@@ -1,4 +1,7 @@
-#Content Manager DX Module
-This is a DX module that contaimn the Content manager Application
+# Content Manager
 
-##How to install
+Content Manager Module for DX
+
+## Getting Started
+
+Compile and deploy the module. 

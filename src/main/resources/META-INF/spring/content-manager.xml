@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
+
+
+
+    <bean id="contentfactory.urlResolverFactory" class="org.jahia.modules.contentmanager.configuration.URLResolverFactory">
+        <property name="cacheService" ref="ehCacheProvider"/>
+    </bean>
+
+    <bean name="org.jahia.bin.ContentFactory" parent="abstractRender" class="org.jahia.bin.Edit">
+        <property name="sessionExpiryTime" value="${sessionExpiryTime}"/>
+        <property name="editConfiguration" ref="contentfactory"/>
+        <property name="availableInDistantPublicationServerMode" value="false"/>
+        <property name="workspace" value="default"/>
+        <property name="urlResolverFactory" ref="contentfactory.urlResolverFactory"/>
+    </bean>
+
+    <bean name="contentfactoryRendererMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/contentfactory/**" value-ref="org.jahia.bin.ContentFactory"/>
+                <entry key="/contentfactoryframe/**" value-ref="org.jahia.bin.ContentFactory"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean name="ContentFactoryFilter" class="org.jahia.modules.contentmanager.configuration.ContentManagerFilter">
+        <property name="priority" value="1"/>
+    </bean>
+
+
+    <bean id="contentfactory" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
+        <property name="needFrameParsing" value="false"/>
+        <property name="requiredPermission" value="editModeAccess"/>
+        <property name="nodeCheckPermission" value="$site"/>
+        <property name="defaultLocation" value="$defaultSiteHome.html"/>
+        <property name="defaultUrlMapping" value="/cms/contentfactory"/>
+        <property name="sitesLocation" value="/sites/*"/>
+        <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
+        <property name="dragAndDropBehavior" value="#{jahiaProperties['jahia.ui.dragAndDrop.edit'] != null ? jahiaProperties['jahia.ui.dragAndDrop.edit'] : (jahiaProperties['jahia.ui.dragAndDrop'] != null ? jahiaProperties['jahia.ui.dragAndDrop'] : 'ENABLED')}"/>
+        <property name="nonEditableTypes">
+            <set>
+                <value>jmix:studioOnly</value>
+            </set>
+        </property>
+        <property name="excludedNodeTypes">
+            <set>
+                <value>jmix:hiddenType</value>
+            </set>
+        </property>
+        <property name="topToolbars">
+            <list>
+            </list>
+        </property>
+        <property name="sidePanelToolbar">
+            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
+                <property name="items">
+                    <list>
+                    </list>
+                </property>
+            </bean>
+        </property>
+        <property name="mainModuleToolbar">
+            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
+                <property name="items">
+                    <list>
+                    </list>
+                </property>
+            </bean>
+        </property>
+
+        <property name="contextMenu">
+            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
+                <property name="items">
+                    <list>
+                    </list>
+                </property>
+            </bean>
+        </property>
+
+        <property name="tabs">
+            <list></list>
+        </property>
+
+        <!-- edit engine -->
+        <property name="engineConfigurations">
+            <map>
+                <entry key="nt:base">
+                    <bean class="org.jahia.services.uicomponents.bean.editmode.EngineConfiguration">
+                        <property name="engineTabs">
+                            <list>
+                                <!--<ref bean="Engine.Tab.ContentAndLayout"/>-->
+                                <ref bean="Engine.Tab.Content"/>
+                                <ref bean="Engine.Tab.ListOrdering"/>
+                                <ref bean="Engine.Tab.Layout"/>
+                                <ref bean="Engine.Tab.Metadata"/>
+                                <ref bean="Engine.Tab.Seo"/>
+                                <ref bean="Engine.Tab.Categories"/>
+                                <ref bean="Engine.Tab.Options"/>
+                                <ref bean="Engine.Tab.LiveRoles"/>
+                                <ref bean="Engine.Tab.EditRoles"/>
+                                <ref bean="Engine.Tab.Usages"/>
+                                <ref bean="Engine.Tab.History"/>
+                                <ref bean="Engine.Tab.Versioning"/>
+                                <ref bean="Engine.Tab.Visibility"/>
+                                <ref bean="Engine.Tab.ContributeMode"/>
+                            </list>
+                        </property>
+                        <property name="creationButtons">
+                            <list>
+                                <ref bean="Engine.Button.WorkInProgress"/>
+                                <ref bean="Engine.Button.Create"/>
+                                <ref bean="Engine.Button.CreateAndNew"/>
+                            </list>
+                        </property>
+                        <property name="editionButtons">
+                            <list>
+                                <ref bean="Engine.Button.WorkInProgress"/>
+                                <ref bean="Engine.Button.Update"/>
+                            </list>
+                        </property>
+                        <property name="commonButtons">
+                            <list>
+                                <ref bean="Engine.Button.Cancel"/>
+                            </list>
+                        </property>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+
+    </bean>
+</beans>

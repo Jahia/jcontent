@@ -2,19 +2,22 @@
 <content xmlns:j="http://www.jahia.org/jahia/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
     <modules jcr:primaryType="jnt:modules">
         <content-manager j:dependencies="default"
-                       j:modulePriority="0"
-                       j:moduleType="module"
-                       j:title="Content Manager"
-                       jcr:primaryType="jnt:module">
-                
-                <portlets jcr:primaryType="jnt:portletFolder"/>
+                         j:modulePriority="0"
+                         j:moduleType="module"
+                         j:title="Content Manager"
+                         jcr:primaryType="jnt:module">
+
+            <portlets jcr:primaryType="jnt:portletFolder"/>
+            <files jcr:primaryType="jnt:folder"/>
+            <contents jcr:primaryType="jnt:contentFolder"/>
+            <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
                 <files jcr:primaryType="jnt:folder"/>
                 <contents jcr:primaryType="jnt:contentFolder"/>
-                <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
-                    <files jcr:primaryType="jnt:folder"/>
-                    <contents jcr:primaryType="jnt:contentFolder"/>
-                </templates>
-                
-            </content-manager>
+                <content-manager  j:applyOn="jnt:virtualsite"
+                                  j:view="content-manager"
+                                  jcr:primaryType="jnt:contentTemplate">
+                </content-manager>
+            </templates>
+        </content-manager>
     </modules>
 </content>

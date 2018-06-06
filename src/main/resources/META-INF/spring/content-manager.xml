@@ -7,38 +7,38 @@
 
 
 
-    <bean id="contentfactory.urlResolverFactory" class="org.jahia.modules.contentmanager.configuration.URLResolverFactory">
+    <bean id="contentmanager.urlResolverFactory" class="org.jahia.modules.contentmanager.configuration.URLResolverFactory">
         <property name="cacheService" ref="ehCacheProvider"/>
     </bean>
 
-    <bean name="org.jahia.bin.ContentFactory" parent="abstractRender" class="org.jahia.bin.Edit">
+    <bean name="org.jahia.bin.ContentManager" parent="abstractRender" class="org.jahia.bin.Edit">
         <property name="sessionExpiryTime" value="${sessionExpiryTime}"/>
-        <property name="editConfiguration" ref="contentfactory"/>
+        <property name="editConfiguration" ref="contentmanager"/>
         <property name="availableInDistantPublicationServerMode" value="false"/>
         <property name="workspace" value="default"/>
-        <property name="urlResolverFactory" ref="contentfactory.urlResolverFactory"/>
+        <property name="urlResolverFactory" ref="contentmanager.urlResolverFactory"/>
     </bean>
 
-    <bean name="contentfactoryRendererMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <bean name="contentmanagerRendererMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="urlMap">
             <map>
-                <entry key="/contentfactory/**" value-ref="org.jahia.bin.ContentFactory"/>
-                <entry key="/contentfactoryframe/**" value-ref="org.jahia.bin.ContentFactory"/>
+                <entry key="/contentmanager/**" value-ref="org.jahia.bin.ContentManager"/>
+                <entry key="/contentmanagerframe/**" value-ref="org.jahia.bin.ContentManager"/>
             </map>
         </property>
     </bean>
 
-    <bean name="ContentFactoryFilter" class="org.jahia.modules.contentmanager.configuration.ContentManagerFilter">
+    <bean name="ContentManagerFilter" class="org.jahia.modules.contentmanager.configuration.ContentManagerFilter">
         <property name="priority" value="1"/>
     </bean>
 
 
-    <bean id="contentfactory" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
+    <bean id="contentmanager" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
         <property name="needFrameParsing" value="false"/>
         <property name="requiredPermission" value="editModeAccess"/>
         <property name="nodeCheckPermission" value="$site"/>
         <property name="defaultLocation" value="$defaultSiteHome.html"/>
-        <property name="defaultUrlMapping" value="/cms/contentfactory"/>
+        <property name="defaultUrlMapping" value="/cms/contentmanager"/>
         <property name="sitesLocation" value="/sites/*"/>
         <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
         <property name="dragAndDropBehavior" value="#{jahiaProperties['jahia.ui.dragAndDrop.edit'] != null ? jahiaProperties['jahia.ui.dragAndDrop.edit'] : (jahiaProperties['jahia.ui.dragAndDrop'] != null ? jahiaProperties['jahia.ui.dragAndDrop'] : 'ENABLED')}"/>

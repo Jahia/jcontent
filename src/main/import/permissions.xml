@@ -1,0 +1,5 @@
+<permissions xmlns:jcr="http://www.jcp.org/jcr/1.0">
+    <managers jcr:primaryType="jnt:permission" >
+        <contentManager jcr:primaryType="jnt:permission" />
+    </managers>
+</permissions>

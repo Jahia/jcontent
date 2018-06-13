@@ -12,7 +12,7 @@
 
 
 <body style="margin: 0px">
-    <template:addResources type="javascript" resources="app/content-manager.js" />
+    <template:addResources type="javascript" resources="apps/content-manager.js" />
     <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 
     <div id="${targetId}">loading..</div>

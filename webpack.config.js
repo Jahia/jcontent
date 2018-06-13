@@ -7,6 +7,7 @@ module.exports = {
         filename: 'content-manager.js'
     },
     resolve: {
+        mainFields: ['main'],
         extensions: ['.js', '.jsx']
     },
     module: {

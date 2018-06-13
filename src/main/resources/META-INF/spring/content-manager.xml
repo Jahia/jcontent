@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+       xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint" xmlns:spring="http://camel.apache.org/schema/spring"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                         http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
 
@@ -9,6 +9,21 @@
 
     <bean id="contentmanager.urlResolverFactory" class="org.jahia.modules.contentmanager.configuration.URLResolverFactory">
         <property name="cacheService" ref="ehCacheProvider"/>
+    </bean>
+
+    <!-- Content Manager -->
+    <bean id="Toolbar.Item.ContentManager" class="org.jahia.services.uicomponents.bean.toolbar.Item">
+        <property name="parentMenu" ref="editmode.managers.menu"/>
+        <property name="actionItem">
+            <bean class="org.jahia.ajax.gwt.client.widget.toolbar.action.SwitchConfigActionItem">
+                <property name="configurationName" value="contentmanager"/>
+                <property name="updateOnMainNodeRefresh" value="true"/>
+                <property name="checkPermissionOnSite" value="true"/>
+            </bean>
+        </property>
+        <property name="titleKey" value="label.contentmanager"/>
+        <property name="icon" value="content-manager-1616"/>
+        <property name="requiredPermission" value="contentManager"/>
     </bean>
 
     <bean name="org.jahia.bin.ContentManager" parent="abstractRender" class="org.jahia.bin.Edit">

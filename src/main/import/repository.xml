@@ -13,10 +13,10 @@
             <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
                 <files jcr:primaryType="jnt:folder"/>
                 <contents jcr:primaryType="jnt:contentFolder"/>
-                <content-manager  j:applyOn="jnt:virtualsite"
-                                  j:view="content-manager"
-                                  j:requiredPermissionNames="contentManager"
-                                  jcr:primaryType="jnt:contentTemplate">
+                <content-manager j:applyOn="jnt:virtualsite"
+                                 j:view="content-manager"
+                                 j:requiredPermissionNames="contentManager"
+                                 jcr:primaryType="jnt:contentTemplate">
                 </content-manager>
             </templates>
         </content-manager>

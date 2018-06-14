@@ -1,0 +1,9 @@
+{
+  "label" : {
+    "contentmanager" : {
+      "title" : "Content Manager i18n",
+      "nodeName" : "Name",
+      "editAction" : "Edit"
+    }
+  }
+}

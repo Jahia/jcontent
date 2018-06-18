@@ -56,7 +56,7 @@
     </parent>
     <artifactId>content-manager</artifactId>
     <name>Content Manager</name>
-    <version>1.0-SNAPSHOT</version>    
+    <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (Content Manager) for running on a Digital Experience Manager server.</description>
 
@@ -66,7 +66,7 @@
     </scm>
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>
-        <ahia-module-type>system</ahia-module-type>
+        <jahia-module-type>system</jahia-module-type>
     </properties>
 
     <repositories>

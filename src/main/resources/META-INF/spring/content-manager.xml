@@ -25,6 +25,7 @@
                 <property name="configurationName" value="contentmanagermode"/>
                 <property name="updateOnMainNodeRefresh" value="true"/>
                 <property name="checkPermissionOnSite" value="true"/>
+                <property name="forceRootChange" value="true"/>
                 <property name="noChecksInMode" >
                     <set>
                         <value>adminmode</value>

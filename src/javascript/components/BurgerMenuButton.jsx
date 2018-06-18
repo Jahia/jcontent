@@ -7,7 +7,7 @@ const styles = theme => ({
         position: "absolute",
         top: "39px",
         left: "39px",
-        background: "url(/images/dx_logo_solid.png) center center no-repeat",
+        background: "url(" + contextJsParameters.contextPath + "/engines/jahia-anthracite/images/dx_logo_solid.png) center center no-repeat",
         width: "3rem",
         height: "3rem",
         backgroundSize: "100%",

@@ -64,6 +64,10 @@
         <connection>scm:dummy:uri</connection>
         <developerConnection>scm:dummy:uri</developerConnection>
     </scm>
+    <properties>
+        <jahia-deploy-on-site>all</jahia-deploy-on-site>
+        <ahia-module-type>system</ahia-module-type>
+    </properties>
 
     <repositories>
         <repository>

@@ -22,9 +22,16 @@
         <property name="parent" ref="menus"/>
         <property name="actionItem">
             <bean class="org.jahia.ajax.gwt.client.widget.toolbar.action.SwitchConfigActionItem">
-                <property name="configurationName" value="contentmanager"/>
+                <property name="configurationName" value="contentmanagermode"/>
                 <property name="updateOnMainNodeRefresh" value="true"/>
                 <property name="checkPermissionOnSite" value="true"/>
+                <property name="noChecksInMode" >
+                    <set>
+                        <value>adminmode</value>
+                        <value>dashboardmode</value>
+                        <value>studiomode</value>
+                    </set>
+                </property>
             </bean>
         </property>
         <property name="titleKey" value="label.contentmanager"/>
@@ -34,7 +41,7 @@
 
     <bean name="org.jahia.bin.ContentManager" parent="abstractRender" class="org.jahia.bin.Edit">
         <property name="sessionExpiryTime" value="${sessionExpiryTime}"/>
-        <property name="editConfiguration" ref="contentmanager"/>
+        <property name="editConfiguration" ref="contentmanagermode"/>
         <property name="availableInDistantPublicationServerMode" value="false"/>
         <property name="workspace" value="default"/>
         <property name="urlResolverFactory" ref="contentmanager.urlResolverFactory"/>
@@ -54,15 +61,13 @@
     </bean>
 
 
-    <bean id="contentmanager" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
-        <property name="needFrameParsing" value="true"/>
-        <property name="requiredPermission" value="editModeAccess"/>
+    <bean id="contentmanagermode" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
+        <property name="requiredPermission" value="contentManager"/>
         <property name="nodeCheckPermission" value="$site"/>
-        <property name="defaultLocation" value="$defaultSiteHome.html"/>
+        <property name="defaultLocation" value="$defaultSiteHome"/>
         <property name="defaultUrlMapping" value="/cms/contentmanager"/>
         <property name="sitesLocation" value="/sites/*"/>
         <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
-        <property name="dragAndDropBehavior" value="#{jahiaProperties['jahia.ui.dragAndDrop.edit'] != null ? jahiaProperties['jahia.ui.dragAndDrop.edit'] : (jahiaProperties['jahia.ui.dragAndDrop'] != null ? jahiaProperties['jahia.ui.dragAndDrop'] : 'ENABLED')}"/>
         <property name="nonEditableTypes">
             <set>
                 <value>jmix:studioOnly</value>

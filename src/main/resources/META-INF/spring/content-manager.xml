@@ -55,7 +55,7 @@
 
 
     <bean id="contentmanager" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
-        <property name="needFrameParsing" value="false"/>
+        <property name="needFrameParsing" value="true"/>
         <property name="requiredPermission" value="editModeAccess"/>
         <property name="nodeCheckPermission" value="$site"/>
         <property name="defaultLocation" value="$defaultSiteHome.html"/>

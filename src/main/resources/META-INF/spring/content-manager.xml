@@ -60,41 +60,43 @@
         <property name="priority" value="1"/>
     </bean>
 
-
     <bean id="contentmanagermode" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
+
         <property name="requiredPermission" value="contentManager"/>
         <property name="nodeCheckPermission" value="$site"/>
         <property name="defaultLocation" value="$defaultSiteHome"/>
         <property name="defaultUrlMapping" value="/cms/contentmanager"/>
         <property name="sitesLocation" value="/sites/*"/>
         <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
+
         <property name="nonEditableTypes">
             <set>
                 <value>jmix:studioOnly</value>
             </set>
         </property>
+
         <property name="excludedNodeTypes">
             <set>
                 <value>jmix:hiddenType</value>
             </set>
         </property>
+
         <property name="topToolbars">
-            <list>
-            </list>
+            <list/>
         </property>
+
         <property name="sidePanelToolbar">
             <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
                 <property name="items">
-                    <list>
-                    </list>
+                    <list/>
                 </property>
             </bean>
         </property>
+
         <property name="mainModuleToolbar">
             <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
                 <property name="items">
-                    <list>
-                    </list>
+                    <list/>
                 </property>
             </bean>
         </property>
@@ -102,14 +104,13 @@
         <property name="contextMenu">
             <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
                 <property name="items">
-                    <list>
-                    </list>
+                    <list/>
                 </property>
             </bean>
         </property>
 
         <property name="tabs">
-            <list></list>
+            <list/>
         </property>
 
         <!-- edit engine -->
@@ -160,4 +161,5 @@
         </property>
 
     </bean>
+
 </beans>

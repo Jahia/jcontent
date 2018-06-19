@@ -22,7 +22,7 @@ class ContentManager extends React.Component {
             console.log(`Url base ${dxContext.urlbase}`);
             console.log(`The last navigation action was ${action}`);
             if (window.parent) {
-                window.parent.history.replaceState(window.parent.history.state, dxContext.contextPath + dxContext.urlbase + location.pathname,  dxContext.contextPath + dxContext.urlbase + location.pathname)
+                window.parent.history.replaceState(window.parent.history.state, dxContext.contextPath + dxContext.urlBrowser + location.pathname,  dxContext.contextPath + dxContext.urlBrowser + location.pathname)
             }
         });
     }

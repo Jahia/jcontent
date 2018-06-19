@@ -68,6 +68,7 @@
         <property name="nodeCheckPermission" value="$site"/>
         <property name="defaultLocation" value="$defaultSiteHome"/>
         <property name="defaultUrlMapping" value="/cms/contentmanager"/>
+        <property name="needFrameParsing" value="false"/>
         <property name="sitesLocation" value="/sites/*"/>
         <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
 

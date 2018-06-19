@@ -1,3 +1,5 @@
+<%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
+<%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -17,6 +19,7 @@
 
     <div id="${targetId}">loading..</div>
     <script type="text/javascript">
+        contextJsParameters['urlBrowser'] = '/cms/contentmanager/${renderContext.workspace}/${renderContext.mainResourceLocale}';
         contextJsParameters['urlbase'] = '${url.base}';
         contextJsParameters['mainResourceId'] = '${renderContext.mainResource.node.identifier}';
         contextJsParameters['mainResourcePath'] = '${renderContext.mainResource.node.path}';

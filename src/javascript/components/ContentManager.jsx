@@ -11,6 +11,7 @@ import ContentBrowser from './ContentBrowser';
 import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
+import * as _ from 'lodash';
 
 class ContentManager extends React.Component {
 
@@ -30,6 +31,8 @@ class ContentManager extends React.Component {
     render() {
         let {dxContext, classes} = this.props;
 
+        const isInFrame = !_.startsWith(window.location.pathname, dxContext.contextPath + dxContext.urlbase);
+
         return (<MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({contextPath: this.props.dxContext.contextPath})}>
@@ -40,7 +43,7 @@ class ContentManager extends React.Component {
                             defaultNS: 'content-manager',
                         })}>
                             <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
-                                           ref={this.setRouter.bind(this)}>
+                                           ref={isInFrame && this.setRouter.bind(this)}>
                                 <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
                                     <Route path='/*' component={ContentBrowser}/>
                                 </ManagerLayout>

@@ -31,7 +31,7 @@ class ContentManager extends React.Component {
     render() {
         let {dxContext, classes} = this.props;
 
-        const isInFrame = !_.startsWith(window.location.pathname, dxContext.contextPath + dxContext.urlbase);
+        const isInFrame = !_.startsWith(window.parent.location.pathname, dxContext.contextPath + dxContext.urlbase);
 
         return (<MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>

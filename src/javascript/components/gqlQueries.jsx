@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 const allContentQuery = gql`
   {
   jcr {
-    nodesByCriteria(criteria: {nodeType:"jnt:content", paths:["/sites/digitall"]}) {
+    nodesByCriteria(criteria: {nodeType:"jnt:content"}) {
       nodes {
         path
         uuid

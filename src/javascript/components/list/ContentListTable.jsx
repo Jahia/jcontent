@@ -2,6 +2,7 @@ import React from "react";
 import {Table, TableBody, TableRow, TableCell, TablePagination} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
+import PropTypes from 'prop-types';
 
 const columnData = [
     {id: 'name', label: 'Name'},
@@ -32,8 +33,8 @@ class ContentListTable extends React.Component {
     };
 
     render() {
-        const {order, orderBy, rowsPerPage} = this.state;
-        const {rows, page, pageSize} = this.props;
+        const {order, orderBy} = this.state;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage} = this.props;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
         return (
@@ -68,10 +69,18 @@ class ContentListTable extends React.Component {
                         )}
                     </TableBody>
                 </Table>
-                <Pagination totalCount={rows.length} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
+                <Pagination totalCount={rows.length} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );
     }
 }
+
+ContentListTable.propTypes = {
+    rows: PropTypes.object.isRequired,
+    page: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    onChangeRowsPerPage: PropTypes.object.isRequired,
+    onChangePage: PropTypes.object.isRequired,
+};
 
 export default ContentListTable;

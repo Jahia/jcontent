@@ -12,20 +12,22 @@ import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
+import {ContentTableData} from "./ContentTableData";
 
 class ContentManager extends React.Component {
 
     setRouter(router) {
         let {dxContext, classes} = this.props;
-
-        router.history.listen((location, action) => {
-            console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
-            console.log(`Url base ${dxContext.urlbase}`);
-            console.log(`The last navigation action was ${action}`);
-            if (window.parent) {
-                window.parent.history.replaceState(window.parent.history.state, dxContext.contextPath + dxContext.urlBrowser + location.pathname,  dxContext.contextPath + dxContext.urlBrowser + location.pathname)
-            }
-        });
+        if (router) {
+            router.history.listen((location, action) => {
+                console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
+                console.log(`Url base ${dxContext.urlbase}`);
+                console.log(`The last navigation action was ${action}`);
+                if (window.parent) {
+                    window.parent.history.replaceState(window.parent.history.state, dxContext.contextPath + dxContext.urlBrowser + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname)
+                }
+            });
+        }
     }
 
     render() {
@@ -45,7 +47,8 @@ class ContentManager extends React.Component {
                             <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
                                            ref={isInFrame && this.setRouter.bind(this)}>
                                 <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
-                                    <Route path='/*' component={ContentBrowser}/>
+                                    <Route path='/browser/*' component={ContentBrowser}/>
+                                    <Route path='/*' component={ContentTableData}/>
                                 </ManagerLayout>
                             </BrowserRouter>
                         </I18nextProvider>

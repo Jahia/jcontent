@@ -13,9 +13,7 @@ class ContentBrowserView extends React.Component {
         let {nodes, path, t} = this.props;
         let pathElements = _.reduce(_.split(path.substring(1), '/'), (result,value) => _.concat(result, result[result.length-1]+'/'+value), ['']);
 
-        return (
-            <Paper elevation={1}>
-                <Grid container>
+        return (<Grid container spacing={2}>
                     <Grid item xs={12}>
                         <ContentBreadcrumbs path={path}/>
                     </Grid>
@@ -42,8 +40,8 @@ class ContentBrowserView extends React.Component {
                     <Grid item xs={4}>
                         <ContentPreview/>
                     </Grid>
-                </Grid>
-            </Paper>);
+            </Grid>
+        );
     }
 }
 

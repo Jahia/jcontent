@@ -31,6 +31,14 @@
     i18next-chained-backend "^0.1.2"
     i18next-xhr-backend "^1.5.1"
 
+"@jahia/icons@^1.0.0-beta.20180618091411":
+  version "1.0.0-beta.20180626130308"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/icons/-/icons-1.0.0-beta.20180626130308.tgz#7c7393b1efca4a013d7499ea441ad40d9a5ed077"
+  dependencies:
+    "@material-ui/core" "^1.2.0"
+    react "^16.4.1"
+    recompose "^0.27.1"
+
 "@jahia/react-apollo@^1.0.0-beta.20180605080720":
   version "1.0.0-beta.20180606085626"
   resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-apollo/-/react-apollo-1.0.0-beta.20180606085626.tgz#190c4629ba46ca0a21221a40ae833a97be67d937"
@@ -42,10 +50,11 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20180605080716":
-  version "1.0.0-beta.20180606085624"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-material/-/react-material-1.0.0-beta.20180606085624.tgz#d7ce6e8a5cf4245e0b72771b94688cfadb773430"
+"@jahia/react-material@^1.0.0-beta.20180626130311":
+  version "1.0.0-beta.20180626130311"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-material/-/react-material-1.0.0-beta.20180626130311.tgz#4f09f45aa6e8c151d3b99c81923df3ff3355ec82"
   dependencies:
+    "@jahia/icons" "^1.0.0-beta.20180618091411"
     "@material-ui/core" "^1.2.0"
     "@material-ui/icons" "^1.1.0"
     lodash "^4.17.10"
@@ -5056,6 +5065,15 @@ react@^16.2.0, react@^16.4.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
+react@^16.4.1:
+  version "16.4.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.4.1.tgz#de51ba5764b5dbcd1f9079037b862bd26b82fe32"
+  dependencies:
+    fbjs "^0.8.16"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.0"
+
 read-chunk@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/read-chunk/-/read-chunk-2.1.0.tgz#6a04c0928005ed9d42e1a6ac5600e19cbc7ff655"
@@ -5124,7 +5142,7 @@ rechoir@^0.6.2:
   dependencies:
     resolve "^1.1.6"
 
-"recompose@^0.26.0 || ^0.27.0":
+"recompose@^0.26.0 || ^0.27.0", recompose@^0.27.1:
   version "0.27.1"
   resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.27.1.tgz#1a49e931f183634516633bbb4f4edbfd3f38a7ba"
   dependencies:

@@ -12,8 +12,7 @@
     <title>${fn:escapeXml(renderContext.mainResource.node.displayableName)}</title>
 </head>
 
-
-<body style="margin: 0px">
+<body>
     <template:addResources type="javascript" resources="apps/content-manager.js" />
     <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 
@@ -29,5 +28,3 @@
         reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
     </script>
 </body>
-
-

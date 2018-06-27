@@ -79,8 +79,8 @@ ContentListTable.propTypes = {
     rows: PropTypes.object.isRequired,
     page: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,
-    onChangeRowsPerPage: PropTypes.object.isRequired,
-    onChangePage: PropTypes.object.isRequired,
+    onChangeRowsPerPage: PropTypes.func.isRequired,
+    onChangePage: PropTypes.func.isRequired,
 };
 
 export default ContentListTable;

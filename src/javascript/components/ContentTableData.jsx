@@ -27,7 +27,8 @@ class ContentTableData extends React.Component {
 
 
     render() {
-        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state, this.props.match.url)}>
+        const path = this.props.match.url;
+        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state, path)}>
             { ({loading, error, data}) => {
                 let rows = [];
                 let totalCount = 0;
@@ -40,11 +41,12 @@ class ContentTableData extends React.Component {
                             name: contentNode.displayName,
                             type: contentNode.primaryNodeType.name,
                             created: contentNode.created.value,
-                            createdBy: contentNode.createdBy.value
+                            createdBy: contentNode.createdBy.value,
+                            path: contentNode.path
                         }
                     })
                 }
-                return <ContentListTable totalCount={totalCount} rows={rows}  pageSize={this.state.rowsPerPage} onChangeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} page={this.state.page}/>;
+                return <ContentListTable match={this.props.match} totalCount={totalCount} rows={rows}  pageSize={this.state.rowsPerPage} onChangeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} page={this.state.page}/>;
             }}
         </Query>;
     }

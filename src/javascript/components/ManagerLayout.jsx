@@ -45,7 +45,7 @@ class ManagerLayout extends React.Component {
     render() {
         let {header, leftSide, children } = this.props;
         return (
-            <Grid container spacing={8}>
+            <Grid container spacing={0}>
                 <Grid item xs={12}>
                     <AppBar position="static">{header}</AppBar>
                 </Grid>

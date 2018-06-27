@@ -16,8 +16,7 @@ class ContentListTable extends React.Component {
 
         this.state = {
             order: 'asc',
-            orderBy: 'calories',
-            selected: []
+            orderBy: ''
         };
     }
 
@@ -31,29 +30,6 @@ class ContentListTable extends React.Component {
 
         this.setState({order, orderBy});
     };
-
-    handleClick = (event, id) => {
-        const {selected} = this.state;
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        this.setState({selected: newSelected});
-    };
-
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
         const {order, orderBy, rowsPerPage} = this.state;
@@ -71,16 +47,12 @@ class ContentListTable extends React.Component {
                     />
                     <TableBody>
                         {rows.map(n => {
-                            const isSelected = this.isSelected(n.uuid);
                             return (
                                 <TableRow
                                     hover
-                                    onClick={event => this.handleClick(event, n.uuid)}
                                     role="checkbox"
-                                    aria-checked={isSelected}
                                     tabIndex={-1}
                                     key={n.uuid}
-                                    selected={isSelected}
                                 >{columnData.map(column => {
                                     return (
                                         <TableCell key={n.uuid + column.id}>{n[column.id]}</TableCell>

@@ -34,7 +34,7 @@ class ContentListTable extends React.Component {
 
     render() {
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, rows.length - page * pageSize);
 
         return (
@@ -69,7 +69,7 @@ class ContentListTable extends React.Component {
                         )}
                     </TableBody>
                 </Table>
-                <Pagination totalCount={rows.length} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
+                <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );
     }

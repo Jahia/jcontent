@@ -1,6 +1,6 @@
 import React from 'react';
 import {Query} from 'react-apollo';
-import {allContentQuery} from "./gqlQueries";
+import {allContentQuery, TableQueryVariables} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 
@@ -21,16 +21,19 @@ class ContentTableData extends React.Component {
         this.setState({page});
     };
 
-    handleChangeRowsPerPage = event => {
-        this.setState({rowsPerPage: event.target.value});
+    handleChangeRowsPerPage = value => {
+        this.setState({rowsPerPage: value});
     };
 
 
     render() {
-        return <Query fetchPolicy={'network-only'} query={allContentQuery}>
+        let { t, classes, filterText, totalCount, pageSize, poll} = this.props;
+        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state)}>
             { ({loading, error, data}) => {
                 let rows = [];
+                let totalCount = 0;
                 if (data.jcr && data.jcr.nodesByCriteria) {
+                    totalCount = data.jcr.nodesByCriteria.pageInfo.totalCount;
                     rows = _.map(data.jcr.nodesByCriteria.nodes, contentNode => {
 
                         return {
@@ -42,8 +45,7 @@ class ContentTableData extends React.Component {
                         }
                     })
                 }
-
-                return <ContentListTable rows={rows}  pageSize={this.state.rowsPerPage} onChangeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} page={this.state.page}/>;
+                return <ContentListTable totalCount={totalCount} rows={rows}  pageSize={this.state.rowsPerPage} onChangeRowsPerPage={this.handleChangeRowsPerPage} onChangePage={this.handleChangePage} page={this.state.page}/>;
             }}
         </Query>;
     }

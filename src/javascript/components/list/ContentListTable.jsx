@@ -35,7 +35,7 @@ class ContentListTable extends React.Component {
     render() {
         const {order, orderBy} = this.state;
         const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount} = this.props;
-        const emptyRows = pageSize - Math.min(pageSize, rows.length - page * pageSize);
+        const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
             <div>
@@ -76,7 +76,7 @@ class ContentListTable extends React.Component {
 }
 
 ContentListTable.propTypes = {
-    rows: PropTypes.object.isRequired,
+    rows: PropTypes.array.isRequired,
     page: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,
     onChangeRowsPerPage: PropTypes.func.isRequired,

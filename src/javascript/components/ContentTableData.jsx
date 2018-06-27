@@ -10,15 +10,15 @@ class ContentTableData extends React.Component {
         super(props);
         this.state = {
             page: 0,
-            rowsPerPage: 5
+            rowsPerPage: 5,
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
 
 
-    handleChangePage = (event, page) => {
-        this.setState({page});
+    handleChangePage = newPage => {
+        this.setState({page: newPage});
     };
 
     handleChangeRowsPerPage = value => {
@@ -27,8 +27,7 @@ class ContentTableData extends React.Component {
 
 
     render() {
-        let { t, classes, filterText, totalCount, pageSize, poll} = this.props;
-        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state)}>
+        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state, this.props.match.url)}>
             { ({loading, error, data}) => {
                 let rows = [];
                 let totalCount = 0;

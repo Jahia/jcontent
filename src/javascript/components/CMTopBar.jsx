@@ -1,27 +1,46 @@
 import React from "react";
-import {Toolbar, Typography} from '@material-ui/core';
+import {withStyles, Toolbar, Typography} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {LanguageSwitcher, SearchBar} from '@jahia/react-material';
 import SiteSelector from './SiteSelector';
 import BurgerMenuButton from './BurgerMenuButton';
-import {withStyles} from '@material-ui/core';
+import {compose} from "react-apollo/index";
 
+const styles = theme => ({
+    title: {
+        display: "inline-block",
+        verticalAlign: "top"
+    },
+    root: {
+        flexGrow: 1,
+    }
+});
 
 class CMTopBar extends React.Component {
 
 
     render() {
+        const { classes } = this.props;
         return (
+            <div className={classes.root}>
             <Toolbar color={'secondary'}>
                 <BurgerMenuButton/>
-                <div>
+                <div className={classes.title}>
                     <SiteSelector/>
-                    <h1>All Content</h1>
+                    <Typography variant="title" color="inherit" >All Content</Typography>
                     <LanguageSwitcher/>
                 </div>
+                <SearchBar placeholderLabel={"search"} onChangeFilter={""} onFocus={""} onBlur={""}/>
             </Toolbar>
+            </div>
         )
     }
 }
 
-export default translate()(CMTopBar);
+
+CMTopBar = compose(
+    (translate()),
+    withStyles(styles)
+)(CMTopBar);
+
+export default CMTopBar;

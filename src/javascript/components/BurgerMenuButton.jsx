@@ -1,17 +1,15 @@
 import React from "react";
 import {translate} from "react-i18next";
-import {withStyles} from '@material-ui/core';
+import {withStyles, IconButton, SvgIcon} from '@material-ui/core';
 
 const styles = theme => ({
-    burgerMenuButton : {
-        position: "absolute",
-        top: "39px",
-        left: "39px",
+    menuButton: {
         background: "url(" + contextJsParameters.contextPath + "/engines/jahia-anthracite/images/dx_logo_solid.png) center center no-repeat",
-        width: "3rem",
-        height: "3rem",
-        backgroundSize: "100%",
-        textIndent: "-50000px"
+        marginLeft: -12,
+        marginRight: 20,
+        width: "3em",
+        height: "3em",
+        backgroundSize: "100%"
     }
 });
 
@@ -19,7 +17,11 @@ class BurgerMenuButton extends React.Component {
     render() {
         let {classes} = this.props;
 
-        return (<button type="button" className={classes.burgerMenuButton} id="hamburger_menu_button">Menu</button>);
+        return (
+            <div className={classes.menuButton} color="inherit" aria-label="Menu">
+
+            </div>
+        );
     }
 }
 

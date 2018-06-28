@@ -82,7 +82,7 @@ class ContentLayout extends React.Component {
                 const xs = 12 - (showBrowser ? 3 : 0) - (showPreview ? 3 : 0);
                 return (
                     <div className={this.props.classes.root}>
-                        <Grid xs={12}>
+                        <Grid item xs={12}>
                             <ContentBreadcrumbs path={this.props.match.url}/>
                             <Button onClick={this.handleShowBrowser}>{showBrowser ? "Hide" : "Show"} Browser</Button>
                             <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>

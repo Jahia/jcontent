@@ -85,7 +85,6 @@ class CMLeftNavigation extends React.Component {
 
         return (
                 <div className={classes.root}>
-
                     <Drawer
                         variant="permanent"
                         classes={{

@@ -18,28 +18,26 @@ const styles = theme => ({
 
 class CMTopBar extends React.Component {
 
-
     render() {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-            <Toolbar color={'secondary'}>
-                <BurgerMenuButton/>
-                <div className={classes.title}>
-                    <SiteSelector/>
-                    <Typography variant="title" color="inherit" >All Content</Typography>
-                    <LanguageSwitcher/>
-                </div>
-                <SearchBar placeholderLabel={"search"} onChangeFilter={""} onFocus={""} onBlur={""}/>
-            </Toolbar>
+                <Toolbar color={'secondary'}>
+                    <BurgerMenuButton/>
+                    <div className={classes.title}>
+                        <SiteSelector/>
+                        <Typography variant="title" color="inherit" >All Content</Typography>
+                        <LanguageSwitcher/>
+                    </div>
+                    <SearchBar placeholderLabel={"search"} onChangeFilter={""} onFocus={""} onBlur={""}/>
+                </Toolbar>
             </div>
-        )
+        );
     }
 }
 
-
 CMTopBar = compose(
-    (translate()),
+    translate(),
     withStyles(styles)
 )(CMTopBar);
 

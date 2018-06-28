@@ -15,7 +15,7 @@ const allContentQuery = gql`
                     totalCount
                 }
                 nodes {
-                    aggregatedPublicationInfo(language: "en"){
+                    aggregatedPublicationInfo(language: "en") {
                         publicationStatus
                     }
                     name

@@ -32,7 +32,6 @@ class ContentLayout extends React.Component {
         this.handleShowPreview = this.handleShowPreview.bind(this);
     }
 
-
     handleChangePage = newPage => {
         this.setState({page: newPage});
     };
@@ -56,7 +55,6 @@ class ContentLayout extends React.Component {
             }
         })
     };
-
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;

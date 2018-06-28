@@ -54,7 +54,7 @@ class ContentManager extends React.Component {
                     </ApolloProvider>
                 </NotificationProvider>
             </MuiThemeProvider>
-        )
+        );
     }
 }
 

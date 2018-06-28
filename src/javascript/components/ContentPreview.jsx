@@ -40,8 +40,8 @@ class ContentPreview extends React.Component {
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
                         <Tab label="Preview"/>
-                        <Tab label="Quick Edit" />
-                        <Tab label="Metadata" href="#basic-tabs" />
+                        <Tab label="Quick Edit"/>
+                        <Tab label="Metadata" href="#basic-tabs"/>
                     </Tabs>
                 </AppBar>
                 {value === 0 && <TabContainer> <div>

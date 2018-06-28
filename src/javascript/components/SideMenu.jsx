@@ -32,15 +32,13 @@ class SideMenu extends React.Component {
 
         return (
             <div className={classes.root}>
-                <List
-                    component="nav"
-                >
+                <List component="nav">
                     <ListItem button onClick={this.handleClick}>
                         <ListItemIcon>
                             {icon}
                         </ListItemIcon>
                         <ListItemText inset primary={text} />
-                        {this.state.open ? <ExpandMore /> : <ChevronLeft />}
+                        {this.state.open ? <ExpandMore/> : <ChevronLeft/>}
                     </ListItem>
                     <Collapse in={this.state.open} timeout="auto" unmountOnExit>
                         {children}

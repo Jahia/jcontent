@@ -123,7 +123,7 @@ ContentListTable.propTypes = {
 
 ContentListTable = compose(
     withStyles(styles),
-    (translate())
+    translate()
 )(ContentListTable);
 
 export default ContentListTable;

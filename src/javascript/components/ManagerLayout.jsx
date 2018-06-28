@@ -32,7 +32,7 @@ class Main extends React.Component {
                     {children}
                 </div>
             </div>
-        )
+        );
     }
 }
 
@@ -55,7 +55,7 @@ class ManagerLayout extends React.Component {
                     </Main>
                 </Grid>
             </Grid>
-        )
+        );
     }
 }
 
@@ -64,4 +64,4 @@ Main = compose(
 )(Main);
 
 
-export default ManagerLayout
+export default ManagerLayout;

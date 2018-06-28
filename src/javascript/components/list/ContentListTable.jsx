@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
@@ -12,6 +12,17 @@ const columnData = [
     {id: 'created', label: 'Created On'},
     {id: 'createdBy', label: 'Created By'}
 ];
+
+const styles = (theme) =>({
+    toBePublished: {
+        boxShadow: 'inset 7px 0px 0 0 ' + '#FB9926',
+        color: theme.palette.getContrastText(theme.palette.publish.main),
+    },
+    isPublished: {
+        boxShadow: 'inset 7px 0px 0 0 #08D000',
+        color: theme.palette.getContrastText(theme.palette.publish.main),
+    },
+});
 
 class ContentListTable extends React.Component {
     constructor(props) {
@@ -36,7 +47,7 @@ class ContentListTable extends React.Component {
 
     render() {
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -50,10 +61,11 @@ class ContentListTable extends React.Component {
                         path={match.url}
                     />
                     <TableBody>
-                        {rows.map((n) => {
+                        {rows.map((n, index) => {
+                            let isPublished = n.isPublished;
                             return (
                                 <TableRow
-                                    hover
+                                    hover classes={{hover: (isPublished ? classes.isPublished : classes.toBePublished)}}
                                     role="checkbox"
                                     tabIndex={-1}
                                     key={n.uuid}
@@ -90,6 +102,7 @@ ContentListTable.propTypes = {
 };
 
 ContentListTable = compose(
+    withStyles(styles),
     (translate())
 )(ContentListTable);
 

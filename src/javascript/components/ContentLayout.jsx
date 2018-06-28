@@ -61,6 +61,7 @@ class ContentLayout extends React.Component {
     render() {
         const { showPreview, showBrowser } = this.state;
         const path = this.props.match.url;
+        let {dxContext} = this.props;
         return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state, path)}>
             { ({loading, error, data}) => {
                 let rows = [];
@@ -68,14 +69,14 @@ class ContentLayout extends React.Component {
                 if (data.jcr && data.jcr.nodesByCriteria) {
                     totalCount = data.jcr.nodesByCriteria.pageInfo.totalCount;
                     rows = _.map(data.jcr.nodesByCriteria.nodes, contentNode => {
-
                         return {
                             uuid: contentNode.uuid,
                             name: contentNode.displayName,
                             type: contentNode.primaryNodeType.name,
                             created: contentNode.created.value,
                             createdBy: contentNode.createdBy.value,
-                            path: contentNode.path
+                            path: contentNode.path,
+                            isPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED'
                         }
                     })
                 }

@@ -35,6 +35,9 @@ const styles = (theme) =>({
             opacity: '1.5'
         }
     },
+    isDeleted: {
+        textDecoration: 'line-through'
+    }
 });
 
 class ContentListTable extends React.Component {
@@ -77,6 +80,7 @@ class ContentListTable extends React.Component {
                         {rows.map((n, index) => {
                             let isPublished = n.isPublished;
                             let classLock = (n.isLocked ? classes.activeLock : classes.inactiveLock);
+                            let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (
                                 <TableRow
                                     hover classes={{hover: (isPublished ? classes.isPublished : classes.toBePublished)}}
@@ -85,8 +89,9 @@ class ContentListTable extends React.Component {
                                     key={n.uuid}
                                 >
                                     {columnData.map(column => {
+                                        let nameColumn = (column.id === 'name');
                                         return (
-                                            <TableCell key={n.uuid + column.id}>{n[column.id]}</TableCell>
+                                            <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
                                         );
                                     })}
                                     <TableCell><Lock className={classLock}/></TableCell>

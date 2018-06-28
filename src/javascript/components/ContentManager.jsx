@@ -12,7 +12,7 @@ import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
-import {ContentTableData} from "./ContentTableData";
+import {ContentLayout} from "./ContentLayout";
 
 class ContentManager extends React.Component {
 
@@ -47,8 +47,7 @@ class ContentManager extends React.Component {
                             <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
                                            ref={isInFrame && this.setRouter.bind(this)}>
                                 <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
-                                    <Route path='/browser/*' component={ContentBrowser}/>
-                                    <Route path='/*' component={ContentTableData}/>
+                                    <Route path='/*' component={ContentLayout}/>
                                 </ManagerLayout>
                             </BrowserRouter>
                         </I18nextProvider>

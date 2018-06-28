@@ -3,7 +3,6 @@ import {Table, TableBody, TableRow, TableCell, Button} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
-import ContentBrowser from "../ContentBrowser";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 
@@ -21,17 +20,8 @@ class ContentListTable extends React.Component {
         this.state = {
             order: 'asc',
             orderBy: '',
-            showBrowser: false
         };
     }
-
-    handleShowBrowser = () => {
-        this.setState((prevState, props) => {
-            return {
-                showBrowser: !prevState.showBrowser
-            }
-        })
-    };
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -45,7 +35,7 @@ class ContentListTable extends React.Component {
     };
 
     render() {
-        const {order, orderBy, showBrowser} = this.state;
+        const {order, orderBy} = this.state;
         const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
@@ -58,12 +48,9 @@ class ContentListTable extends React.Component {
                         onRequestSort={this.handleRequestSort}
                         columnData={columnData}
                         path={match.url}
-                        showBrowser={showBrowser}
-                    >
-                        <Button onClick={this.handleShowBrowser}>{showBrowser ? "Hide" : "Show"} Browser</Button>
-                    </ContentListHeader>
+                    />
                     <TableBody>
-                        {rows.map((n, index) => {
+                        {rows.map((n) => {
                             return (
                                 <TableRow
                                     hover
@@ -71,7 +58,6 @@ class ContentListTable extends React.Component {
                                     tabIndex={-1}
                                     key={n.uuid}
                                 >
-                                    {showBrowser && index == 0 ? <TableCell rowSpan={pageSize}><ContentBrowser match={match}/></TableCell> : ""}
                                     {columnData.map(column => {
                                     return (
                                         <TableCell key={n.uuid + column.id}>{n[column.id]}</TableCell>

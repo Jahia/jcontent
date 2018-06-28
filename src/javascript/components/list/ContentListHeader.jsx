@@ -1,7 +1,6 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, Tooltip, TableSortLabel, Button, Typography } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, Tooltip, TableSortLabel } from "@material-ui/core";
 import PropTypes from 'prop-types';
-import ContentBreadcrumbs from "../ContentBreadcrumbs";
 
 class ContentListHeader extends React.Component {
 
@@ -10,18 +9,11 @@ class ContentListHeader extends React.Component {
     };
 
     render() {
-        const { order, orderBy, columnData, path, children, showBrowser } = this.props;
+        const { order, orderBy, columnData} = this.props;
 
         return (
             <TableHead>
                 <TableRow>
-                    <TableCell colSpan={columnData.length + ( showBrowser ? 1 : 0 )}>
-                        <ContentBreadcrumbs path={path}/>
-                        <span>{children}</span>
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    {showBrowser ? <TableCell><Typography>Browser</Typography></TableCell> : ""}
                     {columnData.map(column => {
                         return (
                             <TableCell

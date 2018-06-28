@@ -15,12 +15,10 @@ const columnData = [
 
 const styles = (theme) =>({
     toBePublished: {
-        boxShadow: 'inset 7px 0px 0 0 ' + '#FB9926',
-        color: theme.palette.getContrastText(theme.palette.publish.main),
+        boxShadow: 'inset 7px 0px 0 0 ' + '#FB9926'
     },
     isPublished: {
-        boxShadow: 'inset 7px 0px 0 0 #08D000',
-        color: theme.palette.getContrastText(theme.palette.publish.main),
+        boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
 });
 

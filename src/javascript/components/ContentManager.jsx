@@ -35,7 +35,8 @@ class ContentManager extends React.Component {
 
         const isInFrame = !_.startsWith(window.parent.location.pathname, dxContext.contextPath + dxContext.urlbase);
 
-        return (<MuiThemeProvider theme={theme}>
+        return (
+            <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({contextPath: this.props.dxContext.contextPath})}>
                         <I18nextProvider i18n={getI18n({
@@ -44,8 +45,7 @@ class ContentManager extends React.Component {
                             ns: ['content-manager'],
                             defaultNS: 'content-manager',
                         })}>
-                            <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
-                                           ref={isInFrame && this.setRouter.bind(this)}>
+                            <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
                                 <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
                                     <Route path='/*' component={ContentLayout}/>
                                 </ManagerLayout>

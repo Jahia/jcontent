@@ -23,6 +23,7 @@ const styles = theme => ({
 );
 
 class Main extends React.Component {
+
     render() {
         const {children, leftSide, classes } = this.props;
         return (

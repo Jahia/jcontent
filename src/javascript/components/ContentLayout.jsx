@@ -75,7 +75,8 @@ class ContentLayout extends React.Component {
                             created: contentNode.created.value,
                             createdBy: contentNode.createdBy.value,
                             path: contentNode.path,
-                            isPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED'
+                            isPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED',
+                            isLocked: contentNode.property != null
                         }
                     })
                 }

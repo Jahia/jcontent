@@ -5,6 +5,7 @@ import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
+import {Lock} from "@material-ui/icons";
 
 const columnData = [
     {id: 'name', label: 'Name'},
@@ -19,6 +20,20 @@ const styles = (theme) =>({
     },
     isPublished: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
+    },
+    inactiveLock: {
+        color: '#B2B2B2',
+        opacity: '0.5',
+        '&:hover': {
+            opacity: '1'
+        }
+    },
+    activeLock:{
+        color: '#FB9926',
+        opacity: '0.9',
+        '&:hover': {
+            opacity: '1.5'
+        }
     },
 });
 
@@ -61,6 +76,7 @@ class ContentListTable extends React.Component {
                     <TableBody>
                         {rows.map((n, index) => {
                             let isPublished = n.isPublished;
+                            let classLock = (n.isLocked ? classes.activeLock : classes.inactiveLock);
                             return (
                                 <TableRow
                                     hover classes={{hover: (isPublished ? classes.isPublished : classes.toBePublished)}}
@@ -69,12 +85,13 @@ class ContentListTable extends React.Component {
                                     key={n.uuid}
                                 >
                                     {columnData.map(column => {
-                                    return (
-                                        <TableCell key={n.uuid + column.id}>{n[column.id]}</TableCell>
-                                    );
-                                })}
-                                <tableCell><Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
-                                </tableCell>
+                                        return (
+                                            <TableCell key={n.uuid + column.id}>{n[column.id]}</TableCell>
+                                        );
+                                    })}
+                                    <TableCell><Lock className={classLock}/></TableCell>
+                                    <tableCell><Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
+                                    </tableCell>
                                 </TableRow>
                             );
                         })}

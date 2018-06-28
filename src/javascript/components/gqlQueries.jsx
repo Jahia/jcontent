@@ -30,6 +30,9 @@ const allContentQuery = gql`
                     primaryNodeType {
                         name
                     }
+                    property(name: "jcr:lockOwner") {
+                        value
+                    }
                 }
             }
         }

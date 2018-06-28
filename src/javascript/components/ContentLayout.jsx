@@ -28,7 +28,7 @@ class ContentLayout extends React.Component {
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-        this.handleShowBrowser = this.handleShowBrowser.bind(this);
+        this.handleShowTree = this.handleShowTree.bind(this);
         this.handleShowPreview = this.handleShowPreview.bind(this);
     }
 
@@ -41,7 +41,7 @@ class ContentLayout extends React.Component {
         this.setState({rowsPerPage: value});
     };
 
-    handleShowBrowser = () => {
+    handleShowTree = () => {
         this.setState((prevState, props) => {
             return {
                 showBrowser: !prevState.showBrowser
@@ -59,7 +59,7 @@ class ContentLayout extends React.Component {
 
 
     render() {
-        const { showPreview, showBrowser } = this.state;
+        const { showPreview, showBrowser: showTree } = this.state;
         const path = this.props.match.url;
         let {dxContext} = this.props;
         return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state, path)}>
@@ -80,16 +80,16 @@ class ContentLayout extends React.Component {
                         }
                     })
                 }
-                const xs = 12 - (showBrowser ? 3 : 0) - (showPreview ? 3 : 0);
+                const xs = 12 - (showTree ? 3 : 0) - (showPreview ? 3 : 0);
                 return (
                     <div className={this.props.classes.root}>
                         <Grid item xs={12}>
                             <ContentBreadcrumbs path={this.props.match.url}/>
-                            <Button onClick={this.handleShowBrowser}>{showBrowser ? "Hide" : "Show"} Browser</Button>
+                            <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
                             <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>
                         </Grid>
                         <Grid container spacing={0}>
-                            {showBrowser && <Grid item xs={3}><ContentBrowser match={this.props.match}/></Grid>}
+                            {showTree && <Grid item xs={3}><ContentBrowser match={this.props.match}/></Grid>}
                             <Grid item xs={xs}>
                                 <ContentListTable
                                     match={this.props.match}

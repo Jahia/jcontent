@@ -8,20 +8,20 @@ const TableQueryVariables = (props, path) => ({
 
 const allContentQuery = gql`
 
-    query($offset:Int, $limit:Int, $path:String!){
+    query($offset:Int, $limit:Int, $path:String!) {
         jcr {
-            nodesByCriteria(criteria: {nodeType: "jnt:content", paths:[$path]}, offset: $offset, limit: $limit) {
-                pageInfo{
+            nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
+                pageInfo {
                     totalCount
                 }
                 nodes {
                     name
                     path
                     displayName
-                    createdBy: property(name:"jcr:createdBy") {
+                    createdBy: property(name: "jcr:createdBy") {
                         value
                     }
-                    created: property(name:"jcr:created") {
+                    created: property(name: "jcr:created") {
                         value
                     }
                     primaryNodeType {

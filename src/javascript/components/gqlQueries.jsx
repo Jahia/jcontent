@@ -30,9 +30,21 @@ const allContentQuery = gql`
                     primaryNodeType {
                         name
                     }
-                    property(name: "jcr:lockOwner") {
+                    lockOwner: property(name: "jcr:lockOwner") {
                         value
                     }
+                    lastPublished: property(name: "j:lastPublished") {
+                        value
+                    }
+                    lastPublishedBy: property(name: "j:lastPublishedBy") {
+                        value
+                    } 
+                    lastModifiedBy: property(name: "jcr:lastModifiedBy") {
+                        value
+                    }
+                    lastModified: property(name: "jcr:lastModified") {
+                        value
+                    } 
                 }
             }
         }

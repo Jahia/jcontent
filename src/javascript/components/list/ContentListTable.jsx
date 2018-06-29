@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles, Tooltip} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
@@ -62,6 +62,16 @@ class ContentListTable extends React.Component {
         this.setState({order, orderBy});
     };
 
+    handleTooltipMessage(node){
+        if(node.isPublished){
+            return "Published by " + node.lastPublishedBy + " on " + node.lastPublished;
+        }else if(node.neverPublished){
+            return "This content has never been published";
+        }else if(node.isModified){
+            return "Modified by " + node.modifiedBy + " on " + node.lastModified;
+        }
+    }
+
     render() {
         const {order, orderBy} = this.state;
         const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes} = this.props;
@@ -83,6 +93,7 @@ class ContentListTable extends React.Component {
                             let classLock = (n.isLocked ? classes.activeLock : classes.inactiveLock);
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (
+                                <Tooltip placement="left" title={this.handleTooltipMessage(n)}>
                                 <TableRow
                                     hover classes={{hover: (isPublished ? classes.isPublished : classes.toBePublished)}}
                                     role="checkbox"
@@ -100,6 +111,7 @@ class ContentListTable extends React.Component {
                                         <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
                                     </tableCell>
                                 </TableRow>
+                                </Tooltip>
                             );
                         })}
                         {emptyRows > 0 && (

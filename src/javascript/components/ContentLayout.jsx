@@ -74,8 +74,14 @@ class ContentLayout extends React.Component {
                             createdBy: contentNode.createdBy.value,
                             path: contentNode.path,
                             isPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED',
-                            isLocked: contentNode.property !== null,
-                            isMarkedForDeletion: contentNode.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION'
+                            isLocked: contentNode.lockOwner !== null,
+                            isMarkedForDeletion: contentNode.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION',
+                            neverPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED',
+                            isModified: contentNode.aggregatedPublicationInfo.publicationStatus === 'MODIFIED',
+                            lastPublishedBy: (contentNode.lastPublishedBy!==null ? contentNode.lastPublishedBy.value : ''),
+                            lastPublished: (contentNode.lastPublished!==null ? contentNode.lastPublished.value : ''),
+                            modifiedBy: (contentNode.lastModifiedBy!==null ? contentNode.lastModifiedBy.value : ''),
+                            lastModified: (contentNode.lastModified!==null ? contentNode.lastModified.value : '')
                         }
                     })
                 }

@@ -46,6 +46,12 @@ const allContentQuery = gql`
                     lastModified: property(name: "jcr:lastModified") {
                         value
                     }
+                    wipStatus: property(name: "j:workInProgressStatus"){
+                        value
+                    }
+                    wipLangs: property(name: "j:workInProgressLanguages"){
+                        values
+                    }
                 }
             }
         }

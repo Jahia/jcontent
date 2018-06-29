@@ -3,9 +3,10 @@ import {Table, TableBody, TableRow, TableCell, Button, withStyles, Tooltip} from
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
+import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
-import {Lock} from "@material-ui/icons";
+import {Lock, SentimentVeryDissatisfied} from "@material-ui/icons";
 
 const columnData = [
     {id: 'name', label: 'Name'},
@@ -24,14 +25,14 @@ const styles = (theme) =>({
     neverPublished:{
         boxShadow: 'inset 7px 0px 0 0 ' + '#000000'
     },
-    inactiveLock: {
+    inactiveStatus: {
         color: '#B2B2B2',
         opacity: '0.5',
         '&:hover': {
             opacity: '1'
         }
     },
-    activeLock:{
+    activeStatus:{
         color: '#FB9926',
         opacity: '0.9',
         '&:hover': {
@@ -75,6 +76,19 @@ class ContentListTable extends React.Component {
         }
     }
 
+    handleWipProperties(node){
+        switch (node.wip) {
+            case 'ALL_CONTENT':
+                return true;
+            case 'LANGUAGES':
+                let langs = node.wipLangs;
+                // we should verify the language of the context to show or not the wip status, static for now
+                return _.includes(langs, "en", 0);
+            default:
+                return false;
+        }
+    }
+
     render() {
         const {order, orderBy} = this.state;
         const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes} = this.props;
@@ -94,7 +108,8 @@ class ContentListTable extends React.Component {
                         {rows.map((n, index) => {
                             let isPublished = n.isPublished;
                             let neverPublished = n.neverPublished;
-                            let classLock = (n.isLocked ? classes.activeLock : classes.inactiveLock);
+                            let classWip = (this.handleWipProperties(n) ? classes.activeStatus : classes.inactiveStatus);
+                            let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (
                                 <Tooltip placement="left" title={this.handleTooltipMessage(n)}>
@@ -110,7 +125,7 @@ class ContentListTable extends React.Component {
                                             <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
                                         );
                                     })}
-                                    <TableCell><Lock className={classLock}/></TableCell>
+                                    <TableCell><SentimentVeryDissatisfied className={classWip}/><Lock className={classLock}/></TableCell>
                                     <tableCell>
                                         <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
                                     </tableCell>

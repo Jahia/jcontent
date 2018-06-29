@@ -96,7 +96,8 @@ class ContentListTable extends React.Component {
                                         );
                                     })}
                                     <TableCell><Lock className={classLock}/></TableCell>
-                                    <tableCell><Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
+                                    <tableCell>
+                                        <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
                                     </tableCell>
                                 </TableRow>
                             );

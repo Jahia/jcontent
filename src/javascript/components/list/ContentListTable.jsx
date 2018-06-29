@@ -22,7 +22,7 @@ const styles = (theme) =>({
     isPublished: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
-    neverPublished:{
+    neverPublished: {
         boxShadow: 'inset 7px 0px 0 0 ' + '#000000'
     },
     inactiveStatus: {
@@ -32,7 +32,7 @@ const styles = (theme) =>({
             opacity: '1'
         }
     },
-    activeStatus:{
+    activeStatus: {
         color: '#FB9926',
         opacity: '0.9',
         '&:hover': {
@@ -66,12 +66,12 @@ class ContentListTable extends React.Component {
         this.setState({order, orderBy});
     };
 
-    handleTooltipMessage(node){
-        if(node.isPublished){
+    handleTooltipMessage(node) {
+        if (node.isPublished) {
             return "Published by " + node.lastPublishedBy + " on " + node.lastPublished;
-        }else if(node.neverPublished){
+        } else if (node.neverPublished) {
             return "This content has never been published";
-        }else if(node.isModified){
+        } else if (node.isModified) {
             return "Modified by " + node.modifiedBy + " on " + node.lastModified;
         }
     }
@@ -113,23 +113,24 @@ class ContentListTable extends React.Component {
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (
                                 <Tooltip placement="left" title={this.handleTooltipMessage(n)}>
-                                <TableRow
-                                    hover classes={{hover: (isPublished ? classes.isPublished : (neverPublished ? classes.neverPublished : classes.toBePublished))}}
-                                    role="checkbox"
-                                    tabIndex={-1}
-                                    key={n.uuid}
-                                >
-                                    {columnData.map(column => {
-                                        let nameColumn = (column.id === 'name');
-                                        return (
-                                            <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
-                                        );
-                                    })}
-                                    <TableCell><SentimentVeryDissatisfied className={classWip}/><Lock className={classLock}/></TableCell>
-                                    <tableCell>
-                                        <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
-                                    </tableCell>
-                                </TableRow>
+                                    <TableRow
+                                        hover={true}
+                                        classes={{hover: (isPublished ? classes.isPublished : (neverPublished ? classes.neverPublished : classes.toBePublished))}}
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={n.uuid}
+                                    >
+                                        {columnData.map(column => {
+                                            let nameColumn = (column.id === 'name');
+                                            return (
+                                                <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
+                                            );
+                                        })}
+                                        <TableCell><SentimentVeryDissatisfied className={classWip}/><Lock className={classLock}/></TableCell>
+                                        <tableCell>
+                                            <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
+                                        </tableCell>
+                                    </TableRow>
                                 </Tooltip>
                             );
                         })}

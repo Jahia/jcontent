@@ -94,52 +94,52 @@ class CMLeftNavigation extends React.Component {
                     >
                         <div className={classes.toolbar}>
                             <IconButton onClick={this.state.open ? this.handleDrawerClose : this.handleDrawerOpen}>
-                                {this.state.open ? <ChevronLeft /> : <ChevronRight /> }
+                                {this.state.open ? <ChevronLeft/> : <ChevronRight/> }
                             </IconButton>
                         </div>
-                        <Divider />
-                        <SideMenu icon={<Face />} text={'Content'}>
+                        <Divider/>
+                        <SideMenu icon={<Face/>} text={'Content'}>
                             <List component="div" disablePadding>
                                 <ListItem button className={classes.nested}>
                                     <ListItemIcon>
-                                        <Tram />
+                                        <Tram/>
                                     </ListItemIcon>
-                                    <ListItemText inset primary="All Content" />
+                                    <ListItemText inset primary="All Content"/>
                                 </ListItem>
                                 <ListItem button className={classes.nested}>
                                     <ListItemIcon>
-                                        <Tram />
+                                        <Tram/>
                                     </ListItemIcon>
-                                    <ListItemText inset primary="Planets" />
+                                    <ListItemText inset primary="Planets"/>
                                 </ListItem>
                                 <ListItem button className={classes.nested}>
                                     <ListItemIcon>
-                                        <Map />
+                                        <Map/>
                                     </ListItemIcon>
-                                    <ListItemText inset primary="Species" />
+                                    <ListItemText inset primary="Species"/>
                                 </ListItem>
                             </List>
                         </SideMenu>
-                        <Divider />
-                        <SideMenu icon={<Face />} text={'Stars'}>
+                        <Divider/>
+                        <SideMenu icon={<Face/>} text={'Stars'}>
                             <List component="div" disablePadding>
                                 <ListItem button className={classes.nested}>
                                     <ListItemIcon>
-                                        <StarBorder />
+                                        <StarBorder/>
                                     </ListItemIcon>
-                                    <ListItemText inset primary="Starred" />
+                                    <ListItemText inset primary="Starred"/>
                                 </ListItem>
                                 <ListItem button className={classes.nested}>
                                     <ListItemIcon>
-                                        <StarBorder />
+                                        <StarBorder/>
                                     </ListItemIcon>
-                                    <ListItemText inset primary="Starred" />
+                                    <ListItemText inset primary="Starred"/>
                                 </ListItem>
                                 <ListItem button className={classes.nested}>
                                     <ListItemIcon>
-                                        <StarBorder />
+                                        <StarBorder/>
                                     </ListItemIcon>
-                                    <ListItemText inset primary="Starred" />
+                                    <ListItemText inset primary="Starred"/>
                                 </ListItem>
                             </List>
                         </SideMenu>

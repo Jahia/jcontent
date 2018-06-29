@@ -10,7 +10,7 @@ class ContentBrowserView extends React.Component {
 
     render() {
         let {nodes, path, t} = this.props;
-        let pathElements = _.reduce(_.split(path.substring(1), '/'), (result,value) => _.concat(result, result[result.length-1]+'/'+value), ['']);
+        let pathElements = _.reduce(_.split(path.substring(1), '/'), (result, value) => _.concat(result, result[result.length - 1] + '/' + value), ['']);
 
         return (
             <List>

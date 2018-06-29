@@ -21,10 +21,7 @@ class ContentListHeader extends React.Component {
                                 padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.id ? order : false}
                             >
-                                <Tooltip
-                                    title="Sort"
-                                    enterDelay={300}
-                                >
+                                <Tooltip title="Sort" enterDelay={300}>
                                     <TableSortLabel
                                         active={orderBy === column.id}
                                         direction={order}

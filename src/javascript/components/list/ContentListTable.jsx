@@ -41,6 +41,7 @@ const styles = (theme) =>({
 });
 
 class ContentListTable extends React.Component {
+
     constructor(props) {
         super(props);
 

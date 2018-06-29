@@ -37,7 +37,7 @@ class SideMenu extends React.Component {
                         <ListItemIcon>
                             {icon}
                         </ListItemIcon>
-                        <ListItemText inset primary={text} />
+                        <ListItemText inset primary={text}/>
                         {this.state.open ? <ExpandMore/> : <ChevronLeft/>}
                     </ListItem>
                     <Collapse in={this.state.open} timeout="auto" unmountOnExit>

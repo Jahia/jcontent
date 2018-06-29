@@ -100,7 +100,7 @@ class ContentLayout extends React.Component {
                                     page={this.state.page}
                                 />
                             </Grid>
-                            {showPreview &&  <Grid item xs={3}><ContentPreview/></Grid>}
+                            {showPreview && <Grid item xs={3}><ContentPreview/></Grid>}
                         </Grid>
                     </div>
                 )

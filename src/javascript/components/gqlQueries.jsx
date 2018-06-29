@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-const TableQueryVariables = (props, path) => ({
+const TableQueryVariables = (path, props) => ({
     path: path,
     offset: props.page,
     limit: props.rowsPerPage

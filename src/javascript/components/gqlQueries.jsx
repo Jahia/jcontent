@@ -1,21 +1,22 @@
 import gql from "graphql-tag";
 
-const TableQueryVariables = (path, props) => ({
+const TableQueryVariables = (path, language, props) => ({
     path: path,
-    offset: props.page,
+    language: language,
+    offset: props.page * props.rowsPerPage,
     limit: props.rowsPerPage
 });
 
 const allContentQuery = gql`
 
-    query($path:String!, $offset:Int, $limit:Int) {
+    query($path:String!, $language:String!, $offset:Int, $limit:Int) {
         jcr {
             nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
                 pageInfo {
                     totalCount
                 }
                 nodes {
-                    aggregatedPublicationInfo(language: "en") {
+                    aggregatedPublicationInfo(language: $language) {
                         publicationStatus
                     }
                     name

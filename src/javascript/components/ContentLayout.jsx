@@ -21,6 +21,7 @@ class ContentLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            language: "en",
             page: 0,
             rowsPerPage: 25,
             showBrowser: false,
@@ -59,7 +60,7 @@ class ContentLayout extends React.Component {
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
         const path = this.props.match.url;
-        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state)}>
+        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
             { ({loading, error, data}) => {
                 let rows = [];
                 let totalCount = 0;

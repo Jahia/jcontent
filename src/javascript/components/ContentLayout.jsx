@@ -107,6 +107,7 @@ class ContentLayout extends React.Component {
                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                     onChangePage={this.handleChangePage}
                                     page={this.state.page}
+                                    lang={this.state.language}
                                 />
                             </Grid>
                             {showPreview && <Grid item xs={3}><ContentPreview/></Grid>}

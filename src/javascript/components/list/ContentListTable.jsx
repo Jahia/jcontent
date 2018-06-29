@@ -76,14 +76,14 @@ class ContentListTable extends React.Component {
         }
     }
 
-    handleWipProperties(node){
+    handleWipProperties(node, lang){
         switch (node.wip) {
             case 'ALL_CONTENT':
                 return true;
             case 'LANGUAGES':
                 let langs = node.wipLangs;
                 // we should verify the language of the context to show or not the wip status, static for now
-                return _.includes(langs, "en", 0);
+                return _.includes(langs, lang, 0);
             default:
                 return false;
         }
@@ -91,7 +91,7 @@ class ContentListTable extends React.Component {
 
     render() {
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -108,7 +108,7 @@ class ContentListTable extends React.Component {
                         {rows.map((n, index) => {
                             let isPublished = n.isPublished;
                             let neverPublished = n.neverPublished;
-                            let classWip = (this.handleWipProperties(n) ? classes.activeStatus : classes.inactiveStatus);
+                            let classWip = (this.handleWipProperties(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                             let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (

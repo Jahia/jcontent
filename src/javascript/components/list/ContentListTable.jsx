@@ -21,6 +21,9 @@ const styles = (theme) =>({
     isPublished: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
+    neverPublished:{
+        boxShadow: 'inset 7px 0px 0 0 ' + '#000000'
+    },
     inactiveLock: {
         color: '#B2B2B2',
         opacity: '0.5',
@@ -90,12 +93,13 @@ class ContentListTable extends React.Component {
                     <TableBody>
                         {rows.map((n, index) => {
                             let isPublished = n.isPublished;
+                            let neverPublished = n.neverPublished;
                             let classLock = (n.isLocked ? classes.activeLock : classes.inactiveLock);
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (
                                 <Tooltip placement="left" title={this.handleTooltipMessage(n)}>
                                 <TableRow
-                                    hover classes={{hover: (isPublished ? classes.isPublished : classes.toBePublished)}}
+                                    hover classes={{hover: (isPublished ? classes.isPublished : (neverPublished ? classes.neverPublished : classes.toBePublished))}}
                                     role="checkbox"
                                     tabIndex={-1}
                                     key={n.uuid}

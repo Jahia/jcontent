@@ -1,14 +1,14 @@
 import gql from "graphql-tag";
 
 const TableQueryVariables = (props, path) => ({
+    path: path,
     offset: props.page,
-    limit: props.rowsPerPage,
-    path: path
+    limit: props.rowsPerPage
 });
 
 const allContentQuery = gql`
 
-    query($offset:Int, $limit:Int, $path:String!) {
+    query($path:String!, $offset:Int, $limit:Int) {
         jcr {
             nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
                 pageInfo {
@@ -38,13 +38,13 @@ const allContentQuery = gql`
                     }
                     lastPublishedBy: property(name: "j:lastPublishedBy") {
                         value
-                    } 
+                    }
                     lastModifiedBy: property(name: "jcr:lastModifiedBy") {
                         value
                     }
                     lastModified: property(name: "jcr:lastModified") {
                         value
-                    } 
+                    }
                 }
             }
         }

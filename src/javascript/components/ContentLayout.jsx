@@ -59,7 +59,7 @@ class ContentLayout extends React.Component {
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
         const path = this.props.match.url;
-        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(this.state, path)}>
+        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state)}>
             { ({loading, error, data}) => {
                 let rows = [];
                 let totalCount = 0;

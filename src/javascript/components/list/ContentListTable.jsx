@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
-import {Lock, SentimentVeryDissatisfied} from "@material-ui/icons";
+import {Lock, Build} from "@material-ui/icons";
 
 const columnData = [
     {id: 'name', label: 'Name'},
@@ -77,12 +77,11 @@ class ContentListTable extends React.Component {
     }
 
     isWip(node, lang) {
-        switch (node.wip) {
+        switch (node.wipStatus) {
             case 'ALL_CONTENT':
                 return true;
             case 'LANGUAGES':
-                let langs = node.wipLangs;
-                return _.includes(langs, lang, 0);
+                return _.includes(node.wipLangs, lang);
             default:
                 return false;
         }
@@ -125,7 +124,7 @@ class ContentListTable extends React.Component {
                                                 <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
                                             );
                                         })}
-                                        <TableCell><SentimentVeryDissatisfied className={classWip}/><Lock className={classLock}/></TableCell>
+                                        <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
                                         <tableCell>
                                             <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
                                         </tableCell>

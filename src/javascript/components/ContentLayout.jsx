@@ -83,8 +83,8 @@ class ContentLayout extends React.Component {
                             lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
                             modifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
                             lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
-                            wip: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
-                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : '')
+                            wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
+                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : [])
                         }
                     })
                 }

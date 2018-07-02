@@ -66,7 +66,7 @@ class ContentListTable extends React.Component {
         this.setState({order, orderBy});
     };
 
-    handleTooltipMessage(node) {
+    getPublicationStatus(node) {
         if (node.isPublished) {
             return "Published by " + node.lastPublishedBy + " on " + node.lastPublished;
         } else if (node.neverPublished) {
@@ -76,13 +76,12 @@ class ContentListTable extends React.Component {
         }
     }
 
-    handleWipProperties(node, lang){
+    isWip(node, lang) {
         switch (node.wip) {
             case 'ALL_CONTENT':
                 return true;
             case 'LANGUAGES':
                 let langs = node.wipLangs;
-                // we should verify the language of the context to show or not the wip status, static for now
                 return _.includes(langs, lang, 0);
             default:
                 return false;
@@ -108,11 +107,11 @@ class ContentListTable extends React.Component {
                         {rows.map((n, index) => {
                             let isPublished = n.isPublished;
                             let neverPublished = n.neverPublished;
-                            let classWip = (this.handleWipProperties(n, lang) ? classes.activeStatus : classes.inactiveStatus);
+                            let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                             let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
                             return (
-                                <Tooltip placement="left" title={this.handleTooltipMessage(n)}>
+                                <Tooltip placement="left" title={this.getPublicationStatus(n)}>
                                     <TableRow
                                         hover={true}
                                         classes={{hover: (isPublished ? classes.isPublished : (neverPublished ? classes.neverPublished : classes.toBePublished))}}

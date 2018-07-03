@@ -1,9 +1,12 @@
 {
-  "label" : {
-    "contentmanager" : {
-      "title" : "Content Manager i18n",
-      "nodeName" : "Name",
-      "editAction" : "Edit"
+  "label": {
+    "contentManager": {
+      "publicationStatus": {
+        "neverPublished": "This content has never been published",
+        "published": "Published by {{userName}} on {{timestamp}}",
+        "modified": "Modified by {{userName}} on {{timestamp}}"
+      },
+      "editAction": "Edit"
     }
   }
 }

@@ -67,12 +67,13 @@ class ContentListTable extends React.Component {
     };
 
     getPublicationStatus(node) {
+        let { t } = this.props;
         if (node.isPublished) {
-            return "Published by " + node.lastPublishedBy + " on " + node.lastPublished;
+            return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
         } else if (node.neverPublished) {
-            return "This content has never been published";
+            return t("label.contentManager.publicationStatus.neverPublished");
         } else if (node.isModified) {
-            return "Modified by " + node.modifiedBy + " on " + node.lastModified;
+            return t("label.contentManager.publicationStatus.modified", {userName: node.modifiedBy, timestamp: node.lastModified});
         }
     }
 
@@ -126,7 +127,7 @@ class ContentListTable extends React.Component {
                                         })}
                                         <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
                                         <tableCell>
-                                            <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentmanager.editAction')}</Button>
+                                            <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
                                         </tableCell>
                                     </TableRow>
                                 </Tooltip>

@@ -14,6 +14,7 @@ class ContentListHeader extends React.Component {
         return (
             <TableHead>
                 <TableRow>
+                    <TableCell padding={'none'}/>
                     {columnData.map(column => {
                         return (
                             <TableCell

@@ -1,12 +1,12 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles, Tooltip} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
 import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
-import {Lock, Build} from "@material-ui/icons";
+import {InfoOutline, Lock, Build} from "@material-ui/icons";
 
 const columnData = [
     {id: 'name', label: 'Name'},
@@ -15,15 +15,67 @@ const columnData = [
     {id: 'createdBy', label: 'Created By'}
 ];
 
-const styles = (theme) =>({
+const styles = (theme) => ({
+    contentRow: {
+        '&:hover $publicationStatus': {
+            display: 'inline-flex'
+        }
+    },
     toBePublished: {
-        boxShadow: 'inset 7px 0px 0 0 ' + '#FB9926'
+        boxShadow: 'inset 7px 0px 0 0 #FB9926'
     },
     isPublished: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
     neverPublished: {
-        boxShadow: 'inset 7px 0px 0 0 ' + '#000000'
+        boxShadow: 'inset 7px 0px 0 0 #000000'
+    },
+    publicationStatusContainer: {
+        position: 'relative'
+    },
+    publicationStatus: {
+        position: 'absolute',
+        left: -23,
+        top: 0,
+        paddingLeft: 4,
+        width: 30,
+        minWidth: 30,
+        height: 48,
+        overflow: 'hidden',
+        justifyContent: 'left',
+        textTransform: 'none',
+        display: 'none',
+        '&:hover': {
+            display: 'inline-flex',
+            width: 'auto'
+        }
+    },
+    publicationStatusToBePublished: {
+        backgroundColor: '#FB9926',
+        '&:hover': {
+            backgroundColor: '#FB9926'
+        }
+    },
+    publicationStatusPublished: {
+        color: 'white',
+        backgroundColor: '#08D000',
+        '&:hover': {
+            backgroundColor: '#08D000'
+        }
+    },
+    publicationStatusNeverPublished: {
+        color: 'white',
+        backgroundColor: '#000000',
+        '&:hover': {
+            backgroundColor: '#000000'
+        }
+    },
+    publicationStatusInfoIcon: {
+        color: 'white',
+        marginRight: 4
+    },
+    publicationStatusLabel: {
+        whiteSpace: 'nowrap',
     },
     inactiveStatus: {
         color: '#B2B2B2',
@@ -48,10 +100,9 @@ class ContentListTable extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             order: 'asc',
-            orderBy: '',
+            orderBy: ''
         };
     }
 
@@ -89,6 +140,7 @@ class ContentListTable extends React.Component {
     }
 
     render() {
+
         const {order, orderBy} = this.state;
         const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
@@ -104,33 +156,51 @@ class ContentListTable extends React.Component {
                         path={match.url}
                     />
                     <TableBody>
-                        {rows.map((n, index) => {
+                        {rows.map(n => {
+
                             let isPublished = n.isPublished;
                             let neverPublished = n.neverPublished;
                             let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                             let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                             let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
+
+                            let contentRowClass = classes.contentRow;
+                            let publicationStatusClass = classes.publicationStatus;
+                            if (isPublished) {
+                                contentRowClass = contentRowClass + ' ' + classes.isPublished;
+                                publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusPublished;
+                            } else {
+                                if (neverPublished) {
+                                    contentRowClass = contentRowClass + ' ' + classes.neverPublished;
+                                    publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusNeverPublished;
+                                } else {
+                                    contentRowClass = contentRowClass + ' ' + classes.toBePublished;
+                                    publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusToBePublished;
+                                }
+                            }
+
                             return (
-                                <Tooltip placement="left" title={this.getPublicationStatus(n)}>
-                                    <TableRow
-                                        hover={true}
-                                        classes={{hover: (isPublished ? classes.isPublished : (neverPublished ? classes.neverPublished : classes.toBePublished))}}
-                                        role="checkbox"
-                                        tabIndex={-1}
-                                        key={n.uuid}
-                                    >
-                                        {columnData.map(column => {
-                                            let nameColumn = (column.id === 'name');
-                                            return (
-                                                <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
-                                            );
-                                        })}
-                                        <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
-                                        <tableCell>
-                                            <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
-                                        </tableCell>
-                                    </TableRow>
-                                </Tooltip>
+                                <TableRow hover={true} classes={{root: contentRowClass}} key={n.uuid}>
+                                    <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
+                                        <Button disableRipple classes={{
+                                            root: publicationStatusClass,
+                                            label: classes.publicationStatusLabel
+                                        }}>
+                                            <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
+                                            {this.getPublicationStatus(n)}
+                                        </Button>
+                                    </TableCell>
+                                    {columnData.map(column => {
+                                        let nameColumn = (column.id === 'name');
+                                        return (
+                                            <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
+                                        );
+                                    })}
+                                    <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
+                                    <tableCell>
+                                        <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
+                                    </tableCell>
+                                </TableRow>
                             );
                         })}
                         {emptyRows > 0 && (

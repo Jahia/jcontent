@@ -18,7 +18,8 @@ const columnData = [
 const styles = (theme) => ({
     contentRow: {
         '&:hover $publicationStatus': {
-            display: 'inline-flex'
+            opacity: 1,
+            transition: ["opacity", "0.25s"],
         }
     },
     toBePublished: {
@@ -40,13 +41,15 @@ const styles = (theme) => ({
         paddingLeft: theme.spacing.unit / 2,
         width: 30,
         minWidth: 30,
-        height: 48,
+        height: '100%',
         overflow: 'hidden',
         justifyContent: 'left',
         textTransform: 'none',
-        display: 'none',
+        opacity: 0,
+        transition: ["opacity", "0.25s"],
         '&:hover': {
-            display: 'inline-flex',
+            opacity: 1,
+            transition: ["opacity", "0.25s"],
             width: 'auto'
         }
     },

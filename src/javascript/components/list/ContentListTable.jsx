@@ -37,7 +37,7 @@ const styles = (theme) => ({
         position: 'absolute',
         left: -23,
         top: 0,
-        paddingLeft: 4,
+        paddingLeft: theme.spacing.unit / 2,
         width: 30,
         minWidth: 30,
         height: 48,
@@ -57,22 +57,22 @@ const styles = (theme) => ({
         }
     },
     publicationStatusPublished: {
-        color: 'white',
+        color: theme.palette.getContrastText(theme.palette.publish.main),
         backgroundColor: '#08D000',
         '&:hover': {
             backgroundColor: '#08D000'
         }
     },
     publicationStatusNeverPublished: {
-        color: 'white',
+        color: theme.palette.getContrastText(theme.palette.publish.main),
         backgroundColor: '#000000',
         '&:hover': {
             backgroundColor: '#000000'
         }
     },
     publicationStatusInfoIcon: {
-        color: 'white',
-        marginRight: 4
+        color: theme.palette.getContrastText(theme.palette.publish.main),
+        marginRight: theme.spacing.unit / 2
     },
     publicationStatusLabel: {
         whiteSpace: 'nowrap',

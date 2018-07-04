@@ -51,7 +51,8 @@ const styles = (theme) => ({
             opacity: 1,
             transition: ["opacity", "0.25s"],
             width: 'auto'
-        }
+        },
+        color: theme.palette.getContrastText(theme.palette.publish.main)
     },
     publicationStatusToBePublished: {
         backgroundColor: '#FB9926',
@@ -60,14 +61,12 @@ const styles = (theme) => ({
         }
     },
     publicationStatusPublished: {
-        color: theme.palette.getContrastText(theme.palette.publish.main),
         backgroundColor: '#08D000',
         '&:hover': {
             backgroundColor: '#08D000'
         }
     },
     publicationStatusNeverPublished: {
-        color: theme.palette.getContrastText(theme.palette.publish.main),
         backgroundColor: '#000000',
         '&:hover': {
             backgroundColor: '#000000'

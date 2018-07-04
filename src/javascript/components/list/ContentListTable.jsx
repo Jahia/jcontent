@@ -144,7 +144,7 @@ class ContentListTable extends React.Component {
     render() {
 
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, match, t, classes, lang} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -155,7 +155,6 @@ class ContentListTable extends React.Component {
                         orderBy={orderBy}
                         onRequestSort={this.handleRequestSort}
                         columnData={columnData}
-                        path={match.url}
                     />
                     <TableBody>
                         {rows.map(n => {

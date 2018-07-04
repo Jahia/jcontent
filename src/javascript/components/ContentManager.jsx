@@ -7,38 +7,35 @@ import {I18nextProvider} from 'react-i18next';
 import {Route} from 'react-router';
 import {BrowserRouter} from 'react-router-dom';
 import {ApolloProvider} from 'react-apollo';
-import ContentBrowser from './ContentBrowser';
 import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
 import {ContentLayout} from "./ContentLayout";
+import {compose} from "react-apollo/index";
 
 class ContentManager extends React.Component {
 
     setRouter(router) {
         let {dxContext, classes} = this.props;
-        if (router) {
-            router.history.listen((location, action) => {
-                console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
-                console.log(`Url base ${dxContext.urlbase}`);
-                console.log(`The last navigation action was ${action}`);
-                if (window.parent) {
-                    window.parent.history.replaceState(window.parent.history.state, dxContext.contextPath + dxContext.urlBrowser + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname)
-                }
-            });
-        }
+        router.history.listen((location, action) => {
+            console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
+            console.log(`Url base ${dxContext.urlbase}`);
+            console.log(`The last navigation action was ${action}`);
+            if (window.parent) {
+                window.parent.history.replaceState(window.parent.history.state,"DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search)
+            }
+        });
     }
 
     render() {
         let {dxContext, classes} = this.props;
-
         const isInFrame = !_.startsWith(window.parent.location.pathname, dxContext.contextPath + dxContext.urlbase);
 
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
-                    <ApolloProvider client={client({contextPath: this.props.dxContext.contextPath})}>
+                    <ApolloProvider client={client({contextPath: dxContext.contextPath})}>
                         <I18nextProvider i18n={getI18n({
                             lng: this.props.dxContext.uilang,
                             contextPath: this.props.dxContext.contextPath,

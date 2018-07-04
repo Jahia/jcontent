@@ -9,6 +9,7 @@ import ContentBrowser from "./ContentBrowser";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
+import CmRouter from './CmRouter'
 
 const styles = theme => ({
     root: {
@@ -31,6 +32,7 @@ class ContentLayout extends React.Component {
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
         this.handleShowTree = this.handleShowTree.bind(this);
         this.handleShowPreview = this.handleShowPreview.bind(this);
+
     }
 
     handleChangePage = newPage => {
@@ -59,9 +61,9 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
-        const path = this.props.match.url;
-        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
+        return (<CmRouter render={router => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(router.path, this.state.language, this.state)}>
             { ({loading, error, data}) => {
+                const path = router.path;
                 let rows = [];
                 let totalCount = 0;
                 if (data.jcr && data.jcr.nodesByCriteria) {
@@ -92,15 +94,14 @@ class ContentLayout extends React.Component {
                 return (
                     <div className={this.props.classes.root}>
                         <Grid item xs={12}>
-                            <ContentBreadcrumbs path={this.props.match.url}/>
+                            <ContentBreadcrumbs path={path}/>
                             <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
                             <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>
                         </Grid>
                         <Grid container spacing={0}>
-                            {showTree && <Grid item xs={3}><ContentBrowser match={this.props.match}/></Grid>}
+                            {showTree && <Grid item xs={3}><ContentBrowser path={path}/></Grid>}
                             <Grid item xs={xs}>
                                 <ContentListTable
-                                    match={this.props.match}
                                     totalCount={totalCount}
                                     rows={rows}
                                     pageSize={this.state.rowsPerPage}
@@ -115,7 +116,7 @@ class ContentLayout extends React.Component {
                     </div>
                 )
             }}
-        </Query>;
+        </Query>)}/>);
     }
 }
 

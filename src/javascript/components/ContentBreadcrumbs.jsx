@@ -1,6 +1,6 @@
 import React from "react";
-import {Link} from 'react-router-dom';
 import * as _ from 'lodash';
+import CmLink from "./CmLink";
 
 class ContentBreadcrumbs extends React.Component {
 
@@ -15,7 +15,7 @@ class ContentBreadcrumbs extends React.Component {
                         const link = i > 0 ? _.replace(pathElements[i], pathElements[i - 1], '') : "/";
                         return (
                             <span key={i}>
-                                {i < pathElements.length - 1 ? <span><Link to={pathElements[i]}>{link}</Link> - </span> : <span>{link}</span>}
+                                {i < pathElements.length - 1 ? <span><CmLink to={pathElements[i]}>{link}</CmLink> - </span> : <span>{link}</span>}
                             </span>
                         );
                     })

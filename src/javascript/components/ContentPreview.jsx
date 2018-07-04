@@ -6,27 +6,19 @@ import { previewQuery } from "./gqlQueries";
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
+        height: "100%",
     },
 });
 
 class ContentPreview extends React.Component {
-    state = {
-        value: 0,
-    };
-
-    handleChange = (event, value) => {
-        this.setState({ value });
-    };
 
     render() {
-        const { path } = this.props;
+        const { path, classes } = this.props;
 
         return (
             <Query fetchPolicy={'network-only'} query={ previewQuery } variables={{path: path}}>
                 {({loading, error, data}) => {
-                    return <Paper>
+                    return <Paper className={ classes.root }>
                         { data.jcr ? data.jcr.nodeByPath.renderedContent.output : "Generating ..." }
                     </Paper>
                 }}

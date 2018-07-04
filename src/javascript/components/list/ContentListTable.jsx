@@ -43,7 +43,7 @@ const styles = (theme) => ({
         minWidth: 30,
         height: '100%',
         overflow: 'hidden',
-        justifyContent: 'left',
+        justifyContent: 'flex-start',
         textTransform: 'none',
         opacity: 0,
         transition: ["opacity", "0.25s"],

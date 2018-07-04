@@ -6,6 +6,9 @@ import { previewQuery } from "./gqlQueries";
 
 const styles = theme => ({
     root: {
+        paddingLeft: theme.spacing.unit * 3
+    },
+    previewPaper: {
         height: "100%",
     },
 });
@@ -18,9 +21,11 @@ class ContentPreview extends React.Component {
         return (
             <Query fetchPolicy={'network-only'} query={ previewQuery } variables={{path: path}}>
                 {({loading, error, data}) => {
-                    return <Paper className={ classes.root }>
-                        { data.jcr ? data.jcr.nodeByPath.renderedContent.output : "Generating ..." }
-                    </Paper>
+                    return <div className={ classes.root }>
+                        <Paper className={ classes.previewPaper }>
+                            { data.jcr ? data.jcr.nodeByPath.renderedContent.output : "Generating ..." }
+                        </Paper>
+                    </div>
                 }}
             </Query>
         );

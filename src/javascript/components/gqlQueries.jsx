@@ -19,6 +19,7 @@ const allContentQuery = gql`
                     aggregatedPublicationInfo(language: $language) {
                         publicationStatus
                     }
+                    uuid
                     name
                     path
                     displayName
@@ -57,4 +58,14 @@ const allContentQuery = gql`
         }
     }`;
 
-export {allContentQuery, TableQueryVariables};
+const previewQuery = gql`query($path:String!) {
+    jcr {
+        nodeByPath(path:$path) {
+            renderedContent(templateType:"html", view:"cm", contextConfiguration:"default") {
+                output
+            }
+        }
+    }
+  }`;
+
+export {allContentQuery, previewQuery, TableQueryVariables};

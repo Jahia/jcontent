@@ -7,7 +7,6 @@ import ContentPreview from "./ContentPreview";
 import {Grid, Button, withStyles} from "@material-ui/core";
 import ContentBrowser from "./ContentBrowser";
 import {compose} from "react-apollo/index";
-import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
 
 const styles = theme => ({
@@ -15,6 +14,10 @@ const styles = theme => ({
         flexGrow: 1,
     },
 });
+
+const TABLE_SIZE = 12;
+const TREE_SIZE = 2;
+const PREVIEW_SIZE = 6;
 
 class ContentLayout extends React.Component {
 
@@ -25,12 +28,14 @@ class ContentLayout extends React.Component {
             page: 0,
             rowsPerPage: 25,
             showBrowser: false,
-            showPreview: false
+            showPreview: false,
+            selectedRowPath: null
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
         this.handleShowTree = this.handleShowTree.bind(this);
         this.handleShowPreview = this.handleShowPreview.bind(this);
+        this.handleRowSelection = this.handleRowSelection.bind(this);
     }
 
     handleChangePage = newPage => {
@@ -57,8 +62,24 @@ class ContentLayout extends React.Component {
         })
     };
 
+    handleRowSelection = (rowPath) => {
+        //Remove selection and close preview panel if it is open
+        if (rowPath === this.state.selectedRowPath) {
+            this.setState({
+                selectedRowPath: null,
+                showPreview: this.state.showPreview ? false : this.state.showPreview
+            });
+        }
+        //Store selection
+        else {
+            this.setState({
+                selectedRowPath: rowPath
+            });
+        }
+    };
+
     render() {
-        const { showPreview, showBrowser: showTree } = this.state;
+        const { showPreview, selectedRowPath, showBrowser: showTree } = this.state;
         const path = this.props.match.url;
         return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
             { ({loading, error, data}) => {
@@ -84,21 +105,22 @@ class ContentLayout extends React.Component {
                             modifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
                             lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
                             wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
-                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : [])
+                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
+                            isSelected: selectedRowPath === contentNode.path
                         }
                     })
                 }
-                const xs = 12 - (showTree ? 3 : 0) - (showPreview ? 3 : 0);
+                const computedTableSize = TABLE_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
                 return (
                     <div className={this.props.classes.root}>
-                        <Grid item xs={12}>
+                        <Grid item xs={ TABLE_SIZE }>
                             <ContentBreadcrumbs path={this.props.match.url}/>
                             <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
                             <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>
                         </Grid>
                         <Grid container spacing={0}>
-                            {showTree && <Grid item xs={3}><ContentBrowser match={this.props.match}/></Grid>}
-                            <Grid item xs={xs}>
+                            {showTree && <Grid item xs={ TREE_SIZE }><ContentBrowser match={this.props.match}/></Grid>}
+                            <Grid item xs={ computedTableSize }>
                                 <ContentListTable
                                     match={this.props.match}
                                     totalCount={totalCount}
@@ -106,11 +128,12 @@ class ContentLayout extends React.Component {
                                     pageSize={this.state.rowsPerPage}
                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                     onChangePage={this.handleChangePage}
+                                    onRowSelected={this.handleRowSelection}
                                     page={this.state.page}
                                     lang={this.state.language}
                                 />
                             </Grid>
-                            {showPreview && <Grid item xs={3}><ContentPreview/></Grid>}
+                            {showPreview && <Grid item xs={ PREVIEW_SIZE }><ContentPreview path={ selectedRowPath } /></Grid>}
                         </Grid>
                     </div>
                 )

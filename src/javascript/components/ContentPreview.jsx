@@ -1,19 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Typography, Tab, Tabs, AppBar, Paper} from "@material-ui/core";
-
-
-function TabContainer(props) {
-    return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
-            {props.children}
-        </Typography>
-    );
-}
-
-TabContainer.propTypes = {
-    children: PropTypes.node.isRequired,
-};
+import {Query} from 'react-apollo';
+import { withStyles, Paper } from "@material-ui/core";
+import { previewQuery } from "./gqlQueries";
 
 const styles = theme => ({
     root: {
@@ -32,40 +21,22 @@ class ContentPreview extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
-        const { value } = this.state;
+        const { path } = this.props;
 
         return (
-            <div className={classes.root}>
-                <AppBar position="static">
-                    <Tabs value={value} onChange={this.handleChange}>
-                        <Tab label="Preview"/>
-                        <Tab label="Quick Edit"/>
-                        <Tab label="Metadata" href="#basic-tabs"/>
-                    </Tabs>
-                </AppBar>
-                {value === 0 && <TabContainer> <div>
-                    <Paper className={classes.root} elevation={1}>
-                        <Typography variant="headline" component="h3">
-                            This could it be a preview
-                        </Typography>
-                        <Typography component="p">
-                            But for now it is only some sample text.
-                        </Typography>
+            <Query fetchPolicy={'network-only'} query={ previewQuery } variables={{path: path}}>
+                {({loading, error, data}) => {
+                    return <Paper>
+                        { data.jcr ? data.jcr.nodeByPath.renderedContent.output : "Generating ..." }
                     </Paper>
-                </div></TabContainer>}
-                {value === 1 && <TabContainer><Paper className={classes.root} elevation={1}>
-                    <Typography variant="headline" component="h3">
-                        Maybe one day
-                    </Typography>
-                    <Typography component="p">
-                        But not now ..
-                    </Typography>
-                </Paper></TabContainer>}
-                {value === 2 && <TabContainer>Surprise !!</TabContainer>}
-            </div>
+                }}
+            </Query>
         );
     }
 }
 
 export default withStyles(styles)(ContentPreview);
+
+ContentPreview.propTypes = {
+    path: PropTypes.string
+};

@@ -191,7 +191,7 @@ class ContentListTable extends React.Component {
                                     <TableRow hover={true}
                                               classes={{root: contentRowClass}}
                                               key={n.uuid}
-                                              onClick={ () => onRowSelected(n.path)}
+                                              onClick={ () => onRowSelected(n)}
                                               selected={ n.isSelected }  >
                                         <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
                                             <Button disableRipple classes={{

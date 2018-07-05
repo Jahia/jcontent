@@ -19,7 +19,7 @@ const styles = theme => ({
     }
 });
 
-const TABLE_SIZE = 12;
+const GRID_SIZE = 12;
 const TREE_SIZE = 2;
 const PREVIEW_SIZE = 6;
 
@@ -33,7 +33,7 @@ class ContentLayout extends React.Component {
             rowsPerPage: 10,
             showBrowser: false,
             showPreview: false,
-            selectedRowPath: null
+            selectedRow: null
         };
         this.handleChangePage = this.handleChangePage.bind(this);
         this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
@@ -59,31 +59,33 @@ class ContentLayout extends React.Component {
     };
 
     handleShowPreview = () => {
-        this.setState((prevState, props) => {
-            return {
-                showPreview: !prevState.showPreview
-            }
-        })
+        if (this.state.selectedRow) {
+            this.setState((prevState, props) => {
+                return {
+                    showPreview: !prevState.showPreview
+                }
+            })
+        }
     };
 
-    handleRowSelection = (rowPath) => {
+    handleRowSelection = (row) => {
         //Remove selection and close preview panel if it is open
-        if (rowPath === this.state.selectedRowPath) {
+        if (this.state.selectedRow && row.path === this.state.selectedRow.path) {
             this.setState({
-                selectedRowPath: null,
+                selectedRow: null,
                 showPreview: this.state.showPreview ? false : this.state.showPreview
             });
         }
         //Store selection
         else {
             this.setState({
-                selectedRowPath: rowPath
+                selectedRow: row
             });
         }
     };
 
     render() {
-        const { showPreview, selectedRowPath, showBrowser: showTree } = this.state;
+        const { showPreview, selectedRow, showBrowser: showTree } = this.state;
         const { classes } = this.props;
         const path = this.props.match.url;
         return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
@@ -111,14 +113,14 @@ class ContentLayout extends React.Component {
                             lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
                             wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
                             wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
-                            isSelected: selectedRowPath === contentNode.path
+                            isSelected: selectedRow ? selectedRow.path === contentNode.path : false
                         }
                     })
                 }
-                const computedTableSize = TABLE_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
+                const computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
                 return (
                     <div className={classes.root}>
-                        <Grid item xs={ TABLE_SIZE }>
+                        <Grid item xs={ GRID_SIZE }>
                             <ContentBreadcrumbs path={this.props.match.url}/>
                             <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
                             <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>
@@ -138,7 +140,7 @@ class ContentLayout extends React.Component {
                                     lang={this.state.language}
                                 />
                             </Grid>
-                            {showPreview && <Grid className={ classes.gridColumn }item xs={ PREVIEW_SIZE }><ContentPreview path={ selectedRowPath } /></Grid>}
+                            {showPreview && <Grid className={ classes.gridColumn }item xs={ PREVIEW_SIZE }><ContentPreview selection={ selectedRow } /></Grid>}
                         </Grid>
                     </div>
                 )

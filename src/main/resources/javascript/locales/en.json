@@ -7,7 +7,15 @@
         "modified": "Modified by {{userName}} on {{timestamp}}"
       },
       "contentPreview" : {
-          "emptyMessage": "Generating..."
+          "emptyMessage": "Generating...",
+          "edit": "Edit",
+          "translate": "Translate",
+          "publish": "Publish",
+          "publishAll": "Publish all languages",
+          "unpublish": "Un-publish {{language}}",
+          "copy": "Copy",
+          "duplicate": "Duplicate",
+          "delete": "Delete"
       },
       "editAction": "Edit"
     }

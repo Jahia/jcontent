@@ -2,9 +2,16 @@
   "label": {
     "contentManager": {
       "publicationStatus": {
-        "neverPublished": "This content has never been published",
+        "notPublished": "This content has never been published",
         "published": "Published by {{userName}} on {{timestamp}}",
-        "modified": "Modified by {{userName}} on {{timestamp}}"
+        "modified": "Modified by {{userName}} on {{timestamp}}",
+        "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
+      },
+      "editAction": "Edit",
+      "errors": "Errors",
+      "tree": {
+        "show": "Show Tree",
+        "hide": "Hide Tree"
       },
       "contentPreview" : {
           "emptyMessage": "Generating...",
@@ -18,6 +25,11 @@
           "delete": "Delete"
       },
       "editAction": "Edit"
+      "preview": {
+        "show": "Show Preview",
+        "hide": "Hide Preview"
+      },
+      "title": "All Content"
     }
   }
 }

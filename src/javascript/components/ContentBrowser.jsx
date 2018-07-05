@@ -1,17 +1,16 @@
 import React from "react";
 import {translate} from 'react-i18next';
-import {Link} from 'react-router-dom';
 import {withNodesFromPath} from '@jahia/react-apollo';
-import { Button, List, ListItem, ListItemText, ListItemIcon} from '@material-ui/core'
+import { List, ListItem, ListItemText, ListItemIcon} from '@material-ui/core'
 import * as _ from 'lodash';
 import {Folder} from '@material-ui/icons';
+import {compose} from "react-apollo";
+import CmLink from "./CmLink";
 
 class ContentBrowserView extends React.Component {
 
     render() {
-        let {nodes, path, t} = this.props;
-        let pathElements = _.reduce(_.split(path.substring(1), '/'), (result, value) => _.concat(result, result[result.length - 1] + '/' + value), ['']);
-
+        let {nodes, t} = this.props;
         return (
             <List>
                     {nodes.map(n => {
@@ -20,7 +19,8 @@ class ContentBrowserView extends React.Component {
                                 <ListItemIcon>
                                     <Folder/>
                                 </ListItemIcon>
-                                <ListItemText><Link to={`${n.path}`}>{n.name}</Link></ListItemText>
+                                {/*todo: remove params={{uuid: n.uuid, name: n.name} part as it is only use for test purpose*/}
+                                <ListItemText><CmLink to={n.path} params={{uuid: n.uuid, name: n.name}}>{n.name}</CmLink></ListItemText>
                             </ListItem>
                         );
                     })}
@@ -32,8 +32,7 @@ class ContentBrowserView extends React.Component {
 let ContentBrowserWithData = withNodesFromPath()(translate()(ContentBrowserView));
 
 let ContentBrowser = (props) => {
-    let path = props.match.url.substring(props.match.path.length - 2);
-    return <ContentBrowserWithData path={path} types={['jnt:folder','jmix:list', 'jnt:virtualsite','jnt:virtualsitesFolder', 'jnt:page']}/>
+    return <ContentBrowserWithData path={props.path}  search={props.search} types={['jnt:folder','jmix:list', 'jnt:virtualsite','jnt:virtualsitesFolder', 'jnt:page']}/>
 };
 
 export default ContentBrowser;

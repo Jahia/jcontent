@@ -47,6 +47,12 @@ const allContentQuery = gql`
                     lastModified: property(name: "jcr:lastModified") {
                         value
                     }
+                    deletedBy: property(name: "j:deletionUser") {
+                        value
+                    }
+                    deleted: property(name: "j:deletionDate") {
+                        value
+                    }
                     wipStatus: property(name: "j:workInProgressStatus") {
                         value
                     }

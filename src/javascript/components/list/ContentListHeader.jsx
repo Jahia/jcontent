@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 class ContentListHeader extends React.Component {
 
-    createSortHandler = property => event => {
+    handleSort = property => event => {
         this.props.onRequestSort(event, property);
     };
 
@@ -26,7 +26,7 @@ class ContentListHeader extends React.Component {
                                     <TableSortLabel
                                         active={orderBy === column.id}
                                         direction={order}
-                                        onClick={this.createSortHandler(column.id)}
+                                        onClick={() => this.handleSort(column.id)}
                                     >
                                         {column.label}
                                     </TableSortLabel>

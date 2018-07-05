@@ -25,6 +25,9 @@ const styles = (theme) => ({
     toBePublished: {
         boxShadow: 'inset 7px 0px 0 0 #FB9926'
     },
+    isMarkedForDeletion: {
+        boxShadow: 'inset 7px 0px 0 0 #FB9926'
+    },
     isPublished: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
@@ -55,6 +58,12 @@ const styles = (theme) => ({
         color: theme.palette.getContrastText(theme.palette.publish.main)
     },
     publicationStatusToBePublished: {
+        backgroundColor: '#FB9926',
+        '&:hover': {
+            backgroundColor: '#FB9926'
+        }
+    },
+    publicationStatusMarkedForDeletion: {
         backgroundColor: '#FB9926',
         '&:hover': {
             backgroundColor: '#FB9926'
@@ -92,9 +101,6 @@ const styles = (theme) => ({
         '&:hover': {
             opacity: '1.5'
         }
-    },
-    isDeleted: {
-        textDecoration: 'line-through'
     }
 });
 
@@ -125,8 +131,12 @@ class ContentListTable extends React.Component {
             return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
         } else if (node.neverPublished) {
             return t("label.contentManager.publicationStatus.neverPublished");
-        } else if (node.isModified) {
-            return t("label.contentManager.publicationStatus.modified", {userName: node.modifiedBy, timestamp: node.lastModified});
+        } else {
+            if (node.isMarkedForDeletion) {
+                return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.modifiedBy, timestamp: node.lastModified});
+            } else {
+                return t("label.contentManager.publicationStatus.modified", {userName: node.modifiedBy, timestamp: node.lastModified});
+            }
         }
     }
 
@@ -161,9 +171,9 @@ class ContentListTable extends React.Component {
 
                             let isPublished = n.isPublished;
                             let neverPublished = n.neverPublished;
+                            let isMarkedForDeletion = n.isMarkedForDeletion;
                             let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                             let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
-                            let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
 
                             let contentRowClass = classes.contentRow;
                             let publicationStatusClass = classes.publicationStatus;
@@ -175,8 +185,13 @@ class ContentListTable extends React.Component {
                                     contentRowClass = contentRowClass + ' ' + classes.neverPublished;
                                     publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusNeverPublished;
                                 } else {
-                                    contentRowClass = contentRowClass + ' ' + classes.toBePublished;
-                                    publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusToBePublished;
+                                    if (isMarkedForDeletion) {
+                                        contentRowClass = contentRowClass + ' ' + classes.isMarkedForDeletion;
+                                        publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusMarkedForDeletion;
+                                    } else {
+                                        contentRowClass = contentRowClass + ' ' + classes.toBePublished;
+                                        publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusToBePublished;
+                                    }
                                 }
                             }
 
@@ -192,9 +207,10 @@ class ContentListTable extends React.Component {
                                         </Button>
                                     </TableCell>
                                     {columnData.map(column => {
-                                        let nameColumn = (column.id === 'name');
                                         return (
-                                            <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
+                                            <TableCell key={column.id}>
+                                                {n[column.id]}
+                                            </TableCell>
                                         );
                                     })}
                                     <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>

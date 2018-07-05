@@ -7,7 +7,17 @@
         "modified": "Modified by {{userName}} on {{timestamp}}",
         "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
       },
-      "editAction": "Edit"
+      "editAction": "Edit",
+      "errors": "Errors",
+      "tree": {
+        "show": "Show Tree",
+        "hide": "Hide Tree"
+      },
+      "preview": {
+        "show": "Show Preview",
+        "hide": "Hide Preview"
+      },
+      "title": "All Content"
     }
   }
 }

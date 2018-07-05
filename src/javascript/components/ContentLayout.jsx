@@ -6,7 +6,7 @@ import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./ContentPreview";
 import {Grid, Button, withStyles} from "@material-ui/core";
 import ContentBrowser from "./ContentBrowser";
-import {compose} from "react-apollo/index";
+import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
 import CmRouter from './CmRouter'
@@ -61,8 +61,13 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
+        const { notificationContext, t } = this.props;
         return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
             { ({loading, error, data}) => {
+                if (error) {
+                    console.log("Error when fetching data: " + error);
+                    notificationContext.notify(t('label.contentManager.errors'), ['closeButton','noAutomaticClose']);
+                }
                 let rows = [];
                 let totalCount = 0;
                 if (data.jcr && data.jcr.nodesByCriteria) {
@@ -90,27 +95,30 @@ class ContentLayout extends React.Component {
                 }
                 const xs = 12 - (showTree ? 3 : 0) - (showPreview ? 3 : 0);
                 return (
-                    <div className={this.props.classes.root}>
-                        <Grid item xs={12}>
-                            <ContentBreadcrumbs path={path}/>
-                            <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
-                            <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>
-                        </Grid>
-                        <Grid container spacing={0}>
-                            {showTree && <Grid item xs={3}><ContentBrowser path={path}/></Grid>}
-                            <Grid item xs={xs}>
-                                <ContentListTable
-                                    totalCount={totalCount}
-                                    rows={rows}
-                                    pageSize={this.state.rowsPerPage}
-                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    onChangePage={this.handleChangePage}
-                                    page={this.state.page}
-                                    lang={this.state.language}
-                                />
+                    <div>
+                        {loading && <ProgressOverlay/>}
+                        <div className={this.props.classes.root}>
+                            <Grid item xs={12}>
+                                <ContentBreadcrumbs path={path}/>
+                                <Button onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
+                                <Button onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
                             </Grid>
-                            {showPreview && <Grid item xs={3}><ContentPreview/></Grid>}
-                        </Grid>
+                            <Grid container spacing={0}>
+                                {showTree && <Grid item xs={3}><ContentBrowser path={path}/></Grid>}
+                                <Grid item xs={xs}>
+                                    <ContentListTable
+                                        totalCount={totalCount}
+                                        rows={rows}
+                                        pageSize={this.state.rowsPerPage}
+                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                        onChangePage={this.handleChangePage}
+                                        page={this.state.page}
+                                        lang={this.state.language}
+                                    />
+                                </Grid>
+                                {showPreview && <Grid item xs={3}><ContentPreview/></Grid>}
+                            </Grid>
+                        </div>
                     </div>
                 )
             }}
@@ -118,7 +126,9 @@ class ContentLayout extends React.Component {
     }
 }
 
-ContentLayout = compose(
+ContentLayout = _.flowRight(
+    withNotifications(),
+    translate(),
     withStyles(styles)
 )(ContentLayout);
 

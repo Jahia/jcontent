@@ -14,15 +14,15 @@ class PublicationStatusNotPublished {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.neverPublished")
+        return t("label.contentManager.publicationStatus.notPublished")
     }
 
     getContentClass(classes) {
-        return classes.neverPublished
+        return classes.notPublished
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusNeverPublished
+        return classes.publicationStatusNotPublished
     }
 }
 
@@ -36,7 +36,7 @@ class PublicationStatusPublished {
     }
 
     getContentClass(classes) {
-        return classes.isPublished
+        return classes.published
     }
 
     getDetailsClass(classes) {
@@ -50,15 +50,15 @@ class PublicationStatusModified {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.modified", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified})
     }
 
     getContentClass(classes) {
-        return classes.toBePublished
+        return classes.modified
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusToBePublished
+        return classes.publicationStatusModified
     }
 }
 
@@ -68,11 +68,11 @@ class PublicationStatusMarkedForDeletion {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted})
     }
 
     getContentClass(classes) {
-        return classes.isMarkedForDeletion
+        return classes.markedForDeletion
     }
 
     getDetailsClass(classes) {
@@ -101,16 +101,16 @@ const styles = (theme) => ({
             transition: ["opacity", "0.25s"],
         }
     },
-    toBePublished: {
+    modified: {
         boxShadow: 'inset 7px 0px 0 0 #FB9926'
     },
-    isMarkedForDeletion: {
+    markedForDeletion: {
         boxShadow: 'inset 7px 0px 0 0 #FB9926'
     },
-    isPublished: {
+    published: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
-    neverPublished: {
+    notPublished: {
         boxShadow: 'inset 7px 0px 0 0 #000000'
     },
     publicationStatusContainer: {
@@ -136,7 +136,7 @@ const styles = (theme) => ({
         },
         color: theme.palette.getContrastText(theme.palette.publish.main)
     },
-    publicationStatusToBePublished: {
+    publicationStatusModified: {
         backgroundColor: '#FB9926',
         '&:hover': {
             backgroundColor: '#FB9926'
@@ -154,7 +154,7 @@ const styles = (theme) => ({
             backgroundColor: '#08D000'
         }
     },
-    publicationStatusNeverPublished: {
+    publicationStatusNotPublished: {
         backgroundColor: '#000000',
         '&:hover': {
             backgroundColor: '#000000'

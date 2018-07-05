@@ -79,8 +79,10 @@ class ContentLayout extends React.Component {
                             isLocked: contentNode.lockOwner !== null,
                             lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
                             lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
-                            modifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
+                            lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
                             lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
+                            deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
+                            deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
                             wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
                             wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : [])
                         }

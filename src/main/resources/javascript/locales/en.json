@@ -5,7 +5,7 @@
         "neverPublished": "This content has never been published",
         "published": "Published by {{userName}} on {{timestamp}}",
         "modified": "Modified by {{userName}} on {{timestamp}}",
-        "markedForDeletion": "Deleted by {{userName}} on {{timestamp}}"
+        "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
       },
       "editAction": "Edit"
     }

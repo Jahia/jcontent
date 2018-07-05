@@ -8,12 +8,91 @@ import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
 
+class PublicationStatusNotPublished {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.neverPublished")
+    }
+
+    getContentClass(classes) {
+        return classes.neverPublished
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusNeverPublished
+    }
+}
+
+class PublicationStatusPublished {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+    }
+
+    getContentClass(classes) {
+        return classes.isPublished
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusPublished
+    }
+}
+
+class PublicationStatusModified {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.modified", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+    }
+
+    getContentClass(classes) {
+        return classes.toBePublished
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusToBePublished
+    }
+}
+
+class PublicationStatusMarkedForDeletion {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+    }
+
+    getContentClass(classes) {
+        return classes.isMarkedForDeletion
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusMarkedForDeletion
+    }
+}
+
 const columnData = [
     {id: 'name', label: 'Name'},
     {id: 'type', label: 'Type'},
     {id: 'created', label: 'Created On'},
     {id: 'createdBy', label: 'Created By'}
 ];
+
+const publicationStatusByName = {
+    "NOT_PUBLISHED": new PublicationStatusNotPublished(),
+    "PUBLISHED": new PublicationStatusPublished(),
+    "MODIFIED": new PublicationStatusModified(),
+    "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
+}
 
 const styles = (theme) => ({
     contentRow: {
@@ -125,21 +204,6 @@ class ContentListTable extends React.Component {
         this.setState({order, orderBy});
     };
 
-    getPublicationStatus(node) {
-        let { t } = this.props;
-        if (node.isPublished) {
-            return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
-        } else if (node.neverPublished) {
-            return t("label.contentManager.publicationStatus.neverPublished");
-        } else {
-            if (node.isMarkedForDeletion) {
-                return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.modifiedBy, timestamp: node.lastModified});
-            } else {
-                return t("label.contentManager.publicationStatus.modified", {userName: node.modifiedBy, timestamp: node.lastModified});
-            }
-        }
-    }
-
     isWip(node, lang) {
         switch (node.wipStatus) {
             case 'ALL_CONTENT':
@@ -169,41 +233,19 @@ class ContentListTable extends React.Component {
                     <TableBody>
                         {rows.map(n => {
 
-                            let isPublished = n.isPublished;
-                            let neverPublished = n.neverPublished;
-                            let isMarkedForDeletion = n.isMarkedForDeletion;
+                            let publicationStatus = publicationStatusByName[n.publicationStatus];
                             let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                             let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
 
-                            let contentRowClass = classes.contentRow;
-                            let publicationStatusClass = classes.publicationStatus;
-                            if (isPublished) {
-                                contentRowClass = contentRowClass + ' ' + classes.isPublished;
-                                publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusPublished;
-                            } else {
-                                if (neverPublished) {
-                                    contentRowClass = contentRowClass + ' ' + classes.neverPublished;
-                                    publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusNeverPublished;
-                                } else {
-                                    if (isMarkedForDeletion) {
-                                        contentRowClass = contentRowClass + ' ' + classes.isMarkedForDeletion;
-                                        publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusMarkedForDeletion;
-                                    } else {
-                                        contentRowClass = contentRowClass + ' ' + classes.toBePublished;
-                                        publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusToBePublished;
-                                    }
-                                }
-                            }
-
                             return (
-                                <TableRow hover={true} classes={{root: contentRowClass}} key={n.uuid}>
+                                <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
                                     <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
                                         <Button disableRipple classes={{
-                                            root: publicationStatusClass,
+                                            root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
                                             label: classes.publicationStatusLabel
                                         }}>
                                             <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
-                                            {this.getPublicationStatus(n)}
+                                            {publicationStatus.getDetailsMessage(n, t)}
                                         </Button>
                                     </TableCell>
                                     {columnData.map(column => {

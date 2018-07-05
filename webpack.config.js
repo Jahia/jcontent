@@ -7,25 +7,25 @@ module.exports = {
         filename: 'content-manager.js'
     },
     resolve: {
-        mainFields: ['main'],
-        extensions: ['.js', '.jsx']
+        mainFields: ['module', 'main'],
+        extensions: ['.mjs', '.js', '.jsx', 'json']
     },
     module: {
         rules: [
+            {
+                test: /\.mjs$/,
+                include: /node_modules/,
+                type: "javascript/auto",
+            },
             {
                 test: /\.jsx?$/,
                 include: [path.join(__dirname, "src")],
                 loader: 'babel-loader',
 
                 query: {
-                    presets: ['env', 'react', 'stage-2'],
+                    presets: [['env', {modules: false}], 'react', 'stage-2'],
                     plugins: [
-                        "lodash",
-                        ["direct-import", [
-                            "@material-ui/core",
-                            "@material-ui/icons",
-                            "react-i18next"
-                        ]]
+                        "lodash"
                     ]
                 }
             }

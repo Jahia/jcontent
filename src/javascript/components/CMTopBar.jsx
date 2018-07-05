@@ -26,7 +26,7 @@ class CMTopBar extends React.Component {
                     <BurgerMenuButton/>
                     <div className={classes.title}>
                         <SiteSelector/>
-                        <Typography variant="title" color="inherit" >All Content</Typography>
+                        <Typography variant="display1" color="inherit" >All Content</Typography>
                         <LanguageSwitcher/>
                     </div>
                     <SearchBar placeholderLabel={"search"} onChangeFilter={""} onFocus={""} onBlur={""}/>

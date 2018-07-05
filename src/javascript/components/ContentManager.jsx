@@ -22,15 +22,13 @@ class ContentManager extends React.Component {
             console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
             console.log(`Url base ${dxContext.urlbase}`);
             console.log(`The last navigation action was ${action}`);
-            if (window.parent) {
-                window.parent.history.replaceState(window.parent.history.state,"DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search)
-            }
+            window.parent.history.replaceState(window.parent.history.state,"DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search)
         });
     }
 
     render() {
         let {dxContext, classes} = this.props;
-        const isInFrame = !_.startsWith(window.parent.location.pathname, dxContext.contextPath + dxContext.urlbase);
+        const isInFrame = window.top !== window;
 
         return (
             <MuiThemeProvider theme={theme}>

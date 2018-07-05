@@ -61,9 +61,8 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
-        return (<CmRouter render={router => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(router.path, this.state.language, this.state)}>
+        return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
             { ({loading, error, data}) => {
-                const path = router.path;
                 let rows = [];
                 let totalCount = 0;
                 if (data.jcr && data.jcr.nodesByCriteria) {

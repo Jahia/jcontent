@@ -198,9 +198,9 @@ class ContentListTable extends React.Component {
                                         );
                                     })}
                                     <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
-                                    <tableCell>
+                                    <TableCell>
                                         <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
-                                    </tableCell>
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}

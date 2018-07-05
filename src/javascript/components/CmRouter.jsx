@@ -26,9 +26,9 @@ class CmRouter extends React.Component {
     };
 
     render() {
-        const { match, location, history, ...rest } = this.props;
+        const { match, location, history } = this.props;
         
-        return <span>{this.props.render(_.merge({...rest},{...this.mapUrlToQuery(match, location)},{...this.mapQueryToUrl(history)}))}</span>
+        return <span>{this.props.render({...this.mapUrlToQuery(match, location),...this.mapQueryToUrl(history)})}</span>
     }
 
 };

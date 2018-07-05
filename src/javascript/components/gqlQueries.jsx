@@ -19,6 +19,7 @@ const allContentQuery = gql`
                     aggregatedPublicationInfo(language: $language) {
                         publicationStatus
                     }
+                    uuid
                     name
                     path
                     displayName

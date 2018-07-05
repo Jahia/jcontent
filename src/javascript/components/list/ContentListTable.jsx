@@ -18,6 +18,7 @@ const columnData = [
 const styles = (theme) => ({
     tableWrapper: {
         overflowX: 'auto',
+        paddingLeft: theme.spacing.unit * 3
     },
     contentRow: {
         '&:hover $publicationStatus': {

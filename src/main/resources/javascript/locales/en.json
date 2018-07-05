@@ -6,6 +6,9 @@
         "published": "Published by {{userName}} on {{timestamp}}",
         "modified": "Modified by {{userName}} on {{timestamp}}"
       },
+      "contentPreview" : {
+          "emptyMessage": "Generating..."
+      },
       "editAction": "Edit"
     }
   }

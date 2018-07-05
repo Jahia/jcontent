@@ -13,6 +13,10 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
     },
+    gridColumn: { //Make it possible for content to expand height to 100%
+        display: "flex",
+        flexDirection: "column"
+    }
 });
 
 const TABLE_SIZE = 12;
@@ -26,7 +30,7 @@ class ContentLayout extends React.Component {
         this.state = {
             language: "en",
             page: 0,
-            rowsPerPage: 25,
+            rowsPerPage: 10,
             showBrowser: false,
             showPreview: false,
             selectedRowPath: null
@@ -80,6 +84,7 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, selectedRowPath, showBrowser: showTree } = this.state;
+        const { classes } = this.props;
         const path = this.props.match.url;
         return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
             { ({loading, error, data}) => {
@@ -112,7 +117,7 @@ class ContentLayout extends React.Component {
                 }
                 const computedTableSize = TABLE_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
                 return (
-                    <div className={this.props.classes.root}>
+                    <div className={classes.root}>
                         <Grid item xs={ TABLE_SIZE }>
                             <ContentBreadcrumbs path={this.props.match.url}/>
                             <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
@@ -133,7 +138,7 @@ class ContentLayout extends React.Component {
                                     lang={this.state.language}
                                 />
                             </Grid>
-                            {showPreview && <Grid item xs={ PREVIEW_SIZE }><ContentPreview path={ selectedRowPath } /></Grid>}
+                            {showPreview && <Grid className={ classes.gridColumn }item xs={ PREVIEW_SIZE }><ContentPreview path={ selectedRowPath } /></Grid>}
                         </Grid>
                     </div>
                 )

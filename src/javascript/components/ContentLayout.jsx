@@ -22,7 +22,7 @@ class ContentLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: "en",
+            language: this.props.lang,
             page: 0,
             rowsPerPage: 25,
             showBrowser: false,

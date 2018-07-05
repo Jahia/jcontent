@@ -11,6 +11,7 @@ import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
+import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import {compose} from "react-apollo/index";
 
@@ -35,16 +36,20 @@ class ContentManager extends React.Component {
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({contextPath: dxContext.contextPath})}>
                         <I18nextProvider i18n={getI18n({
-                            lng: this.props.dxContext.uilang,
-                            contextPath: this.props.dxContext.contextPath,
+                            lng: dxContext.uilang,
+                            contextPath: dxContext.contextPath,
                             ns: ['content-manager'],
                             defaultNS: 'content-manager',
                         })}>
-                            <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
-                                    <Route path='/*' component={ContentLayout}/>
-                                </ManagerLayout>
-                            </BrowserRouter>
+                            <DxContext.Provider value={dxContext}>
+                                <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
+                                    <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
+                                        <Route path='/*' render={props => (
+                                            <ContentLayout lang={dxContext.lang} />
+                                        )}/>
+                                    </ManagerLayout>
+                                </BrowserRouter>
+                            </DxContext.Provider>
                         </I18nextProvider>
                     </ApolloProvider>
                 </NotificationProvider>

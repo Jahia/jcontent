@@ -6,8 +6,10 @@ import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./ContentPreview";
 import {Grid, Button, withStyles} from "@material-ui/core";
 import ContentBrowser from "./ContentBrowser";
-import {compose} from "react-apollo/index";
+import {withNotifications, ProgressOverlay} from '@jahia/react-material';
+import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
+import CmRouter from './CmRouter'
 
 const styles = theme => ({
     root: {
@@ -28,7 +30,7 @@ class ContentLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: "en",
+            language: this.props.lang,
             page: 0,
             rowsPerPage: 10,
             showBrowser: false,
@@ -85,71 +87,85 @@ class ContentLayout extends React.Component {
     };
 
     render() {
-        const { showPreview, selectedRow, showBrowser: showTree } = this.state;
-        const { classes } = this.props;
-        const path = this.props.match.url;
-        return <Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
-            { ({loading, error, data}) => {
-                let rows = [];
-                let totalCount = 0;
-                if (data.jcr && data.jcr.nodesByCriteria) {
-                    totalCount = data.jcr.nodesByCriteria.pageInfo.totalCount;
-                    rows = _.map(data.jcr.nodesByCriteria.nodes, contentNode => {
-                        return {
-                            uuid: contentNode.uuid,
-                            name: contentNode.displayName,
-                            type: contentNode.primaryNodeType.name,
-                            created: contentNode.created.value,
-                            createdBy: contentNode.createdBy.value,
-                            path: contentNode.path,
-                            isPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'PUBLISHED',
-                            isLocked: contentNode.lockOwner !== null,
-                            isMarkedForDeletion: contentNode.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION',
-                            neverPublished: contentNode.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED',
-                            isModified: contentNode.aggregatedPublicationInfo.publicationStatus === 'MODIFIED',
-                            lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
-                            lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
-                            modifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
-                            lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
-                            wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
-                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
-                            isSelected: selectedRow ? selectedRow.path === contentNode.path : false
-                        }
-                    })
-                }
-                const computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
-                return (
-                    <div className={classes.root}>
-                        <Grid item xs={ GRID_SIZE }>
-                            <ContentBreadcrumbs path={this.props.match.url}/>
-                            <Button onClick={this.handleShowTree}>{showTree ? "Hide" : "Show"} Tree</Button>
-                            <Button onClick={this.handleShowPreview}>{showPreview ? "Hide" : "Show"} Preview</Button>
-                        </Grid>
-                        <Grid container spacing={0}>
-                            {showTree && <Grid item xs={ TREE_SIZE }><ContentBrowser match={this.props.match}/></Grid>}
-                            <Grid item xs={ computedTableSize }>
-                                <ContentListTable
-                                    match={this.props.match}
-                                    totalCount={totalCount}
-                                    rows={rows}
-                                    pageSize={this.state.rowsPerPage}
-                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    onChangePage={this.handleChangePage}
-                                    onRowSelected={this.handleRowSelection}
-                                    page={this.state.page}
-                                    lang={this.state.language}
-                                />
-                            </Grid>
-                            {showPreview && <Grid className={ classes.gridColumn }item xs={ PREVIEW_SIZE }><ContentPreview selection={ selectedRow } /></Grid>}
-                        </Grid>
-                    </div>
-                )
-            }}
-        </Query>;
+        const {showPreview, selectedRow, showBrowser: showTree} = this.state;
+        const {notificationContext, t, classes} = this.props;
+        return <CmRouter render={ ({path}) => (
+            <Query fetchPolicy={'network-only'} query={allContentQuery}
+                   variables={TableQueryVariables(path, this.state.language, this.state)}>
+                {({loading, error, data}) => {
+                    if (error) {
+                        console.log("Error when fetching data: " + error);
+                        notificationContext.notify(t('label.contentManager.errors'), ['closeButton', 'noAutomaticClose']);
+                    }
+                    let rows = [];
+                    let totalCount = 0;
+                    if (data.jcr && data.jcr.nodesByCriteria) {
+                        totalCount = data.jcr.nodesByCriteria.pageInfo.totalCount;
+                        rows = _.map(data.jcr.nodesByCriteria.nodes, contentNode => {
+                            return {
+                                uuid: contentNode.uuid,
+                                name: contentNode.displayName,
+                                type: contentNode.primaryNodeType.name,
+                                created: contentNode.created.value,
+                                createdBy: contentNode.createdBy.value,
+                                path: contentNode.path,
+                                publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
+                                isLocked: contentNode.lockOwner !== null,
+                                lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
+                                lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
+                                lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
+                                lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
+                                deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
+                                deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
+                                wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
+                                wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
+                                isSelected: selectedRow ? selectedRow.path === contentNode.path : false
+                            }
+                        })
+                    }
+                    const computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
+                    return (
+                        <div>
+                            {loading && <ProgressOverlay/>}
+                            <div className={classes.root}>
+                                <Grid item xs={GRID_SIZE}>
+                                    <ContentBreadcrumbs path={path}/>
+                                    <Button
+                                        onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
+                                    <Button
+                                        onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
+                                </Grid>
+                                <Grid container spacing={0}>
+                                    {showTree &&
+                                    <Grid item xs={TREE_SIZE}><ContentBrowser path={ path }/></Grid>}
+                                    <Grid item xs={computedTableSize}>
+                                        <ContentListTable
+                                            totalCount={totalCount}
+                                            rows={rows}
+                                            pageSize={this.state.rowsPerPage}
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                            onChangePage={this.handleChangePage}
+                                            onRowSelected={this.handleRowSelection}
+                                            page={this.state.page}
+                                            lang={this.state.language}
+                                        />
+                                    </Grid>
+                                    {showPreview &&
+                                    <Grid className={classes.gridColumn} item xs={PREVIEW_SIZE}><ContentPreview
+                                        selection={selectedRow}/></Grid>}
+                                </Grid>
+                            </div>
+                        </div>
+                    )
+                }}
+            </Query>
+        )}></CmRouter>
     }
 }
 
-ContentLayout = compose(
+ContentLayout = _.flowRight(
+    withNotifications(),
+    translate(),
     withStyles(styles)
 )(ContentLayout);
 

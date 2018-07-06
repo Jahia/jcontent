@@ -8,12 +8,91 @@ import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
 
+class PublicationStatusNotPublished {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.notPublished");
+    }
+
+    getContentClass(classes) {
+        return classes.notPublished;
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusNotPublished;
+    }
+}
+
+class PublicationStatusPublished {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
+    }
+
+    getContentClass(classes) {
+        return classes.published;
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusPublished;
+    }
+}
+
+class PublicationStatusModified {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified});
+    }
+
+    getContentClass(classes) {
+        return classes.modified;
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusModified;
+    }
+}
+
+class PublicationStatusMarkedForDeletion {
+
+    constructor() {
+    }
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});
+    }
+
+    getContentClass(classes) {
+        return classes.markedForDeletion;
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusMarkedForDeletion;
+    }
+}
+
 const columnData = [
     {id: 'name', label: 'Name'},
     {id: 'type', label: 'Type'},
     {id: 'created', label: 'Created On'},
     {id: 'createdBy', label: 'Created By'}
 ];
+
+const publicationStatusByName = {
+    "NOT_PUBLISHED": new PublicationStatusNotPublished(),
+    "PUBLISHED": new PublicationStatusPublished(),
+    "MODIFIED": new PublicationStatusModified(),
+    "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
+}
 
 const styles = (theme) => ({
     tableWrapper: {
@@ -23,16 +102,19 @@ const styles = (theme) => ({
     contentRow: {
         '&:hover $publicationStatus': {
             opacity: 1,
-            transition: ["opacity", "0.25s"],
+            transition: ["opacity", "0.25s"]
         }
     },
-    toBePublished: {
+    modified: {
         boxShadow: 'inset 7px 0px 0 0 #FB9926'
     },
-    isPublished: {
+    markedForDeletion: {
+        boxShadow: 'inset 7px 0px 0 0 #FB9926'
+    },
+    published: {
         boxShadow: 'inset 7px 0px 0 0 #08D000'
     },
-    neverPublished: {
+    notPublished: {
         boxShadow: 'inset 7px 0px 0 0 #000000'
     },
     publicationStatusContainer: {
@@ -59,7 +141,13 @@ const styles = (theme) => ({
         },
         color: theme.palette.getContrastText(theme.palette.publish.main)
     },
-    publicationStatusToBePublished: {
+    publicationStatusModified: {
+        backgroundColor: '#FB9926',
+        '&:hover': {
+            backgroundColor: '#FB9926'
+        }
+    },
+    publicationStatusMarkedForDeletion: {
         backgroundColor: '#FB9926',
         '&:hover': {
             backgroundColor: '#FB9926'
@@ -71,7 +159,7 @@ const styles = (theme) => ({
             backgroundColor: '#08D000'
         }
     },
-    publicationStatusNeverPublished: {
+    publicationStatusNotPublished: {
         backgroundColor: '#000000',
         '&:hover': {
             backgroundColor: '#000000'
@@ -149,7 +237,7 @@ class ContentListTable extends React.Component {
     render() {
 
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, match, t, classes, lang} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -161,67 +249,50 @@ class ContentListTable extends React.Component {
                             orderBy={orderBy}
                             onRequestSort={this.handleRequestSort}
                             columnData={columnData}
-                            path={match.url}
                         />
                         <TableBody>
                             {rows.map(n => {
 
-                                let isPublished = n.isPublished;
-                                let neverPublished = n.neverPublished;
-                                let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
-                                let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
-                                let deletionClass = (n.isMarkedForDeletion ? classes.isDeleted : '');
+                            let publicationStatus = publicationStatusByName[n.publicationStatus];
+                            let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
+                            let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
 
-                                let contentRowClass = classes.contentRow;
-                                let publicationStatusClass = classes.publicationStatus;
-                                if (isPublished) {
-                                    contentRowClass = contentRowClass + ' ' + classes.isPublished;
-                                    publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusPublished;
-                                } else {
-                                    if (neverPublished) {
-                                        contentRowClass = contentRowClass + ' ' + classes.neverPublished;
-                                        publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusNeverPublished;
-                                    } else {
-                                        contentRowClass = contentRowClass + ' ' + classes.toBePublished;
-                                        publicationStatusClass = publicationStatusClass + ' ' + classes.publicationStatusToBePublished;
-                                    }
-                                }
-
-                                return (
-                                    <TableRow hover={true}
-                                              classes={{root: contentRowClass}}
-                                              key={n.uuid}
-                                              onClick={ () => onRowSelected(n)}
-                                              selected={ n.isSelected }  >
-                                        <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
-                                            <Button disableRipple classes={{
-                                                root: publicationStatusClass,
-                                                label: classes.publicationStatusLabel
-                                            }}>
-                                                <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
-                                                {this.getPublicationStatus(n)}
-                                            </Button>
-                                        </TableCell>
-                                        {columnData.map(column => {
-                                            let nameColumn = (column.id === 'name');
-                                            return (
-                                                <TableCell key={n.uuid + column.id} className={(nameColumn ? deletionClass : '')}>{n[column.id]}</TableCell>
-                                            );
-                                        })}
-                                        <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
-                                        <TableCell>
-                                            <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                            {emptyRows > 0 && (
-                                <TableRow style={{height: 49 * emptyRows}}>
-                                    <TableCell colSpan={columnData.length}/>
+                            return (
+                                <TableRow hover={true}
+                                          classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}}
+                                          key={n.uuid}
+                                          onClick={ () => onRowSelected(n)}
+                                          selected={ n.isSelected }>
+                                    <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
+                                        <Button disableRipple classes={{
+                                            root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
+                                            label: classes.publicationStatusLabel
+                                        }}>
+                                            <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
+                                            {publicationStatus.getDetailsMessage(n, t)}
+                                        </Button>
+                                    </TableCell>
+                                    {columnData.map(column => {
+                                        return (
+                                            <TableCell key={column.id}>
+                                                {n[column.id]}
+                                            </TableCell>
+                                        );
+                                    })}
+                                    <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
+                                    <TableCell>
+                                        <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
+                                    </TableCell>
                                 </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                            );
+                        })}
+                        {emptyRows > 0 && (
+                            <TableRow style={{height: 49 * emptyRows}}>
+                                <TableCell colSpan={columnData.length}/>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
                 </div>
                 <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>

@@ -13,17 +13,17 @@ class ContentBrowserView extends React.Component {
         let {nodes, t} = this.props;
         return (
             <List>
-                    {nodes.map(n => {
-                        return (
-                            <ListItem key={n.uuid}>
-                                <ListItemIcon>
-                                    <Folder/>
-                                </ListItemIcon>
-                                {/*todo: remove params={{uuid: n.uuid, name: n.name} part as it is only use for test purpose*/}
-                                <ListItemText><CmLink to={n.path} params={{uuid: n.uuid, name: n.name}}>{n.name}</CmLink></ListItemText>
-                            </ListItem>
-                        );
-                    })}
+                {nodes.map(n => {
+                    return (
+                        <ListItem key={n.uuid}>
+                            <ListItemIcon>
+                                <Folder/>
+                            </ListItemIcon>
+                            {/*todo: remove params={{uuid: n.uuid, name: n.name} part as it is only use for test purpose*/}
+                            <ListItemText><CmLink to={n.path} params={{uuid: n.uuid, name: n.name}}>{n.name}</CmLink></ListItemText>
+                        </ListItem>
+                    );
+                })}
             </List>
         );
     }

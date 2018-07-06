@@ -1,8 +1,5 @@
 class PublicationStatusNotPublished {
 
-    constructor() {
-    }
-
     getDetailsMessage(node, t) {
         return t("label.contentManager.publicationStatus.notPublished");
     }
@@ -17,9 +14,6 @@ class PublicationStatusNotPublished {
 }
 
 class PublicationStatusPublished {
-
-    constructor() {
-    }
 
     getDetailsMessage(node, t) {
         return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
@@ -36,9 +30,6 @@ class PublicationStatusPublished {
 
 class PublicationStatusModified {
 
-    constructor() {
-    }
-
     getDetailsMessage(node, t) {
         return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified});
     }
@@ -53,9 +44,6 @@ class PublicationStatusModified {
 }
 
 class PublicationStatusMarkedForDeletion {
-
-    constructor() {
-    }
 
     getDetailsMessage(node, t) {
         return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});

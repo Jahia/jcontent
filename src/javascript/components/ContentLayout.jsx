@@ -124,42 +124,50 @@ class ContentLayout extends React.Component {
                         })
                     }
                     const computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
-                    return (
-                        <div>
-                            {loading && <ProgressOverlay/>}
-                            <div className={classes.root}>
-                                <Grid item xs={GRID_SIZE}>
-                                    <ContentBreadcrumbs path={path}/>
-                                    <Button
-                                        onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
-                                    <Button
-                                        onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
-                                </Grid>
-                                <Grid container spacing={0}>
-                                    {showTree &&
-                                    <Grid item xs={TREE_SIZE}><ContentBrowser path={ path }/></Grid>}
-                                    <Grid item xs={computedTableSize}>
-                                        <ContentListTable
-                                            totalCount={totalCount}
-                                            rows={rows}
-                                            pageSize={this.state.rowsPerPage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            onChangePage={this.handleChangePage}
-                                            onRowSelected={this.handleRowSelection}
-                                            page={this.state.page}
-                                            lang={this.state.language}
-                                        />
-                                    </Grid>
-                                    {showPreview &&
-                                    <Grid className={classes.gridColumn} item xs={PREVIEW_SIZE}><ContentPreview
-                                        selection={selectedRow}/></Grid>}
-                                </Grid>
-                            </div>
-                        </div>
-                    )
+                    return this.gridRendering(loading, path, computedTableSize, totalCount, rows);
                 }}
             </Query>
         )}></CmRouter>
+    }
+
+    gridRendering(loading, path, computedTableSize, totalCount, rows) {
+        const {showPreview, selectedRow, showBrowser: showTree} = this.state;
+        const {t, classes} = this.props;
+
+        return <div>
+            {loading && <ProgressOverlay/>}
+            <div className={classes.root}>
+                <Grid item xs={GRID_SIZE}>
+                    <ContentBreadcrumbs path={path}/>
+                    <Button
+                        onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
+                    <Button
+                        onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
+                </Grid>
+                <Grid container spacing={0}>
+                    {showTree &&
+                    <Grid item xs={TREE_SIZE}><ContentBrowser path={ path }/></Grid>}
+                    <Grid item xs={computedTableSize}>
+                        <ContentListTable
+                            totalCount={totalCount}
+                            rows={rows}
+                            pageSize={this.state.rowsPerPage}
+                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            onChangePage={this.handleChangePage}
+                            onRowSelected={this.handleRowSelection}
+                            page={this.state.page}
+                            lang={this.state.language}
+                        />
+                    </Grid>
+                    {showPreview && <Grid className={classes.gridColumn} item xs={PREVIEW_SIZE}>
+                        <ContentPreview
+                            selection={selectedRow}
+                            layoutQueryParams={TableQueryVariables(path, this.state.language, this.state)}
+                            rowSelectionFunc={ this.handleRowSelection }/>
+                    </Grid>}
+                </Grid>
+            </div>
+        </div>
     }
 }
 

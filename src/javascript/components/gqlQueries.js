@@ -8,8 +8,7 @@ const TableQueryVariables = (path, language, props) => ({
 });
 
 const allContentQuery = gql`
-
-    query($path:String!, $language:String!, $offset:Int, $limit:Int) {
+    query allContent($path:String!, $language:String!, $offset:Int, $limit:Int) {
         jcr {
             nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
                 pageInfo {
@@ -64,7 +63,7 @@ const allContentQuery = gql`
         }
     }`;
 
-const previewQuery = gql`query($path:String!) {
+const previewQuery = gql`query previewQuery($path:String!) {
     jcr {
         nodeByPath(path:$path) {
             renderedContent(templateType:"html", view:"cm", contextConfiguration:"default") {

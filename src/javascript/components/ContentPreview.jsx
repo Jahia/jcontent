@@ -2,16 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query, Mutation } from 'react-apollo';
 import { translate } from 'react-i18next';
-import { withStyles, Paper, Grid, IconButton, Button, Menu, MenuItem } from "@material-ui/core";
+import { withStyles, Paper, Grid, IconButton, Button, Menu, MenuItem, Dialog, Slide } from "@material-ui/core";
 import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
-import { previewQuery } from "./gqlQueries";
+import { previewQuery, allContentQuery } from "./gqlQueries";
 import { publishNode, deleteNode } from './gqlMutations';
+
+function Transition(props) {
+    return <Slide direction="left" {...props} />;
+}
+
 
 const styles = theme => ({
     root: {
         display: "flex",
         flexDirection: "column",
-        flex: 1
+        flex: 1,
+        transition: "left 0.5s ease 0s",
     },
     button: {
         margin: theme.spacing.unit
@@ -23,6 +29,11 @@ const styles = theme => ({
     previewContainer: {
         overflow: "auto",
         padding: theme.spacing.unit * 2
+    },
+    previewContainerFullScreen: {
+        top: "0!important",
+        left: "0!important",
+        height: "1000px!important"
     },
     controlsPaper: {
         flex: 3,
@@ -43,8 +54,10 @@ class ContentPreview extends React.Component {
         super(props);
         this.state = {
             publishMenuAnchor : null,
-            additionalActionsMenuAnchor: null
-        }
+            additionalActionsMenuAnchor: null,
+            fullScreen: false
+        };
+        this.domNode = React.createRef();
     }
 
     handleMenuClick = (event, anchorType) => {
@@ -55,13 +68,24 @@ class ContentPreview extends React.Component {
         this.setState({ [anchorType]: null });
     };
 
+    handleDialogState = () => {
+        this.setState({
+            fullScreen: !this.state.fullScreen
+        });
+    };
+
     render() {
+        if (!this.state.fullScreen) {
+            return this.mainComponent();
+        }
+        return this.previewDialog(this.mainComponent());
+    }
+
+    mainComponent() {
         const { selection, classes, t } = this.props;
         const path = selection ? selection.path : "";
-        console.log(selection);
-
         return (
-            <div className={ classes.root }>
+            <div className={ classes.root } ref={ this.domNode }>
                 <Paper className={ classes.previewPaper } elevation={ 0 }>
                     <Query fetchPolicy={'network-only'} query={ previewQuery } variables={{path: path}}>
                         {({loading, error, data}) => {
@@ -77,13 +101,17 @@ class ContentPreview extends React.Component {
                         </Grid>
                         <Grid item xs={ 2 }>
                             <IconButton><Share/></IconButton>
-                            <IconButton><Fullscreen/></IconButton>
+                            { this.screenModeButtons() }
                         </Grid>
                         <Grid item xs={ 4 }>
                             <IconButton><Lock/></IconButton>
                         </Grid>
                         <Grid item xs={ 8 }>
-                            <Button className={ classes.button } variant="contained" size="medium" color="primary" >
+                            <Button className={ classes.button }
+                                    variant="contained"
+                                    size="medium"
+                                    color="primary"
+                                    onClick={() => window.parent.editContent(selection.path, selection.name, ['jnt:content'], ['nt:base'])}>
                                 {t('label.contentManager.contentPreview.edit')}
                             </Button>
                             <Button className={ classes.button } variant="contained" size="medium" color="primary" >
@@ -102,6 +130,22 @@ class ContentPreview extends React.Component {
         const { classes, t } = this.props;
         const displayValue = data && data.jcr ? data.jcr.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
         return <div className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
+    }
+
+    previewDialog(component) {
+        return <Dialog
+            fullScreen
+            open={this.state.fullScreen}
+            TransitionComponent={Transition}>
+            { component }
+        </Dialog>
+    }
+
+    screenModeButtons() {
+        if (this.state.fullScreen) {
+            return <IconButton onClick={ this.handleDialogState }><FullscreenExit/></IconButton>
+        }
+        return <IconButton onClick={ this.handleDialogState }><Fullscreen/></IconButton>
     }
 
     publishMenu() {
@@ -133,12 +177,18 @@ class ContentPreview extends React.Component {
     }
 
     publicationMenuItem() {
-        const { t, selection } = this.props;
-        return <Mutation mutation={ publishNode }>
+        const { t, selection, layoutQueryParams } = this.props;
+        //TODO pass a list of all available languages
+        return <Mutation
+            mutation={ publishNode }
+            refetchQueries={[{
+                query: allContentQuery,
+                variables: layoutQueryParams
+            }]}>
             {(publish) => {
                 return <MenuItem onClick={ () => {
                         this.handleMenuClose("publishMenuAnchor");
-                        publish({ variables: { pathOrId: selection.path }});
+                        publish({ variables: { pathOrId: selection.path, languages: ["en"] }});
                     }
                 }>
                     { t('label.contentManager.contentPreview.publishAll') }
@@ -174,23 +224,34 @@ class ContentPreview extends React.Component {
     }
 
     deleteMenuItem() {
-        const { t, selection } = this.props;
-        return <Mutation mutation={ deleteNode }>
-            {(deleteNode) => {
+        const { t, selection, layoutQueryParams, rowSelectionFunc } = this.props;
+        return <Mutation
+            mutation={ deleteNode }
+            refetchQueries={[{
+                query: allContentQuery,
+                variables: layoutQueryParams
+            }]}>
+            {(deleteNode, { data }) => {
                 return <MenuItem onClick={ () => {
                     this.handleMenuClose("additionalActionsMenuAnchor");
-                    deleteNode({ variables: { pathOrId: selection.path }});
-                }
+                    deleteNode({ variables: { pathOrId: selection.path }}).then(() => {
+                            rowSelectionFunc(selection);
+                        }).catch((e) => console.error("Failed to delete", e));
+                    }
                 }>
                     { t('label.contentManager.contentPreview.delete') }
                 </MenuItem>
             }}
         </Mutation>
     }
+
+
 }
 
 export default translate()(withStyles(styles)(ContentPreview));
 
 ContentPreview.propTypes = {
-    selection: PropTypes.object
+    selection: PropTypes.object,
+    layoutQueryParams: PropTypes.object.isRequired,
+    rowSelectionFunc: PropTypes.func.isRequired
 };

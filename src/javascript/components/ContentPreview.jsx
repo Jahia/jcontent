@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Typography, Tab, Tabs, AppBar, Paper} from "@material-ui/core";
 
-
 function TabContainer(props) {
     return (
         <Typography component="div" style={{ padding: 8 * 3 }}>

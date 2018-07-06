@@ -14,15 +14,15 @@ class PublicationStatusNotPublished {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.notPublished")
+        return t("label.contentManager.publicationStatus.notPublished");
     }
 
     getContentClass(classes) {
-        return classes.notPublished
+        return classes.notPublished;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusNotPublished
+        return classes.publicationStatusNotPublished;
     }
 }
 
@@ -32,15 +32,15 @@ class PublicationStatusPublished {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
     }
 
     getContentClass(classes) {
-        return classes.published
+        return classes.published;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusPublished
+        return classes.publicationStatusPublished;
     }
 }
 
@@ -50,15 +50,15 @@ class PublicationStatusModified {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified})
+        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified});
     }
 
     getContentClass(classes) {
-        return classes.modified
+        return classes.modified;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusModified
+        return classes.publicationStatusModified;
     }
 }
 
@@ -68,15 +68,15 @@ class PublicationStatusMarkedForDeletion {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted})
+        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});
     }
 
     getContentClass(classes) {
-        return classes.markedForDeletion
+        return classes.markedForDeletion;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusMarkedForDeletion
+        return classes.publicationStatusMarkedForDeletion;
     }
 }
 
@@ -98,7 +98,7 @@ const styles = (theme) => ({
     contentRow: {
         '&:hover $publicationStatus': {
             opacity: 1,
-            transition: ["opacity", "0.25s"],
+            transition: ["opacity", "0.25s"]
         }
     },
     modified: {

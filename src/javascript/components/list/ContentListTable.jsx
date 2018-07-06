@@ -7,78 +7,13 @@ import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
+import {
+    PublicationStatusMarkedForDeletion,
+    PublicationStatusModified,
+    PublicationStatusNotPublished,
+    PublicationStatusPublished
+} from "./publicationSatus"
 
-class PublicationStatusNotPublished {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.notPublished");
-    }
-
-    getContentClass(classes) {
-        return classes.notPublished;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusNotPublished;
-    }
-}
-
-class PublicationStatusPublished {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
-    }
-
-    getContentClass(classes) {
-        return classes.published;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusPublished;
-    }
-}
-
-class PublicationStatusModified {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified});
-    }
-
-    getContentClass(classes) {
-        return classes.modified;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusModified;
-    }
-}
-
-class PublicationStatusMarkedForDeletion {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});
-    }
-
-    getContentClass(classes) {
-        return classes.markedForDeletion;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusMarkedForDeletion;
-    }
-}
 
 const columnData = [
     {id: 'name', label: 'Name'},
@@ -102,16 +37,16 @@ const styles = (theme) => ({
         }
     },
     modified: {
-        boxShadow: 'inset 7px 0px 0 0 #FB9926'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.modified.main
     },
     markedForDeletion: {
-        boxShadow: 'inset 7px 0px 0 0 #FB9926'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.modified.main
     },
     published: {
-        boxShadow: 'inset 7px 0px 0 0 #08D000'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.published.main
     },
     notPublished: {
-        boxShadow: 'inset 7px 0px 0 0 #000000'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.notPublished.main
     },
     publicationStatusContainer: {
         position: 'relative'
@@ -137,27 +72,27 @@ const styles = (theme) => ({
         color: theme.palette.getContrastText(theme.palette.publish.main)
     },
     publicationStatusModified: {
-        backgroundColor: '#FB9926',
+        backgroundColor: theme.palette.publicationStatus.modified.main,
         '&:hover': {
-            backgroundColor: '#FB9926'
+            backgroundColor: theme.palette.publicationStatus.modified.main
         }
     },
     publicationStatusMarkedForDeletion: {
-        backgroundColor: '#FB9926',
+        backgroundColor: theme.palette.publicationStatus.modified.main,
         '&:hover': {
-            backgroundColor: '#FB9926'
+            backgroundColor: theme.palette.publicationStatus.modified.main
         }
     },
     publicationStatusPublished: {
-        backgroundColor: '#08D000',
+        backgroundColor: theme.palette.publicationStatus.published.main,
         '&:hover': {
-            backgroundColor: '#08D000'
+            backgroundColor: theme.palette.publicationStatus.published.main
         }
     },
     publicationStatusNotPublished: {
-        backgroundColor: '#000000',
+        backgroundColor: theme.palette.publicationStatus.notPublished.main,
         '&:hover': {
-            backgroundColor: '#000000'
+            backgroundColor: theme.palette.publicationStatus.notPublished.main
         }
     },
     publicationStatusInfoIcon: {

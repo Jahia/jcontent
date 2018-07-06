@@ -1,71 +1,73 @@
-export class PublicationStatusNotPublished {
+class PublicationStatusNotPublished {
 
     constructor() {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.notPublished")
+        return t("label.contentManager.publicationStatus.notPublished");
     }
 
     getContentClass(classes) {
-        return classes.notPublished
+        return classes.notPublished;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusNotPublished
+        return classes.publicationStatusNotPublished;
     }
 }
 
-export class PublicationStatusPublished {
+class PublicationStatusPublished {
 
     constructor() {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished})
+        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
     }
 
     getContentClass(classes) {
-        return classes.published
+        return classes.published;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusPublished
+        return classes.publicationStatusPublished;
     }
 }
 
-export class PublicationStatusModified {
+class PublicationStatusModified {
 
     constructor() {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified})
+        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified});
     }
 
     getContentClass(classes) {
-        return classes.modified
+        return classes.modified;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusModified
+        return classes.publicationStatusModified;
     }
 }
 
-export class PublicationStatusMarkedForDeletion {
+class PublicationStatusMarkedForDeletion {
 
     constructor() {
     }
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted})
+        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});
     }
 
     getContentClass(classes) {
-        return classes.markedForDeletion
+        return classes.markedForDeletion;
     }
 
     getDetailsClass(classes) {
-        return classes.publicationStatusMarkedForDeletion
+        return classes.publicationStatusMarkedForDeletion;
     }
 }
+
+export { PublicationStatusMarkedForDeletion, PublicationStatusModified, PublicationStatusNotPublished, PublicationStatusPublished }

@@ -8,20 +8,21 @@ class ContentBreadcrumbs extends React.Component {
 
         let {path} = this.props;
 
-        // For each element of the path, calculate its individual absolute path value.
-        let pathElements = _.reduce(_.split(path.substring(1), '/'), (result, value) => _.concat(result, result[result.length - 1] + '/' + value), ['']);
+        let pathElements = _.split(path.substring(1), '/');
+        let names = _.concat(['/'], pathElements);
+        let paths = _.concat(['/'], _.reduce(pathElements, (result, pathElement) => {
+            let parentPath = (result.length == 0 ? '' : result[result.length - 1]);
+            return _.concat(result, (parentPath + '/' + pathElement));
+        }, []));
 
         return (
             <span>
                 {
-                    _.range(pathElements.length).map(i => {
-
-                        // Compute the current folder name by removing the parent path (the previous one in the pathElements list) from the current path.
-                        const link = i > 0 ? _.replace(pathElements[i], pathElements[i - 1], '') : "/";
-
+                    _.range(paths.length).map(i => {
+                        const link = names[i];
                         return (
                             <span key={i}>
-                                {i < pathElements.length - 1 ? <span><CmLink to={pathElements[i]}>{link}</CmLink> - </span> : <span>{link}</span>}
+                                {i < paths.length - 1 ? <span><CmLink to={paths[i]}>{link}</CmLink> - </span> : <span>{link}</span>}
                             </span>
                         );
                     })

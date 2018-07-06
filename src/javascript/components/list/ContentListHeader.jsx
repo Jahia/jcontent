@@ -1,5 +1,6 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, Tooltip, TableSortLabel } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, TableSortLabel } from "@material-ui/core";
+import {translate} from "react-i18next";
 import PropTypes from 'prop-types';
 
 class ContentListHeader extends React.Component {
@@ -9,7 +10,8 @@ class ContentListHeader extends React.Component {
     };
 
     render() {
-        const { order, orderBy, columnData} = this.props;
+
+        const { order, orderBy, columnData, t} = this.props;
 
         return (
             <TableHead>
@@ -22,15 +24,13 @@ class ContentListHeader extends React.Component {
                                 padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.id ? order : false}
                             >
-                                <Tooltip title="Sort" enterDelay={300}>
-                                    <TableSortLabel
-                                        active={orderBy === column.id}
-                                        direction={order}
-                                        onClick={() => this.handleSort(column.id)}
-                                    >
-                                        {column.label}
-                                    </TableSortLabel>
-                                </Tooltip>
+                                <TableSortLabel
+                                    active={orderBy === column.id}
+                                    direction={order}
+                                    onClick={() => this.handleSort(column.id)}
+                                >
+                                    {t(column.label)}
+                                </TableSortLabel>
                             </TableCell>
                         );
                     }, this)}
@@ -45,5 +45,7 @@ ContentListHeader.propTypes = {
     order: PropTypes.string.isRequired,
     orderBy: PropTypes.string.isRequired,
 };
+
+ContentListHeader = translate()(ContentListHeader);
 
 export default ContentListHeader;

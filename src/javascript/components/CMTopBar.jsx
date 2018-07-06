@@ -7,12 +7,12 @@ import BurgerMenuButton from './BurgerMenuButton';
 import {compose} from "react-apollo/index";
 
 const styles = theme => ({
-    title: {
+    head: {
         display: "inline-block",
         verticalAlign: "top"
     },
     root: {
-        flexGrow: 1,
+        flexGrow: 1
     }
 });
 
@@ -24,12 +24,12 @@ class CMTopBar extends React.Component {
             <div className={classes.root}>
                 <Toolbar color={'secondary'}>
                     <BurgerMenuButton/>
-                    <div className={classes.title}>
+                    <div className={classes.head}>
                         <SiteSelector/>
                         <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
                         <LanguageSwitcher/>
                     </div>
-                    <SearchBar placeholderLabel={"search"} onChangeFilter={""} onFocus={""} onBlur={""}/>
+                    <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
                 </Toolbar>
             </div>
         );

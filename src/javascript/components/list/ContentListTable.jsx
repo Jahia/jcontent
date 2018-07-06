@@ -16,10 +16,10 @@ import {
 
 
 const columnData = [
-    {id: 'name', label: 'Name'},
-    {id: 'type', label: 'Type'},
-    {id: 'created', label: 'Created On'},
-    {id: 'createdBy', label: 'Created By'}
+    {id: 'name', label: 'label.contentManager.listColumns.name'},
+    {id: 'type', label: 'label.contentManager.listColumns.type'},
+    {id: 'created', label: 'label.contentManager.listColumns.created'},
+    {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
 ];
 
 const publicationStatusByName = {
@@ -124,19 +124,27 @@ class ContentListTable extends React.Component {
         super(props);
         this.state = {
             order: 'asc',
-            orderBy: ''
+            orderBy: 'name'
         };
     }
 
-    handleRequestSort = (event, property) => {
-        const orderBy = property;
-        let order = 'desc';
+    handleRequestSort = (event, column) => {
 
-        if (this.state.orderBy === property && this.state.order === 'desc') {
+        let order;
+        if (this.state.orderBy === column) {
+            if (this.state.order === 'asc') {
+                order = 'desc';
+            } else if (this.state.order === 'desc') {
+                order = 'asc';
+            }
+        } else {
             order = 'asc';
         }
 
-        this.setState({order, orderBy});
+        this.setState({
+            order: order,
+            orderBy: column
+        });
     };
 
     isWip(node, lang) {

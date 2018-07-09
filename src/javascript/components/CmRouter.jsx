@@ -2,6 +2,8 @@ import React from "react";
 import * as _ from "lodash";
 import { withRouter } from "react-router";
 
+const QUESTION_MARK_SEPARATOR_INDEX = 1;
+
 class CmRouter extends React.Component {
 
     mapUrlToQuery = (match, location) => {
@@ -12,8 +14,8 @@ class CmRouter extends React.Component {
     };
 
     deserializeQueryString = location => {
-        const search = location.search.substring(1); // removes ? from the query string
-        return search && search !== "" && JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+        const search = location.search !== "" && location.search.substring(QUESTION_MARK_SEPARATOR_INDEX); // removes ? from the query string
+        return search && JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     };
 
     // This method push to the browser url the provided location

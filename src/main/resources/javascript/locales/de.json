@@ -1,0 +1,35 @@
+{
+  "label": {
+    "contentManager": {
+      "publicationStatus": {
+        "notPublished": "Dieser Content wurde nie veröffentlicht",
+        "published": "Veröffentlicht von {{userName}} am/um {{timestamp}}",
+        "modified": "Geändert von {{userName}} am/um {{timestamp}}",
+        "markedForDeletion": "Gelöscht von {{userName}} am/um {{timestamp}}"
+      },
+      "editAction": "Bearbeiten",
+      "errors": "Fehler",
+      "tree": {
+        "show": "Navigationsbaum anzeigen",
+        "hide": "Navigationsbaum verbergen"
+      },
+      "preview": {
+        "show": "Vorschau öffnen",
+        "hide": "Vorschau verbergen",
+        "tabs": {
+          "preview": "Vorschau",
+          "quickEdit": "Schnellbearbeitung",
+          "metadata": "Metadaten"
+        }
+      },
+      "listColumns": {
+        "name": "Name",
+        "type": "Typ",
+        "created": "Erstellt am/um",
+        "createdBy": "Erstellt von"
+      },
+      "title": "Gesamter Content",
+      "search": "Suche"
+    }
+  }
+}

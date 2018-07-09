@@ -11,7 +11,8 @@ import {
     PublicationStatusMarkedForDeletion,
     PublicationStatusModified,
     PublicationStatusNotPublished,
-    PublicationStatusPublished
+    PublicationStatusPublished,
+    PublicationStatusUnpublished
 } from "./publicationSatus"
 
 
@@ -25,9 +26,10 @@ const columnData = [
 const publicationStatusByName = {
     "NOT_PUBLISHED": new PublicationStatusNotPublished(),
     "PUBLISHED": new PublicationStatusPublished(),
+    "UNPUBLISHED": new PublicationStatusUnpublished(),
     "MODIFIED": new PublicationStatusModified(),
     "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
-}
+};
 
 const styles = (theme) => ({
     tableWrapper: {
@@ -48,6 +50,9 @@ const styles = (theme) => ({
     },
     published: {
         boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.published.main
+    },
+    unpublished: {
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.markedForDeletion.main
     },
     notPublished: {
         boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.notPublished.main
@@ -92,6 +97,12 @@ const styles = (theme) => ({
         backgroundColor: theme.palette.publicationStatus.published.main,
         '&:hover': {
             backgroundColor: theme.palette.publicationStatus.published.main
+        }
+    },
+    publicationStatusUnpublished: {
+        backgroundColor: theme.palette.publicationStatus.markedForDeletion.main,
+        '&:hover': {
+            backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
         }
     },
     publicationStatusNotPublished: {
@@ -195,7 +206,6 @@ class ContentListTable extends React.Component {
                         />
                         <TableBody>
                             {rows.map(n => {
-
                             let publicationStatus = publicationStatusByName[n.publicationStatus];
                             let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                             let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);

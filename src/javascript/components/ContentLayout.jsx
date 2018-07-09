@@ -3,7 +3,7 @@ import {Query} from 'react-apollo';
 import {allContentQuery, TableQueryVariables} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
-import ContentPreview from "./ContentPreview";
+import ContentPreview from "./preview/ContentPreview";
 import {Grid, Button, withStyles} from "@material-ui/core";
 import ContentBrowser from "./ContentBrowser";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
@@ -111,13 +111,13 @@ class ContentLayout extends React.Component {
                                 path: contentNode.path,
                                 publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
                                 isLocked: contentNode.lockOwner !== null,
-                                lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
-                                lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
-                                lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
-                                lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
-                                deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
-                                deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
-                                wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
+                                lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : null),
+                                lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : null),
+                                lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : null),
+                                lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : null),
+                                deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : null),
+                                deleted: (contentNode.deleted !== null ? contentNode.deleted.value : null),
+                                wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : null),
                                 wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
                                 isSelected: selectedRow ? selectedRow.path === contentNode.path : false
                             }

@@ -4,8 +4,11 @@ import { Query, Mutation } from 'react-apollo';
 import { translate } from 'react-i18next';
 import { withStyles, Paper, Grid, IconButton, Button, Menu, MenuItem, Dialog, Slide } from "@material-ui/core";
 import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
-import { previewQuery, allContentQuery } from "./gqlQueries";
-import { publishNode, deleteNode } from './gqlMutations';
+import { previewQuery, allContentQuery } from "../gqlQueries";
+import { publishNode, deleteNode } from '../gqlMutations';
+import PublicationInfo from './PublicationStatus';
+import PublicationMenu from './PublishMenu';
+import AdditionalMenuItems from './AdditionalMenuItems';
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
@@ -45,6 +48,10 @@ const styles = theme => ({
         color: "whitesmoke",
         padding: theme.spacing.unit,
         minHeight: "100px"
+    },
+    contentTitle : {
+        fontWeight: 500,
+        padding: theme.spacing.unit
     }
 });
 
@@ -53,7 +60,6 @@ class ContentPreview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            publishMenuAnchor : null,
             additionalActionsMenuAnchor: null,
             fullScreen: false
         };
@@ -82,7 +88,7 @@ class ContentPreview extends React.Component {
     }
 
     mainComponent() {
-        const { selection, classes, t } = this.props;
+        const { selection, classes, t, layoutQueryParams, rowSelectionFunc } = this.props;
         const path = selection ? selection.path : "";
         return (
             <div className={ classes.root } ref={ this.domNode }>
@@ -96,8 +102,8 @@ class ContentPreview extends React.Component {
                 <Paper className={ classes.controlsPaper } elevation={ 0 }>
                     <Grid container spacing={0}>
                         <Grid item xs={ 10 } className={ classes.titleBar }>
-                            <div>{ selection.displayName ? selection.displayName : selection.name }</div>
-                            <div>{ selection.lastPublished }</div>
+                            <div className={ classes.contentTitle }>{ selection.displayName ? selection.displayName : selection.name }</div>
+                            <PublicationInfo selection={ selection }/>
                         </Grid>
                         <Grid item xs={ 2 }>
                             <IconButton><Share/></IconButton>
@@ -117,8 +123,11 @@ class ContentPreview extends React.Component {
                             <Button className={ classes.button } variant="contained" size="medium" color="primary" >
                                 {t('label.contentManager.contentPreview.translate')}
                             </Button>
-                            { this.publishMenu() }
-                            { this.additionalActionsMenu() }
+                            <PublicationMenu selection={ selection }
+                                             layoutQueryParams={ layoutQueryParams } />
+                            <AdditionalMenuItems selection={ selection }
+                                                 layoutQueryParams={ layoutQueryParams }
+                                                 rowSelectionFunc={ rowSelectionFunc } />
                         </Grid>
                     </Grid>
                 </Paper>
@@ -147,105 +156,6 @@ class ContentPreview extends React.Component {
         }
         return <IconButton onClick={ this.handleDialogState }><Fullscreen/></IconButton>
     }
-
-    publishMenu() {
-        const { t, classes } = this.props;
-        const { publishMenuAnchor } = this.state;
-        //TODO get language from context
-        return <span>
-            <Button
-                className={ classes.button }
-                variant="contained"
-                size="medium"
-                color="primary"
-                aria-owns={ publishMenuAnchor ? 'publish-menu' : null}
-                aria-haspopup="true"
-                onClick={ ( event) => this.handleMenuClick(event, "publishMenuAnchor") }>
-                { t('label.contentManager.contentPreview.publish') }
-            </Button>
-            <Menu
-                id="publish-menu"
-                anchorEl={ publishMenuAnchor }
-                open={Boolean( publishMenuAnchor )}
-                onClose={ () => this.handleMenuClose("publishMenuAnchor") }>
-                { this.publicationMenuItem() }
-                <MenuItem onClick={ () => this.handleMenuClose("publishMenuAnchor") }>
-                    { t('label.contentManager.contentPreview.unpublish', { language: "English" } ) }
-                </MenuItem>
-            </Menu>
-        </span>
-    }
-
-    publicationMenuItem() {
-        const { t, selection, layoutQueryParams } = this.props;
-        //TODO pass a list of all available languages
-        return <Mutation
-            mutation={ publishNode }
-            refetchQueries={[{
-                query: allContentQuery,
-                variables: layoutQueryParams
-            }]}>
-            {(publish) => {
-                return <MenuItem onClick={ () => {
-                        this.handleMenuClose("publishMenuAnchor");
-                        publish({ variables: { pathOrId: selection.path, languages: ["en"] }});
-                    }
-                }>
-                    { t('label.contentManager.contentPreview.publishAll') }
-                </MenuItem>
-            }}
-        </Mutation>
-    }
-
-    additionalActionsMenu() {
-        const { t } = this.props;
-        const { additionalActionsMenuAnchor } = this.state;
-        return <span>
-            <IconButton
-                aria-owns={ additionalActionsMenuAnchor ? 'additional-actions-menu' : null}
-                aria-haspopup="true"
-                onClick={ ( event) => this.handleMenuClick(event, "additionalActionsMenuAnchor") }>
-                <MoreVert />
-            </IconButton>
-            <Menu
-                id="additional-actions-menu"
-                anchorEl={ additionalActionsMenuAnchor }
-                open={Boolean( additionalActionsMenuAnchor )}
-                onClose={ () => this.handleMenuClose("additionalActionsMenuAnchor") }>
-                <MenuItem onClick={ () => this.handleMenuClose("additionalActionsMenuAnchor") }>
-                    { t('label.contentManager.contentPreview.copy') }
-                </MenuItem>
-                <MenuItem onClick={ () => this.handleMenuClose("additionalActionsMenuAnchor") }>
-                    { t('label.contentManager.contentPreview.duplicate') }
-                </MenuItem>
-                { this.deleteMenuItem() }
-            </Menu>
-        </span>
-    }
-
-    deleteMenuItem() {
-        const { t, selection, layoutQueryParams, rowSelectionFunc } = this.props;
-        return <Mutation
-            mutation={ deleteNode }
-            refetchQueries={[{
-                query: allContentQuery,
-                variables: layoutQueryParams
-            }]}>
-            {(deleteNode, { data }) => {
-                return <MenuItem onClick={ () => {
-                    this.handleMenuClose("additionalActionsMenuAnchor");
-                    deleteNode({ variables: { pathOrId: selection.path }}).then(() => {
-                            rowSelectionFunc(selection);
-                        }).catch((e) => console.error("Failed to delete", e));
-                    }
-                }>
-                    { t('label.contentManager.contentPreview.delete') }
-                </MenuItem>
-            }}
-        </Mutation>
-    }
-
-
 }
 
 export default translate()(withStyles(styles)(ContentPreview));

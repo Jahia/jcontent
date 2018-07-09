@@ -5,6 +5,7 @@
         "notPublished": "This content has never been published",
         "published": "Published by {{userName}} on {{timestamp}}",
         "modified": "Modified by {{userName}} on {{timestamp}}",
+        "unpublished": "Unpublished by {{userName}} on {{timestamp}}",
         "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
       },
       "editAction": "Edit",
@@ -22,7 +23,12 @@
           "unpublish": "Un-publish {{language}}",
           "copy": "Copy",
           "duplicate": "Duplicate",
-          "delete": "Delete"
+          "delete": "Delete",
+          "notPublished": "Content has never been published",
+          "publishedBy" : "Published by {{userName}} on ",
+          "unpublishedBy" : "Unpublished by {{userName}} on ",
+          "modifiedBy" : "Modified by {{userName}} on ",
+          "markedForDeletionBy" : "Marked for deletion by {{userName}} on "
       },
       "preview": {
         "show": "Show Preview",

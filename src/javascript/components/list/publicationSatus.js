@@ -58,4 +58,21 @@ class PublicationStatusMarkedForDeletion {
     }
 }
 
-export { PublicationStatusMarkedForDeletion, PublicationStatusModified, PublicationStatusNotPublished, PublicationStatusPublished }
+class PublicationStatusUnpublished {
+
+    //TODO not sure about username and timestap correctness in this case.
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.unpublished", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
+    }
+
+    getContentClass(classes) {
+        return classes.unpublished;
+    }
+
+    getDetailsClass(classes) {
+        return classes.publicationStatusUnpublished;
+    }
+}
+
+export { PublicationStatusMarkedForDeletion, PublicationStatusModified, PublicationStatusNotPublished, PublicationStatusPublished, PublicationStatusUnpublished }

@@ -16,4 +16,3 @@ class CmLink extends React.Component {
 }
 
 export default CmLink;
-

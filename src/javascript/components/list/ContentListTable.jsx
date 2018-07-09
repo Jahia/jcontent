@@ -7,84 +7,19 @@ import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
+import {
+    PublicationStatusMarkedForDeletion,
+    PublicationStatusModified,
+    PublicationStatusNotPublished,
+    PublicationStatusPublished
+} from "./publicationSatus"
 
-class PublicationStatusNotPublished {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.notPublished");
-    }
-
-    getContentClass(classes) {
-        return classes.notPublished;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusNotPublished;
-    }
-}
-
-class PublicationStatusPublished {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
-    }
-
-    getContentClass(classes) {
-        return classes.published;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusPublished;
-    }
-}
-
-class PublicationStatusModified {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.modified", {userName: node.lastModifiedBy, timestamp: node.lastModified});
-    }
-
-    getContentClass(classes) {
-        return classes.modified;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusModified;
-    }
-}
-
-class PublicationStatusMarkedForDeletion {
-
-    constructor() {
-    }
-
-    getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});
-    }
-
-    getContentClass(classes) {
-        return classes.markedForDeletion;
-    }
-
-    getDetailsClass(classes) {
-        return classes.publicationStatusMarkedForDeletion;
-    }
-}
 
 const columnData = [
-    {id: 'name', label: 'Name'},
-    {id: 'type', label: 'Type'},
-    {id: 'created', label: 'Created On'},
-    {id: 'createdBy', label: 'Created By'}
+    {id: 'name', label: 'label.contentManager.listColumns.name'},
+    {id: 'type', label: 'label.contentManager.listColumns.type'},
+    {id: 'created', label: 'label.contentManager.listColumns.created'},
+    {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
 ];
 
 const publicationStatusByName = {
@@ -106,16 +41,16 @@ const styles = (theme) => ({
         }
     },
     modified: {
-        boxShadow: 'inset 7px 0px 0 0 #FB9926'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.modified.main
     },
     markedForDeletion: {
-        boxShadow: 'inset 7px 0px 0 0 #FB9926'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.modified.main
     },
     published: {
-        boxShadow: 'inset 7px 0px 0 0 #08D000'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.published.main
     },
     notPublished: {
-        boxShadow: 'inset 7px 0px 0 0 #000000'
+        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.notPublished.main
     },
     publicationStatusContainer: {
         position: 'relative'
@@ -142,27 +77,27 @@ const styles = (theme) => ({
         color: theme.palette.getContrastText(theme.palette.publish.main)
     },
     publicationStatusModified: {
-        backgroundColor: '#FB9926',
+        backgroundColor: theme.palette.publicationStatus.modified.main,
         '&:hover': {
-            backgroundColor: '#FB9926'
+            backgroundColor: theme.palette.publicationStatus.modified.main
         }
     },
     publicationStatusMarkedForDeletion: {
-        backgroundColor: '#FB9926',
+        backgroundColor: theme.palette.publicationStatus.modified.main,
         '&:hover': {
-            backgroundColor: '#FB9926'
+            backgroundColor: theme.palette.publicationStatus.modified.main
         }
     },
     publicationStatusPublished: {
-        backgroundColor: '#08D000',
+        backgroundColor: theme.palette.publicationStatus.published.main,
         '&:hover': {
-            backgroundColor: '#08D000'
+            backgroundColor: theme.palette.publicationStatus.published.main
         }
     },
     publicationStatusNotPublished: {
-        backgroundColor: '#000000',
+        backgroundColor: theme.palette.publicationStatus.notPublished.main,
         '&:hover': {
-            backgroundColor: '#000000'
+            backgroundColor: theme.palette.publicationStatus.notPublished.main
         }
     },
     publicationStatusInfoIcon: {
@@ -197,19 +132,27 @@ class ContentListTable extends React.Component {
         super(props);
         this.state = {
             order: 'asc',
-            orderBy: ''
+            orderBy: 'name'
         };
     }
 
-    handleRequestSort = (event, property) => {
-        const orderBy = property;
-        let order = 'desc';
+    handleRequestSort = (event, column) => {
 
-        if (this.state.orderBy === property && this.state.order === 'desc') {
+        let order;
+        if (this.state.orderBy === column) {
+            if (this.state.order === 'asc') {
+                order = 'desc';
+            } else if (this.state.order === 'desc') {
+                order = 'asc';
+            }
+        } else {
             order = 'asc';
         }
 
-        this.setState({order, orderBy});
+        this.setState({
+            order: order,
+            orderBy: column
+        });
     };
 
     getPublicationStatus(node) {

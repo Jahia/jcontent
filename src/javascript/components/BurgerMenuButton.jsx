@@ -18,7 +18,7 @@ class BurgerMenuButton extends React.Component {
         let {classes} = this.props;
 
         return (
-            <div className={classes.menuButton} color="inherit" aria-label="Menu"/>
+            <div className={classes.menuButton}/>
         );
     }
 }

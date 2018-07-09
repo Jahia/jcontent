@@ -10,10 +10,9 @@ class CmLink extends React.Component {
     };
 
     render() {
-        const { to, params } = this.props;
-        return (<CmRouter render={({goto}) => (<a href={'#'}{...this.props} onClick={() => goto(to, params)}/>)}/>)
+        const { to, params, ...rest } = this.props;
+        return (<CmRouter render={({goto}) => (<a href={'#'} {...rest} onClick={() => goto(to, params)}/>)}/>)
     }
 }
 
 export default CmLink;
-

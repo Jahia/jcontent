@@ -23,7 +23,7 @@ class ContentManager extends React.Component {
             console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
             console.log(`Url base ${dxContext.urlbase}`);
             console.log(`The last navigation action was ${action}`);
-            window.parent.history.replaceState(window.parent.history.state,"DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search)
+            window.parent.history.replaceState(window.parent.history.state, "DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
         });
     }
 

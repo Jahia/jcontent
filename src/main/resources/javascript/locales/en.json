@@ -26,9 +26,21 @@
       },
       "preview": {
         "show": "Show Preview",
-        "hide": "Hide Preview"
+        "hide": "Hide Preview",
+        "tabs": {
+          "preview": "Preview",
+          "quickEdit": "Quick Edit",
+          "metadata": "Metadata"
+        }
       },
-      "title": "All Content"
+      "listColumns": {
+        "name": "Name",
+        "type": "Type",
+        "created": "Created On",
+        "createdBy": "Created By"
+      },
+      "title": "All Content",
+      "search": "search"
     }
   }
 }

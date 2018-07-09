@@ -13,7 +13,7 @@ import CmRouter from './CmRouter'
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
+        flexGrow: 1
     },
     gridColumn: { //Make it possible for content to expand height to 100%
         display: "flex",

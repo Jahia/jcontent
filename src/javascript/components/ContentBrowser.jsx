@@ -32,7 +32,7 @@ class ContentBrowserView extends React.Component {
 let ContentBrowserWithData = withNodesFromPath()(translate()(ContentBrowserView));
 
 let ContentBrowser = (props) => {
-    return <ContentBrowserWithData path={props.path}  search={props.search} types={['jnt:folder','jmix:list', 'jnt:virtualsite','jnt:virtualsitesFolder', 'jnt:page']}/>
+    return <ContentBrowserWithData path={props.path}  search={props.search} types={['jnt:folder', 'jmix:list', 'jnt:virtualsite','jnt:virtualsitesFolder', 'jnt:page']}/>
 };
 
 export default ContentBrowser;

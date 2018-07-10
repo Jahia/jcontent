@@ -1,11 +1,11 @@
 import gql from "graphql-tag";
 
-const TableQueryVariables = (path, language, props, uiLocale) => ({
+const TableQueryVariables = (path, language, props, uiLanguage) => ({
     path: path,
     language: language,
     offset: props.page * props.rowsPerPage,
     limit: props.rowsPerPage,
-    displayLanguage: uiLocale
+    displayLanguage: uiLanguage
 });
 
 const allContentQuery = gql`

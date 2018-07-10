@@ -5,7 +5,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions" %>
-<html lang="${renderContext.mainResourceLocale.language}">
+<c:set var="mainResourceLocale" value="${renderContext.mainResourceLocale}"/>
+<html lang="${mainResourceLocale.language}">
 
 <head>
     <meta charset="utf-8">
@@ -18,14 +19,13 @@
 
     <div id="${targetId}">loading..</div>
     <script type="text/javascript">
-        contextJsParameters['urlBrowser'] = '/cms/contentmanager/${renderContext.workspace}/${renderContext.mainResourceLocale}';
+        contextJsParameters['urlBrowser'] = '/cms/contentmanager/${renderContext.workspace}/${mainResourceLocale}';
         contextJsParameters['urlbase'] = '${url.base}';
         contextJsParameters['mainResourceId'] = '${renderContext.mainResource.node.identifier}';
         contextJsParameters['mainResourcePath'] = '${renderContext.mainResource.node.path}';
         contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
         contextJsParameters['siteTitle'] = '${functions:escapeJavaScript(renderContext.site.title)}';
-        contextJsParameters['uiLocale'] = '${functions:escapeJavaScript(renderContext.UILocale)}';
-        contextJsParameters['contentLanguageName'] = '${functions:displayLocaleNameWith(renderContext.mainResourceLocale, renderContext.mainResourceLocale)}';
+        contextJsParameters['contentLanguageName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
 
         reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
     </script>

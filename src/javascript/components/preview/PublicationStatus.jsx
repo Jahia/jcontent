@@ -21,10 +21,6 @@ const styles = theme => ({
         borderLeft: "5px solid " + theme.palette.publicationStatus.published.main,
         padding: theme.spacing.unit
     },
-    publicationInfoUnpublished: {
-        borderLeft: "5px solid " + theme.palette.publicationStatus.markedForDeletion.main,
-        padding: theme.spacing.unit
-    },
     publicationInfoMarkedForDeletion: {
         borderLeft: "5px solid " + theme.palette.publicationStatus.markedForDeletion.main,
         padding: theme.spacing.unit
@@ -46,11 +42,6 @@ const component = ({ selection, t, classes }) => {
         case Constants.availablePublicationStatuses.PUBLISHED :
             return <div className={classes.publicationInfoPublished}>
                 {t('label.contentManager.contentPreview.publishedBy', {userName: selection.lastPublishedBy})}
-                <Moment format={"LLL"}>{selection.lastPublished}</Moment>
-            </div>;
-        case Constants.availablePublicationStatuses.UNPUBLISHED :
-            return <div className={classes.publicationInfoPublished}>
-                {t('label.contentManager.contentPreview.unpublishedBy', {userName: selection.lastPublishedBy})}
                 <Moment format={"LLL"}>{selection.lastPublished}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.NOT_PUBLISHED :

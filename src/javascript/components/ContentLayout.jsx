@@ -88,10 +88,10 @@ class ContentLayout extends React.Component {
 
     render() {
         const {showPreview, selectedRow, showBrowser: showTree} = this.state;
-        const {notificationContext, t, classes} = this.props;
+        const {notificationContext, t, classes, uiLocale} = this.props;
         return <CmRouter render={ ({path}) => (
             <Query fetchPolicy={'network-only'} query={allContentQuery}
-                   variables={TableQueryVariables(path, this.state.language, this.state)}>
+                   variables={TableQueryVariables(path, this.state.language, this.state, uiLocale)}>
                 {({loading, error, data}) => {
                     if (error) {
                         console.log("Error when fetching data: " + error);
@@ -105,7 +105,7 @@ class ContentLayout extends React.Component {
                             return {
                                 uuid: contentNode.uuid,
                                 name: contentNode.displayName,
-                                type: contentNode.primaryNodeType.name,
+                                type: contentNode.primaryNodeType.displayName,
                                 created: contentNode.created.value,
                                 createdBy: contentNode.createdBy.value,
                                 path: contentNode.path,
@@ -132,7 +132,7 @@ class ContentLayout extends React.Component {
 
     gridRendering(loading, path, computedTableSize, totalCount, rows) {
         const {showPreview, selectedRow, showBrowser: showTree} = this.state;
-        const {t, classes} = this.props;
+        const {t, classes, uiLocale} = this.props;
 
         return <div>
             {loading && <ProgressOverlay/>}
@@ -162,7 +162,7 @@ class ContentLayout extends React.Component {
                     {showPreview && <Grid className={classes.gridColumn} item xs={PREVIEW_SIZE}>
                         <ContentPreview
                             selection={selectedRow}
-                            layoutQueryParams={TableQueryVariables(path, this.state.language, this.state)}
+                            layoutQueryParams={TableQueryVariables(path, this.state.language, this.state, uiLocale)}
                             rowSelectionFunc={ this.handleRowSelection }/>
                     </Grid>}
                 </Grid>

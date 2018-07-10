@@ -202,12 +202,12 @@ class ContentListTable extends React.Component {
                                                 </Button>
                                             </TableCell>
                                             {columnData.map(column => {
-                                                if(column.id === 'actions'){
+                                                if(column.id === 'actions') {
                                                     return (<TableCell key={column.id}>
                                                         <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
                                                         <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
                                                     </TableCell>);
-                                                }else {
+                                                } else {
                                                     return (
                                                         <TableCell key={column.id}>
                                                             <Typography className={classes[column.id]}>{n[column.id]}</Typography>

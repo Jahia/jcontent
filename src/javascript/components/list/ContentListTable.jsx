@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
@@ -115,6 +115,9 @@ const styles = (theme) => ({
         '&:hover': {
             opacity: '1.5'
         }
+    },
+    name: {
+        color: theme.palette.primary.main
     }
 });
 
@@ -194,7 +197,7 @@ class ContentListTable extends React.Component {
                                     {columnData.map(column => {
                                         return (
                                             <TableCell key={column.id}>
-                                                {n[column.id]}
+                                                <Typography className={classes[column.id]}>{n[column.id]}</Typography>
                                             </TableCell>
                                         );
                                     })}

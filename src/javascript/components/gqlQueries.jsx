@@ -1,15 +1,16 @@
 import gql from "graphql-tag";
 
-const TableQueryVariables = (path, language, props) => ({
+const TableQueryVariables = (path, language, props, uiLocale) => ({
     path: path,
     language: language,
     offset: props.page * props.rowsPerPage,
-    limit: props.rowsPerPage
+    limit: props.rowsPerPage,
+    displayLanguage: uiLocale
 });
 
 const allContentQuery = gql`
 
-    query($path:String!, $language:String!, $offset:Int, $limit:Int) {
+    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!) {
         jcr {
             nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
                 pageInfo {
@@ -31,6 +32,7 @@ const allContentQuery = gql`
                     }
                     primaryNodeType {
                         name
+                        displayName(language: $displayLanguage)
                     }
                     lockOwner: property(name: "jcr:lockOwner") {
                         value

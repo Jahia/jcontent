@@ -61,8 +61,8 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
-        const { notificationContext, t } = this.props;
-        return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state)}>
+        const { notificationContext, t, uiLocale } = this.props;
+        return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state, uiLocale)}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);
@@ -76,7 +76,7 @@ class ContentLayout extends React.Component {
                         return {
                             uuid: contentNode.uuid,
                             name: contentNode.displayName,
-                            type: contentNode.primaryNodeType.name,
+                            type: contentNode.primaryNodeType.displayName,
                             created: contentNode.created.value,
                             createdBy: contentNode.createdBy.value,
                             path: contentNode.path,

@@ -18,6 +18,7 @@ import {
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name'},
+    {id: 'actions', label: ''},
     {id: 'type', label: 'label.contentManager.listColumns.type'},
     {id: 'created', label: 'label.contentManager.listColumns.created'},
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
@@ -201,16 +202,19 @@ class ContentListTable extends React.Component {
                                                 </Button>
                                             </TableCell>
                                             {columnData.map(column => {
-                                                return (
-                                                    <TableCell key={column.id}>
-                                                        <Typography className={classes[column.id]}>{n[column.id]}</Typography>
-                                                    </TableCell>
-                                                );
+                                                if(column.id === 'actions'){
+                                                    return (<TableCell key={column.id}>
+                                                        <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
+                                                        <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
+                                                    </TableCell>);
+                                                }else {
+                                                    return (
+                                                        <TableCell key={column.id}>
+                                                            <Typography className={classes[column.id]}>{n[column.id]}</Typography>
+                                                        </TableCell>
+                                                    );
+                                                }
                                             })}
-                                            <TableCell>
-                                                <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
-                                                <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
-                                            </TableCell>
                                             <TableCell>
                                                 <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
                                             </TableCell>

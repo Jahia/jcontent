@@ -12,7 +12,7 @@ import {
     PublicationStatusModified,
     PublicationStatusNotPublished,
     PublicationStatusPublished
-} from "./publicationSatus"
+} from "./publicationStatus"
 
 
 const columnData = [

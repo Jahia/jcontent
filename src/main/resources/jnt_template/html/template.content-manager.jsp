@@ -26,7 +26,6 @@
         contextJsParameters['siteTitle'] = '${functions:escapeJavaScript(renderContext.site.title)}';
         contextJsParameters['uiLocale'] = '${functions:escapeJavaScript(renderContext.UILocale)}';
 
-
         reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
     </script>
 </body>

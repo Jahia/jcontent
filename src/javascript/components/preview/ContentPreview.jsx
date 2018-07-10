@@ -1,19 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query, Mutation } from 'react-apollo';
+import { Query } from 'react-apollo';
 import { translate } from 'react-i18next';
-import { withStyles, Paper, Grid, IconButton, Button, Menu, MenuItem, Dialog, Slide } from "@material-ui/core";
+import { withStyles, Paper, Grid, IconButton, Button, Dialog, Slide } from "@material-ui/core";
 import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
-import { previewQuery, allContentQuery } from "../gqlQueries";
-import { publishNode, deleteNode } from '../gqlMutations';
+import { previewQuery } from "../gqlQueries";
 import PublicationInfo from './PublicationStatus';
 import PublicationMenu from './PublishMenu';
 import AdditionalMenuItems from './AdditionalMenuItems';
+import ShareMenu from './ShareMenu';
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
 }
-
 
 const styles = theme => ({
     root: {
@@ -63,16 +62,7 @@ class ContentPreview extends React.Component {
             additionalActionsMenuAnchor: null,
             fullScreen: false
         };
-        this.domNode = React.createRef();
     }
-
-    handleMenuClick = (event, anchorType) => {
-        this.setState({ [anchorType]: event.currentTarget });
-    };
-
-    handleMenuClose = (anchorType) => {
-        this.setState({ [anchorType]: null });
-    };
 
     handleDialogState = () => {
         this.setState({
@@ -91,7 +81,7 @@ class ContentPreview extends React.Component {
         const { selection, classes, t, layoutQueryParams, rowSelectionFunc } = this.props;
         const path = selection ? selection.path : "";
         return (
-            <div className={ classes.root } ref={ this.domNode }>
+            <div className={ classes.root } >
                 <Paper className={ classes.previewPaper } elevation={ 0 }>
                     <Query fetchPolicy={'network-only'} query={ previewQuery } variables={{path: path}}>
                         {({loading, error, data}) => {
@@ -106,7 +96,7 @@ class ContentPreview extends React.Component {
                             <PublicationInfo selection={ selection }/>
                         </Grid>
                         <Grid item xs={ 2 }>
-                            <IconButton><Share/></IconButton>
+                            <ShareMenu selection={ selection }/>
                             { this.screenModeButtons() }
                         </Grid>
                         <Grid item xs={ 4 }>

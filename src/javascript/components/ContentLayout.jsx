@@ -4,7 +4,8 @@ import {allContentQuery, TableQueryVariables} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
-import {Grid, Button, withStyles} from "@material-ui/core";
+import {Grid, Button, IconButton, withStyles} from "@material-ui/core";
+import {Visibility, VisibilityOff, List} from "@material-ui/icons";
 import ContentBrowser from "./ContentBrowser";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
@@ -22,6 +23,7 @@ const styles = theme => ({
 });
 
 const GRID_SIZE = 12;
+const GRID_PANEL_BUTTONS_SIZE = 2;
 const TREE_SIZE = 2;
 const PREVIEW_SIZE = 6;
 
@@ -137,12 +139,15 @@ class ContentLayout extends React.Component {
         return <div>
             {loading && <ProgressOverlay/>}
             <div className={classes.root}>
-                <Grid item xs={GRID_SIZE}>
-                    <ContentBreadcrumbs path={path}/>
-                    <Button
-                        onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
-                    <Button
-                        onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
+                <Grid container spacing={ 0 }>
+                    <Grid item xs={ GRID_SIZE - GRID_PANEL_BUTTONS_SIZE }>
+                        <ContentBreadcrumbs path={path}/>
+                    </Grid>
+                    <Grid item xs={ GRID_PANEL_BUTTONS_SIZE }>
+                        <IconButton onClick={this.handleShowTree}><List/></IconButton>
+                        { showPreview && <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton> }
+                        { !showPreview && <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton> }
+                    </Grid>
                 </Grid>
                 <Grid container spacing={0}>
                     {showTree &&

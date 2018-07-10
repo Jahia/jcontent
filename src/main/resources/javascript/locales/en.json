@@ -26,9 +26,10 @@
           "delete": "Delete",
           "notPublished": "Content has never been published",
           "publishedBy" : "Published by {{userName}} on ",
-          "unpublishedBy" : "Unpublished by {{userName}} on ",
           "modifiedBy" : "Modified by {{userName}} on ",
-          "markedForDeletionBy" : "Marked for deletion by {{userName}} on "
+          "markedForDeletionBy" : "Marked for deletion by {{userName}} on ",
+          "copyPathToClipboard": "Copy path to clipboard",
+          "copyUUIDToClipboard": "Copy UUID to clipboard"
       },
       "preview": {
         "show": "Show Preview",

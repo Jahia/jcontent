@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./ContentPreview";
 import {Grid, Button, withStyles} from "@material-ui/core";
-import ContentBrowser from "./ContentBrowser";
+import ContentTrees from "./ContentTrees";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
@@ -61,7 +61,7 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
-        const { notificationContext, t, uiLocale } = this.props;
+        const { notificationContext, t, uiLocale, sitePath } = this.props;
         return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state, uiLocale)}>
             { ({loading, error, data}) => {
                 if (error) {
@@ -104,7 +104,7 @@ class ContentLayout extends React.Component {
                                 <Button onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
                             </Grid>
                             <Grid container spacing={0}>
-                                {showTree && <Grid item xs={3}><ContentBrowser path={path}/></Grid>}
+                                {showTree && <Grid item xs={3}><ContentTrees path={path} rootPath={sitePath} lang={this.state.language}/></Grid>}
                                 <Grid item xs={xs}>
                                     <ContentListTable
                                         totalCount={totalCount}

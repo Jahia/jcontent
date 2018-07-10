@@ -9,9 +9,9 @@
       },
       "locked": "Content is locked",
       "lock": "Lock content",
-      "workInProgress": "Work in progress in ",
-      "workInProgressAll": "Work in progress all content",
-      "saveAsWip": "Save as work in progress",
+      "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
+      "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
+      "saveAsWip": "Mark as work in progress",
       "editAction": "Edit",
       "errors": "Errors",
       "tree": {

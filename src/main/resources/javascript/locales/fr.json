@@ -9,9 +9,9 @@
       },
       "locked": "Le contenu est verrouillé",
       "lock": "Verrouiller le contenu",
-      "workInProgress": "Travail en cours en ",
-      "workInProgressAll": "Travail en cours dans toutes les langues",
-      "saveAsWip": "Enregistrer en tant que travail en cours",
+      "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
+      "workInProgressAll": "Travail en cours: Tout le contenu (propriétés communes et internationalisées)",
+      "saveAsWip": "Marquer comme travail en cours",
       "editAction": "Editer",
       "errors": "Erreurs",
       "tree": {

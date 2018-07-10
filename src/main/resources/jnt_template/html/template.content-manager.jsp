@@ -25,7 +25,7 @@
         contextJsParameters['mainResourcePath'] = '${renderContext.mainResource.node.path}';
         contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
         contextJsParameters['siteTitle'] = '${functions:escapeJavaScript(renderContext.site.title)}';
-        contextJsParameters['contentLanguageName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
+        contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
 
         reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
     </script>

@@ -46,15 +46,15 @@ class ContentLayout extends React.Component {
         this.handleRowSelection = this.handleRowSelection.bind(this);
     }
 
-    handleChangePage = newPage => {
+    handleChangePage(newPage) {
         this.setState({page: newPage});
     };
 
-    handleChangeRowsPerPage = value => {
+    handleChangeRowsPerPage(value){
         this.setState({rowsPerPage: value});
     };
 
-    handleShowTree = () => {
+    handleShowTree() {
         this.setState((prevState, props) => {
             return {
                 showBrowser: !prevState.showBrowser
@@ -62,7 +62,7 @@ class ContentLayout extends React.Component {
         })
     };
 
-    handleShowPreview = () => {
+    handleShowPreview() {
         if (this.state.selectedRow) {
             this.setState((prevState, props) => {
                 return {
@@ -72,7 +72,7 @@ class ContentLayout extends React.Component {
         }
     };
 
-    handleRowSelection = (row) => {
+    handleRowSelection(row) {
         //Remove selection and close preview panel if it is open
         if (this.state.selectedRow && row.path === this.state.selectedRow.path) {
             this.setState({

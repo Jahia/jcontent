@@ -7,6 +7,11 @@
         "modified": "Modifié par {{userName}} le {{timestamp}}",
         "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}"
       },
+      "locked": "Le contenu est verrouillé",
+      "lock": "Verrouiller le contenu",
+      "workInProgress": "Travail en cours en ",
+      "workInProgressAll": "Travail en cours dans toutes les langues",
+      "saveAsWip": "Enregistrer en tant que travail en cours",
       "editAction": "Editer",
       "errors": "Erreurs",
       "tree": {

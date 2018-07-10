@@ -7,6 +7,11 @@
         "modified": "Modified by {{userName}} on {{timestamp}}",
         "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
       },
+      "locked": "Content is locked",
+      "lock": "Lock content",
+      "workInProgress": "Work in progress in ",
+      "workInProgressAll": "Work in progress all content",
+      "saveAsWip": "Save as work in progress",
       "editAction": "Edit",
       "errors": "Errors",
       "tree": {

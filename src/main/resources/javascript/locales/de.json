@@ -7,6 +7,11 @@
         "modified": "Geändert von {{userName}} am/um {{timestamp}}",
         "markedForDeletion": "Gelöscht von {{userName}} am/um {{timestamp}}"
       },
+      "locked": "Content gesperrt",
+      "lock": "Gesperrt von content",
+      "workInProgress": "In Arbeit in ",
+      "workInProgressAll": "In Arbeit Gesamter Inhalt",
+      "saveAsWip": "Save as work in progress",
       "editAction": "Bearbeiten",
       "errors": "Fehler",
       "tree": {

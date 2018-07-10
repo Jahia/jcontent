@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography, Tooltip} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
@@ -7,6 +7,7 @@ import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
+import {DxContext} from "../DxContext";
 import {
     PublicationStatusMarkedForDeletion,
     PublicationStatusModified,
@@ -176,44 +177,54 @@ class ContentListTable extends React.Component {
                         onRequestSort={this.handleRequestSort}
                         columnData={columnData}
                     />
-                    <TableBody>
-                        {rows.map(n => {
+                    <DxContext.Consumer>
+                        {value => (
+                            <TableBody>
+                                {rows.map(n => {
 
-                            let publicationStatus = publicationStatusByName[n.publicationStatus];
-                            let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
-                            let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
+                                    let publicationStatus = publicationStatusByName[n.publicationStatus];
+                                    let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
+                                    let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
+                                    let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
+                                    let wipStatus = (this.isWip(n, lang) ? (n.wipStatus==='ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
+                                        t('label.contentManager.workInProgress')+value.contentLanguageName) : t('label.contentManager.saveAsWip'));
 
-                            return (
-                                <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
-                                    <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
-                                        <Button disableRipple classes={{
-                                            root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
-                                            label: classes.publicationStatusLabel
-                                        }}>
-                                            <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
-                                            {publicationStatus.getDetailsMessage(n, t)}
-                                        </Button>
-                                    </TableCell>
-                                    {columnData.map(column => {
-                                        return (
-                                            <TableCell key={column.id}>
-                                                <Typography className={classes[column.id]}>{n[column.id]}</Typography>
+                                    return (
+                                        <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
+                                            <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
+                                                <Button disableRipple classes={{
+                                                    root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
+                                                    label: classes.publicationStatusLabel
+                                                }}>
+                                                    <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
+                                                    {publicationStatus.getDetailsMessage(n, t)}
+                                                </Button>
                                             </TableCell>
-                                        );
-                                    })}
-                                    <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
-                                    <TableCell>
-                                        <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                        {emptyRows > 0 && (
-                            <TableRow style={{height: 49 * emptyRows}}>
-                                <TableCell colSpan={columnData.length}/>
-                            </TableRow>
+                                            {columnData.map(column => {
+                                                return (
+                                                    <TableCell key={column.id}>
+                                                        <Typography className={classes[column.id]}>{n[column.id]}</Typography>
+                                                    </TableCell>
+                                                );
+                                            })}
+                                            <TableCell>
+                                                <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
+                                                <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{height: 49 * emptyRows}}>
+                                        <TableCell colSpan={columnData.length}/>
+                                    </TableRow>
+                                )}
+                            </TableBody>
                         )}
-                    </TableBody>
+                    </DxContext.Consumer>
                 </Table>
                 <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>

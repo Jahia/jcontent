@@ -35,7 +35,8 @@
       },
       "noResults": "No Results",
       "title": "All Content",
-      "search": "search"
+      "search": "search",
+      "sql2Search": "SQL2 Search"
     }
   }
 }

@@ -22,6 +22,7 @@ class ContentManager extends React.Component {
         super(props);
 
         this.state = {
+            contentSource: "browsing",
             sql2Search: {
                 from: "",
                 where: "",
@@ -42,6 +43,7 @@ class ContentManager extends React.Component {
 
     onSql2Search = (from, where, orderBy) => {
         this.setState({
+            contentSource: "sql2Search",
             sql2Search: {
                 from: from,
                 where: where,
@@ -53,6 +55,8 @@ class ContentManager extends React.Component {
     render() {
 
         let {dxContext, classes} = this.props;
+        let {contentSource} = this.state;
+
         const isInFrame = window.top !== window;
 
         return (
@@ -69,7 +73,7 @@ class ContentManager extends React.Component {
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
                                     <ManagerLayout header={<CMTopBar dxContext={dxContext} sql2SearchProps={_.assign({onSearch: this.onSql2Search}, this.state.sql2Search)}/>} leftSide={<CMLeftNavigation/>}>
                                         <Route path='/*' render={props => (
-                                            <ContentLayout lang={dxContext.lang} uiLang={dxContext.uilang} sitePath={'/sites/' + dxContext.siteKey}/>
+                                            <ContentLayout contentSource={contentSource} sql2Search={this.state.sql2Search} dxContext={dxContext}/>
                                         )}/>
                                     </ManagerLayout>
                                 </BrowserRouter>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Query} from 'react-apollo';
-import {allContentQuery, TableQueryVariables} from "./gqlQueries";
+import {BrowsingQueryHandler, Sql2SearchQueryHandler} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./ContentPreview";
@@ -11,6 +11,11 @@ import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
 import CmRouter from './CmRouter'
 import classNames from "classnames";
+
+const contentQueryHandlerBySource = {
+    "browsing": new BrowsingQueryHandler(),
+    "sql2Search": new Sql2SearchQueryHandler()
+};
 
 const styles = theme => ({
     side: {
@@ -34,7 +39,7 @@ class ContentLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: this.props.lang,
+            language: this.props.dxContext.lang,
             page: 0,
             rowsPerPage: 25,
             showTree: true,
@@ -72,9 +77,12 @@ class ContentLayout extends React.Component {
     };
 
     render() {
+
         const { showPreview, showTree: showTree } = this.state;
-        const { notificationContext, t, uiLang, sitePath, classes } = this.props;
-        return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state, uiLang)}>
+        const { contentSource, notificationContext, dxContext, t, classes } = this.props;
+        let queryHandler = contentQueryHandlerBySource[contentSource];
+
+        return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams(path, this.props, this.state, dxContext)}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);
@@ -82,9 +90,9 @@ class ContentLayout extends React.Component {
                 }
                 let rows = [];
                 let totalCount = 0;
-                if (data.jcr && data.jcr.nodesByCriteria) {
-                    totalCount = data.jcr.nodesByCriteria.pageInfo.totalCount;
-                    rows = _.map(data.jcr.nodesByCriteria.nodes, contentNode => {
+                if (data && data.jcr && data.jcr.results) {
+                    totalCount = data.jcr.results.pageInfo.totalCount;
+                    rows = _.map(data.jcr.results.nodes, contentNode => {
                         return {
                             uuid: contentNode.uuid,
                             name: contentNode.displayName,
@@ -121,7 +129,7 @@ class ContentLayout extends React.Component {
                                 <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
                                     {
                                         showTree &&
-                                        <ContentTrees path={path} rootPath={sitePath} lang={this.state.language}/>
+                                        <ContentTrees path={path} rootPath={'/sites/' + dxContext.siteKey} lang={this.state.language}/>
                                     }
                                 </Grid>
                                 <Grid item xs

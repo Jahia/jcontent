@@ -6,7 +6,7 @@ import {compose} from "react-apollo/index";
 
 const styles = theme => ({
     root: {
-        margin: theme.spacing.unit,
+        marginTop: theme.spacing.unit,
     },
     sql2Form: {
         padding: theme.spacing.unit,

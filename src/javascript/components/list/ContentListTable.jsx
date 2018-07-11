@@ -192,7 +192,7 @@ class ContentListTable extends React.Component {
 
                                     return (
                                         <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
-                                            <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
+                                            <TableCell padding={'checkbox'} classes={{root: classes.publicationStatusContainer}}>
                                                 <Button disableRipple classes={{
                                                     root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
                                                     label: classes.publicationStatusLabel
@@ -203,13 +203,13 @@ class ContentListTable extends React.Component {
                                             </TableCell>
                                             {columnData.map(column => {
                                                 if(column.id === 'actions') {
-                                                    return (<TableCell key={column.id}>
+                                                    return (<TableCell key={column.id} padding={'none'}>
                                                         <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
                                                         <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
                                                     </TableCell>);
                                                 } else {
                                                     return (
-                                                        <TableCell key={column.id}>
+                                                        <TableCell key={column.id} padding={'none'}>
                                                             <Typography className={classes[column.id]}>{n[column.id]}</Typography>
                                                         </TableCell>
                                                     );
@@ -223,7 +223,7 @@ class ContentListTable extends React.Component {
                                 })}
                                 {emptyRows > 0 && (
                                     <TableRow style={{height: 49 * emptyRows}}>
-                                        <TableCell colSpan={columnData.length}/>
+                                        <TableCell colSpan={columnData.length} padding={'none'}/>
                                     </TableRow>
                                 )}
                             </TableBody>

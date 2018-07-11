@@ -10,11 +10,23 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./ContentBreadcrumbs";
 import CmRouter from './CmRouter'
+import classNames from "classnames";
 
 const styles = theme => ({
-    root: {
-        flexGrow: 1
+    side: {
+        flexGrow: 1,
+        flexBasis: "auto",
     },
+    main: {
+        flexGrow: 4,
+        flexBasis: "auto",
+    },
+    animate: {
+        transition: "all 200ms ease-in-out"
+    },
+    container: {
+        flexWrap: "nowrap"
+    }
 });
 
 class ContentLayout extends React.Component {
@@ -61,12 +73,12 @@ class ContentLayout extends React.Component {
 
     render() {
         const { showPreview, showBrowser: showTree } = this.state;
-        const { notificationContext, t, uiLang, sitePath } = this.props;
+        const { notificationContext, t, uiLang, sitePath, classes } = this.props;
         return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state, uiLang)}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);
-                    notificationContext.notify(t('label.contentManager.errors'), ['closeButton','noAutomaticClose']);
+                    notificationContext.notify(t('label.contentManager.errors'), ['closeButton', 'noAutomaticClose']);
                 }
                 let rows = [];
                 let totalCount = 0;
@@ -93,19 +105,26 @@ class ContentLayout extends React.Component {
                         }
                     })
                 }
-                const xs = 12 - (showTree ? 3 : 0) - (showPreview ? 3 : 0);
                 return (
                     <div>
                         {loading && <ProgressOverlay/>}
-                        <div className={this.props.classes.root}>
+                        <div>
                             <Grid item xs={12}>
                                 <ContentBreadcrumbs path={path}/>
-                                <Button onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
-                                <Button onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
+                                <Button
+                                    onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
+                                <Button
+                                    onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
                             </Grid>
-                            <Grid container spacing={0}>
-                                {showTree && <Grid item xs={3}><ContentTrees path={path} rootPath={sitePath} lang={this.state.language}/></Grid>}
-                                <Grid item xs={xs}>
+                            <Grid container spacing={0} className={classes.container}>
+                                <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
+                                    {
+                                        showTree &&
+                                        <ContentTrees path={path} rootPath={sitePath} lang={this.state.language}/>
+                                    }
+                                </Grid>
+                                <Grid item xs
+                                      classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
                                     <ContentListTable
                                         totalCount={totalCount}
                                         rows={rows}
@@ -116,7 +135,9 @@ class ContentLayout extends React.Component {
                                         lang={this.state.language}
                                     />
                                 </Grid>
-                                {showPreview && <Grid item xs={3}><ContentPreview/></Grid>}
+                                <Grid item xs
+                                      classes={{item: classNames(classes.side, showPreview && classes.animate)}}>{showPreview &&
+                                <ContentPreview/>}</Grid>
                             </Grid>
                         </div>
                     </div>

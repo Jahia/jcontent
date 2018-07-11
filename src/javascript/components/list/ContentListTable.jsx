@@ -254,7 +254,7 @@ class ContentListTable extends React.Component {
 let EmptyRow = (props) => {
     return (
         <TableRow>
-            <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("noResults")}</TableCell>
+            <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("label.contentManager.noResults")}</TableCell>
         </TableRow>
     )
 };

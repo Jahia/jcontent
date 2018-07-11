@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography, Tooltip} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography, Tooltip, SvgIcon} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
@@ -122,7 +122,10 @@ const styles = (theme) => ({
     },
     name: {
         color: theme.palette.primary.main
-    }
+    },
+    nodeTypeIcon: {
+        marginRight: 5,
+    },
 });
 
 class ContentListTable extends React.Component {
@@ -165,6 +168,11 @@ class ContentListTable extends React.Component {
         }
     }
 
+    addIconSuffix(icon) {
+        return (!icon.includes('.png') ? icon+'.png' : icon);
+    }
+
+
     render() {
 
         const {order, orderBy} = this.state;
@@ -184,14 +192,13 @@ class ContentListTable extends React.Component {
                         {value => (
                             <TableBody>
                                 {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
-
                                     let publicationStatus = publicationStatusByName[n.publicationStatus];
                                     let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                                     let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                                     let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
                                     let wipStatus = (this.isWip(n, lang) ? (n.wipStatus==='ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
                                         t('label.contentManager.workInProgress', {wipLang: value.langName})) : t('label.contentManager.saveAsWip'));
-
+                                    let icon = this.addIconSuffix(n.icon);
                                     return (
                                         <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
                                             <TableCell padding={'checkbox'} classes={{root: classes.publicationStatusContainer}}>
@@ -208,6 +215,12 @@ class ContentListTable extends React.Component {
                                                     return (<TableCell key={column.id} padding={'none'}>
                                                         <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
                                                         <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
+                                                    </TableCell>);
+                                                } else if (column.id === 'name') {
+                                                    return (<TableCell key={column.id}>
+                                                        <Typography className={classes[column.id]}>
+                                                            <img src={icon} className={classes.nodeTypeIcon}/>
+                                                            {n[column.id]}</Typography>
                                                     </TableCell>);
                                                 } else {
                                                     return (

@@ -33,6 +33,7 @@ const allContentQuery = gql`
                     primaryNodeType {
                         name
                         displayName(language: $displayLanguage)
+                        icon
                     }
                     lockOwner: property(name: "jcr:lockOwner") {
                         value

@@ -101,7 +101,8 @@ class ContentLayout extends React.Component {
                             deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
                             deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
                             wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
-                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : [])
+                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
+                            icon: contentNode.primaryNodeType.icon,
                         }
                     })
                 }

@@ -18,7 +18,7 @@ const styles = theme => ({
         flexBasis: "auto",
     },
     main: {
-        flexGrow: 4,
+        flexGrow: 99,
         flexBasis: "auto",
     },
     animate: {

@@ -23,7 +23,9 @@ const styles = theme => ({
 class CMTopBar extends React.Component {
 
     render() {
-        const { dxContext, classes, t } = this.props;
+
+        const { dxContext, sql2SearchProps, classes, t } = this.props;
+
         return (
             <div className={classes.root}>
                 <Toolbar color={'secondary'}>
@@ -35,7 +37,7 @@ class CMTopBar extends React.Component {
                     </div>
                     <div className={classes.search}>
                         <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
-                        <Sql2SearchInputForm siteKey={dxContext.siteKey}/>
+                        <Sql2SearchInputForm siteKey={dxContext.siteKey} sql2From={sql2SearchProps.from} sql2Where={sql2SearchProps.where} sql2OrderBy={sql2SearchProps.orderBy} onSql2Search={sql2SearchProps.onSearch}/>
                     </div>
                 </Toolbar>
             </div>

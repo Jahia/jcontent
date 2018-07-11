@@ -17,9 +17,22 @@ import {compose} from "react-apollo/index";
 
 class ContentManager extends React.Component {
 
+    constructor(props) {
+
+        super(props);
+
+        this.state = {
+            sql2Search: {
+                from: "",
+                where: "",
+                orderBy: ""
+            }
+        };
+    }
+
     setRouter(router) {
         let {dxContext, classes} = this.props;
-        router.history.listen((location, action) => {
+        router && router.history.listen((location, action) => {
             console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
             console.log(`Url base ${dxContext.urlbase}`);
             console.log(`The last navigation action was ${action}`);
@@ -27,7 +40,18 @@ class ContentManager extends React.Component {
         });
     }
 
+    onSql2Search = (from, where, orderBy) => {
+        this.setState({
+            sql2Search: {
+                from: from,
+                where: where,
+                orderBy: orderBy
+            }
+        });
+    }
+
     render() {
+
         let {dxContext, classes} = this.props;
         const isInFrame = window.top !== window;
 
@@ -43,7 +67,7 @@ class ContentManager extends React.Component {
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                    <ManagerLayout header={<CMTopBar dxContext={dxContext} sql2SearchProps={_.assign({onSearch: this.onSql2Search}, this.state.sql2Search)}/>} leftSide={<CMLeftNavigation/>}>
                                         <Route path='/*' render={props => (
                                             <ContentLayout lang={dxContext.lang} uiLang={dxContext.uilang} sitePath={'/sites/' + dxContext.siteKey}/>
                                         )}/>

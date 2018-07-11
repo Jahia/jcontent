@@ -29,7 +29,9 @@ const publicationStatusByName = {
     "PUBLISHED": new PublicationStatusPublished(),
     "MODIFIED": new PublicationStatusModified(),
     "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
-}
+};
+
+const APP_TABLE_CELLS = 2;
 
 const styles = (theme) => ({
     contentRow: {
@@ -181,7 +183,7 @@ class ContentListTable extends React.Component {
                     <DxContext.Consumer>
                         {value => (
                             <TableBody>
-                                {rows.map(n => {
+                                {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
 
                                     let publicationStatus = publicationStatusByName[n.publicationStatus];
                                     let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
@@ -223,7 +225,7 @@ class ContentListTable extends React.Component {
                                 })}
                                 {emptyRows > 0 && (
                                     <TableRow style={{height: 49 * emptyRows}}>
-                                        <TableCell colSpan={columnData.length} padding={'none'}/>
+                                        <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -235,6 +237,14 @@ class ContentListTable extends React.Component {
         );
     }
 }
+
+let EmptyRow = (props) => {
+    return (
+        <TableRow>
+            <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("noResults")}</TableCell>
+        </TableRow>
+    )
+};
 
 ContentListTable.propTypes = {
     rows: PropTypes.array.isRequired,

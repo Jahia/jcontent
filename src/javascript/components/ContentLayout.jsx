@@ -37,7 +37,7 @@ class ContentLayout extends React.Component {
             language: this.props.lang,
             page: 0,
             rowsPerPage: 25,
-            showBrowser: false,
+            showTree: true,
             showPreview: false
         };
         this.handleChangePage = this.handleChangePage.bind(this);
@@ -58,7 +58,7 @@ class ContentLayout extends React.Component {
     handleShowTree = () => {
         this.setState((prevState, props) => {
             return {
-                showBrowser: !prevState.showBrowser
+                showTree: !prevState.showTree
             }
         })
     };
@@ -72,7 +72,7 @@ class ContentLayout extends React.Component {
     };
 
     render() {
-        const { showPreview, showBrowser: showTree } = this.state;
+        const { showPreview, showTree: showTree } = this.state;
         const { notificationContext, t, uiLang, sitePath, classes } = this.props;
         return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={allContentQuery} variables={TableQueryVariables(path, this.state.language, this.state, uiLang)}>
             { ({loading, error, data}) => {

@@ -33,6 +33,8 @@
         "created": "Erstellt am/um",
         "createdBy": "Erstellt von"
       },
+      "browsePages": "Seiten durchsuchen",
+      "browseFolders": "Ordner durchsuchen",
       "noResults": "Kein Ergebnis",
       "title": "Gesamter Content",
       "search": "Suche"

@@ -4,11 +4,12 @@ import {PickerViewMaterial} from '@jahia/react-material';
 import {List, ListItem} from "@material-ui/core";
 import CmRouter from "./CmRouter";
 import gql from "graphql-tag";
+import {translate} from 'react-i18next';
 
 class ContentTree extends React.Component {
 
     render() {
-        let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes} = this.props;
+        let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel} = this.props;
         return (
             <Picker fragments={["displayName", {
                 applyFor: "node",
@@ -21,14 +22,16 @@ class ContentTree extends React.Component {
                     queryVariables={{lang: lang}}
                     selectedPaths={[path]}
                     onSelectItem={(path) => handleSelect(path)}>
-                {({handleSelect, ...others}) => <PickerViewMaterial {...others} textRenderer={(entry) => entry.node.displayName}/>}
+                {({handleSelect, ...others}) => <PickerViewMaterial {...others} textRenderer={(entry) => {
+                    return entry.depth > 0 ? entry.node.displayName : rootLabel;
+                }}/>}
             </Picker>
         )
     }
 }
 
 let ContentTrees = (props) => {
-    const {lang, rootPath, path} = props;
+    const {lang, rootPath, path, t} = props;
     return (<CmRouter render={({goto}) => (
             <List>
                 <ListItem>
@@ -39,6 +42,7 @@ let ContentTrees = (props) => {
                         lang={lang}
                         handleSelect={ path => goto(path) }
                         openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
+                        rootLabel={t("label.contentManager.browsePages")}
                     />
                 </ListItem>
                 <ListItem>
@@ -49,11 +53,13 @@ let ContentTrees = (props) => {
                         lang={lang}
                         handleSelect={ path => goto(path) }
                         openableTypes={['jmix:list', 'jnt:contentFolder']}
+                        rootLabel={t("label.contentManager.browseFolders")}
                     />
                 </ListItem>
             </List>
         )} />
     )
-}
+};
 
-export default ContentTrees;
+
+export default translate()(ContentTrees);

@@ -33,6 +33,8 @@
         "created": "Created On",
         "createdBy": "Created By"
       },
+      "browsePages": "Browse Pages",
+      "browseFolders": "Browse Folders",
       "noResults": "No Results",
       "title": "All Content",
       "search": "search",

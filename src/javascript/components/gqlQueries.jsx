@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 class BrowsingQueryHandler {
 
     getQuery() {
-        return allContentQuery;
+        return getNodeSubTree;
     }
 
     getQueryParams(path, contentLayoutWidgetProps, contentLayoutWidgetState, dxContext) {
@@ -14,6 +14,10 @@ class BrowsingQueryHandler {
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage
         };
+    }
+
+    getResultsPath(results){
+        return results.descendants;
     }
 }
 
@@ -39,6 +43,10 @@ class Sql2SearchQueryHandler {
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage
         };
+    }
+
+    getResultsPath(results){
+        return results;
     }
 }
 
@@ -101,6 +109,24 @@ const allContentQuery = gql`
                 }
                 nodes {
                     ...NodeFields
+                }
+            }
+        }
+    }
+    ${nodeFields}
+`;
+
+const getNodeSubTree = gql ` 
+    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!) {
+        jcr {
+            results: nodeByPath(path: $path) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: ["jmix:editorialContent"], multi:ANY}, recursionTypesFilter: {multi: NONE, types: ["jnt:page"]}){
+                    pageInfo {
+                        totalCount
+                    }
+                    nodes {
+                    ...NodeFields
+                    }
                 }
             }
         }

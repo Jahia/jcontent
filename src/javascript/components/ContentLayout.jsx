@@ -77,7 +77,6 @@ class ContentLayout extends React.Component {
     };
 
     render() {
-
         const { showPreview, showTree: showTree } = this.state;
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
         let queryHandler = contentQueryHandlerBySource[contentSource];
@@ -91,9 +90,9 @@ class ContentLayout extends React.Component {
                 }
                 let rows = [];
                 let totalCount = 0;
-                if (data && data.jcr && data.jcr.results) {
-                    totalCount = data.jcr.results.pageInfo.totalCount;
-                    rows = _.map(data.jcr.results.nodes, contentNode => {
+                if (data && data.jcr && queryHandler.getResultsPath(data.jcr.results)) {
+                    totalCount = queryHandler.getResultsPath(data.jcr.results).pageInfo.totalCount;
+                    rows = _.map(queryHandler.getResultsPath(data.jcr.results).nodes, contentNode => {
                         return {
                             uuid: contentNode.uuid,
                             name: contentNode.displayName,

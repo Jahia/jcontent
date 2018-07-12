@@ -24,8 +24,7 @@ class ContentManager extends React.Component {
         this.state = {
             sql2Search: {
                 from: "",
-                where: "",
-                orderBy: ""
+                where: ""
             }
         };
     }
@@ -40,12 +39,11 @@ class ContentManager extends React.Component {
         });
     }
 
-    onSql2Search = (from, where, orderBy) => {
+    onSql2Search = (from, where) => {
         this.setState({
             sql2Search: {
                 from: from,
-                where: where,
-                orderBy: orderBy
+                where: where
             }
         });
     }

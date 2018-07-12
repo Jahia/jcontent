@@ -3,6 +3,11 @@ import {withStyles, Input, Paper, Button, Collapse} from "@material-ui/core";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
+import {
+    NODE_TYPE_OPEN, NODE_TYPE_CLOSE,
+    BELONGS_TO_SITE_OPEN, BELONGS_TO_SITE_CLOSE,
+    ADDITIONAL_CONDITION_OPEN, ADDITIONAL_CONDITION_CLOSE
+} from "./sql2SearchUtils.js";
 
 const styles = theme => ({
     root: {
@@ -35,7 +40,6 @@ class Sql2SearchInputForm extends React.Component {
 
         this.from = React.createRef();
         this.where = React.createRef();
-        this.orderBy = React.createRef();
     }
 
     onExpandCollapseClick = () => {
@@ -45,7 +49,7 @@ class Sql2SearchInputForm extends React.Component {
     }
 
     onSearchClick = () => {
-        this.props.onSql2Search(this.from.current.value, this.where.current.value, this.orderBy.current.value);
+        this.props.onSql2Search(this.from.current.value, this.where.current.value);
     }
 
     render() {
@@ -62,13 +66,10 @@ class Sql2SearchInputForm extends React.Component {
                     <Paper classes={{root: classes.sql2Form}}>
                         <div>
                             <div>
-                                select * from [<Sql2Input maxLength={50} size={20} inputRef={this.from}/>] where ISDESCENDANTNODE('/sites/{siteKey}')
+                                {NODE_TYPE_OPEN}<Sql2Input maxLength={50} size={20} inputRef={this.from}/>{NODE_TYPE_CLOSE} {BELONGS_TO_SITE_OPEN}{siteKey}{BELONGS_TO_SITE_CLOSE}
                             </div>
                             <div>
-                                and (<Sql2Input maxLength={500} size={80} inputRef={this.where}/>)
-                            </div>
-                            <div>
-                                order by [<Sql2Input maxLength={50} size={20} defaultValue={'jcr:uuid'} inputRef={this.orderBy}/>]
+                                {ADDITIONAL_CONDITION_OPEN}<Sql2Input maxLength={500} size={80} inputRef={this.where}/>{ADDITIONAL_CONDITION_CLOSE}
                             </div>
                         </div>
                         <div className={classes.actions}>

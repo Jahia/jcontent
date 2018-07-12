@@ -6,7 +6,7 @@ class CmRouter extends React.Component {
 
     mapUrlToQuery = (match, location) => {
         return {
-            path: match.url,
+            path: _.replace(location.pathname, match.path, ''),
             filter: this.deserializeQueryString(location)
         }
     };
@@ -18,7 +18,7 @@ class CmRouter extends React.Component {
     };
 
     // This method push to the browser url the provided location
-    mapQueryToUrl = history => {
+    mapQueryToUrl = (match, history, location) => {
         return {
             goto: (path, filter) => {
                 let queryString;
@@ -29,14 +29,14 @@ class CmRouter extends React.Component {
                 } else {
                     queryString = '';
                 }
-                history.push(path + queryString);
+                history.push( match.path + path  + queryString);
             }
         }
     };
 
     render() {
         const { match, location, history } = this.props;
-        return <span>{this.props.render({...this.mapUrlToQuery(match, location), ...this.mapQueryToUrl(history)})}</span>
+        return <span>{this.props.render({...this.mapUrlToQuery(match, location), ...this.mapQueryToUrl(match, history, location)})}</span>
     }
 };
 

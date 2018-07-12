@@ -1,6 +1,7 @@
 package org.jahia.modules.contentmanager.configuration;
 
 import net.sf.ehcache.Ehcache;
+import org.jahia.api.Constants;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.render.RenderContext;
@@ -11,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 public class URLResolver extends org.jahia.services.render.URLResolver {
+
+    private static final String SYSTEM_SITE_PATH = "/sites/systemsite";
+
 
     public URLResolver(String urlPathInfo, String serverName, HttpServletRequest request, Ehcache nodePathCache, Ehcache siteInfoCache) {
         super(urlPathInfo, serverName, request, nodePathCache, siteInfoCache);
@@ -31,6 +35,7 @@ public class URLResolver extends org.jahia.services.render.URLResolver {
 
     @Override
     protected Resource resolveResource(String workspace, Locale locale, String path) throws RepositoryException {
-        return new Resource(resolveNode(workspace, locale, path), "html", "default", Resource.CONFIGURATION_PAGE);
+        // remove mode from the path
+        return new Resource(resolveNode(Constants.EDIT_WORKSPACE, Locale.ENGLISH, SYSTEM_SITE_PATH), "html", "default", Resource.CONFIGURATION_PAGE);
     }
 }

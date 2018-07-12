@@ -5,6 +5,7 @@ import {List, ListItem} from "@material-ui/core";
 import CmRouter from "./CmRouter";
 import gql from "graphql-tag";
 import {translate} from 'react-i18next';
+import * as _ from 'lodash';
 
 class ContentTree extends React.Component {
 

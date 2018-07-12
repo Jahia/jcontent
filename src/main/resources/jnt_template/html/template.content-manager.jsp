@@ -19,12 +19,8 @@
 
     <div id="${targetId}">loading..</div>
     <script type="text/javascript">
-        contextJsParameters['urlBrowser'] = '/cms/contentmanager/${renderContext.workspace}/${mainResourceLocale}';
-        contextJsParameters['urlbase'] = '${url.base}';
-        contextJsParameters['mainResourceId'] = '${renderContext.mainResource.node.identifier}';
-        contextJsParameters['mainResourcePath'] = '${renderContext.mainResource.node.path}';
-        contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
-        contextJsParameters['siteTitle'] = '${functions:escapeJavaScript(renderContext.site.title)}';
+        contextJsParameters['urlBrowser'] = '/cms/contentmanager';
+        contextJsParameters['urlbase'] = '${renderContext.servletPath}';
         contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
 
         reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);

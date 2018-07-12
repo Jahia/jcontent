@@ -22,7 +22,6 @@ class ContentManager extends React.Component {
         super(props);
 
         this.state = {
-            contentSource: "browsing",
             sql2Search: {
                 from: "",
                 where: "",
@@ -43,7 +42,6 @@ class ContentManager extends React.Component {
 
     onSql2Search = (from, where, orderBy) => {
         this.setState({
-            contentSource: "sql2Search",
             sql2Search: {
                 from: from,
                 where: where,
@@ -55,7 +53,6 @@ class ContentManager extends React.Component {
     render() {
 
         let {dxContext, classes} = this.props;
-        let {contentSource} = this.state;
 
         const isInFrame = window.top !== window;
 
@@ -71,11 +68,23 @@ class ContentManager extends React.Component {
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <ManagerLayout header={<CMTopBar dxContext={dxContext} onSql2Search={this.onSql2Search}/>} leftSide={<CMLeftNavigation/>}>
-                                        <Route path='/*' render={props => (
-                                            <ContentLayout contentSource={contentSource} sql2Search={this.state.sql2Search} dxContext={dxContext}/>
-                                        )}/>
-                                    </ManagerLayout>
+                                    <Route path='/sites/:siteKey/:lang' render={props => {
+                                        const siteKey = props.match.params.siteKey;
+                                        dxContext['siteKey'] = siteKey;
+                                        const lang = props.match.params.lang;
+                                        dxContext['lang'] = lang;
+                                        return (
+                                            <ManagerLayout header={<CMTopBar dxContext={dxContext} onSql2Search={this.onSql2Search}/>} leftSide={<CMLeftNavigation/>}>
+                                                <div>
+                                                    <Route path={`${props.match.url}/browse`} render={props => (
+                                                        <ContentLayout contentSource="browsing" dxContext={dxContext}/>
+                                                    )}/>
+                                                    <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                        <ContentLayout contentSource="sql2Search" sql2Search={this.state.sql2Search} dxContext={dxContext}/>
+                                                    )}/>
+                                                </div>
+                                            </ManagerLayout>
+                                    )} }/>
                                 </BrowserRouter>
                             </DxContext.Provider>
                         </I18nextProvider>

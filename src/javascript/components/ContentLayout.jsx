@@ -42,7 +42,7 @@ class ContentLayout extends React.Component {
             language: this.props.dxContext.lang,
             page: 0,
             rowsPerPage: 25,
-            showTree: true,
+            showTree: (this.props.contentSource == 'browsing'),
             showPreview: false
         };
         this.handleChangePage = this.handleChangePage.bind(this);
@@ -120,10 +120,15 @@ class ContentLayout extends React.Component {
                         <div>
                             <Grid item xs={12}>
                                 <ContentBreadcrumbs path={path}/>
-                                <Button
-                                    onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
-                                <Button
-                                    onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
+                                {
+                                    (contentSource == 'browsing') &&
+                                    <Button onClick={this.handleShowTree}>
+                                        {t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}
+                                    </Button>
+                                }
+                                <Button onClick={this.handleShowPreview}>
+                                    {t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}
+                                </Button>
                             </Grid>
                             <Grid container spacing={0} className={classes.container}>
                                 <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
@@ -132,8 +137,7 @@ class ContentLayout extends React.Component {
                                         <ContentTrees path={path} rootPath={'/sites/' + dxContext.siteKey} lang={this.state.language}/>
                                     }
                                 </Grid>
-                                <Grid item xs
-                                      classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
+                                <Grid item xs classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
                                     <ContentListTable
                                         totalCount={totalCount}
                                         rows={rows}
@@ -144,9 +148,9 @@ class ContentLayout extends React.Component {
                                         lang={this.state.language}
                                     />
                                 </Grid>
-                                <Grid item xs
-                                      classes={{item: classNames(classes.side, showPreview && classes.animate)}}>{showPreview &&
-                                <ContentPreview/>}</Grid>
+                                <Grid item xs classes={{item: classNames(classes.side, showPreview && classes.animate)}}>
+                                    {showPreview && <ContentPreview/>}
+                                </Grid>
                             </Grid>
                         </div>
                     </div>

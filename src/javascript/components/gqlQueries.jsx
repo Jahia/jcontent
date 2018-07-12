@@ -42,8 +42,57 @@ class Sql2SearchQueryHandler {
     }
 }
 
-const allContentQuery = gql`
+const nodeFields = gql`
+    fragment NodeFields on JCRNode {
+        aggregatedPublicationInfo(language: $language) {
+            publicationStatus
+        }
+        uuid
+        name
+        path
+        displayName
+        createdBy: property(name: "jcr:createdBy") {
+            value
+        }
+        created: property(name: "jcr:created") {
+            value
+        }
+        primaryNodeType {
+            name
+            displayName(language: $displayLanguage)
+            icon
+        }
+        lockOwner: property(name: "jcr:lockOwner") {
+            value
+        }
+        lastPublished: property(name: "j:lastPublished") {
+            value
+        }
+        lastPublishedBy: property(name: "j:lastPublishedBy") {
+            value
+        }
+        lastModifiedBy: property(name: "jcr:lastModifiedBy") {
+            value
+        }
+        lastModified: property(name: "jcr:lastModified") {
+            value
+        }
+        deletedBy: property(name: "j:deletionUser") {
+            value
+        }
+        deleted: property(name: "j:deletionDate") {
+            value
+        }
+        wipStatus: property(name: "j:workInProgressStatus") {
+            value
+        }
+        wipLangs: property(name: "j:workInProgressLanguages") {
+            values
+        }
+    }
+`;
 
+const allContentQuery = gql`
     query($path:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
             results: nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
@@ -51,58 +100,15 @@ const allContentQuery = gql`
                     totalCount
                 }
                 nodes {
-                    aggregatedPublicationInfo(language: $language) {
-                        publicationStatus
-                    }
-                    uuid
-                    name
-                    path
-                    displayName
-                    createdBy: property(name: "jcr:createdBy") {
-                        value
-                    }
-                    created: property(name: "jcr:created") {
-                        value
-                    }
-                    primaryNodeType {
-                        name
-                        displayName(language: $displayLanguage)
-                        icon
-                    }
-                    lockOwner: property(name: "jcr:lockOwner") {
-                        value
-                    }
-                    lastPublished: property(name: "j:lastPublished") {
-                        value
-                    }
-                    lastPublishedBy: property(name: "j:lastPublishedBy") {
-                        value
-                    }
-                    lastModifiedBy: property(name: "jcr:lastModifiedBy") {
-                        value
-                    }
-                    lastModified: property(name: "jcr:lastModified") {
-                        value
-                    }
-                    deletedBy: property(name: "j:deletionUser") {
-                        value
-                    }
-                    deleted: property(name: "j:deletionDate") {
-                        value
-                    }
-                    wipStatus: property(name: "j:workInProgressStatus") {
-                        value
-                    }
-                    wipLangs: property(name: "j:workInProgressLanguages") {
-                        values
-                    }
+                    ...NodeFields
                 }
             }
         }
-    }`;
+    }
+    ${nodeFields}
+`;
 
 const sql2SearchContentQuery = gql`
-
     query($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
             results: nodesByQuery(query: $query, queryLanguage: SQL2, offset: $offset, limit: $limit) {
@@ -110,54 +116,12 @@ const sql2SearchContentQuery = gql`
                     totalCount
                 }
                 nodes {
-                    aggregatedPublicationInfo(language: $language) {
-                        publicationStatus
-                    }
-                    uuid
-                    name
-                    path
-                    displayName
-                    createdBy: property(name: "jcr:createdBy") {
-                        value
-                    }
-                    created: property(name: "jcr:created") {
-                        value
-                    }
-                    primaryNodeType {
-                        name
-                        displayName(language: $displayLanguage)
-                        icon
-                    }
-                    lockOwner: property(name: "jcr:lockOwner") {
-                        value
-                    }
-                    lastPublished: property(name: "j:lastPublished") {
-                        value
-                    }
-                    lastPublishedBy: property(name: "j:lastPublishedBy") {
-                        value
-                    }
-                    lastModifiedBy: property(name: "jcr:lastModifiedBy") {
-                        value
-                    }
-                    lastModified: property(name: "jcr:lastModified") {
-                        value
-                    }
-                    deletedBy: property(name: "j:deletionUser") {
-                        value
-                    }
-                    deleted: property(name: "j:deletionDate") {
-                        value
-                    }
-                    wipStatus: property(name: "j:workInProgressStatus") {
-                        value
-                    }
-                    wipLangs: property(name: "j:workInProgressLanguages") {
-                        values
-                    }
+                    ...NodeFields
                 }
             }
         }
-    }`;
+    }
+    ${nodeFields}
+`;
 
 export {BrowsingQueryHandler, Sql2SearchQueryHandler};

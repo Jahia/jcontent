@@ -62,7 +62,7 @@ class Sql2SearchInputForm extends React.Component {
                     <Paper classes={{root: classes.sql2Form}}>
                         <div>
                             <div>
-                                select * from [<Sql2Input maxLength={50} size={20} inputRef={this.from}/>] where ISDESCENDANTNODE('/sites/{siteKey}'})
+                                select * from [<Sql2Input maxLength={50} size={20} inputRef={this.from}/>] where ISDESCENDANTNODE('/sites/{siteKey}')
                             </div>
                             <div>
                                 and (<Sql2Input maxLength={500} size={80} inputRef={this.where}/>)

@@ -13,7 +13,9 @@
       "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
       "saveAsWip": "Mark as work in progress",
       "editAction": "Edit",
-      "errors": "Errors",
+      "error": {
+        "queryingContent": "Error querying content: {{details}}"
+      },
       "tree": {
         "show": "Show Tree",
         "hide": "Hide Tree"

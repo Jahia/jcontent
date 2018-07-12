@@ -13,7 +13,6 @@
       "workInProgressAll": "In Arbeit: Gesamter Inhalt (gemeinsame und sprachabhängige Eigenschaften)",
       "saveAsWip": "Als \"in Arbeit\" markieren",
       "editAction": "Bearbeiten",
-      "errors": "Fehler",
       "tree": {
         "show": "Navigationsbaum anzeigen",
         "hide": "Navigationsbaum verbergen"

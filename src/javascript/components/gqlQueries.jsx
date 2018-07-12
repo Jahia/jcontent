@@ -26,7 +26,7 @@ class Sql2SearchQueryHandler {
     getQueryParams(path, contentLayoutWidgetProps, contentLayoutWidgetState, dxContext) {
 
         let {from, where, orderBy} = contentLayoutWidgetProps.sql2Search;
-        let query = "select * from[" + from + "] as node where ISDESCENDANTNODE(node, '/sites/" + dxContext.siteKey + "')";
+        let query = "select * from[" + from + "] where ISDESCENDANTNODE('/sites/" + dxContext.siteKey + "')";
         if (where && where != "") {
             query = query + " and (" + where + ")";
         }

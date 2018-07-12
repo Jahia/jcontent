@@ -61,13 +61,15 @@ class Sql2SearchInputForm extends React.Component {
                 <Collapse in={this.state.open}>
                     <Paper classes={{root: classes.sql2Form}}>
                         <div>
-                            select * from [<Sql2Input maxLength={50} size={20} inputRef={this.from}/>] as node where ISDESCENDANTNODE(node, {`'/sites/${siteKey}'`})
-                        </div>
-                        <div>
-                            and (<Sql2Input maxLength={500} size={80} inputRef={this.where}/>)
-                        </div>
-                        <div>
-                            order by [<Sql2Input maxLength={50} size={20} defaultValue={'jcr:uuid'} inputRef={this.orderBy}/>]
+                            <div>
+                                select * from [<Sql2Input maxLength={50} size={20} inputRef={this.from}/>] where ISDESCENDANTNODE('/sites/{siteKey}'})
+                            </div>
+                            <div>
+                                and (<Sql2Input maxLength={500} size={80} inputRef={this.where}/>)
+                            </div>
+                            <div>
+                                order by [<Sql2Input maxLength={50} size={20} defaultValue={'jcr:uuid'} inputRef={this.orderBy}/>]
+                            </div>
                         </div>
                         <div className={classes.actions}>
                             <Button size={'small'} onClick={this.onSearchClick}>{t('label.contentManager.search')}</Button>

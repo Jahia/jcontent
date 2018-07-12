@@ -71,7 +71,7 @@ class ContentManager extends React.Component {
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <ManagerLayout header={<CMTopBar dxContext={dxContext} sql2SearchProps={_.assign({onSearch: this.onSql2Search}, this.state.sql2Search)}/>} leftSide={<CMLeftNavigation/>}>
+                                    <ManagerLayout header={<CMTopBar dxContext={dxContext} onSql2Search={this.onSql2Search}/>} leftSide={<CMLeftNavigation/>}>
                                         <Route path='/*' render={props => (
                                             <ContentLayout contentSource={contentSource} sql2Search={this.state.sql2Search} dxContext={dxContext}/>
                                         )}/>

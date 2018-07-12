@@ -50,7 +50,7 @@ class Sql2SearchInputForm extends React.Component {
 
     render() {
 
-        let {siteKey, sql2From, sql2Where, sql2OrderBy, classes, t} = this.props;
+        let {siteKey, classes, t} = this.props;
 
         return (
             <div className={classes.root}>
@@ -61,13 +61,13 @@ class Sql2SearchInputForm extends React.Component {
                 <Collapse in={this.state.open}>
                     <Paper classes={{root: classes.sql2Form}}>
                         <div>
-                            select * from [<Sql2Input maxLength={50} size={20} value={sql2From} inputRef={this.from}/>] as node where ISDESCENDANTNODE(node, {`'/sites/${siteKey}'`})
+                            select * from [<Sql2Input maxLength={50} size={20} inputRef={this.from}/>] as node where ISDESCENDANTNODE(node, {`'/sites/${siteKey}'`})
                         </div>
                         <div>
-                            and (<Sql2Input maxLength={500} size={80} value={sql2Where} inputRef={this.where}/>)
+                            and (<Sql2Input maxLength={500} size={80} inputRef={this.where}/>)
                         </div>
                         <div>
-                            order by [<Sql2Input maxLength={50} size={20} value={sql2OrderBy} inputRef={this.orderBy}/>]
+                            order by [<Sql2Input maxLength={50} size={20} defaultValue={'jcr:uuid'} inputRef={this.orderBy}/>]
                         </div>
                         <div className={classes.actions}>
                             <Button size={'small'} onClick={this.onSearchClick}>{t('label.contentManager.search')}</Button>
@@ -83,10 +83,10 @@ class Sql2Input extends React.Component {
 
     render() {
 
-        let {maxLength, size, inputRef, classes} = this.props;
+        let {maxLength, size, defaultValue, inputRef, classes} = this.props;
 
         return (
-            <Input inputProps={{maxLength: maxLength, size: size}} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}/>
+            <Input inputProps={{maxLength: maxLength, size: size}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}/>
         );
     }
 }

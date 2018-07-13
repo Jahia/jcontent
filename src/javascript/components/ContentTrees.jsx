@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 class ContentTree extends React.Component {
 
     render() {
-        let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel} = this.props;
+        let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes} = this.props;
         return (
             <Picker fragments={["displayName", {
                 applyFor: "node",
@@ -41,7 +41,7 @@ let ContentTrees = (props) => {
                         rootPath={rootPath + "/contents"}
                         selectableTypes={['jmix:list']}
                         lang={lang}
-                        handleSelect={ path => goto( path ) }
+                        handleSelect={ path => goto( path, {recurTypes:'jnt:contentFolder'}) }
                         openableTypes={['jmix:list', 'jnt:contentFolder']}
                         rootLabel={t("label.contentManager.browseFolders")}
                     />
@@ -52,7 +52,7 @@ let ContentTrees = (props) => {
                         rootPath={rootPath}
                         selectableTypes={['jnt:page']}
                         lang={lang}
-                        handleSelect={ path => goto( path, {} ) }
+                        handleSelect={ path => goto( path, {filterTypes:'jmix:editorialContent', recurTypes:'jnt:contentList'} ) }
                         openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                         rootLabel={t("label.contentManager.browsePages")}
                     />

@@ -12,12 +12,15 @@ class BrowsingQueryHandler {
     }
 
     getQueryParams(path, contentLayoutWidgetProps, contentLayoutWidgetState, dxContext) {
+        console.log(contentLayoutWidgetProps);
         return {
             path: path,
             language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
-            limit: contentLayoutWidgetState.rowsPerPage
+            limit: contentLayoutWidgetState.rowsPerPage,
+            filterTypes: contentLayoutWidgetProps.filterTypes,
+            recurTypes: contentLayoutWidgetProps.recurTypes
         };
     }
 
@@ -121,10 +124,10 @@ const allContentQuery = gql`
 `;
 
 const getNodeSubTree = gql ` 
-    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!) {
+    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $filterTypes:String, $recurTypes:String) {
         jcr {
             results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: ["jmix:editorialContent"], multi:ANY}, recursionTypesFilter: {multi: NONE, types: ["jnt:page"]}){
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $filterTypes}, recursionTypesFilter: {types: $recurTypes}){
                     pageInfo {
                         totalCount
                     }

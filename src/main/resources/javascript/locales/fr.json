@@ -1,0 +1,42 @@
+{
+  "label": {
+    "contentManager": {
+      "publicationStatus": {
+        "notPublished": "Ce contenu n'a jamais été publié",
+        "published": "Publié par {{userName}} le {{timestamp}}",
+        "modified": "Modifié par {{userName}} le {{timestamp}}",
+        "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}"
+      },
+      "locked": "Le contenu est verrouillé",
+      "lock": "Verrouiller le contenu",
+      "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
+      "workInProgressAll": "Travail en cours: Tout le contenu (propriétés communes et internationalisées)",
+      "saveAsWip": "Marquer comme travail en cours",
+      "editAction": "Editer",
+      "tree": {
+        "show": "Afficher l'arborescence",
+        "hide": "Masquer l'arborescence"
+      },
+      "preview": {
+        "show": "Afficher l'aperçu",
+        "hide": "Masquer l'aperçu",
+        "tabs": {
+          "preview": "Apperçu",
+          "quickEdit": "Edition rapide",
+          "metadata": "Metadata"
+        }
+      },
+      "listColumns": {
+        "name": "Nom",
+        "type": "Type",
+        "created": "Créé le",
+        "createdBy": "Créé par"
+      },
+      "browsePages": "Parcourir les pages",
+      "browseFolders": "Parcourir les répertoires",
+      "noResults": "Aucun résultat",
+      "title": "Tous les contenus",
+      "search": "Recherche"
+    }
+  }
+}

@@ -4,22 +4,28 @@ import {translate} from 'react-i18next';
 import {LanguageSwitcher, SearchBar} from '@jahia/react-material';
 import SiteSelector from './SiteSelector';
 import BurgerMenuButton from './BurgerMenuButton';
+import Sql2SearchInputForm from './Sql2SearchInputForm';
 import {compose} from "react-apollo/index";
 
 const styles = theme => ({
+    root: {
+        flexGrow: 1
+    },
     head: {
         display: "inline-block",
         verticalAlign: "top"
     },
-    root: {
-        flexGrow: 1
+    search: {
+        margin: theme.spacing.unit
     }
 });
 
 class CMTopBar extends React.Component {
 
     render() {
-        const { classes, t } = this.props;
+
+        const { dxContext, classes, t } = this.props;
+
         return (
             <div className={classes.root}>
                 <Toolbar color={'secondary'}>
@@ -29,7 +35,10 @@ class CMTopBar extends React.Component {
                         <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
                         <LanguageSwitcher/>
                     </div>
-                    <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
+                    <div className={classes.search}>
+                        <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
+                        <Sql2SearchInputForm siteKey={dxContext.siteKey}/>
+                    </div>
                 </Toolbar>
             </div>
         );

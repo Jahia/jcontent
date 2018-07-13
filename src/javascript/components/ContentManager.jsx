@@ -17,9 +17,14 @@ import {compose} from "react-apollo/index";
 
 class ContentManager extends React.Component {
 
+    constructor(props) {
+
+        super(props);
+    }
+
     setRouter(router) {
         let {dxContext, classes} = this.props;
-        router.history.listen((location, action) => {
+        router && router.history.listen((location, action) => {
             console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
             console.log(`Url base ${dxContext.urlbase}`);
             console.log(`The last navigation action was ${action}`);
@@ -28,7 +33,9 @@ class ContentManager extends React.Component {
     }
 
     render() {
+
         let {dxContext, classes} = this.props;
+
         const isInFrame = window.top !== window;
 
         return (
@@ -43,11 +50,21 @@ class ContentManager extends React.Component {
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <ManagerLayout header={<CMTopBar/>} leftSide={<CMLeftNavigation/>}>
-                                        <Route path='/*' render={props => (
-                                            <ContentLayout lang={dxContext.lang} uiLocale={dxContext.uiLocale} />
-                                        )}/>
-                                    </ManagerLayout>
+                                    <Route path='/:siteKey/:lang' render={props => {
+                                        dxContext['siteKey'] = props.match.params.siteKey;
+                                        dxContext['lang'] = props.match.params.lang;
+                                        return (
+                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                                <div>
+                                                    <Route path={`${props.match.url}/browse`} render={props => (
+                                                        <ContentLayout contentSource="browsing" dxContext={dxContext}/>
+                                                    )}/>
+                                                    <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                        <ContentLayout contentSource="sql2Search" dxContext={dxContext}/>
+                                                    )}/>
+                                                </div>
+                                            </ManagerLayout>
+                                    )} }/>
                                 </BrowserRouter>
                             </DxContext.Provider>
                         </I18nextProvider>

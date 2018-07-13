@@ -7,6 +7,7 @@ class CmLink extends React.Component {
     static propTypes = {
         goto: PropTypes.func,
         to: PropTypes.string.isRequired,
+        params: PropTypes.object
     };
 
     render() {

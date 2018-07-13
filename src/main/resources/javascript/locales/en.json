@@ -8,8 +8,15 @@
         "unpublished": "Unpublished by {{userName}} on {{timestamp}}",
         "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
       },
+      "locked": "Content is locked",
+      "lock": "Lock content",
+      "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
+      "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
+      "saveAsWip": "Mark as work in progress",
       "editAction": "Edit",
-      "errors": "Errors",
+      "error": {
+        "queryingContent": "Error querying content: {{details}}"
+      },
       "tree": {
         "show": "Show Tree",
         "hide": "Hide Tree"
@@ -46,8 +53,13 @@
         "created": "Created On",
         "createdBy": "Created By"
       },
+      "browsePages": "Browse Pages",
+      "browseFolders": "Browse Folders",
+      "noResults": "No Results",
       "title": "All Content",
-      "search": "search"
+      "search": "search",
+      "sql2Search": "SQL2 Search",
+      "quitSearch": "Quit Search"
     }
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles} from "@material-ui/core";
+import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography, Tooltip, SvgIcon} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
 import { Pagination } from "@jahia/react-material";
 import PropTypes from 'prop-types';
@@ -7,16 +7,18 @@ import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
+import {DxContext} from "../DxContext";
 import {
     PublicationStatusMarkedForDeletion,
     PublicationStatusModified,
     PublicationStatusNotPublished,
     PublicationStatusPublished
-} from './publicationStatus'
+} from "./publicationStatus"
 
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name'},
+    {id: 'actions', label: ''},
     {id: 'type', label: 'label.contentManager.listColumns.type'},
     {id: 'created', label: 'label.contentManager.listColumns.created'},
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
@@ -29,11 +31,9 @@ const publicationStatusByName = {
     "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
 };
 
+const APP_TABLE_CELLS = 2;
+
 const styles = (theme) => ({
-    tableWrapper: {
-        overflowX: 'auto',
-        paddingLeft: theme.spacing.unit * 3
-    },
     contentRow: {
         '&:hover $publicationStatus': {
             opacity: 1,
@@ -68,7 +68,6 @@ const styles = (theme) => ({
         textTransform: 'none',
         opacity: 0,
         transition: ["opacity", "0.25s"],
-        zIndex: 1,
         '&:hover': {
             opacity: 1,
             transition: ["opacity", "0.25s"],
@@ -121,9 +120,12 @@ const styles = (theme) => ({
             opacity: '1.5'
         }
     },
-    isDeleted: {
-        textDecoration: 'line-through'
-    }
+    name: {
+        color: theme.palette.primary.main
+    },
+    nodeTypeIcon: {
+        marginRight: 5,
+    },
 });
 
 class ContentListTable extends React.Component {
@@ -155,17 +157,6 @@ class ContentListTable extends React.Component {
         });
     };
 
-    getPublicationStatus(node) {
-        let { t } = this.props;
-        if (node.isPublished) {
-            return t("label.contentManager.publicationStatus.published", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
-        } else if (node.neverPublished) {
-            return t("label.contentManager.publicationStatus.neverPublished");
-        } else if (node.isModified) {
-            return t("label.contentManager.publicationStatus.modified", {userName: node.modifiedBy, timestamp: node.lastModified});
-        }
-    }
-
     isWip(node, lang) {
         switch (node.wipStatus) {
             case 'ALL_CONTENT':
@@ -177,70 +168,96 @@ class ContentListTable extends React.Component {
         }
     }
 
+    addIconSuffix(icon) {
+        return (!icon.includes('.png') ? icon+'.png' : icon);
+    }
+
+
     render() {
 
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, t, classes, lang} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
             <div>
-                <div className={classes.tableWrapper}>
-                    <Table aria-labelledby="tableTitle">
-                        <ContentListHeader
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={this.handleRequestSort}
-                            columnData={columnData}
-                        />
-                        <TableBody>
-                            {rows.map(n => {
-                            let publicationStatus = publicationStatusByName[n.publicationStatus];
-                            let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
-                            let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
-
-                            return (
-                                <TableRow hover={true}
-                                          classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}}
-                                          key={n.uuid}
-                                          onClick={ () => onRowSelected(n)}
-                                          selected={ n.isSelected }>
-                                    <TableCell padding={'none'} classes={{root: classes.publicationStatusContainer}}>
-                                        <Button disableRipple classes={{
-                                            root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
-                                            label: classes.publicationStatusLabel
-                                        }}>
-                                            <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
-                                            {publicationStatus.getDetailsMessage(n, t)}
-                                        </Button>
-                                    </TableCell>
-                                    {columnData.map(column => {
-                                        return (
-                                            <TableCell key={column.id}>
-                                                {n[column.id]}
+                <Table aria-labelledby="tableTitle">
+                    <ContentListHeader
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={this.handleRequestSort}
+                        columnData={columnData}
+                    />
+                    <DxContext.Consumer>
+                        {dxContext => (
+                            <TableBody>
+                                {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
+                                    let publicationStatus = publicationStatusByName[n.publicationStatus];
+                                    let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
+                                    let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
+                                    let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
+                                    let wipStatus = (this.isWip(n, lang) ? (n.wipStatus==='ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
+                                        t('label.contentManager.workInProgress', {wipLang: dxContext.langName})) : t('label.contentManager.saveAsWip'));
+                                    let icon = this.addIconSuffix(n.icon);
+                                    return (
+                                        <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
+                                            <TableCell padding={'checkbox'} classes={{root: classes.publicationStatusContainer}}>
+                                                <Button disableRipple classes={{
+                                                    root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
+                                                    label: classes.publicationStatusLabel
+                                                }}>
+                                                    <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
+                                                    {publicationStatus.getDetailsMessage(n, t)}
+                                                </Button>
                                             </TableCell>
-                                        );
-                                    })}
-                                    <TableCell><Build className={classWip}/><Lock className={classLock}/></TableCell>
-                                    <TableCell>
-                                        <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                        {emptyRows > 0 && (
-                            <TableRow style={{height: 49 * emptyRows}}>
-                                <TableCell colSpan={columnData.length}/>
-                            </TableRow>
+                                            {columnData.map(column => {
+                                                if(column.id === 'actions') {
+                                                    return (<TableCell key={column.id} padding={'none'}>
+                                                        <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
+                                                        <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
+                                                    </TableCell>);
+                                                } else if (column.id === 'name') {
+                                                    return (<TableCell key={column.id}>
+                                                        <Typography className={classes[column.id]}>
+                                                            <img src={icon} className={classes.nodeTypeIcon}/>
+                                                            {n[column.id]}</Typography>
+                                                    </TableCell>);
+                                                } else {
+                                                    return (
+                                                        <TableCell key={column.id} padding={'none'}>
+                                                            <Typography className={classes[column.id]}>{n[column.id]}</Typography>
+                                                        </TableCell>
+                                                    );
+                                                }
+                                            })}
+                                            <TableCell>
+                                                <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
+                                    <TableRow style={{height: 49 * emptyRows}}>
+                                        <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
+                                    </TableRow>
+                                )}
+                            </TableBody>
                         )}
-                    </TableBody>
+                    </DxContext.Consumer>
                 </Table>
-                </div>
                 <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );
     }
 }
+
+let EmptyRow = (props) => {
+    return (
+        <TableRow>
+            <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("label.contentManager.noResults")}</TableCell>
+        </TableRow>
+    )
+};
 
 ContentListTable.propTypes = {
     rows: PropTypes.array.isRequired,
@@ -248,7 +265,6 @@ ContentListTable.propTypes = {
     pageSize: PropTypes.number.isRequired,
     onChangeRowsPerPage: PropTypes.func.isRequired,
     onChangePage: PropTypes.func.isRequired,
-    onRowSelected: PropTypes.func.isRequired,
 };
 
 ContentListTable = compose(

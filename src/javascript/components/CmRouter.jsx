@@ -1,12 +1,13 @@
 import React from "react";
 import * as _ from "lodash";
 import { withRouter } from "react-router";
+import { DxContext } from "./DxContext";
 
 class CmRouter extends React.Component {
 
-    mapUrlToQuery = (match, location) => {
+    mapUrlToQuery = (match, location, dxContext) => {
         return {
-            path: _.replace(location.pathname, match.path, ''),
+            path: '/sites/' + dxContext.siteKey + _.replace(location.pathname, match.path, ''),
             params: this.deserializeQueryString(location)
         }
     };
@@ -18,7 +19,7 @@ class CmRouter extends React.Component {
     };
 
     // This method push to the browser url the provided location
-    mapQueryToUrl = (match, history, location) => {
+    mapQueryToUrl = (match, history, location, dxContext) => {
         return {
             goto: ( path, filter) => {
                 let queryString;
@@ -29,14 +30,15 @@ class CmRouter extends React.Component {
                 } else {
                     queryString = '';
                 }
-                history.push( match.url + path  + queryString);
+                path = _.replace(path, '/sites/' + dxContext.siteKey, '');
+                history.push( match.url + path + queryString);
             }
         }
     };
 
     render() {
-        const { match, location, history } = this.props;
-        return <span>{this.props.render({...this.mapUrlToQuery(match, location), ...this.mapQueryToUrl(match, history, location)})}</span>
+        const { match, location, history, render } = this.props;
+        return <DxContext.Consumer>{dxContext => render({...this.mapUrlToQuery(match, location, dxContext), ...this.mapQueryToUrl(match, history, location, dxContext)})}</DxContext.Consumer>
     }
 };
 

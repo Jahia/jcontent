@@ -50,11 +50,9 @@ class ContentManager extends React.Component {
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <Route path='/sites/:siteKey/:lang' render={props => {
-                                        const siteKey = props.match.params.siteKey;
-                                        dxContext['siteKey'] = siteKey;
-                                        const lang = props.match.params.lang;
-                                        dxContext['lang'] = lang;
+                                    <Route path='/:siteKey/:lang' render={props => {
+                                        dxContext['siteKey'] = props.match.params.siteKey;
+                                        dxContext['lang'] = props.match.params.lang;
                                         return (
                                             <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                 <div>

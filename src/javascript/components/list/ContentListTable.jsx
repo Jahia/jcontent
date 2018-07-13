@@ -189,7 +189,7 @@ class ContentListTable extends React.Component {
                         columnData={columnData}
                     />
                     <DxContext.Consumer>
-                        {value => (
+                        {dxContext => (
                             <TableBody>
                                 {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
                                     let publicationStatus = publicationStatusByName[n.publicationStatus];
@@ -197,7 +197,7 @@ class ContentListTable extends React.Component {
                                     let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                                     let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
                                     let wipStatus = (this.isWip(n, lang) ? (n.wipStatus==='ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
-                                        t('label.contentManager.workInProgress', {wipLang: value.langName})) : t('label.contentManager.saveAsWip'));
+                                        t('label.contentManager.workInProgress', {wipLang: dxContext.langName})) : t('label.contentManager.saveAsWip'));
                                     let icon = this.addIconSuffix(n.icon);
                                     return (
                                         <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>

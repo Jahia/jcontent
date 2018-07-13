@@ -79,8 +79,9 @@ class ContentLayout extends React.Component {
     render() {
         const { showPreview, showTree: showTree } = this.state;
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
+        const rootPath = '/sites/' + dxContext.siteKey;
         let queryHandler = contentQueryHandlerBySource[contentSource];
-        return (<CmRouter render={({path, params}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams((path === "" || !path) ? ('/sites/' + dxContext.siteKey) : path, params, this.state, dxContext)}>
+        return (<CmRouter render={({path, params}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams( (!path || path === "") ? rootPath : path, params, this.state, dxContext)}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);
@@ -131,7 +132,7 @@ class ContentLayout extends React.Component {
                                 <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
                                     {
                                         showTree &&
-                                        <ContentTrees path={path} rootPath={'/sites/' + dxContext.siteKey}
+                                        <ContentTrees path={path} rootPath={rootPath}
                                                       lang={this.state.language}/>
                                     }
                                 </Grid>

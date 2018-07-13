@@ -12,14 +12,15 @@ class BrowsingQueryHandler {
     }
 
     getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
+        const type = urlParams.type || "contents";
         return {
             path: path,
             language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage,
-            typeFilter: urlParams.typeFilter || "jnt:contentFolder",
-            recursionTypesFilter: urlParams.recursionTypesFilter || "jmix:editorialContent"
+            typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
+            recursionTypesFilter: browseType[type].recursionTypesFilter || "jmix:editorialContent"
         };
     }
 
@@ -54,6 +55,11 @@ class Sql2SearchQueryHandler {
     getResultsPath(results){
         return results;
     }
+}
+
+const browseType = {
+    pages: {recursionTypesFilter:["jnt:page"], typeFilter:["jmix:editorialContent"]},
+    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]}
 }
 
 const nodeFields = gql`

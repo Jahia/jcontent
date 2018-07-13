@@ -37,22 +37,22 @@ let ContentTrees = (props) => {
             <List>
                 <ListItem>
                     <ContentTree
-                        path={rootPath + "/contents"}
+                        path={path}
                         rootPath={rootPath + "/contents"}
                         selectableTypes={['jmix:list']}
                         lang={lang}
-                        handleSelect={ path => goto( path, {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]}) }
+                        handleSelect={ path => goto( path, {type: "contents"}) }
                         openableTypes={['jmix:list', 'jnt:contentFolder']}
                         rootLabel={t("label.contentManager.browseFolders")}
                     />
                 </ListItem>
                 <ListItem>
                     <ContentTree
-                        path={rootPath}
+                        path={path}
                         rootPath={rootPath}
                         selectableTypes={['jnt:page']}
                         lang={lang}
-                        handleSelect={ path => goto( path, {recursionTypesFilter:["jnt:page"], typeFilter:["jmix:editorialContent"]} ) }
+                        handleSelect={ path => goto( path, {type: "pages"} ) }
                         openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                         rootLabel={t("label.contentManager.browsePages")}
                     />

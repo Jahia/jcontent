@@ -16,14 +16,14 @@ class CmRouter extends React.Component {
 
     deserializeQueryString = location => {
         const search = location.search;
-        return search && JSON.parse(decodeURIComponent(_.replace(search, PARAMS_KEY, '')));
+        return search && JSON.parse(decodeURI(_.replace(search, PARAMS_KEY, '')));
     };
 
     // This method push to the browser url the provided location
     mapQueryToUrl = (match, history, location, dxContext) => {
         return {
             goto: ( path, params) => {
-                let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
+                let queryString = params ? PARAMS_KEY + encodeURI(JSON.stringify(params)) : '';
                 path = _.replace(path, '/sites/' + dxContext.siteKey, '');
                 history.push( match.url + path + queryString);
             }

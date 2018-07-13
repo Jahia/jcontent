@@ -37,11 +37,11 @@ let ContentTrees = (props) => {
             <List>
                 <ListItem>
                     <ContentTree
-                        path={rootPath+ "/contents"}
+                        path={rootPath + "/contents"}
                         rootPath={rootPath + "/contents"}
                         selectableTypes={['jmix:list']}
                         lang={lang}
-                        handleSelect={ path => goto( path, {recurTypes:'jnt:contentFolder'}) }
+                        handleSelect={path => goto(path, {recurTypes:'jnt:contentFolder'})}
                         openableTypes={['jmix:list', 'jnt:contentFolder']}
                         rootLabel={t("label.contentManager.browseFolders")}
                     />
@@ -52,7 +52,7 @@ let ContentTrees = (props) => {
                         rootPath={rootPath}
                         selectableTypes={['jnt:page']}
                         lang={lang}
-                        handleSelect={ path => goto( path, {filterTypes:'jmix:editorialContent', recurTypes:'jnt:contentList'} ) }
+                        handleSelect={path => goto(path, {filterTypes:'jmix:editorialContent', recurTypes:'jnt:contentList'})}
                         openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                         rootLabel={t("label.contentManager.browsePages")}
                     />
@@ -61,6 +61,5 @@ let ContentTrees = (props) => {
         )} />
     )
 };
-
 
 export default translate()(ContentTrees);

@@ -34,6 +34,10 @@ const publicationStatusByName = {
 const APP_TABLE_CELLS = 2;
 
 const styles = (theme) => ({
+    tableWrapper: {
+        overflowX: 'auto',
+        paddingLeft: theme.spacing.unit * 3
+    },
     contentRow: {
         '&:hover $publicationStatus': {
             opacity: 1,
@@ -176,11 +180,12 @@ class ContentListTable extends React.Component {
     render() {
 
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, totalCount, t, classes, lang} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
             <div>
+                <div className={classes.tableWrapper}>
                 <Table aria-labelledby="tableTitle">
                     <ContentListHeader
                         order={order}
@@ -200,7 +205,11 @@ class ContentListTable extends React.Component {
                                         t('label.contentManager.workInProgress', {wipLang: dxContext.langName})) : t('label.contentManager.saveAsWip'));
                                     let icon = this.addIconSuffix(n.icon);
                                     return (
-                                        <TableRow hover={true} classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}} key={n.uuid}>
+                                        <TableRow hover={true}
+                                                  classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}}
+                                                  key={n.uuid}
+                                                  onClick={ () => onRowSelected(n)}
+                                                  selected={ n.isSelected }>
                                             <TableCell padding={'checkbox'} classes={{root: classes.publicationStatusContainer}}>
                                                 <Button disableRipple classes={{
                                                     root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
@@ -245,6 +254,7 @@ class ContentListTable extends React.Component {
                         )}
                     </DxContext.Consumer>
                 </Table>
+                </div>
                 <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );

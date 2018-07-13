@@ -54,18 +54,16 @@ class ContentManager extends React.Component {
                                         dxContext['siteKey'] = props.match.params.siteKey;
                                         dxContext['lang'] = props.match.params.lang;
                                         return (
-                                            <div>
-                                                <Route path={`${props.match.url}/browse`} render={props => (
-                                                    <ManagerLayout header={<CMTopBar contentSource="browsing" dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
-                                                         <ContentLayout contentSource="browsing" dxContext={dxContext}/>
-                                                    </ManagerLayout>
-                                                )}/>
-                                                <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                    <ManagerLayout header={<CMTopBar contentSource="sql2Search" dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                                <div>
+                                                    <Route path={`${props.match.url}/browse`} render={props => (
+                                                        <ContentLayout contentSource="browsing" dxContext={dxContext}/>
+                                                    )}/>
+                                                    <Route path={`${props.match.url}/sql2Search`} render={props => (
                                                         <ContentLayout contentSource="sql2Search" dxContext={dxContext}/>
-                                                    </ManagerLayout>
-                                                )}/>
-                                            </div>
+                                                    )}/>
+                                                </div>
+                                            </ManagerLayout>
                                     )} }/>
                                 </BrowserRouter>
                             </DxContext.Provider>

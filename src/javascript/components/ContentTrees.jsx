@@ -41,7 +41,7 @@ let ContentTrees = (props) => {
                         rootPath={rootPath + "/contents"}
                         selectableTypes={['jmix:list']}
                         lang={lang}
-                        handleSelect={path => goto(path, {recurTypes:'jnt:contentFolder'})}
+                        handleSelect={ path => goto( path, {recursionTypesFilter:'jnt:contentFolder', typeFilter:'jmix:editorialContent'}) }
                         openableTypes={['jmix:list', 'jnt:contentFolder']}
                         rootLabel={t("label.contentManager.browseFolders")}
                     />
@@ -52,7 +52,7 @@ let ContentTrees = (props) => {
                         rootPath={rootPath}
                         selectableTypes={['jnt:page']}
                         lang={lang}
-                        handleSelect={path => goto(path, {filterTypes:'jmix:editorialContent', recurTypes:'jnt:contentList'})}
+                        handleSelect={ path => goto( path, {recursionTypesFilter:'jnt:page', typeFilter:'jmix:editorialContent'} ) }
                         openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                         rootLabel={t("label.contentManager.browsePages")}
                     />

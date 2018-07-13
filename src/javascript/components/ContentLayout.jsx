@@ -19,10 +19,6 @@ const contentQueryHandlerBySource = {
 };
 
 const styles = theme => ({
-    side: {
-        flexGrow: 1,
-        flexBasis: "auto",
-    },
     root: {
         flexGrow: 1
     },
@@ -30,15 +26,8 @@ const styles = theme => ({
         display: "flex",
         flexDirection: "column"
     },
-    main: {
-        flexGrow: 99,
-        flexBasis: "auto",
-    },
-    animate: {
-        transition: "all 200ms ease-in-out"
-    },
-    container: {
-        flexWrap: "nowrap"
+    tree: {
+        overflowX: "auto"
     }
 });
 
@@ -162,17 +151,17 @@ class ContentLayout extends React.Component {
                                     { !showPreview && <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton> }
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={0} className={classes.container}>
-                                {contentSource === "browsing" &&
-                                <Grid item xs={TREE_SIZE}>
-                                    {
-                                        showTree &&
-                                        <ContentTrees path={path} rootPath={rootPath}
-                                                      lang={this.state.language}/>
-                                    }
-                                </Grid>
+                            <Grid container spacing={0}>
+                                {
+                                    contentSource === "browsing" && showTree &&
+                                    <Grid item xs={TREE_SIZE} className={ classes.tree }>
+                                        {
+                                            <ContentTrees path={path} rootPath={rootPath}
+                                                          lang={this.state.language}/>
+                                        }
+                                    </Grid>
                                 }
-                                <Grid item xs={computedTableSize}>
+                                <Grid item xs={computedTableSize} >
                                     <ContentListTable
                                         totalCount={totalCount}
                                         rows={rows}

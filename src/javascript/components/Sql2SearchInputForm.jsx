@@ -3,6 +3,7 @@ import {withStyles, Input, Paper, Button, Collapse} from "@material-ui/core";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
+import CmRouter from "./CmRouter";
 import {
     NODE_TYPE_OPEN, NODE_TYPE_CLOSE,
     BELONGS_TO_SITE_OPEN, BELONGS_TO_SITE_CLOSE,
@@ -48,8 +49,12 @@ class Sql2SearchInputForm extends React.Component {
         });
     }
 
-    onSearchClick = () => {
-        this.props.onSql2Search(this.from.current.value, this.where.current.value);
+    onSearchClick = (goto) => {
+        goto('/sql2Search', { from: this.from.current.value, where: this.where.current.value, orderBy: this.orderBy.current.value });
+    }
+
+    onCancel = (goto) => {
+        goto('/browse');
     }
 
     render() {
@@ -73,7 +78,12 @@ class Sql2SearchInputForm extends React.Component {
                             </div>
                         </div>
                         <div className={classes.actions}>
-                            <Button size={'small'} onClick={this.onSearchClick}>{t('label.contentManager.search')}</Button>
+                            <CmRouter render={ ({goto}) => (
+                                <div>
+                                    <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
+                                    <Button size={'small'} onClick={() => this.onCancel(goto)}>{t('label.contentManager.cancel')}</Button>
+                                </div>
+                            )}/>
                         </div>
                     </Paper>
                 </Collapse>

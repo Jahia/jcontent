@@ -20,13 +20,6 @@ class ContentManager extends React.Component {
     constructor(props) {
 
         super(props);
-
-        this.state = {
-            sql2Search: {
-                from: "",
-                where: ""
-            }
-        };
     }
 
     setRouter(router) {
@@ -36,15 +29,6 @@ class ContentManager extends React.Component {
             console.log(`Url base ${dxContext.urlbase}`);
             console.log(`The last navigation action was ${action}`);
             window.parent.history.replaceState(window.parent.history.state, "DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
-        });
-    }
-
-    onSql2Search = (from, where) => {
-        this.setState({
-            sql2Search: {
-                from: from,
-                where: where
-            }
         });
     }
 
@@ -72,13 +56,13 @@ class ContentManager extends React.Component {
                                         const lang = props.match.params.lang;
                                         dxContext['lang'] = lang;
                                         return (
-                                            <ManagerLayout header={<CMTopBar dxContext={dxContext} onSql2Search={this.onSql2Search}/>} leftSide={<CMLeftNavigation/>}>
+                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                 <div>
                                                     <Route path={`${props.match.url}/browse`} render={props => (
                                                         <ContentLayout contentSource="browsing" dxContext={dxContext}/>
                                                     )}/>
                                                     <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                        <ContentLayout contentSource="sql2Search" sql2Search={this.state.sql2Search} dxContext={dxContext}/>
+                                                        <ContentLayout contentSource="sql2Search" dxContext={dxContext}/>
                                                     )}/>
                                                 </div>
                                             </ManagerLayout>

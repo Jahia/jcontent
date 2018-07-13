@@ -42,7 +42,7 @@ class ContentLayout extends React.Component {
             language: this.props.dxContext.lang,
             page: 0,
             rowsPerPage: 25,
-            showTree: (this.props.contentSource == 'browsing'),
+            showTree: true,
             showPreview: false
         };
         this.handleChangePage = this.handleChangePage.bind(this);
@@ -80,8 +80,7 @@ class ContentLayout extends React.Component {
         const { showPreview, showTree: showTree } = this.state;
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
         let queryHandler = contentQueryHandlerBySource[contentSource];
-
-        return (<CmRouter render={({path}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams(path, this.props, this.state, dxContext)}>
+        return (<CmRouter render={({path, params}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams((path === "" || !path) ? ('/sites/' + dxContext.siteKey) : path, params, this.state, dxContext)}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);
@@ -119,25 +118,26 @@ class ContentLayout extends React.Component {
                         {loading && <ProgressOverlay/>}
                         <div>
                             <Grid item xs={12}>
-                                <ContentBreadcrumbs path={path}/>
-                                {
-                                    (contentSource == 'browsing') &&
-                                    <Button onClick={this.handleShowTree}>
-                                        {t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}
-                                    </Button>
-                                }
-                                <Button onClick={this.handleShowPreview}>
-                                    {t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}
-                                </Button>
+                                {contentSource === "browsing" &&
+                                (<span>
+                                    <ContentBreadcrumbs path={path}/>
+                                    <Button onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
+                                </span>
+                                )}
+                                <Button onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
                             </Grid>
                             <Grid container spacing={0} className={classes.container}>
+                                {contentSource === "browsing" &&
                                 <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
                                     {
                                         showTree &&
-                                        <ContentTrees path={path} rootPath={'/sites/' + dxContext.siteKey} lang={this.state.language}/>
+                                        <ContentTrees path={path} rootPath={'/sites/' + dxContext.siteKey}
+                                                      lang={this.state.language}/>
                                     }
                                 </Grid>
-                                <Grid item xs classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
+                                }
+                                <Grid item xs
+                                      classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
                                     <ContentListTable
                                         totalCount={totalCount}
                                         rows={rows}

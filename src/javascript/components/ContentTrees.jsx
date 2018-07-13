@@ -37,24 +37,24 @@ let ContentTrees = (props) => {
             <List>
                 <ListItem>
                     <ContentTree
-                        path={rootPath}
-                        rootPath={rootPath}
-                        selectableTypes={['jnt:page']}
-                        lang={lang}
-                        handleSelect={ path => goto(path) }
-                        openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
-                        rootLabel={t("label.contentManager.browsePages")}
-                    />
-                </ListItem>
-                <ListItem>
-                    <ContentTree
                         path={rootPath+ "/contents"}
                         rootPath={rootPath + "/contents"}
                         selectableTypes={['jmix:list']}
                         lang={lang}
-                        handleSelect={ path => goto(path) }
+                        handleSelect={ path => goto( path ) }
                         openableTypes={['jmix:list', 'jnt:contentFolder']}
                         rootLabel={t("label.contentManager.browseFolders")}
+                    />
+                </ListItem>
+                <ListItem>
+                    <ContentTree
+                        path={rootPath}
+                        rootPath={rootPath}
+                        selectableTypes={['jnt:page']}
+                        lang={lang}
+                        handleSelect={ path => goto( path, {} ) }
+                        openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
+                        rootLabel={t("label.contentManager.browsePages")}
                     />
                 </ListItem>
             </List>

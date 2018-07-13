@@ -15,7 +15,7 @@ class BrowsingQueryHandler {
         return {
             path: path,
             language: contentLayoutWidgetState.language,
-            displayLanguage: contentLayoutWidgetProps.dxContext.uilang,
+            displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage
         };
@@ -34,16 +34,16 @@ class Sql2SearchQueryHandler {
 
     getQueryParams(path, contentLayoutWidgetProps, contentLayoutWidgetState, dxContext) {
 
-        let {from, where} = contentLayoutWidgetProps.sql2Search;
-        let query = `${NODE_TYPE_OPEN}${from}${NODE_TYPE_CLOSE} ${BELONGS_TO_SITE_OPEN}${dxContext.siteKey}${BELONGS_TO_SITE_CLOSE}`;
+        let {from, where, orderBy} = contentLayoutWidgetProps.sql2Search;
+        let query = "select * from[" + from + "] where ISDESCENDANTNODE('/sites/" + dxContext.siteKey + "')";
         if (where && where != "") {
             query = query + ` ${ADDITIONAL_CONDITION_OPEN}${where}${ADDITIONAL_CONDITION_CLOSE}`;
         }
 
         return {
             query: query,
-            language: contentLayoutWidgetState.language,
-            displayLanguage: contentLayoutWidgetProps.dxContext.uilang,
+            language: dxContext.lang,
+            displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage
         };

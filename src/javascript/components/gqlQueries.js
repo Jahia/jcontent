@@ -11,13 +11,16 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, contentLayoutWidgetProps, contentLayoutWidgetState, dxContext) {
+    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
+        const type = urlParams.type || "contents";
         return {
             path: path,
             language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
-            limit: contentLayoutWidgetState.rowsPerPage
+            limit: contentLayoutWidgetState.rowsPerPage,
+            typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
+            recursionTypesFilter: browseType[type].recursionTypesFilter || "jmix:editorialContent"
         };
     }
 
@@ -32,17 +35,17 @@ class Sql2SearchQueryHandler {
         return sql2SearchContentQuery;
     }
 
-    getQueryParams(path, params, contentLayoutWidgetState, dxContext) {
+    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
 
-        let {from, where} = params;
-        let query = "select * from[" + from + "] where ISDESCENDANTNODE('/sites/" + dxContext.siteKey + "')";
+        let {from, where} = urlParams;
+        let query = `${NODE_TYPE_OPEN}${from}${NODE_TYPE_CLOSE} ${BELONGS_TO_SITE_OPEN}${dxContext.siteKey}${BELONGS_TO_SITE_CLOSE}`;
         if (where && where !== "") {
             query = query + ` ${ADDITIONAL_CONDITION_OPEN}${where}${ADDITIONAL_CONDITION_CLOSE}`;
         }
 
         return {
             query: query,
-            language: dxContext.lang,
+            language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage
@@ -52,6 +55,11 @@ class Sql2SearchQueryHandler {
     getResultsPath(results){
         return results;
     }
+}
+
+const browseType = {
+    pages: {recursionTypesFilter:["jnt:page"], typeFilter:["jmix:editorialContent"]},
+    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]}
 }
 
 const nodeFields = gql`
@@ -120,11 +128,11 @@ const allContentQuery = gql`
     ${nodeFields}
 `;
 
-const getNodeSubTree = gql ` 
-    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!) {
+const getNodeSubTree = gql `
+    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: ["jmix:editorialContent"], multi:ANY}, recursionTypesFilter: {multi: NONE, types: ["jnt:page"]}){
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}){
                     pageInfo {
                         totalCount
                     }

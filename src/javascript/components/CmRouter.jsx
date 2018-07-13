@@ -3,6 +3,8 @@ import * as _ from "lodash";
 import { withRouter } from "react-router";
 import { DxContext } from "./DxContext";
 
+const PARAMS_KEY = "?params=";
+
 class CmRouter extends React.Component {
 
     mapUrlToQuery = (match, location, dxContext) => {
@@ -13,25 +15,17 @@ class CmRouter extends React.Component {
     };
 
     deserializeQueryString = location => {
-        const s = location.search;
-        const search = (s && s !== "" && s.substring(1)); // removes ? from the query string
-        return search && JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+        const search = location.search;
+        return search && JSON.parse(decodeURIComponent(_.replace(search, PARAMS_KEY, '')));
     };
 
     // This method push to the browser url the provided location
     mapQueryToUrl = (match, history, location, dxContext) => {
         return {
-            goto: ( path, filter) => {
-                let queryString;
-                if (filter) {
-                    queryString = '?' + Object.keys(filter).map(key => {
-                        return (encodeURIComponent(key) + '=' + encodeURIComponent(filter[key]));
-                    }).join('&');
-                } else {
-                    queryString = '';
-                }
+            goto: ( path, params) => {
+                let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
                 path = _.replace(path, '/sites/' + dxContext.siteKey, '');
-                history.push( match.url + path + queryString);
+                history.push(match.url + path + queryString);
             }
         }
     };

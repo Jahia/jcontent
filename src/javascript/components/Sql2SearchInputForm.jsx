@@ -50,16 +50,19 @@ class Sql2SearchInputForm extends React.Component {
     }
 
     onSearchClick = (goto) => {
-        goto('/sql2Search', { from: this.from.current.value, where: this.where.current.value});
+        goto('/sql2Search', {
+            from: this.from.current.value,
+            where: this.where.current.value
+        });
     }
 
-    onCancel = (goto) => {
+    onQuitClick = (goto) => {
         goto('/browse');
     }
 
     render() {
 
-        let {siteKey, classes, t} = this.props;
+        let {siteKey, showQuitButton, classes, t} = this.props;
 
         return (
             <div className={classes.root}>
@@ -78,10 +81,13 @@ class Sql2SearchInputForm extends React.Component {
                             </div>
                         </div>
                         <div className={classes.actions}>
-                            <CmRouter render={ ({goto}) => (
+                            <CmRouter render={({goto}) => (
                                 <div>
                                     <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
-                                    <Button size={'small'} onClick={() => this.onCancel(goto)}>{t('label.contentManager.quitSearch')}</Button>
+                                    {
+                                        showQuitButton &&
+                                        <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
+                                    }
                                 </div>
                             )}/>
                         </div>

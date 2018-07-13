@@ -36,6 +36,8 @@ const GRID_PANEL_BUTTONS_SIZE = 2;
 const TREE_SIZE = 2;
 const PREVIEW_SIZE = 6;
 
+
+
 class ContentLayout extends React.Component {
 
     constructor(props) {
@@ -99,7 +101,7 @@ class ContentLayout extends React.Component {
         let queryHandler = contentQueryHandlerBySource[contentSource];
         return (<CmRouter render={({path, params}) => {
             const layoutQuery = queryHandler.getQuery();
-            const layoutQueryParams = queryHandler.getQueryParams( (!path || path === "") ? rootPath : path, params, this.state, dxContext);
+            const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
             let computedTableSize;
 
             return <Query fetchPolicy={'network-only'} query={layoutQuery} variables={layoutQueryParams}>

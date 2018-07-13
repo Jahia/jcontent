@@ -3,7 +3,7 @@ import {Query} from 'react-apollo';
 import {BrowsingQueryHandler, Sql2SearchQueryHandler} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
-import ContentPreview from "./ContentPreview";
+import ContentPreview from "./preview/ContentPreview";
 import {Grid, Button, withStyles} from "@material-ui/core";
 import ContentTrees from "./ContentTrees";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
@@ -43,13 +43,9 @@ class ContentLayout extends React.Component {
             page: 0,
             rowsPerPage: 25,
             showTree: true,
-            showPreview: false
+            showPreview: false,
+            selectedRow: null
         };
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-        this.handleShowTree = this.handleShowTree.bind(this);
-        this.handleShowPreview = this.handleShowPreview.bind(this);
-
     }
 
     handleChangePage = newPage => {
@@ -69,19 +65,41 @@ class ContentLayout extends React.Component {
     };
 
     handleShowPreview = () => {
-        this.setState((prevState, props) => {
-            return {
-                showPreview: !prevState.showPreview
-            }
-        })
+        if (this.state.selectedRow) {
+            this.setState((prevState, props) => {
+                return {
+                    showPreview: !prevState.showPreview
+                }
+            })
+        }
+    };
+
+    handleRowSelection = (row) => {
+        //Remove selection and close preview panel if it is open
+        if (this.state.selectedRow && row.path === this.state.selectedRow.path) {
+            this.setState({
+                selectedRow: null,
+                showPreview: this.state.showPreview ? false : this.state.showPreview
+            });
+        }
+        //Store selection
+        else {
+            this.setState({
+                selectedRow: row
+            });
+        }
     };
 
     render() {
-        const { showPreview, showTree: showTree } = this.state;
+        const { showPreview, selectedRow, showTree: showTree } = this.state;
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
         const rootPath = '/sites/' + dxContext.siteKey;
         let queryHandler = contentQueryHandlerBySource[contentSource];
-        return (<CmRouter render={({path, params}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams( (!path || path === "") ? rootPath : path, params, this.state, dxContext)}>
+        return (<CmRouter render={({path, params}) => {
+            const layoutQuery = queryHandler.getQuery();
+            const layoutQueryParams = queryHandler.getQueryParams( (!path || path === "") ? rootPath : path, params, this.state, dxContext);
+
+            return <Query fetchPolicy={'network-only'} query={layoutQuery} variables={layoutQueryParams}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);
@@ -150,14 +168,17 @@ class ContentLayout extends React.Component {
                                     />
                                 </Grid>
                                 <Grid item xs classes={{item: classNames(classes.side, showPreview && classes.animate)}}>
-                                    {showPreview && <ContentPreview/>}
+                                    {showPreview && <ContentPreview selection={ selectedRow }
+                                                                    layoutQuery={ layoutQuery }
+                                                                    layoutQueryParams={layoutQueryParams}
+                                                                    rowSelectionFunc={ this.handleRowSelection }/>}
                                 </Grid>
                             </Grid>
                         </div>
                     </div>
                 )
             }}
-        </Query>)}/>);
+        </Query>}}/>);
     }
 }
 

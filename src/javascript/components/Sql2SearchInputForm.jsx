@@ -81,7 +81,7 @@ class Sql2SearchInputForm extends React.Component {
                             </div>
                         </div>
                         <div className={classes.actions}>
-                            <CmRouter render={ ({goto}) => (
+                            <CmRouter render={({goto}) => (
                                 <div>
                                     <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
                                     {

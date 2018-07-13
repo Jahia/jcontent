@@ -25,7 +25,7 @@ class CmRouter extends React.Component {
             goto: ( path, params) => {
                 let queryString = params ? PARAMS_KEY + encodeURI(JSON.stringify(params)) : '';
                 path = _.replace(path, '/sites/' + dxContext.siteKey, '');
-                history.push( match.url + path + queryString);
+                history.push(match.url + path + queryString);
             }
         }
     };

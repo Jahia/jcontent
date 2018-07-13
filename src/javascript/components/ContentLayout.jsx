@@ -81,7 +81,7 @@ class ContentLayout extends React.Component {
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
         const rootPath = '/sites/' + dxContext.siteKey;
         let queryHandler = contentQueryHandlerBySource[contentSource];
-        return (<CmRouter render={({path, params}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams( (!path || path === "") ? rootPath : path, params, this.state, dxContext)}>
+        return (<CmRouter render={({path, params}) => (<Query fetchPolicy={'network-only'} query={queryHandler.getQuery()} variables={queryHandler.getQueryParams((!path || path === "" ? rootPath : path), this.state, dxContext, params)}>
             { ({loading, error, data}) => {
                 if (error) {
                     console.log("Error when fetching data: " + error);

@@ -11,15 +11,15 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, params, contentLayoutWidgetState, dxContext) {
+    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
         return {
             path: path,
             language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage,
-            typeFilter: params.typeFilter || "jnt:contentFolder",
-            recursionTypesFilter: params.recursionTypesFilter || "jmix:editorialContent"
+            typeFilter: urlParams.typeFilter || "jnt:contentFolder",
+            recursionTypesFilter: urlParams.recursionTypesFilter || "jmix:editorialContent"
         };
     }
 
@@ -34,9 +34,9 @@ class Sql2SearchQueryHandler {
         return sql2SearchContentQuery;
     }
 
-    getQueryParams(path, params, contentLayoutWidgetState, dxContext) {
+    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
 
-        let {from, where} = params;
+        let {from, where} = urlParams;
         let query = "select * from[" + from + "] where ISDESCENDANTNODE('/sites/" + dxContext.siteKey + "')";
         if (where && where !== "") {
             query = query + ` ${ADDITIONAL_CONDITION_OPEN}${where}${ADDITIONAL_CONDITION_CLOSE}`;
@@ -44,7 +44,7 @@ class Sql2SearchQueryHandler {
 
         return {
             query: query,
-            language: dxContext.lang,
+            language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage
@@ -122,7 +122,7 @@ const allContentQuery = gql`
     ${nodeFields}
 `;
 
-const getNodeSubTree = gql ` 
+const getNodeSubTree = gql `
     query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {

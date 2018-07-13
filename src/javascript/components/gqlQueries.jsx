@@ -124,10 +124,10 @@ const allContentQuery = gql`
 `;
 
 const getNodeSubTree = gql ` 
-    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $filterTypes:String, $recurTypes:String) {
+    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!) {
         jcr {
             results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $filterTypes}, recursionTypesFilter: {types: $recurTypes}){
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: ["jmix:editorialContent"], multi:ANY}, recursionTypesFilter: {multi: NONE, types: ["jnt:page"]}){
                     pageInfo {
                         totalCount
                     }

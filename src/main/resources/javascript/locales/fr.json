@@ -18,8 +18,8 @@
         "hide": "Masquer l'arborescence"
       },
       "preview": {
-        "show": "Afficher l'apperçu",
-        "hide": "Masquer l'apperçu",
+        "show": "Afficher l'aperçu",
+        "hide": "Masquer l'aperçu",
         "tabs": {
           "preview": "Apperçu",
           "quickEdit": "Edition rapide",

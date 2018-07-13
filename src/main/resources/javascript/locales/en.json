@@ -40,7 +40,8 @@
       "noResults": "No Results",
       "title": "All Content",
       "search": "search",
-      "sql2Search": "SQL2 Search"
+      "sql2Search": "SQL2 Search",
+      "quitSearch": "Quit Search"
     }
   }
 }

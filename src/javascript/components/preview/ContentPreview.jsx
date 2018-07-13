@@ -29,6 +29,7 @@ const styles = theme => ({
         flex: 9
     },
     previewContainer: {
+        maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         overflow: "auto",
         padding: theme.spacing.unit * 2
     },

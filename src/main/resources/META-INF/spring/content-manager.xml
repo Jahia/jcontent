@@ -31,7 +31,7 @@
             <list>
                 <bean class="org.jahia.services.uicomponents.bean.toolbar.Property">
                     <property name="name" value="url"/>
-                    <property name="value" value="$context/cms/contentmanager$site-path/$lang/browse"/>
+                    <property name="value" value="$context/cms/contentmanager/$site-key/$lang/browse"/>
                 </bean>
                 <bean class="org.jahia.services.uicomponents.bean.toolbar.Property">
                     <property name="name" value="target"/>

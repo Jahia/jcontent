@@ -50,7 +50,7 @@ class Sql2SearchInputForm extends React.Component {
     }
 
     onSearchClick = (goto) => {
-        goto('/sql2Search', { from: this.from.current.value, where: this.where.current.value, orderBy: this.orderBy.current.value });
+        goto('/sql2Search', { from: this.from.current.value, where: this.where.current.value});
     }
 
     onCancel = (goto) => {

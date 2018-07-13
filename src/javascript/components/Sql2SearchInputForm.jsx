@@ -62,7 +62,7 @@ class Sql2SearchInputForm extends React.Component {
 
     render() {
 
-        let {siteKey, classes, t} = this.props;
+        let {siteKey, showQuitButton, classes, t} = this.props;
 
         return (
             <div className={classes.root}>
@@ -84,7 +84,10 @@ class Sql2SearchInputForm extends React.Component {
                             <CmRouter render={ ({goto}) => (
                                 <div>
                                     <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
-                                    <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
+                                    {
+                                        showQuitButton &&
+                                        <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
+                                    }
                                 </div>
                             )}/>
                         </div>

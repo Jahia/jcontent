@@ -24,7 +24,7 @@ class CMTopBar extends React.Component {
 
     render() {
 
-        const { dxContext, classes, t } = this.props;
+        const { contentSource, dxContext, classes, t } = this.props;
 
         return (
             <div className={classes.root}>
@@ -37,7 +37,7 @@ class CMTopBar extends React.Component {
                     </div>
                     <div className={classes.search}>
                         <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
-                        <Sql2SearchInputForm siteKey={dxContext.siteKey}/>
+                        <Sql2SearchInputForm siteKey={dxContext.siteKey} showQuitButton={contentSource != 'browsing'}/>
                     </div>
                 </Toolbar>
             </div>

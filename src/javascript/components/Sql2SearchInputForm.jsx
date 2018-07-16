@@ -62,7 +62,7 @@ class Sql2SearchInputForm extends React.Component {
 
     render() {
 
-        let {siteKey, showQuitButton, classes, t} = this.props;
+        let {siteKey, classes, t} = this.props;
 
         return (
             <div className={classes.root}>
@@ -81,11 +81,11 @@ class Sql2SearchInputForm extends React.Component {
                             </div>
                         </div>
                         <div className={classes.actions}>
-                            <CmRouter render={({goto}) => (
+                            <CmRouter render={({params, goto}) => (
                                 <div>
                                     <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
                                     {
-                                        showQuitButton &&
+                                        params.from && // TODO: When routing implementation allows it, rework to rely on current mode (browse/search) rather than on specific search parameter.
                                         <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
                                     }
                                 </div>

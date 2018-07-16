@@ -22,6 +22,7 @@ class ContentTree extends React.Component {
                     selectableTypes={selectableTypes}
                     queryVariables={{lang: lang}}
                     selectedPaths={[path]}
+                    openSelection={false}
                     onSelectItem={(path) => handleSelect(path)}>
                 {({handleSelect, ...others}) => <PickerViewMaterial {...others} textRenderer={(entry) => {
                     return entry.depth > 0 ? entry.node.displayName : rootLabel;

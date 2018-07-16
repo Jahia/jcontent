@@ -121,26 +121,23 @@ class ContentLayout extends React.Component {
                         {loading && <ProgressOverlay/>}
                         <div>
                             <Grid item xs={12}>
-                                {contentSource === "browsing" &&
-                                (<span>
-                                    <ContentBreadcrumbs path={path}/>
-                                    <Button onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
-                                </span>
+                                {contentSource === "browsing" && (
+                                    <span>
+                                        <ContentBreadcrumbs path={path}/>
+                                        <Button onClick={this.handleShowTree}>{t('label.contentManager.tree.' + (showTree ? "hide" : "show"))}</Button>
+                                    </span>
                                 )}
                                 <Button onClick={this.handleShowPreview}>{t('label.contentManager.preview.' + (showPreview ? "hide" : "show"))}</Button>
                             </Grid>
                             <Grid container spacing={0} className={classes.container}>
                                 {contentSource === "browsing" &&
-                                <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
-                                    {
-                                        showTree &&
-                                        <ContentTrees path={path} rootPath={rootPath}
-                                                      lang={this.state.language}/>
-                                    }
-                                </Grid>
+                                    <Grid item xs classes={{item: classNames(classes.side, showTree && classes.animate)}}>
+                                        {showTree &&
+                                            <ContentTrees path={path} rootPath={rootPath} lang={this.state.language}/>
+                                        }
+                                    </Grid>
                                 }
-                                <Grid item xs
-                                      classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
+                                <Grid item xs classes={{item: classNames(classes.main, (showTree || showPreview) && classes.animate)}}>
                                     <ContentListTable
                                         totalCount={totalCount}
                                         rows={rows}

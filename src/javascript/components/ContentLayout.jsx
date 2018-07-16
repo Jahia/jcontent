@@ -89,6 +89,8 @@ class ContentLayout extends React.Component {
                     console.log("Error when fetching data: " + error);
                     let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                } else {
+                    notificationContext.closeNotification();
                 }
                 let rows = [];
                 let totalCount = 0;

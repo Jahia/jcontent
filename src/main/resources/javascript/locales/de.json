@@ -13,6 +13,9 @@
       "workInProgressAll": "In Arbeit: Gesamter Inhalt (gemeinsame und sprachabhängige Eigenschaften)",
       "saveAsWip": "Als \"in Arbeit\" markieren",
       "editAction": "Bearbeiten",
+      "error": {
+        "queryingContent": "Fehler während Content-Abfrage: {{details}}"
+      },
       "tree": {
         "show": "Navigationsbaum anzeigen",
         "hide": "Navigationsbaum verbergen"
@@ -36,7 +39,9 @@
       "browseFolders": "Ordner durchsuchen",
       "noResults": "Kein Ergebnis",
       "title": "Gesamter Content",
-      "search": "Suche"
+      "search": "Suche",
+      "sql2Search": "SQL2 Suche",
+      "quitSearch": "Suche beenden"
     }
   }
 }

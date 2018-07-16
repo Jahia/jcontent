@@ -4,11 +4,6 @@ import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
-import {
-    NODE_TYPE_OPEN, NODE_TYPE_CLOSE,
-    BELONGS_TO_SITE_OPEN, BELONGS_TO_SITE_CLOSE,
-    ADDITIONAL_CONDITION_OPEN, ADDITIONAL_CONDITION_CLOSE
-} from "./sql2SearchUtils.js";
 
 const styles = theme => ({
     root: {
@@ -50,9 +45,11 @@ class Sql2SearchInputForm extends React.Component {
     }
 
     onSearchClick = (goto) => {
-        goto('/sql2Search', {
+        goto('/sql2Search', (this.where.current.value !== "") ? {
             from: this.from.current.value,
             where: this.where.current.value
+        } : {
+            from: this.from.current.value
         });
     }
 
@@ -72,16 +69,17 @@ class Sql2SearchInputForm extends React.Component {
                 </Button>
                 <Collapse in={this.state.open}>
                     <Paper classes={{root: classes.sql2Form}}>
+                    <CmRouter render={({params, goto}) => (
                         <div>
                             <div>
-                                {NODE_TYPE_OPEN}<Sql2Input maxLength={50} size={20} inputRef={this.from}/>{NODE_TYPE_CLOSE} {BELONGS_TO_SITE_OPEN}{siteKey}{BELONGS_TO_SITE_CLOSE}
+                                <div>
+                                    SELECT * FROM [<Sql2Input maxLength={100} size={20} inputRef={this.from} onEnterPressed={() => this.onSearchClick(goto)}/>] WHERE ISDESCENDANTNODE('/sites/{siteKey}')
+                                </div>
+                                <div>
+                                    AND (<Sql2Input maxLength={2000} size={80} inputRef={this.where} onEnterPressed={() => this.onSearchClick(goto)}/>)
+                                </div>
                             </div>
-                            <div>
-                                {ADDITIONAL_CONDITION_OPEN}<Sql2Input maxLength={500} size={80} inputRef={this.where}/>{ADDITIONAL_CONDITION_CLOSE}
-                            </div>
-                        </div>
-                        <div className={classes.actions}>
-                            <CmRouter render={({params, goto}) => (
+                            <div className={classes.actions}>
                                 <div>
                                     <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
                                     {
@@ -89,8 +87,9 @@ class Sql2SearchInputForm extends React.Component {
                                         <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
                                     }
                                 </div>
-                            )}/>
+                            </div>
                         </div>
+                    )}/>
                     </Paper>
                 </Collapse>
             </div>
@@ -100,12 +99,19 @@ class Sql2SearchInputForm extends React.Component {
 
 class Sql2Input extends React.Component {
 
+    onKeyUp = (e) => {
+        if (e.key === 'Enter') {
+            this.props.onEnterPressed();
+        }
+    }
+
     render() {
 
-        let {maxLength, size, defaultValue, inputRef, classes} = this.props;
+        let {maxLength, size, defaultValue, inputRef, classes, onEnterPressed} = this.props;
 
         return (
-            <Input inputProps={{maxLength: maxLength, size: size}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}/>
+            <Input inputProps={{maxLength: maxLength, size: size}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}
+            onKeyUp={(e)=>this.onKeyUp(e)}/>
         );
     }
 }

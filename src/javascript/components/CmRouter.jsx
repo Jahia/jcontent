@@ -16,7 +16,10 @@ class CmRouter extends React.Component {
 
     deserializeQueryString = location => {
         const search = location.search;
-        return search && JSON.parse(decodeURIComponent(_.replace(search, PARAMS_KEY, '')));
+        if (!search || search == '') {
+            return {};
+        }
+        return JSON.parse(decodeURIComponent(search.substring(PARAMS_KEY.length)));
     };
 
     // This method push to the browser url the provided location

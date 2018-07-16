@@ -6,6 +6,7 @@ import SiteSelector from './SiteSelector';
 import BurgerMenuButton from './BurgerMenuButton';
 import Sql2SearchInputForm from './Sql2SearchInputForm';
 import {compose} from "react-apollo/index";
+import CmRouter from "./CmRouter";
 
 const styles = theme => ({
     root: {
@@ -24,7 +25,7 @@ class CMTopBar extends React.Component {
 
     render() {
 
-        const { contentSource, dxContext, classes, t } = this.props;
+        const { dxContext, classes, t } = this.props;
 
         return (
             <div className={classes.root}>
@@ -37,7 +38,9 @@ class CMTopBar extends React.Component {
                     </div>
                     <div className={classes.search}>
                         <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
-                        <Sql2SearchInputForm siteKey={dxContext.siteKey} showQuitButton={contentSource != 'browsing'}/>
+                        <CmRouter render={({params}) => (
+                            <Sql2SearchInputForm siteKey={dxContext.siteKey} open={params.sql2SearchExpanded} from={params.sql2SearchFrom} where={params.sql2SearchWhere}/>
+                        )}/>
                     </div>
                 </Toolbar>
             </div>

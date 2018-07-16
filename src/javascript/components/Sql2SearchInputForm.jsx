@@ -4,11 +4,6 @@ import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
-import {
-    NODE_TYPE_OPEN, NODE_TYPE_CLOSE,
-    BELONGS_TO_SITE_OPEN, BELONGS_TO_SITE_CLOSE,
-    ADDITIONAL_CONDITION_OPEN, ADDITIONAL_CONDITION_CLOSE
-} from "./sql2SearchUtils.js";
 
 const styles = theme => ({
     root: {
@@ -36,7 +31,7 @@ class Sql2SearchInputForm extends React.Component {
         super(props);
 
         this.state = {
-            open: false
+            open: props.open
         }
 
         this.from = React.createRef();
@@ -50,9 +45,13 @@ class Sql2SearchInputForm extends React.Component {
     }
 
     onSearchClick = (goto) => {
-        goto('/sql2Search', {
-            from: this.from.current.value,
-            where: this.where.current.value
+        goto('/sql2Search', (this.where.current.value !== "") ? {
+            sql2SearchExpanded: true,
+            sql2SearchFrom: this.from.current.value,
+            sql2SearchWhere: this.where.current.value
+        } : {
+            sql2SearchExpanded: true,
+            sql2SearchFrom: this.from.current.value
         });
     }
 
@@ -62,7 +61,7 @@ class Sql2SearchInputForm extends React.Component {
 
     render() {
 
-        let {siteKey, showQuitButton, classes, t} = this.props;
+        let {siteKey, from, where, classes, t} = this.props;
 
         return (
             <div className={classes.root}>
@@ -71,27 +70,27 @@ class Sql2SearchInputForm extends React.Component {
                     {this.state.open ? <ExpandLess/> : <ExpandMore/>}
                 </Button>
                 <Collapse in={this.state.open}>
-                    <Paper classes={{root: classes.sql2Form}}>
-                        <div>
+                    <CmRouter render={({goto}) => (
+                        <Paper classes={{root: classes.sql2Form}}>
                             <div>
-                                {NODE_TYPE_OPEN}<Sql2Input maxLength={50} size={20} inputRef={this.from}/>{NODE_TYPE_CLOSE} {BELONGS_TO_SITE_OPEN}{siteKey}{BELONGS_TO_SITE_CLOSE}
+                                <div>
+                                    SELECT * FROM [<Sql2Input maxLength={50} size={20} defaultValue={from} inputRef={this.from}/>] WHERE ISDESCENDANTNODE('/sites/{siteKey}')
+                                </div>
+                                <div>
+                                    AND (<Sql2Input maxLength={500} size={80} defaultValue={where} inputRef={this.where}/>)
+                                </div>
                             </div>
-                            <div>
-                                {ADDITIONAL_CONDITION_OPEN}<Sql2Input maxLength={500} size={80} inputRef={this.where}/>{ADDITIONAL_CONDITION_CLOSE}
-                            </div>
-                        </div>
-                        <div className={classes.actions}>
-                            <CmRouter render={({goto}) => (
+                            <div className={classes.actions}>
                                 <div>
                                     <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
                                     {
-                                        showQuitButton &&
+                                        from && // TODO: When routing implementation allows it, rework to rely on current mode (browse/search) rather than on specific search parameter.
                                         <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
                                     }
                                 </div>
-                            )}/>
-                        </div>
-                    </Paper>
+                            </div>
+                        </Paper>
+                    )}/>
                 </Collapse>
             </div>
         );
@@ -100,12 +99,19 @@ class Sql2SearchInputForm extends React.Component {
 
 class Sql2Input extends React.Component {
 
+    onKeyUp = (e) => {
+        if (e.key === 'Enter') {
+            this.props.onEnterPressed();
+        }
+    }
+
     render() {
 
-        let {maxLength, size, defaultValue, inputRef, classes} = this.props;
+        let {maxLength, size, defaultValue, inputRef, classes, onEnterPressed} = this.props;
 
         return (
-            <Input inputProps={{maxLength: maxLength, size: size}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}/>
+            <Input inputProps={{maxLength: maxLength, size: size}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}
+            onKeyUp={(e)=>this.onKeyUp(e)}/>
         );
     }
 }

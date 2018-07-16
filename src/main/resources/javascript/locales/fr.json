@@ -13,6 +13,9 @@
       "workInProgressAll": "Travail en cours: Tout le contenu (propriétés communes et internationalisées)",
       "saveAsWip": "Marquer comme travail en cours",
       "editAction": "Editer",
+      "error": {
+        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}"
+      },
       "tree": {
         "show": "Afficher l'arborescence",
         "hide": "Masquer l'arborescence"
@@ -36,7 +39,9 @@
       "browseFolders": "Parcourir les répertoires",
       "noResults": "Aucun résultat",
       "title": "Tous les contenus",
-      "search": "Recherche"
+      "search": "Recherche",
+      "sql2Search": "SQL2 Recherche",
+      "quitSearch": "Quitter la recherche"
     }
   }
 }

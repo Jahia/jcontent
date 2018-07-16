@@ -24,7 +24,21 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@jahia/apollo-dx@^1.0.0-beta.1", "@jahia/apollo-dx@^1.0.0-beta.20180605080716":
+"@jahia/apollo-dx@^1.0.0-beta.1":
+  version "1.0.0-beta.20180716100613"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/apollo-dx/-/apollo-dx-1.0.0-beta.20180716100613.tgz#3acc1e1e4eeed521a3dfd218a3ee66b069641aad"
+  dependencies:
+    apollo-cache-inmemory "^1.2.2"
+    apollo-client "^2.3.2"
+    apollo-link "^1.2.2"
+    apollo-link-http "^1.5.4"
+    apollo-utilities "^1.0.13"
+    graphql "^0.13.2"
+    graphql-tag "^2.9.2"
+    lodash "^4.17.10"
+    zen-observable "^0.8.8"
+
+"@jahia/apollo-dx@^1.0.0-beta.20180605080716":
   version "1.0.0-beta.20180628145923"
   resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/apollo-dx/-/apollo-dx-1.0.0-beta.20180628145923.tgz#57ea94f77ab5888afd72e45804816b34dc34572c"
   dependencies:
@@ -55,8 +69,8 @@
     recompose "^0.27.1"
 
 "@jahia/react-apollo@^1.0.0-beta.20180605080720":
-  version "1.0.0-beta.20180628145926"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-apollo/-/react-apollo-1.0.0-beta.20180628145926.tgz#83b3e38f3b7ca2a02372a61902220503111aeb12"
+  version "1.0.0-beta.20180716100619"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-apollo/-/react-apollo-1.0.0-beta.20180716100619.tgz#3601607f8fb74158e42d688d6fccb39c00b31f10"
   dependencies:
     "@jahia/apollo-dx" "^1.0.0-beta.1"
     apollo-client "^2.3.2"
@@ -3474,6 +3488,10 @@ js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
+"js-tokens@^3.0.0 || ^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+
 js-yaml@~3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.7.0.tgz#5c967ddd837a9bfdca5f2de84253abe8a1c03b80"
@@ -3798,7 +3816,13 @@ long@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/long/-/long-3.2.0.tgz#d821b7138ca1cb581c172990ef14db200b5c474b"
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3.1:
+loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  dependencies:
+    js-tokens "^3.0.0 || ^4.0.0"
+
+loose-envify@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
   dependencies:

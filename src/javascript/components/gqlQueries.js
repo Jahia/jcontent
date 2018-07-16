@@ -1,9 +1,4 @@
 import gql from "graphql-tag";
-import {
-    NODE_TYPE_OPEN, NODE_TYPE_CLOSE,
-    BELONGS_TO_SITE_OPEN, BELONGS_TO_SITE_CLOSE,
-    ADDITIONAL_CONDITION_OPEN, ADDITIONAL_CONDITION_CLOSE
-} from "./sql2SearchUtils.js";
 
 class BrowsingQueryHandler {
 
@@ -37,10 +32,10 @@ class Sql2SearchQueryHandler {
 
     getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
 
-        let {from, where} = urlParams;
-        let query = `${NODE_TYPE_OPEN}${from}${NODE_TYPE_CLOSE} ${BELONGS_TO_SITE_OPEN}${dxContext.siteKey}${BELONGS_TO_SITE_CLOSE}`;
-        if (where && where !== "") {
-            query = query + ` ${ADDITIONAL_CONDITION_OPEN}${where}${ADDITIONAL_CONDITION_CLOSE}`;
+        let {sql2SearchFrom, sql2SearchWhere} = urlParams;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('/sites/${dxContext.siteKey}')`;
+        if (sql2SearchWhere && sql2SearchWhere !== "") {
+            query = query + ` AND (${sql2SearchWhere})`;
         }
 
         return {

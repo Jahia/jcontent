@@ -32,10 +32,10 @@ class Sql2SearchQueryHandler {
 
     getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
 
-        let {from, where} = urlParams;
-        let query = `SELECT * FROM [${from}] WHERE ISDESCENDANTNODE('/sites/${dxContext.siteKey}')`;
-        if (where && where !== "") {
-            query = query + ` AND (${where})`;
+        let {sql2SearchFrom, sql2SearchWhere} = urlParams;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('/sites/${dxContext.siteKey}')`;
+        if (sql2SearchWhere && sql2SearchWhere !== "") {
+            query = query + ` AND (${sql2SearchWhere})`;
         }
 
         return {

@@ -54,6 +54,9 @@ class Sql2SearchInputForm extends React.Component {
     }
 
     onQuitClick = (goto) => {
+        this.setState({ open: false });
+        this.from.current.value = '';
+        this.where.current.value = '';
         goto('/browse');
     }
 

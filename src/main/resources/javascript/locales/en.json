@@ -23,6 +23,7 @@
       },
       "contentPreview" : {
           "emptyMessage": "Generating...",
+          "noViewAvailable": "There is no default or dedicated Content Manager view for this component",
           "edit": "Edit",
           "translate": "Translate",
           "publish": "Publish",

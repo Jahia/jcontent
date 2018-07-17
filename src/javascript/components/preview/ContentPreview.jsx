@@ -130,7 +130,12 @@ class ContentPreview extends React.Component {
 
     previewComponent(data) {
         const { classes, t } = this.props;
-        const displayValue = data && data.jcr ? data.jcr.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
+        let displayValue = data && data.jcr ? data.jcr.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
+
+        if (displayValue === "") {
+            displayValue = t('label.contentManager.contentPreview.noViewAvailable');
+        }
+
         return <div className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
     }
 

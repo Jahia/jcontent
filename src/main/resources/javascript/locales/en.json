@@ -59,7 +59,8 @@
       "title": "All Content",
       "search": "search",
       "sql2Search": "SQL2 Search",
-      "quitSearch": "Quit Search"
+      "quitSearch": "Quit Search",
+      "showCurrentPath": "Show current path"
     }
   }
 }

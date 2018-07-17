@@ -25,8 +25,8 @@
     to-fast-properties "^2.0.0"
 
 "@jahia/apollo-dx@^1.0.0-beta.1":
-  version "1.0.0-beta.20180716100613"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/apollo-dx/-/apollo-dx-1.0.0-beta.20180716100613.tgz#3acc1e1e4eeed521a3dfd218a3ee66b069641aad"
+  version "1.0.0-beta.20180717152330"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/apollo-dx/-/apollo-dx-1.0.0-beta.20180717152330.tgz#4f4d2695780708cefb47e4c28c88badf4989ed46"
   dependencies:
     apollo-cache-inmemory "^1.2.2"
     apollo-client "^2.3.2"
@@ -69,8 +69,8 @@
     recompose "^0.27.1"
 
 "@jahia/react-apollo@^1.0.0-beta.20180605080720":
-  version "1.0.0-beta.20180716100619"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-apollo/-/react-apollo-1.0.0-beta.20180716100619.tgz#3601607f8fb74158e42d688d6fccb39c00b31f10"
+  version "1.0.0-beta.20180717152332"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-apollo/-/react-apollo-1.0.0-beta.20180717152332.tgz#b3935581de19034d23ccc952e1b1fb17ef0a06ad"
   dependencies:
     "@jahia/apollo-dx" "^1.0.0-beta.1"
     apollo-client "^2.3.2"

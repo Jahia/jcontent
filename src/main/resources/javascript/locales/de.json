@@ -41,7 +41,8 @@
       "title": "Gesamter Content",
       "search": "Suche",
       "sql2Search": "SQL2 Suche",
-      "quitSearch": "Suche beenden"
+      "quitSearch": "Suche beenden",
+      "showCurrentPath": "Zeige aktuellen Pfad"
     }
   }
 }

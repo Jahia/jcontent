@@ -106,40 +106,40 @@ class ContentLayout extends React.Component {
 
             return <Query fetchPolicy={'network-only'} query={layoutQuery} variables={layoutQueryParams}>
             { ({loading, error, data}) => {
+                let rows = [];
+                let totalCount = 0;
                 if (error) {
                     console.log("Error when fetching data: " + error);
                     let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                 } else {
                     notificationContext.closeNotification();
-                }
-                let rows = [];
-                let totalCount = 0;
-                if (data && data.jcr && queryHandler.getResultsPath(data.jcr.results)) {
-                    totalCount = queryHandler.getResultsPath(data.jcr.results).pageInfo.totalCount;
-                    rows = _.map(queryHandler.getResultsPath(data.jcr.results).nodes, contentNode => {
-                        return {
-                            uuid: contentNode.uuid,
-                            name: contentNode.displayName,
-                            type: contentNode.primaryNodeType.displayName,
-                            created: contentNode.created.value,
-                            createdBy: contentNode.createdBy.value,
-                            path: contentNode.path,
-                            publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
-                            isLocked: contentNode.lockOwner !== null,
-                            lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
-                            lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
-                            lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
-                            lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
-                            deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
-                            deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
-                            wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
-                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
-                            icon: contentNode.primaryNodeType.icon,
-                            isSelected: selectedRow ? selectedRow.path === contentNode.path : false
-                        }
-                    });
-                    computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
+                    if (data && data.jcr && queryHandler.getResultsPath(data.jcr.results)) {
+                        totalCount = queryHandler.getResultsPath(data.jcr.results).pageInfo.totalCount;
+                        rows = _.map(queryHandler.getResultsPath(data.jcr.results).nodes, contentNode => {
+                            return {
+                                uuid: contentNode.uuid,
+                                name: contentNode.displayName,
+                                type: contentNode.primaryNodeType.displayName,
+                                created: contentNode.created.value,
+                                createdBy: contentNode.createdBy.value,
+                                path: contentNode.path,
+                                publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
+                                isLocked: contentNode.lockOwner !== null,
+                                lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
+                                lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
+                                lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
+                                lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
+                                deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
+                                deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
+                                wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
+                                wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
+                                icon: contentNode.primaryNodeType.icon,
+                                isSelected: selectedRow ? selectedRow.path === contentNode.path : false
+                            }
+                        });
+                        computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
+                    }
                 }
                 return (
                     <div>

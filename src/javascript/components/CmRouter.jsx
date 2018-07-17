@@ -19,7 +19,7 @@ class CmRouter extends React.Component {
         if (!search || search == '') {
             return {};
         }
-        return JSON.parse(decodeURIComponent(search.substring(PARAMS_KEY.length)));
+        return JSON.parse(decodeURIComponent(search.substring(PARAMS_KEY.length).replace(/\+/g, '%20')));
     };
 
     // This method push to the browser url the provided location

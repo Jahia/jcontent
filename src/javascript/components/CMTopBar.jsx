@@ -39,7 +39,7 @@ class CMTopBar extends React.Component {
                     <div className={classes.search}>
                         <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
                         <CmRouter render={({params}) => (
-                            <Sql2SearchInputForm siteKey={dxContext.siteKey} open={params.sql2SearchExpanded} from={params.sql2SearchFrom} where={params.sql2SearchWhere}/>
+                            <Sql2SearchInputForm siteKey={dxContext.siteKey} open={params.sql2SearchFrom != null} from={params.sql2SearchFrom} where={params.sql2SearchWhere}/>
                         )}/>
                     </div>
                 </Toolbar>

@@ -46,11 +46,9 @@ class Sql2SearchInputForm extends React.Component {
 
     onSearchClick = (goto) => {
         goto('/sql2Search', (this.where.current.value !== "") ? {
-            sql2SearchExpanded: true,
             sql2SearchFrom: this.from.current.value,
             sql2SearchWhere: this.where.current.value
         } : {
-            sql2SearchExpanded: true,
             sql2SearchFrom: this.from.current.value
         });
     }
@@ -74,10 +72,10 @@ class Sql2SearchInputForm extends React.Component {
                         <Paper classes={{root: classes.sql2Form}}>
                             <div>
                                 <div>
-                                    SELECT * FROM [<Sql2Input maxLength={50} size={20} defaultValue={from} inputRef={this.from} onEnterPressed={() => this.onSearchClick(goto)}/>] WHERE ISDESCENDANTNODE('/sites/{siteKey}')
+                                    SELECT * FROM [<Sql2Input maxLength={100} size={20} defaultValue={from} inputRef={this.from} onEnterPressed={() => this.onSearchClick(goto)}/>] WHERE ISDESCENDANTNODE('/sites/{siteKey}')
                                 </div>
                                 <div>
-                                    AND (<Sql2Input maxLength={500} size={80} defaultValue={where} inputRef={this.where} onEnterPressed={() => this.onSearchClick(goto)}/>)
+                                    AND (<Sql2Input maxLength={2000} size={80} defaultValue={where} inputRef={this.where} onEnterPressed={() => this.onSearchClick(goto)}/>)
                                 </div>
                             </div>
                             <div className={classes.actions}>

@@ -44,7 +44,9 @@ public class URLResolver extends org.jahia.services.render.URLResolver {
         } else {
             logger.warn("Couldn't resolve site key properly, defaulting to system site");
         }
-        locale = verifyLanguage(pathParts[2]);
+        if (pathParts.length > 2) {
+            locale = verifyLanguage(pathParts[2]);
+        }
     }
 
     @Override

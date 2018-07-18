@@ -13,9 +13,6 @@ class ContentTree extends React.Component {
         this.picker = React.createRef();
     }
 
-    openPath(path, rootPath) {
-        this.picker.current.openPath(path, rootPath);
-    }
     render() {
         let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes} = this.props;
         return (
@@ -48,8 +45,8 @@ class ContentTrees extends React.Component {
     }
 
     openTrees(path) {
-        this.contentTree.current.openPath(path);
-        this.pageTree.current.openPath(path);
+        this.contentTree.current.picker.current.openPaths(path);
+        this.pageTree.current.picker.current.openPaths(path);
     }
 
     render() {
@@ -57,7 +54,7 @@ class ContentTrees extends React.Component {
         return (<CmRouter render={({goto}) => (
                 <List>
                     <ListItem>
-                        <Button onClick={() => this.openTrees(path)}>{t("label.contentmanager.showCurrentPath")}</Button>
+                        <Button onClick={() => this.openTrees(path)}>{t("label.contentManager.showCurrentPath")}</Button>
                     </ListItem>
                     <ListItem>
                         <ContentTree

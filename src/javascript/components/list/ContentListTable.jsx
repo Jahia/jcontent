@@ -186,7 +186,7 @@ class ContentListTable extends React.Component {
         return (
             <div>
                 <div className={classes.tableWrapper}>
-                <Table aria-labelledby="tableTitle">
+                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
                     <ContentListHeader
                         order={order}
                         orderBy={orderBy}
@@ -209,7 +209,8 @@ class ContentListTable extends React.Component {
                                                   classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}}
                                                   key={n.uuid}
                                                   onClick={ () => onRowSelected(n)}
-                                                  selected={ n.isSelected }>
+                                                  selected={ n.isSelected }
+                                                  data-cm-role="table-content-list-row">
                                             <TableCell padding={'checkbox'} classes={{root: classes.publicationStatusContainer}}>
                                                 <Button disableRipple classes={{
                                                     root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
@@ -226,14 +227,14 @@ class ContentListTable extends React.Component {
                                                         <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
                                                     </TableCell>);
                                                 } else if (column.id === 'name') {
-                                                    return (<TableCell key={column.id}>
+                                                    return (<TableCell key={column.id} data-cm-role="table-content-list-cell-name">
                                                         <Typography className={classes[column.id]}>
                                                             <img src={icon} className={classes.nodeTypeIcon}/>
                                                             {n[column.id]}</Typography>
                                                     </TableCell>);
                                                 } else {
                                                     return (
-                                                        <TableCell key={column.id} padding={'none'}>
+                                                        <TableCell key={column.id} padding={'none'} data-cm-role={'table-content-list-cell-' + column.id}>
                                                             <Typography className={classes[column.id]}>{n[column.id]}</Typography>
                                                         </TableCell>
                                                     );

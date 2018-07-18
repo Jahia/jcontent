@@ -66,7 +66,7 @@ class Sql2SearchInputForm extends React.Component {
 
         return (
             <div className={classes.root}>
-                <Button onClick={this.onExpandCollapseClick}>
+                <Button onClick={this.onExpandCollapseClick} data-cm-role={'sql2search-toggle'}>
                     {t('label.contentManager.sql2Search')}
                     {this.state.open ? <ExpandLess/> : <ExpandMore/>}
                 </Button>
@@ -75,18 +75,18 @@ class Sql2SearchInputForm extends React.Component {
                         <Paper classes={{root: classes.sql2Form}}>
                             <div>
                                 <div>
-                                    SELECT * FROM [<Sql2Input maxLength={100} size={20} defaultValue={from} inputRef={this.from} onEnterPressed={() => this.onSearchClick(goto)}/>] WHERE ISDESCENDANTNODE('/sites/{siteKey}')
+                                    SELECT * FROM [<Sql2Input maxLength={100} size={20} defaultValue={from} inputRef={this.from} onEnterPressed={() => this.onSearchClick(goto)} cmRole={'sql2search-input-from'}/>] WHERE ISDESCENDANTNODE('/sites/{siteKey}')
                                 </div>
                                 <div>
-                                    AND (<Sql2Input maxLength={2000} size={80} defaultValue={where} inputRef={this.where} onEnterPressed={() => this.onSearchClick(goto)}/>)
+                                    AND (<Sql2Input maxLength={2000} size={80} defaultValue={where} inputRef={this.where} onEnterPressed={() => this.onSearchClick(goto)} cmRole={'sql2search-input-where'}/>)
                                 </div>
                             </div>
                             <div className={classes.actions}>
                                 <div>
-                                    <Button size={'small'} onClick={() => this.onSearchClick(goto)}>{t('label.contentManager.search')}</Button>
+                                    <Button size={'small'} onClick={() => this.onSearchClick(goto)} data-cm-role={'sql2search-button-search'}>{t('label.contentManager.search')}</Button>
                                     {
                                         from && // TODO: When routing implementation allows it, rework to rely on current mode (browse/search) rather than on specific search parameter.
-                                        <Button size={'small'} onClick={() => this.onQuitClick(goto)}>{t('label.contentManager.quitSearch')}</Button>
+                                        <Button size={'small'} onClick={() => this.onQuitClick(goto)} data-cm-role={'sql2search-button-quit-search'}>{t('label.contentManager.quitSearch')}</Button>
                                     }
                                 </div>
                             </div>
@@ -108,10 +108,10 @@ class Sql2Input extends React.Component {
 
     render() {
 
-        let {maxLength, size, defaultValue, inputRef, classes, onEnterPressed} = this.props;
+        let {maxLength, size, defaultValue, inputRef, classes, onEnterPressed, cmRole} = this.props;
 
         return (
-            <Input inputProps={{maxLength: maxLength, size: size}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}
+            <Input inputProps={{maxLength: maxLength, size: size, 'data-cm-role': cmRole}} defaultValue={defaultValue} inputRef={inputRef} classes={{root: classes.sql2Input, input: classes.sql2Input}}
             onKeyUp={(e)=>this.onKeyUp(e)}/>
         );
     }

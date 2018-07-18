@@ -42,11 +42,13 @@ class ContentTrees extends React.Component {
         super(props);
         this.contentTree = React.createRef();
         this.pageTree= React.createRef();
+        this.filesTree= React.createRef();
     }
 
     openTrees(path) {
         this.contentTree.current.picker.current.openPaths(path);
         this.pageTree.current.picker.current.openPaths(path);
+        this.filesTree.current.picker.current.openPaths(path);
     }
 
     render() {
@@ -78,6 +80,18 @@ class ContentTrees extends React.Component {
                             handleSelect={path => goto(path, {type: "pages"})}
                             openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                             rootLabel={t("label.contentManager.browsePages")}
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ContentTree
+                            ref={this.filesTree}
+                            path={path}
+                            rootPath={rootPath + "/files"}
+                            selectableTypes={['jnt:folder']}
+                            lang={lang}
+                            handleSelect={path => goto(path, {type: "files"})}
+                            openableTypes={['jnt:folder']}
+                            rootLabel={t("label.contentManager.browseFiles")}
                         />
                     </ListItem>
                 </List>

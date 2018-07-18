@@ -6,8 +6,7 @@ class ContentBreadcrumbs extends React.Component {
 
     render() {
 
-        let {path} = this.props;
-
+        let {path, params} = this.props;
         let pathElements = _.split(path.substring(1), '/');
         let names = _.concat(['/'], pathElements);
         let paths = _.concat(['/'], _.reduce(pathElements, (result, pathElement) => {
@@ -22,7 +21,7 @@ class ContentBreadcrumbs extends React.Component {
                         const link = names[i];
                         return (
                             <span key={i}>
-                                {i < paths.length - 1 ? <span><CmLink to={paths[i]}>{link}</CmLink> - </span> : <span>{link}</span>}
+                                {i < paths.length - 1 ? <span><CmLink to={paths[i]} params={ params }>{link}</CmLink> - </span> : <span>{link}</span>}
                             </span>
                         );
                     })

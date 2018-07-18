@@ -54,8 +54,9 @@ class Sql2SearchQueryHandler {
 
 const browseType = {
     pages: {recursionTypesFilter:["jnt:page"], typeFilter:["jmix:editorialContent"]},
-    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]}
-}
+    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]},
+    files: {recursionTypesFilter:["jnt:folder"], typeFilter:["jnt:file"]},
+};
 
 const nodeFields = gql`
     fragment NodeFields on JCRNode {

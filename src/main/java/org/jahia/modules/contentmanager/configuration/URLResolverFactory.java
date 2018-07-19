@@ -11,6 +11,11 @@ import org.jahia.services.sites.JahiaSite;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Content Manager URL Resolver Factory that transforms the CM URL to a valid DX url
+ * Transforms /contentmanager/[siteKey]/[lang]/[browse | search | ..]/[path] to
+ * /contentmanager/default/[lang]/[siteKey].content-manager.html
+ */
 public class URLResolverFactory extends org.jahia.services.render.URLResolverFactory {
 
     private Ehcache nodePathCache;

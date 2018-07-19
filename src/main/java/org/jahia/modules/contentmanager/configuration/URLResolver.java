@@ -15,19 +15,19 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 /**
- *
+ * URL Resolver Wrapper to access protected method from the constructor ..
  */
-public class URLResolver extends org.jahia.services.render.URLResolver {
+class URLResolver extends org.jahia.services.render.URLResolver {
 
-    public URLResolver(String urlPathInfo, String serverName, HttpServletRequest request, Ehcache nodePathCache, Ehcache siteInfoCache) {
+    URLResolver(String urlPathInfo, String serverName, HttpServletRequest request, Ehcache nodePathCache, Ehcache siteInfoCache) {
         super(urlPathInfo, serverName, request, nodePathCache, siteInfoCache);
     }
 
-    public URLResolver(String pathInfo, String serverName, String workspace, HttpServletRequest request, Ehcache nodePathCache, Ehcache siteInfoCache) {
+    URLResolver(String pathInfo, String serverName, String workspace, HttpServletRequest request, Ehcache nodePathCache, Ehcache siteInfoCache) {
         super(pathInfo, serverName, workspace, request, nodePathCache, siteInfoCache);
     }
 
-    public URLResolver(String url, RenderContext context, Ehcache nodePathCache, Ehcache siteInfoCache) {
+    URLResolver(String url, RenderContext context, Ehcache nodePathCache, Ehcache siteInfoCache) {
         super(url, context, nodePathCache, siteInfoCache);
     }
 }

@@ -62,10 +62,6 @@
         </property>
     </bean>
 
-    <bean name="ContentManagerFilter" class="org.jahia.modules.contentmanager.configuration.ContentManagerFilter">
-        <property name="priority" value="1"/>
-    </bean>
-
     <bean id="contentmanagermode" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
 
         <property name="requiredPermission" value="contentManager"/>

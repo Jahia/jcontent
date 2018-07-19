@@ -7,6 +7,8 @@ import BurgerMenuButton from './BurgerMenuButton';
 import Sql2SearchInputForm from './Sql2SearchInputForm';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
+import {DxContext} from "./DxContext";
+
 
 const styles = theme => ({
     root: {
@@ -17,6 +19,9 @@ const styles = theme => ({
         verticalAlign: "top"
     },
     search: {
+        margin: theme.spacing.unit
+    },
+    Iam: {
         margin: theme.spacing.unit
     }
 });
@@ -41,6 +46,14 @@ class CMTopBar extends React.Component {
                         <CmRouter render={({params}) => (
                             <Sql2SearchInputForm siteKey={dxContext.siteKey} open={params.sql2SearchFrom != null} from={params.sql2SearchFrom} where={params.sql2SearchWhere}/>
                         )}/>
+                    </div>
+                    {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}
+                    <div className={classes.Iam}>
+                        <DxContext.Consumer>
+                            { dxContext => (
+                                <Typography variant="display1" color="inherit" align="right">{t('label.contentManager.Iam', {userName: dxContext.userName})}</Typography>
+                            )}
+                        </DxContext.Consumer>
                     </div>
                 </Toolbar>
             </div>

@@ -22,6 +22,7 @@
         contextJsParameters['urlBrowser'] = '/cms/contentmanager';
         contextJsParameters['urlbase'] = '${renderContext.servletPath}';
         contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
+        contextJsParameters['userName'] = '${renderContext.user.username}';
 
         reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
     </script>

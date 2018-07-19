@@ -9,7 +9,7 @@ import {Visibility, VisibilityOff, List} from "@material-ui/icons";
 import ContentTrees from "./ContentTrees";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
-import ContentBreadcrumbs from "./ContentBreadcrumbs";
+import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import CmRouter from './CmRouter'
 import classNames from "classnames";
 
@@ -99,7 +99,7 @@ class ContentLayout extends React.Component {
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
         const rootPath = '/sites/' + dxContext.siteKey;
         let queryHandler = contentQueryHandlerBySource[contentSource];
-        return (<CmRouter render={({path, params}) => {
+        return (<CmRouter render={({path, params, goto}) => {
             const layoutQuery = queryHandler.getQuery();
             const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
             let computedTableSize;
@@ -147,7 +147,12 @@ class ContentLayout extends React.Component {
                         <div className={classes.root}>
                             <Grid container spacing={ 0 }>
                                 <Grid item xs={ GRID_SIZE - GRID_PANEL_BUTTONS_SIZE }>
-                                    {contentSource === "browsing" && <ContentBreadcrumbs path={path} params={ params }/>}
+                                    {contentSource === "browsing" && <ContentBreadcrumbs dxContext={dxContext}
+                                                                                         lang={this.state.language}
+                                                                                         path={path}
+                                                                                         rootPath={rootPath}
+                                                                                         goto={goto}
+                                                                                         params={ params }/>}
                                 </Grid>
                                 <Grid item xs={ GRID_PANEL_BUTTONS_SIZE }>
                                     <IconButton onClick={this.handleShowTree}><List/></IconButton>
@@ -160,7 +165,8 @@ class ContentLayout extends React.Component {
                                     contentSource === "browsing" && showTree &&
                                     <Grid item xs={TREE_SIZE} className={ classes.tree }>
                                         {
-                                            <ContentTrees path={path} rootPath={rootPath}
+                                            <ContentTrees path={path}
+                                                          rootPath={rootPath}
                                                           lang={this.state.language}/>
                                         }
                                     </Grid>

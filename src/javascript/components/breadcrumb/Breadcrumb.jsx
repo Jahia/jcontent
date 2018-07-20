@@ -93,43 +93,32 @@ class BreadcrumbDisplay extends React.Component {
         this.onMenuItemLeave(event);
     }
     generateMenu(nodes) {
-        let {anchorEl, menuActive, menuItemActive} = this.state;
         let {classes} = this.props;
         if (nodes.siblings.length > 1) {
-            return <Menu key={nodes.uuid} id={"breadcrumbMenu_" + nodes.uuid} anchorEl={anchorEl} open={menuActive || menuItemActive}>
+            return <span>
+                <MenuItemContainer key={nodes.uuid} onMouseEnter={this.onMenuItemEnter}
+                                   onMouseLeave={this.onMenuItemLeave}>
+                    <ArrowDropDown className={classes.chevronIcon}/>
+                    <MenuItem className={classes.menuItemHeader}
+                              disableRipple={true}
+                              onClick={(event) => {event.preventDefault()}}>
+                        {nodes.name}
+                    </MenuItem>
+                </MenuItemContainer>
                 {nodes.siblings.map((node, i) => {
-                    if (i === 0) {
-                        return <MenuItemContainer key={node.uuid} onMouseEnter={this.onMenuItemEnter}
-                                               onMouseLeave={this.onMenuItemLeave}>
-                            <ArrowDropDown className={classes.chevronIcon}/>
-                            <MenuItem className={classes.menuItemHeader}
-                                      onClick={(event) => this.onMenuItemSelected(event, node.path, "contents")}>
-                                {node.name}
-                            </MenuItem>
-                        </MenuItemContainer>
-                    } else {
-                        return <MenuItemContainer key={node.uuid}>
-                            <MenuItem className={classes.menuItem}
-                                     onMouseEnter={this.onMenuItemEnter}
-                                     onMouseLeave={this.onMenuItemLeave}
-                                     onClick={(event) => this.onMenuItemSelected(event, node.path, "contents")}>
-                                {this.renderIcon(node.type)}
-                                <MenuItemLabel>{node.name}</MenuItemLabel>
-                            </MenuItem>
-                        </MenuItemContainer>
-                    }
+                    return <MenuItemContainer key={node.uuid}>
+                        <MenuItem className={classes.menuItem}
+                                 onMouseEnter={this.onMenuItemEnter}
+                                 onMouseLeave={this.onMenuItemLeave}
+                                 onClick={(event) => this.onMenuItemSelected(event, node.path, "contents")}>
+                            {this.renderIcon(node.type)}
+                            <MenuItemLabel>{node.name}</MenuItemLabel>
+                        </MenuItem>
+                    </MenuItemContainer>
                 })}
-            </Menu>
+            </span>
         }
         return null;
-    }
-
-    renderIcon(type) {
-        let {classes} = this.props;
-        switch(type) {
-            case "jnt:virtualsite" : return <VirtualsiteIcon className={classes.contentIcon}/>;
-            case "jnt:page" : return <PageIcon className={classes.contentIcon}/>;
-        }
     }
 
     generateMenuButton(nodes) {
@@ -137,8 +126,9 @@ class BreadcrumbDisplay extends React.Component {
         let {updatePickerSelectedPath, classes} = this.props;
         if (nodes.siblings.length > 1) {
             return <Button
-                className={classes.menuButton}
                 id={"menuToggleButton_" + nodes.uuid}
+                className={classes.menuButton}
+                disableRipple={true}
                 aria-owns={anchorEl ? "breadcrumbMenu_" + nodes.uuid : null}
                 aria-haspopup="true"
                 onMouseEnter={this.onMenuButtonActivatorEnter}
@@ -148,8 +138,9 @@ class BreadcrumbDisplay extends React.Component {
             </Button>
         } else {
             return <Button
-                className={classes.menuButton}
                 id={"menuToggleButton_" + nodes.uuid}
+                className={classes.menuButton}
+                disableRipple={true}
                 aria-owns={anchorEl ? "breadcrumbMenu_" + nodes.uuid : null}
                 aria-haspopup="true"
                 onMouseEnter={this.onMenuButtonActivatorEnter}
@@ -161,11 +152,22 @@ class BreadcrumbDisplay extends React.Component {
         }
     }
 
+    renderIcon(type) {
+        let {classes} = this.props;
+        switch(type) {
+            case "jnt:virtualsite" : return <VirtualsiteIcon className={classes.contentIcon}/>;
+            case "jnt:page" : return <PageIcon className={classes.contentIcon}/>;
+        }
+    }
+
     render() {
+        let {anchorEl, menuActive, menuItemActive} = this.state;
         let {nodes} = this.props;
         return (<span id={"breadcrumbSpan_" + nodes.uuid}>
             {this.generateMenuButton(nodes)}
-            {this.generateMenu(nodes)}
+            <Menu key={nodes.uuid} id={"breadcrumbMenu_" + nodes.uuid} anchorEl={anchorEl} open={menuActive || menuItemActive}>
+                {this.generateMenu(nodes)}
+            </Menu>
         </span>)
     }
 }
@@ -180,7 +182,7 @@ class Breadcrumb extends React.Component {
     render() {
         const { classes } = this. props;
         let {path, link, params, pickerEntries, updatePickerSelectedPath} = this.props;
-        let breadcrumbs = this.parseEntries(pickerEntries);
+        let breadcrumbs = this.parseEntries(pickerEntries, path);
 
         return (<div>
             {breadcrumbs.map((breadcrumb, i) => {
@@ -192,25 +194,30 @@ class Breadcrumb extends React.Component {
         </div>)
     }
 
-    parseEntries(entries) {
+    parseEntries(entries, selectedPath) {
         //Process these nodes
         let breadcrumbs = [];
-        let splitCount = -1;
+        let selectedPathParts = selectedPath.replace("/sites/", "").split("/");
         for (let i in entries) {
             let entry =  entries[i];
-            let newSplitCount = entry.path.split("/").length;
-            if (splitCount < newSplitCount) {
+            let entryPathParts = entry.path.replace("/sites/", "").split("/");
+            //Verify this is the same path along the tree that is currently selected.
+            //We are checking parent of current entry
+            let parentIndex = entryPathParts.length -2;
+            if (entryPathParts[parentIndex] !== undefined && selectedPathParts[parentIndex] !== entryPathParts[parentIndex]) {
+                //This is a different path, we will skip it as it is not part of our current breadcrumb!
+                continue;
+            }
+            let breadcrumb = breadcrumbs[entryPathParts.length-1];
+            if (breadcrumb === undefined) {
                 //Start new object, we are at a deeper level then before.
-                let breadcrumb = {};
+                breadcrumb = {};
                 breadcrumb.name = entry.node.primaryNodeType.name === "jnt:virtualsite" ? "Browse Pages" : entry.name;
                 breadcrumb.uuid = entry.node.uuid;
                 breadcrumb.type = entry.node.primaryNodeType.name;
                 breadcrumb.siblings = [];
-                breadcrumbs.push(breadcrumb);
-                splitCount = newSplitCount;
             }
             //Add sibling to list (including first entry)
-            let breadcrumb = breadcrumbs.pop();
             let sibling = {
                 uuid: entry.node.uuid,
                 name: entry.name,
@@ -218,7 +225,13 @@ class Breadcrumb extends React.Component {
                 type: entry.node.primaryNodeType.name
             };
             breadcrumb.siblings.push(sibling);
-            breadcrumbs.push(breadcrumb);
+            //If this path is the selected path, then update root breadcrumb with this entries information.
+            if (selectedPathParts.slice(0, entryPathParts.length).join("/") === entryPathParts.join("/")) {
+                breadcrumb.name = entry.node.primaryNodeType.name === "jnt:virtualsite" ? "Browse Pages" : entry.name;
+                breadcrumb.uuid = entry.node.uuid;
+                breadcrumb.type = entry.node.primaryNodeType.name;
+            }
+            breadcrumbs[entryPathParts.length-1] = breadcrumb;
         }
         return breadcrumbs;
     }

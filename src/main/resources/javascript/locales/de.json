@@ -20,6 +20,12 @@
         "show": "Navigationsbaum anzeigen",
         "hide": "Navigationsbaum verbergen"
       },
+      "contentTypes": {
+	      "any": "Jeglicher Content",      
+	      "error": {
+	           "loading": "Fehler während Content-Typen-Abfrage: {{details}}"
+	      }
+      },
       "preview": {
         "show": "Vorschau öffnen",
         "hide": "Vorschau verbergen",

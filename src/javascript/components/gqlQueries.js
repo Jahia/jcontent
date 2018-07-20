@@ -158,4 +158,17 @@ const sql2SearchContentQuery = gql`
     ${nodeFields}
 `;
 
-export {BrowsingQueryHandler, Sql2SearchQueryHandler};
+const ContentTypesQuery = gql`
+    query ContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
+      jcr {
+        nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includedTypes: ["jmix:editorialContent", "jnt:page"], excludedTypes: ["jmix:studioOnly", "jmix:hiddenType"]}) {
+          nodes {
+            name
+            displayName(language: $displayLanguage)
+          }
+        }
+      }
+    }
+`;
+
+export {BrowsingQueryHandler, Sql2SearchQueryHandler, ContentTypesQuery};

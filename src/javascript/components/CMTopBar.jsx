@@ -4,6 +4,7 @@ import {translate} from 'react-i18next';
 import {LanguageSwitcher, SearchBar} from '@jahia/react-material';
 import SiteSelector from './SiteSelector';
 import BurgerMenuButton from './BurgerMenuButton';
+import ContentTypeSelect from './ContentTypeSelect';
 import Sql2SearchInputForm from './Sql2SearchInputForm';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
@@ -42,6 +43,7 @@ class CMTopBar extends React.Component {
                         <LanguageSwitcher/>
                     </div>
                     <div className={classes.search}>
+                        <ContentTypeSelect siteKey={dxContext.siteKey} displayLanguage={dxContext.uilang}/>
                         <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
                         <CmRouter render={({params}) => (
                             <Sql2SearchInputForm siteKey={dxContext.siteKey} open={params.sql2SearchFrom != null} from={params.sql2SearchFrom} where={params.sql2SearchWhere}/>

@@ -20,6 +20,12 @@
         "show": "Afficher l'arborescence",
         "hide": "Masquer l'arborescence"
       },
+      "contentTypes": {
+	      "any": "Tout contenu",      
+	      "error": {
+	           "loading": "Erreur lors de la récupération des types de contenu: {{details}}"
+	      }
+      },
       "preview": {
         "show": "Afficher l'aperçu",
         "hide": "Masquer l'aperçu",

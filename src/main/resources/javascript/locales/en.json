@@ -15,13 +15,14 @@
       "saveAsWip": "Mark as work in progress",
       "editAction": "Edit",
       "error": {
-        "queryingContent": "Error querying content: {{details}}"
+        "queryingContent": "Error querying content: {{details}}",
+        "contentTypes": "Error retrieving content types: {{details}}"
       },
       "tree": {
         "show": "Show Tree",
         "hide": "Hide Tree"
       },
-      "contentPreview" : {
+      "contentPreview": {
           "emptyMessage": "Generating...",
           "noViewAvailable": "There is no default or dedicated Content Manager view for this component",
           "edit": "Edit",
@@ -38,6 +39,12 @@
           "markedForDeletionBy" : "Marked for deletion by {{userName}} on ",
           "copyPathToClipboard": "Copy path to clipboard",
           "copyUUIDToClipboard": "Copy UUID to clipboard"
+      },
+      "contentTypes": {
+	      "any": "Any content",      
+	      "error": {
+	           "loading": "Error retrieving content types: {{details}}"
+	      }
       },
       "preview": {
         "show": "Show Preview",

@@ -165,6 +165,7 @@ const ContentTypesQuery = gql`
           nodes {
             name
             displayName(language: $displayLanguage)
+            icon
           }
         }
       }

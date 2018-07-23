@@ -1,21 +1,23 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {withStyles, Input, MenuItem, FormControl, Select} from "@material-ui/core";
-import {ExpandLess, ExpandMore} from '@material-ui/icons';
+import {withStyles, Input, MenuItem, Select} from "@material-ui/core";
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
-import sortBy from "lodash/sortBy";
+import * as _ from 'lodash';
 import {Query} from 'react-apollo';
 import {ContentTypesQuery} from "./gqlQueries";
 
 const styles = theme => ({
   root: {
       display: 'inline-block',
-      minWidth: 120,
+      minWidth: 120
   },
   selectMenu: {
       color: theme.palette.text.secondary
+  },
+  nodeTypeIcon: {
+      marginRight: 5
   }
 });
 
@@ -39,7 +41,7 @@ class ContentTypeSelect extends React.Component {
                     let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                 } else if (data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
-                    contentTypes = sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
+                    contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
                 }
                 return (<Select
                     value={this.state.contentType}
@@ -54,7 +56,7 @@ class ContentTypeSelect extends React.Component {
                         <em>{t('label.contentManager.contentTypes.any')}</em>
                     </MenuItem>
                     {contentTypes.map((nt) => (
-                        <MenuItem key={nt.name} value={nt.name} title={nt.displayName + ' (' + nt.name + ')'}>{nt.displayName}</MenuItem>
+                        <MenuItem key={nt.name} value={nt.name} title={nt.displayName + ' (' + nt.name + ')'}><img src={nt.icon + '.png'} className={classes.nodeTypeIcon}/>{nt.displayName}</MenuItem>
                     ))}
                 </Select>)
             }}

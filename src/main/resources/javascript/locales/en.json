@@ -41,10 +41,10 @@
           "copyUUIDToClipboard": "Copy UUID to clipboard"
       },
       "contentTypes": {
-	      "any": "Any content",      
-	      "error": {
-	           "loading": "Error retrieving content types: {{details}}"
-	      }
+          "any": "Any content",
+          "error": {
+               "loading": "Error retrieving content types: {{details}}"
+          }
       },
       "preview": {
         "show": "Show Preview",
@@ -66,9 +66,13 @@
       "browseFiles": "Browse Files",
       "noResults": "No Results",
       "title": "All Content",
-      "search": "search",
-      "sql2Search": "SQL2 Search",
-      "quitSearch": "Quit Search",
+      "search": {
+        "normalPrompt": "What are you looking for?",
+        "sql2Propmt": "You are using SQL queries. Please visit the Academy for more info.",
+        "normal": "Basic",
+        "sql2": "Advanced",
+        "clear": "Clear"
+      },
       "showCurrentPath": "Show current path",
       "Iam": "I am {{userName}}."
     }

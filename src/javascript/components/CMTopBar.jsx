@@ -1,15 +1,14 @@
 import React from "react";
 import {withStyles, Toolbar, Typography} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import {LanguageSwitcher, SearchBar} from '@jahia/react-material';
+import {LanguageSwitcher} from '@jahia/react-material';
 import SiteSelector from './SiteSelector';
 import BurgerMenuButton from './BurgerMenuButton';
-import ContentTypeSelect from './ContentTypeSelect';
 import Sql2SearchInputForm from './Sql2SearchInputForm';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
 import {DxContext} from "./DxContext";
-
+import {CmSearchBar} from "./CmSearchBar";
 
 const styles = theme => ({
     root: {
@@ -43,10 +42,8 @@ class CMTopBar extends React.Component {
                         <LanguageSwitcher/>
                     </div>
                     <div className={classes.search}>
-                        <ContentTypeSelect siteKey={dxContext.siteKey} displayLanguage={dxContext.uilang}/>
-                        <SearchBar placeholderLabel={t('label.contentManager.search')} onChangeFilter={""} onFocus={""} onBlur={""}/>
                         <CmRouter render={({params}) => (
-                            <Sql2SearchInputForm siteKey={dxContext.siteKey} open={params.sql2SearchFrom != null} from={params.sql2SearchFrom} where={params.sql2SearchWhere}/>
+                            <CmSearchBar dxContext={dxContext} sql2SearchFrom={params.sql2SearchFrom} sql2SearchWhere={params.sql2SearchWhere}/>
                         )}/>
                     </div>
                     {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}

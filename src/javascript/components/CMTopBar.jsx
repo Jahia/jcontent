@@ -4,7 +4,6 @@ import {translate} from 'react-i18next';
 import {LanguageSwitcher} from '@jahia/react-material';
 import SiteSelector from './SiteSelector';
 import BurgerMenuButton from './BurgerMenuButton';
-import Sql2SearchInputForm from './Sql2SearchInputForm';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
 import {DxContext} from "./DxContext";

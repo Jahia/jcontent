@@ -11,18 +11,20 @@ import {CmSearchBar} from "./CmSearchBar";
 
 const styles = theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        paddingTop: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit
     },
     head: {
         display: "inline-block",
-        verticalAlign: "top"
+        verticalAlign: "top",
+        marginRight: "auto"
     },
     search: {
-        margin: theme.spacing.unit
+        marginLeft: "auto",
+        width: "80%"
     },
-    Iam: {
-        margin: theme.spacing.unit
-    }
 });
 
 class CMTopBar extends React.Component {
@@ -32,29 +34,31 @@ class CMTopBar extends React.Component {
         const { dxContext, classes, t } = this.props;
 
         return (
-            <div className={classes.root}>
-                <Toolbar color={'secondary'}>
-                    <BurgerMenuButton/>
-                    <div className={classes.head}>
-                        <SiteSelector/>
-                        <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
-                        <LanguageSwitcher/>
-                    </div>
-                    <div className={classes.search}>
-                        <CmRouter render={({params}) => (
-                            <CmSearchBar dxContext={dxContext} sql2SearchFrom={params.sql2SearchFrom} sql2SearchWhere={params.sql2SearchWhere}/>
-                        )}/>
-                    </div>
-                    {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}
-                    <div className={classes.Iam}>
-                        <DxContext.Consumer>
-                            { dxContext => (
-                                <Typography variant="display1" color="inherit" align="right">{t('label.contentManager.Iam', {userName: dxContext.userName})}</Typography>
-                            )}
-                        </DxContext.Consumer>
-                    </div>
-                </Toolbar>
-            </div>
+            <Toolbar color={'secondary'} classes={{root: classes.root}}>
+                <BurgerMenuButton/>
+                <div className={classes.head}>
+                    <SiteSelector/>
+                    <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
+                    <LanguageSwitcher/>
+                </div>
+
+                {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}
+                <div>
+                    <DxContext.Consumer>
+                        { dxContext => (
+                            <Typography variant="subheading" color="inherit">
+                                I am {dxContext.userName}
+                            </Typography>
+                        )}
+                    </DxContext.Consumer>
+                </div>
+
+                <div className={classes.search}>
+                    <CmRouter render={({params}) => (
+                        <CmSearchBar dxContext={dxContext} sql2SearchFrom={params.sql2SearchFrom} sql2SearchWhere={params.sql2SearchWhere}/>
+                    )}/>
+                </div>
+            </Toolbar>
         );
     }
 }

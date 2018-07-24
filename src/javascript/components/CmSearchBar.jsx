@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles, Button, Input, Paper, IconButton} from "@material-ui/core";
+import {withStyles, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
 import Search from '@material-ui/icons/Search';
 import ContentTypeSelect from './ContentTypeSelect';
 import {SearchBar} from '@jahia/react-material';
@@ -9,7 +9,7 @@ import CmRouter from "./CmRouter";
 
 const styles = theme => ({
     sql2Form: {
-        paddingLeft: theme.spacing.unit,
+        padding: theme.spacing.unit,
         color: theme.palette.text.secondary,
         fontFamily: 'monospace'
     },
@@ -19,11 +19,14 @@ const styles = theme => ({
         fontFamily: 'monospace'
     },
     footer: {
-        display: 'flex'
+        display: 'flex',
+        marginTop: theme.spacing.unit
     },
     footerLeft: {
         marginRight: 'auto',
-        padding: theme.spacing.unit
+        // The same padding/font as small buttons on the left of the footer
+        padding: '7px 8px',
+        fontSize: theme.typography.pxToRem(13)
     },
     footerRight: {
         marginLeft: 'auto'
@@ -91,7 +94,7 @@ class CmSearchBarNormal extends React.Component {
                 </div>
                 <div className={classes.footer}>
                     <FooterSection className={classes.footerRight}>
-                        <ActionButton label={'label.contentManager.search.sql2'} onClick={this.props.onSql2Click}/>
+                        <ActionButton label={'label.contentManager.search.sql2'} variant={'flat'} onClick={this.props.onSql2Click}/>
                     </FooterSection>
                 </div>
             </div>
@@ -131,15 +134,19 @@ class CmSearchBarSql2 extends React.Component {
         return (
             <CmRouter render={({params, goto}) => (
                 <div>
-                    <Paper classes={{root: classes.sql2Form}}>
-                        SELECT * FROM [
-                        <Sql2Input maxLength={100} size={15} defaultValue={from} inputRef={this.from} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-from'}/>
-                        ] WHERE ISDESCENDANTNODE('/sites/{siteKey}') AND (
-                        <Sql2Input maxLength={2000} size={50} defaultValue={where} inputRef={this.where} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-where'}/>
-                        )
-                        <IconButton color={'secondary'} onClick={() => this.onSearch(goto)}>
-                            <Search/>
-                        </IconButton>
+                    <Paper>
+                        <Grid container wrap={'nowrap'}>
+                                <Grid container alignItems={'center'} classes={{container: classes.sql2Form}}>
+                                    SELECT * FROM [
+                                    <Sql2Input maxLength={100} size={15} defaultValue={from} inputRef={this.from} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-from'}/>
+                                    ] WHERE ISDESCENDANTNODE('/sites/{siteKey}') AND (
+                                    <Sql2Input maxLength={2000} style={{flexGrow: 10}} defaultValue={where} inputRef={this.where} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-where'}/>
+                                    )
+                                </Grid>
+                                <IconButton color={'secondary'} onClick={() => this.onSearch(goto)}>
+                                    <Search/>
+                                </IconButton>
+                        </Grid>
                     </Paper>
                     <div className={classes.footer}>
                         <FooterSection className={classes.footerLeft}>
@@ -147,10 +154,10 @@ class CmSearchBarSql2 extends React.Component {
                         </FooterSection>
                         <FooterSection className={classes.footerRight}>
                             {params.sql2SearchFrom &&
-                                <ActionButton label={'label.contentManager.search.clear'} onClick={() => this.onClear(goto)}/>
+                                <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
                             }
                             {!params.sql2SearchFrom &&
-                                <ActionButton label={'label.contentManager.search.normal'} onClick={this.props.onNormalClick}/>
+                                <ActionButton label={'label.contentManager.search.normal'} variant={'flat'} onClick={this.props.onNormalClick}/>
                             }
                         </FooterSection>
                     </div>
@@ -175,7 +182,7 @@ class Sql2Input extends React.Component {
 
     render() {
 
-        let {maxLength, size, defaultValue, inputRef, classes, cmRole} = this.props;
+        let {maxLength, size, defaultValue, inputRef, classes, style, cmRole} = this.props;
 
         return (
             <Input
@@ -183,6 +190,7 @@ class Sql2Input extends React.Component {
                 defaultValue={defaultValue}
                 inputRef={inputRef}
                 classes={{root: classes.sql2Input, input: classes.sql2Input}}
+                style={style}
                 onKeyDown={(e) => this.onKeyDown(e)}
             />
         );
@@ -207,10 +215,10 @@ class ActionButton extends React.Component {
 
     render() {
 
-        let {label, onClick, classes, t} = this.props;
+        let {label, variant, onClick, classes, t} = this.props;
 
         return (
-            <Button size={'small'} onClick={onClick} classes={{root: classes.actionButton}}>
+            <Button variant={variant} size={'small'} onClick={onClick} classes={{root: classes.actionButton}}>
                 {t(label)}
             </Button>
         );

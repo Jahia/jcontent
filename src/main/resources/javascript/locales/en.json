@@ -73,8 +73,7 @@
         "sql2": "Advanced",
         "clear": "Clear"
       },
-      "showCurrentPath": "Show current path",
-      "Iam": "I am {{userName}}."
+      "showCurrentPath": "Show current path"
     }
   }
 }

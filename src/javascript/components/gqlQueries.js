@@ -19,8 +19,30 @@ class BrowsingQueryHandler {
         };
     }
 
-    getResultsPath(results){
+    getResultsPath(results) {
         return results.descendants;
+    }
+}
+
+class SearchQueryHandler {
+
+    getQuery() {
+        return searchContentQuery;
+    }
+
+    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
+        return {
+            path: `/sites/${dxContext.siteKey}`,
+            searchTerms: urlParams.searchTerms,
+            language: contentLayoutWidgetState.language,
+            displayLanguage: dxContext.uilang,
+            offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
+            limit: contentLayoutWidgetState.rowsPerPage,
+        };
+    }
+
+    getResultsPath(results) {
+        return results;
     }
 }
 
@@ -47,7 +69,7 @@ class Sql2SearchQueryHandler {
         };
     }
 
-    getResultsPath(results){
+    getResultsPath(results) {
         return results;
     }
 }
@@ -108,15 +130,17 @@ const nodeFields = gql`
     }
 `;
 
-const allContentQuery = gql`
-    query($path:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
+const getNodeSubTree = gql `
+    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
-            results: nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path]}, offset: $offset, limit: $limit) {
-                pageInfo {
-                    totalCount
-                }
-                nodes {
+            results: nodeByPath(path: $path) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
+                    pageInfo {
+                        totalCount
+                    }
+                    nodes {
                     ...NodeFields
+                    }
                 }
             }
         }
@@ -124,17 +148,15 @@ const allContentQuery = gql`
     ${nodeFields}
 `;
 
-const getNodeSubTree = gql `
-    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
+const searchContentQuery = gql`
+    query($path:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
-            results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}){
-                    pageInfo {
-                        totalCount
-                    }
-                    nodes {
+            results: nodesByCriteria(criteria: {nodeType: "jnt:content", paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
+                pageInfo {
+                    totalCount
+                }
+                nodes {
                     ...NodeFields
-                    }
                 }
             }
         }
@@ -172,4 +194,4 @@ const ContentTypesQuery = gql`
     }
 `;
 
-export {BrowsingQueryHandler, Sql2SearchQueryHandler, ContentTypesQuery};
+export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, ContentTypesQuery};

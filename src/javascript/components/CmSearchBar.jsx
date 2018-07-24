@@ -45,7 +45,7 @@ class CmSearchBar extends React.Component {
         this.onNormalClick = this.onNormalClick.bind(this);
         this.onClear = this.onClear.bind(this);
 
-        let normal = <CmSearchBarNormal dxContext={props.dxContext} onSql2Click={this.onSql2Click}/>;
+        let normal = <CmSearchBarNormal dxContext={props.dxContext} search={props.searchTerms} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
         let sql2 = <CmSearchBarSql2 siteKey={props.dxContext.siteKey} from={props.sql2SearchFrom} where={props.sql2SearchWhere} onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
         this.state = {
             normal: normal,
@@ -81,22 +81,70 @@ class CmSearchBar extends React.Component {
 
 class CmSearchBarNormal extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.search = React.createRef();
+    }
+
+    onInputChange(goto) {
+        // Perform search only when the user has paused changing search terms for a second.
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(function() {
+            this.onSearch(goto);
+        }.bind(this), 1000);
+    }
+
+    onKeyDown(e, goto) {
+        if (e.key === 'Enter') {
+            this.onSearch(goto);
+        }
+    }
+
     onSearch(goto) {
+        let searchTerms = this.search.current.value;
+        if (!searchTerms || searchTerms == '') {
+            return;
+        }
+        goto('/search', {
+            searchTerms: searchTerms
+        })
+    }
+
+    onClear(goto) {
+        this.search.current.value = '';
+        this.props.onClear(goto);
     }
 
     render() {
 
-        let {dxContext, onSql2Click, classes, t} = this.props;
+        let {search, dxContext, onSql2Click, classes, t} = this.props;
 
         return (
             <CmRouter render={({params, goto}) => (
                 <SearchBarLayout onSearch={() => this.onSearch(goto)}
                     rightFooter={
-                        <ActionButton label={'label.contentManager.search.sql2'} onClick={onSql2Click}/>
+                        <div>
+                            {(params.searchTerms != null) &&
+                                <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
+                            }
+                            {(params.searchTerms == null) &&
+                                <ActionButton label={'label.contentManager.search.sql2'} onClick={onSql2Click}/>
+                            }
+                        </div>
                     }
                 >
                     <ContentTypeSelect siteKey={dxContext.siteKey} displayLanguage={dxContext.uilang}/>
-                    <Input inputProps={{maxLength: 2000}} placeholder={t('label.contentManager.search.normalPrompt')} style={{flexGrow: 10}}/>
+                    <Input
+                        inputProps={{maxLength: 2000}}
+                        defaultValue={search}
+                        placeholder={t('label.contentManager.search.normalPrompt')}
+                        inputRef={this.search}
+                        style={{flexGrow: 10}}
+                        onChange={() => this.onInputChange(goto)}
+                        onKeyDown={(e) => this.onKeyDown(e, goto)}
+                    />
                 </SearchBarLayout>
             )}/>
         );
@@ -138,10 +186,10 @@ class CmSearchBarSql2 extends React.Component {
                     }
                     rightFooter={
                         <div>
-                            {params.sql2SearchFrom &&
+                            {(params.sql2SearchFrom != null) &&
                                 <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
                             }
-                            {!params.sql2SearchFrom &&
+                            {(params.sql2SearchFrom == null) &&
                                 <ActionButton label={'label.contentManager.search.normal'} onClick={onNormalClick}/>
                             }
                         </div>

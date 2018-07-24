@@ -1,6 +1,6 @@
 import React from 'react';
 import {Query} from 'react-apollo';
-import {BrowsingQueryHandler, Sql2SearchQueryHandler} from "./gqlQueries";
+import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
@@ -15,6 +15,7 @@ import classNames from "classnames";
 
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
+    "search": new SearchQueryHandler(),
     "sql2Search": new Sql2SearchQueryHandler()
 };
 

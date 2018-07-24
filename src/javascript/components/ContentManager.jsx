@@ -59,6 +59,9 @@ class ContentManager extends React.Component {
                                                     <Route path={`${props.match.url}/browse`} render={props => (
                                                         <ContentLayout contentSource="browsing" dxContext={dxContext}/>
                                                     )}/>
+                                                    <Route path={`${props.match.url}/search`} render={props => (
+                                                        <ContentLayout contentSource="search" dxContext={dxContext}/>
+                                                    )}/>
                                                     <Route path={`${props.match.url}/sql2Search`} render={props => (
                                                         <ContentLayout contentSource="sql2Search" dxContext={dxContext}/>
                                                     )}/>

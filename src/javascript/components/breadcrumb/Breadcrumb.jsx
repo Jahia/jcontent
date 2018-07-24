@@ -95,7 +95,7 @@ class BreadcrumbDisplay extends React.Component {
         this.onMenuItemLeave(event);
     }
     generateMenu(nodes) {
-        let {classes} = this.props;
+        let {classes, type} = this.props;
         if (nodes.siblings.length > 1) {
             return <span>
                 <MenuItemContainer key={nodes.uuid} onMouseEnter={this.onMenuItemEnter}
@@ -112,7 +112,7 @@ class BreadcrumbDisplay extends React.Component {
                         <MenuItem className={classes.menuItem}
                                  onMouseEnter={this.onMenuItemEnter}
                                  onMouseLeave={this.onMenuItemLeave}
-                                 onClick={(event) => this.onMenuItemSelected(event, node.path, params.type)}>
+                                 onClick={(event) => this.onMenuItemSelected(event, node.path, type)}>
                             {this.renderIcon(node)}
                             <MenuItemLabel>{node.name}</MenuItemLabel>
                         </MenuItem>

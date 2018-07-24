@@ -88,8 +88,7 @@ class BreadcrumbDisplay extends React.Component {
     };
 
     onMenuItemSelected(event, path, type) {
-        let {updatePickerSelectedPath} = this.props;
-        updatePickerSelectedPath(path, type);
+        this.props.handleSelect(path, type);
         this.onMenuItemLeave(event);
     }
     generateMenu(nodes) {
@@ -123,7 +122,7 @@ class BreadcrumbDisplay extends React.Component {
 
     generateMenuButton(nodes) {
         let {anchorEl} = this.state;
-        let {updatePickerSelectedPath, classes} = this.props;
+        let {classes} = this.props;
         if (nodes.siblings.length > 1) {
             return <Button
                 id={"menuToggleButton_" + nodes.uuid}
@@ -145,7 +144,7 @@ class BreadcrumbDisplay extends React.Component {
                 aria-haspopup="true"
                 onMouseEnter={this.onMenuButtonActivatorEnter}
                 onMouseLeave={this.onMenuButtonActivatorLeave}
-                onClick={() => updatePickerSelectedPath(nodes.siblings[0].path, "contents")}>
+                onClick={() => this.props.handleSelect(nodes.siblings[0].path, "contents")}>
                 {this.renderIcon(nodes.type)}
                 {nodes.name}
             </Button>
@@ -181,13 +180,13 @@ class Breadcrumb extends React.Component {
 
     render() {
         const { classes } = this. props;
-        let {path, link, params, pickerEntries, updatePickerSelectedPath} = this.props;
+        let {path, link, pickerEntries} = this.props;
         let breadcrumbs = this.parseEntries(pickerEntries, path);
 
         return (<div>
             {breadcrumbs.map((breadcrumb, i) => {
                return <span key={breadcrumb.uuid}>
-                    <StyledBreadcrumbDisplay updatePickerSelectedPath={updatePickerSelectedPath} id={breadcrumb.uuid} nodes={breadcrumb} params={params} path={path} link={link} />
+                    <StyledBreadcrumbDisplay handleSelect={this.props.handleSelect} id={breadcrumb.uuid} nodes={breadcrumb} path={path} link={link} />
                    {i < breadcrumbs.length-1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
                    </span>
             })}
@@ -201,6 +200,10 @@ class Breadcrumb extends React.Component {
         for (let i in entries) {
             let entry =  entries[i];
             let entryPathParts = entry.path.replace("/sites/", "").split("/");
+            if (entryPathParts > selectedPathParts) {
+                //skip, our selections does not go this deep.
+                continue;
+            }
             //Verify this is the same path along the tree that is currently selected.
             //We are checking parent of current entry
             let parentIndex = entryPathParts.length -2;
@@ -239,8 +242,7 @@ class Breadcrumb extends React.Component {
 
 Breadcrumb.propTypes = {
     path: PropTypes.string.isRequired,
-    params: PropTypes.object.isRequired,
     dxContext: PropTypes.object.isRequired,
-    updatePickerSelectedPath: PropTypes.func.isRequired
+    handleSelect: PropTypes.func.isRequired
 };
 export default withStyles(styles)(Breadcrumb);

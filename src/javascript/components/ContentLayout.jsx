@@ -152,7 +152,8 @@ class ContentLayout extends React.Component {
                                                                                          lang={this.state.language}
                                                                                          path={path}
                                                                                          rootPath={rootPath}
-                                                                                         goto={goto}/>}
+                                                                                         goto={goto}
+                                                                                         params={ params }/>}
                                 </Grid>
                                 <Grid item xs={ GRID_PANEL_BUTTONS_SIZE }>
                                     <IconButton onClick={this.handleShowTree}><List/></IconButton>

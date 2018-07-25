@@ -5,7 +5,21 @@ import {List, ListItem, Button} from "@material-ui/core";
 import CmRouter from "./CmRouter";
 import gql from "graphql-tag";
 import {translate} from 'react-i18next';
-import * as _ from 'lodash';
+
+//Defined transformations to be able to transition smoothly from url for one type of content to url of another type.
+//Transformations are invoked by the goto function in the route before pushing url to history only if they are defined,
+//otherwise url is pushed to history without changes
+const transformations = {
+    contentTransformation : function(url) {
+        return url.replace("/browse-files/", "/browse/");
+    },
+    pagesTransformation : function(url) {
+        return url.replace("/browse-files/", "/browse/");
+    },
+    filesTransformation : function(url) {
+        return url.replace("/browse/", "/browse-files/");
+    },
+};
 
 class ContentTree extends React.Component {
     constructor(props) {
@@ -65,7 +79,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/contents"}
                             selectableTypes={['jmix:list']}
                             lang={lang}
-                            handleSelect={path => goto(path, {type: "contents"})}
+                            handleSelect={path => goto(path, {type: "contents"}, transformations.contentTransformation)}
                             openableTypes={['jmix:list', 'jnt:contentFolder']}
                             rootLabel={t("label.contentManager.browseFolders")}
                         />
@@ -77,7 +91,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath}
                             selectableTypes={['jnt:page']}
                             lang={lang}
-                            handleSelect={path => goto(path, {type: "pages"})}
+                            handleSelect={path => goto(path, {type: "pages"}, transformations.pagesTransformation)}
                             openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                             rootLabel={t("label.contentManager.browsePages")}
                         />
@@ -89,7 +103,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/files"}
                             selectableTypes={['jnt:folder']}
                             lang={lang}
-                            handleSelect={path => goto(path, {type: "files"})}
+                            handleSelect={path => goto(path, null, transformations.filesTransformation)}
                             openableTypes={['jnt:folder']}
                             rootLabel={t("label.contentManager.browseFiles")}
                         />

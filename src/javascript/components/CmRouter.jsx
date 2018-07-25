@@ -25,10 +25,18 @@ class CmRouter extends React.Component {
     // This method push to the browser url the provided location
     mapQueryToUrl = (match, history, location, dxContext) => {
         return {
-            goto: ( path, params) => {
+            goto: ( path, params, transformation) => {
                 let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
                 path = _.replace(path, '/sites/' + dxContext.siteKey, '');
-                history.push(match.url + path + queryString);
+
+                //Since we can be in a situation when we have n number of trees with n number of possible urls
+                //match.url will need to be adapted.
+                //Transform url as needed if transformation function is defined
+                if (transformation) {
+                    history.push(transformation(match.url + path + queryString));
+                } else {
+                    history.push(match.url + path + queryString);
+                }
             }
         }
     };

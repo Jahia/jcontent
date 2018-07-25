@@ -24,6 +24,29 @@ class BrowsingQueryHandler {
     }
 }
 
+class FilesQueryHandler {
+
+    getQuery() {
+        return filesQuery;
+    }
+
+    getQueryParams(path, contentLayoutWidgetState, dxContext) {
+        return {
+            path: path,
+            language: contentLayoutWidgetState.language,
+            displayLanguage: dxContext.uilang,
+            offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
+            limit: contentLayoutWidgetState.rowsPerPage,
+            typeFilter: "jnt:file",
+            recursionTypesFilter: "jnt:folder"
+        };
+    }
+
+    getResultsPath(results) {
+        return results.descendants;
+    }
+}
+
 class SearchQueryHandler {
 
     getQuery() {
@@ -77,8 +100,7 @@ class Sql2SearchQueryHandler {
 
 const browseType = {
     pages: {recursionTypesFilter:["jnt:page"], typeFilter:["jmix:editorialContent"]},
-    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]},
-    files: {recursionTypesFilter:["jnt:folder"], typeFilter:["jnt:file"]},
+    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]}
 };
 
 const nodeFields = gql`
@@ -181,6 +203,24 @@ const sql2SearchContentQuery = gql`
     ${nodeFields}
 `;
 
+const filesQuery = gql `
+    query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
+        jcr {
+            results: nodeByPath(path: $path) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
+                    pageInfo {
+                        totalCount
+                    }
+                    nodes {
+                    ...NodeFields
+                    }
+                }
+            }
+        }
+    }
+    ${nodeFields}
+`;
+
 const ContentTypesQuery = gql`
     query ContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
       jcr {
@@ -195,4 +235,4 @@ const ContentTypesQuery = gql`
     }
 `;
 
-export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, ContentTypesQuery};
+export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery};

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Query} from 'react-apollo';
-import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler} from "./gqlQueries";
+import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
@@ -15,6 +15,7 @@ import classNames from "classnames";
 
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
+    "files": new FilesQueryHandler(),
     "search": new SearchQueryHandler(),
     "sql2Search": new Sql2SearchQueryHandler()
 };
@@ -100,6 +101,7 @@ class ContentLayout extends React.Component {
         const { contentSource, notificationContext, dxContext, t, classes } = this.props;
         const rootPath = '/sites/' + dxContext.siteKey;
         let queryHandler = contentQueryHandlerBySource[contentSource];
+
         return (<CmRouter render={({path, params, goto}) => {
             const layoutQuery = queryHandler.getQuery();
             const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
@@ -163,7 +165,7 @@ class ContentLayout extends React.Component {
                             </Grid>
                             <Grid container spacing={0}>
                                 {
-                                    contentSource === "browsing" && showTree &&
+                                    (contentSource === "browsing" || contentSource === "files") && showTree &&
                                     <Grid item xs={TREE_SIZE} className={ classes.tree }>
                                         {
                                             <ContentTrees path={path}

@@ -65,12 +65,26 @@ class BreadcrumbDisplay extends React.Component {
 
         this.state = {
             menuActive: false,
-            anchorEl: null,
             anchorPosition: {
                 top: 5,
                 left: 50
             }
         }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let {nodes} = nextProps;
+        let anchorEl = document.getElementById("menuToggleButton_" + nodes.uuid);
+        if (anchorEl != null) {
+            let anchorElPosition = anchorEl.getBoundingClientRect();
+            return {
+                anchorPosition: {
+                    top: anchorElPosition.top - 5,
+                    left: anchorElPosition.left
+                }
+            }
+        }
+        return {}
     }
 
     componentDidMount() {
@@ -97,14 +111,13 @@ class BreadcrumbDisplay extends React.Component {
     onMenuExit(event) {
         setTimeout(() => {
             this.setState((prevState, props) => ({
-                anchorEl: null,
                 menuActive: false,
             }));
         }, 100);
     }
 
     onMenuButtonActivatorEnter(event) {
-        this.setState({ anchorEl: event.currentTarget, menuActive: true, menuEntered: false});
+        this.setState({menuActive: true, menuEntered: false});
     };
 
     onMenuItemSelected(event, path, type) {
@@ -138,7 +151,6 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     generateMenuButton(nodes) {
-        let {anchorEl} = this.state;
         let {classes, type} = this.props;
         if (nodes.siblings.length > 1) {
             return <Button
@@ -146,7 +158,7 @@ class BreadcrumbDisplay extends React.Component {
                 ref={this.anchorButton}
                 className={classes.menuButton}
                 disableRipple={true}
-                aria-owns={anchorEl ? "breadcrumbMenu_" + nodes.uuid : null}
+                aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
                 onMouseEnter={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(nodes, type)}
@@ -158,7 +170,7 @@ class BreadcrumbDisplay extends React.Component {
                 ref={this.anchorButton}
                 className={classes.menuButton}
                 disableRipple={true}
-                aria-owns={anchorEl ? "breadcrumbMenu_" + nodes.uuid : null}
+                aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
                 onClick={() => this.props.handleSelect(nodes.siblings[0].path, "contents")}>
                 {this.renderIcon(nodes, type)}
@@ -188,13 +200,13 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     render() {
-        let {menuActive} = this.state;
+        let {menuActive, anchorPosition} = this.state;
         let {nodes} = this.props;
         return (<span ref={this.menu} id={"breadcrumbSpan_" + nodes.uuid}>
             {this.generateMenuButton(nodes)}
             <Menu disableAutoFocusItem={true}
                   container={this.menu.current}
-                  anchorPosition={this.state.anchorPosition}
+                  anchorPosition={anchorPosition}
                   key={nodes.uuid}
                   id={"breadcrumbMenu_" + nodes.uuid}
                   anchorReference={"anchorPosition"}

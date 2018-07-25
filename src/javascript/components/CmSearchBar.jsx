@@ -48,24 +48,23 @@ class CmSearchBar extends React.Component {
         this.onNormalClick = this.onNormalClick.bind(this);
         this.onClear = this.onClear.bind(this);
 
-        let normal = <CmSearchBarNormal dxContext={props.dxContext} search={props.searchTerms} contentType={props.searchContentType} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
-        let sql2 = <CmSearchBarSql2 dxContext={props.dxContext} from={props.sql2SearchFrom} where={props.sql2SearchWhere} onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
+        let {dxContext, urlParams} = props;
+        this.normal = <CmSearchBarNormal dxContext={dxContext} contentType={urlParams.searchContentType} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
+        this.sql2 = <CmSearchBarSql2 dxContext={dxContext} onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
         this.state = {
-            normal: normal,
-            sql2: sql2,
-            current: (props.sql2SearchFrom ? sql2 : normal)
+            current: (urlParams.sql2SearchFrom == null ? this.normal : this.sql2)
         };
     }
 
     onSql2Click() {
         this.setState({
-            current: this.state.sql2
+            current: this.sql2
         });
     }
 
     onNormalClick() {
         this.setState({
-            current: this.state.normal
+            current: this.normal
         });
     }
 
@@ -87,41 +86,45 @@ class CmSearchBarNormal extends React.Component {
     constructor(props) {
         super(props);
         this.search = React.createRef();
-        this.contentType = this.props.contentType != null ? this.props.contentType : '';
+        this.state = {
+            contentType: props.contentType
+        }
     }
 
-    onInputChange(goto) {
+    onContentTypeChange(contentType, goto) {
+        this.setState({
+            contentType: contentType
+        });
+        this.onSearch(contentType, goto);
+    }
+
+    onSearchInputChange(goto) {
         // Perform search only when the user has paused changing search terms for a second.
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
         this.timeout = setTimeout(function() {
-            this.onSearch(goto);
+            this.onSearch(this.state.contentType, goto);
         }.bind(this), 1000);
     }
 
-    onKeyDown(e, goto) {
+    onSearchInputKeyDown(e, goto) {
         if (e.key === 'Enter') {
-            this.onSearch(goto);
+            this.onSearch(this.state.contentType, goto);
         }
     }
 
-    onSearch(goto) {
+    onSearch(contentType, goto) {
         let searchTerms = this.search.current.value;
         if (!searchTerms || searchTerms == '') {
             return;
         }
-        goto('/search', this.contentType !== "" ? {
-            searchTerms: searchTerms,
-            searchContentType: this.contentType 
+        goto('/search', contentType ? {
+            searchContentType: contentType,
+            searchTerms: searchTerms
         } : {
-            searchTerms: searchTerms 
+            searchTerms: searchTerms
         });
-    }
-
-    onContentTypeChange(contentType, goto) {
-        this.contentType = contentType;
-        this.onSearch(goto);
     }
 
     onClear(goto) {
@@ -131,11 +134,11 @@ class CmSearchBarNormal extends React.Component {
 
     render() {
 
-        let {search, contentType, dxContext, onSql2Click, classes, t} = this.props;
+        let {dxContext, onSql2Click, classes, t} = this.props;
 
         return (
             <CmRouter render={({params, goto}) => (
-                <SearchBarLayout onSearch={() => this.onSearch(goto)}
+                <SearchBarLayout onSearch={() => this.onSearch(this.state.contentType, goto)}
                     rightFooter={
                         <div>
                             {(params.searchTerms != null) &&
@@ -154,12 +157,12 @@ class CmSearchBarNormal extends React.Component {
                         onSelectionChange={(nt) => this.onContentTypeChange(nt, goto)}/>
                     <Input
                         inputProps={{maxLength: 2000}}
-                        defaultValue={search}
+                        defaultValue={params.searchTerms}
                         placeholder={t('label.contentManager.search.normalPrompt')}
                         inputRef={this.search}
                         style={{flexGrow: 10}}
-                        onChange={() => this.onInputChange(goto)}
-                        onKeyDown={(e) => this.onKeyDown(e, goto)}
+                        onChange={() => this.onSearchInputChange(goto)}
+                        onKeyDown={(e) => this.onSearchInputKeyDown(e, goto)}
                     />
                 </SearchBarLayout>
             )}/>
@@ -192,7 +195,7 @@ class CmSearchBarSql2 extends React.Component {
 
     render() {
 
-        let {dxContext, from, where, onNormalClick, classes, t} = this.props;
+        let {dxContext, onNormalClick, classes, t} = this.props;
 
         return (
             <CmRouter render={({params, goto}) => (
@@ -216,9 +219,9 @@ class CmSearchBarSql2 extends React.Component {
                 >
                     <Grid container alignItems={'center'} classes={{container: classes.sql2Form}}>
                         SELECT * FROM [
-                        <Sql2Input maxLength={100} size={15} defaultValue={from} inputRef={this.from} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-from'}/>
+                        <Sql2Input maxLength={100} size={15} defaultValue={params.sql2SearchFrom} inputRef={this.from} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-from'}/>
                         ] WHERE ISDESCENDANTNODE('/sites/{dxContext.siteKey}') AND (
-                        <Sql2Input maxLength={2000} style={{flexGrow: 10}} defaultValue={where} inputRef={this.where} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-where'}/>
+                        <Sql2Input maxLength={2000} style={{flexGrow: 10}} defaultValue={params.sql2SearchWhere} inputRef={this.where} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-where'}/>
                         )
                     </Grid>
                 </SearchBarLayout>

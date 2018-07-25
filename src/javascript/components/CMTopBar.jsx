@@ -55,7 +55,7 @@ class CMTopBar extends React.Component {
 
                 <div className={classes.search}>
                     <CmRouter render={({params}) => (
-                        <CmSearchBar dxContext={dxContext} searchTerms={params.searchTerms} searchContentType={params.searchContentType} sql2SearchFrom={params.sql2SearchFrom} sql2SearchWhere={params.sql2SearchWhere}/>
+                        <CmSearchBar dxContext={dxContext} urlParams={params}/>
                     )}/>
                 </div>
             </Toolbar>

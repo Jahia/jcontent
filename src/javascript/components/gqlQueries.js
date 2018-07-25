@@ -56,8 +56,8 @@ class SearchQueryHandler {
     getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
         return {
             path: `/sites/${dxContext.siteKey}`,
+            nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
             searchTerms: urlParams.searchTerms,
-            searchContentType: urlParams.searchContentType || "jmix:searchable",
             language: contentLayoutWidgetState.language,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
@@ -172,9 +172,9 @@ const getNodeSubTree = gql `
 `;
 
 const searchContentQuery = gql`
-    query($path:String!, $searchContentType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
+    query($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
-            results: nodesByCriteria(criteria: {nodeType: $searchContentType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
+            results: nodesByCriteria(criteria: {nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
                 pageInfo {
                     totalCount
                 }

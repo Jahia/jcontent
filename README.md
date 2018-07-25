@@ -27,20 +27,19 @@ An Action configuration describe how the action should work and what it does.
 
 Example:
 
-     {
-        id: "edit",
-        priority: 1,
-        action: "action",
-        call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
-        icon: "Edit",
-        target:["previewBar", "tableActions"],
-        requiredPermission:"",
-        labelKey: 'label.contentManager.contentPreview.edit'
-    }
+     edit: {
+         priority: 2.5,
+         component: "action",
+         call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+         icon: "Edit",
+         target: ["previewBar", "tableActions"],
+         requiredPermission: "",
+         labelKey: 'label.contentManager.contentPreview.edit'
+     }
 
 - `id` is a unique identifier 
 - `priority` defines in a list of action the order to display actions
-- `action` is the registered action to use  
+- `component` is the registered action to use  
 - `call` is the function to execute when the action is triggered 
 - `icon` is the icon for the action (not implemented yet)
 - `target` is the location id where this action should be displayed

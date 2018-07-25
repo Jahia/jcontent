@@ -14,7 +14,7 @@ import {
     PublicationStatusNotPublished,
     PublicationStatusPublished
 } from "./publicationStatus"
-import ActionProvider from "../ActionProvider";
+import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 
 
@@ -243,9 +243,9 @@ class ContentListTable extends React.Component {
                                                 }
                                             })}
                                             <TableCell>
-                                                <ActionProvider targetName={"tableActions"} name={n.name} path={n.path}>
+                                                <Actions menuId={"tableActions"} name={n.name} path={n.path}>
                                                     {(props) => <CmButton {...props}/>}
-                                                </ActionProvider>
+                                                </Actions>
                                             </TableCell>
                                         </TableRow>
                                     );

@@ -28,98 +28,90 @@
     contextJsParameters['userName'] = '${renderContext.user.username}';
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
-        actions: [
-            {
-                id: "translate",
+        actions: {
+            translate: {
                 priority: 2.51,
-                action: "action",
+                component: "action",
                 call: () => alert("Translate !!!"),
                 icon: "Edit",
-                target:["previewBar"],
-                requiredPermission:"",
+                target: ["previewBar"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.translate'
 
             },
-            {
-                id: "edit",
+            edit: {
                 priority: 2.5,
-                action: "action",
+                component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target:["previewBar", "tableActions"],
-                requiredPermission:"",
+                target: ["previewBar", "tableActions"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.edit'
             },
-            {
-                id: "publish",
-                action: "menuAction",
+            publish: {
+                component: "menuAction",
                 menuId: "publishMenu",
                 icon: "Edit",
-                target:["previewBar", "tableActions"],
-                requiredPermission:"",
+                target: ["previewBar", "tableActions"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.publish'
 
             },
-            {
-                id: "publishAll",
-                action: "action",
+            publishAll: {
+                component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target:["publishMenu"],
-                requiredPermission:"",
+                target: ["publishMenu"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.publishAll'
 
             },
-            {
-                id: "unPublish",
-                action: "action",
+            unPublish: {
+                component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target:["publishMenu"],
-                requiredPermission:"",
+                target: ["publishMenu"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.unpublish'
 
             },
-            {
-                id: "additionalPreview",
-                action: "menuAction",
+            additionalPreview: {
+                component: "menuAction",
                 menuId: "additionalPreviewMenu",
                 icon: "Edit",
-                target:["additionalMenu"],
-                requiredPermission:"",
+                target: ["additionalMenu"],
+                requiredPermission: "",
                 iconButton: true
 
             },
-            {
-                id: "duplicate",
-                action: "action",
+            duplicate: {
+                component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target:["additionalPreviewMenu"],
-                requiredPermission:"",
+                target: ["additionalPreviewMenu"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.duplicate'
 
             },
-            {
-                id: "copy",
-                action: "action",
+            copy: {
+                component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target:["additionalPreviewMenu"],
-                requiredPermission:"",
+                target: ["additionalPreviewMenu"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.copy'
 
             },
-            {
-                id: "delete",
-                action: "action",
+            delete: {
+                component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target:["additionalPreviewMenu"],
-                requiredPermission:"",
+                target: ["additionalPreviewMenu"],
+                requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.delete'
 
-            }]
+            }
+        }
     }
     reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
 </script>

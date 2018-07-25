@@ -9,7 +9,7 @@ import PublicationInfo from './PublicationStatus';
 import PublicationMenu from './PublishMenu';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import ShareMenu from './ShareMenu';
-import ActionProvider from "../ActionProvider";
+import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 
@@ -107,12 +107,12 @@ class ContentPreview extends React.Component {
                             <IconButton><Lock/></IconButton>
                         </Grid>
                         <Grid item xs={ 8 }>
-                            <ActionProvider targetName={"previewBar"} name={selection.name} path={selection.path}>
+                            <Actions menuId={"previewBar"} name={selection.name} path={selection.path}>
                                 {(props) => <CmButton {...props}/>}
-                            </ActionProvider>
-                            <ActionProvider targetName={"additionalMenu"} name={selection.name} path={selection.path}>
+                            </Actions>
+                            <Actions menuId={"additionalMenu"} name={selection.name} path={selection.path}>
                                 {(props) => <CmIconButton {...props}/>}
-                            </ActionProvider>
+                            </Actions>
                         </Grid>
                     </Grid>
                 </Paper>

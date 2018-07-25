@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {translate} from "react-i18next";
 import {withStyles, Menu} from "@material-ui/core";
 import {compose} from "react-apollo/index";
-import ActionProvider from "../ActionProvider";
+import Actions from "../Actions";
 import CmMenuItem from "../renderAction/CmMenuItem";
 
 const styles = theme => ({
@@ -41,9 +41,9 @@ class MenuAction extends Component {
                 anchorEl={anchor}
                 open={Boolean(anchor)}
                 onClose={() => this.handleMenuClose()}>
-                <ActionProvider targetName={menuId} {...rest}>
+                <Actions menuId={menuId} {...rest}>
                     {(props) => <CmMenuItem {...props}/>}
-                </ActionProvider>
+                </Actions>
             </Menu>
         </span>)
     }

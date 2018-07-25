@@ -1,36 +1,34 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {withStyles, Input, MenuItem, Select} from "@material-ui/core";
+import {withStyles} from "@material-ui/core";
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
 import {ContentTypesQuery} from "./gqlQueries";
-
-const styles = theme => ({
-  root: {
-      display: 'inline-block',
-      minWidth: 120
-  },
-  selectMenu: {
-      color: theme.palette.text.secondary
-  },
-  nodeTypeIcon: {
-      marginRight: 5
-  }
-});
+import FilterSelect from './FilterSelect';
 
 class ContentTypeSelect extends React.Component {
 
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            contentType: props.contentType !== undefined ? props.contentType : '',
+        };
     }
 
-    handleChange(e) {
-        let contentType = e.target.value;
-        this.props.onSelectionChange(contentType == '' ? null : contentType);
+    handleChange(data) {
+        console.log("Selected data", data);
+        let newValue = '';
+        if (data != null) {
+            newValue = data.value;
+        }
+        this.setState({contentType: newValue});
+        if (this.props.onSelectionChange !== undefined) {
+            this.props.onSelectionChange(newValue);
+        }
     };
 
     render() {
@@ -46,33 +44,35 @@ class ContentTypeSelect extends React.Component {
                     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                 } else if (data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
                     contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
+                    contentTypes = contentTypes.map((nt) => {
+                        return {
+                            value: nt.name,
+                            title: nt.displayName + ' (' + nt.name + ')',
+                            label: nt.displayName,
+                            icon: nt.icon
+                        }
+                    });
+                    contentTypes.unshift({
+                        value: '',
+                        title: t('label.contentManager.contentTypes.any'),
+                        label: t('label.contentManager.contentTypes.any'),
+                        icon: null
+                    });
                 }
-                return (<Select
-                    value={contentType ? contentType : ''}
-                    onChange={this.handleChange}
-                    displayEmpty
-                    classes={{
-                        root: classes.root,
-                        selectMenu: classes.selectMenu
-                    }}
-                    >
-                    <MenuItem value="">
-                        <em>{t('label.contentManager.contentTypes.any')}</em>
-                    </MenuItem>
-                    {contentTypes.map((nt) => (
-                        <MenuItem key={nt.name} value={nt.name} title={nt.displayName + ' (' + nt.name + ')'}><img src={nt.icon + '.png'} className={classes.nodeTypeIcon}/>{nt.displayName}</MenuItem>
-                    ))}
-                </Select>)
+                return (<FilterSelect
+                    options={contentTypes}
+                    onSelectionChange={this.handleChange}
+                />);
             }}
             </Query>
         );
     }
 }
 
+
 ContentTypeSelect = compose(
     withNotifications(),
     translate(),
-    withStyles(styles)
 )(ContentTypeSelect);
 
 export default ContentTypeSelect;

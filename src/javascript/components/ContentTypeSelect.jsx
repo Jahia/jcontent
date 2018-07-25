@@ -22,12 +22,17 @@ const styles = theme => ({
 });
 
 class ContentTypeSelect extends React.Component {
-    state = {
-        contentType: ''
-    };
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {contentType: props.contentType !== undefined ? props.contentType : ''}; 
+    }
 
-    handleChange = event => {
-        this.setState({contentType: event.target.value});
+    handleChange(e) {
+        this.setState({contentType: e.target.value});
+        if (this.props.onSelectionChange !== undefined) {
+            this.props.onSelectionChange(e.target.value);
+        }
     };
 
     render() {

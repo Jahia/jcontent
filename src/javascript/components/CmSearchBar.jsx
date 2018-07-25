@@ -48,7 +48,7 @@ class CmSearchBar extends React.Component {
         this.onNormalClick = this.onNormalClick.bind(this);
         this.onClear = this.onClear.bind(this);
 
-        let normal = <CmSearchBarNormal dxContext={props.dxContext} search={props.searchTerms} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
+        let normal = <CmSearchBarNormal dxContext={props.dxContext} search={props.searchTerms} contentType={props.searchContentType} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
         let sql2 = <CmSearchBarSql2 dxContext={props.dxContext} from={props.sql2SearchFrom} where={props.sql2SearchWhere} onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
         this.state = {
             normal: normal,
@@ -87,6 +87,7 @@ class CmSearchBarNormal extends React.Component {
     constructor(props) {
         super(props);
         this.search = React.createRef();
+        this.contentType = this.props.contentType != null ? this.props.contentType : '';
     }
 
     onInputChange(goto) {
@@ -110,9 +111,17 @@ class CmSearchBarNormal extends React.Component {
         if (!searchTerms || searchTerms == '') {
             return;
         }
-        goto('/search', {
-            searchTerms: searchTerms
-        })
+        goto('/search', this.contentType !== "" ? {
+            searchTerms: searchTerms,
+            searchContentType: this.contentType 
+        } : {
+            searchTerms: searchTerms 
+        });
+    }
+
+    onContentTypeChange(contentType, goto) {
+        this.contentType = contentType;
+        this.onSearch(goto);
     }
 
     onClear(goto) {
@@ -122,7 +131,7 @@ class CmSearchBarNormal extends React.Component {
 
     render() {
 
-        let {search, dxContext, onSql2Click, classes, t} = this.props;
+        let {search, contentType, dxContext, onSql2Click, classes, t} = this.props;
 
         return (
             <CmRouter render={({params, goto}) => (
@@ -138,7 +147,11 @@ class CmSearchBarNormal extends React.Component {
                         </div>
                     }
                 >
-                    <ContentTypeSelect siteKey={dxContext.siteKey} displayLanguage={dxContext.uilang}/>
+                    <ContentTypeSelect
+                        siteKey={dxContext.siteKey}
+                        displayLanguage={dxContext.uilang}
+                        contentType={contentType}
+                        onSelectionChange={(nt) => this.onContentTypeChange(nt, goto)}/>
                     <Input
                         inputProps={{maxLength: 2000}}
                         defaultValue={search}

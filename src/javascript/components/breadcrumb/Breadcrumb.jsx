@@ -5,7 +5,7 @@ import styled from "styled-components/dist/styled-components";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Folder from '@material-ui/icons/Folder';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
-import {VirtualsiteIcon, PageIcon} from '@jahia/icons';
+import {PageIcon} from '@jahia/icons';
 import { withStyles } from '@material-ui/core/styles';
 import * as _ from 'lodash';
 
@@ -37,6 +37,9 @@ const styles = theme => ({
         position: "relative",
         bottom: "6px"
     },
+    menu: {
+        background: 'red'
+    }
 });
 
 const MenuItemContainer = styled.div`
@@ -52,54 +55,67 @@ class BreadcrumbDisplay extends React.Component {
 
     constructor(props) {
         super(props);
+        this.addMenuExitListener = this.addMenuExitListener.bind(this);
         this.onMenuButtonActivatorEnter = this.onMenuButtonActivatorEnter.bind(this);
-        this.onMenuButtonActivatorLeave = this.onMenuButtonActivatorLeave.bind(this);
-        this.onMenuItemEnter = this.onMenuItemEnter.bind(this);
-        this.onMenuItemLeave = this.onMenuItemLeave.bind(this);
+        this.onMenuExit = this.onMenuExit.bind(this);
         this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
-        this.menuItemCloseTimeout = null;
+
+        this.menu = React.createRef();
+        this.anchorButton = React.createRef();
+
         this.state = {
-            menuItemActive: false,
-            menuItemCloseTimeout: null,
-            anchorEl: null
+            menuActive: false,
+            anchorEl: null,
+            anchorPosition: {
+                top: 5,
+                left: 50
+            }
         }
     }
 
-    onMenuItemEnter(event) {
-        if (this.menuItemCloseTimeout !== null) {
-            clearTimeout(this.menuItemCloseTimeout);
-        }
+    componentDidMount() {
+        let {nodes} = this.props;
+        let position = document.getElementById("menuToggleButton_" + nodes.uuid).getBoundingClientRect();
         this.setState({
-            menuItemActive: true,
-            menuItemCloseTimeout: null
+            anchorPosition: {
+                top: position.top - 5,
+                left: position.left
+            }
         });
     }
-    onMenuItemLeave(event) {
-        this.menuItemCloseTimeout = setTimeout(() => {
+
+    addMenuExitListener() {
+        let {nodes} = this.props;
+        setTimeout(() => {
+            let backdropEl = document.getElementById("breadcrumbMenu_" + nodes.uuid).children[0];
+            //backdrop
+            backdropEl.addEventListener("mouseover", this.onMenuExit);
+        }, 50);
+
+    }
+
+    onMenuExit(event) {
+        setTimeout(() => {
             this.setState((prevState, props) => ({
                 anchorEl: null,
-                menuItemActive: false,
-                menuItemCloseTimeout: null
+                menuActive: false,
             }));
-        }, 200);
+        }, 100);
     }
+
     onMenuButtonActivatorEnter(event) {
-        this.setState({ anchorEl: event.currentTarget, menuActive: true});
-    };
-    onMenuButtonActivatorLeave(event) {
-        this.setState({menuActive: false});
+        this.setState({ anchorEl: event.currentTarget, menuActive: true, menuEntered: false});
     };
 
     onMenuItemSelected(event, path, type) {
         this.props.handleSelect(path, type);
-        this.onMenuItemLeave(event);
+        this.onMenuExit(event);
     }
     generateMenu(nodes) {
         let {classes, type} = this.props;
         if (nodes.siblings.length > 1) {
             return <span>
-                <MenuItemContainer key={nodes.uuid} onMouseEnter={this.onMenuItemEnter}
-                                   onMouseLeave={this.onMenuItemLeave}>
+                <MenuItemContainer key={nodes.uuid}>
                     <ArrowDropDown className={classes.chevronIcon}/>
                     <MenuItem className={classes.menuItemHeader}
                               disableRipple={true}
@@ -110,8 +126,6 @@ class BreadcrumbDisplay extends React.Component {
                 {nodes.siblings.map((node, i) => {
                     return <MenuItemContainer key={node.uuid}>
                         <MenuItem className={classes.menuItem}
-                                 onMouseEnter={this.onMenuItemEnter}
-                                 onMouseLeave={this.onMenuItemLeave}
                                  onClick={(event) => this.onMenuItemSelected(event, node.path, type)}>
                             {this.renderIcon(node)}
                             <MenuItemLabel>{node.name}</MenuItemLabel>
@@ -129,24 +143,23 @@ class BreadcrumbDisplay extends React.Component {
         if (nodes.siblings.length > 1) {
             return <Button
                 id={"menuToggleButton_" + nodes.uuid}
+                ref={this.anchorButton}
                 className={classes.menuButton}
                 disableRipple={true}
                 aria-owns={anchorEl ? "breadcrumbMenu_" + nodes.uuid : null}
                 aria-haspopup="true"
-                onMouseEnter={this.onMenuButtonActivatorEnter}
-                onMouseLeave={this.onMenuButtonActivatorLeave}>
+                onMouseEnter={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(nodes, type)}
                 {nodes.name}
             </Button>
         } else {
             return <Button
                 id={"menuToggleButton_" + nodes.uuid}
+                ref={this.anchorButton}
                 className={classes.menuButton}
                 disableRipple={true}
                 aria-owns={anchorEl ? "breadcrumbMenu_" + nodes.uuid : null}
                 aria-haspopup="true"
-                onMouseEnter={this.onMenuButtonActivatorEnter}
-                onMouseLeave={this.onMenuButtonActivatorLeave}
                 onClick={() => this.props.handleSelect(nodes.siblings[0].path, "contents")}>
                 {this.renderIcon(nodes, type)}
                 {nodes.name}
@@ -175,11 +188,18 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     render() {
-        let {anchorEl, menuActive, menuItemActive} = this.state;
+        let {menuActive} = this.state;
         let {nodes} = this.props;
-        return (<span id={"breadcrumbSpan_" + nodes.uuid}>
+        return (<span ref={this.menu} id={"breadcrumbSpan_" + nodes.uuid}>
             {this.generateMenuButton(nodes)}
-            <Menu key={nodes.uuid} id={"breadcrumbMenu_" + nodes.uuid} anchorEl={anchorEl} open={menuActive || menuItemActive}>
+            <Menu disableAutoFocusItem={true}
+                  container={this.menu.current}
+                  anchorPosition={this.state.anchorPosition}
+                  key={nodes.uuid}
+                  id={"breadcrumbMenu_" + nodes.uuid}
+                  anchorReference={"anchorPosition"}
+                  open={menuActive}
+                  onEnter={this.addMenuExitListener}>
                 {this.generateMenu(nodes)}
             </Menu>
         </span>)

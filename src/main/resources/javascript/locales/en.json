@@ -68,7 +68,7 @@
       "title": "All Content",
       "search": {
         "normalPrompt": "What are you looking for?",
-        "sql2Propmt": "You are using SQL queries. Please visit the Academy for more info.",
+        "sql2Prompt": "You are using SQL queries. Please visit the <0>Academy</0> for more info.",
         "normal": "Basic",
         "sql2": "Advanced",
         "clear": "Clear"

@@ -5,7 +5,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions" %>
+<%@ page import="org.jahia.settings.SettingsBean"%>
+
 <c:set var="mainResourceLocale" value="${renderContext.mainResourceLocale}"/>
+
 <html lang="${mainResourceLocale.language}">
 
 <head>
@@ -24,6 +27,7 @@
     contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
     contextJsParameters['userName'] = '${renderContext.user.username}';
     contextJsParameters['config'] = {
+        sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: [
             {
                 id: "edit",

@@ -2,7 +2,7 @@ import React from "react";
 import {withStyles, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
 import Search from '@material-ui/icons/Search';
 import ContentTypeSelect from './ContentTypeSelect';
-import {translate} from 'react-i18next';
+import {translate, Trans} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
 
@@ -32,6 +32,9 @@ const styles = theme => ({
     },
     actionButton: {
         textTransform: 'none'
+    },
+    link: {
+        color: 'inherit'
     }
 });
 
@@ -46,7 +49,7 @@ class CmSearchBar extends React.Component {
         this.onClear = this.onClear.bind(this);
 
         let normal = <CmSearchBarNormal dxContext={props.dxContext} search={props.searchTerms} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
-        let sql2 = <CmSearchBarSql2 siteKey={props.dxContext.siteKey} from={props.sql2SearchFrom} where={props.sql2SearchWhere} onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
+        let sql2 = <CmSearchBarSql2 dxContext={props.dxContext} from={props.sql2SearchFrom} where={props.sql2SearchWhere} onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
         this.state = {
             normal: normal,
             sql2: sql2,
@@ -176,13 +179,16 @@ class CmSearchBarSql2 extends React.Component {
 
     render() {
 
-        let {siteKey, from, where, onNormalClick, classes, t} = this.props;
+        let {dxContext, from, where, onNormalClick, classes, t} = this.props;
 
         return (
             <CmRouter render={({params, goto}) => (
                 <SearchBarLayout onSearch={() => this.onSearch(goto)}
                     leftFooter={
-                        t('label.contentManager.search.sql2Propmt')
+                        <Trans
+                            i18nKey={'label.contentManager.search.sql2Prompt'}
+                            components={[<a href={dxContext.config.sql2CheatSheetUrl} target={'_blank'} className={classes.link}>univers</a>]}
+                        />
                     }
                     rightFooter={
                         <div>
@@ -198,7 +204,7 @@ class CmSearchBarSql2 extends React.Component {
                     <Grid container alignItems={'center'} classes={{container: classes.sql2Form}}>
                         SELECT * FROM [
                         <Sql2Input maxLength={100} size={15} defaultValue={from} inputRef={this.from} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-from'}/>
-                        ] WHERE ISDESCENDANTNODE('/sites/{siteKey}') AND (
+                        ] WHERE ISDESCENDANTNODE('/sites/{dxContext.siteKey}') AND (
                         <Sql2Input maxLength={2000} style={{flexGrow: 10}} defaultValue={where} inputRef={this.where} onSearch={() => this.onSearch(goto)} cmRole={'sql2search-input-where'}/>
                         )
                     </Grid>

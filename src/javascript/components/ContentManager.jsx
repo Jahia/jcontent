@@ -15,11 +15,25 @@ import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import {compose} from "react-apollo/index";
 
+import Action from "./actions/Action"
+import MenuAction from "./actions/MenuAction";
+
+const actionComponents = {
+    action: Action,
+    menuAction: MenuAction
+}
+
+
 class ContentManager extends React.Component {
 
     constructor(props) {
 
         super(props);
+        this.actionsRegistry = this.actionsRegistry.bind(this);
+    }
+
+    actionsRegistry = (action) => {
+        return actionComponents[action];
     }
 
     setRouter(router) {
@@ -49,6 +63,10 @@ class ContentManager extends React.Component {
                             defaultNS: 'content-manager',
                         })}>
                             <DxContext.Provider value={dxContext}>
+                                {
+                                    // register action components
+                                    dxContext['actionsRegistry'] = this.actionsRegistry
+                                }
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
                                     <Route path='/:siteKey/:lang' render={props => {
                                         dxContext['siteKey'] = props.match.params.siteKey;
@@ -67,7 +85,7 @@ class ContentManager extends React.Component {
                                                     )}/>
                                                 </div>
                                             </ManagerLayout>
-                                    )} }/>
+                                        )} }/>
                                 </BrowserRouter>
                             </DxContext.Provider>
                         </I18nextProvider>

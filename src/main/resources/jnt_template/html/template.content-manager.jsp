@@ -14,16 +14,107 @@
 </head>
 
 <body>
-    <template:addResources type="javascript" resources="apps/content-manager.js" />
-    <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
+<template:addResources type="javascript" resources="apps/content-manager.js" />
+<c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 
-    <div id="${targetId}">loading..</div>
-    <script type="text/javascript">
-        contextJsParameters['urlBrowser'] = '/cms/contentmanager';
-        contextJsParameters['urlbase'] = '${renderContext.servletPath}';
-        contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
-        contextJsParameters['userName'] = '${renderContext.user.username}';
+<div id="${targetId}">loading..</div>
+<script type="text/javascript">
+    contextJsParameters['urlBrowser'] = '/cms/contentmanager';
+    contextJsParameters['urlbase'] = '${renderContext.servletPath}';
+    contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
+    contextJsParameters['userName'] = '${renderContext.user.username}';
+    contextJsParameters['config'] = {
+        actions: [
+            {
+                id: "edit",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["previewBar", "tableActions"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.edit'
+            },
+            {
+                id: "translate",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["previewBar"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.translate'
 
-        reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
-    </script>
+            },
+            {
+                id: "publish",
+                action: "menuAction",
+                menuId: "publishMenu",
+                icon: "Edit",
+                target:["previewBar", "tableActions"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.publish'
+
+            },
+            {
+                id: "publishAll",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["publishMenu"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.publishAll'
+
+            },
+            {
+                id: "unPublish",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["publishMenu"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.unpublish'
+
+            },
+            {
+                id: "additionalPreview",
+                action: "menuAction",
+                menuId: "additionalPreviewMenu",
+                icon: "Edit",
+                target:["additionalMenu"],
+                requiredPermission:"",
+                iconButton: true
+
+            },
+            {
+                id: "duplicate",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["additionalPreviewMenu"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.duplicate'
+
+            },
+            {
+                id: "copy",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["additionalPreviewMenu"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.copy'
+
+            },
+            {
+                id: "delete",
+                action: "action",
+                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                icon: "Edit",
+                target:["additionalPreviewMenu"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.delete'
+
+            }]
+    }
+    reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
+</script>
 </body>

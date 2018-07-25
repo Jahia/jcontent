@@ -9,6 +9,9 @@ import PublicationInfo from './PublicationStatus';
 import PublicationMenu from './PublishMenu';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import ShareMenu from './ShareMenu';
+import ActionProvider from "../ActionProvider";
+import CmButton from "../renderAction/CmButton";
+import CmIconButton from "../renderAction/CmIconButton";
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
@@ -104,23 +107,12 @@ class ContentPreview extends React.Component {
                             <IconButton><Lock/></IconButton>
                         </Grid>
                         <Grid item xs={ 8 }>
-                            <Button className={ classes.button }
-                                    variant="contained"
-                                    size="medium"
-                                    color="primary"
-                                    onClick={() => window.parent.editContent(selection.path, selection.name, ['jnt:content'], ['nt:base'])}>
-                                {t('label.contentManager.contentPreview.edit')}
-                            </Button>
-                            <Button className={ classes.button } variant="contained" size="medium" color="primary" >
-                                {t('label.contentManager.contentPreview.translate')}
-                            </Button>
-                            <PublicationMenu selection={ selection }
-                                             layoutQuery={ layoutQuery }
-                                             layoutQueryParams={ layoutQueryParams } />
-                            <AdditionalMenuItems selection={ selection }
-                                                 layoutQuery={ layoutQuery }
-                                                 layoutQueryParams={ layoutQueryParams }
-                                                 rowSelectionFunc={ rowSelectionFunc } />
+                            <ActionProvider targetName={"previewBar"} name={selection.name} path={selection.path}>
+                                {(props) => <CmButton {...props}/>}
+                            </ActionProvider>
+                            <ActionProvider targetName={"additionalMenu"} name={selection.name} path={selection.path}>
+                                {(props) => <CmIconButton {...props}/>}
+                            </ActionProvider>
                         </Grid>
                     </Grid>
                 </Paper>

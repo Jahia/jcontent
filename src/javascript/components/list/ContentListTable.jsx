@@ -14,6 +14,8 @@ import {
     PublicationStatusNotPublished,
     PublicationStatusPublished
 } from "./publicationStatus"
+import ActionProvider from "../ActionProvider";
+import CmButton from "../renderAction/CmButton";
 
 
 const columnData = [
@@ -241,7 +243,9 @@ class ContentListTable extends React.Component {
                                                 }
                                             })}
                                             <TableCell>
-                                                <Button onClick={(event) => window.parent.editContent(n.path, n.name, ['jnt:content'], ['nt:base'])}>{t('label.contentManager.editAction')}</Button>
+                                                <ActionProvider targetName={"tableActions"} name={n.name} path={n.path}>
+                                                    {(props) => <CmButton {...props}/>}
+                                                </ActionProvider>
                                             </TableCell>
                                         </TableRow>
                                     );

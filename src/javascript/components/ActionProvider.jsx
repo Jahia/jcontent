@@ -8,8 +8,8 @@ class ActionProvider extends React.Component {
         const { targetName, path, name, children } = this.props;
         return (<DxContext.Consumer>
             {dxContext => {
-                const actions = _.filter(dxContext.config.actions, action => _.includes(action.target, targetName));
-                //
+                const actions = _.sortBy(_.filter(dxContext.config.actions, action => _.includes(action.target, targetName)), "priority");
+
                 return _.map(actions, action => {
                         let Action = dxContext.actionsRegistry(action.action);
                         Action = Action || dxContext.actionsRegistry("action");

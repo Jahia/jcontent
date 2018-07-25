@@ -72,7 +72,7 @@ class ContentManager extends React.Component {
                                         dxContext['siteKey'] = props.match.params.siteKey;
                                         dxContext['lang'] = props.match.params.lang;
                                         return (
-                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                            <ManagerLayout header={<CMTopBar />} leftSide={<CMLeftNavigation/>}>
                                                 <div>
                                                     <Route path={`${props.match.url}/browse`} render={props => (
                                                         <ContentLayout contentSource="browsing" dxContext={dxContext}/>

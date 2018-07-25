@@ -30,23 +30,25 @@
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: [
             {
+                id: "translate",
+                priority: 2.51,
+                action: "action",
+                call: () => alert("Translate !!!"),
+                icon: "Edit",
+                target:["previewBar"],
+                requiredPermission:"",
+                labelKey: 'label.contentManager.contentPreview.translate'
+
+            },
+            {
                 id: "edit",
+                priority: 2.5,
                 action: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
                 target:["previewBar", "tableActions"],
                 requiredPermission:"",
                 labelKey: 'label.contentManager.contentPreview.edit'
-            },
-            {
-                id: "translate",
-                action: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
-                icon: "Edit",
-                target:["previewBar"],
-                requiredPermission:"",
-                labelKey: 'label.contentManager.contentPreview.translate'
-
             },
             {
                 id: "publish",

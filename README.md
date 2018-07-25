@@ -39,7 +39,7 @@ Example:
     }
 
 - `id` is a unique identifier 
-- `priority` defines in a list of action the order to display actions (not implemented yet)
+- `priority` defines in a list of action the order to display actions
 - `action` is the registered action to use  
 - `call` is the function to execute when the action is triggered 
 - `icon` is the icon for the action (not implemented yet)

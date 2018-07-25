@@ -22,21 +22,20 @@ const styles = theme => ({
 });
 
 class ContentTypeSelect extends React.Component {
+
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {contentType: props.contentType !== undefined ? props.contentType : ''}; 
     }
 
     handleChange(e) {
-        this.setState({contentType: e.target.value});
-        if (this.props.onSelectionChange !== undefined) {
-            this.props.onSelectionChange(e.target.value);
-        }
+        let contentType = e.target.value;
+        this.props.onSelectionChange(contentType == '' ? null : contentType);
     };
 
     render() {
-        let { classes, siteKey, displayLanguage, notificationContext, t } = this.props;
+
+        let { contentType, classes, siteKey, displayLanguage, notificationContext, t } = this.props;
 
         return (
             <Query fetchPolicy={"network-only"} query={ContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
@@ -49,7 +48,7 @@ class ContentTypeSelect extends React.Component {
                     contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
                 }
                 return (<Select
-                    value={this.state.contentType}
+                    value={contentType ? contentType : ''}
                     onChange={this.handleChange}
                     displayEmpty
                     classes={{
@@ -69,10 +68,6 @@ class ContentTypeSelect extends React.Component {
         );
     }
 }
-
-ContentTypeSelect.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 ContentTypeSelect = compose(
     withNotifications(),

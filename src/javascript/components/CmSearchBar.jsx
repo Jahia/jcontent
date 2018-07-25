@@ -23,7 +23,7 @@ const styles = theme => ({
     },
     footerLeft: {
         marginRight: 'auto',
-        // The same padding/font as small buttons on the left of the footer
+        // The same padding/font as small buttons on the right of the footer
         padding: '7px 8px',
         fontSize: theme.typography.pxToRem(13)
     },
@@ -116,8 +116,13 @@ class CmSearchBarNormal extends React.Component {
 
     onSearch(contentType, goto) {
         let searchTerms = this.search.current.value;
-        if (!searchTerms || searchTerms == '') {
+        if (!searchTerms) {
             return;
+        } else {
+            searchTerms = searchTerms.trim();
+            if (searchTerms == '') {
+                return;
+            }
         }
         goto('/search', contentType ? {
             searchContentType: contentType,
@@ -128,6 +133,9 @@ class CmSearchBarNormal extends React.Component {
     }
 
     onClear(goto) {
+        this.setState({
+            contentType: null
+        });
         this.search.current.value = '';
         this.props.onClear(goto);
     }
@@ -153,8 +161,9 @@ class CmSearchBarNormal extends React.Component {
                     <ContentTypeSelect
                         siteKey={dxContext.siteKey}
                         displayLanguage={dxContext.uilang}
-                        contentType={contentType}
-                        onSelectionChange={(nt) => this.onContentTypeChange(nt, goto)}/>
+                        contentType={this.state.contentType}
+                        onSelectionChange={(contentType) => this.onContentTypeChange(contentType, goto)}
+                    />
                     <Input
                         inputProps={{maxLength: 2000}}
                         defaultValue={params.searchTerms}

@@ -118,11 +118,10 @@ class CmSearchBarNormal extends React.Component {
         let searchTerms = this.search.current.value;
         if (!searchTerms) {
             return;
-        } else {
-            searchTerms = searchTerms.trim();
-            if (searchTerms == '') {
-                return;
-            }
+        }
+        searchTerms = searchTerms.trim();
+        if (searchTerms == '') {
+            return;
         }
         goto('/search', contentType ? {
             searchContentType: contentType,

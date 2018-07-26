@@ -15,7 +15,7 @@
       "saveAsWip": "Mark as work in progress",
       "editAction": "Edit",
       "error": {
-        "queryingContent": "Error querying content: {{details}}",
+        "queryingContent": "Error querying content: {{details}}"
       },
       "tree": {
         "show": "Show Tree",

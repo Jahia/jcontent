@@ -224,7 +224,7 @@ const filesQuery = gql `
 const ContentTypesQuery = gql`
     query ContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
       jcr {
-        nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includedTypes: ["jmix:editorialContent", "jnt:page"], excludedTypes: ["jmix:studioOnly", "jmix:hiddenType"]}) {
+        nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType"]}) {
           nodes {
             name
             displayName(language: $displayLanguage)

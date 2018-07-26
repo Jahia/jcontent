@@ -16,7 +16,6 @@
       "editAction": "Edit",
       "error": {
         "queryingContent": "Error querying content: {{details}}",
-        "contentTypes": "Error retrieving content types: {{details}}"
       },
       "tree": {
         "show": "Show Tree",

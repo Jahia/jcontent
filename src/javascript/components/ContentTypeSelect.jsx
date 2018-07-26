@@ -69,7 +69,6 @@ class ContentTypeSelect extends React.Component {
     }
 }
 
-
 ContentTypeSelect = compose(
     withNotifications(),
     translate(),

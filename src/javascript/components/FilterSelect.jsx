@@ -47,17 +47,6 @@ const DropdownIndicator = (props) => {
     );
 };
 
-const MaterialMenu = (props) => {
-    const {children, ...other} = props;
-    return components.Menu && (
-        <components.Menu {...other}>
-            <MenuList>
-                {children}
-            </MenuList>
-        </components.Menu>
-    )
-}
-
 const ITEM_HEIGHT = 48;
 
 const customStyles = {

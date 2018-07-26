@@ -4,7 +4,7 @@ import Select, {components} from 'react-select';
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {withStyles, Input, MenuItem, MenuList} from "@material-ui/core";
+import {withStyles, Input, MenuItem} from "@material-ui/core";
 import * as _ from 'lodash';
 import {compose} from "react-apollo/index";
 

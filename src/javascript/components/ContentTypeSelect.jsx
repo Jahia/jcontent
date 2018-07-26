@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {withStyles} from "@material-ui/core";
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
@@ -14,18 +13,9 @@ class ContentTypeSelect extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            contentType: props.contentType !== undefined ? props.contentType : '',
-        };
     }
 
-    handleChange(data) {
-        console.log("Selected data", data);
-        let newValue = '';
-        if (data != null) {
-            newValue = data.value;
-        }
-        this.setState({contentType: newValue});
+    handleChange(newValue) {
         if (this.props.onSelectionChange !== undefined) {
             this.props.onSelectionChange(newValue);
         }
@@ -53,13 +43,14 @@ class ContentTypeSelect extends React.Component {
                         }
                     });
                     contentTypes.unshift({
-                        value: '',
+                        value: null,
                         title: t('label.contentManager.contentTypes.any'),
                         label: t('label.contentManager.contentTypes.any'),
                         icon: null
                     });
                 }
                 return (<FilterSelect
+                    selectedOption={contentType}
                     options={contentTypes}
                     onSelectionChange={this.handleChange}
                 />);
@@ -68,6 +59,11 @@ class ContentTypeSelect extends React.Component {
         );
     }
 }
+
+ContentTypeSelect.propTypes = {
+    contentType : PropTypes.string,
+    onSelectionChange : PropTypes.func
+};
 
 ContentTypeSelect = compose(
     withNotifications(),

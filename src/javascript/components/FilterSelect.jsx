@@ -2,7 +2,9 @@ import React from "react";
 import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import {withStyles, Input, MenuItem} from "@material-ui/core";
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import {withStyles, Input, MenuItem, MenuList} from "@material-ui/core";
 import * as _ from 'lodash';
 import {compose} from "react-apollo/index";
 
@@ -24,11 +26,14 @@ class Option extends React.Component {
                 }}
                 title={this.props.data.title}
             >
-                {this.props.data.icon != null ?
-                    (<img src={this.props.data.icon + '.png'}/>)
-                    : (<div/>)
+                { this.props.data.icon != null &&
+                    <ListItemIcon>
+                        <img src={this.props.data.icon + '.png'}/>
+                    </ListItemIcon>
                 }
-                {children}
+                <ListItemText>
+                    {children}
+                </ListItemText>
             </MenuItem>
         );
     }
@@ -42,35 +47,18 @@ const DropdownIndicator = (props) => {
     );
 };
 
-function SelectWrapped(props) {
-    const {classes, value, options, ...other} = props;
-    let optionValue = _.find(options, (data) => data.value === value);
-    return (
-        <Select
-            components={{
-                Option,
-                DropdownIndicator
-            }}
-            styles={customStyles}
-            isClearable={true}
-            options={options}
-            value={optionValue}
-            {...other}
-        />
-    );
+const MaterialMenu = (props) => {
+    const {children, ...other} = props;
+    return components.Menu && (
+        <components.Menu {...other}>
+            <MenuList>
+                {children}
+            </MenuList>
+        </components.Menu>
+    )
 }
 
 const ITEM_HEIGHT = 48;
-
-const styles = theme => ({
-    root: {
-        display: 'inline-block',
-        minWidth: 200,
-    },
-    chip: {
-        margin: theme.spacing.unit / 4
-    }
-});
 
 const customStyles = {
     control: () => ({
@@ -99,21 +87,42 @@ const customStyles = {
     })
 };
 
+function SelectWrapped(props) {
+    const {classes, value, options, ...other} = props;
+    let optionValue = _.find(options, (data) => data.value === value);
+    return (
+        <Select
+            components={{
+                Option,
+                DropdownIndicator,
+            }}
+            styles={customStyles}
+            isClearable={true}
+            options={options}
+            value={optionValue}
+            {...other}
+        />
+    );
+}
+
+const styles = theme => ({
+    root: {
+        display: 'inline-block',
+        minWidth: 200,
+    }
+});
+
 class FilterSelect extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            contentType: props.contentType !== undefined ? props.contentType : '',
-        };
     }
 
     handleChange(data) {
-        let newValue = '';
+        let newValue = null;
         if (data != null) {
             newValue = data.value;
         }
-        this.setState({contentType: newValue});
         if (this.props.onSelectionChange !== undefined) {
             this.props.onSelectionChange(newValue);
         }
@@ -128,7 +137,7 @@ class FilterSelect extends React.Component {
                     fullWidth
                     inputComponent={SelectWrapped}
                     onChange={this.handleChange}
-                    value={this.state.contentType}
+                    value={this.props.selectedOption}
                     inputProps={{
                         options
                     }}
@@ -139,6 +148,9 @@ class FilterSelect extends React.Component {
 
 FilterSelect.propTypes = {
     classes: PropTypes.object.isRequired,
+    options: PropTypes.array.isRequired,
+    selectedOption: PropTypes.string,
+    onSelectionChange : PropTypes.func
 };
 
 FilterSelect = compose(

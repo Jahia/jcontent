@@ -87,7 +87,7 @@ class CmSearchBarNormal extends React.Component {
         super(props);
         this.search = React.createRef();
         this.state = {
-            contentType: props.contentType
+            contentType: (props.contentType !== undefined ? props.contentType : null)
         }
     }
 

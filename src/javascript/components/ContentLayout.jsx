@@ -150,12 +150,9 @@ class ContentLayout extends React.Component {
                         <div className={classes.root}>
                             <Grid container spacing={ 0 }>
                                 <Grid item xs={ GRID_SIZE - GRID_PANEL_BUTTONS_SIZE }>
-                                    {contentSource === "browsing" && <ContentBreadcrumbs dxContext={dxContext}
+                                    {(contentSource === "browsing" || contentSource === "files") && <ContentBreadcrumbs dxContext={dxContext}
                                                                                          lang={this.state.language}
-                                                                                         path={path}
-                                                                                         rootPath={rootPath}
-                                                                                         goto={goto}
-                                                                                         params={ params }/>}
+                                                                                         rootPath={rootPath}/>}
                                 </Grid>
                                 <Grid item xs={ GRID_PANEL_BUTTONS_SIZE }>
                                     <IconButton onClick={this.handleShowTree}><List/></IconButton>

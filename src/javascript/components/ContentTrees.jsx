@@ -9,7 +9,7 @@ import {translate} from 'react-i18next';
 //Defined transformations to be able to transition smoothly from url for one type of content to url of another type.
 //Transformations are invoked by the goto function in the route before pushing url to history only if they are defined,
 //otherwise url is pushed to history without changes
-const transformations = {
+export const transformations = {
     contentTransformation : function(url) {
         return url.replace("/browse-files/", "/browse/");
     },
@@ -103,7 +103,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/files"}
                             selectableTypes={['jnt:folder']}
                             lang={lang}
-                            handleSelect={path => goto(path, null, transformations.filesTransformation)}
+                            handleSelect={path => goto(path, {type: "files"}, transformations.filesTransformation)}
                             openableTypes={['jnt:folder']}
                             rootLabel={t("label.contentManager.browseFiles")}
                         />

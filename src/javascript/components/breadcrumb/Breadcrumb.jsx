@@ -120,10 +120,11 @@ class BreadcrumbDisplay extends React.Component {
         this.setState({menuActive: true, menuEntered: false});
     };
 
-    onMenuItemSelected(event, path, type) {
-        this.props.handleSelect(path, type);
+    onMenuItemSelected(event, path) {
+        this.props.handleSelect(path);
         this.onMenuExit(event);
     }
+
     generateMenu(nodes) {
         let {classes, type} = this.props;
         if (nodes.siblings.length > 1) {
@@ -172,7 +173,7 @@ class BreadcrumbDisplay extends React.Component {
                 disableRipple={true}
                 aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
-                onClick={() => this.props.handleSelect(nodes.siblings[0].path, "contents")}>
+                onClick={() => this.props.handleSelect(nodes.siblings[0].path)}>
                 {this.renderIcon(nodes, type)}
                 {nodes.name}
             </Button>
@@ -283,7 +284,7 @@ class Breadcrumb extends React.Component {
             if (breadcrumb === undefined) {
                 //Start new object, we are at a deeper level then before.
                 breadcrumb = {};
-                breadcrumb.name = breadcrumbs.length === 0 ? rootLabel : entry.name;
+                breadcrumb.name = breadcrumbs.length === 0 ? rootLabel : entry.node.displayName;
                 breadcrumb.uuid = entry.node.uuid;
                 breadcrumb.type = entry.node.primaryNodeType.name;
                 breadcrumb.siblings = [];
@@ -291,14 +292,14 @@ class Breadcrumb extends React.Component {
             //Add sibling to list (including first entry)
             let sibling = {
                 uuid: entry.node.uuid,
-                name: entry.name,
+                name: entry.node.displayName,
                 path: entry.path,
                 type: entry.node.primaryNodeType.name
             };
             breadcrumb.siblings.push(sibling);
             //If this path is the selected path, then update root breadcrumb with this entries information.
             if (selectedPathParts.slice(0, entryPathParts.length).join("/") === entryPathParts.join("/")) {
-                breadcrumb.name = breadcrumbs.length === 0 ? rootLabel : entry.name;
+                breadcrumb.name = breadcrumbs.length === 0 ? rootLabel : entry.node.displayName;
                 breadcrumb.uuid = entry.node.uuid;
                 breadcrumb.type = entry.node.primaryNodeType.name;
             }

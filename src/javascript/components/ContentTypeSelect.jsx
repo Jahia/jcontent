@@ -34,12 +34,12 @@ class ContentTypeSelect extends React.Component {
                     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                 } else if (data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
                     contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
-                    contentTypes = contentTypes.map((nt) => {
+                    contentTypes = contentTypes.map((nodeType) => {
                         return {
-                            value: nt.name,
-                            title: nt.displayName + ' (' + nt.name + ')',
-                            label: nt.displayName,
-                            icon: nt.icon
+                            value: nodeType.name,
+                            title: nodeType.displayName + ' (' + nodeType.name + ')',
+                            label: nodeType.displayName,
+                            icon: nodeType.icon
                         }
                     });
                     contentTypes.unshift({

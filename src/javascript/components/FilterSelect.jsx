@@ -9,12 +9,15 @@ import * as _ from 'lodash';
 import {compose} from "react-apollo/index";
 
 class Option extends React.Component {
+
     handleClick = event => {
         this.props.selectOption(this.props.data, event);
     };
 
     render() {
+
         const {children, isFocused, isSelected, onFocus} = this.props;
+
         return (
             <MenuItem
                 onFocus={onFocus}
@@ -26,7 +29,7 @@ class Option extends React.Component {
                 }}
                 title={this.props.data.title}
             >
-                { this.props.data.icon != null &&
+                {this.props.data.icon != null &&
                     <ListItemIcon>
                         <img src={this.props.data.icon + '.png'}/>
                     </ListItemIcon>
@@ -83,7 +86,7 @@ function SelectWrapped(props) {
         <Select
             components={{
                 Option,
-                DropdownIndicator,
+                DropdownIndicator
             }}
             styles={customStyles}
             isClearable={true}
@@ -97,11 +100,12 @@ function SelectWrapped(props) {
 const styles = theme => ({
     root: {
         display: 'inline-block',
-        minWidth: 200,
+        minWidth: 200
     }
 });
 
 class FilterSelect extends React.Component {
+
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
@@ -118,6 +122,7 @@ class FilterSelect extends React.Component {
     };
 
     render() {
+
         let {classes, options} = this.props;
 
         return (
@@ -131,7 +136,8 @@ class FilterSelect extends React.Component {
                         options
                     }}
                 />
-            </div>);
+            </div>
+        );
     }
 }
 

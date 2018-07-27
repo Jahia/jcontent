@@ -72,7 +72,7 @@ class ContentTrees extends React.Component {
                     <ListItem>
                         <Button onClick={() => this.openTrees(path)}>{t("label.contentManager.showCurrentPath")}</Button>
                     </ListItem>
-                    <ListItem>
+                    <ListItem data-cm-role={'browse-tree-content'}>
                         <ContentTree
                             ref={this.contentTree}
                             path={path}
@@ -84,7 +84,7 @@ class ContentTrees extends React.Component {
                             rootLabel={t("label.contentManager.browseFolders")}
                         />
                     </ListItem>
-                    <ListItem>
+                    <ListItem data-cm-role={'browse-tree-pages'}>
                         <ContentTree
                             ref={this.pageTree}
                             path={path}
@@ -96,7 +96,7 @@ class ContentTrees extends React.Component {
                             rootLabel={t("label.contentManager.browsePages")}
                         />
                     </ListItem>
-                    <ListItem>
+                    <ListItem data-cm-role={'browse-tree-files'}>
                         <ContentTree
                             ref={this.filesTree}
                             path={path}

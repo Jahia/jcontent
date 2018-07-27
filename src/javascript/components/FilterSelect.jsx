@@ -8,47 +8,12 @@ import {withStyles, Input, MenuItem} from "@material-ui/core";
 import * as _ from 'lodash';
 import {compose} from "react-apollo/index";
 
-class Option extends React.Component {
-
-    handleClick = event => {
-        this.props.selectOption(this.props.data, event);
-    };
-
-    render() {
-
-        const {children, isFocused, isSelected, onFocus} = this.props;
-
-        return (
-            <MenuItem
-                onFocus={onFocus}
-                selected={isFocused}
-                onClick={this.handleClick}
-                component="div"
-                style={{
-                    fontWeight: isSelected ? 500 : 400
-                }}
-                title={this.props.data.title}
-            >
-                {this.props.data.icon != null &&
-                    <ListItemIcon>
-                        <img src={this.props.data.icon + '.png'}/>
-                    </ListItemIcon>
-                }
-                <ListItemText>
-                    {children}
-                </ListItemText>
-            </MenuItem>
-        );
+const styles = theme => ({
+    root: {
+        display: 'inline-block',
+        minWidth: 200
     }
-}
-
-const DropdownIndicator = (props) => {
-    return components.DropdownIndicator && (
-        <components.DropdownIndicator {...props}>
-            <ArrowDropDownIcon/>
-        </components.DropdownIndicator>
-    );
-};
+});
 
 const ITEM_HEIGHT = 48;
 
@@ -79,30 +44,73 @@ const customStyles = {
     })
 };
 
-function SelectWrapped(props) {
-    const {classes, value, options, ...other} = props;
-    let optionValue = _.find(options, (data) => data.value === value);
-    return (
-        <Select
-            components={{
-                Option,
-                DropdownIndicator
-            }}
-            styles={customStyles}
-            isClearable={true}
-            options={options}
-            value={optionValue}
-            {...other}
-        />
-    );
+class Option extends React.Component {
+
+    handleClick = event => {
+        this.props.selectOption(this.props.data, event);
+    };
+
+    render() {
+
+        const {data, children, isFocused, isSelected, onFocus} = this.props;
+
+        return (
+            <MenuItem
+                onFocus={onFocus}
+                selected={isFocused}
+                onClick={this.handleClick}
+                component="div"
+                style={{
+                    fontWeight: isSelected ? 500 : 400
+                }}
+                title={data.title}
+            >
+                {data.icon != null &&
+                    <ListItemIcon>
+                        <img src={data.icon + '.png'}/>
+                    </ListItemIcon>
+                }
+                <ListItemText>
+                    {children}
+                </ListItemText>
+            </MenuItem>
+        );
+    }
 }
 
-const styles = theme => ({
-    root: {
-        display: 'inline-block',
-        minWidth: 200
+class DropdownIndicator extends React.Component {
+
+    render() {
+        return (
+            <components.DropdownIndicator {...this.props}>
+                <ArrowDropDownIcon/>
+            </components.DropdownIndicator>
+        );
     }
-});
+};
+
+class SelectWrapped extends React.Component {
+
+    render() {
+
+        const {classes, value, options, ...other} = this.props;
+        let optionValue = _.find(options, (data) => data.value === value);
+
+        return (
+            <Select
+                components={{
+                    Option,
+                    DropdownIndicator
+                }}
+                styles={customStyles}
+                isClearable={true}
+                options={options}
+                value={optionValue}
+                {...other}
+            />
+        );
+    }
+}
 
 class FilterSelect extends React.Component {
 
@@ -123,7 +131,7 @@ class FilterSelect extends React.Component {
 
     render() {
 
-        let {classes, options} = this.props;
+        let {classes, options, selectedOption} = this.props;
 
         return (
             <div className={classes.root} data-cm-role={'filter-select'}>
@@ -131,7 +139,7 @@ class FilterSelect extends React.Component {
                     fullWidth
                     inputComponent={SelectWrapped}
                     onChange={this.handleChange}
-                    value={this.props.selectedOption}
+                    value={selectedOption}
                     inputProps={{
                         options
                     }}

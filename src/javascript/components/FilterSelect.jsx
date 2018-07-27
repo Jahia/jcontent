@@ -126,7 +126,7 @@ class FilterSelect extends React.Component {
         let {classes, options} = this.props;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} data-cm-role={'filter-select'}>
                 <Input
                     fullWidth
                     inputComponent={SelectWrapped}

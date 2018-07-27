@@ -140,10 +140,10 @@ class CmSearchBarNormal extends React.Component {
                     rightFooter={
                         <React.Fragment>
                             {(params.searchTerms != null) &&
-                                <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
+                                <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)} cmRole={'search-clear'}/>
                             }
                             {(params.searchTerms == null) &&
-                                <ActionButton label={'label.contentManager.search.sql2'} onClick={onSql2Click}/>
+                                <ActionButton label={'label.contentManager.search.sql2'} onClick={onSql2Click} cmRole={'search-type-sql2search'}/>
                             }
                         </React.Fragment>
                     }
@@ -155,7 +155,7 @@ class CmSearchBarNormal extends React.Component {
                         onSelectionChange={(contentType) => this.onContentTypeChange(contentType, goto)}
                     />
                     <Input
-                        inputProps={{maxLength: 2000}}
+                        inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
                         defaultValue={params.searchTerms}
                         placeholder={t('label.contentManager.search.normalPrompt')}
                         inputRef={this.search}
@@ -208,10 +208,10 @@ class CmSearchBarSql2 extends React.Component {
                     rightFooter={
                         <React.Fragment>
                             {(params.sql2SearchFrom != null) &&
-                                <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
+                                <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)} cmRole={'search-clear'}/>
                             }
                             {(params.sql2SearchFrom == null) &&
-                                <ActionButton label={'label.contentManager.search.normal'} onClick={onNormalClick}/>
+                                <ActionButton label={'label.contentManager.search.normal'} onClick={onNormalClick} cmRole={'search-type-normal'}/>
                             }
                         </React.Fragment>
                     }
@@ -270,7 +270,7 @@ class SearchBarLayout extends React.Component {
                 <Paper square>
                     <Grid container wrap={'nowrap'}>
                         {children}
-                        <IconButton color={'secondary'} onClick={onSearch}>
+                        <IconButton color={'secondary'} onClick={onSearch} data-cm-role={'search-submit'}>
                             <Search/>
                         </IconButton>
                     </Grid>
@@ -296,10 +296,10 @@ class ActionButton extends React.Component {
 
     render() {
 
-        let {label, variant, onClick, classes, t} = this.props;
+        let {label, variant, onClick, classes, t, cmRole} = this.props;
 
         return (
-            <Button variant={variant} size={'small'} onClick={onClick} classes={{root: classes.actionButton}}>
+            <Button variant={variant} size={'small'} onClick={onClick} classes={{root: classes.actionButton}} data-cm-role={cmRole}>
                 {t(label)}
             </Button>
         );

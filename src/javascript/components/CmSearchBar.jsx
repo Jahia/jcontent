@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
+import {withStyles, Typography, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
 import Search from '@material-ui/icons/Search';
 import ContentTypeSelect from './ContentTypeSelect';
 import {translate, Trans} from 'react-i18next';
@@ -20,15 +20,6 @@ const styles = theme => ({
     footer: {
         display: 'flex',
         marginTop: theme.spacing.unit
-    },
-    footerLeft: {
-        marginRight: 'auto',
-        // The same padding/font as small buttons on the right of the footer
-        padding: '7px 8px',
-        fontSize: theme.typography.pxToRem(13)
-    },
-    footerRight: {
-        marginLeft: 'auto'
     },
     actionButton: {
         textTransform: 'none'
@@ -147,14 +138,14 @@ class CmSearchBarNormal extends React.Component {
             <CmRouter render={({params, goto}) => (
                 <SearchBarLayout onSearch={() => this.onSearch(this.state.contentType, goto)}
                     rightFooter={
-                        <div>
+                        <React.Fragment>
                             {(params.searchTerms != null) &&
                                 <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
                             }
                             {(params.searchTerms == null) &&
                                 <ActionButton label={'label.contentManager.search.sql2'} onClick={onSql2Click}/>
                             }
-                        </div>
+                        </React.Fragment>
                     }
                 >
                     <ContentTypeSelect
@@ -215,14 +206,14 @@ class CmSearchBarSql2 extends React.Component {
                         />
                     }
                     rightFooter={
-                        <div>
+                        <React.Fragment>
                             {(params.sql2SearchFrom != null) &&
                                 <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(goto)}/>
                             }
                             {(params.sql2SearchFrom == null) &&
                                 <ActionButton label={'label.contentManager.search.normal'} onClick={onNormalClick}/>
                             }
-                        </div>
+                        </React.Fragment>
                     }
                 >
                     <Grid container alignItems={'center'} classes={{container: classes.sql2Form}}>
@@ -275,7 +266,7 @@ class SearchBarLayout extends React.Component {
         let {children, leftFooter, rightFooter, onSearch, classes} = this.props;
 
         return (
-            <div>
+            <React.Fragment>
                 <Paper square>
                     <Grid container wrap={'nowrap'}>
                         {children}
@@ -284,15 +275,19 @@ class SearchBarLayout extends React.Component {
                         </IconButton>
                     </Grid>
                 </Paper>
-                <div className={classes.footer}>
-                    <span className={classes.footerLeft}>
-                        {leftFooter}
-                    </span>
-                    <span className={classes.footerRight}>
-                        {rightFooter}
-                    </span>
-                </div>
-            </div>
+                <Grid container>
+                    <Grid item xs={8}>
+                        <Typography color="inherit" variant="body1" gutterBottom align="left">
+                            {leftFooter}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Typography  color="inherit" variant="body1" gutterBottom align="right">
+                            {rightFooter}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </React.Fragment>
         )
     }
 }

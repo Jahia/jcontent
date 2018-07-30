@@ -39,47 +39,32 @@ class ContentBreadcrumbs extends React.Component {
         return newPaths;
     }
 
-    getPickerConfiguration(params, path) {
+    getPickerConfiguration(path) {
         let {t, rootPath} = this.props;
-        let pickerConfiguration = {
-            type: params.type != null ? params.type : this.parseTypeFromPath(path)
-        };
-        switch (pickerConfiguration.type) {
-            case "contents" :
-                pickerConfiguration.selectableTypes = ['jmix:list'];
-                pickerConfiguration.openableTypes = ['jmix:list', 'jnt:contentFolder'];
-                pickerConfiguration.rootLabel = t("label.contentManager.browseFolders");
-                pickerConfiguration.rootPath = rootPath + "/contents";
-                break;
-            case "files":
-                pickerConfiguration.selectableTypes = ['jnt:folder'];
-                pickerConfiguration.openableTypes = ['jnt:folder'];
-                pickerConfiguration.rootLabel = t("label.contentManager.browseFiles");
-                pickerConfiguration.rootPath = rootPath + "/files";
-                break;
-            case "pages":
-            default:
-                pickerConfiguration.selectableTypes = ["jnt:pages"];
-                pickerConfiguration.openableTypes = ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'];
-                pickerConfiguration.rootLabel = t("label.contentManager.browsePages");
-                pickerConfiguration.rootPath = rootPath
+        let pickerConfiguration = {};
+        if (path.indexOf(rootPath + "/contents") !== -1) {
+            pickerConfiguration.selectableTypes = ['jmix:list'];
+            pickerConfiguration.openableTypes = ['jmix:list', 'jnt:contentFolder'];
+            pickerConfiguration.rootLabel = t("label.contentManager.browseFolders");
+            pickerConfiguration.rootPath = rootPath + "/contents";
+        } else if (path.indexOf(rootPath + "/files") !== -1) {
+            pickerConfiguration.selectableTypes = ['jnt:folder'];
+            pickerConfiguration.openableTypes = ['jnt:folder'];
+            pickerConfiguration.rootLabel = t("label.contentManager.browseFiles");
+            pickerConfiguration.rootPath = rootPath + "/files";
+        } else {
+            pickerConfiguration.selectableTypes = ["jnt:page"];
+            pickerConfiguration.openableTypes = ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'];
+            pickerConfiguration.rootLabel = t("label.contentManager.browsePages");
+            pickerConfiguration.rootPath = rootPath
         }
         return pickerConfiguration;
     }
 
-    parseTypeFromPath(path) {
-        let {rootPath} = this.props;
-        if (path.indexOf(rootPath + "/contents") !== -1) {
-            return "contents";
-        } else if (path.indexOf(rootPath + "/files") !== -1) {
-            return "files";
-        }
-        return "pages";
-    }
      render() {
-        let {lang, dxContext} = this.props;
+        let {lang, dxContext, rootPath} = this.props;
         return (<CmRouter render={({path, params, goto}) => {
-            let pickerConfiguration = this.getPickerConfiguration(params, path);
+            let pickerConfiguration = this.getPickerConfiguration(path);
             let paths = this.generatePathParts(path);
             return (<Picker fragments={["displayName", {
                 applyFor: "node",
@@ -93,14 +78,14 @@ class ContentBreadcrumbs extends React.Component {
                     selectableTypes={pickerConfiguration.selectableTypes}
                     queryVariables={{lang: lang}}
                     openSelection={false}
-                    onSelectItem={(path) => { goto(path, {type: pickerConfiguration.type}, this.resolveTransformation(pickerConfiguration.type))}} >
+                    onSelectItem={(path, newParams) => {goto(path, Object.assign(params, newParams), this.resolveTransformation(newParams.type))}} >
                 {({...others}) => {
                     return <Breadcrumb {...others}
                                        path={path}
+                                       rootPath={rootPath}
                                        rootLabel={pickerConfiguration.rootLabel}
                                        dxContext={dxContext}
-                                       handleSelect={others.onSelectItem}
-                                       type={pickerConfiguration.type}/>
+                                       handleSelect={others.onSelectItem}/>
                 }}
             </Picker>)
         }}/>)}

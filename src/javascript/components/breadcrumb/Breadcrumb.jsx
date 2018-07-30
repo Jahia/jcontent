@@ -121,13 +121,13 @@ class BreadcrumbDisplay extends React.Component {
         this.setState({menuActive: true});
     };
 
-    onMenuItemSelected(event, path) {
-        this.props.handleSelect(path);
+    onMenuItemSelected(event, node) {
+        this.props.handleSelect(node.path, {type: node.pathType});
         this.onMenuExit(event);
     }
 
     generateMenu(nodes) {
-        let {classes, type} = this.props;
+        let {classes} = this.props;
         if (nodes.siblings.length > 1) {
             return <span>
                 <MenuItemContainer key={"dropdown_" + nodes.uuid}>
@@ -141,7 +141,7 @@ class BreadcrumbDisplay extends React.Component {
                 {nodes.siblings.map((node, i) => {
                     return <MenuItemContainer key={node.uuid}>
                         <MenuItem className={classes.menuItem}
-                                 onClick={(event) => this.onMenuItemSelected(event, node.path)}>
+                                 onClick={(event) => this.onMenuItemSelected(event, node)}>
                             {this.renderIcon(node)}
                             <MenuItemLabel>{node.name}</MenuItemLabel>
                         </MenuItem>
@@ -153,7 +153,7 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     generateMenuButton(nodes) {
-        let {classes, type} = this.props;
+        let {classes} = this.props;
         if (nodes.siblings.length > 1) {
             return <Button
                 id={"menuToggleButton_" + nodes.uuid}
@@ -174,7 +174,7 @@ class BreadcrumbDisplay extends React.Component {
                 disableRipple={true}
                 aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
-                onClick={() => this.props.handleSelect(nodes.siblings[0].path)}>
+                onClick={() => {this.props.handleSelect(nodes.siblings[0].path, {type: nodes.siblings[0].pathType});}}>
                 {this.renderIcon(nodes)}
                 {nodes.name}
             </Button>
@@ -237,7 +237,7 @@ class Breadcrumb extends React.Component {
     }
 
     render() {
-        let {type, classes} = this.props;
+        let {classes} = this.props;
         let {breadcrumbs} = this.state;
         return (<div>
             {breadcrumbs.map((breadcrumb, i) => {
@@ -245,8 +245,7 @@ class Breadcrumb extends React.Component {
                     <StyledBreadcrumbDisplay
                         id={breadcrumb.uuid}
                         handleSelect={this.props.handleSelect}
-                        nodes={breadcrumb}
-                        type={type}/>
+                        nodes={breadcrumb}/>
                    {i < breadcrumbs.length-1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
                    </span>
             })}
@@ -263,14 +262,24 @@ class Breadcrumb extends React.Component {
         }
     }
 
+    static parseTypeFromPath(rootPath, path) {
+        if (path.indexOf(rootPath + "/contents") !== -1) {
+            return "contents";
+        } else if (path.indexOf(rootPath + "/files") !== -1) {
+            return "files";
+        }
+        return "pages";
+    }
+
     static parseEntries(props) {
-        let {pickerEntries:entries, path:selectedPath, rootLabel, dxContext, t, type} = props;
+        let {pickerEntries:entries, path:selectedPath, rootLabel, dxContext, t, rootPath} = props;
         //Process these nodes
         let breadcrumbs = [];
-        let selectedPathParts = this.splitPath(selectedPath, type, dxContext);
+        let rootType = this.parseTypeFromPath(rootPath, selectedPath);
+        let selectedPathParts = this.splitPath(selectedPath, rootType, dxContext);
         for (let i in entries) {
             let entry =  entries[i];
-            let entryPathParts = this.splitPath(entry.path, type, dxContext);
+            let entryPathParts = this.splitPath(entry.path, rootType, dxContext);
             if (entryPathParts.length > selectedPathParts.length) {
                 //skip, our selections does not go this deep.
                 continue;
@@ -284,6 +293,7 @@ class Breadcrumb extends React.Component {
                 continue;
             }
             let breadcrumb = breadcrumbs[entryPathParts.length-1];
+
             if (breadcrumb === undefined) {
                 //Start new object, we are at a deeper level then before.
                 breadcrumb = {};
@@ -291,6 +301,7 @@ class Breadcrumb extends React.Component {
                 breadcrumb.uuid = entry.node.uuid;
                 breadcrumb.path = entry.node.path;
                 breadcrumb.type = entry.node.primaryNodeType.name;
+                breadcrumb.pathType = rootType;
                 breadcrumb.siblings = [];
             }
             //Add sibling to list (including first entry)
@@ -298,6 +309,7 @@ class Breadcrumb extends React.Component {
                 uuid: entry.node.uuid,
                 name: breadcrumbs.length === 0 ? rootLabel : entry.node.displayName,
                 path: entry.path,
+                pathType: breadcrumb.pathType,
                 type: entry.node.primaryNodeType.name
             };
 
@@ -307,17 +319,20 @@ class Breadcrumb extends React.Component {
                 let siblingsToBeAdded = [{
                     uuid: 'contents_id',
                     name: t("label.contentManager.browseFolders"),
-                    path: "/sites/" + dxContext.siteKey + "/contents",
+                    path: rootPath + "/contents",
+                    pathType: "contents",
                     type: "jnt:contentFolder"
                 },{
                     uuid: "pages_id",
                     name: t("label.contentManager.browsePages"),
-                    path: "/sites/" + dxContext.siteKey,
+                    path: rootPath,
+                    pathType: "pages",
                     type: "jnt:virtualsite"
                 }, {
                     uuid: "files_id",
                     name: t("label.contentManager.browseFiles"),
-                    path: "/sites/" + dxContext.siteKey + "/files",
+                    path: rootPath + "/files",
+                    pathType: "files",
                     type: "jnt:folder"
                 }];
                 for (let j in siblingsToBeAdded) {
@@ -340,9 +355,9 @@ class Breadcrumb extends React.Component {
 
 Breadcrumb.propTypes = {
     path: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
     dxContext: PropTypes.object.isRequired,
     handleSelect: PropTypes.func.isRequired,
-    rootLabel: PropTypes.string
+    rootLabel: PropTypes.string,
+    rootPath: PropTypes.string.isRequired
 };
 export default translate()(withStyles(styles)(Breadcrumb));

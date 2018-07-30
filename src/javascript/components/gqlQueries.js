@@ -174,7 +174,7 @@ const getNodeSubTree = gql `
 const searchContentQuery = gql`
     query($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
-            results: nodesByCriteria(criteria: {nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
+            results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
                 pageInfo {
                     totalCount
                 }
@@ -190,7 +190,7 @@ const searchContentQuery = gql`
 const sql2SearchContentQuery = gql`
     query($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
-            results: nodesByQuery(query: $query, queryLanguage: SQL2, offset: $offset, limit: $limit) {
+            results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit) {
                 pageInfo {
                     totalCount
                 }

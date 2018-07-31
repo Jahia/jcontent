@@ -1,29 +1,26 @@
 import React from 'react';
-import { DxContext } from "./DxContext";
 import * as _ from 'lodash';
+import actionsRegistry from "./actionsRegistry"
 
 class Actions extends React.Component {
 
     render() {
-        const { menuId, path, name, children } = this.props;
-        return (<DxContext.Consumer>
-            {dxContext => {
-                const allActions = dxContext.config.actions;
-                const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(allActions), actionKey => _.includes(allActions[actionKey].target, menuId)), "priority");
+        const {menuId, path, name, children} = this.props;
+        // Filter action for the current MenuId
+        const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
 
-                return _.map(actionsToDisplayKeys, actionKey => {
-                        let action = allActions[actionKey];
-                        let Action = dxContext.actionsRegistry(action.component);
-                        Action = Action || dxContext.actionsRegistry("action");
-                        return Action &&
-                            (
-                                <Action {...action} path={path} name={name} key={actionKey}>
-                                    {children}
-                                </Action>
-                            )
-                })
-            }}
-        </DxContext.Consumer>)
+        return _.map(actionsToDisplayKeys, actionKey => {
+                let action = actionsRegistry[actionKey];
+                let ActionComponent = action.component;
+                ActionComponent = ActionComponent || dxContext.actionsRegistry("action");
+                return ActionComponent &&
+                    (
+                        <ActionComponent {...action} path={path} name={name} key={actionKey}>
+                            {children}
+                        </ActionComponent>
+                    )
+            }
+        )
     }
 }
 

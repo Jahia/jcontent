@@ -1,8 +1,8 @@
 import React from 'react';
-import {withStyles, Button, IconButton} from "@material-ui/core/es/index";
+import {withStyles, IconButton} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
-import {MoreVert} from "@material-ui/icons/es/index";
+import {MoreHoriz} from "@material-ui/icons";
 
 const styles = theme => ({
     root: {
@@ -24,7 +24,7 @@ class CmIconButton extends React.Component {
             <IconButton
                 aria-haspopup="true"
                 onClick={(event) => onClick(event)}>
-                <MoreVert/>
+                <MoreHoriz/>
             </IconButton>
         )
     }

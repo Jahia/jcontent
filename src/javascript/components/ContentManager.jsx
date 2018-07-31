@@ -15,6 +15,7 @@ import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import {compose} from "react-apollo/index";
 
+import actionsRegistry from "./actionsRegistry"
 import Action from "./actions/Action"
 import MenuAction from "./actions/MenuAction";
 
@@ -27,13 +28,7 @@ const actionComponents = {
 class ContentManager extends React.Component {
 
     constructor(props) {
-
         super(props);
-        this.actionsRegistry = this.actionsRegistry.bind(this);
-    }
-
-    actionsRegistry = (action) => {
-        return actionComponents[action];
     }
 
     setRouter(router) {
@@ -50,7 +45,6 @@ class ContentManager extends React.Component {
 
         let {dxContext, classes} = this.props;
         // register action components
-        dxContext['actionsRegistry'] = this.actionsRegistry;
         const isInFrame = window.top !== window;
 
         return (
@@ -68,6 +62,12 @@ class ContentManager extends React.Component {
                                     <Route path='/:siteKey/:lang' render={props => {
                                         dxContext['siteKey'] = props.match.params.siteKey;
                                         dxContext['lang'] = props.match.params.lang;
+                                        // register actions
+                                        _.each(Object.keys(dxContext.config.actions), actionKey => {
+                                            const action = dxContext.config.actions[actionKey];
+                                            action.component = actionComponents[action.component];
+                                            actionsRegistry[actionKey] = action;
+                                        });
                                         return (
                                             <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                 <div>

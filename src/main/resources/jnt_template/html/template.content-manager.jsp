@@ -39,12 +39,20 @@
                 labelKey: 'label.contentManager.contentPreview.translate'
 
             },
+            tableActions: {
+                priority: 2.5,
+                component: "menuAction",
+                menuId: "tableMenuActions",
+                target: ["tableActions"],
+                requiredPermission: "",
+                labelKey: 'label.contentManager.contentPreview.edit'
+            },
             edit: {
                 priority: 2.5,
                 component: "action",
                 call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
-                target: ["previewBar", "tableActions"],
+                target: ["previewBar", "tableMenuActions"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.edit'
             },
@@ -52,7 +60,7 @@
                 component: "menuAction",
                 menuId: "publishMenu",
                 icon: "Edit",
-                target: ["previewBar", "tableActions"],
+                target: ["previewBar", "tableMenuActions"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.publish'
 

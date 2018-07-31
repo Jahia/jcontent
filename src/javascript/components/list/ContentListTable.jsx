@@ -16,6 +16,7 @@ import {
 } from "./publicationStatus"
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
+import CmIconButton from "../renderAction/CmIconButton";
 
 
 const columnData = [
@@ -244,7 +245,7 @@ class ContentListTable extends React.Component {
                                             })}
                                             <TableCell>
                                                 <Actions menuId={"tableActions"} name={n.name} path={n.path}>
-                                                    {(props) => <CmButton {...props}/>}
+                                                    {(props) => <CmIconButton {...props}/>}
                                                 </Actions>
                                             </TableCell>
                                         </TableRow>

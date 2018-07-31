@@ -33,7 +33,7 @@ class PublishMenu extends Component {
         const { t, classes } = this.props;
         const { publishMenuAnchor } = this.state;
 
-        return <span>
+        return <React.Fragment>
             <Button
                 className={ classes.button }
                 variant="contained"
@@ -54,7 +54,7 @@ class PublishMenu extends Component {
                     { t('label.contentManager.contentPreview.unpublish', { language: "English" } ) }
                 </MenuItem>
             </Menu>
-        </span>
+        </React.Fragment>
     }
 
     publicationMenuItem() {

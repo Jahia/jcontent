@@ -29,6 +29,12 @@ class ContentManager extends React.Component {
 
     constructor(props) {
         super(props);
+        const { dxContext } = props;
+        // register actions
+        _.each(Object.keys(dxContext.config.actions), actionKey => {
+            actionsRegistry[actionKey] = dxContext.config.actions[actionKey];
+            actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component];
+        });
     }
 
     setRouter(router) {
@@ -62,12 +68,7 @@ class ContentManager extends React.Component {
                                     <Route path='/:siteKey/:lang' render={props => {
                                         dxContext['siteKey'] = props.match.params.siteKey;
                                         dxContext['lang'] = props.match.params.lang;
-                                        // register actions
-                                        _.each(Object.keys(dxContext.config.actions), actionKey => {
-                                            const action = dxContext.config.actions[actionKey];
-                                            action.component = actionComponents[action.component];
-                                            actionsRegistry[actionKey] = action;
-                                        });
+
                                         return (
                                             <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                 <div>

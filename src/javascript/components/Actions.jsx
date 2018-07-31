@@ -12,7 +12,6 @@ class Actions extends React.Component {
         return _.map(actionsToDisplayKeys, actionKey => {
                 let action = actionsRegistry[actionKey];
                 let ActionComponent = action.component;
-                ActionComponent = ActionComponent || dxContext.actionsRegistry("action");
                 return ActionComponent &&
                     (
                         <ActionComponent {...action} path={path} name={name} key={actionKey}>

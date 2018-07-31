@@ -64,6 +64,7 @@
 
     <bean id="contentmanagermode" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
 
+        <property name="refreshEnabled" value="false"/>
         <property name="requiredPermission" value="contentManager"/>
         <property name="nodeCheckPermission" value="$site"/>
         <property name="defaultLocation" value="$defaultSiteHome"/>

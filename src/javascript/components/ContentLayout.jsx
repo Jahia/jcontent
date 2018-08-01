@@ -10,8 +10,12 @@ import ContentTrees from "./ContentTrees";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
-import CmRouter from './CmRouter'
-import classNames from "classnames";
+import CmRouter from './CmRouter';
+
+//Files grid
+import FilesGrid from './filesGrid/FilesGrid';
+import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
+import { valueToSizeTransformation } from './filesGrid/filesGridUtils';
 
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
@@ -34,7 +38,7 @@ const styles = theme => ({
 });
 
 const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 2;
+const GRID_PANEL_BUTTONS_SIZE = 3;
 const TREE_SIZE = 2;
 const PREVIEW_SIZE = 6;
 
@@ -50,7 +54,8 @@ class ContentLayout extends React.Component {
             rowsPerPage: 25,
             showTree: true,
             showPreview: false,
-            selectedRow: null
+            selectedRow: null,
+            filesGridSizeValue: 4
         };
     }
 
@@ -155,6 +160,7 @@ class ContentLayout extends React.Component {
                                                                                          rootPath={rootPath}/>}
                                 </Grid>
                                 <Grid item xs={ GRID_PANEL_BUTTONS_SIZE }>
+                                    { contentSource === "files" && <FilesGridSizeSelector initValue={ 4 } onChange={ (value) => this.setState({ filesGridSizeValue: value })}/> }
                                     <IconButton onClick={this.handleShowTree}><List/></IconButton>
                                     { showPreview && <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton> }
                                     { !showPreview && <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton> }
@@ -172,16 +178,28 @@ class ContentLayout extends React.Component {
                                     </Grid>
                                 }
                                 <Grid item xs={computedTableSize} >
-                                    <ContentListTable
-                                        totalCount={totalCount}
-                                        rows={rows}
-                                        pageSize={this.state.rowsPerPage}
-                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                        onChangePage={this.handleChangePage}
-                                        onRowSelected={this.handleRowSelection}
-                                        page={this.state.page}
-                                        lang={this.state.language}
-                                    />
+                                    {
+                                        contentSource === "files" ?
+                                            <FilesGrid size={ valueToSizeTransformation(this.state.filesGridSizeValue) }
+                                                       totalCount={totalCount}
+                                                       rows={rows}
+                                                       pageSize={this.state.rowsPerPage}
+                                                       onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                                       onChangePage={this.handleChangePage}
+                                                       onRowSelected={this.handleRowSelection}
+                                                       page={this.state.page}
+                                                       lang={this.state.language} /> :
+                                            <ContentListTable
+                                                totalCount={totalCount}
+                                                rows={rows}
+                                                pageSize={this.state.rowsPerPage}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                                onChangePage={this.handleChangePage}
+                                                onRowSelected={this.handleRowSelection}
+                                                page={this.state.page}
+                                                lang={this.state.language}
+                                            />
+                                    }
                                 </Grid>
                                 {
                                     showPreview &&  <Grid item xs={PREVIEW_SIZE} className={classes.gridColumn}>

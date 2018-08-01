@@ -19,6 +19,8 @@ import actionsRegistry from "./actionsRegistry"
 import Action from "./actions/Action"
 import MenuAction from "./actions/MenuAction";
 
+import { initIcons } from './icons/initIcons';
+
 const actionComponents = {
     action: Action,
     menuAction: MenuAction
@@ -30,6 +32,7 @@ class ContentManager extends React.Component {
     constructor(props) {
         super(props);
         const { dxContext } = props;
+        initIcons();
         // register actions
         _.each(Object.keys(dxContext.config.actions), actionKey => {
             actionsRegistry[actionKey] = dxContext.config.actions[actionKey];

@@ -26,7 +26,6 @@
     contextJsParameters['urlbase'] = '${renderContext.servletPath}';
     contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
     contextJsParameters['userName'] = '${renderContext.user.username}';
-    contextJsParameters['siteName'] = '${renderContext.site.displayableName}';
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: {

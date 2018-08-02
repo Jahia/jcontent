@@ -1,7 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFilePowerpoint, faFileWord,faFileExcel, faFileImage, faFilePdf, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
-export const initIcons = function() {
+export const initFontawesomeIcons = function() {
     library.add(faFilePowerpoint);
     library.add(faFileWord);
     library.add(faFileExcel);

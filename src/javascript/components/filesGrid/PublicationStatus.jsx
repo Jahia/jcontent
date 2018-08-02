@@ -7,6 +7,21 @@ const styles = theme => ({
         width: 8,
         height: 160,
         backgroundColor: theme.palette.publicationStatus.published.main
+    },
+    modified: {
+        width: 8,
+        height: 160,
+        backgroundColor: theme.palette.publicationStatus.modified.main
+    },
+    notPublished: {
+        width: 8,
+        height: 160,
+        backgroundColor: theme.palette.publicationStatus.notPublished.main
+    },
+    markedForDeletion: {
+        width: 8,
+        height: 160,
+        backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
     }
 });
 

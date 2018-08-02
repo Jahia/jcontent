@@ -21,6 +21,13 @@
         "show": "Show Tree",
         "hide": "Hide Tree"
       },
+      "filesGrid": {
+        "emptyMessage": "This folder does not contain any files",
+        "name": "Name:",
+        "createdBy": "Created by:",
+        "author": "{{author}} on ",
+        "fileInfo": "File info:"
+      },
       "contentPreview": {
           "emptyMessage": "Generating...",
           "noViewAvailable": "There is no default or dedicated Content Manager view for this component",

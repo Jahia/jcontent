@@ -143,7 +143,11 @@ class ContentLayout extends React.Component {
                                 wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
                                 wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
                                 icon: contentNode.primaryNodeType.icon,
-                                isSelected: selectedRow ? selectedRow.path === contentNode.path : false
+                                isSelected: selectedRow ? selectedRow.path === contentNode.path : false,
+                                width: (contentNode.width != null ? contentNode.width.value : ''),
+                                height: (contentNode.width != null ? contentNode.height.value : ''),
+                                fileChildren: contentNode.fileChildren
+
                             }
                         });
                         computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);

@@ -1,5 +1,5 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faFilePowerpoint, faFileWord,faFileExcel, faFileImage, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faFilePowerpoint, faFileWord,faFileExcel, faFileImage, faFilePdf, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 export const initIcons = function() {
     library.add(faFilePowerpoint);
@@ -7,4 +7,5 @@ export const initIcons = function() {
     library.add(faFileExcel);
     library.add(faFileImage);
     library.add(faFilePdf);
+    library.add(faChevronDown);
 };

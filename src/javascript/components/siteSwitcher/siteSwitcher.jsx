@@ -5,6 +5,7 @@ import {Query} from 'react-apollo';
 import gql from "graphql-tag";
 import {Button, Menu, MenuItem} from '@material-ui/core';
 import CmRouter from "../CmRouter";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class SiteSwitcher extends React.Component {
     constructor(props) {
@@ -101,9 +102,13 @@ class SiteSwitcherDisplay extends React.Component {
             return <span>Loading...</span>
         } else {
             return <div>
-                <Button aria-owns={anchorEl ? 'site-menu' : null}
+                    <Button aria-owns={anchorEl ? 'site-menu' : null}
                         aria-haspopup="true"
-                        onClick={this.handleClick}>{this.getCurrentSiteName(siteNodes)}</Button>
+                        onClick={this.handleClick}>
+                        {this.getCurrentSiteName(siteNodes)}
+                        &nbsp;
+                        <FontAwesomeIcon icon="chevron-down"/>
+                    </Button>
                 <Menu id="site-switcher"
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}

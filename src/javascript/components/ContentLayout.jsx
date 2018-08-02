@@ -145,9 +145,7 @@ class ContentLayout extends React.Component {
                                 icon: contentNode.primaryNodeType.icon,
                                 isSelected: selectedRow ? selectedRow.path === contentNode.path : false,
                                 width: (contentNode.width != null ? contentNode.width.value : ''),
-                                height: (contentNode.width != null ? contentNode.height.value : ''),
-                                fileChildren: contentNode.fileChildren
-
+                                height: (contentNode.width != null ? contentNode.height.value : '')
                             }
                         });
                         computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);

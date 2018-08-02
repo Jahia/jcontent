@@ -217,16 +217,8 @@ const filesQuery = gql `
                             value
                         }
                     height: property(name: "j:height") {
-                        value
-                        }
-                    fileChildren :children {
-                        nodes {
-                          name
-                          mime :property(name: "jcr:mimeType") {
                             value
-                          }
                         }
-                      }
                     }
                 }
             }

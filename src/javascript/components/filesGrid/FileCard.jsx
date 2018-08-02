@@ -12,6 +12,8 @@ import PublicationStatus from './PublicationStatus';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
+import { fileIcon } from './filesGridUtils';
+
 const styles = theme => ({
     card: {
         display: 'flex',
@@ -31,12 +33,16 @@ const styles = theme => ({
         flex: "1",
         height: "auto"
     },
-    cover: {
-        width: 160,
-        height: 160,
+    coverLarge: {
+        width: 300,
+        height: 300,
+    },
+    coverMedium: {
+        width: 150,
+        height: 150,
     },
     coverVertical: {
-        height: 160,
+        height: 150,
     }
 });
 
@@ -51,18 +57,26 @@ class FileCard extends Component {
     render() {
         const { classes, cardType  } = this.props;
 
-        return cardType === VERTICAL_CARD_TYPE ? this.verticalCard() : this.regularCard();
+        return cardType === VERTICAL_CARD_TYPE ? this.verticalCard() : this.regularCard(cardType);
     }
 
-    regularCard() {
+    regularCard(cardType) {
+        switch(cardType) {
+            case 12 :
+            case 6 : return this.largeCard();
+            default : return this.mediumCard();
+        }
+    }
+
+    largeCard() {
         const { classes, t, node } = this.props;
         console.log(node);
 
         return <Card className={ classes.card }>
             <PublicationStatus status={{}}/>
             <CardMedia
-                className={ classes.cover }
-                image="https://media.gettyimages.com/photos/moraine-lake-reflections-banff-national-park-canada-picture-id908178828"
+                className={ classes.coverLarge }
+                image={ `/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
             <div className={classes.details}>
@@ -77,7 +91,33 @@ class FileCard extends Component {
                     </Typography>
 
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
-                    <Typography variant="body2" color="textSecondary">200 x 200 (1.2mb)</Typography>
+                    <Typography variant="body2" color="textSecondary">{ `${node.width} x ${node.height}` }</Typography>
+                </CardContent>
+            </div>
+        </Card>
+    }
+
+    mediumCard() {
+        const { classes, t, node } = this.props;
+        console.log(node);
+
+        return <Card className={ classes.card }>
+            <PublicationStatus status={{}}/>
+            <CardMedia
+                className={ classes.coverMedium }
+                image={ `/files/default/${node.path}?t=thumbnail` }
+                title={ node.name }
+            />
+            <div className={classes.details}>
+                <CardContent className={classes.content}>
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
+                        <Moment format={"LLL"}>{node.created}</Moment>
+                    </Typography>
                 </CardContent>
             </div>
         </Card>
@@ -89,7 +129,7 @@ class FileCard extends Component {
         return <Card className={ classes.cardVertical }>
             <CardMedia
                 className={ classes.coverVertical }
-                image="https://media.gettyimages.com/photos/moraine-lake-reflections-banff-national-park-canada-picture-id908178828"
+                image={ `/files/default/${node.path}?t=thumbnail` }
                 title={ node.name }
             />
             <div className={classes.details}>

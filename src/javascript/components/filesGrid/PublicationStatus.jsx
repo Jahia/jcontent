@@ -5,22 +5,22 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     published: {
         width: 8,
-        height: 160,
+        height: 150,
         backgroundColor: theme.palette.publicationStatus.published.main
     },
     modified: {
         width: 8,
-        height: 160,
+        height: 150,
         backgroundColor: theme.palette.publicationStatus.modified.main
     },
     notPublished: {
         width: 8,
-        height: 160,
+        height: 150,
         backgroundColor: theme.palette.publicationStatus.notPublished.main
     },
     markedForDeletion: {
         width: 8,
-        height: 160,
+        height: 150,
         backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
     }
 });

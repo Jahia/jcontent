@@ -2,7 +2,7 @@ import React from "react";
 import {withStyles, Toolbar, Typography} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {LanguageSwitcher} from '@jahia/react-material';
-import SiteSelector from './SiteSelector';
+import SiteSwitcher from './siteSwitcher/SiteSwitcher';
 import BurgerMenuButton from './BurgerMenuButton';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
@@ -37,7 +37,7 @@ class CMTopBar extends React.Component {
             <Toolbar color={'secondary'} classes={{root: classes.root}}>
                 <BurgerMenuButton/>
                 <div className={classes.head}>
-                    <SiteSelector/>
+                    <SiteSwitcher dxContext={dxContext}/>
                     <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
                     <LanguageSwitcher/>
                 </div>

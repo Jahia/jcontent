@@ -115,6 +115,27 @@
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.delete'
 
+            },
+            createMenu: {
+                component: "menuAction",
+                menuId: "createMenuActions",
+                target: ["createMenu"],
+                requiredPermission: "jcr:addChildNodes",
+                labelKey: 'label.contentManager.create.create'
+            },
+            createContentFolderAction: {
+                component: "action",
+                call: (path) => window.parent.createContent(path, 'jnt:contentFolder', false),
+                target: ["createMenuActions"],
+                requiredPermission: "jcr:addChildNodes",
+                labelKey: 'label.contentManager.create.contentFolder'
+            },
+            createContentAction: {
+                component: "action",
+                call: (path) => window.parent.createContent(path),
+                target: ["createMenuActions"],
+                requiredPermission: "jcr:addChildNodes",
+                labelKey: 'label.contentManager.create.content'
             }
         }
     };

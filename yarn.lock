@@ -116,8 +116,8 @@
     zen-observable "^0.8.8"
 
 "@jahia/apollo-dx@^1.0.0-beta.20180605080716":
-  version "1.0.0-beta.20180628145923"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/apollo-dx/-/apollo-dx-1.0.0-beta.20180628145923.tgz#57ea94f77ab5888afd72e45804816b34dc34572c"
+  version "1.0.0-beta.20180803133828"
+  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/apollo-dx/-/apollo-dx-1.0.0-beta.20180803133828.tgz#bd30c7f4f8729e777ed81dd35e4bbfb6011c5fc5"
   dependencies:
     apollo-cache-inmemory "^1.2.2"
     apollo-client "^2.3.2"

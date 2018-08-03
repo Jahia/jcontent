@@ -26,6 +26,11 @@
 	           "loading": "Erreur lors de la récupération des types de contenu: {{details}}"
 	      }
       },
+      "create": {
+          "create": "Créer",
+          "content": "Nouveau contenu",
+          "contentFolder": "Nouveau répertoire de contenu"
+      },
       "preview": {
         "show": "Afficher l'aperçu",
         "hide": "Masquer l'aperçu",

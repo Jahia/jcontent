@@ -6,12 +6,12 @@ import {getI18n} from '@jahia/i18next';
 import {I18nextProvider} from 'react-i18next';
 import {Route} from 'react-router';
 import {BrowserRouter} from 'react-router-dom';
-import {ApolloProvider} from 'react-apollo';
+import {ApolloProvider, ApolloConsumer} from 'react-apollo';
 import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
-import {DxContext} from "./DxContext";
+import {DxContextProvider, DxContextConsumer} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import defaultActions from "./actions/defaultActions"
 import actionsRegistry from "./actionsRegistry"
@@ -57,9 +57,6 @@ class ContentManager extends React.Component {
     setRouter(router) {
         let {dxContext, classes} = this.props;
         router && router.history.listen((location, action) => {
-            console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
-            console.log(`Url base ${dxContext.urlbase}`);
-            console.log(`The last navigation action was ${action}`);
             window.parent.history.replaceState(window.parent.history.state, "DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
         });
     }
@@ -79,12 +76,14 @@ class ContentManager extends React.Component {
                             ns: ['content-manager'],
                             defaultNS: 'content-manager',
                         })}>
-                            <DxContext.Provider value={dxContext}>
+                            <ApolloConsumer>
+                            {apolloClient => 
+                            <DxContextProvider dxContext={dxContext} apolloClient={apolloClient}>
+                                <DxContextConsumer>{dxContext => (
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
                                                ref={isInFrame && this.setRouter.bind(this)}>
                                     <Route path='/:siteKey/:lang' render={props => {
-                                        dxContext['siteKey'] = props.match.params.siteKey;
-                                        dxContext['lang'] = props.match.params.lang;
+                                        dxContext.onRouteChanged(props.location, props.match);
                                         return (
                                             <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
                                                            leftSide={<CMLeftNavigation/>}>
@@ -106,7 +105,10 @@ class ContentManager extends React.Component {
                                         )
                                     }}/>
                                 </BrowserRouter>
-                            </DxContext.Provider>
+                            )}</DxContextConsumer>
+                            </DxContextProvider>
+                            }
+                            </ApolloConsumer>
                         </I18nextProvider>
                     </ApolloProvider>
                 </NotificationProvider>

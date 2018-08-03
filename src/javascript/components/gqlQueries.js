@@ -241,4 +241,24 @@ const ContentTypesQuery = gql`
     }
 `;
 
-export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery};
+const LoadSelectionQuery = gql `
+    query LoadSelectionQuery($paths: [String!]!, $language:String!, $displayLanguage:String!) {
+        jcr {
+            nodesByPath(paths: $paths) {
+                ...NodeFields
+                contributeTypes: property(name: "j:contributeTypes") {
+                    values
+                }
+                primaryNodeType {
+                    name
+                    supertypes {
+                        name
+                    }
+                }
+            }
+        }
+    }
+    ${nodeFields}
+`;
+
+export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery};

@@ -19,12 +19,16 @@ const styles = theme => ({
 class CmIconButton extends React.Component {
 
     render() {
-        const {classes, onClick, labelKey, t} = this.props;
+        const {classes, onClick, labelKey, t, children} = this.props;
+        let childrenCount = React.Children.count(children);
         return (
             <IconButton
                 aria-haspopup="true"
                 onClick={(event) => onClick(event)}>
-                <MoreHoriz/>
+            {childrenCount > 0
+                ? <React.Fragment>{children}</React.Fragment>
+                : <MoreHoriz/>
+            }
             </IconButton>
         )
     }

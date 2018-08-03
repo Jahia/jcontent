@@ -6,13 +6,15 @@ import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
 import PreviewDrawer from "./preview/PreviewDrawer";
 import {Grid, IconButton, withStyles} from "@material-ui/core";
-import {Visibility, VisibilityOff, List} from "@material-ui/icons";
+import {Visibility, VisibilityOff, List, Add} from "@material-ui/icons";
 import ContentTrees from "./ContentTrees";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import CmRouter from './CmRouter';
 import {DxContext} from "./DxContext";
+import Actions from "./Actions";
+import CmButton from "./renderAction/CmButton";
 
 //Files grid
 import FilesGrid from './filesGrid/FilesGrid';
@@ -185,6 +187,11 @@ class ContentLayout extends React.Component {
                                                             rootPath={rootPath}/>}
                                     </Grid>
                                     <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={ classes.buttonPanel }>
+                                        {((contentSource === "browsing" || contentSource === "files") && path != rootPath) &&
+                                            <Actions menuId={"createMenu"} path={path}>
+                                                {(props) => <CmButton {...props}><Add/></CmButton>}
+                                                </Actions>
+                                            }
                                         <IconButton onClick={this.handleShowTree}><List/></IconButton>
                                         {showPreview &&
                                         <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>}

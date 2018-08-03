@@ -52,6 +52,11 @@
                "loading": "Error retrieving content types: {{details}}"
           }
       },
+      "create": {
+          "create": "Create",
+          "content": "New content",
+          "contentFolder": "New content folder"
+      },
       "preview": {
         "show": "Show Preview",
         "hide": "Hide Preview",

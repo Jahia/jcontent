@@ -26,6 +26,11 @@
 	           "loading": "Fehler während Content-Typen-Abfrage: {{details}}"
 	      }
       },
+      "create": {
+          "create": "Erstellen",
+          "content": "Neuer Content",
+          "contentFolder": "Neues Content Verzeichnis"
+      },
       "preview": {
         "show": "Vorschau öffnen",
         "hide": "Vorschau verbergen",

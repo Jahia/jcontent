@@ -18,13 +18,15 @@ const styles = theme => ({
 class CmButton extends React.Component {
 
     render() {
-        const {classes, onClick, labelKey, t} = this.props;
+        const {classes, onClick, labelKey, t, children} = this.props;
+        let childrenCount = React.Children.count(children);
         return (
             <Button className={classes.button}
                     variant="contained"
                     size="medium"
                     color="primary"
                     onClick={(event) => onClick(event)}>
+                {childrenCount > 0 && <React.Fragment>{children}</React.Fragment>}
                 {t(labelKey)}
             </Button>
         )

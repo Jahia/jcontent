@@ -9,7 +9,7 @@ class CmMenuItem extends Component {
         const {labelKey, onClick, t} = this.props;
         return (
             <MenuItem onClick={(event) => onClick(event)}>
-                {t(labelKey, {language: "English"})}
+                {t(labelKey)}
             </MenuItem>
         )
     }

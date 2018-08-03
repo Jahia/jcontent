@@ -8,18 +8,48 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 class LanguageSwitcher extends React.Component {
     constructor(props) {
         super(props);
+        let {dxContext} = props;
+        this.variables = {
+            path: '/sites/' + dxContext.siteKey,
+            languagesProperty: 'j:languages'
+
+        };
+        this.query = gql `query siteLanguages($path: String!, $languagesProperty: String!){
+            jcr(workspace: LIVE) {
+                site:nodeByPath(path: $path) {
+                    name
+                    languages:property(name: $languagesProperty) {
+                        name
+                        values
+                    }
+                }
+            }
+        }`;
     }
 
     onSelectLanguage = (lang, path) => {
         //Switch language functionality
         console.log('switching language');
     };
+
+    parseLanguages(data) {
+        if (data && data.jcr != null) {
+            return data.jcr.site.languages.values;
+        }
+        return [];
+    }
+
     render() {
         let {dxContext} = this.props;
-        //*Temp set of languages
-        let languages = ["en", "fr"];
         return <CmRouter render={({path, params, goto, switchto}) => {
-            return <LanguageSwitcherDisplay dxContext={dxContext} languages={languages} loading={false} onSelectLanguage={(lang) => this.onSelectLanguage(lang, path)}/>;
+           return <Query query={this.query} variables={this.variables} fetchPolicy={"cache-network-only"} >
+                {
+                    ({error, loading, data}) => {
+                        let languages = this.parseLanguages(data);
+                        return <LanguageSwitcherDisplay dxContext={dxContext} languages={languages} loading={loading} onSelectLanguage={(lang) => this.onSelectLanguage(lang, path)}/>;
+                    }
+                }
+            </Query>
         }}/>
 
     }

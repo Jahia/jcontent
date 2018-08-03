@@ -6,21 +6,27 @@ import {translate} from "react-i18next";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import PublicationStatus from './PublicationStatus';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-import { fileIcon } from './filesGridUtils';
+import { fileIcon, isImage } from './filesGridUtils';
 
 const styles = theme => ({
     card: {
         display: 'flex',
+        maxHeight: 300
+    },
+    cardMedium: {
+        display: 'flex',
+        maxHeight: 150
     },
     cardVertical: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        maxHeight: 200,
+        minHeight: 200,
     },
     details: {
         display: 'flex',
@@ -43,10 +49,11 @@ const styles = theme => ({
     },
     coverVertical: {
         height: 150,
+    },
+    selectedCard: {
+        boxShadow: "1px 0px 15px 4px rgba(247,150,5,1)"
     }
 });
-
-const VERTICAL_CARD_TYPE = 2;
 
 class FileCard extends Component {
 
@@ -55,28 +62,44 @@ class FileCard extends Component {
     }
 
     render() {
-        const { classes, cardType  } = this.props;
+        const { cardType, node  } = this.props;
 
-        return cardType === VERTICAL_CARD_TYPE ? this.verticalCard() : this.regularCard(cardType);
+        if (isImage(node.path)) {
+            //Media cards are used for images
+            return this.regularMediaCard(cardType);
+        }
+
+        return this.fileCard(cardType);
     }
 
-    regularCard(cardType) {
+    regularMediaCard(cardType) {
         switch(cardType) {
-            case 12 :
-            case 6 : return this.largeCard();
-            default : return this.mediumCard();
+            case 2 : return this.verticalMediaCard();
+            case 6 :
+            case 12 : return this.largeMediaCard();
+            default : return this.mediumMediaCard();
         }
     }
 
-    largeCard() {
-        const { classes, t, node } = this.props;
-        console.log(node);
+    fileCard(cardType) {
+        switch(cardType) {
+            case 2 :
+            case 3 : return this.verticalFileCard();
+            case 6 :
+            case 12 : return this.largeFileCard();
+            default : return this.mediumFileCard();
+        }
+    }
 
-        return <Card className={ classes.card }>
-            <PublicationStatus status={{}}/>
+    largeMediaCard() {
+        const { classes, t, node } = this.props;
+
+        return <Card className={ this.generateCardClass(node, classes.card) }
+                     onClick={ () => this.props.onSelect(node) }>
+            <PublicationStatus node={ node }/>
             <CardMedia
                 className={ classes.coverLarge }
-                image={ `/files/default/${node.path}?t=thumbnail2` }
+                image={ `/files/default/${node.path}` }
                 title={ node.name }
             />
             <div className={classes.details}>
@@ -97,15 +120,15 @@ class FileCard extends Component {
         </Card>
     }
 
-    mediumCard() {
+    mediumMediaCard() {
         const { classes, t, node } = this.props;
-        console.log(node);
 
-        return <Card className={ classes.card }>
-            <PublicationStatus status={{}}/>
+        return <Card className={ this.generateCardClass(node, classes.cardMedium) }
+                     onClick={ () => this.props.onSelect(node) }>
+            <PublicationStatus node={ node }/>
             <CardMedia
                 className={ classes.coverMedium }
-                image={ `/files/default/${node.path}?t=thumbnail` }
+                image={ `/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
             <div className={classes.details}>
@@ -123,18 +146,19 @@ class FileCard extends Component {
         </Card>
     }
 
-    verticalCard() {
+    verticalMediaCard() {
         const { classes, t, node } = this.props;
 
-        return <Card className={ classes.cardVertical }>
+        return <Card className={ this.generateCardClass(node, classes.cardVertical) }
+                     onClick={ () => this.props.onSelect(node) }>
             <CardMedia
                 className={ classes.coverVertical }
-                image={ `/files/default/${node.path}?t=thumbnail` }
+                image={ `/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
             <div className={classes.details}>
                 <div className={ classes.publicationStatus }>
-                    <PublicationStatus status={{}}/>
+                    <PublicationStatus node={ node }/>
                 </div>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
@@ -143,11 +167,94 @@ class FileCard extends Component {
             </div>
         </Card>
     }
+
+    largeFileCard() {
+        const { classes, t, node } = this.props;
+
+        return <Card className={ this.generateCardClass(node, classes.card) }
+                     onClick={ () => this.props.onSelect(node) }>
+            <PublicationStatus node={ node }/>
+            {
+                fileIcon(node.path, '6x', {fontSize: "160px"})
+            }
+            <div className={classes.details}>
+                <CardContent className={classes.content}>
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
+                        <Moment format={"LLL"}>{node.created}</Moment>
+                    </Typography>
+
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
+                    <Typography variant="body2" color="textSecondary">{ `${node.width} x ${node.height}` }</Typography>
+                </CardContent>
+            </div>
+        </Card>
+    }
+
+    mediumFileCard() {
+        const { classes, t, node } = this.props;
+
+        return <Card className={ this.generateCardClass(node, classes.card) }
+                     onClick={ () => this.props.onSelect(node) }>
+            <PublicationStatus node={ node }/>
+            {
+                fileIcon(node.path, '6x', {fontSize: "160px"})
+            }
+            <div className={classes.details}>
+                <CardContent className={classes.content}>
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
+                        <Moment format={"LLL"}>{node.created}</Moment>
+                    </Typography>
+                </CardContent>
+            </div>
+        </Card>
+    }
+
+    verticalFileCard() {
+        const { classes, t, node } = this.props;
+
+        return <Card className={ this.generateCardClass(node, classes.cardVertical) }
+                     onClick={ () => this.props.onSelect(node) }>
+            <div style={{textAlign: "center"}}>
+                {
+                    fileIcon(node.path, '6x', {fontSize: "100px"})
+                }
+            </div>
+            <div className={classes.details}>
+                <PublicationStatus node={ node }/>
+                <CardContent className={classes.content}>
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+
+                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
+                        <Moment format={"LLL"}>{node.created}</Moment>
+                    </Typography>
+                </CardContent>
+            </div>
+        </Card>
+    }
+    
+    generateCardClass(node, baseClass) {
+        const { classes } = this.props;
+        return node.isSelected ? `${baseClass} ${classes.selectedCard}` : baseClass;
+    }
 }
 
 FileCard.propTypes = {
     cardType: PropTypes.number.isRequired,
-    node: PropTypes.object.isRequired
+    node: PropTypes.object.isRequired,
+    onSelect: PropTypes.func.isRequired
 };
 
 const ComposedFileCard = compose(

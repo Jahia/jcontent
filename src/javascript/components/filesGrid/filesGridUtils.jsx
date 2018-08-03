@@ -13,38 +13,87 @@ export const valueToSizeTransformation = function(value) {
 };
 
 
-export const fileIcon = function(filename, size = "lg"){
+export const fileIcon = function(filename, size = "lg", style = {}){
     switch (filename.split('.').pop().toLowerCase()) {
         case "png":
         case "jpeg":
         case "jpg":
         case "gif":
-        case "img": return <FontAwesomeIcon icon={ "image" } size={ size }/>;
+        case "img": return <FontAwesomeIcon icon={ ["far", "image"] }
+                                            size={ size }
+                                            color={ "#cecece" }
+                                            style={ style }/>;
         case "avi":
         case "mp4":
-        case "video": return <FontAwesomeIcon icon={ "video" } size={ size }/>;
+        case "video": return <FontAwesomeIcon icon={ ["far", "file-video"] }
+                                              size={ size }
+                                              color={ "#cecece" }
+                                              style={ style }/>;
         case "mp3":
         case "aiff":
-        case "sound": return <FontAwesomeIcon icon={ "file-audio" } size={ size }/>;
-        case "pdf": return <FontAwesomeIcon icon={ "file-pdf" } size={ size }/>;
+        case "sound": return <FontAwesomeIcon icon={ ["far", "file-audio"] }
+                                              size={ size }
+                                              color={ "#cecece" }
+                                              style={ style }/>;
+        case "pdf": return <FontAwesomeIcon icon={ ["far", "file-pdf"] }
+                                            size={ size }
+                                            color={ "#cecece" }
+                                            style={ style }/>;
         case "gz":
         case "tgz":
         case "tar.gz":
         case "jar":
         case "rar":
-        case "zip": return <FontAwesomeIcon icon={ "file-archive" } size={ size } color={ "darkgoldenrod" }/>;
+        case "zip": return <FontAwesomeIcon icon={ ["far", "file-archive"] }
+                                            size={ size }
+                                            color={ "#cecece" }
+                                            style={ style }/>;
         case "docx":
-        case "doc": return <FontAwesomeIcon icon={ "file-word" } size={ size } color={ "mediumblue" }/>;
-        case "xls": return <FontAwesomeIcon icon={ "file-excel" } size={ size } color={ "green" }/>;
+        case "doc": return <FontAwesomeIcon icon={ ["far","file-word"] }
+                                            size={ size }
+                                            color={ "#224288" }
+                                            style={ style }/>;
+        case "xls": return <FontAwesomeIcon icon={ ["far","file-excel"] }
+                                            size={ size }
+                                            color={ "#1d6236" }
+                                            style={ style }/>;
         case "pptx":
-        case "ppt": return <FontAwesomeIcon icon={ "file-powerpoint" } size={ size } color={ "orangered" }/>;
+        case "ppt": return <FontAwesomeIcon icon={ ["far","file-powerpoint"] }
+                                            size={ size }
+                                            color={ "#c5321e" }
+                                            style={ style }/>;
         case "css":
         case "java":
-        case "html": return <FontAwesomeIcon icon={ "file-code" } size={ size } color={ "mediumpurple" }/>;
+        case "html": return <FontAwesomeIcon icon={ ["far", "file-code"] }
+                                             size={ size }
+                                             color={ "#cecece" }
+                                             style={ style }/>;
         case "txt":
         case "csv":
-        case "text": return <FontAwesomeIcon icon={ "file" } size={ size } />;
-        case "folder": return <FontAwesomeIcon icon={ "folder" } size={ size } />;
-        default: return <FontAwesomeIcon icon={ "file-alt" } size={ size } />;
+        case "text": return <FontAwesomeIcon icon={ ["far","file"] }
+                                             size={ size }
+                                             color={ "#cecece" }
+                                             style={ style }/>;
+        case "folder": return <FontAwesomeIcon icon={ ["far","folder"] }
+                                               size={ size }
+                                               color={ "#cecece" }
+                                               style={ style }/>;
+        default: return <FontAwesomeIcon icon={ ["far","file-alt"] }
+                                         size={ size }
+                                         color={ "#cecece" }
+                                         style={ style }/>;
+    }
+};
+
+export const isImage = function(filename) {
+    switch (filename.split('.').pop().toLowerCase()) {
+        case "png":
+        case "jpeg":
+        case "jpg":
+        case "gif":
+        case "img":
+            return true;
+        default :
+            return false;
     }
 };

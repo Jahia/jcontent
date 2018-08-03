@@ -5,7 +5,6 @@ import {
     faFileExcel,
     faFileImage,
     faFilePdf,
-    faChevronDown,
     faImage,
     faFileVideo,
     faFileAudio,
@@ -14,7 +13,9 @@ import {
     faFile,
     faFolder,
     faFileAlt
-} from '@fortawesome/free-solid-svg-icons';
+} from '@fortawesome/free-regular-svg-icons';
+
+import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 export const initFontawesomeIcons = function() {
     library.add(faFilePowerpoint);
@@ -22,7 +23,6 @@ export const initFontawesomeIcons = function() {
     library.add(faFileExcel);
     library.add(faFileImage);
     library.add(faFilePdf);
-    library.add(faChevronDown);
     library.add(faImage);
     library.add(faFileVideo);
     library.add(faFileAudio);
@@ -31,4 +31,8 @@ export const initFontawesomeIcons = function() {
     library.add(faFile);
     library.add(faFolder);
     library.add(faFileAlt);
+    library.add(faChevronDown);
+    library.add(faChevronUp);
+    library.add(faChevronLeft);
+    library.add(faChevronRight);
 };

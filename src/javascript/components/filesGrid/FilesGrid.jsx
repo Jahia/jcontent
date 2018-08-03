@@ -22,8 +22,8 @@ class FilesGrid extends Component {
         return <Grid container spacing={ 8 }>
             {
                 this.props.rows.map((node) => (
-                    <Grid key={ node.uuid } item xs={ size } >
-                        <FileCard cardType={ size } node={ node }/>
+                    <Grid key={ node.uuid } item xs={ size }>
+                        <FileCard cardType={ size } node={ node } onSelect={ this.props.onRowSelected } />
                     </Grid>
                 ))
             }
@@ -33,7 +33,8 @@ class FilesGrid extends Component {
 
 FilesGrid.propTypes = {
     size: PropTypes.number.isRequired,
-    rows: PropTypes.array.isRequired
+    rows: PropTypes.array.isRequired,
+    onRowSelected: PropTypes.func.isRequired
 };
 
 const ComposedFilesGrid = compose(

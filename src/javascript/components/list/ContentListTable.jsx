@@ -207,7 +207,6 @@ class ContentListTable extends React.Component {
                                     let wipStatus = (this.isWip(n, lang) ? (n.wipStatus==='ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
                                         t('label.contentManager.workInProgress', {wipLang: dxContext.langName})) : t('label.contentManager.saveAsWip'));
                                     let icon = this.addIconSuffix(n.icon);
-                                    console.log("renderring row " + n.path);
                                     return (
                                         <TableRow hover={true}
                                                   classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}}

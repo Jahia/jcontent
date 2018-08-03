@@ -130,14 +130,12 @@ class ContentLayout extends React.Component {
                     let rows = [];
                     let totalCount = 0;
                     if (!loading) {
-                        console.log("processing data");
                         if (error) {
                             console.log("Error when fetching data: " + error);
                             let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                             notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         } else {
                             notificationContext.closeNotification();
-                            console.log(data);
                             if (data && data.jcr && queryHandler.getResultsPath(data.jcr.results)) {
                                 totalCount = queryHandler.getResultsPath(data.jcr.results).pageInfo.totalCount;
                                 rows = _.map(queryHandler.getResultsPath(data.jcr.results).nodes, contentNode => {

@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-import * as _ from 'lodash';
 import {Query} from 'react-apollo';
 import gql from "graphql-tag";
 import {Button, Menu, MenuItem} from '@material-ui/core';
@@ -100,7 +98,7 @@ class SiteSwitcherDisplay extends React.Component {
             return <span>Loading...</span>
         } else {
             return <div>
-                    <Button aria-owns={anchorEl ? 'site-menu' : null}
+                    <Button aria-owns={anchorEl ? 'site-switcher' : null}
                         aria-haspopup="true"
                         onClick={this.handleClick}>
                         {this.getCurrentSiteName(siteNodes)}

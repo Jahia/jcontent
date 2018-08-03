@@ -16,17 +16,20 @@ import { fileIcon, isImage } from './filesGridUtils';
 const styles = theme => ({
     card: {
         display: 'flex',
-        maxHeight: 300
+        maxHeight: 300,
+        cursor: "pointer"
     },
     cardMedium: {
         display: 'flex',
-        maxHeight: 150
+        maxHeight: 150,
+        cursor: "pointer"
     },
     cardVertical: {
         display: 'flex',
         flexDirection: 'column',
         maxHeight: 200,
         minHeight: 200,
+        cursor: "pointer"
     },
     details: {
         display: 'flex',
@@ -51,6 +54,7 @@ const styles = theme => ({
         height: 150,
     },
     selectedCard: {
+        backgroundColor: "rgb(250, 250, 250)",
         boxShadow: "1px 0px 15px 4px rgba(247,150,5,1)"
     }
 });

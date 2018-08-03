@@ -21,6 +21,7 @@ const styles = theme => ({
         flexDirection: "column",
         flex: 1,
         transition: "left 0.5s ease 0s",
+        maxWidth: 650
     },
     button: {
         margin: theme.spacing.unit

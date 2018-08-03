@@ -4,6 +4,7 @@ import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQ
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
+import PreviewDrawer from "./preview/PreviewDrawer";
 import {Grid, IconButton, withStyles} from "@material-ui/core";
 import {Visibility, VisibilityOff, List} from "@material-ui/icons";
 import ContentTrees from "./ContentTrees";
@@ -36,6 +37,11 @@ const styles = theme => ({
     },
     tree: {
         overflowX: "auto"
+    },
+    buttonPanel : {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
     }
 });
 
@@ -178,14 +184,14 @@ class ContentLayout extends React.Component {
                                                             lang={this.state.language}
                                                             rootPath={rootPath}/>}
                                     </Grid>
-                                    <Grid item xs={GRID_PANEL_BUTTONS_SIZE}>
-                                        {contentSource === "files" && <FilesGridSizeSelector initValue={4}
-                                                                                             onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
+                                    <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={ classes.buttonPanel }>
                                         <IconButton onClick={this.handleShowTree}><List/></IconButton>
                                         {showPreview &&
                                         <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>}
                                         {!showPreview &&
                                         <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>}
+                                        {contentSource === "files" && <FilesGridSizeSelector initValue={4}
+                                                                                             onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={0}>
@@ -233,6 +239,16 @@ class ContentLayout extends React.Component {
                                         </Grid>
                                     }
                                 </Grid>
+                                {/*I am experimenting with drawer to see if it will give us better results than what we have*/}
+                                {/*now. I don't think that the table will work out the way it is given that our options, as far*/}
+                                {/*as modification is concerned are limited.*/}
+                                {/*<PreviewDrawer open={ showPreview }*/}
+                                               {/*onClose={this.handleShowPreview}>*/}
+                                    {/*<ContentPreview selection={selectedRow}*/}
+                                                    {/*layoutQuery={layoutQuery}*/}
+                                                    {/*layoutQueryParams={layoutQueryParams}*/}
+                                                    {/*rowSelectionFunc={this.handleRowSelection}/>*/}
+                                {/*</PreviewDrawer>*/}
                             </div>
                         </div>
                     )

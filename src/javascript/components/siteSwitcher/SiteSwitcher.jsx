@@ -11,22 +11,18 @@ class SiteSwitcher extends React.Component {
     constructor(props) {
         super(props);
         this.variables = {
-            path: "/sites",
-            types: ["jnt:virtualsite"]
+            workspace: 'LIVE',
+            query: "select * from [jnt:virtualsite] where isdescendantnode('/sites')"
         };
-        this.query = gql `query SiteNodes($path:String!, $types:[String]!){
-            jcr {
-                node:nodeByPath(path: $path) {
-                    path
-                    uuid
-                    name
-                    children(typesFilter:{types:$types}) {
-                        nodes {
-                            path
-                            uuid
-                            name
-                            displayName
-                        }
+        this.query = gql `query SiteNodes($query: String!){
+            jcr(workspace: LIVE) {
+                result:nodesByQuery(query: $query, queryLanguage: SQL2) {
+                    siteNodes:nodes {
+                        path
+                        uuid
+                        name
+                        hasPermission(permissionName: "contentManager")
+                        displayName
                     }
                 }
             }
@@ -35,9 +31,11 @@ class SiteSwitcher extends React.Component {
 
     getSites(data) {
         let siteNodes = [];
-        if (data && data.jcr.node != null) {
-            for(let i in data.jcr.node.children.nodes) {
-                siteNodes.push(data.jcr.node.children.nodes[i]);
+        if (data && data.jcr.result != null) {
+            for(let i in data.jcr.result.siteNodes) {
+                if (data.jcr.result.siteNodes[i].hasPermission) {
+                    siteNodes.push(data.jcr.result.siteNodes[i]);
+                }
             }
         }
         return siteNodes;

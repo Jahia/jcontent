@@ -6,8 +6,6 @@ import { withStyles, Paper, Grid, IconButton, Button, Dialog, Slide } from "@mat
 import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
 import { previewQuery } from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
-import PublicationMenu from './PublishMenu';
-import AdditionalMenuItems from './AdditionalMenuItems';
 import ShareMenu from './ShareMenu';
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";

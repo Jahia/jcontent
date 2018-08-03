@@ -49,9 +49,6 @@
             },
             edit: {
                 priority: 2.5,
-                component: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
-                icon: "Edit",
                 target: ["previewBar", "tableMenuActions"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.edit'
@@ -67,7 +64,7 @@
             },
             publishAll: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
                 target: ["publishMenu"],
                 requiredPermission: "",
@@ -76,7 +73,7 @@
             },
             unPublish: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
                 target: ["publishMenu"],
                 requiredPermission: "",
@@ -94,7 +91,7 @@
             },
             duplicate: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
@@ -103,7 +100,7 @@
             },
             copy: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
@@ -112,7 +109,7 @@
             },
             delete: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
+                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
                 icon: "Edit",
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
@@ -120,7 +117,9 @@
 
             }
         }
-    }
+    };
+
+
     reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
 </script>
 </body>

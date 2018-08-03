@@ -13,30 +13,44 @@ import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
 import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
-import {compose} from "react-apollo/index";
-
+import defaultActions from "./actions/defaultActions"
 import actionsRegistry from "./actionsRegistry"
 import Action from "./actions/Action"
 import MenuAction from "./actions/MenuAction";
 
-import { initFontawesomeIcons } from './icons/initFontawesomeIcons';
+import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
 
 const actionComponents = {
     action: Action,
     menuAction: MenuAction
 }
 
-
 class ContentManager extends React.Component {
 
     constructor(props) {
         super(props);
-        const { dxContext } = props;
+        const {dxContext} = props;
         initFontawesomeIcons();
         // register actions
-        _.each(Object.keys(dxContext.config.actions), actionKey => {
-            actionsRegistry[actionKey] = dxContext.config.actions[actionKey];
-            actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component];
+        // register actions from the configuration
+        const actions = _.merge(dxContext.config.actions, defaultActions);
+        _.each(Object.keys(actions), actionKey => {
+            actionsRegistry[actionKey] = actions[actionKey];
+            // get Component if not set yet
+            if (typeof  actionsRegistry[actionKey].component === 'string') {
+                actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component]
+            }
+
+            // register callbacks (add callback to existing one)
+            function customizer(objValue, srcValue) {
+                if (_.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
+            }
+            // put all the callbacks in the window object
+            const callback = actions[actionKey].callback;
+            _.mergeWith(window.parent, callback, customizer);
+
         });
     }
 
@@ -55,7 +69,6 @@ class ContentManager extends React.Component {
         let {dxContext, classes} = this.props;
         // register action components
         const isInFrame = window.top !== window;
-
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
@@ -67,29 +80,31 @@ class ContentManager extends React.Component {
                             defaultNS: 'content-manager',
                         })}>
                             <DxContext.Provider value={dxContext}>
-                                <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
+                                <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
+                                               ref={isInFrame && this.setRouter.bind(this)}>
                                     <Route path='/:siteKey/:lang' render={props => {
                                         dxContext['siteKey'] = props.match.params.siteKey;
                                         dxContext['lang'] = props.match.params.lang;
-
                                         return (
-                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
+                                                           leftSide={<CMLeftNavigation/>}>
                                                 <div>
                                                     <Route path={`${props.match.url}/browse`} render={props => (
-                                                        <ContentLayout contentSource="browsing" dxContext={dxContext}/>
+                                                        <ContentLayout contentSource="browsing" lang={dxContext.lang}/>
                                                     )}/>
                                                     <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                        <ContentLayout contentSource="files" dxContext={dxContext}/>
+                                                        <ContentLayout contentSource="files" lang={dxContext.lang}/>
                                                     )}/>
                                                     <Route path={`${props.match.url}/search`} render={props => (
-                                                        <ContentLayout contentSource="search" dxContext={dxContext}/>
+                                                        <ContentLayout contentSource="search" lang={dxContext.lang}/>
                                                     )}/>
                                                     <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                        <ContentLayout contentSource="sql2Search" dxContext={dxContext}/>
+                                                        <ContentLayout contentSource="sql2Search" lang={dxContext.lang}/>
                                                     )}/>
                                                 </div>
                                             </ManagerLayout>
-                                        )} }/>
+                                        )
+                                    }}/>
                                 </BrowserRouter>
                             </DxContext.Provider>
                         </I18nextProvider>

@@ -17,9 +17,10 @@ import defaultActions from "./actions/defaultActions"
 import actionsRegistry from "./actionsRegistry"
 import Action from "./actions/Action"
 import MenuAction from "./actions/MenuAction";
+import eventHandlers from "./eventHandlers"
 
 import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
-import GWTExternalEventsHandlers from "./GWTExternalEventsHandlers";
+import GWTExternalEventHandlers from "./GWTExternalEventHandlers";
 
 const actionComponents = {
     action: Action,
@@ -81,7 +82,8 @@ class ContentManager extends React.Component {
                                             <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
                                                 <Route path='/:siteKey/:lang' render={props => {
                                                     dxContext.onRouteChanged(props.location, props.match);
-                                                    dxContext.gwtExternalEventsHandlers =  new GWTExternalEventsHandlers(apolloClient)
+                                                    dxContext.gwtExternalEventHandlers =  new GWTExternalEventHandlers(apolloClient, dxContext.uilang);
+                                                    dxContext.gwtExternalEventHandlers.register(eventHandlers);
                                                     return (
                                                         <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
                                                                        leftSide={<CMLeftNavigation/>}>

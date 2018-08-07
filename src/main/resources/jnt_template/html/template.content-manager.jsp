@@ -47,9 +47,17 @@
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.edit'
             },
+            contentTreeActions: {
+                priority: 2.5,
+                component: "menuAction",
+                menuId: "contentTreeMenuActions",
+                target: ["contentTreeActions"],
+                requiredPermission: "",
+                labelKey: 'label.contentManager.contentPreview.edit'
+            },
             edit: {
                 priority: 2.5,
-                target: ["previewBar", "tableMenuActions"],
+                target: ["previewBar", "tableMenuActions", "contentTreeMenuActions"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.edit'
             },

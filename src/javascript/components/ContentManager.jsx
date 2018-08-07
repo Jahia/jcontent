@@ -19,6 +19,7 @@ import Action from "./actions/Action"
 import MenuAction from "./actions/MenuAction";
 
 import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
+import GWTExternalEventsHandlers from "./GWTExternalEventsHandlers";
 
 const actionComponents = {
     action: Action,
@@ -47,9 +48,6 @@ class ContentManager extends React.Component {
                     return objValue.concat(srcValue);
                 }
             }
-            // put all the callbacks in the window object
-            const callback = actions[actionKey].callback;
-            _.mergeWith(window.parent, callback, customizer);
 
         });
     }
@@ -77,37 +75,37 @@ class ContentManager extends React.Component {
                             defaultNS: 'content-manager',
                         })}>
                             <ApolloConsumer>
-                            {apolloClient => 
-                            <DxContextProvider dxContext={dxContext} apolloClient={apolloClient}>
-                                <DxContextConsumer>{dxContext => (
-                                <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase}
-                                               ref={isInFrame && this.setRouter.bind(this)}>
-                                    <Route path='/:siteKey/:lang' render={props => {
-                                        dxContext.onRouteChanged(props.location, props.match);
-                                        return (
-                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
-                                                           leftSide={<CMLeftNavigation/>}>
-                                                <div>
-                                                    <Route path={`${props.match.url}/browse`} render={props => (
-                                                        <ContentLayout contentSource="browsing" lang={dxContext.lang}/>
-                                                    )}/>
-                                                    <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                        <ContentLayout contentSource="files" lang={dxContext.lang}/>
-                                                    )}/>
-                                                    <Route path={`${props.match.url}/search`} render={props => (
-                                                        <ContentLayout contentSource="search" lang={dxContext.lang}/>
-                                                    )}/>
-                                                    <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                        <ContentLayout contentSource="sql2Search" lang={dxContext.lang}/>
-                                                    )}/>
-                                                </div>
-                                            </ManagerLayout>
-                                        )
-                                    }}/>
-                                </BrowserRouter>
-                            )}</DxContextConsumer>
-                            </DxContextProvider>
-                            }
+                                {apolloClient =>
+                                    <DxContextProvider dxContext={dxContext} apolloClient={apolloClient}>
+                                        <DxContextConsumer>{dxContext => (
+                                            <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
+                                                <Route path='/:siteKey/:lang' render={props => {
+                                                    dxContext.onRouteChanged(props.location, props.match);
+                                                    dxContext.gwtExternalEventsHandlers =  new GWTExternalEventsHandlers(apolloClient)
+                                                    return (
+                                                        <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
+                                                                       leftSide={<CMLeftNavigation/>}>
+                                                            <div>
+                                                                <Route path={`${props.match.url}/browse`} render={props => (
+                                                                    <ContentLayout contentSource="browsing" lang={dxContext.lang}/>
+                                                                )}/>
+                                                                <Route path={`${props.match.url}/browse-files`} render={props => (
+                                                                    <ContentLayout contentSource="files" lang={dxContext.lang}/>
+                                                                )}/>
+                                                                <Route path={`${props.match.url}/search`} render={props => (
+                                                                    <ContentLayout contentSource="search" lang={dxContext.lang}/>
+                                                                )}/>
+                                                                <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                                    <ContentLayout contentSource="sql2Search" lang={dxContext.lang}/>
+                                                                )}/>
+                                                            </div>
+                                                        </ManagerLayout>
+                                                    )
+                                                }}/>
+                                            </BrowserRouter>
+                                        )}</DxContextConsumer>
+                                    </DxContextProvider>
+                                }
                             </ApolloConsumer>
                         </I18nextProvider>
                     </ApolloProvider>

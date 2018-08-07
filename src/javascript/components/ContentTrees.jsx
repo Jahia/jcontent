@@ -5,6 +5,8 @@ import {List, ListItem, Button} from "@material-ui/core";
 import CmRouter from "./CmRouter";
 import gql from "graphql-tag";
 import {translate} from 'react-i18next';
+import Actions from "./Actions";
+import CmIconButton from "./renderAction/CmIconButton";
 
 //Defined transformations to be able to transition smoothly from url for one type of content to url of another type.
 //Transformations are invoked by the goto function in the route before pushing url to history only if they are defined,
@@ -44,7 +46,15 @@ class ContentTree extends React.Component {
                     openSelection={false}
                     onSelectItem={(path) => handleSelect(path)}>
                 {({handleSelect, ...others}) => <PickerViewMaterial {...others} textRenderer={(entry) => {
-                    return entry.depth > 0 ? entry.node.displayName : rootLabel;
+                    return entry.depth > 0 ?
+                        (<React.Fragment>
+                            {entry.node.displayName}
+                            <Actions menuId={"contentTreeActions"} path={path}>
+                                {(props) => <CmIconButton {...props}/>}
+                            </Actions>
+                        </React.Fragment>)
+
+                : rootLabel
                 }}/>}
             </Picker>
         )

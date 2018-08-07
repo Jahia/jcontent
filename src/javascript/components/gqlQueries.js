@@ -109,6 +109,7 @@ const nodeFields = gql`
             publicationStatus
         }
         uuid
+        workspace
         name
         path
         displayName
@@ -169,6 +170,17 @@ const getNodeSubTree = gql `
         }
     }
     ${nodeFields}
+`;
+
+const getNodeByPath = gql `
+query ($path: String!, $language: String!, $displayLanguage:String!) {
+  jcr {
+    results: nodeByPath(path: $path) {
+      ...NodeFields
+    }
+  }
+}
+${nodeFields}
 `;
 
 const searchContentQuery = gql`
@@ -261,4 +273,4 @@ const LoadSelectionQuery = gql `
     ${nodeFields}
 `;
 
-export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery};
+export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery, getNodeByPath};

@@ -65,18 +65,7 @@ class ContentLayout extends React.Component {
             showPreview: false,
             selectedRow: null,
             filesGridSizeValue: 4,
-            timestamp: false
         };
-        props.client.onResetStore(() => {
-            // using a timestamp make the state change to reload the data
-            this.setState({
-                timestamp: Date.now()
-            })
-        });
-        // register method to reset store
-        window.parent.resetContentManagerStore = () => {
-            props.client.resetStore();
-        }
     }
 
     handleChangePage = newPage => {
@@ -123,17 +112,18 @@ class ContentLayout extends React.Component {
 
     render() {
         const {showPreview, selectedRow, showTree: showTree} = this.state;
-        const {contentSource, notificationContext, t, classes} = this.props;
+        const {contentSource, notificationContext, t, classes, client} = this.props;
 
         return (<DxContext.Consumer>{dxContext => {
             const rootPath = '/sites/' + dxContext.siteKey;
             let queryHandler = contentQueryHandlerBySource[contentSource];
             return (<CmRouter render={({path, params, goto}) => {
+            dxContext.gwtExternalEventsHandlers.setContext(path, goto, params, dxContext.lang, this.forceUpdate.bind(this));
             const layoutQuery = queryHandler.getQuery();
             const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
             let computedTableSize;
 
-            return <Query fetchPolicy={'network-only'} query={layoutQuery} variables={layoutQueryParams}>
+            return <Query query={layoutQuery} variables={layoutQueryParams}>
                 {({loading, error, data}) => {
                     let rows = [];
                     let totalCount = 0;

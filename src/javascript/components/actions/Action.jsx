@@ -11,7 +11,7 @@ class Action extends React.Component {
         // todo: check nodeType or any other constraint
 
         return (
-            <Query fetchPolicy={'network-only'} query={ checkPermissionQuery } variables={{path: path, permission: permission}}>
+            <Query query={ checkPermissionQuery } variables={{path: path, permission: permission}}>
                 {({loading, error, data}) => {
                     return !loading && data.jcr.nodeByPath.perm && children({...rest, onClick: () => call(path)})
                 } }

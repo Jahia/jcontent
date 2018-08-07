@@ -42,7 +42,7 @@ class LanguageSwitcher extends React.Component {
     render() {
         let {dxContext} = this.props;
         return <CmRouter render={({path, params, goto, switchto}) => {
-           return <Query query={this.query} variables={this.variables} fetchPolicy={"cache-network-only"} >
+           return <Query query={this.query} variables={this.variables}>
                 {
                     ({error, loading, data}) => {
                         let languages = this.parseLanguages(data);

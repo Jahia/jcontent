@@ -86,7 +86,7 @@ class ContentPreview extends React.Component {
         return (
             <div className={ classes.root } >
                 <Paper className={ classes.previewPaper } elevation={ 0 }>
-                    <Query fetchPolicy={'network-only'} query={ previewQuery } variables={{path: path}}>
+                    <Query query={ previewQuery } variables={{path: path}}>
                         {({loading, error, data}) => {
                             return this.previewComponent(data);
                         }}

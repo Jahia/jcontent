@@ -26,7 +26,7 @@ class ContentTypeSelect extends React.Component {
         let { contentType, classes, siteKey, displayLanguage, notificationContext, t } = this.props;
 
         return (
-            <Query fetchPolicy={"network-only"} query={ContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
+            <Query query={ContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
                 {({ loading, error, data }) => {
                 let contentTypes = [];
                 if (error) {

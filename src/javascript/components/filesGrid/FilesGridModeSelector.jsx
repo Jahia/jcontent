@@ -20,7 +20,6 @@ class FilesGridModeSelector extends React.Component {
 }
 
 FilesGridModeSelector.propTypes = {
-    classes: PropTypes.object.isRequired,
     showList: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired
 };

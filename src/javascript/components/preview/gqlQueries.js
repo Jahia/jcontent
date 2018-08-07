@@ -3,8 +3,12 @@ import gql from "graphql-tag";
 const previewQuery = gql`query previewQuery($path:String!) {
     jcr {
         nodeByPath(path:$path) {
-            renderedContent(templateType:"html", view:"cm", contextConfiguration:"default") {
+            id : uuid
+            renderedContent(templateType:"html", view:"content-template", contextConfiguration:"page") {
                 output
+                staticAssets(type:"css") {
+                    key
+                }
             }
         }
     }

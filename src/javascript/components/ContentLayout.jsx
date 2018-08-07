@@ -19,8 +19,8 @@ import CmButton from "./renderAction/CmButton";
 //Files grid
 import FilesGrid from './filesGrid/FilesGrid';
 import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
+import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
-import {client} from "@jahia/apollo-dx/index";
 
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
@@ -49,8 +49,7 @@ const styles = theme => ({
 
 const GRID_SIZE = 12;
 const GRID_PANEL_BUTTONS_SIZE = 3;
-const TREE_SIZE = 2;
-const PREVIEW_SIZE = 6;
+const TREE_SIZE = 3;
 
 
 class ContentLayout extends React.Component {
@@ -65,6 +64,7 @@ class ContentLayout extends React.Component {
             showPreview: false,
             selectedRow: null,
             filesGridSizeValue: 4,
+            showList: false
         };
     }
 
@@ -160,7 +160,7 @@ class ContentLayout extends React.Component {
                                         height: (contentNode.width != null ? contentNode.height.value : '')
                                     }
                                 });
-                                computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0) - (showPreview ? PREVIEW_SIZE : 0);
+                                computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0)
 
                             }
                         }
@@ -187,6 +187,8 @@ class ContentLayout extends React.Component {
                                         <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>}
                                         {!showPreview &&
                                         <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>}
+                                        {contentSource === "files" && <FilesGridModeSelector showList={ this.state.showList }
+                                                                                             onChange={() => this.setState({showList: !this.state.showList})}/>}
                                         {contentSource === "files" && <FilesGridSizeSelector initValue={4}
                                                                                              onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
                                     </Grid>
@@ -204,7 +206,7 @@ class ContentLayout extends React.Component {
                                     }
                                     <Grid item xs={computedTableSize}>
                                         {
-                                            contentSource === "files" ?
+                                            contentSource === "files" && !this.state.showList ?
                                                 <FilesGrid
                                                     size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                                     totalCount={totalCount}
@@ -227,25 +229,14 @@ class ContentLayout extends React.Component {
                                                 />
                                         }
                                     </Grid>
-                                    {
-                                        showPreview && <Grid item xs={PREVIEW_SIZE} className={classes.gridColumn}>
-                                            <ContentPreview selection={selectedRow}
-                                                            layoutQuery={layoutQuery}
-                                                            layoutQueryParams={layoutQueryParams}
-                                                            rowSelectionFunc={this.handleRowSelection}/>
-                                        </Grid>
-                                    }
                                 </Grid>
-                                {/*I am experimenting with drawer to see if it will give us better results than what we have*/}
-                                {/*now. I don't think that the table will work out the way it is given that our options, as far*/}
-                                {/*as modification is concerned are limited.*/}
-                                {/*<PreviewDrawer open={ showPreview }*/}
-                                               {/*onClose={this.handleShowPreview}>*/}
-                                    {/*<ContentPreview selection={selectedRow}*/}
-                                                    {/*layoutQuery={layoutQuery}*/}
-                                                    {/*layoutQueryParams={layoutQueryParams}*/}
-                                                    {/*rowSelectionFunc={this.handleRowSelection}/>*/}
-                                {/*</PreviewDrawer>*/}
+                                <PreviewDrawer open={ showPreview }
+                                               onClose={this.handleShowPreview}>
+                                    <ContentPreview selection={selectedRow}
+                                                    layoutQuery={layoutQuery}
+                                                    layoutQueryParams={layoutQueryParams}
+                                                    rowSelectionFunc={this.handleRowSelection}/>
+                                </PreviewDrawer>
                             </div>
                         </div>
                     )

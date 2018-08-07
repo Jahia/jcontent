@@ -13,7 +13,11 @@ class Action extends React.Component {
         return (
             <Query query={ checkPermissionQuery } variables={{path: path, permission: permission}}>
                 {({loading, error, data}) => {
-                    return !loading && data.jcr.nodeByPath.perm && children({...rest, onClick: () => call(path)})
+                    if (loading || !data || !data.jcr) {
+                        return null;
+                    }
+
+                    return !loading && data.jcr && data.jcr.nodeByPath.perm && children({...rest, onClick: () => call(path)})
                 } }
             </Query>
         )

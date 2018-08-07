@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import { translate } from 'react-i18next';
-import { withStyles, Paper, Grid, IconButton, Button, Dialog, Slide } from "@material-ui/core";
+import { withStyles, Paper, Grid, IconButton } from "@material-ui/core";
 import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
 import { previewQuery } from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
@@ -11,17 +11,16 @@ import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 
-function Transition(props) {
-    return <Slide direction="left" {...props} />;
-}
-
 const styles = theme => ({
     root: {
         display: "flex",
         flexDirection: "column",
         flex: 1,
-        transition: "left 0.5s ease 0s",
-        maxWidth: 650
+        transition: "width 0.3s ease-in 0s",
+        width: 650,
+    },
+    rootFullWidth : {
+        width : "99vw"
     },
     button: {
         margin: theme.spacing.unit
@@ -31,7 +30,7 @@ const styles = theme => ({
         flex: 9
     },
     previewContainer: {
-        maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
+        // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         overflow: "auto",
         padding: theme.spacing.unit * 2
     },
@@ -74,20 +73,22 @@ class ContentPreview extends React.Component {
     };
 
     render() {
-        if (!this.state.fullScreen) {
-            return this.mainComponent();
-        }
-        return this.previewDialog(this.mainComponent());
+        return this.mainComponent();
     }
 
     mainComponent() {
-        const { selection, classes, t, layoutQuery, layoutQueryParams, rowSelectionFunc } = this.props;
+        const { selection, classes, t } = this.props;
         const path = selection ? selection.path : "";
+        const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
         return (
-            <div className={ classes.root } >
+            <div className={ rootClass } >
                 <Paper className={ classes.previewPaper } elevation={ 0 }>
                     <Query query={ previewQuery } variables={{path: path}}>
                         {({loading, error, data}) => {
+                            if (error) {
+                                console.error(error);
+                            }
+
                             return this.previewComponent(data);
                         }}
                     </Query>
@@ -127,16 +128,7 @@ class ContentPreview extends React.Component {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
 
-        return <div className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
-    }
-
-    previewDialog(component) {
-        return <Dialog
-            fullScreen
-            open={this.state.fullScreen}
-            TransitionComponent={Transition}>
-            { component }
-        </Dialog>
+        return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
     }
 
     screenModeButtons() {

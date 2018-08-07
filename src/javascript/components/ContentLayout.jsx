@@ -183,12 +183,12 @@ class ContentLayout extends React.Component {
                                                 </Actions>
                                             }
                                         <IconButton onClick={this.handleShowTree}><List/></IconButton>
+                                        {contentSource === "files" && <FilesGridModeSelector showList={ this.state.showList }
+                                                                                             onChange={() => this.setState({showList: !this.state.showList})}/>}
                                         {showPreview &&
                                         <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>}
                                         {!showPreview &&
                                         <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>}
-                                        {contentSource === "files" && <FilesGridModeSelector showList={ this.state.showList }
-                                                                                             onChange={() => this.setState({showList: !this.state.showList})}/>}
                                         {contentSource === "files" && <FilesGridSizeSelector initValue={4}
                                                                                              onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
                                     </Grid>

@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import {Button, Menu, MenuItem} from '@material-ui/core';
 import CmRouter from "../CmRouter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {translate} from "react-i18next";
 
 class LanguageSwitcher extends React.Component {
     constructor(props) {
@@ -27,9 +28,15 @@ class LanguageSwitcher extends React.Component {
         }`;
     }
 
-    onSelectLanguage = (lang, path) => {
+    onSelectLanguage = (lang, path, switchto, params) => {
         //Switch language functionality
-        console.log('switching language');
+        let {i18n, dxContext} = this.props;
+        //get part of path from /sites/sitekey/...
+        let extractedPath = path.substring(path.indexOf('/' + dxContext.siteKey + '/' + dxContext.lang));
+        //change locale of ui
+        i18n.changeLanguage(lang);
+        //update language in url and update route.
+        switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
     };
 
     parseLanguages(data) {
@@ -46,7 +53,7 @@ class LanguageSwitcher extends React.Component {
                 {
                     ({error, loading, data}) => {
                         let languages = this.parseLanguages(data);
-                        return <LanguageSwitcherDisplay dxContext={dxContext} languages={languages} loading={loading} onSelectLanguage={(lang) => this.onSelectLanguage(lang, path)}/>;
+                        return <LanguageSwitcherDisplay dxContext={dxContext} languages={languages} loading={loading} onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
                     }
                 }
             </Query>
@@ -98,4 +105,4 @@ class LanguageSwitcherDisplay extends React.Component {
     }
 }
 
-export default LanguageSwitcher;
+export default translate()(LanguageSwitcher);

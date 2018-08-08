@@ -38,9 +38,10 @@ class CmRouter extends React.Component {
                     history.push(match.url + path + queryString);
                 }
             },
-            switchto: (path) => {
+            switchto: (url, params) => {
                 //Update history with provided path (This is primarily used for changing the current selected site)
-                history.push(path);
+                let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
+                history.push(url + queryString);
             }
         }
     };

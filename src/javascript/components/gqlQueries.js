@@ -10,7 +10,7 @@ class BrowsingQueryHandler {
         const type = urlParams.type || "contents";
         return {
             path: path,
-            language: contentLayoutWidgetState.language,
+            language: dxContext.lang,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage,
@@ -33,7 +33,7 @@ class FilesQueryHandler {
     getQueryParams(path, contentLayoutWidgetState, dxContext) {
         return {
             path: path,
-            language: contentLayoutWidgetState.language,
+            language: dxContext.lang,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage,
@@ -58,7 +58,7 @@ class SearchQueryHandler {
             path: `/sites/${dxContext.siteKey}`,
             nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
             searchTerms: urlParams.searchTerms,
-            language: contentLayoutWidgetState.language,
+            language: dxContext.lang,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage,
@@ -86,7 +86,7 @@ class Sql2SearchQueryHandler {
 
         return {
             query: query,
-            language: contentLayoutWidgetState.language,
+            language: dxContext.lang,
             displayLanguage: dxContext.uilang,
             offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
             limit: contentLayoutWidgetState.rowsPerPage

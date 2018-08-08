@@ -57,7 +57,6 @@ class ContentLayout extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: props.lang,
             page: 0,
             rowsPerPage: 25,
             showTree: true,
@@ -173,7 +172,7 @@ class ContentLayout extends React.Component {
                                     <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                                         {(contentSource === "browsing" || contentSource === "files") &&
                                         <ContentBreadcrumbs dxContext={dxContext}
-                                                            lang={this.state.language}
+                                                            lang={dxContext.lang}
                                                             rootPath={rootPath}/>}
                                     </Grid>
                                     <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={ classes.buttonPanel }>
@@ -200,7 +199,7 @@ class ContentLayout extends React.Component {
                                             {
                                                 <ContentTrees path={path}
                                                               rootPath={rootPath}
-                                                              lang={this.state.language}/>
+                                                              lang={dxContext.lang}/>
                                             }
                                         </Grid>
                                     }
@@ -216,7 +215,7 @@ class ContentLayout extends React.Component {
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
-                                                    lang={this.state.language}/> :
+                                                    lang={dxContext.lang}/> :
                                                 <ContentListTable
                                                     totalCount={totalCount}
                                                     rows={rows}
@@ -225,7 +224,7 @@ class ContentLayout extends React.Component {
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
-                                                    lang={this.state.language}
+                                                    lang={dxContext.lang}
                                                 />
                                         }
                                     </Grid>

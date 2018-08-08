@@ -1,7 +1,7 @@
 import React from "react";
 import {withStyles, Toolbar, Typography} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import {LanguageSwitcher} from '@jahia/react-material';
+import LanguageSwitcher from './languageSwitcher/LanguageSwitcher';
 import SiteSwitcher from './siteSwitcher/SiteSwitcher';
 import BurgerMenuButton from './BurgerMenuButton';
 import {compose} from "react-apollo/index";
@@ -39,7 +39,7 @@ class CMTopBar extends React.Component {
                 <div className={classes.head}>
                     <SiteSwitcher dxContext={dxContext}/>
                     <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
-                    <LanguageSwitcher/>
+                    <LanguageSwitcher dxContext={dxContext}/>
                 </div>
 
                 {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}

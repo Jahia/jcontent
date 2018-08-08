@@ -89,16 +89,16 @@ class ContentManager extends React.Component {
                                                                        leftSide={<CMLeftNavigation/>}>
                                                             <div>
                                                                 <Route path={`${props.match.url}/browse`} render={props => (
-                                                                    <ContentLayout contentSource="browsing" lang={dxContext.lang}/>
+                                                                    <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.lang}/>
                                                                 )}/>
                                                                 <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                                    <ContentLayout contentSource="files" lang={dxContext.lang}/>
+                                                                    <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.lang}/>
                                                                 )}/>
                                                                 <Route path={`${props.match.url}/search`} render={props => (
-                                                                    <ContentLayout contentSource="search" lang={dxContext.lang}/>
+                                                                    <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.lang}/>
                                                                 )}/>
                                                                 <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                                    <ContentLayout contentSource="sql2Search" lang={dxContext.lang}/>
+                                                                    <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.lang}/>
                                                                 )}/>
                                                             </div>
                                                         </ManagerLayout>

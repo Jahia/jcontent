@@ -88,7 +88,7 @@ class FileCard extends Component {
     fileCard(cardType) {
         switch(cardType) {
             case 2 :
-            case 3 : return this.verticalFileCard();
+            case 3 : return this.verticalFileCard(cardType);
             case 6 :
             case 12 : return this.largeFileCard();
             default : return this.mediumFileCard();
@@ -161,9 +161,7 @@ class FileCard extends Component {
                 title={ node.name }
             />
             <div className={classes.details}>
-                <div className={ classes.publicationStatus }>
-                    <PublicationStatus node={ node }/>
-                </div>
+                <PublicationStatus node={ node }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -223,7 +221,7 @@ class FileCard extends Component {
         </Card>
     }
 
-    verticalFileCard() {
+    verticalFileCard(cardType) {
         const { classes, t, node } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
@@ -239,11 +237,13 @@ class FileCard extends Component {
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                        { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
-                        <Moment format={"LLL"}>{node.created}</Moment>
-                    </Typography>
+                    { cardType !== 2 && <React.Fragment>
+                        <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
+                            <Moment format={"LLL"}>{node.created}</Moment>
+                        </Typography>
+                    </React.Fragment> }
                 </CardContent>
             </div>
         </Card>

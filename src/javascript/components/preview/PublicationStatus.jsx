@@ -4,7 +4,7 @@ import { translate } from 'react-i18next';
 import { withStyles } from "@material-ui/core";
 import Moment from 'react-moment';
 import 'moment-timezone';
-import Constants from './constants';
+import Constants from '../constants';
 
 //TODO Here as well as in ContentListTable unpublished status is not clear
 

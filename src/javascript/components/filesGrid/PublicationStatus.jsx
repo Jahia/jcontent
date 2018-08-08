@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Constants from '../constants';
 
 const styles = theme => ({
     published: {
@@ -18,6 +19,10 @@ const styles = theme => ({
     markedForDeletion: {
         width: 8,
         backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
+    },
+    noStatus: {
+        width: 8,
+        backgroundColor: "#cecece"
     }
 });
 
@@ -28,11 +33,18 @@ class PublicationStatus extends Component {
     }
 
     render() {
+        return <div className={ this.publicationStatusClass() } />
+    }
+
+    publicationStatusClass() {
         const { classes } = this.props;
-
-        return <div className={ classes.published }>
-
-        </div>
+        switch(this.props.node.publicationStatus) {
+            case Constants.availablePublicationStatuses.PUBLISHED : return classes.published;
+            case Constants.availablePublicationStatuses.NOT_PUBLISHED : return classes.notPublished;
+            case Constants.availablePublicationStatuses.MODIFIED : return classes.modified;
+            case Constants.availablePublicationStatuses.MARKED_FOR_DELETION : return classes.markedForDeletion;
+            default : return classes.noStatus;
+        }
     }
 }
 

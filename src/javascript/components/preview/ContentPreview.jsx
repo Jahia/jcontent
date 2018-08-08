@@ -83,7 +83,7 @@ class ContentPreview extends React.Component {
         return (
             <div className={ rootClass } >
                 <Paper className={ classes.previewPaper } elevation={ 0 }>
-                    <Query query={ previewQuery } variables={{path: path}}>
+                    <Query query={ previewQuery } variables={ this.queryVariables(path) }>
                         {({loading, error, data}) => {
                             if (error) {
                                 console.error(error);
@@ -136,6 +136,15 @@ class ContentPreview extends React.Component {
             return <IconButton onClick={ this.handleDialogState }><FullscreenExit/></IconButton>
         }
         return <IconButton onClick={ this.handleDialogState }><Fullscreen/></IconButton>
+    }
+
+    queryVariables(path) {
+        return {
+            path: path,
+            templateType: "html",
+            view: "cm",
+            contextConfiguration: "default"
+        }
     }
 }
 

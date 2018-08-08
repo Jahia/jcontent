@@ -34,8 +34,7 @@ Example:
          icon: "Edit",
          target: ["previewBar", "tableActions"],
          requiredPermission: "",
-         labelKey: 'label.contentManager.contentPreview.edit',         
-         callback: editCallback
+         labelKey: 'label.contentManager.contentPreview.edit'
      }
 
 - `id` is a unique identifier 
@@ -46,7 +45,6 @@ Example:
 - `target` is the location id where this action should be displayed
 - `requiredPermission` set the required permission to display the action   
 - `labelKey` is the key to use to display the label
-- `callback` is an an object that defines a function (or an array of function) called by GWT 
 
 Note that some of the properties can be defined as default properties in `Actions/defaultActions.js` and override 
 within the configuration file. 
@@ -66,6 +64,8 @@ To register an action, add it in the `actionComponents` object in `ContentManage
     }
 
 ## Development
+
+### Add event handlers 
 
 ### URL management
 

@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import {PredefinedFragments} from "@jahia/apollo-dx";
 
 class BrowsingQueryHandler {
 
@@ -108,10 +109,7 @@ const nodeFields = gql`
         aggregatedPublicationInfo(language: $language) {
             publicationStatus
         }
-        uuid
-        workspace
         name
-        path
         displayName
         createdBy: property(name: "jcr:createdBy") {
             value
@@ -151,13 +149,15 @@ const nodeFields = gql`
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
         }
+        ...NodeCacheRequiredFields
     }
-`;
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}`;
 
 const getNodeSubTree = gql `
     query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
+                ...NodeCacheRequiredFields
                 descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
                     pageInfo {
                         totalCount

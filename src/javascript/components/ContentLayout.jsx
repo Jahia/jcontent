@@ -15,6 +15,7 @@ import CmRouter from './CmRouter';
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
+import {context as eventHandlersContext} from "./eventHandlerRegistry"
 
 //Files grid
 import FilesGrid from './filesGrid/FilesGrid';
@@ -117,7 +118,7 @@ class ContentLayout extends React.Component {
             const rootPath = '/sites/' + dxContext.siteKey;
             let queryHandler = contentQueryHandlerBySource[contentSource];
             return (<CmRouter render={({path, params, goto}) => {
-            dxContext.gwtExternalEventHandlers.setContext(path, goto, params, dxContext.lang, this.forceUpdate.bind(this));
+            _.assign(eventHandlersContext, {path: path,goto: goto,params: params,language: dxContext.lang, uiLang: dxContext.uilang, apolloClient: client});
             const layoutQuery = queryHandler.getQuery();
             const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
             let computedTableSize;
@@ -177,7 +178,7 @@ class ContentLayout extends React.Component {
                                     </Grid>
                                     <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={ classes.buttonPanel }>
                                         {((contentSource === "browsing" || contentSource === "files") && path != rootPath) &&
-                                            <Actions menuId={"createMenu"} path={path}>
+                                            <Actions menuId={"createMenu"} context={{path: path}}>
                                                 {(props) => <CmButton {...props}><Add/></CmButton>}
                                                 </Actions>
                                             }
@@ -248,7 +249,8 @@ class ContentLayout extends React.Component {
 ContentLayout = _.flowRight(
     withNotifications(),
     translate(),
-    withStyles(styles)
+    withStyles(styles),
+    withApollo
 )(ContentLayout);
 
 export {ContentLayout};

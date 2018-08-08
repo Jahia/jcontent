@@ -107,10 +107,10 @@ class ContentPreview extends React.Component {
                             <IconButton><Lock/></IconButton>
                         </Grid>
                         <Grid item xs={ 8 }>
-                            <Actions menuId={"previewBar"} name={selection.name} path={selection.path}>
+                            <Actions menuId={"previewBar"}  context={{path: selection.path}}>
                                 {(props) => <CmButton {...props}/>}
                             </Actions>
-                            <Actions menuId={"additionalMenu"} name={selection.name} path={selection.path}>
+                            <Actions menuId={"additionalMenu"}  context={{path: selection.path}}>
                                 {(props) => <CmIconButton {...props}/>}
                             </Actions>
                         </Grid>

@@ -1,6 +1,6 @@
 import {getNodeByPath} from "./gqlQueries";
 
-// Event handlers use a context provided when registering events in GWTExternalEventHandlers
+// Event handlers use a context provided when registering events in listenersRegistry
 
 const eventHandlers = {
     // listeners after save button in engines.
@@ -14,7 +14,9 @@ window.parent.updateContentManagerStore = (context, enginePath, engineNodeName) 
     if (enginePath === context.path && enginePath !== path) {
         context.goto(path, context.params);
     } else {
-        context.apolloClient.query({query: getNodeByPath, variables: {"path": path, "language": context.language, "displayLanguage": context.uiLang}});
+        context.apolloClient.query({query: getNodeByPath,
+            fetchPolicy: "network-only",
+            variables: {"path": path, "language": context.language, "displayLanguage": context.uiLang}});
     }
 }
 

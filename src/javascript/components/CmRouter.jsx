@@ -1,7 +1,7 @@
 import React from "react";
 import * as _ from "lodash";
 import { withRouter } from "react-router";
-import { DxContextConsumer } from "./DxContext";
+import { DxContext } from "./DxContext";
 
 const PARAMS_KEY = "?params=";
 
@@ -48,7 +48,7 @@ class CmRouter extends React.Component {
 
     render() {
         const { match, location, history, render } = this.props;
-        return <DxContextConsumer>{dxContext => render({...this.mapUrlToQuery(match, location, dxContext), ...this.mapQueryToUrl(match, history, location, dxContext)})}</DxContextConsumer>
+        return <DxContext.Consumer>{dxContext => render({...this.mapUrlToQuery(match, location, dxContext), ...this.mapQueryToUrl(match, history, location, dxContext)})}</DxContext.Consumer>
     }
 };
 

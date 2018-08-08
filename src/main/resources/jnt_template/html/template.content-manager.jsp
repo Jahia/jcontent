@@ -129,19 +129,22 @@
                 menuId: "createMenuActions",
                 target: ["createMenu"],
                 requiredPermission: "jcr:addChildNodes",
-                labelKey: 'label.contentManager.create.create'
+                labelKey: 'label.contentManager.create.create',
+                hideOnNodeTypes: ["jnt:page"]
             },
             createContentFolderAction: {
                 component: "action",
                 call: (path) => window.parent.createContent(path, 'jnt:contentFolder', false),
                 target: ["createMenuActions"],
+                requiredAllowedChildNodeTypes: ['jnt:contentFolder'],
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.contentFolder'
             },
             createContentAction: {
                 component: "action",
-                call: (path) => window.parent.createContent(path),
+                call: (path, nodetype) => window.parent.createContent(path, nodetype, true),
                 target: ["createMenuActions"],
+                requiredAllowedChildNodeTypes: ['jnt:content'],
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.content'
             }

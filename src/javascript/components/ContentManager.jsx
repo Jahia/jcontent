@@ -11,7 +11,7 @@ import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './CMLeftNavigation';
 import CMTopBar from './CMTopBar';
 import * as _ from 'lodash';
-import {DxContextProvider, DxContextConsumer} from "./DxContext";
+import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import defaultActions from "./actions/defaultActions"
 import actionsRegistry from "./actionsRegistry"
@@ -20,7 +20,7 @@ import MenuAction from "./actions/MenuAction";
 import eventHandlers from "./eventHandlers"
 
 import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
-import GWTExternalEventHandlers from "./GWTExternalEventHandlers";
+import {register as eventHandlerRegister} from "./eventHandlerRegistry";
 
 const actionComponents = {
     action: Action,
@@ -56,7 +56,9 @@ class ContentManager extends React.Component {
     setRouter(router) {
         let {dxContext, classes} = this.props;
         router && router.history.listen((location, action) => {
-            window.parent.history.replaceState(window.parent.history.state, "DX Content Manager " + location.pathname, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
+            const title = "DX Content Manager " + location.pathname;
+            window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
+            window.parent.document.title = title;
         });
     }
 
@@ -65,6 +67,7 @@ class ContentManager extends React.Component {
         let {dxContext, classes} = this.props;
         // register action components
         const isInFrame = window.top !== window;
+        eventHandlerRegister(eventHandlers);
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
@@ -75,40 +78,34 @@ class ContentManager extends React.Component {
                             ns: ['content-manager'],
                             defaultNS: 'content-manager',
                         })}>
-                            <ApolloConsumer>
-                                {apolloClient =>
-                                    <DxContextProvider dxContext={dxContext} apolloClient={apolloClient}>
-                                        <DxContextConsumer>{dxContext => (
-                                            <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                                <Route path='/:siteKey/:lang' key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang}  render={props => {
-                                                    dxContext.onRouteChanged(props.location, props.match);
-                                                    dxContext.gwtExternalEventHandlers =  new GWTExternalEventHandlers(apolloClient, dxContext.uilang);
-                                                    dxContext.gwtExternalEventHandlers.register(eventHandlers);
-                                                    return (
-                                                        <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
-                                                                       leftSide={<CMLeftNavigation/>}>
-                                                            <div>
-                                                                <Route path={`${props.match.url}/browse`} render={props => (
-                                                                    <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                                )}/>
-                                                                <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                                    <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                                )}/>
-                                                                <Route path={`${props.match.url}/search`} render={props => (
-                                                                    <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                                )}/>
-                                                                <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                                    <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                                )}/>
-                                                            </div>
-                                                        </ManagerLayout>
-                                                    )
-                                                }}/>
-                                            </BrowserRouter>
-                                        )}</DxContextConsumer>
-                                    </DxContextProvider>
-                                }
-                            </ApolloConsumer>
+                            <DxContext.Provider value={dxContext}>
+                                <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
+                                    <Route path='/:siteKey/:lang' key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang}  render={props => {
+                                        dxContext['siteKey'] = props.match.params.siteKey;
+                                        dxContext['lang'] = props.match.params.lang;
+                                        return (
+                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
+                                                           leftSide={<CMLeftNavigation/>}>
+                                                <div>
+                                                    <Route path={`${props.match.url}/browse`} render={props => (
+                                                        <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                    )}/>
+                                                    <Route path={`${props.match.url}/browse-files`} render={props => (
+                                                        <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                    )}/>
+                                                    <Route path={`${props.match.url}/search`} render={props => (
+                                                        <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                    )}/>
+                                                    <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                        <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                    )}/>
+                                                </div>
+                                            </ManagerLayout>
+                                        )
+                                    }
+                                    }/>
+                                </BrowserRouter>
+                            </DxContext.Provider>
                         </I18nextProvider>
                     </ApolloProvider>
                 </NotificationProvider>

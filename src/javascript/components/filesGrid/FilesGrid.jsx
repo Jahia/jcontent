@@ -4,6 +4,7 @@ import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import FileCard from './FileCard';
 import Grid from '@material-ui/core/Grid';
+import { Pagination } from "@jahia/react-material";
 
 class FilesGrid extends Component {
 
@@ -27,6 +28,7 @@ class FilesGrid extends Component {
                     </Grid>
                 ))
             }
+            <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
         </Grid>
     }
 }

@@ -80,7 +80,7 @@ class ContentManager extends React.Component {
                                     <DxContextProvider dxContext={dxContext} apolloClient={apolloClient}>
                                         <DxContextConsumer>{dxContext => (
                                             <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                                <Route path='/:siteKey/:lang' key={"main-route_" + dxContext.lang}  render={props => {
+                                                <Route path='/:siteKey/:lang' key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang}  render={props => {
                                                     dxContext.onRouteChanged(props.location, props.match);
                                                     dxContext.gwtExternalEventHandlers =  new GWTExternalEventHandlers(apolloClient, dxContext.uilang);
                                                     dxContext.gwtExternalEventHandlers.register(eventHandlers);
@@ -89,16 +89,16 @@ class ContentManager extends React.Component {
                                                                        leftSide={<CMLeftNavigation/>}>
                                                             <div>
                                                                 <Route path={`${props.match.url}/browse`} render={props => (
-                                                                    <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.lang}/>
+                                                                    <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                                 )}/>
                                                                 <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                                    <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.lang}/>
+                                                                    <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                                 )}/>
                                                                 <Route path={`${props.match.url}/search`} render={props => (
-                                                                    <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.lang}/>
+                                                                    <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                                 )}/>
                                                                 <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                                    <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.lang}/>
+                                                                    <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                                 )}/>
                                                             </div>
                                                         </ManagerLayout>

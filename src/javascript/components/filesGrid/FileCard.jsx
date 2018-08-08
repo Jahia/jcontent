@@ -17,19 +17,28 @@ const styles = theme => ({
     card: {
         display: 'flex',
         maxHeight: 300,
-        cursor: "pointer"
+        cursor: "pointer",
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+            width: 24
+        }
     },
     cardMedium: {
         display: 'flex',
         maxHeight: 150,
-        cursor: "pointer"
+        cursor: "pointer",
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+            width: 24
+        }
     },
     cardVertical: {
         display: 'flex',
         flexDirection: 'column',
         maxHeight: 200,
         minHeight: 200,
-        cursor: "pointer"
+        cursor: "pointer",
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+            width: 24
+        }
     },
     details: {
         display: 'flex',

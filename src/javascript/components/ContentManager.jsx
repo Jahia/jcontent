@@ -80,7 +80,7 @@ class ContentManager extends React.Component {
                                     <DxContextProvider dxContext={dxContext} apolloClient={apolloClient}>
                                         <DxContextConsumer>{dxContext => (
                                             <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                                <Route path='/:siteKey/:lang' render={props => {
+                                                <Route path='/:siteKey/:lang' key={"main-route_" + dxContext.lang}  render={props => {
                                                     dxContext.onRouteChanged(props.location, props.match);
                                                     dxContext.gwtExternalEventHandlers =  new GWTExternalEventHandlers(apolloClient, dxContext.uilang);
                                                     dxContext.gwtExternalEventHandlers.register(eventHandlers);

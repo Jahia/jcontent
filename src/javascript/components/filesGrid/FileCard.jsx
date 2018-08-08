@@ -156,11 +156,12 @@ class FileCard extends Component {
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
                      onClick={ () => this.props.onSelect(node) }>
             <CardMedia
+                style={{ flex: 2 }}
                 className={ classes.coverVertical }
                 image={ `/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
-            <div className={classes.details}>
+            <div className={classes.details} style={{ flex: 1.5 }}>
                 <PublicationStatus node={ node }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
@@ -226,12 +227,12 @@ class FileCard extends Component {
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
                      onClick={ () => this.props.onSelect(node) }>
-            <div style={{textAlign: "center"}}>
+            <div style={{textAlign: "center", flex: 2}}>
                 {
                     fileIcon(node.path, '6x', {fontSize: "100px"})
                 }
             </div>
-            <div className={classes.details}>
+            <div className={classes.details} style={{ flex: 2 }}>
                 <PublicationStatus node={ node }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>

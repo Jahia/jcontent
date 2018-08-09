@@ -1,6 +1,7 @@
 import React from "react";
 import {Query} from 'react-apollo';
 import gql from "graphql-tag";
+import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem} from '@material-ui/core';
 import CmRouter from "../CmRouter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,6 +19,7 @@ class LanguageSwitcher extends React.Component {
           jcr(workspace: LIVE) {
             result:nodeByPath(path: $path) {
               site {
+                defaultLanguage
                 languages {
                   displayName(language: $displayLanguage)
                   language
@@ -38,6 +40,25 @@ class LanguageSwitcher extends React.Component {
         i18n.changeLanguage(lang);
         //update language in url and update route.
         switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
+    };
+
+    validateLanguageExists = (languages, data) => {
+        let {dxContext} = this.props;
+        if (!_.isEmpty(languages)) {
+            //If we cant find the selected language in the list of available languages,
+            // we will implicitly switch to the default language of the site
+            let languageExists = _.find(languages, function(language) {
+                return language.language === dxContext.lang;
+            });
+            if (languageExists === undefined) {
+                let language = _.find(languages, function(language) {
+                    return language.language === data.jcr.result.site.defaultLanguage;
+                });
+                return language.language;
+            }
+            return true;
+        }
+        return true;
     };
 
     parseSiteLanguages(data) {
@@ -61,10 +82,16 @@ class LanguageSwitcher extends React.Component {
                         ({error, loading, data}) => {
                             if (!loading) {
                                 let displayableLanguages = this.parseSiteLanguages(data);
-                                return <LanguageSwitcherDisplay dxContext={dxContext}
-                                                                languages={displayableLanguages}
-                                                                loading={loading}
-                                                                onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
+                                let languageExists = this.validateLanguageExists(displayableLanguages, data);
+                                if (languageExists === true) {
+                                    return <LanguageSwitcherDisplay dxContext={dxContext}
+                                                                    languages={displayableLanguages}
+                                                                    loading={loading}
+                                                                    onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
+                                } else {
+                                    this.onSelectLanguage(languageExists, path, switchto, params);
+                                    return null
+                                }
                             }
                             return <span>Loading...</span>
                         }
@@ -94,6 +121,7 @@ class LanguageSwitcherDisplay extends React.Component {
     uppercaseFirst = (string) => {
         return string.charAt(0).toUpperCase() + string.substr(1);
     };
+
     render() {
         let {dxContext, languages, loading, onSelectLanguage} = this.props;
         let {anchorEl} = this.state;

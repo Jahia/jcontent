@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import PublicationStatus from './PublicationStatus';
+import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
@@ -18,6 +18,7 @@ const styles = theme => ({
         display: 'flex',
         maxHeight: 300,
         cursor: "pointer",
+        position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
         }
@@ -26,6 +27,7 @@ const styles = theme => ({
         display: 'flex',
         maxHeight: 150,
         cursor: "pointer",
+        position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
         }
@@ -36,6 +38,7 @@ const styles = theme => ({
         maxHeight: 200,
         minHeight: 200,
         cursor: "pointer",
+        position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
         }
@@ -43,6 +46,13 @@ const styles = theme => ({
     details: {
         display: 'flex',
         flexDirection: 'row',
+    },
+    verticalDetails: {
+        display: "flex",
+        position: "relative",
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+            width: 24
+        }
     },
     content: {
         flex: '10',
@@ -170,7 +180,7 @@ class FileCard extends Component {
                 image={ `/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
-            <div className={classes.details} style={{ flex: 1.5 }}>
+            <div className={classes.verticalDetails} style={{ flex: 1.5 }}>
                 <PublicationStatus node={ node }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
@@ -241,7 +251,7 @@ class FileCard extends Component {
                     fileIcon(node.path, '6x', {fontSize: "100px"})
                 }
             </div>
-            <div className={classes.details} style={{ flex: 2 }}>
+            <div className={classes.verticalDetails} style={{ flex: 2 }}>
                 <PublicationStatus node={ node }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>

@@ -8,15 +8,12 @@ import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {InfoOutline, Lock, Build} from "@material-ui/icons";
 import {DxContext} from "../DxContext";
-import {
-    PublicationStatusMarkedForDeletion,
-    PublicationStatusModified,
-    PublicationStatusNotPublished,
-    PublicationStatusPublished
-} from "./publicationStatus"
+import { publicationStatusByName } from "../publicationStatus/publicationStatus"
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
+
+import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 
 
 const columnData = [
@@ -27,37 +24,14 @@ const columnData = [
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
 ];
 
-const publicationStatusByName = {
-    "NOT_PUBLISHED": new PublicationStatusNotPublished(),
-    "PUBLISHED": new PublicationStatusPublished(),
-    "MODIFIED": new PublicationStatusModified(),
-    "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
-};
-
 const APP_TABLE_CELLS = 2;
 
 const styles = (theme) => ({
-    tableWrapper: {
-        overflowX: 'auto',
-        paddingLeft: theme.spacing.unit * 3
-    },
     contentRow: {
-        '&:hover $publicationStatus': {
-            opacity: 1,
-            transition: ["opacity", "0.25s"]
+        height: 56,
+        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+            width: 24
         }
-    },
-    modified: {
-        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.modified.main
-    },
-    markedForDeletion: {
-        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.modified.main
-    },
-    published: {
-        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.published.main
-    },
-    notPublished: {
-        boxShadow: 'inset 7px 0px 0 0 ' + theme.palette.publicationStatus.notPublished.main
     },
     publicationStatusContainer: {
         position: 'relative'
@@ -133,6 +107,13 @@ const styles = (theme) => ({
     nodeTypeIcon: {
         marginRight: 5,
     },
+    publicationCell: {
+        position: 'relative',
+        display: "flex",
+        padding: 0,
+        borderBottom: "none",
+        height: "inherit"
+    }
 });
 
 class ContentListTable extends React.Component {
@@ -188,7 +169,6 @@ class ContentListTable extends React.Component {
 
         return (
             <div>
-                <div className={classes.tableWrapper}>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
                     <ContentListHeader
                         order={order}
@@ -209,19 +189,14 @@ class ContentListTable extends React.Component {
                                     let icon = this.addIconSuffix(n.icon);
                                     return (
                                         <TableRow hover={true}
-                                                  classes={{root: classes.contentRow + ' ' + publicationStatus.getContentClass(classes)}}
+                                                  className={ classes.row }
+                                                  classes={{root: classes.contentRow }}
                                                   key={n.uuid}
                                                   onClick={ () => onRowSelected(n)}
                                                   selected={ n.isSelected }
                                                   data-cm-role="table-content-list-row">
-                                            <TableCell padding={'checkbox'} classes={{root: classes.publicationStatusContainer}}>
-                                                <Button disableRipple classes={{
-                                                    root: classes.publicationStatus + ' ' + publicationStatus.getDetailsClass(classes),
-                                                    label: classes.publicationStatusLabel
-                                                }}>
-                                                    <InfoOutline color="primary" classes={{colorPrimary: classes.publicationStatusInfoIcon}}/>
-                                                    {publicationStatus.getDetailsMessage(n, t)}
-                                                </Button>
+                                            <TableCell className={ classes.publicationCell }>
+                                                <PublicationStatus node={ n }/>
                                             </TableCell>
                                             {columnData.map(column => {
                                                 if(column.id === 'actions') {
@@ -260,7 +235,6 @@ class ContentListTable extends React.Component {
                         )}
                     </DxContext.Consumer>
                 </Table>
-                </div>
                 <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );

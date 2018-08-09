@@ -219,6 +219,7 @@ const filesQuery = gql `
     query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
+                id : uuid
                 descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
                     pageInfo {
                         totalCount

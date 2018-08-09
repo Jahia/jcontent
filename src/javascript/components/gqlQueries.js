@@ -172,7 +172,7 @@ const getNodeSubTree = gql `
     ${nodeFields}
 `;
 
-const getNodeByPath = gql `
+const GetNodeByPathQuery = gql `
 query ($path: String!, $language: String!, $displayLanguage:String!) {
   jcr {
     results: nodeByPath(path: $path) {
@@ -273,4 +273,18 @@ const LoadSelectionQuery = gql `
     ${nodeFields}
 `;
 
-export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery, getNodeByPath};
+
+const CheckRequirementsQuery = gql`query checkRequirementsQuery($path:String!, $permission:String!, $isNodeType:  InputNodeTypesInput!, $isNotNodeType:  InputNodeTypesInput!) {
+    jcr {
+        nodeByPath(path:$path) {
+            ...NodeCacheRequiredFields
+            perm: hasPermission(permissionName:$permission)
+            showOnType: isNodeType(type:$isNodeType)
+            hideOnType: isNodeType(type:$isNotNodeType)
+        }
+    }
+}
+${PredefinedFragments.nodeCacheRequiredFields.gql}`;
+
+
+export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery, GetNodeByPathQuery, CheckRequirementsQuery};

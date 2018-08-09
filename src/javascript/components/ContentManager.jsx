@@ -15,7 +15,7 @@ import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import defaultActions from "./actions/defaultActions"
 import actionsRegistry from "./actionsRegistry"
-import Action from "./actions/Action"
+import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
 import eventHandlers from "./eventHandlers"
 
@@ -23,7 +23,7 @@ import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
 import {register as eventHandlerRegister} from "./eventHandlerRegistry";
 
 const actionComponents = {
-    action: Action,
+    action: CallAction,
     menuAction: MenuAction
 }
 

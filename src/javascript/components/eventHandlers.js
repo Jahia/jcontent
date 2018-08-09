@@ -1,4 +1,4 @@
-import {getNodeByPath} from "./gqlQueries";
+import {GetNodeByPathQuery} from "./gqlQueries";
 
 // Event handlers use a context provided when registering events in listenersRegistry
 
@@ -14,7 +14,7 @@ window.parent.updateContentManagerStore = (context, enginePath, engineNodeName) 
     if (enginePath === context.path && enginePath !== path) {
         context.goto(path, context.params);
     } else {
-        context.apolloClient.query({query: getNodeByPath,
+        context.apolloClient.query({query: GetNodeByPathQuery,
             fetchPolicy: "network-only",
             variables: {"path": path, "language": context.language, "displayLanguage": context.uiLang}});
     }

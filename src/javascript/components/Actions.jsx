@@ -1,7 +1,7 @@
 import React from 'react';
 import * as _ from 'lodash';
 import actionsRegistry from "./actionsRegistry"
-import {CheckRequirementsQuery} from "./actions/gqlQueries";
+import {CheckRequirementsQuery} from "./gqlQueries";
 import {Query} from "react-apollo";
 
 class Actions extends React.Component {

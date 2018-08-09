@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Action extends React.Component {
+class CallAction extends React.Component {
 
     render() {
         const {call, children, context, ...rest} = this.props;
@@ -9,5 +9,5 @@ class Action extends React.Component {
 }
 
 
-export default Action;
+export default CallAction;
 

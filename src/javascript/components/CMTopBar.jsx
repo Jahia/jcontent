@@ -37,9 +37,9 @@ class CMTopBar extends React.Component {
             <Toolbar color={'secondary'} classes={{root: classes.root}}>
                 <BurgerMenuButton/>
                 <div className={classes.head}>
-                    <SiteSwitcher dxContext={dxContext}/>
+                    <SiteSwitcher key={'siteSwitcher_' + dxContext.siteKey + '_' + dxContext.lang} dxContext={dxContext}/>
                     <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
-                    <LanguageSwitcher dxContext={dxContext}/>
+                    <LanguageSwitcher key={'languageSwitcher_' + dxContext.siteKey + '_' + dxContext.lang} dxContext={dxContext}/>
                 </div>
 
                 {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}

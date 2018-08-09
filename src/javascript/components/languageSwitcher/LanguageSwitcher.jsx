@@ -12,19 +12,20 @@ class LanguageSwitcher extends React.Component {
         let {dxContext} = props;
         this.variables = {
             path: '/sites/' + dxContext.siteKey,
-            languagesProperty: 'j:languages'
-
+            displayLanguage: dxContext.lang
         };
-        this.query = gql `query siteLanguages($path: String!, $languagesProperty: String!){
-            jcr(workspace: LIVE) {
-                site:nodeByPath(path: $path) {
-                    name
-                    languages:property(name: $languagesProperty) {
-                        name
-                        values
-                    }
+        this.query = gql `query siteLanguages($path: String!, $displayLanguage: String!) {
+          jcr(workspace: LIVE) {
+            result:nodeByPath(path: $path) {
+              site {
+                languages {
+                  displayName(language: $displayLanguage)
+                  language
+                  activeInEdit
                 }
+              }
             }
+          }
         }`;
     }
 
@@ -39,23 +40,35 @@ class LanguageSwitcher extends React.Component {
         switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
     };
 
-    parseLanguages(data) {
+    parseSiteLanguages(data) {
+        let parsedSiteLanguages = [];
         if (data && data.jcr != null) {
-            return data.jcr.site.languages.values;
+            let siteLanguages = data.jcr.result.site.languages;
+            for(let i in siteLanguages) {
+                if (siteLanguages[i].activeInEdit) {
+                    parsedSiteLanguages.push(siteLanguages[i]);
+                }
+            }
         }
-        return [];
+        return parsedSiteLanguages;
     }
 
     render() {
         let {dxContext} = this.props;
         return <CmRouter render={({path, params, goto, switchto}) => {
-           return <Query query={this.query} variables={this.variables}>
-                {
-                    ({error, loading, data}) => {
-                        let languages = this.parseLanguages(data);
-                        return <LanguageSwitcherDisplay dxContext={dxContext} languages={languages} loading={loading} onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
+            return <Query query={this.query} variables={this.variables}>
+                    {
+                        ({error, loading, data}) => {
+                            if (!loading) {
+                                let displayableLanguages = this.parseSiteLanguages(data);
+                                return <LanguageSwitcherDisplay dxContext={dxContext}
+                                                                languages={displayableLanguages}
+                                                                loading={loading}
+                                                                onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
+                            }
+                            return <span>Loading...</span>
+                        }
                     }
-                }
             </Query>
         }}/>
 
@@ -78,6 +91,9 @@ class LanguageSwitcherDisplay extends React.Component {
         this.setState({ anchorEl: null });
     };
 
+    uppercaseFirst = (string) => {
+        return string.charAt(0).toUpperCase() + string.substr(1);
+    };
     render() {
         let {dxContext, languages, loading, onSelectLanguage} = this.props;
         let {anchorEl} = this.state;
@@ -97,7 +113,7 @@ class LanguageSwitcherDisplay extends React.Component {
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     {languages.map((lang, i) => {
-                        return <MenuItem key={lang} onClick={() => {onSelectLanguage(lang); this.handleClose();}}>{lang}</MenuItem>
+                        return <MenuItem key={lang.language} onClick={() => {onSelectLanguage(lang.language); this.handleClose();}}>{this.uppercaseFirst(lang.displayName)}</MenuItem>
                     })}
                 </Menu>
             </div>

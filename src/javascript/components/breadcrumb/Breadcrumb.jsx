@@ -103,9 +103,8 @@ class BreadcrumbDisplay extends React.Component {
         let {nodes} = this.props;
         setTimeout(() => {
             let backdropEl = document.getElementById("breadcrumbMenu_" + nodes.uuid).children[0];
-            //backdrop
             backdropEl.addEventListener("mouseover", this.onMenuExit);
-        }, 50);
+        }, 10);
 
     }
 
@@ -118,7 +117,9 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     onMenuButtonActivatorEnter(event) {
-        this.setState({menuActive: true});
+        if (!this.state.menuActive) {
+            this.setState({menuActive: true});
+        }
     };
 
     onMenuItemSelected(event, node) {
@@ -162,7 +163,7 @@ class BreadcrumbDisplay extends React.Component {
                 disableRipple={true}
                 aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
-                onMouseEnter={this.onMenuButtonActivatorEnter}>
+                onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(nodes)}
                 {nodes.name}
             </Button>

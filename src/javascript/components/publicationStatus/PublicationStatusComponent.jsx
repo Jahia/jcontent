@@ -47,7 +47,7 @@ const styles = theme => ({
         transition: "width 0.2s ease-in 0s",
         color: theme.palette.getContrastText(theme.palette.publish.main),
         "&:hover ~ div.CM_PUBLICATION_INFO": {
-            width: 350,
+            width: 400,
             opacity: 1,
             visibility: "visible"
         }

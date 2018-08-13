@@ -78,6 +78,10 @@ const styles = theme => ({
     }
 });
 
+const PUBLICATION_INFO_WIDTH_LARGE = 400;
+const PUBLICATION_INFO_WIDTH_MED = 300;
+const PUBLICATION_INFO_WIDTH_SMALL = 150;
+
 class FileCard extends Component {
 
     constructor(props) {
@@ -119,7 +123,7 @@ class FileCard extends Component {
 
         return <Card className={ this.generateCardClass(node, classes.card) }
                      onClick={ () => this.props.onSelect(node) }>
-            <PublicationStatus node={ node }/>
+            <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             <CardMedia
                 className={ classes.coverLarge }
                 image={ `${dxContext.contextPath}/files/default/${node.path}` }
@@ -148,7 +152,7 @@ class FileCard extends Component {
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
                      onClick={ () => this.props.onSelect(node) }>
-            <PublicationStatus node={ node }/>
+            <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             <CardMedia
                 className={ classes.coverMedium }
                 image={ `${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2` }
@@ -181,7 +185,7 @@ class FileCard extends Component {
                 title={ node.name }
             />
             <div className={classes.verticalDetails} style={{ flex: 1.5 }}>
-                <PublicationStatus node={ node }/>
+                <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -195,7 +199,7 @@ class FileCard extends Component {
 
         return <Card className={ this.generateCardClass(node, classes.card) }
                      onClick={ () => this.props.onSelect(node) }>
-            <PublicationStatus node={ node }/>
+            <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             {
                 fileIcon(node.path, '6x', {fontSize: "160px"})
             }
@@ -222,7 +226,7 @@ class FileCard extends Component {
 
         return <Card className={ this.generateCardClass(node, classes.card) }
                      onClick={ () => this.props.onSelect(node) }>
-            <PublicationStatus node={ node }/>
+            <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             {
                 fileIcon(node.path, '6x', {fontSize: "160px"})
             }
@@ -252,7 +256,7 @@ class FileCard extends Component {
                 }
             </div>
             <div className={classes.verticalDetails} style={{ flex: 2 }}>
-                <PublicationStatus node={ node }/>
+                <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}>
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>

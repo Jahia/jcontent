@@ -197,7 +197,7 @@ class ContentListTable extends React.Component {
                                                   selected={ n.isSelected }
                                                   data-cm-role="table-content-list-row">
                                             <TableCell className={ classes.publicationCell }>
-                                                <PublicationStatus node={ n }/>
+                                                <PublicationStatus node={ n } publicationInfoWidth={ 400 }/>
                                             </TableCell>
                                             {columnData.map(column => {
                                                 if(column.id === 'actions') {

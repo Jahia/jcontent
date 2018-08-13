@@ -5,6 +5,7 @@ import Constants from '../constants';
 import { InfoOutline } from "@material-ui/icons";
 import { publicationStatusByName } from "./publicationStatus";
 import {translate} from "react-i18next";
+import injectSheet from 'react-jss'
 
 const styles = theme => ({
     root: {
@@ -38,21 +39,6 @@ const styles = theme => ({
     noStatus: {
         backgroundColor: "#cecece"
     },
-    infoButton: {
-        flex: "auto",
-        display: "flex",
-        alignItems: "center",
-        width: 0,
-        backgroundColor: "inherit",
-        transition: "width 0.2s ease-in 0s",
-        overflow: "hidden",
-        color: theme.palette.getContrastText(theme.palette.publish.main),
-        "&:hover ~ div.CM_PUBLICATION_INFO": {
-            width: 400,
-            opacity: 1,
-            visibility: "visible"
-        }
-    },
     publicationInfo: {
         flex: 20,
         display: "flex",
@@ -61,8 +47,7 @@ const styles = theme => ({
         width:0,
         opacity: 0,
         visibility: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
+        paddingRight: 5,
         overflow: "hidden",
         color: theme.palette.getContrastText(theme.palette.publish.main),
         transition: "width 0.3s ease-in 0s"
@@ -92,11 +77,11 @@ class PublicationStatusComponent extends Component {
         return <React.Fragment>
             <div className={ `${publicationStatusClass} ${classes.root}` } />
             <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}>
-                <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
+                <InfoButton publicationInfoWidth={ this.props.publicationInfoWidth }>
                     <div className={ classes.infoContainer }>
                         <InfoOutline/>
                     </div>
-                </div>
+                </InfoButton>
                 <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }>
                     <div className={ classes.infoContainer } style={{paddingLeft: 20}}>
                         { publicationStatus.geti18nDetailsMessage(node, t, i18n.language ) }
@@ -108,8 +93,33 @@ class PublicationStatusComponent extends Component {
 }
 
 PublicationStatusComponent.propTypes = {
-    node: PropTypes.object.isRequired
+    node: PropTypes.object.isRequired,
+    publicationInfoWidth: PropTypes.number.isRequired
 };
 
 
 export default translate()(withStyles(styles)(PublicationStatusComponent));
+
+const infoButtonStyles = theme => ({
+    infoButton: {
+        flex: "auto",
+        display: "flex",
+        alignItems: "center",
+        width: 0,
+        backgroundColor: "inherit",
+        transition: "width 0.2s ease-in 0s",
+        overflow: "hidden",
+        color: theme.palette.getContrastText(theme.palette.publish.main),
+        "&:hover ~ div.CM_PUBLICATION_INFO": {
+            width: props => props.publicationInfoWidth,
+            opacity: 1,
+            visibility: "visible"
+        }
+    }
+});
+
+const InfoButton = injectSheet(infoButtonStyles)(({classes, children}) => (
+    <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
+        {children}
+    </div>
+));

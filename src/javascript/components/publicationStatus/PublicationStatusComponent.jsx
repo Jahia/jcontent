@@ -39,12 +39,13 @@ const styles = theme => ({
         backgroundColor: "#cecece"
     },
     infoButton: {
-        flex: 1,
+        flex: "auto",
         display: "flex",
         alignItems: "center",
         width: 0,
         backgroundColor: "inherit",
         transition: "width 0.2s ease-in 0s",
+        overflow: "hidden",
         color: theme.palette.getContrastText(theme.palette.publish.main),
         "&:hover ~ div.CM_PUBLICATION_INFO": {
             width: 400,

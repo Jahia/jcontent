@@ -5,6 +5,7 @@ import {translate} from "react-i18next";
 import FileCard from './FileCard';
 import Grid from '@material-ui/core/Grid';
 import { Pagination } from "@jahia/react-material";
+import { DxContext } from "../DxContext";
 
 class FilesGrid extends Component {
 
@@ -24,7 +25,14 @@ class FilesGrid extends Component {
             {
                 this.props.rows.map((node) => (
                     <Grid key={ node.uuid } item xs={ size }>
-                        <FileCard cardType={ size } node={ node } onSelect={ this.props.onRowSelected } />
+                        <DxContext.Consumer>
+                            {
+                                dxContext => <FileCard cardType={ size }
+                                                       node={ node }
+                                                       onSelect={ this.props.onRowSelected }
+                                                       dxContext={ dxContext }/>
+                            }
+                        </DxContext.Consumer>
                     </Grid>
                 ))
             }

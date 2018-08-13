@@ -115,14 +115,14 @@ class FileCard extends Component {
     }
 
     largeMediaCard() {
-        const { classes, t, node } = this.props;
+        const { classes, t, node, dxContext } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
                      onClick={ () => this.props.onSelect(node) }>
             <PublicationStatus node={ node }/>
             <CardMedia
                 className={ classes.coverLarge }
-                image={ `/files/default/${node.path}` }
+                image={ `${dxContext.contextPath}/files/default/${node.path}` }
                 title={ node.name }
             />
             <div className={classes.details}>
@@ -144,14 +144,14 @@ class FileCard extends Component {
     }
 
     mediumMediaCard() {
-        const { classes, t, node } = this.props;
+        const { classes, t, node, dxContext } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
                      onClick={ () => this.props.onSelect(node) }>
             <PublicationStatus node={ node }/>
             <CardMedia
                 className={ classes.coverMedium }
-                image={ `/files/default/${node.path}?t=thumbnail2` }
+                image={ `${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
             <div className={classes.details}>
@@ -170,14 +170,14 @@ class FileCard extends Component {
     }
 
     verticalMediaCard() {
-        const { classes, t, node } = this.props;
+        const { classes, t, node, dxContext } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
                      onClick={ () => this.props.onSelect(node) }>
             <CardMedia
                 style={{ flex: 2 }}
                 className={ classes.coverVertical }
-                image={ `/files/default/${node.path}?t=thumbnail2` }
+                image={ `${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
             <div className={classes.verticalDetails} style={{ flex: 1.5 }}>

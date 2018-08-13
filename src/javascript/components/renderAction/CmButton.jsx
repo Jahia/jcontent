@@ -26,7 +26,7 @@ class CmButton extends React.Component {
                     size="medium"
                     color="primary"
                     onClick={(event) => onClick(event)}>
-                {childrenCount > 0 && <React.Fragment>{children}</React.Fragment>}
+                {childrenCount > 0 && children}
                 {t(labelKey)}
             </Button>
         )

@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 import {PredefinedFragments} from "@jahia/apollo-dx";
+import * as _ from 'lodash';
+import {replaceFragmentsInDocument} from "@jahia/apollo-dx/index";
 
 class BrowsingQueryHandler {
 
@@ -276,17 +278,102 @@ const LoadSelectionQuery = gql `
 `;
 
 
-const CheckRequirementsQuery = gql`query checkRequirementsQuery($path:String!, $permission:String!, $isNodeType:  InputNodeTypesInput!, $isNotNodeType:  InputNodeTypesInput!) {
+let getRequirementsQuery =  () => _.cloneDeep(gql`query CheckRequirementsQuery($path:String!) {
     jcr {
         nodeByPath(path:$path) {
             ...NodeCacheRequiredFields
-            perm: hasPermission(permissionName:$permission)
-            showOnType: isNodeType(type:$isNodeType)
-            hideOnType: isNodeType(type:$isNotNodeType)
+            ...requirements
         }
     }
 }
-${PredefinedFragments.nodeCacheRequiredFields.gql}`;
+${PredefinedFragments.nodeCacheRequiredFields.gql}
+`);
+
+const RequirementFragments = {
+    isNodeType: {
+        variables: {
+            isNodeType:  "InputNodeTypesInput!"
+        },
+        applyFor: "requirements",
+        gql: gql`fragment NodeIsNodeType on JCRNode {
+            isNodeType(type: $isNodeType)
+        }`
+    },
+    isNotNodeType: {
+        variables: {
+            isNotNodeType:  "InputNodeTypesInput!"
+        },
+        applyFor: "requirements",
+        gql: gql`fragment NodeIsNotNodeType on JCRNode {
+            isNotNodeType: isNodeType(type: $isNotNodeType)
+        }`
+    },
+    permission: {
+        variables: {
+            permission: "String!"
+        },
+        applyFor: "requirements",
+        gql: gql`fragment NodeHasPermission on JCRNode {
+            hasPermission(permissionName: $permission)
+        }`
+    },
+    requiredType: {
+        variables: {
+            permission: "String!"
+        },
+        applyFor: "requirements",
+        gql: gql`fragment NodeHasPermission on JCRNode {
+            nodesByPath(path: $path) {
+                contributeTypes: property(name: "j:contributeTypes") {
+                    values
+                }
+                primaryNodeType {
+                    name
+                    supertypes {
+                        name
+                    }
+                }
+            }
+        }`
+    },
+}
+
+class RequirementQueryHandler {
+    getQuery(path, requiredPermission, hideOnNodeTypes, showOnNodeTypes, provideType) {
+        let checkRequirementFragments = [];
+        // check permission
+        this.checkPermission = !_.isEmpty(requiredPermission);
+        this.checkHideOn = !_.isEmpty(hideOnNodeTypes);
+        this.checkShowOn = !_.isEmpty(showOnNodeTypes);
+        this.checkProvideType = !_.isEmpty(provideType);
+
+        this.variables = {path: path};
+        if (this.checkPermission) {
+            checkRequirementFragments.push(RequirementFragments.permission);
+            this.variables.permission = requiredPermission;
+        }
+        if (this.checkHideOn) {
+            checkRequirementFragments.push(RequirementFragments.isNotNodeType);
+            this.variables.isNotNodeType = {types: hideOnNodeTypes};
+        }
+        if (this.checkShowOn) {
+            checkRequirementFragments.push(RequirementFragments.isNodeType);
+            this.variables.isNodeType = {types: showOnNodeTypes};
+        }
+
+        if (this.checkProvideType) {
+            checkRequirementFragments.push(RequirementFragments.provideType);
+        }
+
+        let requirementsQuery = getRequirementsQuery();
+        replaceFragmentsInDocument(requirementsQuery, checkRequirementFragments);
+        return requirementsQuery;
+    }
+
+    getVariables() {
+        return this.variables;
+    }
+}
 
 
-export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery, GetNodeByPathQuery, CheckRequirementsQuery};
+export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery, GetNodeByPathQuery, RequirementFragments, RequirementQueryHandler};

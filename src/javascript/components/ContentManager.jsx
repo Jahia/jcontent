@@ -1,25 +1,26 @@
 import React from "react";
-import {MuiThemeProvider} from '@material-ui/core';
-import {NotificationProvider, theme} from '@jahia/react-material';
-import {client} from '@jahia/apollo-dx';
-import {getI18n} from '@jahia/i18next';
-import {I18nextProvider} from 'react-i18next';
-import {Route} from 'react-router';
-import {BrowserRouter} from 'react-router-dom';
-import {ApolloProvider, ApolloConsumer} from 'react-apollo';
-import ManagerLayout from './ManagerLayout';
-import CMLeftNavigation from './CMLeftNavigation';
-import CMTopBar from './CMTopBar';
-import * as _ from 'lodash';
+import {MuiThemeProvider} from "@material-ui/core";
+import {NotificationProvider} from "@jahia/react-material";
+import {anthraciteTheme as theme} from "@jahia/react-material/theme";
+import {client} from "@jahia/apollo-dx";
+import {getI18n} from "@jahia/i18next";
+import {I18nextProvider} from "react-i18next";
+import {Route} from "react-router";
+import {BrowserRouter} from "react-router-dom";
+import {ApolloProvider, ApolloConsumer} from "react-apollo";
+import ManagerLayout from "./ManagerLayout";
+import CMLeftNavigation from "./CMLeftNavigation";
+import CMTopBar from "./CMTopBar";
+import * as _ from "lodash";
 import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
-import defaultActions from "./actions/defaultActions"
+import defaultActions from "./actions/defaultActions";
 import actionsRegistry from "./actionsRegistry"
 import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
 import eventHandlers from "./eventHandlers"
 
-import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
+import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {register as eventHandlerRegister} from "./eventHandlerRegistry";
 
 const actionComponents = {
@@ -39,7 +40,7 @@ class ContentManager extends React.Component {
         _.each(Object.keys(actions), actionKey => {
             actionsRegistry[actionKey] = actions[actionKey];
             // get Component if not set yet
-            if (typeof  actionsRegistry[actionKey].component === 'string') {
+            if (typeof  actionsRegistry[actionKey].component === "string") {
                 actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component]
             }
 
@@ -75,14 +76,14 @@ class ContentManager extends React.Component {
                         <I18nextProvider i18n={getI18n({
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,
-                            ns: ['content-manager'],
-                            defaultNS: 'content-manager',
+                            ns: ["content-manager"],
+                            defaultNS: "content-manager",
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <Route path='/:siteKey/:lang' key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang}  render={props => {
-                                        dxContext['siteKey'] = props.match.params.siteKey;
-                                        dxContext['lang'] = props.match.params.lang;
+                                    <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang}  render={props => {
+                                        dxContext["siteKey"] = props.match.params.siteKey;
+                                        dxContext["lang"] = props.match.params.lang;
                                         return (
                                             <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
                                                            leftSide={<CMLeftNavigation/>}>

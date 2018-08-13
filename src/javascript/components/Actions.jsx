@@ -1,8 +1,13 @@
-import React from 'react';
-import * as _ from 'lodash';
-import actionsRegistry from "./actionsRegistry"
-import {CheckRequirementsQuery} from "./gqlQueries";
+import React from "react";
+import * as _ from "lodash";
+import actionsRegistry from "./actionsRegistry";
+import {
+    CheckRequirementsQuery,
+    getRequirementsQuery,
+    RequirementQueryHandler
+} from "./gqlQueries";
 import {Query} from "react-apollo";
+import {replaceFragmentsInDocument} from "@jahia/apollo-dx";
 
 class Actions extends React.Component {
 
@@ -13,32 +18,27 @@ class Actions extends React.Component {
 
         return _.map(actionsToDisplayKeys, actionKey => {
                 let action = actionsRegistry[actionKey];
-                const {requiredPermission, hideOnNodeTypes, showOnNodeTypes, ...actionRest} = action;
-                // check permission
-                const permission = requiredPermission === undefined || requiredPermission === "" ? "jcr:write" : requiredPermission;
-                const hideOn = {types: hideOnNodeTypes === undefined || hideOnNodeTypes === "" ? ["dummyType"] : hideOnNodeTypes};
-                const showOn = {types: showOnNodeTypes === undefined || showOnNodeTypes === "" ? ["nt:base"] : showOnNodeTypes};
+                const {requiredPermission, hideOnNodeTypes, showOnNodeTypes, provideType, ...actionRest} = action;
+                let requirementQueryHandler = new RequirementQueryHandler();
+                let query = requirementQueryHandler.getQuery(context.path, requiredPermission, hideOnNodeTypes, showOnNodeTypes, provideType);
+                let ActionComponent =  action.component;
 
-                let ActionComponent = action.component;
                 return ActionComponent &&
                     (
-                        <Query query={CheckRequirementsQuery} variables={{
-                            path: context.path,
-                            permission: permission,
-                            isNodeType: showOn,
-                            isNotNodeType: hideOn
-                        }}  key={actionKey}>
+                        <Query query={query} variables={requirementQueryHandler.getVariables()}  key={actionKey}>
                             {({loading, error, data}) => {
                                 if (loading || !data || !data.jcr) {
                                     return null;
                                 }
-                                if (!data.jcr.nodeByPath.perm || !data.jcr.nodeByPath.showOnType || data.jcr.nodeByPath.hideOnType) {
+                                if ((requirementQueryHandler.checkPermission && !data.jcr.nodeByPath.hasPermission) ||
+                                    (requirementQueryHandler.checkShowOn && !data.jcr.nodeByPath.isNodeType) ||
+                                    (requirementQueryHandler.checkHideOn && data.jcr.nodeByPath.isNotNodeType)) {
                                     return null;
                                 }
                                 return (
-                                <ActionComponent {...actionRest} context={context}>
-                                {children}
-                                </ActionComponent>
+                                    <ActionComponent {...actionRest} context={context}>
+                                        {children}
+                                    </ActionComponent>
                                 )
                             }}
                         </Query>

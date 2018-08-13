@@ -144,7 +144,7 @@
                 component: "action",
                 call: (path, nodetype) => window.parent.createContent(path, nodetype, true),
                 target: ["createMenuActions"],
-                requiredAllowedChildNodeTypes: ['jnt:content'],
+                provideType: true,
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.content'
             }

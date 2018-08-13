@@ -112,7 +112,8 @@ const styles = (theme) => ({
         display: "flex",
         padding: 0,
         borderBottom: "none",
-        height: "inherit"
+        height: "100%",
+        minHeight: 56 //same as row height
     }
 });
 

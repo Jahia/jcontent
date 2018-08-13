@@ -132,19 +132,14 @@
                 labelKey: 'label.contentManager.create.create',
                 hideOnNodeTypes: ["jnt:page"]
             },
-            createContentFolderAction: {
-                component: "action",
-                call: (path) => window.parent.createContent(path, 'jnt:contentFolder', false),
+            createContentFolder: {
                 target: ["createMenuActions"],
                 requiredAllowedChildNodeTypes: ['jnt:contentFolder'],
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.contentFolder'
             },
-            createContentAction: {
-                component: "action",
-                call: (path, nodetype) => window.parent.createContent(path, nodetype, true),
+            createContent: {
                 target: ["createMenuActions"],
-                provideType: true,
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.content'
             }

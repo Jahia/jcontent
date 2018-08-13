@@ -102,8 +102,8 @@ class Sql2SearchQueryHandler {
 }
 
 const browseType = {
-    pages: {recursionTypesFilter:["jnt:page"], typeFilter:["jmix:editorialContent"]},
-    contents: {recursionTypesFilter:["jnt:contentFolder"], typeFilter:["jmix:editorialContent"]}
+    pages: {recursionTypesFilter: ["jnt:page"], typeFilter: ["jmix:editorialContent"]},
+    contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: ["jmix:editorialContent"]}
 };
 
 const nodeFields = gql`
@@ -153,10 +153,10 @@ const nodeFields = gql`
         }
         ...NodeCacheRequiredFields
     }
-    ${PredefinedFragments.nodeCacheRequiredFields.gql}`;
+${PredefinedFragments.nodeCacheRequiredFields.gql}`;
 
 const getNodeSubTree = gql `
-    query($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
+    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
                 ...NodeCacheRequiredFields
@@ -175,7 +175,7 @@ const getNodeSubTree = gql `
 `;
 
 const GetNodeByPathQuery = gql `
-query ($path: String!, $language: String!, $displayLanguage:String!) {
+query GetNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
   jcr {
     results: nodeByPath(path: $path) {
       ...NodeFields
@@ -186,7 +186,7 @@ ${nodeFields}
 `;
 
 const searchContentQuery = gql`
-    query($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
+    query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
             results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
                 pageInfo {
@@ -198,11 +198,11 @@ const searchContentQuery = gql`
             }
         }
     }
-    ${nodeFields}
+
 `;
 
 const sql2SearchContentQuery = gql`
-    query($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
+    query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
             results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit) {
                 pageInfo {
@@ -214,7 +214,7 @@ const sql2SearchContentQuery = gql`
             }
         }
     }
-    ${nodeFields}
+
 `;
 
 const filesQuery = gql `
@@ -245,15 +245,15 @@ const filesQuery = gql `
 
 const ContentTypesQuery = gql`
     query ContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
-      jcr {
-        nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page", "jnt:file"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType", "jnt:editableFile"]}) {
-          nodes {
-            name
-            displayName(language: $displayLanguage)
-            icon
-          }
+        jcr {
+            nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page", "jnt:file"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType", "jnt:editableFile"]}) {
+                nodes {
+                    name
+                    displayName(language: $displayLanguage)
+                    icon
+                }
+            }
         }
-      }
     }
 `;
 
@@ -278,7 +278,7 @@ const LoadSelectionQuery = gql `
 `;
 
 
-let getRequirementsQuery =  () => _.cloneDeep(gql`query CheckRequirementsQuery($path:String!) {
+let getRequirementsQuery = () => _.cloneDeep(gql`query CheckRequirementsQuery($path:String!) {
     jcr {
         nodeByPath(path:$path) {
             ...NodeCacheRequiredFields
@@ -292,7 +292,7 @@ ${PredefinedFragments.nodeCacheRequiredFields.gql}
 const RequirementFragments = {
     isNodeType: {
         variables: {
-            isNodeType:  "InputNodeTypesInput!"
+            isNodeType: "InputNodeTypesInput!"
         },
         applyFor: "requirements",
         gql: gql`fragment NodeIsNodeType on JCRNode {
@@ -301,7 +301,7 @@ const RequirementFragments = {
     },
     isNotNodeType: {
         variables: {
-            isNotNodeType:  "InputNodeTypesInput!"
+            isNotNodeType: "InputNodeTypesInput!"
         },
         applyFor: "requirements",
         gql: gql`fragment NodeIsNotNodeType on JCRNode {
@@ -317,52 +317,45 @@ const RequirementFragments = {
             hasPermission(permissionName: $permission)
         }`
     },
-    requiredType: {
-        variables: {
-            permission: "String!"
-        },
+    allowedChildNodeTypes: {
         applyFor: "requirements",
-        gql: gql`fragment NodeHasPermission on JCRNode {
-            nodesByPath(path: $path) {
-                contributeTypes: property(name: "j:contributeTypes") {
-                    values
-                }
-                primaryNodeType {
-                    name
-                    supertypes {
-                        name
-                    }
-                }
+        gql: gql`fragment ProvideTypes on JCRNode {
+            allowedChildNodeTypes {
+                name
+            }
+            contributeTypes: property(name: "j:contributeTypes") {
+                values
             }
         }`
     },
 }
 
 class RequirementQueryHandler {
-    getQuery(path, requiredPermission, hideOnNodeTypes, showOnNodeTypes, provideType) {
+    getQuery(path, action) {
         let checkRequirementFragments = [];
         // check permission
-        this.checkPermission = !_.isEmpty(requiredPermission);
-        this.checkHideOn = !_.isEmpty(hideOnNodeTypes);
-        this.checkShowOn = !_.isEmpty(showOnNodeTypes);
-        this.checkProvideType = !_.isEmpty(provideType);
+        this.checkPermission = !_.isEmpty(action.requiredPermission);
+        this.checkHideOn = !_.isEmpty(action.hideOnNodeTypes);
+        this.checkShowOn = !_.isEmpty(action.showOnNodeTypes);
+        this.checkAllowedChildNodeTypes = _.isEmpty(action.requiredAllowedChildNodeTypes) && action.provideAllowedChildNodeTypes;
+
 
         this.variables = {path: path};
         if (this.checkPermission) {
             checkRequirementFragments.push(RequirementFragments.permission);
-            this.variables.permission = requiredPermission;
+            this.variables.permission = action.requiredPermission;
         }
         if (this.checkHideOn) {
             checkRequirementFragments.push(RequirementFragments.isNotNodeType);
-            this.variables.isNotNodeType = {types: hideOnNodeTypes};
+            this.variables.isNotNodeType = {types: action.hideOnNodeTypes};
         }
         if (this.checkShowOn) {
             checkRequirementFragments.push(RequirementFragments.isNodeType);
-            this.variables.isNodeType = {types: showOnNodeTypes};
+            this.variables.isNodeType = {types: action.showOnNodeTypes};
         }
 
-        if (this.checkProvideType) {
-            checkRequirementFragments.push(RequirementFragments.provideType);
+        if (this.checkAllowedChildNodeTypes) {
+            checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
         }
 
         let requirementsQuery = getRequirementsQuery();
@@ -376,4 +369,13 @@ class RequirementQueryHandler {
 }
 
 
-export {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, ContentTypesQuery, LoadSelectionQuery, GetNodeByPathQuery, RequirementFragments, RequirementQueryHandler};
+export {
+    BrowsingQueryHandler,
+    SearchQueryHandler,
+    Sql2SearchQueryHandler,
+    FilesQueryHandler,
+    ContentTypesQuery,
+    LoadSelectionQuery,
+    GetNodeByPathQuery,
+    RequirementQueryHandler
+};

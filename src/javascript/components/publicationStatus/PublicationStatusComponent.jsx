@@ -47,7 +47,6 @@ const styles = theme => ({
         width:0,
         opacity: 0,
         visibility: "hidden",
-        paddingRight: 5,
         overflow: "hidden",
         color: theme.palette.getContrastText(theme.palette.publish.main),
         transition: "width 0.3s ease-in 0s"

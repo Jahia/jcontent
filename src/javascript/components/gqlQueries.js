@@ -124,25 +124,25 @@ const nodeFields = gql`
             displayName(language: $displayLanguage)
             icon
         }
-        lockOwner: property(name: "jcr:lockOwner") {
+        lockOwner: property(name: "jcr:lockOwner", language: $language) {
             value
         }
-        lastPublished: property(name: "j:lastPublished") {
+        lastPublished: property(name: "j:lastPublished", language: $language) {
             value
         }
-        lastPublishedBy: property(name: "j:lastPublishedBy") {
+        lastPublishedBy: property(name: "j:lastPublishedBy", language: $language) {
             value
         }
-        lastModifiedBy: property(name: "jcr:lastModifiedBy") {
+        lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {
             value
         }
-        lastModified: property(name: "jcr:lastModified") {
+        lastModified: property(name: "jcr:lastModified", language: $language) {
             value
         }
-        deletedBy: property(name: "j:deletionUser") {
+        deletedBy: property(name: "j:deletionUser", language: $language) {
             value
         }
-        deleted: property(name: "j:deletionDate") {
+        deleted: property(name: "j:deletionDate", language: $language) {
             value
         }
         wipStatus: property(name: "j:workInProgressStatus") {

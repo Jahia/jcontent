@@ -1,7 +1,7 @@
 import React from "react";
 import {MuiThemeProvider} from "@material-ui/core";
 import {NotificationProvider} from "@jahia/react-material";
-import {anthraciteLightTheme as theme} from "@jahia/react-material/theme";
+import {theme as theme} from "@jahia/react-material/theme";
 import {client} from "@jahia/apollo-dx";
 import {getI18n} from "@jahia/i18next";
 import {I18nextProvider} from "react-i18next";

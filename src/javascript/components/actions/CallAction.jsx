@@ -8,6 +8,5 @@ class CallAction extends React.Component {
     }
 }
 
-
 export default CallAction;
 

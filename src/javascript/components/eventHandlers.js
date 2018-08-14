@@ -14,9 +14,11 @@ window.parent.updateContentManagerStore = (context, enginePath, engineNodeName) 
     if (enginePath === context.path && enginePath !== path) {
         context.goto(path, context.params);
     } else {
-        context.apolloClient.query({query: GetNodeByPathQuery,
+        context.apolloClient.query({
+            query: GetNodeByPathQuery,
             fetchPolicy: "network-only",
-            variables: {"path": path, "language": context.language, "displayLanguage": context.uiLang}});
+            variables: {"path": path, "language": context.language, "displayLanguage": context.uiLang}
+        });
     }
 }
 

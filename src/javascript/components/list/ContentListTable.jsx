@@ -12,9 +12,7 @@ import { publicationStatusByName } from "../publicationStatus/publicationStatus"
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
-
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
-
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name'},
@@ -160,7 +158,6 @@ class ContentListTable extends React.Component {
     addIconSuffix(icon) {
         return (!icon.includes('.png') ? icon+'.png' : icon);
     }
-
 
     render() {
 

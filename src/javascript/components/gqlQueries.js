@@ -287,7 +287,6 @@ const LoadSelectionQuery = gql`
     ${nodeFields}
 `;
 
-
 let getRequirementsQuery = () => _.cloneDeep(gql `
     query CheckRequirementsQuery($path:String!) {
         jcr {
@@ -342,6 +341,7 @@ const RequirementFragments = {
 }
 
 class RequirementQueryHandler {
+
     getQuery(path, action) {
         let checkRequirementFragments = [];
         // check permission

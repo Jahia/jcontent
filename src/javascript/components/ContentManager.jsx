@@ -19,7 +19,6 @@ import actionsRegistry from "./actionsRegistry"
 import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
 import eventHandlers from "./eventHandlers"
-
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {register as eventHandlerRegister} from "./eventHandlerRegistry";
 

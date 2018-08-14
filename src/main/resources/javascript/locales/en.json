@@ -55,6 +55,7 @@
       "create": {
           "create": "Create",
           "content": "New content",
+          "contentWithArgs": "New {{typeName}}",
           "contentFolder": "New content folder"
       },
       "preview": {

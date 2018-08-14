@@ -155,7 +155,7 @@ const nodeFields = gql `
     }
 ${PredefinedFragments.nodeCacheRequiredFields.gql}`;
 
-const getNodeSubTree = gql `
+const getNodeSubTree = gql`
     query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -217,7 +217,7 @@ const sql2SearchContentQuery = gql `
 
 `;
 
-const filesQuery = gql `
+const filesQuery = gql`
     query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -257,7 +257,17 @@ const ContentTypesQuery = gql `
     }
 `;
 
-const LoadSelectionQuery = gql `
+const ContentTypeQuery = gql`
+    query ContentTypeQuery($nodeType: String!, $displayLanguage: String!) {
+  jcr {
+    nodeTypeByName(name: $nodeType) {
+      displayName(language: $displayLanguage)
+    }
+  }
+}
+`;
+
+const LoadSelectionQuery = gql`
     query LoadSelectionQuery($paths: [String!]!, $language:String!, $displayLanguage:String!) {
         jcr {
             nodesByPath(paths: $paths) {
@@ -375,6 +385,7 @@ export {
     Sql2SearchQueryHandler,
     FilesQueryHandler,
     ContentTypesQuery,
+    ContentTypeQuery,
     LoadSelectionQuery,
     GetNodeByPathQuery,
     RequirementQueryHandler

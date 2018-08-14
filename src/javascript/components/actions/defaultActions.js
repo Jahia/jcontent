@@ -9,7 +9,6 @@ let createContent = (context) => {
     return window.parent.createContent(context.path, _.join(context.nodeTypes, " "), true);
 }
 
-// updateButtonItemCallback is called by GWT when the save succeed on UpdateButton component in GWT engine
 let defaultActions = {
     edit: {
         component: CallAction,

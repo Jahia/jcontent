@@ -39,7 +39,7 @@ class ContentManager extends React.Component {
         _.each(Object.keys(actions), actionKey => {
             actionsRegistry[actionKey] = actions[actionKey];
             // get Component if not set yet
-            if (typeof  actionsRegistry[actionKey].component === "string") {
+            if (typeof actionsRegistry[actionKey].component === "string") {
                 actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component]
             }
 
@@ -49,7 +49,6 @@ class ContentManager extends React.Component {
                     return objValue.concat(srcValue);
                 }
             }
-
         });
     }
 

@@ -9,8 +9,8 @@ const eventHandlers = {
 
 window.parent.updateContentManagerStore = (context, enginePath, engineNodeName) => {
     const path = enginePath.substring(0, enginePath.lastIndexOf('/') + 1) + engineNodeName;
-    // check if enginePath is equal to the path of the router (this mean that we are editing the tree selection)
-    // then check if the path has changed ..
+    // check if enginePath is equal to the path of the router (this means that we are editing the tree selection)
+    // then check if the path has changed
     if (enginePath === context.path && enginePath !== path) {
         context.goto(path, context.params);
     } else {

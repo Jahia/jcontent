@@ -343,13 +343,12 @@ const RequirementFragments = {
 class RequirementQueryHandler {
 
     getQuery(path, action) {
+
         let checkRequirementFragments = [];
-        // check permission
         this.checkPermission = !_.isEmpty(action.requiredPermission);
         this.checkHideOn = !_.isEmpty(action.hideOnNodeTypes);
         this.checkShowOn = !_.isEmpty(action.showOnNodeTypes);
         this.checkAllowedChildNodeTypes = _.isEmpty(action.requiredAllowedChildNodeTypes) && action.provideAllowedChildNodeTypes;
-
 
         this.variables = {path: path};
         if (this.checkPermission) {

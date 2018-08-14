@@ -1,11 +1,11 @@
 <%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions" %>
-<%@ page import="org.jahia.settings.SettingsBean"%>
+<%@ page import="org.jahia.settings.SettingsBean" %>
 
 <c:set var="mainResourceLocale" value="${renderContext.mainResourceLocale}"/>
 
@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<template:addResources type="javascript" resources="apps/content-manager.js" />
+<template:addResources type="javascript" resources="apps/content-manager.js"/>
 <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 
 <div id="${targetId}">loading..</div>
@@ -72,7 +72,7 @@
             },
             publishAll: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
+                call: () => alert('not implemented yet'),
                 icon: "Edit",
                 target: ["publishMenu"],
                 requiredPermission: "",
@@ -81,7 +81,7 @@
             },
             unPublish: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
+                call: () => alert('not implemented yet'),
                 icon: "Edit",
                 target: ["publishMenu"],
                 requiredPermission: "",
@@ -99,7 +99,7 @@
             },
             duplicate: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
+                call: () => alert('not implemented yet'),
                 icon: "Edit",
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
@@ -108,7 +108,7 @@
             },
             copy: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
+                call: () => alert('not implemented yet'),
                 icon: "Edit",
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
@@ -117,7 +117,7 @@
             },
             delete: {
                 component: "action",
-                call: (path, name) => window.parent.editContent(path, ['jnt:content'], ['nt:base']),
+                call: () => alert('not implemented yet'),
                 icon: "Edit",
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
@@ -133,15 +133,17 @@
                 hideOnNodeTypes: ["jnt:page"]
             },
             createContentFolder: {
-                target: ["createMenuActions"],
+                target: ["createMenuActions", "contentTreeMenuActions"],
                 requiredAllowedChildNodeTypes: ['jnt:contentFolder'],
                 requiredPermission: "jcr:addChildNodes",
-                labelKey: 'label.contentManager.create.contentFolder'
+                labelKey: 'label.contentManager.create.contentFolder',
+                hideOnNodeTypes: ["jnt:page"]
             },
             createContent: {
-                target: ["createMenuActions"],
+                target: ["createMenuActions", "contentTreeMenuActions"],
                 requiredPermission: "jcr:addChildNodes",
-                labelKey: 'label.contentManager.create.content'
+                labelKey: 'label.contentManager.create.content',
+                hideOnNodeTypes: ["jnt:page"]
             }
         }
     };

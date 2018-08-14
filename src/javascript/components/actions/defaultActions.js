@@ -3,7 +3,6 @@ import {Edit} from "@material-ui/icons";
 import * as _ from "lodash";
 
 let edit = (context) => window.parent.editContent(context.path, context.displayName, ['jnt:content'], ['nt:base']);
-
 let createContentFolder = (context) => window.parent.createContent(context.path, 'jnt:contentFolder', false);
 let createContent = (context) => {
     return window.parent.createContent(context.path, _.join(context.nodeTypes, " "), true);

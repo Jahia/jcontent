@@ -21,11 +21,13 @@ class CmButton extends React.Component {
         const {classes, onClick, labelKey, t, children} = this.props;
         let childrenCount = React.Children.count(children);
         return (
-            <Button className={classes.button}
-                    variant="contained"
-                    size="medium"
-                    color="primary"
-                    onClick={(event) => onClick(event)}>
+            <Button
+                className={classes.button}
+                variant="contained"
+                size="medium"
+                color="primary"
+                onClick={(event) => onClick(event)}
+            >
                 {childrenCount > 0 && children}
                 {t(labelKey)}
             </Button>

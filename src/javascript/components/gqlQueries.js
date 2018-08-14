@@ -106,7 +106,7 @@ const browseType = {
     contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: ["jmix:editorialContent"]}
 };
 
-const nodeFields = gql`
+const nodeFields = gql `
     fragment NodeFields on JCRNode {
         aggregatedPublicationInfo(language: $language) {
             publicationStatus
@@ -175,17 +175,17 @@ const getNodeSubTree = gql `
 `;
 
 const GetNodeByPathQuery = gql `
-query GetNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
-  jcr {
-    results: nodeByPath(path: $path) {
-      ...NodeFields
+    query GetNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
+        jcr {
+            results: nodeByPath(path: $path) {
+                ...NodeFields
+            }
+        }
     }
-  }
-}
-${nodeFields}
+    ${nodeFields}
 `;
 
-const searchContentQuery = gql`
+const searchContentQuery = gql `
     query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
             results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
@@ -201,7 +201,7 @@ const searchContentQuery = gql`
 
 `;
 
-const sql2SearchContentQuery = gql`
+const sql2SearchContentQuery = gql `
     query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
         jcr {
             results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit) {
@@ -243,7 +243,7 @@ const filesQuery = gql `
     ${nodeFields}
 `;
 
-const ContentTypesQuery = gql`
+const ContentTypesQuery = gql `
     query ContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
         jcr {
             nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page", "jnt:file"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType", "jnt:editableFile"]}) {
@@ -278,15 +278,16 @@ const LoadSelectionQuery = gql `
 `;
 
 
-let getRequirementsQuery = () => _.cloneDeep(gql`query CheckRequirementsQuery($path:String!) {
-    jcr {
-        nodeByPath(path:$path) {
-            ...NodeCacheRequiredFields
-            ...requirements
+let getRequirementsQuery = () => _.cloneDeep(gql `
+    query CheckRequirementsQuery($path:String!) {
+        jcr {
+            nodeByPath(path:$path) {
+                ...NodeCacheRequiredFields
+                ...requirements
+            }
         }
     }
-}
-${PredefinedFragments.nodeCacheRequiredFields.gql}
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `);
 
 const RequirementFragments = {
@@ -295,7 +296,7 @@ const RequirementFragments = {
             isNodeType: "InputNodeTypesInput!"
         },
         applyFor: "requirements",
-        gql: gql`fragment NodeIsNodeType on JCRNode {
+        gql: gql `fragment NodeIsNodeType on JCRNode {
             isNodeType(type: $isNodeType)
         }`
     },
@@ -304,7 +305,7 @@ const RequirementFragments = {
             isNotNodeType: "InputNodeTypesInput!"
         },
         applyFor: "requirements",
-        gql: gql`fragment NodeIsNotNodeType on JCRNode {
+        gql: gql `fragment NodeIsNotNodeType on JCRNode {
             isNotNodeType: isNodeType(type: $isNotNodeType)
         }`
     },
@@ -313,13 +314,13 @@ const RequirementFragments = {
             permission: "String!"
         },
         applyFor: "requirements",
-        gql: gql`fragment NodeHasPermission on JCRNode {
+        gql: gql `fragment NodeHasPermission on JCRNode {
             hasPermission(permissionName: $permission)
         }`
     },
     allowedChildNodeTypes: {
         applyFor: "requirements",
-        gql: gql`fragment ProvideTypes on JCRNode {
+        gql: gql `fragment ProvideTypes on JCRNode {
             allowedChildNodeTypes {
                 name
             }
@@ -367,7 +368,6 @@ class RequirementQueryHandler {
         return this.variables;
     }
 }
-
 
 export {
     BrowsingQueryHandler,

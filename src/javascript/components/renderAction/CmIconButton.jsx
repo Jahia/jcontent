@@ -22,13 +22,11 @@ class CmIconButton extends React.Component {
         const {classes, onClick, labelKey, t, children} = this.props;
         let childrenCount = React.Children.count(children);
         return (
-            <IconButton
-                aria-haspopup="true"
-                onClick={(event) => onClick(event)}>
-            {childrenCount > 0
-                ? <React.Fragment>{children}</React.Fragment>
-                : <MoreHoriz/>
-            }
+            <IconButton aria-haspopup="true" onClick={(event) => onClick(event)}>
+                {childrenCount > 0
+                    ? <React.Fragment>{children}</React.Fragment>
+                    : <MoreHoriz/>
+                }
             </IconButton>
         )
     }

@@ -37,7 +37,6 @@
                 target: ["previewBar"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.translate'
-
             },
             tableActions: {
                 priority: 2.5,
@@ -68,7 +67,6 @@
                 target: ["previewBar", "tableMenuActions"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.publish'
-
             },
             publishAll: {
                 component: "action",
@@ -77,7 +75,6 @@
                 target: ["publishMenu"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.publishAll'
-
             },
             unPublish: {
                 component: "action",
@@ -86,7 +83,6 @@
                 target: ["publishMenu"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.unpublish'
-
             },
             additionalPreview: {
                 component: "menuAction",
@@ -95,7 +91,6 @@
                 target: ["additionalMenu"],
                 requiredPermission: "",
                 iconButton: true
-
             },
             duplicate: {
                 component: "action",
@@ -104,7 +99,6 @@
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.duplicate'
-
             },
             copy: {
                 component: "action",
@@ -113,7 +107,6 @@
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.copy'
-
             },
             delete: {
                 component: "action",
@@ -122,7 +115,6 @@
                 target: ["additionalPreviewMenu"],
                 requiredPermission: "",
                 labelKey: 'label.contentManager.contentPreview.delete'
-
             },
             createMenu: {
                 component: "menuAction",
@@ -147,7 +139,6 @@
             }
         }
     };
-
 
     reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
 </script>

@@ -52,7 +52,6 @@ const GRID_SIZE = 12;
 const GRID_PANEL_BUTTONS_SIZE = 3;
 const TREE_SIZE = 3;
 
-
 class ContentLayout extends React.Component {
 
     constructor(props) {
@@ -118,7 +117,14 @@ class ContentLayout extends React.Component {
             const rootPath = '/sites/' + dxContext.siteKey;
             let queryHandler = contentQueryHandlerBySource[contentSource];
             return (<CmRouter render={({path, params, goto}) => {
-            _.assign(eventHandlersContext, {path: path,goto: goto,params: params,language: dxContext.lang, uiLang: dxContext.uilang, apolloClient: client});
+            _.assign(eventHandlersContext, {
+                path: path,
+                goto: goto,
+                params: params,
+                language: dxContext.lang,
+                uiLang: dxContext.uilang,
+                apolloClient: client
+            });
             const layoutQuery = queryHandler.getQuery();
             const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
             let computedTableSize;
@@ -161,7 +167,6 @@ class ContentLayout extends React.Component {
                                     }
                                 });
                                 computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0)
-
                             }
                         }
                     }
@@ -176,12 +181,12 @@ class ContentLayout extends React.Component {
                                                             lang={dxContext.lang}
                                                             rootPath={rootPath}/>}
                                     </Grid>
-                                    <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={ classes.buttonPanel }>
+                                    <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
                                         {((contentSource === "browsing" || contentSource === "files") && path != rootPath) &&
                                             <Actions menuId={"createMenu"} context={{path: path}}>
                                                 {(props) => <CmButton {...props}><Add/></CmButton>}
-                                                </Actions>
-                                            }
+                                            </Actions>
+                                        }
                                         <IconButton onClick={this.handleShowTree}><List/></IconButton>
                                         {contentSource === "files" && <FilesGridModeSelector showList={ this.state.showList }
                                                                                              onChange={() => this.setState({showList: !this.state.showList})}/>}

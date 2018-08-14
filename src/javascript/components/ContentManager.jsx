@@ -64,7 +64,6 @@ class ContentManager extends React.Component {
     }
 
     render() {
-
         let {dxContext, classes} = this.props;
         // register action components
         const isInFrame = window.top !== window;
@@ -81,7 +80,7 @@ class ContentManager extends React.Component {
                         })}>
                             <DxContext.Provider value={dxContext}>
                                 <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang}  render={props => {
+                                    <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
                                         dxContext["siteKey"] = props.match.params.siteKey;
                                         dxContext["lang"] = props.match.params.lang;
                                         return (
@@ -102,9 +101,8 @@ class ContentManager extends React.Component {
                                                     )}/>
                                                 </div>
                                             </ManagerLayout>
-                                        )
-                                    }
-                                    }/>
+                                        );
+                                    }}/>
                                 </BrowserRouter>
                             </DxContext.Provider>
                         </I18nextProvider>

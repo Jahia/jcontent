@@ -73,6 +73,9 @@ class ContentPreview extends React.Component {
     };
 
     render() {
+        if (this.props.selection === null) {
+            return null;
+        }
         return this.mainComponent();
     }
 

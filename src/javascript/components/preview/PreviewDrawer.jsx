@@ -27,6 +27,7 @@ class PreviewDrawer extends React.Component {
 
         return (
             <Drawer anchor="right"
+                    style={{position: "initial"}}
                     open={ this.props.open }>
                 <div className={classes.drawerHeader}>
                     <IconButton onClick={ this.props.onClose }>

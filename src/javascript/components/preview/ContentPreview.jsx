@@ -6,10 +6,13 @@ import { withStyles, Paper, Grid, IconButton } from "@material-ui/core";
 import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
 import { previewQuery } from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
+import { Mutation } from 'react-apollo';
 import ShareMenu from './ShareMenu';
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
+import { lockNode, unlockNode } from "./gqlMutations";
+import Tooltip from '@material-ui/core/Tooltip';
 import FileViewer from "./filePreviewer/FileViewer";
 
 const styles = theme => ({
@@ -110,7 +113,7 @@ class ContentPreview extends React.Component {
                             { this.screenModeButtons() }
                         </Grid>
                         <Grid item xs={ 4 }>
-                            <IconButton><Lock/></IconButton>
+                            { selection.isLocked ? this.unlock() : this.lock() }
                         </Grid>
                         <Grid item xs={ 8 }>
                             <Actions menuId={"previewBar"}  context={{path: selection.path}}>
@@ -154,6 +157,38 @@ class ContentPreview extends React.Component {
             view: "cm",
             contextConfiguration: "default"
         }
+    }
+
+    lock() {
+        const { t, selection, layoutQuery, layoutQueryParams } = this.props;
+        return <Mutation
+            mutation={ lockNode }
+            refetchQueries={[{
+                query: layoutQuery,
+                variables: layoutQueryParams
+            }]}>
+            {(lockNode) => {
+                return <Tooltip title={ t('label.contentManager.contentPreview.lockNode') } placement="top-start">
+                    <IconButton onClick={ () => lockNode({ variables: { pathOrId: selection.path }}) }><LockOpen/></IconButton>
+                </Tooltip>
+            }}
+        </Mutation>
+    }
+
+    unlock() {
+        const { t, selection, layoutQuery, layoutQueryParams } = this.props;
+        return <Mutation
+            mutation={ unlockNode }
+            refetchQueries={[{
+                query: layoutQuery,
+                variables: layoutQueryParams
+            }]}>
+            {(unlockNode) => {
+                return <Tooltip title={ t('label.contentManager.contentPreview.nodeLockedBy', {username: selection.lockOwner}) } placement="top-start">
+                    <IconButton onClick={ () => unlockNode({ variables: { pathOrId: selection.path }}) }><Lock/></IconButton>
+                </Tooltip>
+            }}
+        </Mutation>
     }
 }
 

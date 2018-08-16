@@ -153,6 +153,7 @@ class ContentLayout extends React.Component {
                                             path: contentNode.path,
                                             publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
                                             isLocked: contentNode.lockOwner !== null,
+                                            lockOwner: contentNode.lockOwner !== null ? contentNode.lockOwner.value : '',
                                             lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
                                             lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
                                             lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
@@ -235,7 +236,11 @@ class ContentLayout extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <PreviewDrawer open={ showPreview } onClose={this.handleShowPreview}>
-                                        <ContentPreview selection={selectedRow} layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams} rowSelectionFunc={this.handleRowSelection}/>
+                                        {/*Always get row from query not from state to be up to date*/}
+                                        <ContentPreview selection={rows.find((row) => { return selectedRow !== null && row.path === selectedRow.path})}
+                                                        layoutQuery={layoutQuery}
+                                                        layoutQueryParams={layoutQueryParams}
+                                                        rowSelectionFunc={this.handleRowSelection}/>
                                     </PreviewDrawer>
                                 </div>
                             </div>

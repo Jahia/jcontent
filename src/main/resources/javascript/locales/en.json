@@ -44,7 +44,9 @@
           "modifiedBy" : "Modified by {{userName}} on ",
           "markedForDeletionBy" : "Marked for deletion by {{userName}} on ",
           "copyPathToClipboard": "Copy path to clipboard",
-          "copyUUIDToClipboard": "Copy UUID to clipboard"
+          "copyUUIDToClipboard": "Copy UUID to clipboard",
+          "nodeLockedBy": "Content locked by {{username}}",
+          "lockNode": "Lock content"
       },
       "contentTypes": {
           "any": "Any content",

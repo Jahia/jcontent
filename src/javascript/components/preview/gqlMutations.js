@@ -14,4 +14,20 @@ const deleteNode = gql`mutation deleteNode($pathOrId: String!) {
   }
 }`;
 
-export { publishNode, deleteNode };
+const lockNode = gql`mutation lockNode($pathOrId: String!) {
+    jcr {
+        mutateNode(pathOrId: $pathOrId) {
+          lock
+    }
+  }
+}`;
+
+const unlockNode = gql`mutation unlockNode($pathOrId: String!) {
+    jcr {
+        mutateNode(pathOrId: $pathOrId) {
+          unlock
+    }
+  }
+}`;
+
+export { publishNode, deleteNode, lockNode, unlockNode };

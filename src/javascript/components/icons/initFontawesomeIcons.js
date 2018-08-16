@@ -15,7 +15,15 @@ import {
     faFileAlt
 } from '@fortawesome/free-regular-svg-icons';
 
-import { faChevronDown, faChevronLeft, faChevronRight, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown,
+    faChevronLeft,
+    faChevronRight,
+    faChevronUp,
+    faStepForward,
+    faStepBackward,
+    faSearchPlus,
+    faSearchMinus
+} from '@fortawesome/free-solid-svg-icons';
 
 export const initFontawesomeIcons = function() {
     library.add(faFilePowerpoint);
@@ -35,4 +43,8 @@ export const initFontawesomeIcons = function() {
     library.add(faChevronUp);
     library.add(faChevronLeft);
     library.add(faChevronRight);
+    library.add(faStepForward);
+    library.add(faStepBackward);
+    library.add(faSearchPlus);
+    library.add(faSearchMinus);
 };

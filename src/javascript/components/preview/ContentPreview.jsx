@@ -10,6 +10,7 @@ import ShareMenu from './ShareMenu';
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
+import FileViewer from "./filePreviewer/FileViewer";
 
 const styles = theme => ({
     root: {
@@ -26,7 +27,6 @@ const styles = theme => ({
         margin: theme.spacing.unit
     },
     previewPaper: {
-        overflow: "auto",
         flex: 9
     },
     previewContainer: {
@@ -92,7 +92,10 @@ class ContentPreview extends React.Component {
                                 console.error(error);
                             }
 
-                            return this.previewComponent(data);
+                            if (!loading) {
+                                return this.previewComponent(data);
+                            }
+                            return null
                         }}
                     </Query>
                 </Paper>
@@ -126,12 +129,15 @@ class ContentPreview extends React.Component {
     previewComponent(data) {
         const { classes, t } = this.props;
         let displayValue = data && data.jcr ? data.jcr.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
-
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
-
-        return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
+        //If node type is "jnt:file" use pdf viewer
+        if (data && data.jcr && data.jcr.nodeByPath.isFile) {
+            return <FileViewer key={data.jcr.nodeByPath.uuid} file={'/files/default' + data.jcr.nodeByPath.path}/>
+        } else {
+            return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
+        }
     }
 
     screenModeButtons() {

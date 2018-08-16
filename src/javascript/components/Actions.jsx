@@ -27,6 +27,12 @@ class Actions extends React.Component {
                 <Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey}>
                     {({loading, error, data}) => {
 
+                        if (error) {
+                            let message = t('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
+                            notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                            return null;
+                        }
+
                         if (loading || !data || !data.jcr) {
                             return null;
                         }

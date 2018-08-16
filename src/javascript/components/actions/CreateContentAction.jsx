@@ -4,34 +4,40 @@ import {ContentTypeQuery} from "../gqlQueries";
 import {Query} from "react-apollo";
 import {DxContext} from "../DxContext";
 import {translate} from "react-i18next";
+import * as _ from "lodash";
 
-class CreateAction extends React.Component {
+class CreateContentAction extends React.Component {
 
     render() {
 
         const {children, context, t, call, ...rest} = this.props;
 
-        if (_.size(context.nodeTypes) > Constants.numberOfSplitActionTypes) {
+        if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems) {
             return children({...rest, onClick: () => call(context)})
         } else {
+            let ctx = _.clone(context);
             return _.map(context.nodeTypes, type => {
-                context.nodeTypes = [type];
-                rest.labelKey= "label.contentManager.create.contentWithArgs";
+                ctx.nodeTypes = [type];
                 return <DxContext.Consumer key={type}>{dxContext => (
                     <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
                         {({loading, error, data}) => {
+
                             if (error) {
                                 let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                                 notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                                 return null;
                             }
-                            if (!loading && data && data.jcr && data.jcr.nodeTypeByName && data.jcr.nodeTypeByName.displayName) {
-                                rest.labelParams = {
-                                    typeName: data.jcr.nodeTypeByName.displayName
-                                }
-                                return children({...rest, onClick: () => call(context)})
+
+                            if (loading || !data || !data.jcr) {
+                                return null;
                             }
-                            return null;
+
+                            return children({
+                                ...rest,
+                                labelKey: "label.contentManager.create.contentOfType",
+                                labelParams: {typeName: data.jcr.nodeTypeByName.displayName},
+                                onClick: () => call(ctx)
+                            });
                         }}
                     </Query>
                 )}</DxContext.Consumer>
@@ -40,4 +46,4 @@ class CreateAction extends React.Component {
     }
 }
 
-export default translate()(CreateAction);
+export default translate()(CreateContentAction);

@@ -5,7 +5,7 @@ const constants = {
         "NOT_PUBLISHED": "NOT_PUBLISHED",
         "MARKED_FOR_DELETION": "MARKED_FOR_DELETION"
     },
-    numberOfSplitActionTypes: 5
+    maxCreateContentOfTypeDirectItems: 5
 };
 
 export default constants;

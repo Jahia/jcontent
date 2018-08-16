@@ -52,10 +52,15 @@
                "loading": "Error retrieving content types: {{details}}"
           }
       },
+      "actions": {
+          "error": {
+               "loading": "Error retrieving action data: {{details}}"
+          }
+      },
       "create": {
           "create": "Create",
           "content": "New content",
-          "contentWithArgs": "New {{typeName}}",
+          "contentOfType": "New {{typeName}}",
           "contentFolder": "New content folder"
       },
       "preview": {

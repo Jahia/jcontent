@@ -153,9 +153,10 @@ const nodeFields = gql `
         }
         ...NodeCacheRequiredFields
     }
-${PredefinedFragments.nodeCacheRequiredFields.gql}`;
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
 
-const getNodeSubTree = gql`
+const getNodeSubTree = gql `
     query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -165,7 +166,7 @@ const getNodeSubTree = gql`
                         totalCount
                     }
                     nodes {
-                    ...NodeFields
+                        ...NodeFields
                     }
                 }
             }
@@ -198,7 +199,7 @@ const searchContentQuery = gql `
             }
         }
     }
-
+    ${nodeFields}
 `;
 
 const sql2SearchContentQuery = gql `
@@ -214,10 +215,10 @@ const sql2SearchContentQuery = gql `
             }
         }
     }
-
+    ${nodeFields}
 `;
 
-const filesQuery = gql`
+const filesQuery = gql `
     query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -228,11 +229,11 @@ const filesQuery = gql`
                         totalCount
                     }
                     nodes {
-                    ...NodeFields
-                    width: property(name: "j:width") {
+                        ...NodeFields
+                        width: property(name: "j:width") {
                             value
                         }
-                    height: property(name: "j:height") {
+                        height: property(name: "j:height") {
                             value
                         }
                     }
@@ -257,17 +258,17 @@ const ContentTypesQuery = gql `
     }
 `;
 
-const ContentTypeQuery = gql`
+const ContentTypeQuery = gql `
     query ContentTypeQuery($nodeType: String!, $displayLanguage: String!) {
-  jcr {
-    nodeTypeByName(name: $nodeType) {
-      displayName(language: $displayLanguage)
+        jcr {
+            nodeTypeByName(name: $nodeType) {
+                displayName(language: $displayLanguage)
+            }
+        }
     }
-  }
-}
 `;
 
-const LoadSelectionQuery = gql`
+const LoadSelectionQuery = gql `
     query LoadSelectionQuery($paths: [String!]!, $language:String!, $displayLanguage:String!) {
         jcr {
             nodesByPath(paths: $paths) {

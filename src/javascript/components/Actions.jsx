@@ -19,32 +19,35 @@ class Actions extends React.Component {
         return _.map(actionsToDisplayKeys, actionKey => {
 
             let action = actionsRegistry[actionKey];
-            const {requiredAllowedChildNodeTypes} = action;
-            let requirementQueryHandler = new RequirementQueryHandler();
-            let query = requirementQueryHandler.getQuery(context.path, action);
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeTypes, provideAllowedChildNodeTypes} = action;
+            let requirementQueryHandler = new RequirementQueryHandler(context.path, action);
             let ActionComponent = action.component;
 
             return ActionComponent && (
-                <Query query={query} variables={requirementQueryHandler.getVariables()} key={actionKey}>
+                <Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey}>
                     {({loading, error, data}) => {
+
                         if (loading || !data || !data.jcr) {
                             return null;
                         }
+
                         // check display of the action
                         const node = data.jcr.nodeByPath;
-                        if ((requirementQueryHandler.checkPermission && !node.hasPermission) ||
-                            (requirementQueryHandler.checkShowOn && !node.isNodeType) ||
-                            (requirementQueryHandler.checkHideOn && node.isNotNodeType))
+                        if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
+                            (!_.isEmpty(showOnNodeTypes) && !node.isNodeType) ||
+                            (!_.isEmpty(hideOnNodeTypes) && node.isNotNodeType))
                         {
                             return null;
                         }
+
                         // fill the context
-                        if (requirementQueryHandler.checkAllowedChildNodeTypes) {
+                        if (_.isEmpty(requiredAllowedChildNodeTypes) && provideAllowedChildNodeTypes) {
                             const contributeTypes = node.contributeTypes;
                             context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? _.map(node.allowedChildNodeTypes, type => type.name) : contributeTypes.values;
                         } else {
                             context.nodeTypes = requiredAllowedChildNodeTypes;
                         }
+
                         return (
                             <ActionComponent {...action} context={context}>
                                 {children}

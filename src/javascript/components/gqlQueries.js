@@ -342,34 +342,29 @@ const RequirementFragments = {
 
 class RequirementQueryHandler {
 
-    getQuery(path, action) {
-
-        let checkRequirementFragments = [];
-        this.checkPermission = !_.isEmpty(action.requiredPermission);
-        this.checkHideOn = !_.isEmpty(action.hideOnNodeTypes);
-        this.checkShowOn = !_.isEmpty(action.showOnNodeTypes);
-        this.checkAllowedChildNodeTypes = _.isEmpty(action.requiredAllowedChildNodeTypes) && action.provideAllowedChildNodeTypes;
-
+    constructor(path, action) {
+        this.checkRequirementFragments = [];
         this.variables = {path: path};
-        if (this.checkPermission) {
-            checkRequirementFragments.push(RequirementFragments.permission);
+        if (!_.isEmpty(action.requiredPermission)) {
+            this.checkRequirementFragments.push(RequirementFragments.permission);
             this.variables.permission = action.requiredPermission;
         }
-        if (this.checkHideOn) {
-            checkRequirementFragments.push(RequirementFragments.isNotNodeType);
+        if (!_.isEmpty(action.hideOnNodeTypes)) {
+            this.checkRequirementFragments.push(RequirementFragments.isNotNodeType);
             this.variables.isNotNodeType = {types: action.hideOnNodeTypes};
         }
-        if (this.checkShowOn) {
-            checkRequirementFragments.push(RequirementFragments.isNodeType);
+        if (!_.isEmpty(action.showOnNodeTypes)) {
+            this.checkRequirementFragments.push(RequirementFragments.isNodeType);
             this.variables.isNodeType = {types: action.showOnNodeTypes};
         }
-
-        if (this.checkAllowedChildNodeTypes) {
-            checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
+        if (_.isEmpty(action.requiredAllowedChildNodeTypes) && action.provideAllowedChildNodeTypes) {
+            this.checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
         }
+    }
 
+    getQuery() {
         let requirementsQuery = getRequirementsQuery();
-        replaceFragmentsInDocument(requirementsQuery, checkRequirementFragments);
+        replaceFragmentsInDocument(requirementsQuery, this.checkRequirementFragments);
         return requirementsQuery;
     }
 

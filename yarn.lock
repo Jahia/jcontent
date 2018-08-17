@@ -5214,6 +5214,10 @@ react-apollo@^2.1.3, react-apollo@^2.1.4:
     lodash "^4.17.10"
     prop-types "^15.6.0"
 
+react-darkroom@^0.3.7:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/react-darkroom/-/react-darkroom-0.3.7.tgz#54ce5ead8545ac79019d69a5b540995f20132917"
+
 react-dom@^16.4.0:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.2.tgz#4afed569689f2c561d2b8da0b819669c38a0bda4"

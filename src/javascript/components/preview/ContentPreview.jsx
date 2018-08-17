@@ -14,6 +14,7 @@ import CmIconButton from "../renderAction/CmIconButton";
 import { lockNode, unlockNode } from "./gqlMutations";
 import Tooltip from '@material-ui/core/Tooltip';
 import FileViewer from "./filePreviewer/FileViewer";
+import ImageViewer from "./filePreviewer/ImageViewer";
 
 const styles = theme => ({
     root: {
@@ -44,13 +45,14 @@ const styles = theme => ({
     },
     controlsPaper: {
         flex: 3,
-        maxHeight: "150px",
+        maxHeight: "200px",
         backgroundColor: "#555",
         opacity: 0.9
     },
     titleBar: {
         color: "whitesmoke",
         padding: theme.spacing.unit,
+        paddingBottom: '0px',
         minHeight: "100px"
     },
     contentTitle : {
@@ -65,7 +67,8 @@ class ContentPreview extends React.Component {
         super(props);
         this.state = {
             additionalActionsMenuAnchor: null,
-            fullScreen: false
+            fullScreen: false,
+            imageControlElementId: "previewImageControls"
         };
     }
 
@@ -112,6 +115,10 @@ class ContentPreview extends React.Component {
                             <ShareMenu selection={ selection }/>
                             { this.screenModeButtons() }
                         </Grid>
+                        <Grid item xs={12}>
+                            {/*Element that will contain image controls if an image is the document being previewed*/}
+                            <div id={this.state.imageControlElementId} style={{background: 'transparent'}}></div>
+                        </Grid>
                         <Grid item xs={ 4 }>
                             { selection.isLocked ? this.unlock() : this.lock() }
                         </Grid>
@@ -137,7 +144,10 @@ class ContentPreview extends React.Component {
         }
         //If node type is "jnt:file" use pdf viewer
         if (data && data.jcr && data.jcr.nodeByPath.isFile) {
-            return <FileViewer key={data.jcr.nodeByPath.uuid} file={'/files/default' + data.jcr.nodeByPath.path}/>
+            //return <FileViewer key={data.jcr.nodeByPath.uuid} file={'/files/default' + data.jcr.nodeByPath.path}/>
+            return <ImageViewer key={data.jcr.nodeByPath.uuid}
+                                elementId={this.state.imageControlElementId}
+                                file={'/files/default' + data.jcr.nodeByPath.path}/>
         } else {
             return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
         }

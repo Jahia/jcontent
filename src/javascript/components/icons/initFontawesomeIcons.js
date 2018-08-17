@@ -22,7 +22,11 @@ import { faChevronDown,
     faStepForward,
     faStepBackward,
     faSearchPlus,
-    faSearchMinus
+    faSearchMinus,
+    faCropAlt,
+    faExpand,
+    faRedoAlt,
+    faUndoAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 export const initFontawesomeIcons = function() {
@@ -47,4 +51,8 @@ export const initFontawesomeIcons = function() {
     library.add(faStepBackward);
     library.add(faSearchPlus);
     library.add(faSearchMinus);
+    library.add(faCropAlt);
+    library.add(faExpand);
+    library.add(faRedoAlt);
+    library.add(faUndoAlt);
 };

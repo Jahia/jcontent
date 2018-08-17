@@ -4,7 +4,7 @@ import {NotificationProvider} from "@jahia/react-material";
 import {theme as theme} from "@jahia/react-material/theme";
 import {client} from "@jahia/apollo-dx";
 import {getI18n} from "@jahia/i18next";
-import {I18nextProvider} from "react-i18next";
+import {I18n, I18nextProvider} from "react-i18next";
 import {Route} from "react-router";
 import {BrowserRouter} from "react-router-dom";
 import {ApolloProvider, ApolloConsumer} from "react-apollo";
@@ -60,10 +60,10 @@ class ContentManager extends React.Component {
         this.forceUpdate();
     }
 
-    setRouter(router) {
+    setRouter(t, router) {
         let {dxContext, classes} = this.props;
         router && router.history.listen((location, action) => {
-            const title = "DX Content Manager " + location.pathname;
+            const title = t("label.contentManager.appTitle", {path: location.pathname});
             window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
             window.parent.document.title = title;
         });
@@ -84,33 +84,37 @@ class ContentManager extends React.Component {
                             ns: ["content-manager"],
                             defaultNS: "content-manager",
                         })}>
-                            <DxContext.Provider value={dxContext}>
-                                <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this)}>
-                                    <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
-                                        dxContext["siteKey"] = props.match.params.siteKey;
-                                        dxContext["lang"] = props.match.params.lang;
-                                        return (
-                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
-                                                           leftSide={<CMLeftNavigation/>}>
-                                                <div>
-                                                    <Route path={`${props.match.url}/browse`} render={props => (
-                                                        <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                    )}/>
-                                                    <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                        <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                    )}/>
-                                                    <Route path={`${props.match.url}/search`} render={props => (
-                                                        <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                    )}/>
-                                                    <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                        <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                    )}/>
-                                                </div>
-                                            </ManagerLayout>
-                                        );
-                                    }}/>
-                                </BrowserRouter>
-                            </DxContext.Provider>
+                            <I18n>{(t) => {
+                                return (
+                                    <DxContext.Provider value={dxContext}>
+                                        <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this, t)}>
+                                            <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
+                                                dxContext["siteKey"] = props.match.params.siteKey;
+                                                dxContext["lang"] = props.match.params.lang;
+                                                return (
+                                                    <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
+                                                                   leftSide={<CMLeftNavigation/>}>
+                                                        <div>
+                                                            <Route path={`${props.match.url}/browse`} render={props => (
+                                                                <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            )}/>
+                                                            <Route path={`${props.match.url}/browse-files`} render={props => (
+                                                                <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            )}/>
+                                                            <Route path={`${props.match.url}/search`} render={props => (
+                                                                <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            )}/>
+                                                            <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                                <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            )}/>
+                                                        </div>
+                                                    </ManagerLayout>
+                                                );
+                                            }}/>
+                                        </BrowserRouter>
+                                    </DxContext.Provider>
+                                )}}
+                            </I18n>
                         </I18nextProvider>
                     </ApolloProvider>
                 </NotificationProvider>

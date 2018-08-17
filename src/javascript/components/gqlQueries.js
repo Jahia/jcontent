@@ -273,26 +273,7 @@ const ContentTypeQuery = gql `
     }
 `;
 
-const LoadSelectionQuery = gql `
-    query LoadSelectionQuery($paths: [String!]!, $language:String!, $displayLanguage:String!) {
-        jcr {
-            nodesByPath(paths: $paths) {
-                ...NodeFields
-                contributeTypes: property(name: "j:contributeTypes") {
-                    values
-                }
-                primaryNodeType {
-                    name
-                    supertypes {
-                        name
-                    }
-                }
-            }
-        }
-    }
-    ${nodeFields}
-`;
-
+// We use a clone version of the query as the requirements can be different between queries.
 let getRequirementsQuery = () => _.cloneDeep(gql `
     query CheckRequirementsQuery($path:String!) {
         jcr {
@@ -386,7 +367,6 @@ export {
     FilesQueryHandler,
     ContentTypesQuery,
     ContentTypeQuery,
-    LoadSelectionQuery,
     GetNodeAndChildrenByPathQuery,
     RequirementQueryHandler
 };

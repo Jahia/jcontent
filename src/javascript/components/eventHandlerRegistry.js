@@ -6,7 +6,7 @@ const context = {
 let register = (eventHandlers) => {;
     // register listeners
     eventHandlers = _.mapValues(eventHandlers, handlers => _.map(handlers, handler => handler.bind(this, context)));
-    _.mergeWith(window.parent, eventHandlers);
+    _.mergeWith(window, eventHandlers);
 }
 
 export {register, context}

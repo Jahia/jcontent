@@ -13,6 +13,7 @@
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
       "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
       "saveAsWip": "Mark as work in progress",
+      "appTitle": "DX Content Manager {{path}}",
       "editAction": "Edit",
       "error": {
         "queryingContent": "Error querying content: {{details}}"

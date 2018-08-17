@@ -4,11 +4,11 @@ import {GetNodeAndChildrenByPathQuery} from "./gqlQueries";
 
 const eventHandlers = {
     // listeners after save button in engines.
-    updateButtonItemEventHandlers: [(context, path, nodeName, uuid) => window.parent.updateContentManagerStore(context, path, nodeName, uuid, false)],
-    createButtonItemEventHandlers: [(context, path, nodeName, uuid) => window.parent.updateContentManagerStore(context, path, nodeName, uuid, true)]
+    updateButtonItemEventHandlers: [(context, path, nodeName, uuid) => window.onContentSave(context, path, nodeName, uuid, false)],
+    createButtonItemEventHandlers: [(context, path, nodeName, uuid) => window.onContentSave(context, path, nodeName, uuid, true)]
 }
 
-window.parent.updateContentManagerStore = (context, enginePath, engineNodeName, uuid, forceRefresh) => {
+window.onContentSave = (context, enginePath, engineNodeName, uuid, forceRefresh) => {
     // clean up the cache entry
     const path = enginePath.substring(0, enginePath.lastIndexOf('/') + 1) + engineNodeName;
     if (enginePath === context.path && enginePath !== path) {

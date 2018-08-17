@@ -132,49 +132,55 @@ class ContentLayout extends React.Component {
 
                 return <Query query={layoutQuery} variables={layoutQueryParams}>
                     {({loading, error, data}) => {
+
+                        if (loading) {
+                            return <ProgressOverlay/>
+                        }
+
+                        if (error) {
+                            console.log("Error when fetching data: " + error);
+                            let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                            notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                            return null;
+                        }
+
                         let rows = [];
                         let totalCount = 0;
-                        if (!loading) {
-                            if (error) {
-                                console.log("Error when fetching data: " + error);
-                                let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-                                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-                            } else {
-                                notificationContext.closeNotification();
-                                if (data && data.jcr && queryHandler.getResultsPath(data.jcr.results)) {
-                                    totalCount = queryHandler.getResultsPath(data.jcr.results).pageInfo.totalCount;
-                                    rows = _.map(queryHandler.getResultsPath(data.jcr.results).nodes, contentNode => {
-                                        return {
-                                            uuid: contentNode.uuid,
-                                            name: contentNode.displayName,
-                                            type: contentNode.primaryNodeType.displayName,
-                                            created: contentNode.created.value,
-                                            createdBy: contentNode.createdBy.value,
-                                            path: contentNode.path,
-                                            publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
-                                            isLocked: contentNode.lockOwner !== null,
-                                            lockOwner: contentNode.lockOwner !== null ? contentNode.lockOwner.value : '',
-                                            lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
-                                            lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
-                                            lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
-                                            lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
-                                            deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
-                                            deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
-                                            wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
-                                            wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
-                                            icon: contentNode.primaryNodeType.icon,
-                                            isSelected: selectedRow ? selectedRow.path === contentNode.path : false,
-                                            width: (contentNode.width != null ? contentNode.width.value : ''),
-                                            height: (contentNode.width != null ? contentNode.height.value : '')
-                                        }
-                                    });
-                                    computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0)
+                        notificationContext.closeNotification();
+
+                        if (data && data.jcr) {
+                            let result = queryHandler.getResultsPath(data.jcr.results);
+                            totalCount = result.pageInfo.totalCount;
+                            rows = _.map(result.nodes, contentNode => {
+                                return {
+                                    uuid: contentNode.uuid,
+                                    name: contentNode.displayName,
+                                    type: contentNode.primaryNodeType.displayName,
+                                    created: contentNode.created.value,
+                                    createdBy: contentNode.createdBy.value,
+                                    path: contentNode.path,
+                                    publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
+                                    isLocked: contentNode.lockOwner !== null,
+                                    lockOwner: contentNode.lockOwner !== null ? contentNode.lockOwner.value : '',
+                                    lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
+                                    lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
+                                    lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
+                                    lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
+                                    deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
+                                    deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
+                                    wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
+                                    wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
+                                    icon: contentNode.primaryNodeType.icon,
+                                    isSelected: selectedRow ? selectedRow.path === contentNode.path : false,
+                                    width: (contentNode.width != null ? contentNode.width.value : ''),
+                                    height: (contentNode.width != null ? contentNode.height.value : '')
                                 }
-                            }
+                            });
+                            computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0)
                         }
+
                         return (
                             <div>
-                                {loading && <ProgressOverlay/>}
                                 <div className={classes.root}>
                                     <Grid container spacing={0}>
                                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>

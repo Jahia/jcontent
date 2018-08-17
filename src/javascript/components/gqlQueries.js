@@ -175,11 +175,16 @@ const getNodeSubTree = gql `
     ${nodeFields}
 `;
 
-const GetNodeByPathQuery = gql `
+const GetNodeAndChildrenByPathQuery = gql `
     query GetNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
         jcr {
             results: nodeByPath(path: $path) {
                 ...NodeFields
+                children {
+                    nodes {
+                        ...NodeFields
+                    }
+                }
             }
         }
     }
@@ -382,6 +387,6 @@ export {
     ContentTypesQuery,
     ContentTypeQuery,
     LoadSelectionQuery,
-    GetNodeByPathQuery,
+    GetNodeAndChildrenByPathQuery,
     RequirementQueryHandler
 };

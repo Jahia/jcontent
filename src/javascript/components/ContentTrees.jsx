@@ -31,12 +31,9 @@ class ContentTree extends React.Component {
 
     render() {
         let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes} = this.props;
+        console.log(`display ${rootPath} tree`);
         return (
-            <Picker fragments={["displayName", {
-                applyFor: "node",
-                gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`
-            }]}
-                    ref={this.picker}
+            <Picker ref={this.picker}
                     rootPaths={[rootPath]}
                     defaultOpenPaths={[path]}
                     openableTypes={openableTypes}

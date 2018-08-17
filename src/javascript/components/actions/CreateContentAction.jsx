@@ -11,8 +11,8 @@ class CreateContentAction extends React.Component {
     render() {
 
         const {children, context, t, call, ...rest} = this.props;
-
-        if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems) {
+        // if jmix:droppableContent is part of the nodetypes, use the "new content" button item
+        if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(context.nodeTypes, "jmix:droppableContent")) {
             return children({...rest, onClick: () => call(context)})
         } else {
             let ctx = _.clone(context);

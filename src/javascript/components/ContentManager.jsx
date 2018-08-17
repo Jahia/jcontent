@@ -32,6 +32,8 @@ class ContentManager extends React.Component {
     constructor(props) {
         super(props);
         const {dxContext} = props;
+        window.forceCMUpdate = this.forceCMUpdate.bind(this);
+        // test
         initFontawesomeIcons();
         // register actions
         // register actions from the configuration
@@ -50,6 +52,12 @@ class ContentManager extends React.Component {
                 }
             }
         });
+    }
+
+    // !!this method should never be called but is necessary until BACKLOG-8369 fixed!!
+    forceCMUpdate = () => {
+        console.warn("update application, this should not happen ..")
+        this.forceUpdate();
     }
 
     setRouter(router) {

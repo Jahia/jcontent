@@ -53,7 +53,9 @@ export const fileIcon = function(filename, size = "lg", style = {}){
                                             size={ size }
                                             color={ "#224288" }
                                             style={ style }/>;
-        case "xls": return <FontAwesomeIcon icon={ ["far","file-excel"] }
+        case "xlsx":
+        case "xls":
+            return <FontAwesomeIcon icon={ ["far","file-excel"] }
                                             size={ size }
                                             color={ "#1d6236" }
                                             style={ style }/>;
@@ -100,4 +102,8 @@ export const isImage = function(filename) {
 
 export const isPDF = function(filename) {
     return filename.split('.').pop().toLowerCase() === 'pdf';
+};
+
+export const getFileType = function(filename) {
+    return filename.split('.').pop().toLowerCase();
 };

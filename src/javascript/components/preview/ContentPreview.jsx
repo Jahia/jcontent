@@ -15,7 +15,8 @@ import { lockNode, unlockNode } from "./gqlMutations";
 import Tooltip from '@material-ui/core/Tooltip';
 import PDFViewer from "./filePreviewer/PDFViewer";
 import ImageViewer from "./filePreviewer/ImageViewer";
-import {isPDF, isImage} from "../filesGrid/filesGridUtils";
+import DocumentViewer from "./filePreviewer/DocumentViewer";
+import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
 
 const styles = theme => ({
     root: {
@@ -145,14 +146,16 @@ class ContentPreview extends React.Component {
         }
         //If node type is "jnt:file" use pdf viewer
         if (data && data.jcr && data.jcr.nodeByPath.isFile) {
+            let file = dxContext.contextPath + '/files/default' + data.jcr.nodeByPath.path;
             if (isPDF(data.jcr.nodeByPath.path)) {
-                return <PDFViewer key={data.jcr.nodeByPath.uuid} file={dxContext.contextPath + '/files/default' + data.jcr.nodeByPath.path}/>;
+                return <PDFViewer key={data.jcr.nodeByPath.uuid} file={file}/>;
             } else if(isImage(data.jcr.nodeByPath.path)) {
                 return <ImageViewer key={data.jcr.nodeByPath.uuid}
                              elementId={this.state.imageControlElementId}
-                             file={dxContext.contextPath + '/files/default' + data.jcr.nodeByPath.path}/>;
+                             file={file}/>;
             } else {
-                //Implement document viewer
+                let type = getFileType(file);
+                return <DocumentViewer file={file} type={type}/>
             }
         } else {
             return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />

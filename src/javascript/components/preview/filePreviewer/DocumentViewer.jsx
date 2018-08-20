@@ -7,29 +7,41 @@ import styled from 'styled-components/dist/styled-components.js';
 import {fileIcon} from '../../filesGrid/filesGridUtils';
 
 const DocumentPreviewContainer = styled.div`
-    width:500px;
-    height:67%;
+    width:600px;
+    height:700px;
     display: flex;
-    align-items: center;
+    justify-content: space-around;
+    -webkit-flex-flow: row wrap;
     video {
-        width:600px;    
-        margin-left: 25px;
+        width:630px;    
+        margin-left: 30px;
     }
     div.document-container {
-        width:600px;
-        margin-left: 25px;
-        overflow-x: hidden;
+        position:absolute;
+        height: 700px;
+        width: 600px;
+        overflow: hidden auto;
+        margin: 0 auto;
     }
 `;
 const styles = theme => ({
-    previewPaper: {
+    documentPaper: {
         flex:1,
         width: '650px'
     },
     defaultPaper: {
         flex:1,
-        width: '650px',
-        "marginLeft": "9vw"
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -72.5%)"
+    },
+    videoPaper: {
+        flex:1,
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-52.5%, -72.5%)"
     }
 });
 class DocumentViewer extends React.Component {
@@ -37,30 +49,40 @@ class DocumentViewer extends React.Component {
         super(props);
         this.state = {};
     }
-    render() {
+
+    renderViewer = () => {
         let {file, type, classes} = this.props;
         switch(type) {
             case "docx":
             case "doc":
+                return <Paper className={classes.documentPaper} elevation={0}>
+                    <FileViewer fileType={type}
+                                filePath={file}/>
+                </Paper>;
             case "avi":
             case "mp4":
             case "video":
-                return <DocumentPreviewContainer>
-                    <Paper className={classes.previewPaper} elevation={0}>
-                        <FileViewer className={'test'}
-                                    fileType={type}
-                                    filePath={file}/>
-                    </Paper>
-                </DocumentPreviewContainer>;
+                return <Paper className={classes.videoPaper} elevation={0}>
+                    <FileViewer fileType={type}
+                                filePath={file}/>
+                </Paper>;
             default:
-                return <DocumentPreviewContainer>
-                    <Paper className={classes.defaultPaper} elevation={0}>
-                        {fileIcon(file, null, {"fontSize": "24em"})}
-                    </Paper>
-                </DocumentPreviewContainer>;
+                return <Paper className={classes.defaultPaper} elevation={0}>
+                    {fileIcon(file, null, {"fontSize": "24em"})}
+                </Paper>;
         }
+    };
 
+    render() {
+        return <DocumentPreviewContainer>
+            {this.renderViewer()}
+        </DocumentPreviewContainer>
     }
 }
+
+DocumentViewer.propTypes = {
+    file: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired
+};
 
 export default withStyles(styles)(DocumentViewer);

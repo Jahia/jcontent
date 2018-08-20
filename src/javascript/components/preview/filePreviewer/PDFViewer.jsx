@@ -8,19 +8,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 
 const PDFContainer = styled.div`
-    height:67%;
-    border:1px solid #b0b5b6;
+    height:800;
     margin: 5px;
     display: flex;
-    padding: 5px 0;
     div {
+        position:relative;
         width: 640px;
         overflow: auto;
+        margin: 0 auto;
     }
     div > canvas {
+        position:relative;
         display: block;
         margin: 0 auto;
-        transform: translateY(10vh);
     }
 `;
 
@@ -31,9 +31,6 @@ const Controls = styled.div`
     display: flex;
 `;
 const styles = theme => ({
-    root: {
-        width: 500,
-    },
     controlLeft: {
         flex: 1,
         margin: 'auto',
@@ -49,6 +46,13 @@ const styles = theme => ({
         margin: 'auto',
         textAlign: 'end',
         background: 'transparent'
+    },
+    pdfPaper: {
+        border: "1px solid #b0b5b6",
+        flex:1,
+        left: "50%",
+        top: "50%",
+        transform : "translate(-50%, -50%)"
     }
 });
 
@@ -148,17 +152,20 @@ class PDFViewer extends React.Component {
 
     render() {
         let {page, file, scaleSize} = this.state;
+        let {classes} = this.props;
         let pagination = this.renderPagination();
         return <div>
-                <PDFContainer>
-                    <PDF
-                        file={file}
-                        scale={scaleSizes[scaleSize]}
-                        onDocumentComplete={this.onDocumentComplete}
-                        onPageComplete={this.onPageComplete}
-                        page={page}
-                    />
-                </PDFContainer>
+                    <PDFContainer>
+                        <Paper elevation={0} className={classes.pdfPaper}>
+                            <PDF
+                                file={file}
+                                scale={scaleSizes[scaleSize]}
+                                onDocumentComplete={this.onDocumentComplete}
+                                onPageComplete={this.onPageComplete}
+                                page={page}
+                            />
+                        </Paper>
+                    </PDFContainer>
                 {pagination}
             </div>
     }

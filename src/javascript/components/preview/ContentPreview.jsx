@@ -119,7 +119,7 @@ class ContentPreview extends React.Component {
                         </Grid>
                         <Grid item xs={12}>
                             {/*Element that will contain image controls if an image is the document being previewed*/}
-                            <div id={this.state.imageControlElementId} style={{background: 'transparent'}}></div>
+                            <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                         </Grid>
                         <Grid item xs={ 4 }>
                             { selection.isLocked ? this.unlock() : this.lock() }

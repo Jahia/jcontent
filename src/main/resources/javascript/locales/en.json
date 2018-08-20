@@ -1,6 +1,7 @@
 {
   "label": {
     "contentManager": {
+      "appTitle": "DX Content Manager {{path}}",
       "publicationStatus": {
         "notPublished": "This content has never been published",
         "published": "Published by {{userName}} on {{timestamp}}",
@@ -13,7 +14,6 @@
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
       "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
       "saveAsWip": "Mark as work in progress",
-      "appTitle": "DX Content Manager {{path}}",
       "editAction": "Edit",
       "error": {
         "queryingContent": "Error querying content: {{details}}"

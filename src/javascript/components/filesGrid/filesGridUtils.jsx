@@ -97,3 +97,7 @@ export const isImage = function(filename) {
             return false;
     }
 };
+
+export const isPDF = function(filename) {
+    return filename.split('.').pop().toLowerCase() === 'pdf';
+};

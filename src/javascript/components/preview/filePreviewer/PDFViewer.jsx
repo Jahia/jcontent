@@ -54,7 +54,7 @@ const styles = theme => ({
 
 const scaleSizes = [.25, .33, .5, .67, .75, .8, .9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 
-class FileViewer extends React.Component {
+class PDFViewer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -164,9 +164,9 @@ class FileViewer extends React.Component {
     }
 }
 
-FileViewer.propTypes = {
+PDFViewer.propTypes = {
     file: PropTypes.string.isRequired
 };
 
-export default translate()(withStyles(styles)(FileViewer));
+export default translate()(withStyles(styles)(PDFViewer));
 

@@ -13,8 +13,9 @@ import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 import { lockNode, unlockNode } from "./gqlMutations";
 import Tooltip from '@material-ui/core/Tooltip';
-import FileViewer from "./filePreviewer/FileViewer";
+import PDFViewer from "./filePreviewer/PDFViewer";
 import ImageViewer from "./filePreviewer/ImageViewer";
+import {isPDF, isImage} from "../filesGrid/filesGridUtils";
 
 const styles = theme => ({
     root: {
@@ -137,17 +138,22 @@ class ContentPreview extends React.Component {
     }
 
     previewComponent(data) {
-        const { classes, t } = this.props;
+        const { classes, t, dxContext } = this.props;
         let displayValue = data && data.jcr ? data.jcr.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
         //If node type is "jnt:file" use pdf viewer
         if (data && data.jcr && data.jcr.nodeByPath.isFile) {
-            //return <FileViewer key={data.jcr.nodeByPath.uuid} file={'/files/default' + data.jcr.nodeByPath.path}/>
-            return <ImageViewer key={data.jcr.nodeByPath.uuid}
-                                elementId={this.state.imageControlElementId}
-                                file={'/files/default' + data.jcr.nodeByPath.path}/>
+            if (isPDF(data.jcr.nodeByPath.path)) {
+                return <PDFViewer key={data.jcr.nodeByPath.uuid} file={dxContext.contextPath + '/files/default' + data.jcr.nodeByPath.path}/>;
+            } else if(isImage(data.jcr.nodeByPath.path)) {
+                return <ImageViewer key={data.jcr.nodeByPath.uuid}
+                             elementId={this.state.imageControlElementId}
+                             file={dxContext.contextPath + '/files/default' + data.jcr.nodeByPath.path}/>;
+            } else {
+                //Implement document viewer
+            }
         } else {
             return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
         }

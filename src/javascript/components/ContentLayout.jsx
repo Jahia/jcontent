@@ -246,7 +246,8 @@ class ContentLayout extends React.Component {
                                         <ContentPreview selection={rows.find((row) => { return selectedRow !== null && row.path === selectedRow.path})}
                                                         layoutQuery={layoutQuery}
                                                         layoutQueryParams={layoutQueryParams}
-                                                        rowSelectionFunc={this.handleRowSelection}/>
+                                                        rowSelectionFunc={this.handleRowSelection}
+                                                        dxContext={dxContext}/>
                                     </PreviewDrawer>
                                 </div>
                             </div>

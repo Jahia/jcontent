@@ -79,7 +79,7 @@ class ContentBreadcrumbs extends React.Component {
                         selectableTypes={pickerConfiguration.selectableTypes}
                         queryVariables={{lang: lang}}
                         openSelection={false}
-                        onSelectItem={(path, newParams) => {goto(SITE_ROOT + '/' + this.getBasePath(newParams.type) + path, newParams)}}
+                        onSelectItem={(path, newParams) => {goto(`${SITE_ROOT}/${dxContext.lang}/${this.getBasePath(newParams.type)}${path}`, newParams)}}
                     >
                         {({...others}) => {
                             return <Breadcrumb

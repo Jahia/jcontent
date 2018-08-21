@@ -26,11 +26,11 @@ class CmRouter extends React.Component {
     // This method push to the browser url the provided location
     mapQueryToUrl = (match, history, location, dxContext) => {
         return {
-            goto: (path, params, transformation) => {
+            goto: (path, params) => {
                 let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
-                path = _.replace(path, '/sites/' + dxContext.siteKey, '');
+                path = _.replace(path, `/sites/${dxContext.siteKey}`, '');
                 if (path.startsWith(SITE_ROOT)) {
-                    path = '/' + dxContext.siteKey + '/' + dxContext.lang + path.substring(SITE_ROOT.length);
+                    path = `/${dxContext.siteKey}${path.substring(SITE_ROOT.length)}`;
                 } else {
                     path = match.url + path;
                 }

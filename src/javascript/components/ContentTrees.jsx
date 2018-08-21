@@ -72,7 +72,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/contents"}
                             selectableTypes={['jmix:list']}
                             lang={lang}
-                            handleSelect={path => goto(SITE_ROOT + '/browse' + path, {type: "contents"})}
+                            handleSelect={path => goto(`${SITE_ROOT}/${lang}/browse${path}`, {type: "contents"})}
                             openableTypes={['jmix:list', 'jnt:contentFolder']}
                             rootLabel={t("label.contentManager.browseFolders")}
                         />
@@ -84,7 +84,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath}
                             selectableTypes={['jnt:page']}
                             lang={lang}
-                            handleSelect={path => goto(SITE_ROOT + '/browse' + path, {type: "pages"})}
+                            handleSelect={path => goto(`${SITE_ROOT}/${lang}/browse${path}`, {type: "pages"})}
                             openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                             rootLabel={t("label.contentManager.browsePages")}
                         />
@@ -96,7 +96,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/files"}
                             selectableTypes={['jnt:folder']}
                             lang={lang}
-                            handleSelect={path => goto(SITE_ROOT + '/browse-files' + path, {type: "files"})}
+                            handleSelect={path => goto(`${SITE_ROOT}/${lang}/browse-files${path}`, {type: "files"})}
                             openableTypes={['jnt:folder']}
                             rootLabel={t("label.contentManager.browseFiles")}
                         />

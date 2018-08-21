@@ -4,10 +4,12 @@ import gql from "graphql-tag";
 import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem} from '@material-ui/core';
 import CmRouter from "../CmRouter";
+import {SITE_ROOT} from "../CmRouter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {translate} from "react-i18next";
 
 class LanguageSwitcher extends React.Component {
+
     constructor(props) {
         super(props);
         let {dxContext} = props;
@@ -30,15 +32,23 @@ class LanguageSwitcher extends React.Component {
         }`;
     }
 
-    onSelectLanguage = (lang, path, switchto, params) => {
-        //Switch language functionality
+    getBasePath(type) {
+        switch(type) {
+            case 'contents':
+                return 'browse';
+            case 'pages':
+                return 'browse';
+            case 'files':
+                return 'browse-files';
+            default:
+                return 'browse';
+        }
+    }
+
+    onSelectLanguage = (lang, path, goto, params) => {
         let {i18n, dxContext} = this.props;
-        //get part of path from /sites/sitekey/...
-        let extractedPath = path.substring(path.indexOf('/' + dxContext.siteKey + '/' + dxContext.lang));
-        //change locale of ui
         i18n.changeLanguage(lang);
-        //update language in url and update route.
-        switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
+        goto(`${SITE_ROOT}/${lang}/${this.getBasePath(params.type)}${path}`, {type: params.type});
     };
 
     validateLanguageExists = (languages, data) => {
@@ -75,7 +85,7 @@ class LanguageSwitcher extends React.Component {
 
     render() {
         let {dxContext} = this.props;
-        return <CmRouter render={({path, params, goto, switchto}) => {
+        return <CmRouter render={({path, params, goto}) => {
             return <Query query={this.query} variables={this.variables}>
                     {
                         ({error, loading, data}) => {
@@ -86,9 +96,9 @@ class LanguageSwitcher extends React.Component {
                                     return <LanguageSwitcherDisplay dxContext={dxContext}
                                                                     languages={displayableLanguages}
                                                                     loading={loading}
-                                                                    onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
+                                                                    onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, goto, params)}/>;
                                 } else {
-                                    this.onSelectLanguage(languageExists, path, switchto, params);
+                                    this.onSelectLanguage(languageExists, path, goto, params);
                                     return null
                                 }
                             }

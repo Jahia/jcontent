@@ -9,12 +9,13 @@ import {
 import {Query} from "react-apollo";
 import {replaceFragmentsInDocument} from "@jahia/apollo-dx";
 import {translate} from "react-i18next";
+import {withNotifications} from "@jahia/react-material/index";
 
 class Actions extends React.Component {
 
     render() {
 
-        const {menuId, context, children, t} = this.props;
+        const {menuId, context, children, t, notificationContext} = this.props;
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
 
         return _.map(actionsToDisplayKeys, actionKey => {
@@ -67,4 +68,4 @@ class Actions extends React.Component {
     }
 }
 
-export default  translate()(Actions);
+export default  translate()(withNotifications()(Actions));

@@ -5,12 +5,13 @@ import {Query} from "react-apollo";
 import {DxContext} from "../DxContext";
 import {translate} from "react-i18next";
 import * as _ from "lodash";
+import {withNotifications} from "@jahia/react-material/index";
 
 class CreateContentAction extends React.Component {
 
     render() {
 
-        const {children, context, t, call, ...rest} = this.props;
+        const {children, context, t, call, notificationContext, ...rest} = this.props;
         // if jmix:droppableContent is part of the nodetypes, use the "new content" button item
         if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(context.nodeTypes, "jmix:droppableContent")) {
             return children({...rest, onClick: () => call(context)})
@@ -21,7 +22,6 @@ class CreateContentAction extends React.Component {
                 return <DxContext.Consumer key={type}>{dxContext => (
                     <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
                         {({loading, error, data}) => {
-
                             if (error) {
                                 let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                                 notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
@@ -46,4 +46,4 @@ class CreateContentAction extends React.Component {
     }
 }
 
-export default translate()(CreateContentAction);
+export default translate()(withNotifications()(CreateContentAction));

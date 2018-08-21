@@ -130,14 +130,14 @@
                 requiredAllowedChildNodeTypes: ['jnt:contentFolder'],
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.contentFolder',
-                hideOnNodeTypes: ["jnt:page"]
+                hideOnNodeTypes: ["jnt:page", "nt:hierarchyNode"]
             },
             createContent: {
                 priority: 3.1,
                 target: ["createMenuActions", "contentTreeMenuActions"],
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.content',
-                hideOnNodeTypes: ["jnt:page"]
+                hideOnNodeTypes: ["jnt:page", "nt:hierarchyNode"]
             }
         }
     };

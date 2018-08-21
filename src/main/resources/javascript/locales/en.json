@@ -64,7 +64,8 @@
           "create": "Create",
           "content": "New content",
           "contentOfType": "New {{typeName}}",
-          "contentFolder": "New content folder"
+          "contentFolder": "New content folder",
+          "folder": "New folder"
       },
       "preview": {
         "show": "Show Preview",

@@ -1,12 +1,11 @@
-import CallAction from './CallAction'
+import CallAction from "./CallAction"
 import {Edit} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
 
-let edit = (context) => window.parent.editContent(context.path, context.displayName, ['jnt:content'], ['nt:base']);
-let createContentFolder = (context) => window.parent.createContent(context.path, 'jnt:contentFolder', false);
-let createContent = (context) => {
-    return window.parent.createContent(context.path, context.nodeTypes, true);
-}
+let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
+let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
+let createFolder = (context) => window.parent.createContent(context.path, ["jnt:folder"], false);
+let createContent = (context) =>  window.parent.createContent(context.path, context.nodeTypes, true);
 
 let defaultActions = {
     edit: {
@@ -23,6 +22,15 @@ let defaultActions = {
         component: CreateContentAction,
         provideAllowedChildNodeTypes: true,
         call: createContent,
+    },
+    createFolder: {
+        component: CallAction,
+        call: createFolder,
+        priority: 3,
+        target: ["createMenuActions", "contentTreeMenuActions"],
+        requiredAllowedChildNodeTypes: ["jnt:folder"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.create.folder"
     }
 }
 

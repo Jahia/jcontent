@@ -51,9 +51,14 @@ class CmSearchBar extends React.Component {
 
     getBasePath(type) {
         switch(type) {
-            case 'contents': return 'browse';
-            case 'files': return 'browse-files';
-            case 'pages': return 'browse';
+            case 'contents':
+                return 'browse';
+            case 'pages':
+                return 'browse';
+            case 'files':
+                return 'browse-files';
+            default:
+                return 'browse';
         }
     }
 
@@ -126,12 +131,12 @@ class CmSearchBarNormal extends React.Component {
             return;
         }
 
-        _.assign(params, contentType ? {
-            searchContentType: contentType,
-            searchTerms: searchTerms
-        } : {
-            searchTerms: searchTerms
-        });
+        params.searchTerms = searchTerms;
+        if (contentType) {
+            params.searchContentType = contentType;
+        } else {
+            _.unset(params, 'searchContentType');
+        }
 
         goto(SITE_ROOT + '/search' + path, params);
     }
@@ -197,12 +202,15 @@ class CmSearchBarSql2 extends React.Component {
     }
 
     onSearch(path, params, goto) {
-        goto(SITE_ROOT + '/sql2Search' + path, (this.where.current.value !== "") ? {
-            sql2SearchFrom: this.from.current.value,
-            sql2SearchWhere: this.where.current.value
-        } : {
-            sql2SearchFrom: this.from.current.value
-        });
+
+        params.sql2SearchFrom = this.from.current.value;
+        if (this.where.current.value == '') {
+            _.unset(params, 'sql2SearchWhere');
+        } else {
+            params.sql2SearchWhere = this.where.current.value;
+        }
+
+        goto(SITE_ROOT + '/sql2Search' + path, params);
     }
 
     onClear(path, params, goto) {

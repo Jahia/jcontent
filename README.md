@@ -37,7 +37,6 @@ Example:
          labelKey: 'label.contentManager.contentPreview.edit'
      }
 
-- `id` is a unique identifier 
 - `priority` defines in a list of action the order to display actions
 - `component` is the registered component to use  
 - `call` is the function to execute when the action is triggered 
@@ -45,6 +44,9 @@ Example:
 - `target` is the location id where this action should be displayed
 - `requiredPermission` set the required permission to display the action   
 - `labelKey` is the key to use to display the label
+- `requiredAllowedChildNodeType` defines the required allowed child type to make that action being displayed
+- `hideOnNodeTypes` defines a list of types on which the action should not be displayed
+- `shownNodeTypes` defines a list of types on which the action should be displayed
 
 Note that some of the properties can be defined as default properties in `Actions/defaultActions.js` and override 
 within the configuration file. 

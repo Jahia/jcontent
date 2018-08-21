@@ -14,7 +14,7 @@ let defaultActions = {
         icon: Edit,
     },
     createContentFolder: {
-        component: CallAction,
+        component: CreateContentAction,
         call: createContentFolder,
 
     },
@@ -24,11 +24,11 @@ let defaultActions = {
         call: createContent,
     },
     createFolder: {
-        component: CallAction,
+        component: CreateContentAction,
         call: createFolder,
         priority: 3,
         target: ["createMenuActions", "contentTreeMenuActions"],
-        requiredAllowedChildNodeTypes: ["jnt:folder"],
+        requiredAllowedChildNodeType: "jnt:folder",
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.folder",
         hideOnNodeTypes: ["jnt:page"]

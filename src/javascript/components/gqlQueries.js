@@ -325,6 +325,15 @@ const RequirementFragments = {
             }
         }`
     },
+    isAllowedChildNodeType: {
+        variables: {
+            isAllowedChildNodeType: "String!"
+        },
+        applyFor: "requirements",
+        gql: gql `fragment IsdAllowedChildNodeType on JCRNode {
+            allowedChildNodeType(type: $isAllowedChildNodeType)
+        }`
+    },
 }
 
 class RequirementQueryHandler {
@@ -344,8 +353,12 @@ class RequirementQueryHandler {
             this.checkRequirementFragments.push(RequirementFragments.isNodeType);
             this.variables.isNodeType = {types: action.showOnNodeTypes};
         }
-        if (_.isEmpty(action.requiredAllowedChildNodeTypes) && action.provideAllowedChildNodeTypes) {
+        if (action.provideAllowedChildNodeTypes) {
             this.checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
+        }
+        if (!_.isEmpty(action.requiredAllowedChildNodeType)) {
+            this.checkRequirementFragments.push(RequirementFragments.isAllowedChildNodeType);
+            this.variables.isAllowedChildNodeType = action.requiredAllowedChildNodeType
         }
     }
 

@@ -21,7 +21,7 @@ class Actions extends React.Component {
         return _.map(actionsToDisplayKeys, actionKey => {
 
             let action = actionsRegistry[actionKey];
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeTypes, provideAllowedChildNodeTypes} = action;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, provideAllowedChildNodeTypes} = action;
             let requirementQueryHandler = new RequirementQueryHandler(context.path, action);
             let ActionComponent = action.component;
 
@@ -49,13 +49,16 @@ class Actions extends React.Component {
                         }
 
                         // fill the context
-                        if (_.isEmpty(requiredAllowedChildNodeTypes) && provideAllowedChildNodeTypes) {
+                        if (provideAllowedChildNodeTypes) {
                             const contributeTypes = node.contributeTypes;
                             context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? _.map(node.allowedChildNodeTypes, type => type.name) : contributeTypes.values;
-                        } else {
-                            context.nodeTypes = requiredAllowedChildNodeTypes;
                         }
-
+                        if (_.isEmpty(requiredAllowedChildNodeType)) {
+                            context.isdAllowedChildNodeType = true;
+                        } else {
+                            context.isdAllowedChildNodeType = node.allowedChildNodeType;
+                            context.nodeTypes = [requiredAllowedChildNodeType];
+                        }
                         return (
                             <ActionComponent {...action} context={context}>
                                 {children}

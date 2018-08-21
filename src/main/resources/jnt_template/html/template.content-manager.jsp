@@ -127,17 +127,17 @@
             createContentFolder: {
                 priority: 3,
                 target: ["createMenuActions", "contentTreeMenuActions"],
-                requiredAllowedChildNodeTypes: ['jnt:contentFolder'],
+                requiredAllowedChildNodeType: 'jnt:contentFolder',
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.contentFolder',
-                hideOnNodeTypes: ["jnt:page", "nt:hierarchyNode"]
+                hideOnNodeTypes: ["jnt:page"]
             },
             createContent: {
                 priority: 3.1,
                 target: ["createMenuActions", "contentTreeMenuActions"],
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.content',
-                hideOnNodeTypes: ["jnt:page", "nt:hierarchyNode"]
+                hideOnNodeTypes: ["jnt:page", "jnt:folder"]
             }
         }
     };

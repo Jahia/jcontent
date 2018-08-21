@@ -1,5 +1,5 @@
-import React from 'react';
-import Constants from '../constants';
+import React from "react";
+import Constants from "../constants";
 import {ContentTypeQuery} from "../gqlQueries";
 import {Query} from "react-apollo";
 import {DxContext} from "../DxContext";
@@ -12,6 +12,9 @@ class CreateContentAction extends React.Component {
     render() {
 
         const {children, context, t, call, notificationContext, ...rest} = this.props;
+        if (!context.isdAllowedChildNodeType) {
+            return null;
+        }
         // if jmix:droppableContent is part of the nodetypes, use the "new content" button item
         if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(context.nodeTypes, "jmix:droppableContent")) {
             return children({...rest, onClick: () => call(context)})

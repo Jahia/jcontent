@@ -35,7 +35,7 @@ class LanguageSwitcher extends React.Component {
     onSelectLanguage = (lang, path, goto, params) => {
         let {i18n, dxContext} = this.props;
         i18n.changeLanguage(lang);
-        goto(getAbsoluteBrowsingPath(params.type, lang, path));
+        goto(getAbsoluteBrowsingPath(params.type, lang, path), {type: params.type});
     };
 
     validateLanguageExists = (languages, data) => {

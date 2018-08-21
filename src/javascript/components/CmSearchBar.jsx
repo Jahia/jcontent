@@ -62,7 +62,7 @@ class CmSearchBar extends React.Component {
     }
 
     onClear(path, params, goto, dxContext) {
-        goto(getAbsoluteBrowsingPath(params.type, dxContext.lang, path));
+        goto(getAbsoluteBrowsingPath(params.type, dxContext.lang, path), params);
     }
 
     render() {

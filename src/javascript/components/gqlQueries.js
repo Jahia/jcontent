@@ -58,7 +58,7 @@ class SearchQueryHandler {
 
     getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
         return {
-            path: `/sites/${dxContext.siteKey}`,
+            path: path,
             nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
             searchTerms: urlParams.searchTerms,
             language: dxContext.lang,
@@ -82,7 +82,7 @@ class Sql2SearchQueryHandler {
     getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
 
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
-        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('/sites/${dxContext.siteKey}')`;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
         if (sql2SearchWhere && sql2SearchWhere !== "") {
             query = query + ` AND (${sql2SearchWhere})`;
         }

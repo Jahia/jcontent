@@ -3,6 +3,7 @@ import * as _ from "lodash";
 import { withRouter } from "react-router";
 import { DxContext } from "./DxContext";
 
+const SITE_ROOT = ":siteRoot";
 const PARAMS_KEY = "?params=";
 
 class CmRouter extends React.Component {
@@ -25,18 +26,15 @@ class CmRouter extends React.Component {
     // This method push to the browser url the provided location
     mapQueryToUrl = (match, history, location, dxContext) => {
         return {
-            goto: ( path, params, transformation) => {
+            goto: (path, params, transformation) => {
                 let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
                 path = _.replace(path, '/sites/' + dxContext.siteKey, '');
-
-                //Since we can be in a situation when we have n number of trees with n number of possible urls
-                //match.url will need to be adapted.
-                //Transform url as needed if transformation function is defined
-                if (transformation) {
-                    history.push(transformation(match.url + path + queryString));
+                if (path.startsWith(SITE_ROOT)) {
+                    path = '/' + dxContext.siteKey + '/' + dxContext.lang + path.substring(SITE_ROOT.length);
                 } else {
-                    history.push(match.url + path + queryString);
+                    path = match.url + path;
                 }
+                history.push(path + queryString);
             },
             switchto: (url, params) => {
                 //Update history with provided path (This is primarily used for changing the current selected site)
@@ -53,3 +51,4 @@ class CmRouter extends React.Component {
 };
 
 export default withRouter(CmRouter);
+export {SITE_ROOT};

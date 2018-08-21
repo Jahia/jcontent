@@ -184,9 +184,7 @@ class ContentLayout extends React.Component {
                                 <div className={classes.root}>
                                     <Grid container spacing={0}>
                                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                                            {(contentSource === "browsing" || contentSource === "files") &&
-                                                <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
-                                            }
+                                            <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
                                         </Grid>
                                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
                                             {((contentSource === "browsing" || contentSource === "files") && path != rootPath) &&
@@ -210,8 +208,7 @@ class ContentLayout extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={0}>
-                                        {
-                                            (contentSource === "browsing" || contentSource === "files") && showTree &&
+                                        {showTree &&
                                             <Grid item xs={TREE_SIZE} className={classes.tree}>
                                                 <ContentTrees path={path} rootPath={rootPath} lang={dxContext.lang}/>
                                             </Grid>

@@ -92,23 +92,28 @@ class ContentManager extends React.Component {
                                                 dxContext["siteKey"] = props.match.params.siteKey;
                                                 dxContext["lang"] = props.match.params.lang;
                                                 return (
-                                                    <ManagerLayout header={<CMTopBar dxContext={dxContext}/>}
-                                                                   leftSide={<CMLeftNavigation/>}>
-                                                        <div>
-                                                            <Route path={`${props.match.url}/browse`} render={props => (
+                                                    <React.Fragment>
+                                                        <Route path={`${props.match.url}/browse`} render={props => (
+                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                                 <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            )}/>
-                                                            <Route path={`${props.match.url}/browse-files`} render={props => (
+                                                            </ManagerLayout>
+                                                        )}/>
+                                                        <Route path={`${props.match.url}/browse-files`} render={props => (
+                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                                 <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            )}/>
-                                                            <Route path={`${props.match.url}/search`} render={props => (
+                                                            </ManagerLayout>
+                                                        )}/>
+                                                        <Route path={`${props.match.url}/search`} render={props => (
+                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                                 <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            )}/>
-                                                            <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                            </ManagerLayout>
+                                                        )}/>
+                                                        <Route path={`${props.match.url}/sql2Search`} render={props => (
+                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
                                                                 <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            )}/>
-                                                        </div>
-                                                    </ManagerLayout>
+                                                            </ManagerLayout>
+                                                        )}/>
+                                                    </React.Fragment>
                                                 );
                                             }}/>
                                         </BrowserRouter>

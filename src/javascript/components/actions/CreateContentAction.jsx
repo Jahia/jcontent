@@ -19,9 +19,7 @@ class CreateContentAction extends React.Component {
         if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(context.nodeTypes, "jmix:droppableContent")) {
             return children({...rest, onClick: () => call(context)})
         } else {
-            let ctx = _.clone(context);
             return _.map(context.nodeTypes, type => {
-                ctx.nodeTypes = [type];
                 return <DxContext.Consumer key={type}>{dxContext => (
                     <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
                         {({loading, error, data}) => {
@@ -34,6 +32,8 @@ class CreateContentAction extends React.Component {
                             if (loading || !data || !data.jcr) {
                                 return null;
                             }
+                            let ctx = _.cloneDeep(context);
+                            ctx.nodeTypes = [type];
 
                             return children({
                                 ...rest,

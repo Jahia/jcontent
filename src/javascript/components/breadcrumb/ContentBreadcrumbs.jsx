@@ -6,22 +6,13 @@ import gql from "graphql-tag";
 import {Picker} from "@jahia/react-apollo";
 import {translate} from "react-i18next";
 import CmRouter from "../CmRouter";
-import {SITE_ROOT} from "../CmRouter";
+import {getAbsoluteBrowsingPath} from "../utils.js";
 
 class ContentBreadcrumbs extends React.Component {
 
     constructor(props) {
         super(props);
         this.picker = React.createRef();
-        this.getBasePath = this.getBasePath.bind(this);
-    }
-
-    getBasePath(type) {
-        switch(type) {
-            case 'contents': return 'browse';
-            case 'files': return 'browse-files';
-            case 'pages': return 'browse';
-        }
     }
 
     generatePathParts(path) {
@@ -79,7 +70,7 @@ class ContentBreadcrumbs extends React.Component {
                         selectableTypes={pickerConfiguration.selectableTypes}
                         queryVariables={{lang: lang}}
                         openSelection={false}
-                        onSelectItem={(path, newParams) => {goto(`${SITE_ROOT}/${dxContext.lang}/${this.getBasePath(newParams.type)}${path}`, newParams)}}
+                        onSelectItem={(path, newParams) => goto(getAbsoluteBrowsingPath(newParams.type, dxContext.lang, path))}
                     >
                         {({...others}) => {
                             return <Breadcrumb

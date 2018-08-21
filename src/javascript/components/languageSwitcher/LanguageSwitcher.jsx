@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem} from '@material-ui/core';
 import CmRouter from "../CmRouter";
-import {SITE_ROOT} from "../CmRouter";
+import {getAbsoluteBrowsingPath} from "../utils.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {translate} from "react-i18next";
 
@@ -32,23 +32,10 @@ class LanguageSwitcher extends React.Component {
         }`;
     }
 
-    getBasePath(type) {
-        switch(type) {
-            case 'contents':
-                return 'browse';
-            case 'pages':
-                return 'browse';
-            case 'files':
-                return 'browse-files';
-            default:
-                return 'browse';
-        }
-    }
-
     onSelectLanguage = (lang, path, goto, params) => {
         let {i18n, dxContext} = this.props;
         i18n.changeLanguage(lang);
-        goto(`${SITE_ROOT}/${lang}/${this.getBasePath(params.type)}${path}`, {type: params.type});
+        goto(getAbsoluteBrowsingPath(params.type, lang, path));
     };
 
     validateLanguageExists = (languages, data) => {

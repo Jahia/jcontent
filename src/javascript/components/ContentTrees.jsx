@@ -3,8 +3,8 @@ import {Picker} from "@jahia/react-apollo";
 import {PickerViewMaterial} from '@jahia/react-material';
 import {List, ListItem, Button} from "@material-ui/core";
 import CmRouter from "./CmRouter";
-import {SITE_ROOT} from "./CmRouter";
 import gql from "graphql-tag";
+import {getAbsoluteBrowsingPath} from "./utils.js";
 import {translate} from 'react-i18next';
 import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
@@ -72,7 +72,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/contents"}
                             selectableTypes={['jmix:list']}
                             lang={lang}
-                            handleSelect={path => goto(`${SITE_ROOT}/${lang}/browse${path}`, {type: "contents"})}
+                            handleSelect={path => goto(getAbsoluteBrowsingPath("contents", lang, path))}
                             openableTypes={['jmix:list', 'jnt:contentFolder']}
                             rootLabel={t("label.contentManager.browseFolders")}
                         />
@@ -84,7 +84,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath}
                             selectableTypes={['jnt:page']}
                             lang={lang}
-                            handleSelect={path => goto(`${SITE_ROOT}/${lang}/browse${path}`, {type: "pages"})}
+                            handleSelect={path => goto(getAbsoluteBrowsingPath("pages", lang, path))}
                             openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                             rootLabel={t("label.contentManager.browsePages")}
                         />
@@ -96,7 +96,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/files"}
                             selectableTypes={['jnt:folder']}
                             lang={lang}
-                            handleSelect={path => goto(`${SITE_ROOT}/${lang}/browse-files${path}`, {type: "files"})}
+                            handleSelect={path => goto(getAbsoluteBrowsingPath("files", lang, path))}
                             openableTypes={['jnt:folder']}
                             rootLabel={t("label.contentManager.browseFiles")}
                         />

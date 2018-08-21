@@ -6,6 +6,7 @@ import {translate, Trans} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
 import {SITE_ROOT} from "./CmRouter";
+import {getAbsoluteBrowsingPath} from "./utils.js";
 
 const styles = theme => ({
     sql2Form: {
@@ -36,7 +37,6 @@ class CmSearchBar extends React.Component {
 
         super(props);
 
-        this.getBasePath = this.getBasePath.bind(this);
         this.onSql2Click = this.onSql2Click.bind(this);
         this.onNormalClick = this.onNormalClick.bind(this);
         this.onClear = this.onClear.bind(this);
@@ -47,19 +47,6 @@ class CmSearchBar extends React.Component {
         this.state = {
             current: (urlParams.sql2SearchFrom == null ? this.normal : this.sql2)
         };
-    }
-
-    getBasePath(type) {
-        switch(type) {
-            case 'contents':
-                return 'browse';
-            case 'pages':
-                return 'browse';
-            case 'files':
-                return 'browse-files';
-            default:
-                return 'browse';
-        }
     }
 
     onSql2Click() {
@@ -75,7 +62,7 @@ class CmSearchBar extends React.Component {
     }
 
     onClear(path, params, goto, dxContext) {
-        goto(`${SITE_ROOT}/${dxContext.lang}/${this.getBasePath(params.type)}${path}`, params);
+        goto(getAbsoluteBrowsingPath(params.type, dxContext.lang, path));
     }
 
     render() {

@@ -30,7 +30,8 @@ let defaultActions = {
         target: ["createMenuActions", "contentTreeMenuActions"],
         requiredAllowedChildNodeTypes: ["jnt:folder"],
         requiredPermission: "jcr:addChildNodes",
-        labelKey: "label.contentManager.create.folder"
+        labelKey: "label.contentManager.create.folder",
+        hideOnNodeTypes: ["jnt:page"]
     }
 }
 

@@ -30,6 +30,23 @@ const Controls = styled.div`
     background: #eeeeee96;
     display: flex;
 `;
+
+const ZoomScaleDisplay = styled.div`
+    position: fixed !important;
+    z-index: 1300;
+    top: 85px;
+    right: 20px;
+    background-color: #4c4c4ddb;
+    width: 60px !important;
+    text-align: center;
+    height: 30px;
+    padding-top: 7px;
+    color: white;
+    font-family: sans-serif;
+    font-weight: 700;
+    border-radius: 5px;
+`;
+
 const styles = theme => ({
     controlLeft: {
         flex: 1,
@@ -53,6 +70,14 @@ const styles = theme => ({
         left: "50%",
         top: "50%",
         transform : "translate(-50%, -50%)"
+    },
+    hideScale: {
+        opacity:0,
+        transition: "opacity 0.3s ease-out 0s"
+    },
+    showScale: {
+        opacity: 1,
+        transition: "opacity 0.3s ease-in 0s"
     }
 });
 
@@ -66,7 +91,8 @@ class PDFViewer extends React.Component {
             pages: null,
             file: props.file,
             scaleSize: 7
-        }
+        };
+        this.scaleTimeout = null;
     }
 
     onDocumentComplete = (pages) => {
@@ -107,7 +133,11 @@ class PDFViewer extends React.Component {
                     newScaleSize = --scaleSize;
                     break;
             }
-            return {scaleSize: newScaleSize}
+            clearTimeout(this.scaleTimeout);
+            this.scaleTimeout = setTimeout(() => {
+                this.setState({showScale: false});
+            }, 1000);
+            return {scaleSize: newScaleSize, showScale: true}
         });
     };
     renderPagination = () => {
@@ -150,22 +180,27 @@ class PDFViewer extends React.Component {
         )
     };
 
+    displayScaleSize = () => {
+      return Math.floor(scaleSizes[this.state.scaleSize] * 100) + " %"
+    };
+
     render() {
-        let {page, file, scaleSize} = this.state;
+        let {page, file, scaleSize, showScale} = this.state;
         let {classes} = this.props;
         let pagination = this.renderPagination();
         return <div>
-                    <PDFContainer>
-                        <Paper elevation={0} className={classes.pdfPaper}>
-                            <PDF
-                                file={file}
-                                scale={scaleSizes[scaleSize]}
-                                onDocumentComplete={this.onDocumentComplete}
-                                onPageComplete={this.onPageComplete}
-                                page={page}
-                            />
-                        </Paper>
-                    </PDFContainer>
+                <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
+                <PDFContainer>
+                    <Paper elevation={0} className={classes.pdfPaper}>
+                        <PDF
+                            file={file}
+                            scale={scaleSizes[scaleSize]}
+                            onDocumentComplete={this.onDocumentComplete}
+                            onPageComplete={this.onPageComplete}
+                            page={page}
+                        />
+                    </Paper>
+                </PDFContainer>
                 {pagination}
             </div>
     }

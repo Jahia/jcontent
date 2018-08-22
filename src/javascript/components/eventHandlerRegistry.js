@@ -1,15 +1,18 @@
 import * as _ from "lodash";
 
-const context = {
+let register = (eventType, eventHandler) => {
+    if (window.parent[eventType]) {
+        let eventHandlers = window.parent[eventType];
+        if (_.indexOf(eventHandlers, eventHandler) < 0) {
+            eventHandlers[eventHandlers.length] = eventHandler;
+        }
+    } else {
+        window.parent[eventType] = [eventHandler];
+    }
 }
 
-let register = (eventHandlers) => {
-    eventHandlers = _.mapValues(eventHandlers, handlers => _.map(handlers, handler => handler.bind(this, context)));
-    _.mergeWith(window.parent, eventHandlers);
+let unregister = (eventType, eventHandler) => {
+    _.remove(window.parent[eventType], (eh) => (eh === eventHandler));
 }
 
-let unregister = (eventHandlers) => {
-    _.mapKeys(eventHandlers, handler => delete window.parent.handler);
-}
-
-export {register, unregister, context}
+export {register, unregister}

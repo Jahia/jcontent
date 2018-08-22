@@ -1,6 +1,6 @@
 import React from 'react';
 import {Query, withApollo} from 'react-apollo';
-import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler} from "./gqlQueries";
+import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, GetNodeAndChildrenByPathQuery} from "./gqlQueries";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
@@ -15,9 +15,7 @@ import CmRouter from './CmRouter';
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
-import eventHandlers from "./eventHandlers"
-import {register as eventHandlerRegister, unregister as eventHandlerUnregister} from "./eventHandlerRegistry";
-import {context as eventHandlersContext} from "./eventHandlerRegistry"
+import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
 
 //Files grid
 import FilesGrid from './filesGrid/FilesGrid';
@@ -57,7 +55,9 @@ const TREE_SIZE = 3;
 class ContentLayout extends React.Component {
 
     constructor(props) {
+
         super(props);
+
         this.state = {
             page: 0,
             rowsPerPage: 25,
@@ -67,6 +67,9 @@ class ContentLayout extends React.Component {
             filesGridSizeValue: 4,
             showList: false
         };
+
+        this.onGwtContentCreate = this.onGwtContentCreate.bind(this);
+        this.onGwtContentUpdate = this.onGwtContentUpdate.bind(this);
     }
 
     handleChangePage = newPage => {
@@ -112,11 +115,41 @@ class ContentLayout extends React.Component {
     };
 
     componentDidMount() {
-        eventHandlerRegister(eventHandlers);
+        gwtEventHandlerRegister("updateButtonItemEventHandlers", this.onGwtContentUpdate);
+        gwtEventHandlerRegister("createButtonItemEventHandlers", this.onGwtContentCreate);
     }
 
     componentWillUnmount() {
-        eventHandlerUnregister();
+        gwtEventHandlerUnregister("updateButtonItemEventHandlers", this.onGwtContentUpdate);
+        gwtEventHandlerUnregister("createButtonItemEventHandlers", this.onGwtContentCreate);
+    }
+
+    onGwtContentCreate(enginePath, engineNodeName, uuid) {
+        this.onGwtContentSave(enginePath, engineNodeName, uuid, true);
+    }
+
+    onGwtContentUpdate(enginePath, engineNodeName, uuid) {
+        this.onGwtContentSave(enginePath, engineNodeName, uuid, false);
+    }
+
+    onGwtContentSave(enginePath, engineNodeName, uuid, forceRefresh) {
+        // clean up the cache entry
+        const path = enginePath.substring(0, enginePath.lastIndexOf("/") + 1) + engineNodeName;
+        if (enginePath === this.gwtEventHandlerContext.path && enginePath !== path) {
+            this.gwtEventHandlerContext.goto(path, this.gwtEventHandlerContext.params);
+        } else {
+            // update the parent node to update the current node data (needed for add / remove / move etc ..
+            // TODO: do not call forceCMUpdate() but let the application update by itself ( BACKLOG-8369 )
+            this.props.client.query({
+                query: GetNodeAndChildrenByPathQuery,
+                fetchPolicy: "network-only",
+                variables: {
+                    "path": path.substring(0, path.lastIndexOf("/")),
+                    "language": this.gwtEventHandlerContext.dxContext.lang,
+                    "displayLanguage": this.gwtEventHandlerContext.dxContext.uilang
+                }
+            }).then(forceRefresh && window.forceCMUpdate());
+        }
     }
 
     render() {
@@ -128,14 +161,14 @@ class ContentLayout extends React.Component {
             const rootPath = '/sites/' + dxContext.siteKey;
             let queryHandler = contentQueryHandlerBySource[contentSource];
             return <CmRouter render={({path, params, goto}) => {
-                _.assign(eventHandlersContext, {
+
+                this.gwtEventHandlerContext = {
                     path: path,
-                    goto: goto,
                     params: params,
-                    language: dxContext.lang,
-                    uiLang: dxContext.uilang,
-                    apolloClient: client
-                });
+                    goto: goto,
+                    dxContext: dxContext
+                };
+
                 const layoutQuery = queryHandler.getQuery();
                 const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
                 let computedTableSize;

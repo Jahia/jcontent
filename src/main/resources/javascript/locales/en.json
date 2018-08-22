@@ -9,6 +9,13 @@
         "unpublished": "Unpublished by {{userName}} on {{timestamp}}",
         "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
       },
+      "contextMenu": {
+        "lockActions": {
+          "lock": "Lock",
+          "unlock": "Unlock",
+          "clearAllLocks": "Clear all locks"
+        }
+      },
       "locked": "Content is locked",
       "lock": "Lock content",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",

@@ -1,7 +1,7 @@
 import CallAction from "./CallAction"
 import {Edit} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
-
+import LockManagementAction from "./LockManagementAction";
 let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
 let createFolder = (context) => window.parent.createContent(context.path, ["jnt:folder"], false);
@@ -135,7 +135,27 @@ let defaultActions = {
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.create",
         hideOnNodeTypes: ["jnt:page"]
-    }
-}
+    },
+    lock: {
+        priority: 2.5,
+        action:'lock',
+        component: LockManagementAction,
+        target: ["contentTreeMenuActions"],
+        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
+        requiredPermission: "jcr:lockManagement",
+        labelKey: 'label.contentManager.contextMenu.lockActions.lock',
+        showOnNodeTypes: ["jnt:contentFolder"]
+    },
+    unlock: {
+        priority: 2.5,
+        action: 'unlock',
+        component: LockManagementAction,
+        target: ["contentTreeMenuActions"],
+        requiredPermission: "jcr:lockManagement",
+        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
+        labelKey: 'label.contentManager.contextMenu.lockActions.unlock',
+        showOnNodeTypes: ["jnt:contentFolder"]
+    },
+};
 
 export default defaultActions;

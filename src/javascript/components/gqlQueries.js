@@ -298,6 +298,20 @@ const RequirementsQuery = gql `
 `;
 
 const RequirementFragments = {
+    retrieveProperties: {
+        variables: {
+            retrievePropertiesNames: "[String!]!",
+            retrievePropertiesLang: "String!"
+        },
+        applyFor: "requirements",
+        gql: gql `fragment NodeProperties on JCRNode {
+            properties(names: $retrievePropertiesNames, language: $retrievePropertiesLang) {
+                name
+                value
+                values
+            }
+        }`
+    },
     isNodeType: {
         variables: {
             isNodeType: "InputNodeTypesInput!"
@@ -341,11 +355,11 @@ const RequirementFragments = {
             isAllowedChildNodeType: "String!"
         },
         applyFor: "requirements",
-        gql: gql `fragment IsdAllowedChildNodeType on JCRNode {
+        gql: gql `fragment IsAllowedChildNodeType on JCRNode {
             allowedChildNodeType(type: $isAllowedChildNodeType)
         }`
     },
-}
+};
 
 class RequirementQueryHandler {
 
@@ -370,6 +384,10 @@ class RequirementQueryHandler {
         if (!_.isEmpty(action.requiredAllowedChildNodeType)) {
             this.checkRequirementFragments.push(RequirementFragments.isAllowedChildNodeType);
             this.variables.isAllowedChildNodeType = action.requiredAllowedChildNodeType
+        }
+        if (!_.isEmpty(action.retrieveProperties)) {
+            this.checkRequirementFragments.push(RequirementFragments.retrieveProperties);
+            this.variables = {...action.retrieveProperties, ...this.variables}
         }
     }
 

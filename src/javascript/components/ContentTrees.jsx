@@ -31,7 +31,7 @@ class ContentTree extends React.Component {
                     return entry.depth > 0 ?
                         (<React.Fragment>
                             {entry.node.displayName}
-                            <Actions menuId={"contentTreeActions"} context={{path: path, displayName: entry.node.displayName}}>
+                            <Actions menuId={"contentTreeActions"} context={{path: path, displayName: entry.node.displayName, lang: lang}}>
                                 {(props) => <CmIconButton {...props}/>}
                             </Actions>
                         </React.Fragment>)

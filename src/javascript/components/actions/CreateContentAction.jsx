@@ -12,7 +12,7 @@ class CreateContentAction extends React.Component {
     render() {
 
         const {children, context, t, call, notificationContext, ...rest} = this.props;
-        if (!context.isdAllowedChildNodeType) {
+        if (!context.isAllowedChildNodeType) {
             return null;
         }
         // if jmix:droppableContent is part of the nodetypes, use the "new content" button item

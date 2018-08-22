@@ -21,7 +21,10 @@ class Actions extends React.Component {
         return _.map(actionsToDisplayKeys, actionKey => {
 
             let action = actionsRegistry[actionKey];
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, provideAllowedChildNodeTypes} = action;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, provideAllowedChildNodeTypes, retrieveProperties} = action;
+            if (retrieveProperties != null) {
+                action.retrieveProperties.retrievePropertiesLang = context.lang;
+            }
             let requirementQueryHandler = new RequirementQueryHandler(context.path, action);
             let ActionComponent = action.component;
 
@@ -38,7 +41,6 @@ class Actions extends React.Component {
                         if (loading || !data || !data.jcr) {
                             return null;
                         }
-
                         // check display of the action
                         const node = data.jcr.nodeByPath;
                         if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
@@ -54,11 +56,15 @@ class Actions extends React.Component {
                             context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? _.map(node.allowedChildNodeTypes, type => type.name) : contributeTypes.values;
                         }
                         if (_.isEmpty(requiredAllowedChildNodeType)) {
-                            context.isdAllowedChildNodeType = true;
+                            context.isAllowedChildNodeType = true;
                         } else {
-                            context.isdAllowedChildNodeType = node.allowedChildNodeType;
+                            context.isAllowedChildNodeType = node.allowedChildNodeTypes;
                             context.nodeTypes = [requiredAllowedChildNodeType];
                         }
+                        if (!_.isEmpty(retrieveProperties)) {
+                            context.retrieveProperties = node.properties;
+                        }
+                        context.requirementQueryHandler = requirementQueryHandler;
                         return (
                             <ActionComponent {...action} context={context}>
                                 {children}

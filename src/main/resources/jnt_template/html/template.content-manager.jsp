@@ -29,8 +29,9 @@
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: {
-           /* You can override any of the action configuration from here using the following format: */
-            /*createMenu: {
+            // Any action configuration can be overriden here, for example:
+            /*
+            createMenu: {
                 component: "menuAction",
                 menuId: "createMenuActions",
                 target: ["createMenu"],
@@ -52,7 +53,8 @@
                 requiredPermission: "jcr:addChildNodes",
                 labelKey: 'label.contentManager.create.content',
                 hideOnNodeTypes: ["jnt:page", "jnt:folder"]
-            }*/
+            }
+            */
         }
     };
 

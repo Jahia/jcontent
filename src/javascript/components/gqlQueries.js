@@ -274,7 +274,7 @@ const ContentTypeQuery = gql `
 `;
 
 // We use a clone version of the query as the requirements can be different between queries.
-let getRequirementsQuery = () => _.cloneDeep(gql `
+let RequirementsQuery = gql `
     query CheckRequirementsQuery($path:String!) {
         jcr {
             nodeByPath(path:$path) {
@@ -284,7 +284,7 @@ let getRequirementsQuery = () => _.cloneDeep(gql `
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
-`);
+`;
 
 const RequirementFragments = {
     isNodeType: {
@@ -363,7 +363,7 @@ class RequirementQueryHandler {
     }
 
     getQuery() {
-        let requirementsQuery = getRequirementsQuery();
+        let requirementsQuery = _.cloneDeep(RequirementsQuery);
         replaceFragmentsInDocument(requirementsQuery, this.checkRequirementFragments);
         return requirementsQuery;
     }

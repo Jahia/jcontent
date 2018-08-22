@@ -20,7 +20,7 @@ import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
 import eventHandlers from "./eventHandlers"
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
-import {register as eventHandlerRegister} from "./eventHandlerRegistry";
+import {register as eventHandlerRegister, unregister as eventHandlerUnregister} from "./eventHandlerRegistry";
 
 const actionComponents = {
     action: CallAction,
@@ -69,11 +69,18 @@ class ContentManager extends React.Component {
         });
     }
 
+    componentDidMount() {
+        eventHandlerRegister(eventHandlers);
+    }
+
+    componentWillUnmount() {
+        eventHandlerUnregister();
+    }
+
     render() {
         let {dxContext, classes} = this.props;
         // register action components
         const isInFrame = window.top !== window;
-        eventHandlerRegister(eventHandlers);
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>

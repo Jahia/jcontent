@@ -17,7 +17,6 @@ class ContentTree extends React.Component {
 
     render() {
         let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes} = this.props;
-        console.log(`display ${rootPath} tree`);
         return (
             <Picker ref={this.picker}
                     rootPaths={[rootPath]}

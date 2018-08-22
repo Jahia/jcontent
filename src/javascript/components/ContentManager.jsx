@@ -18,9 +18,7 @@ import defaultActions from "./actions/defaultActions";
 import actionsRegistry from "./actionsRegistry"
 import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
-import eventHandlers from "./eventHandlers"
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
-import {register as eventHandlerRegister, unregister as eventHandlerUnregister} from "./eventHandlerRegistry";
 import {Routes} from "./Routes";
 
 const actionComponents = {
@@ -68,14 +66,6 @@ class ContentManager extends React.Component {
             window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
             window.parent.document.title = title;
         });
-    }
-
-    componentDidMount() {
-        eventHandlerRegister(eventHandlers);
-    }
-
-    componentWillUnmount() {
-        eventHandlerUnregister();
     }
 
     render() {

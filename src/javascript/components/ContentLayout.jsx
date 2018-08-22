@@ -15,6 +15,8 @@ import CmRouter from './CmRouter';
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
+import eventHandlers from "./eventHandlers"
+import {register as eventHandlerRegister, unregister as eventHandlerUnregister} from "./eventHandlerRegistry";
 import {context as eventHandlersContext} from "./eventHandlerRegistry"
 
 //Files grid
@@ -108,6 +110,14 @@ class ContentLayout extends React.Component {
             });
         }
     };
+
+    componentDidMount() {
+        eventHandlerRegister(eventHandlers);
+    }
+
+    componentWillUnmount() {
+        eventHandlerUnregister();
+    }
 
     render() {
 

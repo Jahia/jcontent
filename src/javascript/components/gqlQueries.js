@@ -273,8 +273,19 @@ const ContentTypeQuery = gql `
     }
 `;
 
-// We use a clone version of the query as the requirements can be different between queries.
-let RequirementsQuery = gql `
+const NodeDisplayNameQuery = gql `
+    query NodeDisplayNameQuery($path:String!, $language:String!) {
+        jcr {
+            nodeByPath(path: $path) {
+                ...NodeCacheRequiredFields
+                displayName(language: $language)
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
+
+const RequirementsQuery = gql `
     query CheckRequirementsQuery($path:String!) {
         jcr {
             nodeByPath(path:$path) {
@@ -380,6 +391,7 @@ export {
     FilesQueryHandler,
     ContentTypesQuery,
     ContentTypeQuery,
+    NodeDisplayNameQuery,
     GetNodeAndChildrenByPathQuery,
     RequirementQueryHandler
 };

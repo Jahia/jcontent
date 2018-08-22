@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles, Typography, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
+import {withStyles, Typography, Button, Input, InputAdornment, Paper, IconButton, Grid} from "@material-ui/core";
 import Search from '@material-ui/icons/Search';
 import ContentTypeSelect from './ContentTypeSelect';
 import {translate, Trans} from 'react-i18next';
@@ -7,8 +7,14 @@ import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
 import {SITE_ROOT} from "./CmRouter";
 import {getAbsoluteBrowsingPath} from "./utils.js";
+import {Query} from 'react-apollo';
+import {NodeDisplayNameQuery} from "./gqlQueries";
+import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 
 const styles = theme => ({
+    underneathNode: {
+        marginTop: 6
+    },
     sql2Form: {
         padding: theme.spacing.unit,
         color: theme.palette.text.secondary,
@@ -143,7 +149,7 @@ class CmSearchBarNormal extends React.Component {
 
     render() {
 
-        let {dxContext, onSql2Click, classes, t} = this.props;
+        let {dxContext, onSql2Click, classes, t, notificationContext} = this.props;
 
         return (
             <CmRouter render={({path, params, goto}) => (
@@ -165,15 +171,38 @@ class CmSearchBarNormal extends React.Component {
                         contentType={this.state.contentType}
                         onSelectionChange={(contentType) => this.onContentTypeChange(path, params, contentType, goto, dxContext)}
                     />
-                    <Input
-                        inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
-                        defaultValue={params.searchTerms}
-                        placeholder={t('label.contentManager.search.normalPrompt')}
-                        inputRef={this.search}
-                        style={{flexGrow: 10}}
-                        onChange={() => this.onSearchInputChange(path, params, goto, dxContext)}
-                        onKeyDown={(e) => this.onSearchInputKeyDown(e, path, params, goto, dxContext)}
-                    />
+                    <Query query={NodeDisplayNameQuery} variables={{path: path, language: dxContext.lang}}>
+                        {({loading, error, data}) => {
+
+                            if (loading) {
+                                return <ProgressOverlay/>
+                            }
+
+                            if (error) {
+                                console.log("Error when fetching data: " + error);
+                                let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                                return null;
+                            }
+
+                            let displayName = data.jcr.nodeByPath.displayName;
+
+                            return (
+                                <Input
+                                    inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
+                                    defaultValue={params.searchTerms}
+                                    placeholder={t('label.contentManager.search.normalPrompt')}
+                                    endAdornment={<InputAdornment position="end" classes={{root: classes.underneathNode}}>
+                                        {t('label.contentManager.search.underneathNode', {nodeDisplayName: displayName})}
+                                    </InputAdornment>}
+                                    inputRef={this.search}
+                                    style={{flexGrow: 10}}
+                                    onChange={() => this.onSearchInputChange(path, params, goto, dxContext)}
+                                    onKeyDown={(e) => this.onSearchInputKeyDown(e, path, params, goto, dxContext)}
+                                />
+                            );
+                        }}
+                    </Query>
                 </SearchBarLayout>
             )}/>
         );

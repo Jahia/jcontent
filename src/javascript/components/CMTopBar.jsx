@@ -8,6 +8,7 @@ import {compose} from "react-apollo/index";
 import CmRouter from "./CmRouter";
 import {DxContext} from "./DxContext";
 import {CmSearchBar} from "./CmSearchBar";
+import {Routes} from "./Routes";
 
 const styles = theme => ({
     root: {
@@ -31,7 +32,7 @@ class CMTopBar extends React.Component {
 
     render() {
 
-        const { dxContext, classes, t } = this.props;
+        const {dxContext, baseRoutePath, classes, t} = this.props;
 
         return (
             <Toolbar color={'secondary'} classes={{root: classes.root}}>
@@ -54,9 +55,28 @@ class CMTopBar extends React.Component {
                 </div>
 
                 <div className={classes.search}>
-                    <CmRouter render={({params}) => (
-                        <CmSearchBar dxContext={dxContext} urlParams={params}/>
-                    )}/>
+                    <CmRouter render={({params}) => {
+
+                        let searchBar = <CmSearchBar dxContext={dxContext} urlParams={params}/>
+
+                        return (
+                            <Routes
+                                basePath={baseRoutePath}
+                                browseRender={props =>
+                                    searchBar
+                                }
+                                browseFilesRender={props =>
+                                    searchBar
+                                }
+                                searchRender={props =>
+                                    searchBar
+                                }
+                                sql2SearchRender={props =>
+                                    searchBar
+                                }
+                            />
+                        );
+                    }}/>
                 </div>
             </Toolbar>
         );

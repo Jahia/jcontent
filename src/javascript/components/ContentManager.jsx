@@ -21,6 +21,7 @@ import MenuAction from "./actions/MenuAction";
 import eventHandlers from "./eventHandlers"
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {register as eventHandlerRegister, unregister as eventHandlerUnregister} from "./eventHandlerRegistry";
+import {Routes} from "./Routes";
 
 const actionComponents = {
     action: CallAction,
@@ -99,28 +100,26 @@ class ContentManager extends React.Component {
                                                 dxContext["siteKey"] = props.match.params.siteKey;
                                                 dxContext["lang"] = props.match.params.lang;
                                                 return (
-                                                    <React.Fragment>
-                                                        <Route path={`${props.match.url}/browse`} render={props => (
-                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                                    <ManagerLayout
+                                                        header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url}/>}
+                                                        leftSide={<CMLeftNavigation/>}
+                                                    >
+                                                        <Routes
+                                                            basePath={props.match.url}
+                                                            browseRender={props =>
                                                                 <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            </ManagerLayout>
-                                                        )}/>
-                                                        <Route path={`${props.match.url}/browse-files`} render={props => (
-                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                                            }
+                                                            browseFilesRender={props =>
                                                                 <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            </ManagerLayout>
-                                                        )}/>
-                                                        <Route path={`${props.match.url}/search`} render={props => (
-                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                                            }
+                                                            searchRender={props =>
                                                                 <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            </ManagerLayout>
-                                                        )}/>
-                                                        <Route path={`${props.match.url}/sql2Search`} render={props => (
-                                                            <ManagerLayout header={<CMTopBar dxContext={dxContext}/>} leftSide={<CMLeftNavigation/>}>
+                                                            }
+                                                            sql2SearchRender={props =>
                                                                 <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            </ManagerLayout>
-                                                        )}/>
-                                                    </React.Fragment>
+                                                            }
+                                                        />
+                                                    </ManagerLayout>
                                                 );
                                             }}/>
                                         </BrowserRouter>

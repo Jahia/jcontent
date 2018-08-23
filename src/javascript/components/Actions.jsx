@@ -41,6 +41,7 @@ class Actions extends React.Component {
                         if (loading || !data || !data.jcr) {
                             return null;
                         }
+
                         // check display of the action
                         const node = data.jcr.nodeByPath;
                         if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
@@ -64,6 +65,7 @@ class Actions extends React.Component {
                             context.retrieveProperties = node.properties;
                         }
                         context.requirementQueryHandler = requirementQueryHandler;
+
                         return (
                             <ActionComponent {...action} context={context}>
                                 {children}

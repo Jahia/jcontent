@@ -132,11 +132,6 @@ class ContentLayout extends React.Component {
         this.onGwtContentSave(enginePath, engineNodeName, uuid, false);
     }
 
-    isBrowsing() {
-        let {contentSource} = this.props;
-        return (contentSource === "browsing" || contentSource === "files")
-    }
-
     onGwtContentSave(enginePath, engineNodeName, uuid, forceRefresh) {
         // clean up the cache entry
         const path = enginePath.substring(0, enginePath.lastIndexOf("/") + 1) + engineNodeName;
@@ -155,6 +150,11 @@ class ContentLayout extends React.Component {
                 }
             }).then(forceRefresh && window.forceCMUpdate());
         }
+    }
+
+    isBrowsing() {
+        let {contentSource} = this.props;
+        return (contentSource === "browsing" || contentSource === "files")
     }
 
     render() {

@@ -132,6 +132,11 @@ class ContentLayout extends React.Component {
         this.onGwtContentSave(enginePath, engineNodeName, uuid, false);
     }
 
+    isBrowsing() {
+        let {contentSource} = this.props;
+        return (contentSource === "browsing" || contentSource === "files")
+    }
+
     onGwtContentSave(enginePath, engineNodeName, uuid, forceRefresh) {
         // clean up the cache entry
         const path = enginePath.substring(0, enginePath.lastIndexOf("/") + 1) + engineNodeName;
@@ -219,7 +224,7 @@ class ContentLayout extends React.Component {
                                     height: (contentNode.width != null ? contentNode.height.value : '')
                                 }
                             });
-                            computedTableSize = GRID_SIZE - (showTree ? TREE_SIZE : 0)
+                            computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0)
                         }
 
                         return (
@@ -230,14 +235,16 @@ class ContentLayout extends React.Component {
                                             <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
                                         </Grid>
                                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
-                                            {((contentSource === "browsing" || contentSource === "files") && path != rootPath) &&
+                                            {this.isBrowsing() && path != rootPath &&
                                                 <Actions menuId={"createMenu"} context={{path: path}}>
                                                     {(props) => <CmButton {...props}><Add/></CmButton>}
                                                 </Actions>
                                             }
-                                            <IconButton onClick={this.handleShowTree}><List/></IconButton>
+                                            {this.isBrowsing() &&
+                                                <IconButton onClick={this.handleShowTree}><List/></IconButton>
+                                            }
                                             {contentSource === "files" &&
-                                                <FilesGridModeSelector showList={ this.state.showList } onChange={() => this.setState({showList: !this.state.showList})}/>
+                                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                                             }
                                             {showPreview &&
                                                 <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>
@@ -251,7 +258,7 @@ class ContentLayout extends React.Component {
                                         </Grid>
                                     </Grid>
                                     <Grid container spacing={0}>
-                                        {showTree &&
+                                        {this.isBrowsing() && showTree &&
                                             <Grid item xs={TREE_SIZE} className={classes.tree}>
                                                 <ContentTrees path={path} rootPath={rootPath} lang={dxContext.lang}/>
                                             </Grid>

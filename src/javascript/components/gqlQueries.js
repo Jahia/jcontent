@@ -285,11 +285,17 @@ const NodeDisplayNameQuery = gql `
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-const RequirementsQuery = gql `
-    query CheckRequirementsQuery($path:String!) {
+const ActionRequirementsQuery = gql `
+    query ActionRequirementsQuery($path:String!) {
         jcr {
             nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
+                allowedChildNodeTypes {
+                    name
+                }
+                contributeTypes: property(name: "j:contributeTypes") {
+                    values
+                }
                 ...requirements
             }
         }
@@ -297,7 +303,7 @@ const RequirementsQuery = gql `
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-const RequirementFragments = {
+const ActionRequirementsFragments = {
     retrieveProperties: {
         variables: {
             retrievePropertiesNames: "[String!]!",
@@ -338,47 +344,35 @@ const RequirementFragments = {
         gql: gql `fragment NodeHasPermission on JCRNode {
             hasPermission(permissionName: $permission)
         }`
-    },
-    allowedChildNodeTypes: {
-        applyFor: "requirements",
-        gql: gql `fragment ProvideTypes on JCRNode {
-            allowedChildNodeTypes {
-                name
-            }
-            contributeTypes: property(name: "j:contributeTypes") {
-                values
-            }
-        }`
     }
 };
 
 class ActionRequirementsQueryHandler {
 
     constructor(path, action) {
-        this.checkRequirementFragments = [];
+        this.requirementsFragments = [];
         this.variables = {path: path};
         if (!_.isEmpty(action.requiredPermission)) {
-            this.checkRequirementFragments.push(RequirementFragments.permission);
+            this.requirementsFragments.push(ActionRequirementsFragments.permission);
             this.variables.permission = action.requiredPermission;
         }
         if (!_.isEmpty(action.hideOnNodeTypes)) {
-            this.checkRequirementFragments.push(RequirementFragments.isNotNodeType);
+            this.requirementsFragments.push(ActionRequirementsFragments.isNotNodeType);
             this.variables.isNotNodeType = {types: action.hideOnNodeTypes};
         }
         if (!_.isEmpty(action.showOnNodeTypes)) {
-            this.checkRequirementFragments.push(RequirementFragments.isNodeType);
+            this.requirementsFragments.push(ActionRequirementsFragments.isNodeType);
             this.variables.isNodeType = {types: action.showOnNodeTypes};
         }
-        this.checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
         if (!_.isEmpty(action.retrieveProperties)) {
-            this.checkRequirementFragments.push(RequirementFragments.retrieveProperties);
+            this.requirementsFragments.push(ActionRequirementsFragments.retrieveProperties);
             this.variables = {...action.retrieveProperties, ...this.variables}
         }
     }
 
     getQuery() {
-        let requirementsQuery = _.cloneDeep(RequirementsQuery);
-        replaceFragmentsInDocument(requirementsQuery, this.checkRequirementFragments);
+        let requirementsQuery = _.cloneDeep(ActionRequirementsQuery);
+        replaceFragmentsInDocument(requirementsQuery, this.requirementsFragments);
         return requirementsQuery;
     }
 

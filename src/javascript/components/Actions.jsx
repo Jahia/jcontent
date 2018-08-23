@@ -54,11 +54,10 @@ class Actions extends React.Component {
                         if (provideAllowedChildNodeTypes) {
                             const contributeTypes = node.contributeTypes;
                             context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? _.map(node.allowedChildNodeTypes, type => type.name) : contributeTypes.values;
+                            context.isAllowedChildNodeType = !_.isEmpty(context.nodeTypes );
                         }
-                        if (_.isEmpty(requiredAllowedChildNodeType)) {
-                            context.isAllowedChildNodeType = true;
-                        } else {
-                            context.isAllowedChildNodeType = node.allowedChildNodeTypes;
+                        if (!_.isEmpty(requiredAllowedChildNodeType)) {
+                            context.isAllowedChildNodeType = node.allowedChildNodeType;
                             context.nodeTypes = [requiredAllowedChildNodeType];
                         }
                         if (!_.isEmpty(retrieveProperties)) {

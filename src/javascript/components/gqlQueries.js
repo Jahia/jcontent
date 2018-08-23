@@ -349,19 +349,10 @@ const RequirementFragments = {
                 values
             }
         }`
-    },
-    isAllowedChildNodeType: {
-        variables: {
-            isAllowedChildNodeType: "String!"
-        },
-        applyFor: "requirements",
-        gql: gql `fragment IsAllowedChildNodeType on JCRNode {
-            allowedChildNodeType(type: $isAllowedChildNodeType)
-        }`
-    },
+    }
 };
 
-class RequirementQueryHandler {
+class ActionRequirementsQueryHandler {
 
     constructor(path, action) {
         this.checkRequirementFragments = [];
@@ -378,13 +369,7 @@ class RequirementQueryHandler {
             this.checkRequirementFragments.push(RequirementFragments.isNodeType);
             this.variables.isNodeType = {types: action.showOnNodeTypes};
         }
-        if (action.provideAllowedChildNodeTypes) {
-            this.checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
-        }
-        if (!_.isEmpty(action.requiredAllowedChildNodeType)) {
-            this.checkRequirementFragments.push(RequirementFragments.isAllowedChildNodeType);
-            this.variables.isAllowedChildNodeType = action.requiredAllowedChildNodeType
-        }
+        this.checkRequirementFragments.push(RequirementFragments.allowedChildNodeTypes);
         if (!_.isEmpty(action.retrieveProperties)) {
             this.checkRequirementFragments.push(RequirementFragments.retrieveProperties);
             this.variables = {...action.retrieveProperties, ...this.variables}
@@ -411,5 +396,5 @@ export {
     ContentTypeQuery,
     NodeDisplayNameQuery,
     GetNodeAndChildrenByPathQuery,
-    RequirementQueryHandler
+    ActionRequirementsQueryHandler
 };

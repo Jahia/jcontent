@@ -29,7 +29,6 @@ let defaultActions = {
     },
     createContent: {
         component: CreateContentAction,
-        provideAllowedChildNodeTypes: true,
         call: createContent,
         priority: 3.1,
         target: ["createMenuActions", "contentTreeMenuActions"],

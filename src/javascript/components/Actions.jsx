@@ -4,7 +4,7 @@ import actionsRegistry from "./actionsRegistry";
 import {
     CheckRequirementsQuery,
     getRequirementsQuery,
-    RequirementQueryHandler
+    ActionRequirementsQueryHandler
 } from "./gqlQueries";
 import {Query} from "react-apollo";
 import {replaceFragmentsInDocument} from "@jahia/apollo-dx";
@@ -21,11 +21,11 @@ class Actions extends React.Component {
         return _.map(actionsToDisplayKeys, actionKey => {
 
             let action = actionsRegistry[actionKey];
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, provideAllowedChildNodeTypes, retrieveProperties} = action;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, retrieveProperties} = action;
             if (retrieveProperties != null) {
                 action.retrieveProperties.retrievePropertiesLang = context.lang;
             }
-            let requirementQueryHandler = new RequirementQueryHandler(context.path, action);
+            let requirementQueryHandler = new ActionRequirementsQueryHandler(context.path, action);
             let ActionComponent = action.component;
 
             return ActionComponent && (
@@ -52,13 +52,12 @@ class Actions extends React.Component {
                         }
 
                         // fill the context
-                        if (provideAllowedChildNodeTypes) {
-                            const contributeTypes = node.contributeTypes;
-                            context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? _.map(node.allowedChildNodeTypes, type => type.name) : contributeTypes.values;
-                            context.isAllowedChildNodeType = !_.isEmpty(context.nodeTypes );
-                        }
-                        if (!_.isEmpty(requiredAllowedChildNodeType)) {
-                            context.isAllowedChildNodeType = node.allowedChildNodeType;
+                        const contributeTypes = node.contributeTypes;
+                        const nodeTypes = _.map(node.allowedChildNodeTypes, type => type.name);
+                        if (_.isEmpty(requiredAllowedChildNodeType)) {
+                            context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? nodeTypes : contributeTypes.values;
+                        } else {
+                            context.isAllowedChildNodeType = _.includes(nodeTypes, requiredAllowedChildNodeType);
                             context.nodeTypes = [requiredAllowedChildNodeType];
                         }
                         if (!_.isEmpty(retrieveProperties)) {

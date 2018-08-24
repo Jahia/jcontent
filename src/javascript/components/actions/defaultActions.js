@@ -5,7 +5,7 @@ import LockManagementAction from "./LockManagementAction";
 let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
 let createFolder = (context) => window.parent.createContent(context.path, ["jnt:folder"], false);
-let createContent = (context) =>  window.parent.createContent(context.path, context.nodeTypes, true);
+let createContent = (context) =>  window.parent.createContent(context.path, context.nodeTypes, context.includeSubTypes);
 
 let defaultActions = {
     edit: {

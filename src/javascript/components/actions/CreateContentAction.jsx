@@ -17,8 +17,10 @@ class CreateContentAction extends React.Component {
         }
         // if jmix:droppableContent is part of the nodetypes, use the "new content" button item
         if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(context.nodeTypes, "jmix:droppableContent")) {
+            context.includeSubTypes = true;
             return children({...rest, onClick: () => call(context)})
         } else {
+            context.includeSubTypes = false;
             return _.map(context.nodeTypes, type => {
                 return <DxContext.Consumer key={type}>{dxContext => (
                     <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
@@ -34,6 +36,7 @@ class CreateContentAction extends React.Component {
                             }
                             let ctx = _.cloneDeep(context);
                             ctx.nodeTypes = [type];
+                            ctx.show
 
                             return children({
                                 ...rest,

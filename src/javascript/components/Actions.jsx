@@ -20,12 +20,13 @@ class Actions extends React.Component {
 
         return _.map(actionsToDisplayKeys, actionKey => {
 
+            let ctx = _.clone(context);
             let action = actionsRegistry[actionKey];
             let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, retrieveProperties} = action;
             if (retrieveProperties != null) {
-                action.retrieveProperties.retrievePropertiesLang = context.lang;
+                action.retrieveProperties.retrievePropertiesLang = ctx.lang;
             }
-            let requirementQueryHandler = new ActionRequirementsQueryHandler(context.path, action);
+            let requirementQueryHandler = new ActionRequirementsQueryHandler(ctx.path, action);
             let ActionComponent = action.component;
 
             return ActionComponent && (
@@ -55,18 +56,19 @@ class Actions extends React.Component {
                         const contributeTypes = node.contributeTypes;
                         const nodeTypes = _.map(node.allowedChildNodeTypes, type => type.name);
                         if (_.isEmpty(requiredAllowedChildNodeType)) {
-                            context.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? nodeTypes : contributeTypes.values;
+                            ctx.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? nodeTypes : contributeTypes.values;
+                            ctx.isAllowedChildNodeType = true;
                         } else {
-                            context.isAllowedChildNodeType = _.includes(nodeTypes, requiredAllowedChildNodeType);
-                            context.nodeTypes = [requiredAllowedChildNodeType];
+                            ctx.isAllowedChildNodeType = _.includes(nodeTypes, requiredAllowedChildNodeType);
+                            ctx.nodeTypes = [requiredAllowedChildNodeType];
                         }
                         if (!_.isEmpty(retrieveProperties)) {
-                            context.retrieveProperties = node.properties;
+                            ctx.retrieveProperties = node.properties;
                         }
-                        context.requirementQueryHandler = requirementQueryHandler;
-
+                        ctx.requirementQueryHandler = requirementQueryHandler;
+                        console.log(action, context);
                         return (
-                            <ActionComponent {...action} context={context}>
+                            <ActionComponent {...action} context={ctx}>
                                 {children}
                             </ActionComponent>
                         );

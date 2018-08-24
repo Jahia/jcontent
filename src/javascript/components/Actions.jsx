@@ -66,7 +66,6 @@ class Actions extends React.Component {
                             ctx.retrieveProperties = node.properties;
                         }
                         ctx.requirementQueryHandler = requirementQueryHandler;
-                        console.log(action, context);
                         return (
                             <ActionComponent {...action} context={ctx}>
                                 {children}

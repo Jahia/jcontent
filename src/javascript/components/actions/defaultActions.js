@@ -155,6 +155,16 @@ let defaultActions = {
         labelKey: 'label.contentManager.contextMenu.lockActions.unlock',
         showOnNodeTypes: ["jnt:contentFolder"]
     },
+    clearAllLocks: {
+        priority: 2.5,
+        action: 'clearAllLocks',
+        component: LockManagementAction,
+        target: ["contentTreeMenuActions"],
+        requiredPermission: "jcr:lockManagement",
+        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
+        labelKey: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
+        showOnNodeTypes: ["jnt:contentFolder"]
+    },
 };
 
 export default defaultActions;

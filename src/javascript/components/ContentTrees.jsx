@@ -16,7 +16,7 @@ class ContentTree extends React.Component {
     }
 
     render() {
-        let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes} = this.props;
+        let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes, user} = this.props;
         return (
             <Picker ref={this.picker}
                     rootPaths={[rootPath]}
@@ -31,7 +31,7 @@ class ContentTree extends React.Component {
                     return entry.depth > 0 ?
                         (<React.Fragment>
                             {entry.node.displayName}
-                            <Actions menuId={"contentTreeActions"} context={{path: path, displayName: entry.node.displayName, lang: lang}}>
+                            <Actions menuId={"contentTreeActions"} context={{path: path, displayName: entry.node.displayName, lang: lang, user:user}}>
                                 {(props) => <CmIconButton {...props}/>}
                             </Actions>
                         </React.Fragment>)
@@ -58,7 +58,7 @@ class ContentTrees extends React.Component {
     }
 
     render() {
-        const {lang, rootPath, path, t} = this.props;
+        const {lang, rootPath, path, t, user} = this.props;
         return (<CmRouter render={({goto}) => (
                 <List>
                     <ListItem>
@@ -71,6 +71,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/contents"}
                             selectableTypes={['jmix:list']}
                             lang={lang}
+                            user={user}
                             handleSelect={path => goto(getAbsoluteBrowsingPath("contents", lang, path), {type: "contents"})}
                             openableTypes={['jmix:list', 'jnt:contentFolder']}
                             rootLabel={t("label.contentManager.browseFolders")}
@@ -83,6 +84,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath}
                             selectableTypes={['jnt:page']}
                             lang={lang}
+                            user={user}
                             handleSelect={path => goto(getAbsoluteBrowsingPath("pages", lang, path), {type: "pages"})}
                             openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
                             rootLabel={t("label.contentManager.browsePages")}
@@ -95,6 +97,7 @@ class ContentTrees extends React.Component {
                             rootPath={rootPath + "/files"}
                             selectableTypes={['jnt:folder']}
                             lang={lang}
+                            user={user}
                             handleSelect={path => goto(getAbsoluteBrowsingPath("files", lang, path), {type: "files"})}
                             openableTypes={['jnt:folder']}
                             rootLabel={t("label.contentManager.browseFiles")}

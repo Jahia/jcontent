@@ -260,7 +260,7 @@ class ContentLayout extends React.Component {
                                     <Grid container spacing={0}>
                                         {this.isBrowsing() && showTree &&
                                             <Grid item xs={TREE_SIZE} className={classes.tree}>
-                                                <ContentTrees path={path} rootPath={rootPath} lang={dxContext.lang}/>
+                                                <ContentTrees path={path} rootPath={rootPath} lang={dxContext.lang} user={dxContext.userName}/>
                                             </Grid>
                                         }
                                         <Grid item xs={computedTableSize}>

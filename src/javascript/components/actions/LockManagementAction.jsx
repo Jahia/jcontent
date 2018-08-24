@@ -1,5 +1,5 @@
 import React from 'react';
-import {lockNode, unlockNode} from "../preview/gqlMutations";
+import {lockNode, unlockNode, clearAllLocks} from "../preview/gqlMutations";
 import { Mutation } from 'react-apollo';
 
 class LockManagementAction extends React.Component {
@@ -11,9 +11,11 @@ class LockManagementAction extends React.Component {
                 return _.isEmpty(context.retrieveProperties) ? this.lock() : null;
             case 'unlock':
                 //Only render this component if the node has a lock on it.
-                return context.retrieveProperties != null && _.find(context.retrieveProperties, (obj)=> {
-                    return obj.name === 'j:lockTypes';
-                }) !== undefined ? this.unlock() : null;
+                return this.isNodeLocked() ? this.unlock() : null;
+            case 'clearAllLocks':
+                //If user is root
+                //@TODO update is user root check once current user is implemented in GraphQL DXM Provider
+                return context.user === 'root' ? this.clearAllLocks() : null
         }
     }
 
@@ -51,6 +53,31 @@ class LockManagementAction extends React.Component {
                 });
             }}
         </Mutation>
+    };
+
+    clearAllLocks = () => {
+        const {target:menuId, children, context, close, ...rest} = this.props;
+        return <Mutation
+            mutation={ clearAllLocks }
+            refetchQueries={[{
+                query: context.requirementQueryHandler.getQuery(),
+                variables: context.requirementQueryHandler.getVariables()
+            }]}>
+            {(clearAllLocks) => {
+                return children({
+                    ...rest,
+                    menuId,
+                    onClick: () => {clearAllLocks({variables: {pathOrId: context.path}})}
+                });
+            }}
+        </Mutation>
+    };
+
+    isNodeLocked = () => {
+        let {context} = this.props;
+        return context.retrieveProperties != null && _.find(context.retrieveProperties, (obj)=> {
+            return obj.name === 'j:lockTypes';
+        }) !== undefined
     };
 }
 

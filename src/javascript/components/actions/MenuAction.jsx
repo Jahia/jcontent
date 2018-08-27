@@ -14,6 +14,18 @@ const styles = theme => ({
 
 class MenuAction extends Component {
 
+    constructor(props) {
+
+        super(props);
+
+        this.state = {
+            anchor: null,
+        };
+
+        this.handleMenuClick = this.handleMenuClick.bind(this);
+        this.handleMenuClose = this.handleMenuClose.bind(this);
+    }
+
     handleMenuClick(event) {
         this.setState({anchor: event.currentTarget});
     };
@@ -22,27 +34,20 @@ class MenuAction extends Component {
         this.setState({anchor: null});
     };
 
-    constructor(props) {
-        super(props);
-        this.handleMenuClick = this.handleMenuClick.bind(this);
-        this.state = {
-            anchor: null,
-        };
-    }
-
     render() {
+
         const {menuId, children, ...rest} = this.props;
         const {anchor} = this.state;
 
         return (<span>
-            {children({...rest, onClick:this.handleMenuClick})}
+            {children({...rest, onClick: this.handleMenuClick})}
             <Menu
                 id={menuId}
                 anchorEl={anchor}
                 open={Boolean(anchor)}
                 onClose={() => this.handleMenuClose()}>
                 <Actions menuId={menuId} {...rest}>
-                    {(props) => <CmMenuItem {...props}/>}
+                    {(props) => <CmMenuItem {...props} menuClose={this.handleMenuClose}/>}
                 </Actions>
             </Menu>
         </span>)

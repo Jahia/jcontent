@@ -5,10 +5,21 @@ import {compose} from "react-apollo/index";
 
 class CmMenuItem extends Component {
 
+    constructor(props) {
+        super(props);
+        this.onClick = this.onClick.bind(this);
+    }
+
+    onClick(event) {
+        let {menuClose, onClick} = this.props;
+        menuClose();
+        onClick(event);
+    }
+
     render() {
-        const {labelKey, labelParams, onClick, t} = this.props;
+        const {labelKey, labelParams, t} = this.props;
         return (
-            <MenuItem onClick={(event) => onClick(event)}>
+            <MenuItem onClick={(event) => this.onClick(event)}>
                 {t(labelKey, labelParams)}
             </MenuItem>
         )

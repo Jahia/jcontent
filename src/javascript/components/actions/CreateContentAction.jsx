@@ -25,6 +25,7 @@ class CreateContentAction extends React.Component {
                 return <DxContext.Consumer key={type}>{dxContext => (
                     <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
                         {({loading, error, data}) => {
+
                             if (error) {
                                 let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                                 notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
@@ -34,9 +35,9 @@ class CreateContentAction extends React.Component {
                             if (loading || !data || !data.jcr) {
                                 return null;
                             }
+
                             let ctx = _.cloneDeep(context);
                             ctx.nodeTypes = [type];
-                            ctx.show
 
                             return children({
                                 ...rest,

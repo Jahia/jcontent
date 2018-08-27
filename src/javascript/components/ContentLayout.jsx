@@ -77,10 +77,12 @@ class ContentLayout extends React.Component {
     };
 
     handleChangeRowsPerPage = value => {
-        this.setState({
-            page: 0,
-            rowsPerPage: value
-        });
+        if (value != this.state.rowsPerPage) {
+            this.setState({
+                page: 0,
+                rowsPerPage: value
+            });
+        }
     };
 
     handleShowTree = () => {

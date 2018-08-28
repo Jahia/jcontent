@@ -69,6 +69,32 @@ class ContentManager extends React.Component {
     }
 
     render() {
+        let contentTreeConfigs = {
+            contents: {
+                rootPath: "/contents",
+                selectableTypes: ['jmix:list'],
+                type: "contents",
+                openableTypes: ['jmix:list', 'jnt:contentFolder'],
+                rootLabel: "label.contentManager.browseFolders",
+                key: "browse-tree-content"
+            },
+            pages: {
+                rootPath: "",
+                selectableTypes: ['jnt:page'],
+                type: "pages",
+                openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
+                rootLabel: "label.contentManager.browsePages",
+                key: "browse-tree-pages"
+            },
+            files: {
+                rootPath: "/files",
+                selectableTypes: ['jnt:folder'],
+                type: "files",
+                openableTypes: ['jnt:folder'],
+                rootLabel: "label.contentManager.browseFiles",
+                key: "browse-tree-files"
+            }
+        }
         let {dxContext, classes} = this.props;
         // register action components
         const isInFrame = window.top !== window;
@@ -97,16 +123,16 @@ class ContentManager extends React.Component {
                                                         <Routes
                                                             basePath={props.match.url}
                                                             browseRender={props =>
-                                                                <ContentLayout contentSource="browsing" lang={dxContext.lang} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                             }
                                                             browseFilesRender={props =>
-                                                                <ContentLayout contentSource="files" lang={dxContext.lang} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                             }
                                                             searchRender={props =>
-                                                                <ContentLayout contentSource="search" lang={dxContext.lang} key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout contentSource="search"  key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                             }
                                                             sql2SearchRender={props =>
-                                                                <ContentLayout contentSource="sql2Search" lang={dxContext.lang} key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
                                                             }
                                                         />
                                                     </ManagerLayout>

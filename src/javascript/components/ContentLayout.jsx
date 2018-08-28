@@ -116,7 +116,7 @@ class ContentLayout extends React.Component {
     render() {
 
         const {showPreview, selectedRow, showTree: showTree} = this.state;
-        const {contentSource, classes} = this.props;
+        const {contentSource, contentTreeConfigs, classes} = this.props;
 
         return <DxContext.Consumer>{dxContext => {
             const rootPath = '/sites/' + dxContext.siteKey;
@@ -154,9 +154,9 @@ class ContentLayout extends React.Component {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={0}>
-                                {this.isBrowsing() && showTree &&
+                                {contentTreeConfigs && showTree &&
                                 <Grid item xs={TREE_SIZE} className={classes.tree}>
-                                    <ContentTrees path={path} rootPath={rootPath} lang={dxContext.lang} user={dxContext.userName}/>
+                                    <ContentTrees contentTreeConfigs={contentTreeConfigs} path={path} rootPath={rootPath} lang={dxContext.lang} user={dxContext.userName}/>
                                 </Grid>
                                 }
                                 <Grid item xs={computedTableSize}>

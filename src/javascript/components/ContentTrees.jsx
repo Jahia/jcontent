@@ -36,7 +36,7 @@ class ContentTree extends React.Component {
                             </Actions>
                         </React.Fragment>)
 
-                : rootLabel
+                        : rootLabel
                 }}/>}
             </Picker>
         )
@@ -46,63 +46,49 @@ class ContentTree extends React.Component {
 class ContentTrees extends React.Component {
     constructor(props) {
         super(props);
-        this.contentTree = React.createRef();
-        this.pageTree= React.createRef();
-        this.filesTree= React.createRef();
+        this.componentsRefs = [];
     }
 
     openTrees(path) {
-        this.contentTree.current.picker.current.openPaths(path);
-        this.pageTree.current.picker.current.openPaths(path);
-        this.filesTree.current.picker.current.openPaths(path);
+        _.each(this.componentsRefs, ref => {
+            ref.current.picker.current.openPaths(path);
+        });
     }
 
     render() {
-        const {lang, rootPath, path, t, user} = this.props;
+        const {lang, rootPath, path, t, user, contentTreeConfigs} = this.props;
+
         return (<CmRouter render={({goto}) => (
                 <List>
-                    <ListItem>
-                        <Button onClick={() => this.openTrees(path)}>{t("label.contentManager.showCurrentPath")}</Button>
-                    </ListItem>
-                    <ListItem data-cm-role={'browse-tree-content'}>
-                        <ContentTree
-                            ref={this.contentTree}
-                            path={path}
-                            rootPath={rootPath + "/contents"}
-                            selectableTypes={['jmix:list']}
-                            lang={lang}
-                            user={user}
-                            handleSelect={path => goto(getAbsoluteBrowsingPath("contents", lang, path), {type: "contents"})}
-                            openableTypes={['jmix:list', 'jnt:contentFolder']}
-                            rootLabel={t("label.contentManager.browseFolders")}
-                        />
-                    </ListItem>
-                    <ListItem data-cm-role={'browse-tree-pages'}>
-                        <ContentTree
-                            ref={this.pageTree}
-                            path={path}
-                            rootPath={rootPath}
-                            selectableTypes={['jnt:page']}
-                            lang={lang}
-                            user={user}
-                            handleSelect={path => goto(getAbsoluteBrowsingPath("pages", lang, path), {type: "pages"})}
-                            openableTypes={['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText']}
-                            rootLabel={t("label.contentManager.browsePages")}
-                        />
-                    </ListItem>
-                    <ListItem data-cm-role={'browse-tree-files'}>
-                        <ContentTree
-                            ref={this.filesTree}
-                            path={path}
-                            rootPath={rootPath + "/files"}
-                            selectableTypes={['jnt:folder']}
-                            lang={lang}
-                            user={user}
-                            handleSelect={path => goto(getAbsoluteBrowsingPath("files", lang, path), {type: "files"})}
-                            openableTypes={['jnt:folder']}
-                            rootLabel={t("label.contentManager.browseFiles")}
-                        />
-                    </ListItem>
+                    {
+                        contentTreeConfigs.showAllContents ?
+                            <ListItem>
+                                <Button onClick={() => this.openTrees(path)}>{t("label.contentManager.showCurrentPath")}</Button>
+                            </ListItem> : ""
+                    }
+                    {
+                        _.map(contentTreeConfigs, (contentTreeConfig) => {
+                            // create ref
+                            let componentRef = React.createRef();
+                            this.componentsRefs.push(componentRef);
+
+                            return <ListItem data-cm-role={contentTreeConfig.key}  key={contentTreeConfig.key}>
+                                <ContentTree
+                                    ref={componentRef}
+                                    path={path}
+                                    rootPath={rootPath + contentTreeConfig.rootPath}
+                                    selectableTypes= {contentTreeConfig.selectableTypes}
+                                    lang={lang}
+                                    user={user}
+                                    handleSelect={path => goto(getAbsoluteBrowsingPath(contentTreeConfig.type, lang, path), {type: contentTreeConfig.type})}
+                                    openableTypes={contentTreeConfig.openableTypes}
+                                    rootLabel={t(contentTreeConfig.rootLabel)}
+                                />
+                            </ListItem>
+                        })
+                    }
+
+
                 </List>
             )}/>
         )

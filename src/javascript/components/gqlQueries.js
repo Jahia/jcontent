@@ -151,6 +151,9 @@ const nodeFields = gql `
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
         }
+        title: property(name: "jcr:title", language: $language){
+            value
+        }
         ...NodeCacheRequiredFields
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}

@@ -207,7 +207,7 @@ class ContentLayout extends React.Component {
                             rows = _.map(result.nodes, contentNode => {
                                 return {
                                     uuid: contentNode.uuid,
-                                    name: contentNode.displayName,
+                                    name: (contentNode.title !== null ? contentNode.title.value : contentNode.displayName),
                                     type: contentNode.primaryNodeType.displayName,
                                     created: contentNode.created.value,
                                     createdBy: contentNode.createdBy.value,

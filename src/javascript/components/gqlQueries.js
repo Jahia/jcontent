@@ -112,7 +112,7 @@ const nodeFields = gql `
             publicationStatus
         }
         name
-        displayName
+        displayName(language: $language)
         createdBy: property(name: "jcr:createdBy") {
             value
         }
@@ -150,9 +150,6 @@ const nodeFields = gql `
         }
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
-        }
-        title: property(name: "jcr:title", language: $language){
-            value
         }
         ...NodeCacheRequiredFields
     }

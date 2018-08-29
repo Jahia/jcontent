@@ -160,7 +160,6 @@ const getNodeSubTree = gql `
     query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
         jcr {
             results: nodeByPath(path: $path) {
-                ...NodeCacheRequiredFields
                 descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
                     pageInfo {
                         totalCount
@@ -169,6 +168,7 @@ const getNodeSubTree = gql `
                         ...NodeFields
                     }
                 }
+                ...NodeCacheRequiredFields
             }
         }
     }
@@ -180,7 +180,6 @@ const GetNodeAndChildrenByPathQuery = gql `
         jcr {
             results: nodeByPath(path: $path) {
                 ...NodeFields
-                ...NodeCacheRequiredFields
                 children {
                     nodes {
                         ...NodeFields
@@ -229,7 +228,6 @@ const filesQuery = gql `
         jcr {
             results: nodeByPath(path: $path) {
                 id : uuid
-                ...NodeCacheRequiredFields
                 descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
                     pageInfo {
                         totalCount
@@ -244,6 +242,7 @@ const filesQuery = gql `
                         }
                     }
                 }
+                ...NodeCacheRequiredFields
             }
         }
     }
@@ -268,7 +267,6 @@ const ContentTypesQuery = gql `
     query ContentTypesQuery($nodeTypes: [String]!) {
         jcr {
             nodeTypesByNames(names: $nodeTypes) {
-                ...NodeCacheRequiredFields
                 name
                 supertypes {
                     name
@@ -276,28 +274,25 @@ const ContentTypesQuery = gql `
             }
         }
     }
-    ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
 const ContentTypeNamesQuery = gql `
     query ContentTypeNamesQuery($nodeTypes: [String]!, $displayLanguage: String!) {
         jcr {
             nodeTypesByNames(names: $nodeTypes) {
-            ...NodeCacheRequiredFields
                 name,
                 displayName(language: $displayLanguage)
             }
         }
     }
-     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
 const NodeDisplayNameQuery = gql `
     query NodeDisplayNameQuery($path:String!, $language:String!) {
         jcr {
             nodeByPath(path: $path) {
-                ...NodeCacheRequiredFields
                 displayName(language: $language)
+                ...NodeCacheRequiredFields
             }
         }
     }

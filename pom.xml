@@ -53,6 +53,7 @@
         <artifactId>jahia-modules</artifactId>
         <groupId>org.jahia.modules</groupId>
         <version>7.2.3.2-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <artifactId>content-manager</artifactId>
     <name>Content Manager</name>
@@ -61,8 +62,10 @@
     <description>This is the custom module (Content Manager) for running on a Digital Experience Manager server.</description>
 
     <scm>
-        <connection>scm:dummy:uri</connection>
-        <developerConnection>scm:dummy:uri</developerConnection>
+        <connection>scm:git:git@github.com:Jahia/content-manager.git</connection>
+        <developerConnection>scm:git:git@github.com:Jahia/content-manager.git</developerConnection>
+        <url>https://github.com/Jahia/content-manager</url>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>

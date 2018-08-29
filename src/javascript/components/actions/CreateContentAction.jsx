@@ -1,6 +1,6 @@
 import React from "react";
 import Constants from "../constants";
-import {ContentTypeQuery} from "../gqlQueries";
+import {ContentTypeQuery, ContentTypesQuery} from "../gqlQueries";
 import {Query} from "react-apollo";
 import {DxContext} from "../DxContext";
 import {translate} from "react-i18next";
@@ -9,19 +9,31 @@ import {withNotifications} from "@jahia/react-material/index";
 
 class CreateContentAction extends React.Component {
 
-    render() {
+    static filterByRequiredSuperType(types, requiredChildNodeSuperType) {
+        return _.filter(types, type => {
+            let superTypes = _.map(type.supertypes, superType => superType.name);
+            return _.includes(superTypes, requiredChildNodeSuperType);
+        });
+    }
 
-        const {children, context, t, call, notificationContext, ...rest} = this.props;
-        if (!context.isAllowedChildNodeType) {
+    doRender(nodeTypes, context) {
+
+        if (_.isEmpty(nodeTypes)) {
             return null;
         }
-        // if jmix:droppableContent is part of the nodetypes, use the "new content" button item
-        if (_.size(context.nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(context.nodeTypes, "jmix:droppableContent")) {
-            context.includeSubTypes = true;
-            return children({...rest, onClick: () => call(context)})
+
+        let {call, children, notificationContext, t, ...rest} = this.props;
+
+        let ctx = _.cloneDeep(context);
+
+        // if jmix:droppableContent is part of the node types, use the "new content" button item
+        if (_.size(nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, "jmix:droppableContent")) {
+            ctx.includeSubTypes = true;
+            ctx.nodeTypes = nodeTypes;
+            return children({...rest, onClick: () => call(ctx)})
         } else {
-            context.includeSubTypes = false;
-            return _.map(context.nodeTypes, type => {
+            ctx.includeSubTypes = false;
+            return _.map(nodeTypes, type => {
                 return <DxContext.Consumer key={type}>{dxContext => (
                     <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
                         {({loading, error, data}) => {
@@ -36,7 +48,6 @@ class CreateContentAction extends React.Component {
                                 return null;
                             }
 
-                            let ctx = _.cloneDeep(context);
                             ctx.nodeTypes = [type];
 
                             return children({
@@ -51,6 +62,60 @@ class CreateContentAction extends React.Component {
             });
         }
     }
+
+    render() {
+
+        let {requiredChildNodeSuperType, requiredAllowedChildNodeType, context, t, notificationContext} = this.props;
+
+        let {node} = context;
+        let childNodeTypes = node.allowedChildNodeTypes;
+        if (!_.isEmpty(requiredChildNodeSuperType)) {
+            childNodeTypes = CreateContentAction.filterByRequiredSuperType(childNodeTypes, requiredChildNodeSuperType);
+        }
+        let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
+        let contributeTypesProperty = node.contributeTypes;
+
+        if (_.isEmpty(requiredAllowedChildNodeType)) {
+            if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
+                if (_.isEmpty(requiredChildNodeSuperType)) {
+                    return this.doRender(contributeTypesProperty.values, context);
+                } else {
+                    return <Query query={ContentTypesQuery} variables={{nodeTypes: contributeTypesProperty.values}}>
+                        {({loading, error, data}) => {
+
+                            if (error) {
+                                let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
+                                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                                return null;
+                            }
+
+                            if (loading || !data || !data.jcr) {
+                                return null;
+                            }
+
+                            let contributionNodeTypes = data.jcr.nodeTypesByNames;
+                            contributionNodeTypes = CreateContentAction.filterByRequiredSuperType(contributionNodeTypes, requiredChildNodeSuperType);
+                            let nodeTypes = _.map(contributionNodeTypes, nodeType => nodeType.name);
+                            return this.doRender(nodeTypes, context);
+                        }}
+                    </Query>
+                }
+            } else {
+                return this.doRender(childNodeTypeNames, context);
+            }
+        } else {
+            if (_.includes(childNodeTypeNames, requiredAllowedChildNodeType)) {
+                return this.doRender([requiredAllowedChildNodeType], context);
+            } else {
+                return this.doRender([], context);
+            }
+        }
+    }
 }
 
-export default translate()(withNotifications()(CreateContentAction));
+CreateContentAction = _.flowRight(
+    withNotifications(),
+    translate()
+)(CreateContentAction);
+
+export default CreateContentAction;

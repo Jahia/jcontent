@@ -5,7 +5,7 @@ import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
-import {ContentTypesQuery} from "./gqlQueries";
+import {SiteContentTypesQuery} from "./gqlQueries";
 import FilterSelect from './FilterSelect';
 
 class ContentTypeSelect extends React.Component {
@@ -26,7 +26,7 @@ class ContentTypeSelect extends React.Component {
         let { contentType, classes, siteKey, displayLanguage, notificationContext, t } = this.props;
 
         return (
-            <Query query={ContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
+            <Query query={SiteContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
                 {({ loading, error, data }) => {
                 let contentTypes = [];
                 if (error) {

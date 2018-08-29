@@ -249,8 +249,8 @@ const filesQuery = gql `
     ${nodeFields}
 `;
 
-const ContentTypesQuery = gql `
-    query ContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
+const SiteContentTypesQuery = gql `
+    query SiteContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
         jcr {
             nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page", "jnt:file"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType", "jnt:editableFile"]}) {
                 nodes {
@@ -273,6 +273,19 @@ const ContentTypeQuery = gql `
     }
 `;
 
+const ContentTypesQuery = gql `
+    query ContentTypesQuery($nodeTypes: [String]!) {
+        jcr {
+            nodeTypesByNames(names: $nodeTypes) {
+                name
+                supertypes {
+                    name
+                }
+            }
+        }
+    }
+`;
+
 const NodeDisplayNameQuery = gql `
     query NodeDisplayNameQuery($path:String!, $language:String!) {
         jcr {
@@ -290,12 +303,6 @@ const ActionRequirementsQuery = gql `
         jcr {
             nodeByPath(path:$path) {
                 ...NodeCacheRequiredFields
-                allowedChildNodeTypes {
-                    name
-                }
-                contributeTypes: property(name: "j:contributeTypes") {
-                    values
-                }
                 ...requirements
             }
         }
@@ -304,6 +311,20 @@ const ActionRequirementsQuery = gql `
 `;
 
 const ActionRequirementsFragments = {
+    childNodeTypeInfo: {
+        applyFor: "requirements",
+        gql: gql `fragment ProvideTypes on JCRNode {
+            allowedChildNodeTypes {
+                name
+                supertypes {
+                    name
+                }
+            }
+            contributeTypes: property(name: "j:contributeTypes") {
+                values
+            }
+        }`
+    },
     retrieveProperties: {
         variables: {
             retrievePropertiesNames: "[String!]!",
@@ -350,8 +371,10 @@ const ActionRequirementsFragments = {
 class ActionRequirementsQueryHandler {
 
     constructor(path, action) {
+
         this.requirementsFragments = [];
         this.variables = {path: path};
+
         if (!_.isEmpty(action.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);
             this.variables.permission = action.requiredPermission;
@@ -367,6 +390,16 @@ class ActionRequirementsQueryHandler {
         if (!_.isEmpty(action.retrieveProperties)) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveProperties);
             this.variables = {...action.retrieveProperties, ...this.variables}
+        }
+
+        // Assume that child node type info is needed if the action has a child node type property configured.
+        let keys = _.keysIn(action);
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            if (/.*ChildNode.*Type.*/.test(key)) {
+                this.requirementsFragments.push(ActionRequirementsFragments.childNodeTypeInfo);
+                break;
+            }
         }
     }
 
@@ -386,8 +419,9 @@ export {
     SearchQueryHandler,
     Sql2SearchQueryHandler,
     FilesQueryHandler,
-    ContentTypesQuery,
+    SiteContentTypesQuery,
     ContentTypeQuery,
+    ContentTypesQuery,
     NodeDisplayNameQuery,
     GetNodeAndChildrenByPathQuery,
     ActionRequirementsQueryHandler

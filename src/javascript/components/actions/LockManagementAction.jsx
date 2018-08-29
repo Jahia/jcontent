@@ -8,7 +8,7 @@ class LockManagementAction extends React.Component {
         switch (action) {
             case 'lock':
                 //Only render this component if there is no lock on it
-                return _.isEmpty(context.retrieveProperties) ? this.lock() : null;
+                return _.isEmpty(context.node.properties) ? this.lock() : null;
             case 'unlock':
                 //Only render this component if the node has a lock on it.
                 return this.isNodeLocked() ? this.unlock() : null;
@@ -75,7 +75,7 @@ class LockManagementAction extends React.Component {
 
     isNodeLocked = () => {
         let {context} = this.props;
-        return context.retrieveProperties != null && _.find(context.retrieveProperties, (obj)=> {
+        return context.node.properties != null && _.find(context.node.properties, (obj)=> {
             return obj.name === 'j:lockTypes';
         }) !== undefined
     };

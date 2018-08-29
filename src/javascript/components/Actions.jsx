@@ -22,7 +22,7 @@ class Actions extends React.Component {
 
             let ctx = _.clone(context);
             let action = actionsRegistry[actionKey];
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requiredAllowedChildNodeType, retrieveProperties} = action;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties} = action;
             if (retrieveProperties != null) {
                 action.retrieveProperties.retrievePropertiesLang = ctx.lang;
             }
@@ -52,20 +52,9 @@ class Actions extends React.Component {
                             return null;
                         }
 
-                        // fill the context
-                        const contributeTypes = node.contributeTypes;
-                        const nodeTypes = _.map(node.allowedChildNodeTypes, type => type.name);
-                        if (_.isEmpty(requiredAllowedChildNodeType)) {
-                            ctx.nodeTypes = !contributeTypes || _.isEmpty(contributeTypes.values) ? nodeTypes : contributeTypes.values;
-                            ctx.isAllowedChildNodeType = true;
-                        } else {
-                            ctx.isAllowedChildNodeType = _.includes(nodeTypes, requiredAllowedChildNodeType);
-                            ctx.nodeTypes = [requiredAllowedChildNodeType];
-                        }
-                        if (!_.isEmpty(retrieveProperties)) {
-                            ctx.retrieveProperties = node.properties;
-                        }
+                        ctx.node = node;
                         ctx.requirementQueryHandler = requirementQueryHandler;
+
                         return (
                             <ActionComponent {...action} context={ctx}>
                                 {children}

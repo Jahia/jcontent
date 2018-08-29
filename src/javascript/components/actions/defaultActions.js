@@ -2,6 +2,7 @@ import CallAction from "./CallAction"
 import {Edit} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
 import LockManagementAction from "./LockManagementAction";
+
 let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
 let createFolder = (context) => window.parent.createContent(context.path, ["jnt:folder"], false);
@@ -34,7 +35,8 @@ let defaultActions = {
         target: ["createMenuActions", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.content",
-        hideOnNodeTypes: ["jnt:page", "jnt:folder"]
+        hideOnNodeTypes: ["jnt:page", "jnt:folder"],
+        requiredChildNodeSuperType: "jmix:editorialContent"
     },
     createFolder: {
         component: CreateContentAction,

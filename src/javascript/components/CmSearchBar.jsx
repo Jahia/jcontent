@@ -130,6 +130,7 @@ class CmSearchBarNormal extends React.Component {
         } else {
             _.unset(params, 'searchContentType');
         }
+        _.unset(params, 'sql2SearchFrom');
 
         goto(`${SITE_ROOT}/${dxContext.lang}/search${path}`, params);
     }
@@ -234,7 +235,7 @@ class CmSearchBarSql2 extends React.Component {
         this.from.current.value = '';
         this.where.current.value = '';
 
-        _.unset(params, 'sql2SearchFrom');
+        params.sql2SearchFrom = '';
         _.unset(params, 'sql2SearchWhere');
         this.props.onClear(path, params, goto, dxContext);
     }
@@ -254,10 +255,10 @@ class CmSearchBarSql2 extends React.Component {
                     }
                     rightFooter={
                         <React.Fragment>
-                            {(params.sql2SearchFrom != null) &&
+                            {(params.sql2SearchFrom != null && params.sql2SearchFrom.length > 0) &&
                                 <ActionButton label={'label.contentManager.search.clear'} variant={'contained'} onClick={() => this.onClear(path, params, goto, dxContext)} cmRole={'search-clear'}/>
                             }
-                            {(params.sql2SearchFrom == null) &&
+                            {(params.sql2SearchFrom == null || params.sql2SearchFrom.length === 0) &&
                                 <ActionButton label={'label.contentManager.search.normal'} onClick={onNormalClick} cmRole={'search-type-normal'}/>
                             }
                         </React.Fragment>

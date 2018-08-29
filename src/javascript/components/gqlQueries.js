@@ -180,6 +180,7 @@ const GetNodeAndChildrenByPathQuery = gql `
         jcr {
             results: nodeByPath(path: $path) {
                 ...NodeFields
+                ...NodeCacheRequiredFields
                 children {
                     nodes {
                         ...NodeFields
@@ -267,6 +268,7 @@ const ContentTypesQuery = gql `
     query ContentTypesQuery($nodeTypes: [String]!) {
         jcr {
             nodeTypesByNames(names: $nodeTypes) {
+                ...NodeCacheRequiredFields
                 name
                 supertypes {
                     name
@@ -274,17 +276,20 @@ const ContentTypesQuery = gql `
             }
         }
     }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
 const ContentTypeNamesQuery = gql `
     query ContentTypeNamesQuery($nodeTypes: [String]!, $displayLanguage: String!) {
         jcr {
             nodeTypesByNames(names: $nodeTypes) {
+            ...NodeCacheRequiredFields
                 name,
                 displayName(language: $displayLanguage)
             }
         }
     }
+     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
 const NodeDisplayNameQuery = gql `

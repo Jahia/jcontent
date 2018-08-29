@@ -263,16 +263,6 @@ const SiteContentTypesQuery = gql `
     }
 `;
 
-const ContentTypeQuery = gql `
-    query ContentTypeQuery($nodeType: String!, $displayLanguage: String!) {
-        jcr {
-            nodeTypeByName(name: $nodeType) {
-                displayName(language: $displayLanguage)
-            }
-        }
-    }
-`;
-
 const ContentTypesQuery = gql `
     query ContentTypesQuery($nodeTypes: [String]!) {
         jcr {
@@ -281,6 +271,17 @@ const ContentTypesQuery = gql `
                 supertypes {
                     name
                 }
+            }
+        }
+    }
+`;
+
+const ContentTypeNamesQuery = gql `
+    query ContentTypeNamesQuery($nodeTypes: [String]!, $displayLanguage: String!) {
+        jcr {
+            nodeTypesByNames(names: $nodeTypes) {
+                name,
+                displayName(language: $displayLanguage)
             }
         }
     }
@@ -420,8 +421,8 @@ export {
     Sql2SearchQueryHandler,
     FilesQueryHandler,
     SiteContentTypesQuery,
-    ContentTypeQuery,
     ContentTypesQuery,
+    ContentTypeNamesQuery,
     NodeDisplayNameQuery,
     GetNodeAndChildrenByPathQuery,
     ActionRequirementsQueryHandler

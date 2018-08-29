@@ -1,6 +1,6 @@
 import React from "react";
 import Constants from "../constants";
-import {ContentTypeQuery, ContentTypesQuery} from "../gqlQueries";
+import {ContentTypesQuery, ContentTypeNamesQuery} from "../gqlQueries";
 import {Query} from "react-apollo";
 import {DxContext} from "../DxContext";
 import {translate} from "react-i18next";
@@ -30,36 +30,38 @@ class CreateContentAction extends React.Component {
         if (_.size(nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, "jmix:droppableContent")) {
             ctx.includeSubTypes = true;
             ctx.nodeTypes = nodeTypes;
-            return children({...rest, onClick: () => call(ctx)})
+            return children({...rest, onClick: () => call(ctx)});
         } else {
+
             ctx.includeSubTypes = false;
-            return _.map(nodeTypes, type => {
-                return <DxContext.Consumer key={type}>{dxContext => (
-                    <Query query={ContentTypeQuery} variables={{nodeType: type, displayLanguage: dxContext.uilang}}>
-                        {({loading, error, data}) => {
 
-                            if (error) {
-                                let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
-                                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-                                return null;
-                            }
+            return <DxContext.Consumer>{dxContext => (
+                <Query query={ContentTypeNamesQuery} variables={{nodeTypes: nodeTypes, displayLanguage: dxContext.uilang}}>
+                    {({loading, error, data}) => {
 
-                            if (loading || !data || !data.jcr) {
-                                return null;
-                            }
+                        if (error) {
+                            let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
+                            notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                            return null;
+                        }
 
-                            ctx.nodeTypes = [type];
+                        if (loading || !data || !data.jcr) {
+                            return null;
+                        }
 
+                        return _.map(data.jcr.nodeTypesByNames, type => {
+                            ctx.nodeTypes = [type.name];
                             return children({
                                 ...rest,
                                 labelKey: "label.contentManager.create.contentOfType",
-                                labelParams: {typeName: data.jcr.nodeTypeByName.displayName},
-                                onClick: () => call(ctx)
+                                labelParams: {typeName: type.displayName},
+                                onClick: () => call(ctx),
+                                key: type.name
                             });
-                        }}
-                    </Query>
-                )}</DxContext.Consumer>
-            });
+                        });
+                    }}
+                </Query>
+            )}</DxContext.Consumer>;
         }
     }
 
@@ -98,7 +100,7 @@ class CreateContentAction extends React.Component {
                             let nodeTypes = _.map(contributionNodeTypes, nodeType => nodeType.name);
                             return this.doRender(nodeTypes, context);
                         }}
-                    </Query>
+                    </Query>;
                 }
             } else {
                 return this.doRender(childNodeTypeNames, context);

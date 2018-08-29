@@ -303,8 +303,8 @@ const ActionRequirementsQuery = gql `
     query ActionRequirementsQuery($path:String!) {
         jcr {
             nodeByPath(path:$path) {
-                ...NodeCacheRequiredFields
                 ...requirements
+                ...NodeCacheRequiredFields
             }
         }
     }

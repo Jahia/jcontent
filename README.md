@@ -21,7 +21,10 @@ should be move to an external file.
 
 ### Actions
 
-Actions are configured within the `actions` array in the `config` entry of the application context.
+#### Configuration
+Actions are configured in the `Actions/defaultActions.js` file.
+
+Actions configurations can be override within the `actions` array in the `config` entry of the application context.
 
 An Action configuration describe how the action should work and what it does.
 
@@ -48,9 +51,6 @@ Example:
 - `hideOnNodeTypes` defines a list of types on which the action should not be displayed
 - `shownNodeTypes` defines a list of types on which the action should be displayed
 
-Note that some of the properties can be defined as default properties in `Actions/defaultActions.js` and override 
-within the configuration file. 
-
 These properties are available either for the action and its display (the button / item ..). As soon as an 
 action needs it, you can add your custom configurable property (like nodeTypes, enable, etc ..)
     
@@ -64,7 +64,39 @@ To register an action, add it in the `actionComponents` object in `ContentManage
         action: Action,
         menuAction: MenuAction
     }
+Depending of the requirement, existing Action may not be enough and you might need to create your own. For example
+to execute a GraphQL query or change the state of a component. 
+An Action component is a render prop component that takes all action properties and context as props, then do operations
+ or provide to its children the operations to execute
+ 
+Example:
 
+    class CallAction extends React.Component {    
+        render() {
+            const {call, children, context, ...rest} = this.props;
+            return children({...rest, onClick: () => call(context)})
+        }
+    }
+    
+    export default CallAction; 
+#### Usage
+With the `Actions` render props component, you can specify where your actions should be displayed.
+This component has 2 required properties:
+- `menuId` is referenced by the `target` in action configuration.
+- `context` defines a context that will be used while executing the action. Depending of the action component, 
+it can be enhanced in the action rendering chain. 
+   
+As a render props component, it provides all the configuration to the display of the action. This display has to be
+set as a children of the `Actions` component.
+
+Example:
+
+    <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name}}>
+        {(props) => <CmIconButton {...props}/>}
+     </Actions>
+
+In this example, this actions placeholder will display all action that have its `target` set to `tableActions`. 
+`props` provides all the action configuration properties.
 ## Development
 
 ### Add event handlers 

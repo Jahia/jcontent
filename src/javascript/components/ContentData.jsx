@@ -33,6 +33,8 @@ class ContentData extends React.Component {
 
         this.onGwtContentCreate = this.onGwtContentCreate.bind(this);
         this.onGwtContentUpdate = this.onGwtContentUpdate.bind(this);
+        this.handleChangePage = this.handleChangePage.bind(this);
+        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
 
     componentDidMount() {
@@ -73,9 +75,22 @@ class ContentData extends React.Component {
         }
     }
 
+    handleChangePage = newPage => {
+        this.setState({page: newPage});
+    };
+
+    handleChangeRowsPerPage = value => {
+        if (value != this.state.rowsPerPage) {
+            this.setState({
+                page: 0,
+                rowsPerPage: value
+            });
+        }
+    };
+
     render() {
 
-        const {contentSource, selectedRow, notificationContext, t, children} = this.props;
+        const {contentSource, selectedRow, notificationContext, t, children, rootPath} = this.props;
         let queryHandler = contentQueryHandlerBySource[contentSource];
 
         return <DxContext.Consumer>{dxContext => {
@@ -89,7 +104,7 @@ class ContentData extends React.Component {
                 };
 
                 const layoutQuery = queryHandler.getQuery();
-                const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params);
+                const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params, rootPath);
 
                 return <Query query={layoutQuery} variables={layoutQueryParams}>
                     {({loading, error, data}) => {
@@ -133,7 +148,16 @@ class ContentData extends React.Component {
                                 }
                             });
                         }
-                        return children({rows: rows, totalCount: totalCount, layoutQuery: layoutQuery, layoutQueryParams: layoutQueryParams});
+                        return children({
+                            handleChangePage: this.handleChangePage,
+                            handleChangeRowsPerPage: this.handleChangeRowsPerPage,
+                            rows: rows,
+                            totalCount: totalCount,
+                            layoutQuery: layoutQuery,
+                            layoutQueryParams: layoutQueryParams,
+                            rowsPerPage: this.state.rowsPerPage,
+                            page: this.state.page
+                        });
                     }}
                 </Query>
             }}/>

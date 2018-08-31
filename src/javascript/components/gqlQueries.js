@@ -9,8 +9,8 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
-        const type = urlParams.type || "contents";
+    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams, rootPath) {
+        const type = urlParams.type || (_.startsWith(path, rootPath + "/contents") ? "contents" : "pages");
         return {
             path: path,
             language: dxContext.lang,

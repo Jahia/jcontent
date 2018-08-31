@@ -51,8 +51,6 @@ class ContentLayout extends React.Component {
         super(props);
 
         this.state = {
-            page: 0,
-            rowsPerPage: 25,
             showTree: true,
             showPreview: false,
             selectedRow: null,
@@ -60,19 +58,6 @@ class ContentLayout extends React.Component {
             showList: false
         };
     }
-
-    handleChangePage = newPage => {
-        this.setState({page: newPage});
-    };
-
-    handleChangeRowsPerPage = value => {
-        if (value != this.state.rowsPerPage) {
-            this.setState({
-                page: 0,
-                rowsPerPage: value
-            });
-        }
-    };
 
     handleShowTree = () => {
         this.setState((prevState, props) => {
@@ -122,8 +107,8 @@ class ContentLayout extends React.Component {
             const rootPath = '/sites/' + dxContext.siteKey;
             return <CmRouter render={({path, params, goto}) => {
                 let computedTableSize;
-                return <ContentData contentSource={contentSource}>
-                    { ({rows, totalCount, layoutQuery, layoutQueryParams}) => {
+                return <ContentData contentSource={contentSource} rootPath={rootPath}>
+                    { ({rows, totalCount, layoutQuery, layoutQueryParams, handleChangePage, handleChangeRowsPerPage, rowsPerPage, page}) => {
                         computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
                         return <div className={classes.root}>
                             <Grid container spacing={0}>
@@ -165,20 +150,20 @@ class ContentLayout extends React.Component {
                                             size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                             totalCount={totalCount}
                                             rows={rows}
-                                            pageSize={this.state.rowsPerPage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            onChangePage={this.handleChangePage}
+                                            pageSize={rowsPerPage}
+                                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                                            onChangePage={handleChangePage}
                                             onRowSelected={this.handleRowSelection}
-                                            page={this.state.page}
+                                            page={page}
                                             lang={dxContext.lang}
                                         /> : <ContentListTable
                                             totalCount={totalCount}
                                             rows={rows}
-                                            pageSize={this.state.rowsPerPage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            onChangePage={this.handleChangePage}
+                                            pageSize={rowsPerPage}
+                                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                                            onChangePage={handleChangePage}
                                             onRowSelected={this.handleRowSelection}
-                                            page={this.state.page}
+                                            page={page}
                                             lang={dxContext.lang}
                                         />
                                     }

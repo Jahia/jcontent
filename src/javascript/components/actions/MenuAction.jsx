@@ -36,10 +36,10 @@ class MenuAction extends Component {
         this.setState({anchor: null});
     };
 
-    handleCloseSubMenu(event){
+    handleCloseSubMenu(){
         this.setState({
             subMenu: false,
-            anchor: event.currentTarget,
+            anchor: true,
         });
     }
 

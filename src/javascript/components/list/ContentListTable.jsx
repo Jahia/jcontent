@@ -217,7 +217,7 @@ class ContentListTable extends React.Component {
                                                 }
                                             })}
                                             <TableCell>
-                                                <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name}}>
+                                                <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name, uuid:n.uuid}}>
                                                     {(props) => <CmIconButton {...props}/>}
                                                 </Actions>
                                             </TableCell>

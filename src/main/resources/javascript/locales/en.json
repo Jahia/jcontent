@@ -43,6 +43,7 @@
           "translate": "Translate",
           "publish": "Publish",
           "publishAll": "Publish all languages",
+          "advancedPublish": "Advanced publish",
           "unpublish": "Un-publish {{language}}",
           "copy": "Copy",
           "duplicate": "Duplicate",

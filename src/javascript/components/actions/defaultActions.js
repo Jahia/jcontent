@@ -1,12 +1,14 @@
 import CallAction from "./CallAction"
-import {Edit} from "@material-ui/icons";
+import {Edit, Publish} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
+import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
 
 let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
 let createFolder = (context) => window.parent.createContent(context.path, ["jnt:folder"], false);
 let createContent = (context) =>  window.parent.createContent(context.path, context.nodeTypes, context.includeSubTypes);
+let publish = (context) => window.parent.openPublicationWorkflow(context.uuid, context.allSubTree, context.allLanguages, context.checkForUnpublication);
 
 let defaultActions = {
     edit: {
@@ -74,27 +76,44 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.edit"
     },
     publish: {
-        component: "menuAction",
-        menuId: "publishMenu",
-        icon: "Edit",
+        component: PublishAction,
+            call: publish,
+        icon: "Publish",
         target: ["previewBar", "tableMenuActions"],
         requiredPermission: "",
-        labelKey: "label.contentManager.contentPreview.publish"
+        labelKey: "label.contentManager.contentPreview.publish",
+            allSubtree: false,
+            allLanguages: false,
+            checkForUnpublication: false
     },
+    advancedPublish: {
+        component: "menuAction",
+        menuId: "publishMenu",
+        icon: "Publish",
+        target: ["previewBar", "tableMenuActions"],
+        requiredPermission: "",
+        labelKey: "label.contentManager.contentPreview.advancedPublish"
+},
     publishAll: {
-        component: "action",
-        call: () => alert("not implemented yet"),
-        icon: "Edit",
+        component: PublishAction,
+        call: publish,
+        icon: "Publish",
         target: ["publishMenu"],
         requiredPermission: "",
+            allSubtree: true,
+            allLanguages: true,
+            checkForUnpublication: false,
         labelKey: "label.contentManager.contentPreview.publishAll"
     },
     unPublish: {
-        component: "action",
-        call: () => alert("not implemented yet"),
-        icon: "Edit",
+        component: PublishAction,
+        call: publish,
+        icon: "Publish",
         target: ["publishMenu"],
         requiredPermission: "",
+            allSubtree: false,
+            allLanguages: false,
+            checkForUnpublication: true,
         labelKey: "label.contentManager.contentPreview.unpublish"
     },
     additionalPreview: {

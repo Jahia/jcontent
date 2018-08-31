@@ -9,14 +9,14 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams, rootPath) {
+    getQueryParams(path, paginationState, dxContext, urlParams, rootPath) {
         const type = urlParams.type || (_.startsWith(path, rootPath + "/contents") ? "contents" : "pages");
         return {
             path: path,
             language: dxContext.lang,
             displayLanguage: dxContext.uilang,
-            offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
-            limit: contentLayoutWidgetState.rowsPerPage,
+            offset: paginationState.page * paginationState.rowsPerPage,
+            limit: paginationState.rowsPerPage,
             typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
             recursionTypesFilter: browseType[type].recursionTypesFilter || "jmix:editorialContent"
         };
@@ -33,13 +33,13 @@ class FilesQueryHandler {
         return filesQuery;
     }
 
-    getQueryParams(path, contentLayoutWidgetState, dxContext) {
+    getQueryParams(path, paginationState, dxContext) {
         return {
             path: path,
             language: dxContext.lang,
             displayLanguage: dxContext.uilang,
-            offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
-            limit: contentLayoutWidgetState.rowsPerPage,
+            offset: paginationState.page * paginationState.rowsPerPage,
+            limit: paginationState.rowsPerPage,
             typeFilter: "jnt:file",
             recursionTypesFilter: "jnt:folder"
         };
@@ -56,15 +56,15 @@ class SearchQueryHandler {
         return searchContentQuery;
     }
 
-    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
+    getQueryParams(path, paginationState, dxContext, urlParams) {
         return {
             path: path,
             nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
             searchTerms: urlParams.searchTerms,
             language: dxContext.lang,
             displayLanguage: dxContext.uilang,
-            offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
-            limit: contentLayoutWidgetState.rowsPerPage,
+            offset: paginationState.page * paginationState.rowsPerPage,
+            limit: paginationState.rowsPerPage,
         };
     }
 
@@ -79,7 +79,7 @@ class Sql2SearchQueryHandler {
         return sql2SearchContentQuery;
     }
 
-    getQueryParams(path, contentLayoutWidgetState, dxContext, urlParams) {
+    getQueryParams(path, paginationState, dxContext, urlParams) {
 
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
@@ -91,8 +91,8 @@ class Sql2SearchQueryHandler {
             query: query,
             language: dxContext.lang,
             displayLanguage: dxContext.uilang,
-            offset: contentLayoutWidgetState.page * contentLayoutWidgetState.rowsPerPage,
-            limit: contentLayoutWidgetState.rowsPerPage
+            offset: paginationState.page * paginationState.rowsPerPage,
+            limit: paginationState.rowsPerPage
         };
     }
 

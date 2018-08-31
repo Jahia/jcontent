@@ -134,7 +134,7 @@ class ContentLayout extends React.Component {
                                     <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>
                                     }
                                     {contentSource === "files" &&
-                                    <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                                    <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue : value})}/>
                                     }
                                 </Grid>
                             </Grid>
@@ -145,8 +145,8 @@ class ContentLayout extends React.Component {
                                 </Grid>
                                 }
                                 <Grid item xs={computedTableSize}>
-                                    {contentSource === "files" && !this.state.showList ?
-                                        <FilesGrid
+                                    {contentSource === "files" && !this.state.showList
+                                        ? <FilesGrid
                                             size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                             totalCount={totalCount}
                                             rows={rows}
@@ -156,7 +156,8 @@ class ContentLayout extends React.Component {
                                             onRowSelected={this.handleRowSelection}
                                             page={page}
                                             lang={dxContext.lang}
-                                        /> : <ContentListTable
+                                        />
+                                        : <ContentListTable
                                             totalCount={totalCount}
                                             rows={rows}
                                             pageSize={rowsPerPage}

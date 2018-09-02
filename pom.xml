@@ -87,6 +87,24 @@
         </repository>
     </repositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.gemini.blueprint</groupId>
+            <artifactId>gemini-blueprint-core</artifactId>
+            <version>1.0.2.RELEASE</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.osgi</groupId>
+                    <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.osgi</groupId>
+                    <artifactId>org.osgi.compendium</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -95,7 +113,9 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <instructions />
+                    <instructions>
+                        <Jahia-ActionList-Resources>/javascript/actionlists/contentManagerLeftMenu.js::0,/javascript/actionlists/siteSettings.js::1</Jahia-ActionList-Resources>
+                    </instructions>
                 </configuration>
             </plugin>
             <plugin>

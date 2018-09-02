@@ -103,7 +103,19 @@
         "sql2": "Advanced",
         "clear": "Clear"
       },
-      "showCurrentPath": "Show current path"
+      "showCurrentPath": "Show current path",
+      "leftMenu" : {
+        "content" : "Content",
+        "media" : "Media",
+        "savedSearches" : "Saved searches",
+        "contentReports" : "Content reports",
+        "manage" : {
+          "title" : "Manage",
+          "users" : {
+            "title" : "Users"
+          }
+        }
+      }
     }
   }
 }

@@ -53,7 +53,19 @@
       "search": "Recherche",
       "sql2Search": "SQL2 Recherche",
       "quitSearch": "Quitter la recherche",
-      "showCurrentPath": "Ouvrir le chemin courant"
+      "showCurrentPath": "Ouvrir le chemin courant",
+      "leftMenu" : {
+        "content" : "Contenu",
+        "media" : "Média",
+        "savedSearches" : "Recherches sauvegardées",
+        "contentReports" : "Rapport de contenu",
+        "manage" : {
+          "title" : "Gestion",
+          "users" : {
+            "title" : "Utilisateurs"
+          }
+        }
+      }
     }
   }
 }

@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
 <%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions" %>
+<%@ taglib prefix="cmFunctions" uri="http://www.jahia.org/tags/contentmanager/functions" %>
 <%@ page import="org.jahia.settings.SettingsBean" %>
 
 <c:set var="mainResourceLocale" value="${renderContext.mainResourceLocale}"/>
@@ -29,35 +30,15 @@
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: {
-            // Any action configuration can be overriden here, for example:
-            /*
-            createMenu: {
-                component: "menuAction",
-                menuId: "createMenuActions",
-                target: ["createMenu"],
-                requiredPermission: "jcr:addChildNodes",
-                labelKey: 'label.contentManager.create.create',
-                hideOnNodeTypes: ["jnt:page"]
-            },
-            createContentFolder: {
-                priority: 3,
-                target: ["createMenuActions", "contentTreeMenuActions"],
-                requiredAllowedChildNodeType: 'jnt:contentFolder',
-                requiredPermission: "jcr:addChildNodes",
-                labelKey: 'label.contentManager.create.contentFolder',
-                hideOnNodeTypes: ["jnt:page"]
-            },
-            createContent: {
-                priority: 3.1,
-                target: ["createMenuActions", "contentTreeMenuActions"],
-                requiredPermission: "jcr:addChildNodes",
-                labelKey: 'label.contentManager.create.content',
-                hideOnNodeTypes: ["jnt:page", "jnt:folder"]
-            }
-            */
         }
     };
+    contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces(renderContext)};
+</script>
 
+${cmFunctions:generateActionLists(renderContext)}
+
+<script type="text/javascript">
     reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
 </script>
+
 </body>

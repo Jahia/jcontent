@@ -4,6 +4,7 @@
       "appTitle": "DX Content Manager {{path}}",
       "publicationStatus": {
         "notPublished": "This content has never been published",
+        "unPublished": "Unpublished by {{userName}} on {{timestamp}}",
         "published": "Published by {{userName}} on {{timestamp}}",
         "modified": "Modified by {{userName}} on {{timestamp}}",
         "unpublished": "Unpublished by {{userName}} on {{timestamp}}",

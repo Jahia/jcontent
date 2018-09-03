@@ -2,6 +2,24 @@ import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
+class PublicationStatusUnpublished {
+
+    getDetailsMessage(node, t) {
+        return t("label.contentManager.publicationStatus.unPublished", {userName: node.lastPublishedBy, timestamp: node.lastPublished});
+    }
+
+    geti18nDetailsMessage(node, t, locale = "en") {
+        return <React.Fragment>
+            { t("label.contentManager.publicationStatus.unPublished", {userName: node.lastModifiedBy, timestamp: "" }) }
+            <Moment format={"LLL"} locale={ locale }>{node.lastModified}</Moment>
+        </React.Fragment>
+    }
+
+    getContentClass(classes) {
+        return classes.unPublished;
+    }
+}
+
 class PublicationStatusNotPublished {
 
     getDetailsMessage(node, t) {
@@ -73,6 +91,7 @@ class PublicationStatusMarkedForDeletion {
 
 
 export const publicationStatusByName = {
+    "UNPUBLISHED": new PublicationStatusUnpublished(),
     "NOT_PUBLISHED": new PublicationStatusNotPublished(),
     "PUBLISHED": new PublicationStatusPublished(),
     "MODIFIED": new PublicationStatusModified(),

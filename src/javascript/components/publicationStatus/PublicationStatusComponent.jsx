@@ -33,6 +33,9 @@ const styles = theme => ({
     notPublished: {
         backgroundColor: theme.palette.publicationStatus.notPublished.main
     },
+    unPublished: {
+        backgroundColor: "#cecece"
+    },
     markedForDeletion: {
         backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
     },

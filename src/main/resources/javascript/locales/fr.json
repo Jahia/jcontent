@@ -4,6 +4,7 @@
       "publicationStatus": {
         "notPublished": "Ce contenu n'a jamais été publié",
         "published": "Publié par {{userName}} le {{timestamp}}",
+        "unPublished": "dépublié par {{userName}} le {{timestamp}}",
         "modified": "Modifié par {{userName}} le {{timestamp}}",
         "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}"
       },

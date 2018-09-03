@@ -1,6 +1,7 @@
 import CallAction from "./CallAction"
 import {Edit, Publish} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
+import CreateContentOfTypeAction from "./CreateContentOfTypeAction";
 import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
 
@@ -21,11 +22,11 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.edit"
     },
     createContentFolder: {
-        component: CreateContentAction,
+        component: CreateContentOfTypeAction,
         call: createContentFolder,
         priority: 3,
         target: ["createMenuActions", "contentTreeMenuActions"],
-        requiredAllowedChildNodeType: "jnt:contentFolder",
+        contentType: "jnt:contentFolder",
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.contentFolder",
         hideOnNodeTypes: ["jnt:page"]
@@ -38,14 +39,14 @@ let defaultActions = {
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.content",
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-        requiredChildNodeSuperType: "jmix:editorialContent"
+        baseContentType: "jmix:editorialContent"
     },
     createFolder: {
-        component: CreateContentAction,
+        component: CreateContentOfTypeAction,
         call: createFolder,
         priority: 3,
         target: ["createMenuActions", "contentTreeMenuActions"],
-        requiredAllowedChildNodeType: "jnt:folder",
+        contentType: "jnt:folder",
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.folder",
         hideOnNodeTypes: ["jnt:page"]

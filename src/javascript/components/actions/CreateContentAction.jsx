@@ -9,10 +9,10 @@ import {withNotifications} from "@jahia/react-material/index";
 
 class CreateContentAction extends React.Component {
 
-    static filterByRequiredSuperType(types, requiredChildNodeSuperType) {
+    static filterByBaseType(types, baseTypeName) {
         return _.filter(types, type => {
             let superTypes = _.map(type.supertypes, superType => superType.name);
-            return _.includes(superTypes, requiredChildNodeSuperType);
+            return _.includes(superTypes, baseTypeName);
         });
     }
 
@@ -49,14 +49,14 @@ class CreateContentAction extends React.Component {
                             return null;
                         }
 
-                        return _.map(data.jcr.nodeTypesByNames, type => {
-                            ctx.nodeTypes = [type.name];
+                        return _.map(data.jcr.nodeTypesByNames, nodeType => {
+                            ctx.nodeTypes = [nodeType.name];
                             return children({
                                 ...rest,
                                 labelKey: "label.contentManager.create.contentOfType",
-                                labelParams: {typeName: type.displayName},
+                                labelParams: {typeName: nodeType.displayName},
                                 onClick: () => call(ctx),
-                                key: type.name
+                                key: nodeType.name
                             });
                         });
                     }}
@@ -67,50 +67,42 @@ class CreateContentAction extends React.Component {
 
     render() {
 
-        let {requiredChildNodeSuperType, requiredAllowedChildNodeType, context, t, notificationContext} = this.props;
+        let {baseContentType, context, t, notificationContext} = this.props;
 
         let {node} = context;
         let childNodeTypes = node.allowedChildNodeTypes;
-        if (!_.isEmpty(requiredChildNodeSuperType)) {
-            childNodeTypes = CreateContentAction.filterByRequiredSuperType(childNodeTypes, requiredChildNodeSuperType);
+        if (!_.isEmpty(baseContentType)) {
+            childNodeTypes = CreateContentAction.filterByBaseType(childNodeTypes, baseContentType);
         }
         let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
         let contributeTypesProperty = node.contributeTypes;
 
-        if (_.isEmpty(requiredAllowedChildNodeType)) {
-            if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
-                if (_.isEmpty(requiredChildNodeSuperType)) {
-                    return this.doRender(contributeTypesProperty.values, context);
-                } else {
-                    return <Query query={ContentTypesQuery} variables={{nodeTypes: contributeTypesProperty.values}}>
-                        {({loading, error, data}) => {
-
-                            if (error) {
-                                let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
-                                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-                                return null;
-                            }
-
-                            if (loading || !data || !data.jcr) {
-                                return null;
-                            }
-
-                            let contributionNodeTypes = data.jcr.nodeTypesByNames;
-                            contributionNodeTypes = CreateContentAction.filterByRequiredSuperType(contributionNodeTypes, requiredChildNodeSuperType);
-                            let nodeTypes = _.map(contributionNodeTypes, nodeType => nodeType.name);
-                            return this.doRender(nodeTypes, context);
-                        }}
-                    </Query>;
-                }
+        if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
+            if (_.isEmpty(baseContentType)) {
+                return this.doRender(contributeTypesProperty.values, context);
             } else {
-                return this.doRender(childNodeTypeNames, context);
+                return <Query query={ContentTypesQuery} variables={{nodeTypes: contributeTypesProperty.values}}>
+                    {({loading, error, data}) => {
+
+                        if (error) {
+                            let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
+                            notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                            return null;
+                        }
+
+                        if (loading || !data || !data.jcr) {
+                            return null;
+                        }
+
+                        let contributionNodeTypes = data.jcr.nodeTypesByNames;
+                        contributionNodeTypes = CreateContentAction.filterByBaseType(contributionNodeTypes, baseContentType);
+                        let nodeTypes = _.map(contributionNodeTypes, nodeType => nodeType.name);
+                        return this.doRender(nodeTypes, context);
+                    }}
+                </Query>;
             }
         } else {
-            if (_.includes(childNodeTypeNames, requiredAllowedChildNodeType)) {
-                return this.doRender([requiredAllowedChildNodeType], context);
-            } else {
-                return this.doRender([], context);
-            }
+            return this.doRender(childNodeTypeNames, context);
         }
     }
 }

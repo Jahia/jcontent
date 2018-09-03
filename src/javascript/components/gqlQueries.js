@@ -393,11 +393,11 @@ class ActionRequirementsQueryHandler {
             this.variables = {...action.retrieveProperties, ...this.variables}
         }
 
-        // Assume that child node type info is needed if the action has a child node type property configured.
+        // Assume that child node type info is needed if the action has a content type property configured.
         let keys = _.keysIn(action);
         for (let i = 0; i < keys.length; i++) {
             let key = keys[i];
-            if (/.*ChildNode.*Type.*/.test(key)) {
+            if (/.*[cC]ontentType/.test(key)) {
                 this.requirementsFragments.push(ActionRequirementsFragments.childNodeTypeInfo);
                 break;
             }

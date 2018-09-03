@@ -1,4 +1,5 @@
 import React from "react";
+import {DxContext} from "../DxContext";
 import * as _ from "lodash";
 
 class PublishAction extends React.Component {
@@ -14,7 +15,11 @@ class PublishAction extends React.Component {
         ctx.allLanguages = allLanguages;
         ctx.allSubTree = allSubTree;
         ctx.checkForUnpublication = checkForUnpublication;
-        return children({...rest, onClick: () => call(ctx)})
+        return <DxContext.Consumer>{dxContext => (
+            children({...rest,
+                labelParams: {language: dxContext.langName},
+                onClick: () => call(ctx)})
+        )}</DxContext.Consumer>;
     }
 
 }

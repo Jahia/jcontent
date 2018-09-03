@@ -18,13 +18,17 @@ import defaultActions from "./actions/defaultActions";
 import actionsRegistry from "./actionsRegistry"
 import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
+import RouterAction from "./actions/RouterAction";
+import SideMenuAction from "./actions/SideMenuAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {Routes} from "./Routes";
 
 const actionComponents = {
     action: CallAction,
-    menuAction: MenuAction
-}
+    menuAction: MenuAction,
+    routerAction : RouterAction,
+    sideMenuAction : SideMenuAction
+};
 
 class ContentManager extends React.Component {
 
@@ -105,7 +109,7 @@ class ContentManager extends React.Component {
                         <I18nextProvider i18n={getI18n({
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,
-                            ns: ["content-manager"],
+                            ns: dxContext.i18nNamespaces,
                             defaultNS: "content-manager",
                         })}>
                             <I18n>{(t) => {
@@ -118,7 +122,7 @@ class ContentManager extends React.Component {
                                                 return (
                                                     <ManagerLayout
                                                         header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url}/>}
-                                                        leftSide={<CMLeftNavigation/>}
+                                                        leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
                                                     >
                                                         <Routes
                                                             basePath={props.match.url}

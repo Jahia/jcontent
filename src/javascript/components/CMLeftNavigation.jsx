@@ -3,9 +3,9 @@ import { withStyles, IconButton, Drawer, Divider, List, ListItem, ListItemIcon, 
 
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
-import SideMenu from "./SideMenu"
 import classNames from "classnames";
-import {StarBorder, Face, Tram, Map, ChevronLeft, ChevronRight} from '@material-ui/icons';
+import {Menu, ChevronLeft, ChevronRight} from '@material-ui/icons';
+import Actions from "./Actions";
 
 const drawerWidth = 240;
 
@@ -81,7 +81,7 @@ class CMLeftNavigation extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { dxContext, classes, baseRoutePath, t } = this.props;
 
         return (
                 <div className={classes.root}>
@@ -98,51 +98,19 @@ class CMLeftNavigation extends React.Component {
                             </IconButton>
                         </div>
                         <Divider/>
-                        <SideMenu icon={<Face/>} text={'Content'}>
-                            <List component="div" disablePadding>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemIcon>
-                                        <Tram/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="All Content"/>
-                                </ListItem>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemIcon>
-                                        <Tram/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Planets"/>
-                                </ListItem>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemIcon>
-                                        <Map/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Species"/>
-                                </ListItem>
-                            </List>
-                        </SideMenu>
+                        <List component="nav">
+                            <Actions menuId="leftMenuActions" context={{path:'', siteKey: dxContext.siteKey, lang : dxContext.lang}}>
+                                {(props) =>
+                                    <ListItem button onClick={props.onClick}>
+                                        <ListItemIcon>
+                                            <Menu/>
+                                        </ListItemIcon>
+                                        <ListItemText inset primary={t(props.labelKey)}/>
+                                    </ListItem>
+                                }
+                            </Actions>
+                        </List>
                         <Divider/>
-                        <SideMenu icon={<Face/>} text={'Stars'}>
-                            <List component="div" disablePadding>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemIcon>
-                                        <StarBorder/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Starred"/>
-                                </ListItem>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemIcon>
-                                        <StarBorder/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Starred"/>
-                                </ListItem>
-                                <ListItem button className={classes.nested}>
-                                    <ListItemIcon>
-                                        <StarBorder/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary="Starred"/>
-                                </ListItem>
-                            </List>
-                        </SideMenu>
                     </Drawer>
                 </div>
         );

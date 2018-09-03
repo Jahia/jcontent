@@ -77,14 +77,16 @@ let defaultActions = {
     },
     publish: {
         component: PublishAction,
-            call: publish,
+        call: publish,
         icon: "Publish",
         target: ["previewBar", "tableMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publish",
-            allSubtree: false,
-            allLanguages: false,
-            checkForUnpublication: false
+        allSubtree: false,
+        allLanguages: false,
+        checkForUnpublication: false,
+        hideOnNodeTypes: ["jnt:virtualsite"]
+
     },
     advancedPublish: {
         component: "menuAction",
@@ -93,17 +95,42 @@ let defaultActions = {
         target: ["previewBar", "tableMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.advancedPublish"
-},
+    },
+    publishInAllLanguages: {
+        component: PublishAction,
+        call: publish,
+        icon: "Publish",
+        target: ["publishMenu"],
+        requiredPermission: "",
+        allSubTree: false,
+        allLanguages: true,
+        checkForUnpublication: false,
+        hideOnNodeTypes: ["nt:file", "nt:folder"],
+        labelKey: "label.contentManager.contentPreview.publishInAllLanguages"
+    },
     publishAll: {
         component: PublishAction,
         call: publish,
         icon: "Publish",
         target: ["publishMenu"],
         requiredPermission: "",
-            allSubtree: true,
-            allLanguages: true,
-            checkForUnpublication: false,
+        allSubTree: true,
+        allLanguages: false,
+        checkForUnpublication: false,
+        hideOnNodeTypes: ["nt:file"],
         labelKey: "label.contentManager.contentPreview.publishAll"
+    },
+    publishAllInAllLanguages: {
+        component: PublishAction,
+        call: publish,
+        icon: "Publish",
+        target: ["publishMenu"],
+        requiredPermission: "",
+        allSubTree: true,
+        allLanguages: true,
+        checkForUnpublication: false,
+        hideOnNodeTypes: ["nt:file", "nt:folder"],
+        labelKey: "label.contentManager.contentPreview.publishAllInAllLanguages"
     },
     unPublish: {
         component: PublishAction,
@@ -111,9 +138,10 @@ let defaultActions = {
         icon: "Publish",
         target: ["publishMenu"],
         requiredPermission: "",
-            allSubtree: false,
-            allLanguages: false,
-            checkForUnpublication: true,
+        allSubTree: false,
+        allLanguages: false,
+        checkForUnpublication: true,
+        hideOnNodeTypes: ["jnt:virtualsite"],
         labelKey: "label.contentManager.contentPreview.unpublish"
     },
     additionalPreview: {

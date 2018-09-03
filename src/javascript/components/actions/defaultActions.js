@@ -144,6 +144,18 @@ let defaultActions = {
         hideOnNodeTypes: ["jnt:virtualsite"],
         labelKey: "label.contentManager.contentPreview.unpublish"
     },
+    unPublishInAllLanguages: {
+        component: PublishAction,
+        call: publish,
+        icon: "Publish",
+        target: ["publishMenu"],
+        requiredPermission: "",
+        allSubTree: false,
+        allLanguages: true,
+        checkForUnpublication: true,
+        hideOnNodeTypes: ["jnt:virtualsite"],
+        labelKey: "label.contentManager.contentPreview.unpublishInAllLanguages"
+    },
     additionalPreview: {
         component: "menuAction",
         menuId: "additionalPreviewMenu",

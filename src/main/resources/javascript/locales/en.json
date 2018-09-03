@@ -48,6 +48,7 @@
           "publishInAllLanguages": "Publish in All languages",
           "advancedPublish": "Advanced publish",
           "unpublish": "Un-publish in {{language}}",
+          "unpublishInAllLanguages": "Un-publish in all languages",
           "copy": "Copy",
           "duplicate": "Duplicate",
           "delete": "Delete",

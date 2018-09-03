@@ -30,6 +30,8 @@ const actionComponents = {
     sideMenuAction : SideMenuAction
 };
 
+const PARAMS_KEY = "?params=";
+
 class ContentManager extends React.Component {
 
     constructor(props) {
@@ -62,6 +64,14 @@ class ContentManager extends React.Component {
         console.warn("update application, this should not happen ..")
         this.forceUpdate();
     }
+
+    deserializeQueryString = location => {
+        const search = location.search;
+        if (!search || search == '') {
+            return {};
+        }
+        return JSON.parse(decodeURIComponent(search.substring(PARAMS_KEY.length).replace(/\+/g, '%20')));
+    };
 
     setRouter(t, router) {
         let {dxContext, classes} = this.props;
@@ -119,9 +129,10 @@ class ContentManager extends React.Component {
                                             <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
                                                 dxContext["siteKey"] = props.match.params.siteKey;
                                                 dxContext["lang"] = props.match.params.lang;
+                                                const routeParams = this.deserializeQueryString(props.location);
                                                 return (
                                                     <ManagerLayout
-                                                        header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url}/>}
+                                                        header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url} modeParams={routeParams.modeParams}/>}
                                                         leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
                                                     >
                                                         <Routes

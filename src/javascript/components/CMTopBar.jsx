@@ -32,14 +32,18 @@ class CMTopBar extends React.Component {
 
     render() {
 
-        const {dxContext, baseRoutePath, classes, t} = this.props;
+        const {dxContext, baseRoutePath, classes, modeParams, t} = this.props;
+        let modeTitle = t('label.contentManager.title');
+        if (modeParams && modeParams.labelKey) {
+            modeTitle = t('label.contentManager.leftMenu.' + modeParams.labelKey);
+        }
 
         return (
             <Toolbar color={'secondary'} classes={{root: classes.root}}>
                 <BurgerMenuButton/>
                 <div className={classes.head}>
                     <SiteSwitcher key={'siteSwitcher_' + dxContext.siteKey + '_' + dxContext.lang} dxContext={dxContext}/>
-                    <Typography variant="display1" color="inherit">{t('label.contentManager.title')}</Typography>
+                    <Typography variant="display1" color="inherit">{modeTitle}</Typography>
                     <LanguageSwitcher key={'languageSwitcher_' + dxContext.siteKey + '_' + dxContext.lang} dxContext={dxContext}/>
                 </div>
 

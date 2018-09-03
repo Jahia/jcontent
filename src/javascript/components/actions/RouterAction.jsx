@@ -3,14 +3,14 @@ import CmRouter from '../CmRouter';
 
 class RouterAction extends React.Component {
 
-    handleClick = (path, params, goto, switchto, context, mode) => {
-        const url = "/" + context.siteKey + "/" + context.lang + "/" + mode + context.node.path;
-        switchto(url, '');
+    handleClick = (params, switchToMode, mode, modeParams) => {
+        params.modeParams = modeParams;
+        switchToMode(mode, '', params);
     };
 
     render() {
-        const {children, context, mode, ...rest} = this.props;
-        return <CmRouter render={({path, params, goto, switchto}) => children({...rest, onClick: () => this.handleClick(path, params, goto, switchto, context, mode)})} />
+        const {children, mode, modeParams, ...rest} = this.props;
+        return <CmRouter render={({path, params, goto, switchto, switchToMode}) => children({...rest, onClick: () => this.handleClick(params, switchToMode, mode, modeParams)})} />
     }
 }
 

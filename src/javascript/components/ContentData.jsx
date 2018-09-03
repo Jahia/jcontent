@@ -83,6 +83,7 @@ class ContentData extends React.Component {
                     goto: goto,
                     dxContext: dxContext
                 };
+
                 const paginationState = {
                     page: page,
                     rowsPerPage: rowsPerPage
@@ -93,6 +94,7 @@ class ContentData extends React.Component {
 
                 return <Query query={layoutQuery} variables={layoutQueryParams}>
                     {({loading, error, data}) => {
+
                         if (error) {
                             console.log("Error when fetching data: " + error);
                             let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});

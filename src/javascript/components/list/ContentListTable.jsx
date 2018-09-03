@@ -188,77 +188,73 @@ class ContentListTable extends React.Component {
                                     let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                                     let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                                     let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
-                                    let wipStatus = (this.isWip(n, lang) ? (n.wipStatus === 'ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
-                                        t('label.contentManager.workInProgress', {wipLang: dxContext.langName})) : t('label.contentManager.saveAsWip'));
+                                    let wipStatus = this.isWip(n, lang)
+                                        ? (n.wipStatus === 'ALL_CONTENT' ? t('label.contentManager.workInProgressAll') : t('label.contentManager.workInProgress', {wipLang: dxContext.langName}))
+                                        : t('label.contentManager.saveAsWip');
                                     let icon = this.addIconSuffix(n.icon);
                                     return (
-                                        <TableRow hover={true}
-                                                  className={classes.row}
-                                                  classes={{root: classes.contentRow}}
-                                                  key={n.uuid}
-                                                  onClick={() => onRowSelected(n)}
-                                                  selected={isSelected}
-                                                  data-cm-role="table-content-list-row">
+                                        <TableRow
+                                            hover={true}
+                                            className={classes.row}
+                                            classes={{root: classes.contentRow}}
+                                            key={n.uuid}
+                                            onClick={() => onRowSelected(n)}
+                                            selected={isSelected}
+                                            data-cm-role="table-content-list-row"
+                                        >
                                             <TableCell className={classes.publicationCell}>
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
                                             {columnData.map(column => {
                                                 if (column.id === 'actions') {
-                                                    return (<TableCell key={column.id} padding={'none'}>
-                                                        <Tooltip title={wipStatus}><Build
-                                                            className={classWip}/></Tooltip>
-                                                        <Tooltip title={lockStatus}><Lock
-                                                            className={classLock}/></Tooltip>
-                                                    </TableCell>);
+                                                    return <TableCell key={column.id} padding={'none'}>
+                                                        <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
+                                                        <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
+                                                    </TableCell>;
                                                 } else if (column.id === 'name') {
-                                                    return (<TableCell key={column.id}
-                                                                       data-cm-role="table-content-list-cell-name">
+                                                    return <TableCell key={column.id} data-cm-role="table-content-list-cell-name">
                                                         <Typography className={classes[column.id]}>
                                                             <img src={icon} className={classes.nodeTypeIcon}/>
-                                                            {n[column.id]}</Typography>
-                                                    </TableCell>);
+                                                            {n[column.id]}
+                                                        </Typography>
+                                                    </TableCell>;
                                                 } else {
-                                                    return (
-                                                        <TableCell key={column.id} padding={'none'}
-                                                                   data-cm-role={'table-content-list-cell-' + column.id}>
-                                                            <Typography
-                                                                className={classes[column.id]}>{n[column.id]}</Typography>
-                                                        </TableCell>
-                                                    );
+                                                    return <TableCell key={column.id} padding={'none'} data-cm-role={'table-content-list-cell-' + column.id}>
+                                                        <Typography className={classes[column.id]}>
+                                                            {n[column.id]}
+                                                        </Typography>
+                                                    </TableCell>;
                                                 }
                                             })}
                                             <TableCell>
-                                                <Actions menuId={"tableActions"}
-                                                         context={{path: n.path, displayName: n.name, uuid: n.uuid}}>
+                                                <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name, uuid: n.uuid}}>
                                                     {(props) => <CmIconButton {...props}/>}
                                                 </Actions>
                                             </TableCell>
                                         </TableRow>
                                     );
                                 })}
-                                {emptyRows > 0 && (
+                                {emptyRows > 0 &&
                                     <TableRow style={{height: 49 * emptyRows}}>
                                         <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
                                     </TableRow>
-                                )}
+                                }
                             </TableBody>
                         )}
                     </DxContext.Consumer>
                 </Table>
-                <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page}
-                            onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
+                <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );
     }
 }
 
 let EmptyRow = (props) => {
-    return (
-        <TableRow>
-            <TableCell
-                colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("label.contentManager.noResults")}</TableCell>
-        </TableRow>
-    )
+    return <TableRow>
+        <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>
+            {props.translate("label.contentManager.noResults")}
+        </TableCell>
+    </TableRow>;
 };
 
 ContentListTable.propTypes = {
@@ -266,7 +262,7 @@ ContentListTable.propTypes = {
     page: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,
     onChangeRowsPerPage: PropTypes.func.isRequired,
-    onChangePage: PropTypes.func.isRequired,
+    onChangePage: PropTypes.func.isRequired
 };
 
 ContentListTable = compose(

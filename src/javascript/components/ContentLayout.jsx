@@ -54,7 +54,7 @@ class ContentLayout extends React.Component {
             filesGridSizeValue: 4,
             showList: false,
             page: 0,
-            rowsPerPage: 25,
+            rowsPerPage: 25
         };
     }
 
@@ -122,45 +122,45 @@ class ContentLayout extends React.Component {
                 return <React.Fragment>
                     <Grid container spacing={0}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                            <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang}
-                                                rootPath={rootPath}/>
+                            <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
                             {this.isBrowsing() && path != rootPath &&
-                            <Actions menuId={"createMenu"} context={{path: path}}>
-                                {(props) => <CmButton {...props}><Add/></CmButton>}
-                            </Actions>
+                                <Actions menuId={"createMenu"} context={{path: path}}>
+                                    {(props) => <CmButton {...props}><Add/></CmButton>}
+                                </Actions>
                             }
                             {this.isBrowsing() &&
-                            <IconButton onClick={this.handleShowTree}><List/></IconButton>
+                                <IconButton onClick={this.handleShowTree}><List/></IconButton>
                             }
                             {contentSource === "files" &&
-                            <FilesGridModeSelector showList={this.state.showList}
-                                                   onChange={() => this.setState({showList: !this.state.showList})}/>
+                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                             }
                             {showPreview &&
-                            <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>
+                                <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>
                             }
                             {!showPreview &&
-                            <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>
+                                <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>
                             }
                             {contentSource === "files" &&
-                            <FilesGridSizeSelector initValue={4}
-                                                   onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                                <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
                             }
                         </Grid>
                     </Grid>
-                    <ContentData contentSource={contentSource} rootPath={rootPath} page={this.state.page}
-                                 rowsPerPage={this.state.rowsPerPage}>
+                    <ContentData contentSource={contentSource} rootPath={rootPath} page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
                         {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
                             return <React.Fragment>
                                 <Grid container spacing={0}>
                                     {contentTreeConfigs && showTree &&
-                                    <Grid item xs={TREE_SIZE} className={classes.tree}>
-                                        <ContentTrees contentTreeConfigs={contentTreeConfigs} path={path}
-                                                      rootPath={rootPath} lang={dxContext.lang}
-                                                      user={dxContext.userName}/>
-                                    </Grid>
+                                        <Grid item xs={TREE_SIZE} className={classes.tree}>
+                                            <ContentTrees
+                                                contentTreeConfigs={contentTreeConfigs}
+                                                path={path}
+                                                rootPath={rootPath}
+                                                lang={dxContext.lang}
+                                                user={dxContext.userName}
+                                            />
+                                        </Grid>
                                     }
                                     <Grid item xs={computedTableSize}>
                                         {contentSource === "files" && !this.state.showList
@@ -192,13 +192,13 @@ class ContentLayout extends React.Component {
                                 </Grid>
                                 <PreviewDrawer open={showPreview} onClose={this.handleShowPreview}>
                                     {/*Always get row from query not from state to be up to date*/}
-                                    <ContentPreview selection={rows.find((row) => {
-                                        return selectedRow !== null && row.path === selectedRow.path
-                                    })}
-                                                    layoutQuery={layoutQuery}
-                                                    layoutQueryParams={layoutQueryParams}
-                                                    rowSelectionFunc={this.handleRowSelection}
-                                                    dxContext={dxContext}/>
+                                    <ContentPreview
+                                        selection={rows.find((row) => {return selectedRow !== null && row.path === selectedRow.path})}
+                                        layoutQuery={layoutQuery}
+                                        layoutQueryParams={layoutQueryParams}
+                                        rowSelectionFunc={this.handleRowSelection}
+                                        dxContext={dxContext}
+                                    />
                                 </PreviewDrawer>
                             </React.Fragment>
                         }}

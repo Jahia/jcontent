@@ -1,6 +1,4 @@
 import React from "react";
-import {ContentTypesQuery, ContentTypeNamesQuery} from "../gqlQueries";
-import {translate} from "react-i18next";
 import * as _ from "lodash";
 
 class PublishAction extends React.Component {

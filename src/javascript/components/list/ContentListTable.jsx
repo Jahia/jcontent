@@ -1,16 +1,22 @@
 import React from "react";
-import {Table, TableBody, TableRow, TableCell, Button, withStyles, Typography, Tooltip, SvgIcon} from "@material-ui/core";
+import {
+    Table,
+    TableBody,
+    TableRow,
+    TableCell,
+    withStyles,
+    Typography,
+    Tooltip
+} from "@material-ui/core";
 import ContentListHeader from "./ContentListHeader";
-import { Pagination } from "@jahia/react-material";
+import {Pagination} from "@jahia/react-material";
 import PropTypes from 'prop-types';
 import * as _ from "lodash";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
-import {InfoOutline, Lock, Build} from "@material-ui/icons";
+import {Lock, Build} from "@material-ui/icons";
 import {DxContext} from "../DxContext";
-import { publicationStatusByName } from "../publicationStatus/publicationStatus"
 import Actions from "../Actions";
-import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 
@@ -27,7 +33,7 @@ const APP_TABLE_CELLS = 2;
 const styles = (theme) => ({
     contentRow: {
         height: 56,
-        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 24
         }
     },
@@ -156,13 +162,13 @@ class ContentListTable extends React.Component {
     }
 
     addIconSuffix(icon) {
-        return (!icon.includes('.png') ? icon+'.png' : icon);
+        return (!icon.includes('.png') ? icon + '.png' : icon);
     }
 
     render() {
 
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, t, classes, lang} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, t, classes, lang, selectedRow} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -178,46 +184,52 @@ class ContentListTable extends React.Component {
                         {dxContext => (
                             <TableBody>
                                 {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
-                                    let publicationStatus = publicationStatusByName[n.publicationStatus];
+                                    let isSelected = selectedRow ? selectedRow.path === n.path : false;
                                     let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                                     let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                                     let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
-                                    let wipStatus = (this.isWip(n, lang) ? (n.wipStatus==='ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
+                                    let wipStatus = (this.isWip(n, lang) ? (n.wipStatus === 'ALL_CONTENT' ? t('label.contentManager.workInProgressAll') :
                                         t('label.contentManager.workInProgress', {wipLang: dxContext.langName})) : t('label.contentManager.saveAsWip'));
                                     let icon = this.addIconSuffix(n.icon);
                                     return (
                                         <TableRow hover={true}
-                                                  className={ classes.row }
-                                                  classes={{root: classes.contentRow }}
+                                                  className={classes.row}
+                                                  classes={{root: classes.contentRow}}
                                                   key={n.uuid}
-                                                  onClick={ () => onRowSelected(n)}
-                                                  selected={ n.isSelected }
+                                                  onClick={() => onRowSelected(n)}
+                                                  selected={isSelected}
                                                   data-cm-role="table-content-list-row">
-                                            <TableCell className={ classes.publicationCell }>
-                                                <PublicationStatus node={ n } publicationInfoWidth={ 400 }/>
+                                            <TableCell className={classes.publicationCell}>
+                                                <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
                                             {columnData.map(column => {
-                                                if(column.id === 'actions') {
+                                                if (column.id === 'actions') {
                                                     return (<TableCell key={column.id} padding={'none'}>
-                                                        <Tooltip title={wipStatus}><Build className={classWip}/></Tooltip>
-                                                        <Tooltip title={lockStatus}><Lock className={classLock}/></Tooltip>
+                                                        <Tooltip title={wipStatus}><Build
+                                                            className={classWip}/></Tooltip>
+                                                        <Tooltip title={lockStatus}><Lock
+                                                            className={classLock}/></Tooltip>
                                                     </TableCell>);
                                                 } else if (column.id === 'name') {
-                                                    return (<TableCell key={column.id} data-cm-role="table-content-list-cell-name">
+                                                    return (<TableCell key={column.id}
+                                                                       data-cm-role="table-content-list-cell-name">
                                                         <Typography className={classes[column.id]}>
                                                             <img src={icon} className={classes.nodeTypeIcon}/>
                                                             {n[column.id]}</Typography>
                                                     </TableCell>);
                                                 } else {
                                                     return (
-                                                        <TableCell key={column.id} padding={'none'} data-cm-role={'table-content-list-cell-' + column.id}>
-                                                            <Typography className={classes[column.id]}>{n[column.id]}</Typography>
+                                                        <TableCell key={column.id} padding={'none'}
+                                                                   data-cm-role={'table-content-list-cell-' + column.id}>
+                                                            <Typography
+                                                                className={classes[column.id]}>{n[column.id]}</Typography>
                                                         </TableCell>
                                                     );
                                                 }
                                             })}
                                             <TableCell>
-                                                <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name, uuid:n.uuid}}>
+                                                <Actions menuId={"tableActions"}
+                                                         context={{path: n.path, displayName: n.name, uuid: n.uuid}}>
                                                     {(props) => <CmIconButton {...props}/>}
                                                 </Actions>
                                             </TableCell>
@@ -233,7 +245,8 @@ class ContentListTable extends React.Component {
                         )}
                     </DxContext.Consumer>
                 </Table>
-                <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
+                <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page}
+                            onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
             </div>
         );
     }
@@ -242,7 +255,8 @@ class ContentListTable extends React.Component {
 let EmptyRow = (props) => {
     return (
         <TableRow>
-            <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("label.contentManager.noResults")}</TableCell>
+            <TableCell
+                colSpan={columnData.length + APP_TABLE_CELLS}>{props.translate("label.contentManager.noResults")}</TableCell>
         </TableRow>
     )
 };

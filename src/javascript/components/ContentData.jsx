@@ -1,6 +1,12 @@
 import React from 'react';
 import {Query, withApollo} from 'react-apollo';
-import {BrowsingQueryHandler, SearchQueryHandler, Sql2SearchQueryHandler, FilesQueryHandler, GetNodeAndChildrenByPathQuery} from "./gqlQueries";
+import {
+    BrowsingQueryHandler,
+    SearchQueryHandler,
+    Sql2SearchQueryHandler,
+    FilesQueryHandler,
+    GetNodeAndChildrenByPathQuery
+} from "./gqlQueries";
 import * as _ from "lodash";
 import {withNotifications} from '@jahia/react-material';
 import CmRouter from './CmRouter';
@@ -21,20 +27,8 @@ class ContentData extends React.Component {
 
         super(props);
 
-        this.state = {
-            page: 0,
-            rowsPerPage: 25,
-            showTree: true,
-            showPreview: false,
-            selectedRow: null,
-            filesGridSizeValue: 4,
-            showList: false
-        };
-
         this.onGwtContentCreate = this.onGwtContentCreate.bind(this);
         this.onGwtContentUpdate = this.onGwtContentUpdate.bind(this);
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
 
     componentDidMount() {
@@ -75,22 +69,9 @@ class ContentData extends React.Component {
         }
     }
 
-    handleChangePage = newPage => {
-        this.setState({page: newPage});
-    };
-
-    handleChangeRowsPerPage = value => {
-        if (value != this.state.rowsPerPage) {
-            this.setState({
-                page: 0,
-                rowsPerPage: value
-            });
-        }
-    };
-
     render() {
 
-        const {contentSource, selectedRow, notificationContext, t, children, rootPath} = this.props;
+        const {contentSource, notificationContext, t, children, rootPath, page, rowsPerPage} = this.props;
         let queryHandler = contentQueryHandlerBySource[contentSource];
 
         return <DxContext.Consumer>{dxContext => {
@@ -102,9 +83,13 @@ class ContentData extends React.Component {
                     goto: goto,
                     dxContext: dxContext
                 };
+                const paginationState = {
+                    page: page,
+                    rowsPerPage: rowsPerPage
+                };
 
                 const layoutQuery = queryHandler.getQuery();
-                const layoutQueryParams = queryHandler.getQueryParams(path, this.state, dxContext, params, rootPath);
+                const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, dxContext, params, rootPath);
 
                 return <Query query={layoutQuery} variables={layoutQueryParams}>
                     {({loading, error, data}) => {
@@ -142,21 +127,16 @@ class ContentData extends React.Component {
                                     wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
                                     wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
                                     icon: contentNode.primaryNodeType.icon,
-                                    isSelected: selectedRow ? selectedRow.path === contentNode.path : false,
                                     width: (contentNode.width != null ? contentNode.width.value : ''),
                                     height: (contentNode.width != null ? contentNode.height.value : '')
                                 }
                             });
                         }
                         return children({
-                            handleChangePage: this.handleChangePage,
-                            handleChangeRowsPerPage: this.handleChangeRowsPerPage,
                             rows: rows,
                             totalCount: totalCount,
                             layoutQuery: layoutQuery,
                             layoutQueryParams: layoutQueryParams,
-                            rowsPerPage: this.state.rowsPerPage,
-                            page: this.state.page
                         });
                     }}
                 </Query>

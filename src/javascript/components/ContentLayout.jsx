@@ -23,9 +23,6 @@ import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
 import {ContentData} from "./ContentData";
 
 const styles = theme => ({
-    root: {
-        flexGrow: 1
-    },
     gridColumn: { //Make it possible for content to expand height to 100%
         display: "flex",
         flexDirection: "column"
@@ -33,7 +30,7 @@ const styles = theme => ({
     tree: {
         overflowX: "auto"
     },
-    buttonPanel : {
+    buttonPanel: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center"
@@ -55,7 +52,9 @@ class ContentLayout extends React.Component {
             showPreview: false,
             selectedRow: null,
             filesGridSizeValue: 4,
-            showList: false
+            showList: false,
+            page: 0,
+            rowsPerPage: 25,
         };
     }
 
@@ -93,6 +92,19 @@ class ContentLayout extends React.Component {
         }
     };
 
+    handleChangePage = newPage => {
+        this.setState({page: newPage});
+    };
+
+    handleChangeRowsPerPage = value => {
+        if (value != this.state.rowsPerPage) {
+            this.setState({
+                page: 0,
+                rowsPerPage: value
+            });
+        }
+    };
+
     isBrowsing() {
         let {contentSource} = this.props;
         return (contentSource === "browsing" || contentSource === "files")
@@ -106,80 +118,92 @@ class ContentLayout extends React.Component {
         return <DxContext.Consumer>{dxContext => {
             const rootPath = '/sites/' + dxContext.siteKey;
             return <CmRouter render={({path, params, goto}) => {
-                let computedTableSize;
-                return <ContentData contentSource={contentSource} rootPath={rootPath}>
-                    { ({rows, totalCount, layoutQuery, layoutQueryParams, handleChangePage, handleChangeRowsPerPage, rowsPerPage, page}) => {
-                        computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
-                        return <div className={classes.root}>
-                            <Grid container spacing={0}>
-                                <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                                    <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
+                let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
+                return <React.Fragment>
+                    <Grid container spacing={0}>
+                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                            <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang}
+                                                rootPath={rootPath}/>
+                        </Grid>
+                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
+                            {this.isBrowsing() && path != rootPath &&
+                            <Actions menuId={"createMenu"} context={{path: path}}>
+                                {(props) => <CmButton {...props}><Add/></CmButton>}
+                            </Actions>
+                            }
+                            {this.isBrowsing() &&
+                            <IconButton onClick={this.handleShowTree}><List/></IconButton>
+                            }
+                            {contentSource === "files" &&
+                            <FilesGridModeSelector showList={this.state.showList}
+                                                   onChange={() => this.setState({showList: !this.state.showList})}/>
+                            }
+                            {showPreview &&
+                            <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>
+                            }
+                            {!showPreview &&
+                            <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>
+                            }
+                            {contentSource === "files" &&
+                            <FilesGridSizeSelector initValue={4}
+                                                   onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                            }
+                        </Grid>
+                    </Grid>
+                    <ContentData contentSource={contentSource} rootPath={rootPath} page={this.state.page}
+                                 rowsPerPage={this.state.rowsPerPage}>
+                        {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
+                            return <React.Fragment>
+                                <Grid container spacing={0}>
+                                    {contentTreeConfigs && showTree &&
+                                    <Grid item xs={TREE_SIZE} className={classes.tree}>
+                                        <ContentTrees contentTreeConfigs={contentTreeConfigs} path={path}
+                                                      rootPath={rootPath} lang={dxContext.lang}
+                                                      user={dxContext.userName}/>
+                                    </Grid>
+                                    }
+                                    <Grid item xs={computedTableSize}>
+                                        {contentSource === "files" && !this.state.showList
+                                            ? <FilesGrid
+                                                size={valueToSizeTransformation(this.state.filesGridSizeValue)}
+                                                totalCount={totalCount}
+                                                rows={rows}
+                                                pageSize={this.state.rowsPerPage}
+                                                selectedRow={this.state.selectedRow}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                                onChangePage={this.handleChangePage}
+                                                onRowSelected={this.handleRowSelection}
+                                                page={this.state.page}
+                                                lang={dxContext.lang}
+                                            />
+                                            : <ContentListTable
+                                                totalCount={totalCount}
+                                                rows={rows}
+                                                pageSize={this.state.rowsPerPage}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                                onChangePage={this.handleChangePage}
+                                                onRowSelected={this.handleRowSelection}
+                                                page={this.state.page}
+                                                lang={dxContext.lang}
+                                                selectedRow={this.state.selectedRow}
+                                            />
+                                        }
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
-                                    {this.isBrowsing() && path != rootPath &&
-                                    <Actions menuId={"createMenu"} context={{path: path}}>
-                                        {(props) => <CmButton {...props}><Add/></CmButton>}
-                                    </Actions>
-                                    }
-                                    {this.isBrowsing() &&
-                                    <IconButton onClick={this.handleShowTree}><List/></IconButton>
-                                    }
-                                    {contentSource === "files" &&
-                                    <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
-                                    }
-                                    {showPreview &&
-                                    <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>
-                                    }
-                                    {!showPreview &&
-                                    <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>
-                                    }
-                                    {contentSource === "files" &&
-                                    <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue : value})}/>
-                                    }
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={0}>
-                                {contentTreeConfigs && showTree &&
-                                <Grid item xs={TREE_SIZE} className={classes.tree}>
-                                    <ContentTrees contentTreeConfigs={contentTreeConfigs} path={path} rootPath={rootPath} lang={dxContext.lang} user={dxContext.userName}/>
-                                </Grid>
-                                }
-                                <Grid item xs={computedTableSize}>
-                                    {contentSource === "files" && !this.state.showList
-                                        ? <FilesGrid
-                                            size={valueToSizeTransformation(this.state.filesGridSizeValue)}
-                                            totalCount={totalCount}
-                                            rows={rows}
-                                            pageSize={rowsPerPage}
-                                            onChangeRowsPerPage={handleChangeRowsPerPage}
-                                            onChangePage={handleChangePage}
-                                            onRowSelected={this.handleRowSelection}
-                                            page={page}
-                                            lang={dxContext.lang}
-                                        />
-                                        : <ContentListTable
-                                            totalCount={totalCount}
-                                            rows={rows}
-                                            pageSize={rowsPerPage}
-                                            onChangeRowsPerPage={handleChangeRowsPerPage}
-                                            onChangePage={handleChangePage}
-                                            onRowSelected={this.handleRowSelection}
-                                            page={page}
-                                            lang={dxContext.lang}
-                                        />
-                                    }
-                                </Grid>
-                            </Grid>
-                            <PreviewDrawer open={ showPreview } onClose={this.handleShowPreview}>
-                                {/*Always get row from query not from state to be up to date*/}
-                                <ContentPreview selection={rows.find((row) => { return selectedRow !== null && row.path === selectedRow.path})}
-                                                layoutQuery={layoutQuery}
-                                                layoutQueryParams={layoutQueryParams}
-                                                rowSelectionFunc={this.handleRowSelection}
-                                                dxContext={dxContext}/>
-                            </PreviewDrawer>
-                        </div>}}
-                </ContentData>
+                                <PreviewDrawer open={showPreview} onClose={this.handleShowPreview}>
+                                    {/*Always get row from query not from state to be up to date*/}
+                                    <ContentPreview selection={rows.find((row) => {
+                                        return selectedRow !== null && row.path === selectedRow.path
+                                    })}
+                                                    layoutQuery={layoutQuery}
+                                                    layoutQueryParams={layoutQueryParams}
+                                                    rowSelectionFunc={this.handleRowSelection}
+                                                    dxContext={dxContext}/>
+                                </PreviewDrawer>
+                            </React.Fragment>
+                        }}
+                    </ContentData>
+                </React.Fragment>
             }}/>
         }}</DxContext.Consumer>;
     }

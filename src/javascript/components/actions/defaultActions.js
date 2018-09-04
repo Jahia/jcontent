@@ -4,6 +4,7 @@ import CreateContentAction from "./CreateContentAction";
 import CreateContentOfTypeAction from "./CreateContentOfTypeAction";
 import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
+import Constants from "../constants";
 
 let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
@@ -39,7 +40,7 @@ let defaultActions = {
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.content",
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-        baseContentType: "jmix:editorialContent"
+        baseContentType: Constants.contentType
     },
     createFolder: {
         component: CreateContentOfTypeAction,

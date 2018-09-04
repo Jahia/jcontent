@@ -2,6 +2,7 @@ import gql from "graphql-tag";
 import {PredefinedFragments} from "@jahia/apollo-dx";
 import * as _ from 'lodash';
 import {replaceFragmentsInDocument} from "@jahia/apollo-dx/index";
+import Constants from "./constants";
 
 class BrowsingQueryHandler {
 
@@ -18,7 +19,7 @@ class BrowsingQueryHandler {
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
-            recursionTypesFilter: browseType[type].recursionTypesFilter || "jmix:editorialContent"
+            recursionTypesFilter: browseType[type].recursionTypesFilter || Constants.contentType
         };
     }
 
@@ -102,8 +103,8 @@ class Sql2SearchQueryHandler {
 }
 
 const browseType = {
-    pages: {recursionTypesFilter: ["jnt:page"], typeFilter: ["jmix:editorialContent"]},
-    contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: ["jmix:editorialContent"]}
+    pages: {recursionTypesFilter: ["jnt:page"], typeFilter: [Constants.contentType]},
+    contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType]}
 };
 
 const nodeFields = gql `

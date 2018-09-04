@@ -24,7 +24,7 @@ import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {Routes} from "./Routes";
 
 const actionComponents = {
-    action: CallAction,
+    callAction: CallAction,
     menuAction: MenuAction,
     routerAction : RouterAction,
     sideMenuAction : SideMenuAction

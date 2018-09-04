@@ -1,44 +1,27 @@
 import React from "react";
-import Collapse from "@material-ui/core/Collapse/Collapse";
 import Actions from "../Actions";
-import { List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
-import { ArrowForward } from '@material-ui/icons';
-import { withStyles } from '@material-ui/core/styles';
+import {List, Collapse} from '@material-ui/core';
+import {ArrowForward} from '@material-ui/icons';
 import {compose} from "react-apollo";
 import {translate} from "react-i18next";
-
-const styles = theme => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-    },
-    nested: {
-        paddingLeft: theme.spacing.unit * 4,
-    },
-});
+import CmLeftMenuItem from "../renderAction/CmLeftMenuItem";
 
 class SideMenuAction extends React.Component {
-    state = { open: false };
+    state = {open: false};
 
     handleClick = () => {
-        this.setState(state => ({ open: !state.open }));
+        this.setState(state => ({open: !state.open}));
     };
 
     render() {
-        const {menuId, children, context, classes, t, ...rest} = this.props;
+        const {menuId, children, context, ...rest} = this.props;
         return (<React.Fragment>
-                {children({...rest, onClick: this.handleClick})}
+                {children({...rest, onClick: this.handleClick, open: this.state.open})}
                 <Collapse in={this.state.open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <Actions menuId={menuId} context={{path: '', siteKey : context.siteKey, lang : context.lang}}>
+                        <Actions menuId={menuId} context={context}>
                             {(props) =>
-                                <ListItem button className={classes.nested} onClick={props.onClick}>
-                                    <ListItemIcon>
-                                        <ArrowForward/>
-                                    </ListItemIcon>
-                                    <ListItemText inset primary={t(props.labelKey)}/>
-                                </ListItem>
+                                <CmLeftMenuItem {...props} icon={<ArrowForward/>}/>
                             }
                         </Actions>
                     </List>
@@ -50,7 +33,6 @@ class SideMenuAction extends React.Component {
 
 SideMenuAction = compose(
     translate(),
-    withStyles(styles, { withTheme: true })
 )(SideMenuAction);
 
 

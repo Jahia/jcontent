@@ -1,14 +1,15 @@
 import React from "react";
-import { withStyles, IconButton, Drawer, Divider, List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import {withStyles, Paper, IconButton, Drawer, Divider, List} from '@material-ui/core';
 
 import {translate} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import classNames from "classnames";
 import {Menu, ChevronLeft, ChevronRight} from '@material-ui/icons';
 import Actions from "./Actions";
+import CmLeftMenuItem from "./renderAction/CmLeftMenuItem";
 
 const drawerWidth = 240;
-
+// TODO this styles should be provided by the theme / new structure when available
 const styles = theme => ({
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -69,50 +70,49 @@ const styles = theme => ({
 class CMLeftNavigation extends React.Component {
 
     state = {
-        open: true,
+        openDrawer: true,
     };
 
     handleDrawerOpen = () => {
-        this.setState({ open: true });
+        this.setState({openDrawer: true});
     };
 
     handleDrawerClose = () => {
-        this.setState({ open: false });
+        this.setState({openDrawer: false});
     };
 
     render() {
-        const { dxContext, classes, baseRoutePath, t } = this.props;
+        const {dxContext, classes} = this.props;
 
         return (
-                <div className={classes.root}>
-                    <Drawer
-                        variant="permanent"
-                        classes={{
-                            paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-                        }}
-                        open={this.state.open}
-                    >
-                        <div className={classes.toolbar}>
-                            <IconButton onClick={this.state.open ? this.handleDrawerClose : this.handleDrawerOpen}>
-                                {this.state.open ? <ChevronLeft/> : <ChevronRight/> }
-                            </IconButton>
-                        </div>
-                        <Divider/>
-                        <List component="nav">
-                            <Actions menuId="leftMenuActions" context={{path:'', siteKey: dxContext.siteKey, lang : dxContext.lang}}>
-                                {(props) =>
-                                    <ListItem button onClick={props.onClick}>
-                                        <ListItemIcon>
-                                            <Menu/>
-                                        </ListItemIcon>
-                                        <ListItemText inset primary={t(props.labelKey)}/>
-                                    </ListItem>
-                                }
-                            </Actions>
-                        </List>
-                        <Divider/>
-                    </Drawer>
-                </div>
+            <Paper elevation={0}>
+                <Drawer
+                    variant="permanent"
+                    classes={{
+                        paper: classNames(classes.drawerPaper, !this.state.openDrawer && classes.drawerPaperClose),
+                    }}
+                    open={this.state.openDrawer}
+                >
+                    <div className={classes.toolbar}>
+                        <IconButton onClick={this.state.openDrawer ? this.handleDrawerClose : this.handleDrawerOpen}>
+                            {this.state.openDrawer ? <ChevronLeft/> : <ChevronRight/>}
+                        </IconButton>
+                    </div>
+                    <Divider/>
+                    <List component="nav">
+                        <Actions menuId="leftMenuActions" context={{
+                            path: `/sites/${dxContext.siteKey}`,
+                            siteKey: dxContext.siteKey,
+                            lang: dxContext.lang
+                        }}>
+                            {(props) =>
+                                <CmLeftMenuItem {...props} icon={<Menu/>}/>
+                            }
+                        </Actions>
+                    </List>
+                    <Divider/>
+                </Drawer>
+            </Paper>
         );
     }
 }
@@ -120,7 +120,7 @@ class CMLeftNavigation extends React.Component {
 
 CMLeftNavigation = compose(
     translate(),
-    withStyles(styles, { withTheme: true })
+    withStyles(styles, {withTheme: true})
 )(CMLeftNavigation);
 
 export default CMLeftNavigation;

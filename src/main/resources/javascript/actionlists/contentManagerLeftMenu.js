@@ -33,7 +33,8 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         component: "sideMenuAction",
         menuId : "leftMenuManageActions",
         target : ["leftMenuActions"],
-        labelKey: 'label.contentManager.leftMenu.manage.title'
+        labelKey: 'label.contentManager.leftMenu.manage.title',
+        hasChildren: true,
     },
     bottomLeftMenu: {
         component: "sideMenuAction",

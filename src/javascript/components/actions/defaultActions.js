@@ -54,7 +54,7 @@ let defaultActions = {
     },
     translate: {
         priority: 2.51,
-        component: "action",
+        component: "callAction",
         call: () => alert("Translate !!!"),
         icon: "Edit",
         target: ["previewBar"],
@@ -167,7 +167,7 @@ let defaultActions = {
         iconButton: true
     },
     duplicate: {
-        component: "action",
+        component: CallAction,
         call: () => alert("not implemented yet"),
         icon: "Edit",
         target: ["additionalPreviewMenu"],
@@ -175,7 +175,7 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.duplicate"
     },
     copy: {
-        component: "action",
+        component: CallAction,
         call: () => alert("not implemented yet"),
         icon: "Edit",
         target: ["additionalPreviewMenu"],
@@ -183,7 +183,7 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.copy"
     },
     delete: {
-        component: "action",
+        component: CallAction,
         call: () => alert("not implemented yet"),
         icon: "Edit",
         target: ["additionalPreviewMenu"],

@@ -32,7 +32,7 @@ Example:
 
      edit: {
          priority: 2.5,
-         component: "action",
+         component: "callAction",
          call: (path, name) => window.parent.editContent(path, name, ['jnt:content'], ['nt:base']),
          icon: "Edit",
          target: ["previewBar", "tableActions"],
@@ -55,13 +55,13 @@ These properties are available either for the action and its display (the button
 action needs it, you can add your custom configurable property (like nodeTypes, enable, etc ..)
     
 Available registered Actions:
-- `Action` A simple action that execute the `call` function set on the action
+- `CallAction` A simple action that execute the `call` function set on the action
 - `MenuAction` An action that opens a menu containing all entries matching `menuId` as target
 
 To register an action, add it in the `actionComponents` object in `ContentManager.jsx`
     
     const actionComponents = {
-        action: Action,
+        callAction: CallAction,
         menuAction: MenuAction
     }
 Depending of the requirement, existing Action may not be enough and you might need to create your own. For example

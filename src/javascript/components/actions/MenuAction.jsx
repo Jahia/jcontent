@@ -20,12 +20,10 @@ class MenuAction extends Component {
 
         this.state = {
             anchor: null,
-            subMenu: null,
         };
 
         this.handleMenuClick = this.handleMenuClick.bind(this);
         this.handleMenuClose = this.handleMenuClose.bind(this);
-        this.handleCloseSubMenu = this.handleCloseSubMenu.bind(this);
     }
 
     handleMenuClick(event) {
@@ -36,33 +34,22 @@ class MenuAction extends Component {
         this.setState({anchor: null});
     };
 
-    handleCloseSubMenu(){
-        this.setState({
-            subMenu: false,
-            anchor: true,
-        });
-    }
-
-
     render() {
 
-        const {menuId, children, ...rest} = this.props;
+        const {menuId, children, menuClose, ...rest} = this.props;
         const {anchor} = this.state;
-
+        let handleMenuClose = menuClose || this.handleMenuClose;
         return (<span>
-            {children({...rest, onClick: this.handleMenuClick})}
+            {children({...rest, menuId: menuId, onClick: this.handleMenuClick})}
             <Menu
                 id={menuId}
                 anchorEl={anchor}
                 open={Boolean(anchor)}
                 onClose={() => this.handleMenuClose()}>
-                <Actions menuId={menuId} {...rest}>
+                <Actions menuId={menuId} {...rest} menuClose={handleMenuClose}>
                     {(props) => {
-                        if(menuId !== 'publishMenu'){
-                                return <CmMenuItem {...props} menuClose={this.handleCloseSubMenu}/>
-                        }else{
-                            return <CmMenuItem {...props} menuClose={this.handleMenuClose}/>
-                        } }}
+                        return <CmMenuItem {...props} menuClose={handleMenuClose}/>
+                        }}
                 </Actions>
             </Menu>
         </span>)

@@ -11,8 +11,8 @@ class CmMenuItem extends Component {
     }
 
     onClick(event) {
-        let {menuClose, onClick} = this.props;
-        menuClose();
+        let {menuClose, onClick, menuId} = this.props;
+        !menuId && menuClose();
         onClick(event);
     }
 

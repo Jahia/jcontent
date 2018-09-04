@@ -15,7 +15,7 @@ class Actions extends React.Component {
 
     render() {
 
-        const {menuId, context, children, t, notificationContext} = this.props;
+        const {menuId, context, children, t, notificationContext, ...rest} = this.props;
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
 
         return _.map(actionsToDisplayKeys, actionKey => {
@@ -56,7 +56,7 @@ class Actions extends React.Component {
                         ctx.requirementQueryHandler = requirementQueryHandler;
 
                         return (
-                            <ActionComponent {...action} context={ctx}>
+                            <ActionComponent {...rest} {...action} context={ctx}>
                                 {children}
                             </ActionComponent>
                         );

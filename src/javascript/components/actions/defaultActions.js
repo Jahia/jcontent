@@ -81,7 +81,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["previewBar", "tableMenuActions"],
+        target: ["previewBar", "tableMenuActions", "contentTreeMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publish",
         allSubtree: false,
@@ -94,7 +94,7 @@ let defaultActions = {
         component: "menuAction",
         menuId: "publishMenu",
         icon: "Publish",
-        target: ["previewBar", "tableMenuActions"],
+        target: ["previewBar", "tableMenuActions", "contentTreeMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.advancedPublish"
     },

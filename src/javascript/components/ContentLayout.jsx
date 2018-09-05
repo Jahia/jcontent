@@ -157,7 +157,7 @@ class ContentLayout extends React.Component {
                                                 contentTreeConfigs={contentTreeConfigs}
                                                 path={path}
                                                 rootPath={rootPath}
-                                                lang={dxContext.lang}
+                                                lang={dxContext.uilang}
                                                 user={dxContext.userName}
                                             />
                                         </Grid>

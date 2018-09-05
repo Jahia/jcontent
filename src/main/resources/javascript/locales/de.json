@@ -22,15 +22,15 @@
         "hide": "Navigationsbaum verbergen"
       },
       "contentTypes": {
-	      "any": "Jeglicher Content",      
-	      "error": {
-	           "loading": "Fehler während Content-Typen-Abfrage: {{details}}"
-	      }
+        "any": "Jeglicher Content",
+        "error": {
+          "loading": "Fehler während Content-Typen-Abfrage: {{details}}"
+        }
       },
       "create": {
-          "create": "Erstellen",
-          "content": "Neuer Content",
-          "contentFolder": "Neues Content Verzeichnis"
+        "create": "Erstellen",
+        "content": "Neuer Content",
+        "contentFolder": "Neues Content Verzeichnis"
       },
       "preview": {
         "show": "Vorschau öffnen",
@@ -50,11 +50,24 @@
       "browsePages": "Seiten durchsuchen",
       "browseFolders": "Ordner durchsuchen",
       "noResults": "Kein Ergebnis",
-      "title": "Gesamter Content",
+      "title": {
+        "browse": "Contents",
+        "browse-files": "Medien"
+      }
       "search": "Suche",
       "sql2Search": "SQL2 Suche",
       "quitSearch": "Suche beenden",
-      "showCurrentPath": "Zeige aktuellen Pfad"
+      "showCurrentPath": "Zeige aktuellen Pfad",
+      "leftMenu": {
+        "content": "Content",
+        "media": "Medien",
+        "savedSearches": "Gespeicherte Suchen",
+        "contentReports": "Content Reports",
+        "manage": {
+          "title": "Administration",
+          "users": {
+            "title": "User"
+          }
+        }
+      }
     }
-  }
-}

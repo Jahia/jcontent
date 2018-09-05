@@ -1,5 +1,6 @@
 import React from "react";
 import {Query} from 'react-apollo';
+import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem} from '@material-ui/core';
@@ -25,16 +26,21 @@ class LanguageSwitcher extends React.Component {
                   activeInEdit
                 }
               }
+              ...NodeCacheRequiredFields
             }
           }
-        }`;
+        }
+        ${PredefinedFragments.nodeCacheRequiredFields.gql}
+        `;
     }
 
-    onSelectLanguage = (lang, path, switchto, params) => {
+    onSelectLanguage = (lang, langLabel, path, switchto, params) => {
         //Switch language functionality
         let {dxContext} = this.props;
         //get part of path from /sites/sitekey/...
         let extractedPath = path.substring(path.indexOf('/' + dxContext.siteKey + '/' + dxContext.lang));
+        // switch edit mode linker language
+        window.parent.authoringApi.switchEditLinkerLanguage(lang, langLabel);
         //update language in url and update route.
         switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
     };
@@ -84,7 +90,7 @@ class LanguageSwitcher extends React.Component {
                                     return <LanguageSwitcherDisplay dxContext={dxContext}
                                                                     languages={displayableLanguages}
                                                                     loading={loading}
-                                                                    onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}/>;
+                                                                    onSelectLanguage={(lang, langLabel) => this.onSelectLanguage(lang, langLabel, path, switchto, params)}/>;
                                 } else {
                                     this.onSelectLanguage(languageExists, path, switchto, params);
                                     return null
@@ -138,7 +144,7 @@ class LanguageSwitcherDisplay extends React.Component {
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     {languages.map((lang, i) => {
-                        return <MenuItem key={lang.language} onClick={() => {onSelectLanguage(lang.language); this.handleClose();}}>{this.uppercaseFirst(lang.displayName)}</MenuItem>
+                        return <MenuItem key={lang.language} onClick={() => {onSelectLanguage(lang.language, lang.displayName); this.handleClose();}}>{this.uppercaseFirst(lang.displayName)}</MenuItem>
                     })}
                 </Menu>
             </div>

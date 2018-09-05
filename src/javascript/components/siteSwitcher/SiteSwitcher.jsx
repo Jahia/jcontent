@@ -1,5 +1,6 @@
 import React from "react";
 import {Query} from 'react-apollo';
+import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import {Button, Menu, MenuItem} from '@material-ui/core';
 import CmRouter from "../CmRouter";
@@ -9,22 +10,29 @@ class SiteSwitcher extends React.Component {
     constructor(props) {
         super(props);
         this.variables = {
-            workspace: 'LIVE',
-            query: "select * from [jnt:virtualsite] where isdescendantnode('/sites')"
+            query: "select * from [jnt:virtualsite] where ischildnode('/sites')"
         };
         this.query = gql `query SiteNodes($query: String!){
-            jcr(workspace: LIVE) {
-                result:nodesByQuery(query: $query, queryLanguage: SQL2) {
+            jcr {
+                result:nodesByQuery(query: $query) {
                     siteNodes:nodes {
-                        path
-                        uuid
                         name
                         hasPermission(permissionName: "contentManager")
                         displayName
+                        site {
+                            defaultLanguage
+                            languages {
+                                language
+                                activeInEdit
+                            }
+                        }
+                        ...NodeCacheRequiredFields
                     }
                 }
             }
-        }`;
+        }
+        ${PredefinedFragments.nodeCacheRequiredFields.gql}
+        `;
     }
 
     getSites(data) {
@@ -38,6 +46,33 @@ class SiteSwitcher extends React.Component {
         }
         return siteNodes;
     }
+    getTargetSiteLangguageForSwitch(siteNode, currentLang) {
+        let newLang = null;
+        let siteLanguages = siteNode.site.languages;
+        for (let i in siteLanguages) {
+            let lang = siteLanguages[i];
+            if (lang.activeInEdit && lang === currentLang) {
+                newLang = currentLang;
+                break;
+            }
+        }
+        if (newLang === null) {
+            // target site does not have current language -> we take the site's default one
+            newLang = siteNode.site.defaultLanguage;
+        }
+        return newLang;
+    }
+
+    onSelectSite = (siteNode, switchto) => {
+        let {dxContext} = this.props;
+        // calculate target language
+        let newLang = this.getTargetSiteLangguageForSwitch(siteNode, dxContext.lang);
+        // switch edit mode linker site
+        window.parent.authoringApi.switchSite(siteNode.name);
+        // switch to path
+        switchto('/' + siteNode.name +  "/" + newLang + "/browse");
+    };
+
     render() {
         let {dxContext} = this.props;
         return <CmRouter render={({path, params, goto, switchto}) => {
@@ -46,7 +81,7 @@ class SiteSwitcher extends React.Component {
                     ({error, loading, data}) => {
                         if (!loading) {
                             let sites = this.getSites(data);
-                            return <SiteSwitcherDisplay onSelectSite={(path) => switchto(path)} siteNodes={sites} dxContext={dxContext}/>
+                            return <SiteSwitcherDisplay onSelectSite={(siteNode) => this.onSelectSite(siteNode, switchto)} siteNodes={sites} dxContext={dxContext}/>
                         } else {
                             return <SiteSwitcherDisplay loading={true} dxContext={dxContext}/>
                         }
@@ -62,7 +97,6 @@ export default SiteSwitcher;
 class SiteSwitcherDisplay extends React.Component {
     constructor(props) {
         super(props);
-        this.reconstructPath = this.reconstructPath.bind(this);
         this.getCurrentSiteName = this.getCurrentSiteName.bind(this);
         this.state = {
             anchorEl: null
@@ -77,11 +111,6 @@ class SiteSwitcherDisplay extends React.Component {
         this.setState({ anchorEl: null });
     };
 
-    reconstructPath(siteNode) {
-        let {dxContext} = this.props;
-        let constructedPath = '/' + siteNode.name +  "/" + dxContext.lang + "/browse";
-        return constructedPath;
-    }
     getCurrentSiteName(siteNodes) {
         let {dxContext} = this.props;
         for (let i in siteNodes) {
@@ -110,7 +139,7 @@ class SiteSwitcherDisplay extends React.Component {
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}>
                     {siteNodes.map((siteNode, i) => {
-                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(this.reconstructPath(siteNode)); this.handleClose();}}>{siteNode.displayName}</MenuItem>
+                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode); this.handleClose();}}>{siteNode.displayName}</MenuItem>
                     })}
                 </Menu>
             </div>

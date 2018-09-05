@@ -6,11 +6,11 @@ import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
 
-let edit = (context) => window.parent.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
-let createContentFolder = (context) => window.parent.createContent(context.path, ["jnt:contentFolder"], false);
-let createFolder = (context) => window.parent.createContent(context.path, ["jnt:folder"], false);
-let createContent = (context) =>  window.parent.createContent(context.path, context.nodeTypes, context.includeSubTypes);
-let publish = (context) => window.parent.openPublicationWorkflow(context.uuid, context.allSubTree, context.allLanguages, context.checkForUnpublication);
+let edit = (context) => window.parent.authoringApi.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
+let createContentFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:contentFolder"], false);
+let createFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:folder"], false);
+let createContent = (context) =>  window.parent.authoringApi.createContent(context.path, context.nodeTypes, context.includeSubTypes);
+let publish = (context) => window.parent.authoringApi.openPublicationWorkflow(context.uuid, context.allSubTree, context.allLanguages, context.checkForUnpublication);
 
 let defaultActions = {
     edit: {

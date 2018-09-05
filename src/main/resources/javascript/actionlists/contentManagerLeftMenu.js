@@ -3,9 +3,6 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 1.0,
         component: "routerAction",
         mode : "browse",
-        modeParams : {
-            labelKey : "content"
-        },
         menuId: "leftMenuContentActions",
         target: ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.content',
@@ -14,12 +11,16 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 2.0,
         component: "routerAction",
         mode : "browse-files",
-        modeParams : {
-            labelKey : "media"
-        },
         menuId : "leftMenuMediaActions",
         target: ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.media',
+    },
+    savedSearchesLeftMenu: {
+        priority : 3.0,
+        component: "sideMenuAction",
+        menuId : "leftMenuSavedSearchActions",
+        target: ["leftMenuActions"],
+        labelKey: 'label.contentManager.leftMenu.savedSearches',
     },
     contentReportsLeftMenu : {
         priority : 4.0,

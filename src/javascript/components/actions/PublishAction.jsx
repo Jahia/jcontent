@@ -11,7 +11,7 @@ class PublishAction extends React.Component {
     render() {
         const {call, children, context, allLanguages, allSubTree, checkForUnpublication, ...rest} = this.props;
         let ctx = _.cloneDeep(context);
-        ctx.uuid = [context.uuid];
+        ctx.uuid = [context.node.uuid];
         ctx.allLanguages = allLanguages;
         ctx.allSubTree = allSubTree;
         ctx.checkForUnpublication = checkForUnpublication;

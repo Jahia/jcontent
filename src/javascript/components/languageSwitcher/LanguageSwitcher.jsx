@@ -32,11 +32,9 @@ class LanguageSwitcher extends React.Component {
 
     onSelectLanguage = (lang, path, switchto, params) => {
         //Switch language functionality
-        let {i18n, dxContext} = this.props;
+        let {dxContext} = this.props;
         //get part of path from /sites/sitekey/...
         let extractedPath = path.substring(path.indexOf('/' + dxContext.siteKey + '/' + dxContext.lang));
-        //change locale of ui
-        i18n.changeLanguage(lang);
         //update language in url and update route.
         switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
     };

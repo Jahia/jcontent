@@ -11,7 +11,8 @@ const constants = {
         "contents": "browse",
         "pages": "browse",
         "files": "browse-files"
-    }
+    },
+    locationModeIndex: 2
 };
 
 export default constants;

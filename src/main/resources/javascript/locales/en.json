@@ -98,7 +98,10 @@
       "browseFolders": "Browse Folders",
       "browseFiles": "Browse Files",
       "noResults": "No Results",
-      "title": "All Content",
+      "title": {
+        "browse": "Contents",
+        "browse-files": "Medias"
+      },
       "search": {
         "normalPrompt": "What are you looking for?",
         "sql2Prompt": "You are using SQL queries. Please visit the <0>Academy</0> for more info.",

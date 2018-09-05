@@ -355,6 +355,7 @@ class ActionButton extends React.Component {
 }
 
 CmSearchBarNormal = compose(
+    withNotifications(),
     translate(),
     withStyles(styles)
 )(CmSearchBarNormal);

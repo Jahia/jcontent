@@ -22,6 +22,7 @@ import RouterAction from "./actions/RouterAction";
 import SideMenuAction from "./actions/SideMenuAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {Routes} from "./Routes";
+import constants from "./constants";
 
 const actionComponents = {
     callAction: CallAction,
@@ -102,6 +103,7 @@ class ContentManager extends React.Component {
         let {dxContext, classes} = this.props;
         // register action components
         const isInFrame = window.top !== window;
+        let mode = "browse";
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
@@ -119,9 +121,10 @@ class ContentManager extends React.Component {
                                             <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
                                                 dxContext["siteKey"] = props.match.params.siteKey;
                                                 dxContext["lang"] = props.match.params.lang;
+                                                const currentMode = _.words(props.location.pathname, /[^\/]+/g)[constants.locationModeIndex];
                                                 return (
                                                     <ManagerLayout
-                                                        header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url}/>}
+                                                        header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url} mode={currentMode}/>}
                                                         leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
                                                     >
                                                         <Routes

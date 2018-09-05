@@ -4,7 +4,7 @@ import CmRouter from '../CmRouter';
 class RouterAction extends React.Component {
 
     handleClick = (path, params, goto, switchto, context, mode) => {
-        const url = "/" + context.siteKey + "/" + context.lang + "/" + mode + context.node.path;
+        const url = "/" + context.siteKey + "/" + context.lang + "/" + mode;
         switchto(url, '');
     };
 

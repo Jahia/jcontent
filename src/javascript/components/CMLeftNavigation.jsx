@@ -103,7 +103,7 @@ class CMLeftNavigation extends React.Component {
                         <Actions menuId="leftMenuActions" context={{
                             path: `/sites/${dxContext.siteKey}`,
                             siteKey: dxContext.siteKey,
-                            lang: dxContext.uilang
+                            lang: dxContext.lang
                         }}>
                             {(props) =>
                                 <CmLeftMenuItem {...props} icon={<Menu/>}/>

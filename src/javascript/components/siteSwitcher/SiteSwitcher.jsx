@@ -7,6 +7,7 @@ import CmRouter from "../CmRouter";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class SiteSwitcher extends React.Component {
+
     constructor(props) {
         super(props);
         this.variables = {
@@ -46,7 +47,8 @@ class SiteSwitcher extends React.Component {
         }
         return siteNodes;
     }
-    getTargetSiteLangguageForSwitch(siteNode, currentLang) {
+
+    getTargetSiteLanguageForSwitch(siteNode, currentLang) {
         let newLang = null;
         let siteLanguages = siteNode.site.languages;
         for (let i in siteLanguages) {
@@ -66,7 +68,7 @@ class SiteSwitcher extends React.Component {
     onSelectSite = (siteNode, switchto) => {
         let {dxContext} = this.props;
         // calculate target language
-        let newLang = this.getTargetSiteLangguageForSwitch(siteNode, dxContext.lang);
+        let newLang = this.getTargetSiteLanguageForSwitch(siteNode, dxContext.lang);
         // switch edit mode linker site
         window.parent.authoringApi.switchSite(siteNode.name);
         // switch to path
@@ -95,6 +97,7 @@ class SiteSwitcher extends React.Component {
 export default SiteSwitcher;
 
 class SiteSwitcherDisplay extends React.Component {
+
     constructor(props) {
         super(props);
         this.getCurrentSiteName = this.getCurrentSiteName.bind(this);
@@ -127,17 +130,12 @@ class SiteSwitcherDisplay extends React.Component {
             return <span>Loading...</span>
         } else {
             return <div>
-                    <Button aria-owns={anchorEl ? 'site-switcher' : null}
-                        aria-haspopup="true"
-                        onClick={this.handleClick}>
-                        {this.getCurrentSiteName(siteNodes)}
-                        &nbsp;
-                        <FontAwesomeIcon icon="chevron-down"/>
-                    </Button>
-                <Menu id="site-switcher"
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={this.handleClose}>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick}>
+                    {this.getCurrentSiteName(siteNodes)}
+                    &nbsp;
+                    <FontAwesomeIcon icon="chevron-down"/>
+                </Button>
+                <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map((siteNode, i) => {
                         return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode); this.handleClose();}}>{siteNode.displayName}</MenuItem>
                     })}
@@ -146,4 +144,3 @@ class SiteSwitcherDisplay extends React.Component {
         }
     }
 }
-

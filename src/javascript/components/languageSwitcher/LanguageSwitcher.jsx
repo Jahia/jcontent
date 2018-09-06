@@ -35,11 +35,13 @@ class LanguageSwitcher extends React.Component {
         `;
     }
 
-    onSelectLanguage = (lang, path, switchto, params) => {
+    onSelectLanguage = (lang, langLabel, path, switchto, params) => {
         //Switch language functionality
         let {dxContext} = this.props;
         //get part of path from /sites/sitekey/...
         let extractedPath = path.substring(path.indexOf('/' + dxContext.siteKey + '/' + dxContext.lang));
+        //update the language name in the context
+        dxContext.langName = langLabel;
         // switch edit mode linker language
         window.parent.authoringApi.switchLanguage(lang);
         //update language in url and update route.
@@ -66,6 +68,7 @@ class LanguageSwitcher extends React.Component {
     };
 
     parseSiteLanguages(data) {
+        let {dxContext} = this.props;
         let parsedSiteLanguages = [];
         if (data && data.jcr != null) {
             let siteLanguages = data.jcr.result.site.languages;
@@ -75,6 +78,7 @@ class LanguageSwitcher extends React.Component {
                 }
             }
         }
+        dxContext.siteLanguages = parsedSiteLanguages;
         return parsedSiteLanguages;
     }
 
@@ -92,7 +96,7 @@ class LanguageSwitcher extends React.Component {
                                         dxContext={dxContext}
                                         languages={displayableLanguages}
                                         loading={loading}
-                                        onSelectLanguage={(lang) => this.onSelectLanguage(lang, path, switchto, params)}
+                                        onSelectLanguage={(lang, langLabel) => this.onSelectLanguage(lang, langLabel, path, switchto, params)}
                                     />;
                                 } else {
                                     this.onSelectLanguage(languageExists, path, switchto, params);
@@ -143,7 +147,7 @@ class LanguageSwitcherDisplay extends React.Component {
                 </Button>
                 <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {languages.map((lang, i) => {
-                        return <MenuItem key={lang.language} onClick={() => {onSelectLanguage(lang.language); this.handleClose();}}>
+                        return <MenuItem key={lang.language} onClick={() => {onSelectLanguage(lang.language, lang.displayName); this.handleClose();}}>
                             {this.uppercaseFirst(lang.displayName)}
                         </MenuItem>;
                     })}

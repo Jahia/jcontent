@@ -9,17 +9,29 @@ class PublishAction extends React.Component {
     }
 
     render() {
-        const {call, children, context, allLanguages, allSubTree, checkForUnpublication, ...rest} = this.props;
-        let ctx = _.cloneDeep(context);
-        ctx.uuid = [context.node.uuid];
-        ctx.allLanguages = allLanguages;
-        ctx.allSubTree = allSubTree;
-        ctx.checkForUnpublication = checkForUnpublication;
-        return <DxContext.Consumer>{dxContext => (
-            children({...rest,
-                labelParams: {language: dxContext.langName},
-                onClick: () => call(ctx)})
-        )}</DxContext.Consumer>;
+        return <DxContext.Consumer>{dxContext => {
+            const {call, children, context, allLanguages, allSubTree, checkForUnpublication, checkIfLanguagesMoreThanOne, ...rest} = this.props;
+            let ctx = _.cloneDeep(context);
+            ctx.uuid = [context.node.uuid];
+            ctx.allLanguages = allLanguages;
+            ctx.allSubTree = allSubTree;
+            ctx.checkForUnpublication = checkForUnpublication;
+            if(checkIfLanguagesMoreThanOne){
+                if(dxContext.siteLanguages.length > 1){
+                    return children({...rest,
+                        labelParams: {language: dxContext.langName},
+                        onClick: () => call(ctx)
+                    })
+                }else{
+                    return null;
+                }
+            }else{
+                return children({...rest,
+                    labelParams: {language: dxContext.langName},
+                    onClick: () => call(ctx)
+                })
+            }
+        }}</DxContext.Consumer>;
     }
 
 }

@@ -108,6 +108,7 @@ let defaultActions = {
         allLanguages: true,
         checkForUnpublication: false,
         hideOnNodeTypes: ["nt:file", "nt:folder"],
+        checkIfLanguagesMoreThanOne: true,
         labelKey: "label.contentManager.contentPreview.publishInAllLanguages"
     },
     publishAll: {
@@ -132,6 +133,7 @@ let defaultActions = {
         allLanguages: true,
         checkForUnpublication: false,
         hideOnNodeTypes: ["nt:file", "nt:folder"],
+        checkIfLanguagesMoreThanOne: true,
         labelKey: "label.contentManager.contentPreview.publishAllInAllLanguages"
     },
     unPublish: {
@@ -156,6 +158,7 @@ let defaultActions = {
         allLanguages: true,
         checkForUnpublication: true,
         hideOnNodeTypes: ["jnt:virtualsite"],
+        checkIfLanguagesMoreThanOne: true,
         labelKey: "label.contentManager.contentPreview.unpublishInAllLanguages"
     },
     additionalPreview: {

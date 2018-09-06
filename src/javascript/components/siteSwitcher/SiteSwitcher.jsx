@@ -39,7 +39,7 @@ class SiteSwitcher extends React.Component {
     getSites(data) {
         let siteNodes = [];
         if (data && data.jcr.result != null) {
-            for(let i in data.jcr.result.siteNodes) {
+            for (let i in data.jcr.result.siteNodes) {
                 if (data.jcr.result.siteNodes[i].hasPermission) {
                     siteNodes.push(data.jcr.result.siteNodes[i]);
                 }
@@ -53,13 +53,12 @@ class SiteSwitcher extends React.Component {
         let siteLanguages = siteNode.site.languages;
         for (let i in siteLanguages) {
             let lang = siteLanguages[i];
-            if (lang.activeInEdit && lang === currentLang) {
+            if (lang.activeInEdit && lang.language === currentLang) {
                 newLang = currentLang;
                 break;
             }
         }
         if (newLang === null) {
-            // target site does not have current language -> we take the site's default one
             newLang = siteNode.site.defaultLanguage;
         }
         return newLang;
@@ -67,11 +66,8 @@ class SiteSwitcher extends React.Component {
 
     onSelectSite = (siteNode, switchto) => {
         let {dxContext} = this.props;
-        // calculate target language
         let newLang = this.getTargetSiteLanguageForSwitch(siteNode, dxContext.lang);
-        // switch edit mode linker site
-        window.parent.authoringApi.switchSite(siteNode.name);
-        // switch to path
+        window.parent.authoringApi.switchSite(siteNode.name, newLang);
         switchto('/' + siteNode.name +  "/" + newLang + "/browse");
     };
 

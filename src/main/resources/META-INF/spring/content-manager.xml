@@ -25,7 +25,7 @@
             <bean class="org.jahia.ajax.gwt.client.widget.toolbar.action.OpenWindowActionItem"/>
         </property>
         <property name="titleKey" value="label.contentmanager"/>
-        <property name="icon" value="content-manager-1616"/>
+        <property name="icon" value="/modules/content-manager/icons/app-document.svg"/>
         <property name="requiredPermission" value="contentManager"/>
         <property name="properties">
             <list>

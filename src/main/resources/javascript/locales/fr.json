@@ -50,7 +50,12 @@
       "browsePages": "Parcourir les pages",
       "browseFolders": "Parcourir les répertoires",
       "noResults": "Aucun résultat",
-      "title": "Tous les contenus",
+      "title": {
+        "browse": "Contenu",
+        "browse-files": "Média",
+        "search": "Recherche",
+        "sql2Search": "Recherche"
+      },
       "search": "Recherche",
       "sql2Search": "SQL2 Recherche",
       "quitSearch": "Quitter la recherche",

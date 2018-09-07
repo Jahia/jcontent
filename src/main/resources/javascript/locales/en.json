@@ -100,7 +100,9 @@
       "noResults": "No Results",
       "title": {
         "browse": "Content",
-        "browse-files": "Media"
+        "browse-files": "Media",
+        "search": "Search",
+        "sql2Search": "Search"
       },
       "search": {
         "normalPrompt": "What are you looking for?",

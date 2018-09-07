@@ -52,7 +52,9 @@
       "noResults": "Kein Ergebnis",
       "title": {
         "browse": "Content",
-        "browse-files": "Medien"
+        "browse-files": "Medien",
+        "search": "Suche",
+        "sql2Search": "Suche"
       },
       "search": "Suche",
       "sql2Search": "SQL2 Suche",
@@ -71,3 +73,5 @@
         }
       }
     }
+  }
+}

@@ -20,14 +20,14 @@ class CmRouter extends React.Component {
         if (!search || search == '') {
             return {};
         }
-        return JSON.parse(decodeURIComponent(search.substring(PARAMS_KEY.length).replace(/\+/g, '%20')));
+        return JSON.parse(decodeURIComponent(decodeURIComponent(search.substring(PARAMS_KEY.length).replace(/\+/g, '%20'))));
     };
 
     // This method push to the browser url the provided location
     mapQueryToUrl = (match, history, location, dxContext) => {
         return {
             goto: (path, params) => {
-                let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
+                let queryString = params ? PARAMS_KEY + encodeURIComponent(encodeURIComponent(JSON.stringify(params))) : '';
                 path = _.replace(path, `/sites/${dxContext.siteKey}`, '');
                 if (path.startsWith(SITE_ROOT)) {
                     path = `/${dxContext.siteKey}${path.substring(SITE_ROOT.length)}`;
@@ -38,7 +38,7 @@ class CmRouter extends React.Component {
             },
             switchto: (url, params) => {
                 //Update history with provided path (This is primarily used for changing the current selected site)
-                let queryString = params ? PARAMS_KEY + encodeURIComponent(JSON.stringify(params)) : '';
+                let queryString = params ? PARAMS_KEY + encodeURIComponent(encodeURIComponent(JSON.stringify(params))) : '';
                 history.push(url + queryString);
             }
         }

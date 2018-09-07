@@ -85,7 +85,7 @@ class PublicationStatusComponent extends Component {
                     </div>
                 </InfoButton>
                 <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }>
-                    <div className={ classes.infoContainer } style={{paddingLeft: 20}}>
+                    <div className={ classes.infoContainer } style={{paddingLeft: 20}} data-cm-role={'publication-info'} data-cm-value={node.publicationStatus}>
                         { publicationStatus.geti18nDetailsMessage(node, t, i18n.language ) }
                     </div>
                 </div>

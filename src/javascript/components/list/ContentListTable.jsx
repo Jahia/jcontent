@@ -202,7 +202,7 @@ class ContentListTable extends React.Component {
                                             selected={isSelected}
                                             data-cm-role="table-content-list-row"
                                         >
-                                            <TableCell className={classes.publicationCell}>
+                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
                                             {columnData.map(column => {
@@ -226,9 +226,9 @@ class ContentListTable extends React.Component {
                                                     </TableCell>;
                                                 }
                                             })}
-                                            <TableCell>
+                                            <TableCell data-cm-role={'table-content-list-cell-action-menu'}>
                                                 <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name}}>
-                                                    {(props) => <CmIconButton {...props}/>}
+                                                    {(props) => <CmIconButton {...props} cmRole={'table-content-list-action-menu'}/>}
                                                 </Actions>
                                             </TableCell>
                                         </TableRow>

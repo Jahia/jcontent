@@ -39,7 +39,7 @@ class MenuAction extends Component {
         const {menuId, children, menuClose, ...rest} = this.props;
         const {anchor} = this.state;
         let handleMenuClose = menuClose || this.handleMenuClose;
-        return (<span>
+        return (<span data-cm-role={'menu-action-' + menuId}>
             {children({...rest, menuId: menuId, onClick: this.handleMenuClick})}
             <Menu
                 id={menuId}

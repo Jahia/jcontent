@@ -137,8 +137,8 @@
     i18next-xhr-backend "^1.5.1"
 
 "@jahia/icons@^1.0.0-beta.20180618091411":
-  version "1.0.0-beta.20180803133828"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/icons/-/icons-1.0.0-beta.20180803133828.tgz#ea518f5d1667eb913e8da581ee9f01b5ddb10e41"
+  version "1.0.0-beta.20180907081143"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2ficons/-/icons-1.0.0-beta.20180907081143.tgz#c11ecfad55dd89abea3b4b7a5b61e29d68be6b2b"
   dependencies:
     "@material-ui/core" "^1.2.0"
     react "^16.4.1"
@@ -156,8 +156,8 @@
     react-apollo "^2.1.4"
 
 "@jahia/react-material@^1.0.0-beta.20180710133148":
-  version "1.0.0-beta.20180803133830"
-  resolved "https://devtools.jahia.com/nexus3/repository/npm-internal/@jahia/react-material/-/react-material-1.0.0-beta.20180803133830.tgz#d4eeff35e4f345d5b54b526de1558bdd33fbfd00"
+  version "1.0.0-beta.20180907081145"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20180907081145.tgz#f30f9a767e7a4a59566cc1022ce268ea70a5deb6"
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20180618091411"
     "@material-ui/core" "^1.2.0"
@@ -166,6 +166,7 @@
     prop-types "^15.6.1"
     react-dom "^16.4.0"
     react-i18next "^7.6.1"
+    react-select "^2.0.0"
 
 "@jahia/redux@^1.0.0-beta.20180628145924":
   version "1.0.0-beta.20180803133829"
@@ -3310,9 +3311,15 @@ iconv-lite@0.4.19:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
 
-iconv-lite@^0.4.17, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
+iconv-lite@^0.4.17, iconv-lite@^0.4.4:
   version "0.4.23"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.23.tgz#297871f63be507adcfbfca715d0cd0eed84e9a63"
+  dependencies:
+    safer-buffer ">= 2.1.2 < 3"
+
+iconv-lite@~0.4.13:
+  version "0.4.24"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
@@ -5376,9 +5383,17 @@ react-file-viewer@^0.5.0:
     three "0.85.2"
     xlsx "^0.10.1"
 
-react-i18next@^7.3.1, react-i18next@^7.6.1:
+react-i18next@^7.3.1:
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-7.10.1.tgz#9e119c15970eb401b9ef178336a2e09dd120bb15"
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+    html-parse-stringify2 "2.0.1"
+    prop-types "^15.6.0"
+
+react-i18next@^7.6.1:
+  version "7.11.1"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-7.11.1.tgz#eacaec8357f5557eaf290eae198025fe0a682603"
   dependencies:
     hoist-non-react-statics "^2.3.1"
     html-parse-stringify2 "2.0.1"
@@ -5494,7 +5509,7 @@ react@^15.5.4:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react@^16.2.0, react@^16.4.0, react@^16.4.1:
+react@^16.2.0, react@^16.4.0:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.4.2.tgz#2cd90154e3a9d9dd8da2991149fdca3c260e129f"
   dependencies:
@@ -5502,6 +5517,15 @@ react@^16.2.0, react@^16.4.0, react@^16.4.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react@^16.4.1:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.5.0.tgz#f2c1e754bf9751a549d9c6d9aca41905beb56575"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    schedule "^0.3.0"
 
 read-chunk@^2.1.0:
   version "2.1.0"
@@ -5832,6 +5856,12 @@ sax@^1.2.4, sax@~1.2.1:
 sax@~1.1.1:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
+
+schedule@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
+  dependencies:
+    object-assign "^4.1.1"
 
 schema-utils@^0.3.0:
   version "0.3.0"

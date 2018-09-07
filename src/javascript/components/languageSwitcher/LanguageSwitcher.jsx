@@ -140,7 +140,7 @@ class LanguageSwitcherDisplay extends React.Component {
             return <span>Loading...</span>
         } else {
             return <div>
-                <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" onClick={this.handleClick}>
+                <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'language-switcher'}>
                     {dxContext.lang}
                     &nbsp;
                     <FontAwesomeIcon icon="chevron-down"/>

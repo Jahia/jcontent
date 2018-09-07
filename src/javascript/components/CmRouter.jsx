@@ -8,6 +8,10 @@ const PARAMS_KEY = "?params=";
 
 class CmRouter extends React.Component {
 
+    // NOTE: We have do encode/decode the params part of the URL twice to avoid issues with Firefox that automatically
+    // decodes some symbols like curly brackets and double quotes when displaying them in the address bar and does not
+    // encode them again when sending to the server (when the user changes the URL manually and presses Enter, for example).
+
     mapUrlToQuery = (match, location, dxContext) => {
         return {
             path: '/sites/' + dxContext.siteKey + _.replace(location.pathname, match.path, ''),

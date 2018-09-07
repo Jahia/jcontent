@@ -51,9 +51,9 @@
       "browseFolders": "Ordner durchsuchen",
       "noResults": "Kein Ergebnis",
       "title": {
-        "browse": "Contents",
+        "browse": "Content",
         "browse-files": "Medien"
-      }
+      },
       "search": "Suche",
       "sql2Search": "SQL2 Suche",
       "quitSearch": "Suche beenden",

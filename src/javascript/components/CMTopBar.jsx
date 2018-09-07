@@ -41,7 +41,7 @@ class CMTopBar extends React.Component {
                 <BurgerMenuButton/>
                 <div className={classes.head}>
                     <SiteSwitcher key={"siteSwitcher_" + dxContext.siteKey + "_" + dxContext.lang} dxContext={dxContext}/>
-                    <Typography variant="display1" color="inherit">{modeTitle}</Typography>
+                    <Typography variant="display1" color="inherit" data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
                     <LanguageSwitcher key={"languageSwitcher_" + dxContext.siteKey + "_" + dxContext.lang} dxContext={dxContext}/>
                 </div>
 

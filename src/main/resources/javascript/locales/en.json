@@ -99,8 +99,8 @@
       "browseFiles": "Browse Files",
       "noResults": "No Results",
       "title": {
-        "browse": "Contents",
-        "browse-files": "Medias"
+        "browse": "Content",
+        "browse-files": "Media"
       },
       "search": {
         "normalPrompt": "What are you looking for?",

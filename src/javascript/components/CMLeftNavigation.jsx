@@ -85,7 +85,7 @@ class CMLeftNavigation extends React.Component {
         const {dxContext, classes} = this.props;
 
         return (
-            <Paper elevation={0}>
+            <Paper elevation={0} data-cm-role={'left-navigation'}>
                 <Drawer
                     variant="permanent"
                     classes={{
@@ -94,12 +94,12 @@ class CMLeftNavigation extends React.Component {
                     open={this.state.openDrawer}
                 >
                     <div className={classes.toolbar}>
-                        <IconButton onClick={this.state.openDrawer ? this.handleDrawerClose : this.handleDrawerOpen}>
+                        <IconButton onClick={this.state.openDrawer ? this.handleDrawerClose : this.handleDrawerOpen} data-cm-role={'left-navigation-toggle'}>
                             {this.state.openDrawer ? <ChevronLeft/> : <ChevronRight/>}
                         </IconButton>
                     </div>
                     <Divider/>
-                    <List component="nav">
+                    <List component="nav" data-cm-role={'left-navigation-menu'}>
                         <Actions menuId="leftMenuActions" context={{
                             path: `/sites/${dxContext.siteKey}`,
                             siteKey: dxContext.siteKey,

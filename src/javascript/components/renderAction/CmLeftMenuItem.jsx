@@ -20,7 +20,7 @@ class CmLeftMenuItem extends React.Component {
                 <ListItemIcon>
                     {icon}
                 </ListItemIcon>
-                <ListItemText inset primary={t(labelKey)}/>
+                <ListItemText inset primary={t(labelKey)} primaryTypographyProps={{'data-cm-role': 'left-menu-item-text'}}/>
                 {hasChildren ? (open ? <ExpandMore/> : <ChevronLeft/>) : ""}
             </ListItem>
         )

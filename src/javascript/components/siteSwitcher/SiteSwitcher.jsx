@@ -10,10 +10,12 @@ class SiteSwitcher extends React.Component {
 
     constructor(props) {
         super(props);
+        let {dxContext} = this.props;
         this.variables = {
-            query: "select * from [jnt:virtualsite] where ischildnode('/sites')"
+            query: "select * from [jnt:virtualsite] where ischildnode('/sites')",
+            language: dxContext.uilang
         };
-        this.query = gql `query SiteNodes($query: String!){
+        this.query = gql `query SiteNodes($query: String!, $language: String!){
             jcr {
                 result:nodesByQuery(query: $query) {
                     siteNodes:nodes {
@@ -23,6 +25,7 @@ class SiteSwitcher extends React.Component {
                         site {
                             defaultLanguage
                             languages {
+                                displayName(language: $language)
                                 language
                                 activeInEdit
                             }
@@ -48,27 +51,38 @@ class SiteSwitcher extends React.Component {
         return siteNodes;
     }
 
-    getTargetSiteLanguageForSwitch(siteNode, currentLang) {
+    getTargetSiteLanguageForSwitch(siteNode, currentLang, currentLangLabel) {
         let newLang = null;
         let siteLanguages = siteNode.site.languages;
         for (let i in siteLanguages) {
             let lang = siteLanguages[i];
             if (lang.activeInEdit && lang.language === currentLang) {
-                newLang = currentLang;
+                newLang = {
+                    lang: currentLang,
+                    langLabel: currentLangLabel
+                };
                 break;
+            }else if(siteNode.site.defaultLanguage === lang.language){
+                newLang = {
+                    lang: lang.language,
+                    langLabel: lang.displayName,
+                }
             }
         }
         if (newLang === null) {
-            newLang = siteNode.site.defaultLanguage;
+            newLang = {
+                lang: siteNode.site.defaultLanguage,
+            }
         }
         return newLang;
     }
 
     onSelectSite = (siteNode, switchto) => {
         let {dxContext} = this.props;
-        let newLang = this.getTargetSiteLanguageForSwitch(siteNode, dxContext.lang);
-        window.parent.authoringApi.switchSite(siteNode.name, newLang);
-        switchto('/' + siteNode.name +  "/" + newLang + "/browse");
+        let newLang = this.getTargetSiteLanguageForSwitch(siteNode, dxContext.lang, dxContext.langName);
+        dxContext.langName = newLang.langLabel;
+        window.parent.authoringApi.switchSite(siteNode.name, newLang.lang);
+        switchto('/' + siteNode.name +  "/" + newLang.lang + "/browse");
     };
 
     render() {

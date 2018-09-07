@@ -16,21 +16,13 @@ class PublishAction extends React.Component {
             ctx.allLanguages = allLanguages;
             ctx.allSubTree = allSubTree;
             ctx.checkForUnpublication = checkForUnpublication;
-            if(checkIfLanguagesMoreThanOne){
-                if(dxContext.siteLanguages.length > 1){
-                    return children({...rest,
-                        labelParams: {language: dxContext.langName},
-                        onClick: () => call(ctx)
-                    })
-                }else{
-                    return null;
-                }
-            }else{
-                return children({...rest,
+            const display = !checkIfLanguagesMoreThanOne || (checkIfLanguagesMoreThanOne && dxContext.siteLanguages.length > 1);
+            return display ? children({
+                    ...rest,
                     labelParams: {language: dxContext.langName},
                     onClick: () => call(ctx)
-                })
-            }
+                }) : null;
+
         }}</DxContext.Consumer>;
     }
 

@@ -8,7 +8,7 @@ import {
     GetNodeAndChildrenByPathQuery
 } from "./gqlQueries";
 import * as _ from "lodash";
-import {withNotifications} from '@jahia/react-material';
+import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import CmRouter from './CmRouter';
 import {DxContext} from "./DxContext";
 import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
@@ -102,6 +102,10 @@ class ContentData extends React.Component {
                             return null;
                         }
 
+                        if (loading) {
+                            return <ProgressOverlay/>;
+                        }
+
                         let rows = [];
                         let totalCount = 0;
                         notificationContext.closeNotification();
@@ -134,6 +138,7 @@ class ContentData extends React.Component {
                                 }
                             });
                         }
+
                         return children({
                             rows: rows,
                             totalCount: totalCount,

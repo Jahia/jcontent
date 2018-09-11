@@ -19,6 +19,7 @@ import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
 import RouterAction from "./actions/RouterAction";
 import SideMenuAction from "./actions/SideMenuAction";
+import WorkflowsAction from "./actions/WorkflowsAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {Routes} from "./Routes";
 import constants from "./constants";
@@ -27,7 +28,8 @@ const actionComponents = {
     callAction: CallAction,
     menuAction: MenuAction,
     routerAction : RouterAction,
-    sideMenuAction : SideMenuAction
+    sideMenuAction : SideMenuAction,
+    WorkflowsAction : WorkflowsAction
 };
 
 class ContentManager extends React.Component {

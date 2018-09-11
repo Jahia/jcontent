@@ -1,3 +1,6 @@
+
+let openWorkflows = (context) => window.parent.authoringApi.openWorkflowsEngine();
+
 contextJsParameters['config'].actions = Object.assign(contextJsParameters['config'].actions, {
     contentLeftMenu: {
         priority : 1.0,
@@ -44,5 +47,12 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         requiredPermission: "",
         labelKey: 'label.contentManager.bottomLeftMenu',
     },
-
+    WorkflowsLeftMenu: {
+        priority : 6.0,
+        component: "WorkflowsAction",
+        call: openWorkflows,
+        requiredPermission: "",
+        target: ["leftMenuActions"],
+        labelKey: 'label.contentManager.leftMenu.workflows',
+    },
 });

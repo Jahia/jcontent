@@ -115,7 +115,7 @@ class CmSearchBarNormal extends React.Component {
 
     onSearch(path, params, contentType, goto, dxContext) {
 
-        let searchTerms = this.search.current.value;
+        let searchTerms = this.search.current ? this.search.current.value : params.searchTerms;
         if (!searchTerms) {
             return;
         }

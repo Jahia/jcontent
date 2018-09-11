@@ -1,15 +1,14 @@
 import React from "react";
 import {MuiThemeProvider} from "@material-ui/core";
-import {NotificationProvider, legacyTheme as theme} from "@jahia/react-material";
+import {NotificationProvider, anthraciteDarkTheme as theme} from "@jahia/react-material";
 import {client} from "@jahia/apollo-dx";
 import {getI18n} from "@jahia/i18next";
 import {I18n, I18nextProvider} from "react-i18next";
 import {Route} from "react-router";
 import {BrowserRouter} from "react-router-dom";
-import {ApolloProvider, ApolloConsumer} from "react-apollo";
+import {ApolloProvider } from "react-apollo";
 import ManagerLayout from "./ManagerLayout";
 import CMLeftNavigation from "./CMLeftNavigation";
-import CMTopBar from "./CMTopBar";
 import * as _ from "lodash";
 import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
@@ -21,7 +20,6 @@ import RouterAction from "./actions/RouterAction";
 import SideMenuAction from "./actions/SideMenuAction";
 import WorkflowsAction from "./actions/WorkflowsAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
-import {Routes} from "./Routes";
 import constants from "./constants";
 
 const actionComponents = {
@@ -125,24 +123,21 @@ class ContentManager extends React.Component {
                                                 const currentMode = _.words(props.location.pathname, /[^\/]+/g)[constants.locationModeIndex];
                                                 return (
                                                     <ManagerLayout
-                                                        header={<CMTopBar dxContext={dxContext} baseRoutePath={props.match.url} mode={currentMode}/>}
                                                         leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
                                                     >
-                                                        <Routes
-                                                            basePath={props.match.url}
-                                                            browseRender={props =>
-                                                                <ContentLayout contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            }
-                                                            browseFilesRender={props =>
-                                                                <ContentLayout contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            }
-                                                            searchRender={props =>
-                                                                <ContentLayout contentSource="search"  key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            }
-                                                            sql2SearchRender={props =>
-                                                                <ContentLayout contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                            }
-                                                        />
+                                                        <Route path={`${props.match.url}/browse`} render={props =>
+                                                            <ContentLayout mode={"browse"} contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/browse-files`} render={props =>
+                                                            <ContentLayout mode={"browse-files"} contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/search`} render={props =>
+                                                            <ContentLayout mode={"search"} contentSource="search"  key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/sql2Search`} render={props =>
+                                                            <ContentLayout mode={"sql2Search"} contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                        }/>
+
                                                     </ManagerLayout>
                                                 );
                                             }}/>

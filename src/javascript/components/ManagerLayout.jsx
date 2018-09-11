@@ -2,7 +2,6 @@ import React from "react";
 import {
     withStyles,
     Grid,
-    AppBar
 } from '@material-ui/core';
 import {compose} from "react-apollo/index";
 
@@ -44,12 +43,9 @@ class ManagerLayout extends React.Component {
     }
 
     render() {
-        let {header, leftSide, children } = this.props;
+        let { leftSide, children } = this.props;
         return (
             <Grid container spacing={0}>
-                <Grid item xs={12}>
-                    <AppBar position="static">{header}</AppBar>
-                </Grid>
                 <Grid item xs={12}>
                     <Main leftSide={leftSide}>
                         {children}

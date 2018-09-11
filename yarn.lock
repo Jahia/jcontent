@@ -5392,8 +5392,8 @@ react-i18next@^7.3.1:
     prop-types "^15.6.0"
 
 react-i18next@^7.6.1:
-  version "7.11.1"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-7.11.1.tgz#eacaec8357f5557eaf290eae198025fe0a682603"
+  version "7.12.0"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-7.12.0.tgz#edaed1593fdfb34ddb47e4faf409cb36c8220d80"
   dependencies:
     hoist-non-react-statics "^2.3.1"
     html-parse-stringify2 "2.0.1"
@@ -6761,8 +6761,8 @@ webpack@^4.7.0:
     webpack-sources "^1.0.1"
 
 whatwg-fetch@>=0.10.0:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
 
 whet.extend@~0.9.9:
   version "0.9.9"

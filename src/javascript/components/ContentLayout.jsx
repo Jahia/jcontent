@@ -117,7 +117,7 @@ class ContentLayout extends React.Component {
                         <Grid item xs={GRID_SIZE} className={classes.topBar}>
                             <CMTopBar dxContext={dxContext} mode={mode}/>
                         </Grid>
-                        <Grid container xs={GRID_SIZE} direction="row" alignItems="center">
+                        <Grid container spacing={0} direction="row" alignItems="center">
                             <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                                 <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
                             </Grid>

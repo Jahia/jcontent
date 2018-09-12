@@ -62,7 +62,7 @@ public class TagFunctions {
         Set<String> namespaces = new LinkedHashSet<>();
         for (String siteInstalledModule : installedModules) {
             JahiaTemplatesPackage templatesPackage = jahiaTemplateManagerService.getTemplatePackageById(siteInstalledModule);
-            if (templatesPackage.getBundle().getEntry("/javascript/locales") != null) {
+            if (templatesPackage != null && templatesPackage.getBundle().getEntry("/javascript/locales") != null) {
                 namespaces.add(siteInstalledModule);
             }
         }

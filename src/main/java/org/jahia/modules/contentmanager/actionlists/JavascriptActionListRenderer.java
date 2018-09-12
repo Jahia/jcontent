@@ -75,7 +75,7 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
         Set<ActionListResource> actionListResourceList = new TreeSet<>();
         for (String siteInstalledModule : installedModules) {
             JahiaTemplatesPackage templatesPackage = templateManagerService.getTemplatePackageById(siteInstalledModule);
-            String actionListResources = templatesPackage.getBundle().getHeaders().get("Jahia-ActionList-Resources");
+            String actionListResources = templatesPackage != null ? templatesPackage.getBundle().getHeaders().get("Jahia-ActionList-Resources") : null;
             if (actionListResources != null) {
                 String[] actionListResourceArray = actionListResources.split(",");
                 for (String actionListResourceEntry : actionListResourceArray) {

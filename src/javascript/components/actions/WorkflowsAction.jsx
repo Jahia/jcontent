@@ -1,6 +1,7 @@
 import React from "react";
 import {DxContext} from "../DxContext";
 import * as _ from "lodash";
+import {Query} from 'react-apollo';
 import gql from "graphql-tag";
 import Badge from '@material-ui/core/Badge';
 
@@ -9,6 +10,13 @@ class WorkflowsAction extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.query = gql `query getWorkflows($language: String!){
+          jcr {
+            result:workflowTasksForUser(language: $language)
+          }
+        }`;
+
     }
 
     render() {
@@ -20,8 +28,22 @@ class WorkflowsAction extends React.Component {
                 labelParams: {language: dxContext.langName},
                 onClick: () => call(ctx)
             });
-            return <Badge badgeContent={4} color="primary">{child}</Badge>
 
+            let variables = {
+                language: dxContext.lang
+            };
+            return <Query query={this.query} variables={variables} pollInterval={2000}>
+                {
+                    ({error, loading, data}) => {
+                        if (!loading && !error) {
+                            let numberOfTasks = data.jcr.result;
+                            return <Badge badgeContent={numberOfTasks} color="primary">{child}</Badge>
+                        }else{
+                            return null;
+                        }
+                    }
+                }
+            </Query>
         }}</DxContext.Consumer>;
     }
 

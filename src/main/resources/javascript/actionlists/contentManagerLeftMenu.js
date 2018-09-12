@@ -47,7 +47,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         requiredPermission: "",
         labelKey: 'label.contentManager.bottomLeftMenu',
     },
-    WorkflowsLeftMenu: {
+    workflowsLeftMenu: {
         priority : 6.0,
         component: "WorkflowsAction",
         call: openWorkflows,

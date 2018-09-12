@@ -10,12 +10,10 @@ class SiteSwitcher extends React.Component {
 
     constructor(props) {
         super(props);
-        let {dxContext} = this.props;
         this.variables = {
             query: "select * from [jnt:virtualsite] where ischildnode('/sites')",
-            language: dxContext.uilang
         };
-        this.query = gql `query SiteNodes($query: String!, $language: String!){
+        this.query = gql `query SiteNodes($query: String!){
             jcr {
                 result:nodesByQuery(query: $query) {
                     siteNodes:nodes {
@@ -25,7 +23,7 @@ class SiteSwitcher extends React.Component {
                         site {
                             defaultLanguage
                             languages {
-                                displayName(language: $language)
+                                displayName
                                 language
                                 activeInEdit
                             }

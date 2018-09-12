@@ -15,15 +15,14 @@ class LanguageSwitcher extends React.Component {
         let {dxContext} = props;
         this.variables = {
             path: '/sites/' + dxContext.siteKey,
-            language: dxContext.uilang
         };
-        this.query = gql `query siteLanguages($path: String!, $language: String!) {
+        this.query = gql `query siteLanguages($path: String!) {
           jcr(workspace: LIVE) {
             result:nodeByPath(path: $path) {
               site {
                 defaultLanguage
                 languages {
-                  displayName(language: $language)
+                  displayName
                   language
                   activeInEdit
                 }

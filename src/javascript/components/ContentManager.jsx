@@ -1,12 +1,12 @@
 import React from "react";
 import {MuiThemeProvider} from "@material-ui/core";
-import {NotificationProvider, anthraciteDarkTheme as theme} from "@jahia/react-material";
+import {anthraciteDarkTheme as theme, NotificationProvider} from "@jahia/react-material";
 import {client} from "@jahia/apollo-dx";
 import {getI18n} from "@jahia/i18next";
 import {I18n, I18nextProvider} from "react-i18next";
 import {Route} from "react-router";
-import {BrowserRouter} from "react-router-dom";
-import {ApolloProvider } from "react-apollo";
+import {ApolloProvider} from "react-apollo";
+import {createBrowserHistory} from "history";
 import ManagerLayout from "./ManagerLayout";
 import CMLeftNavigation from "./CMLeftNavigation";
 import * as _ from "lodash";
@@ -21,7 +21,9 @@ import RouterAction from "./actions/RouterAction";
 import SideMenuAction from "./actions/SideMenuAction";
 import WorkflowsAction from "./actions/WorkflowsAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
-import constants from "./constants";
+import {ConnectedRouter} from 'connected-react-router'
+import {Provider} from 'react-redux'
+import getStore from './redux/getStore';
 
 const actionComponents = {
     callAction: CallAction,
@@ -58,19 +60,32 @@ class ContentManager extends React.Component {
         });
     }
 
+    getStore = (dxContext, t) => {
+        if (!this.store) {
+            this.store = getStore(dxContext, this.getHistory(dxContext, t));
+        }
+        return this.store;
+    };
+
+    getHistory = (dxContext, t) => {
+        if (!this.history) {
+            this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
+            if (window.top !== window) {
+                this.history.listen((location, action) => {
+                    const title = t("label.contentManager.appTitle", {path: location.pathname});
+                    // const title = 'title';
+                    window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
+                    window.parent.document.title = title;
+                });
+            }
+        }
+        return this.history;
+    };
+
     // !!this method should never be called but is necessary until BACKLOG-8369 fixed!!
     forceCMUpdate = () => {
         console.warn("update application, this should not happen ..")
         this.forceUpdate();
-    }
-
-    setRouter(t, router) {
-        let {dxContext, classes} = this.props;
-        router && router.history.listen((location, action) => {
-            const title = t("label.contentManager.appTitle", {path: location.pathname});
-            window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
-            window.parent.document.title = title;
-        });
     }
 
     render() {
@@ -101,9 +116,7 @@ class ContentManager extends React.Component {
             }
         }
         let {dxContext, classes} = this.props;
-        // register action components
-        const isInFrame = window.top !== window;
-        let mode = "browse";
+
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
@@ -116,37 +129,37 @@ class ContentManager extends React.Component {
                         })}>
                             <I18n>{(t) => {
                                 return (
-                                    <DxContext.Provider value={dxContext}>
-                                        <BrowserRouter basename={dxContext.contextPath + dxContext.urlbase} ref={isInFrame && this.setRouter.bind(this, t)}>
-                                            <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
-                                                dxContext["siteKey"] = props.match.params.siteKey;
-                                                dxContext["lang"] = props.match.params.lang;
-                                                const currentMode = _.words(props.location.pathname, /[^\/]+/g)[constants.locationModeIndex];
-                                                return (
-                                                    <ManagerLayout
-                                                        leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
-                                                    >
-                                                        <Route path={`${props.match.url}/browse`} render={props =>
-                                                            <ContentLayout mode={"browse"} contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                            <ContentLayout mode={"browse-files"} contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/search`} render={props =>
-                                                            <ContentLayout mode={"search"} contentSource="search"  key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/sql2Search`} render={props =>
-                                                            <ContentLayout mode={"sql2Search"} contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/iframe/:actionKey`} render={props =>
-                                                            <IFrameLayout actionKey={props.match.params.actionKey} actionsRegistry={actionsRegistry} workspace={dxContext.workspace} siteKey={dxContext.siteKey} lang={dxContext.lang}/>
-                                                        }/>
-
-                                                    </ManagerLayout>
-                                                );
-                                            }}/>
-                                        </BrowserRouter>
-                                    </DxContext.Provider>
+                                    <Provider store={this.getStore(dxContext, t)}>
+                                        <DxContext.Provider value={dxContext}>
+                                            <ConnectedRouter history={this.getHistory(dxContext, t)} >
+                                                <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
+                                                    dxContext["siteKey"] = props.match.params.siteKey;
+                                                    dxContext["lang"] = props.match.params.lang;
+                                                    return (
+                                                        <ManagerLayout
+                                                            leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
+                                                        >
+                                                            <Route path={`${props.match.url}/browse`} render={props =>
+                                                                <ContentLayout mode={"browse"} contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/browse-files`} render={props =>
+                                                                <ContentLayout mode={"browse-files"} contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/search`} render={props =>
+                                                                <ContentLayout mode={"search"} contentSource="search"  key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/sql2Search`} render={props =>
+                                                                <ContentLayout mode={"sql2Search"} contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/iframe/:actionKey`} render={props =>
+                                                                <IFrameLayout actionKey={props.match.params.actionKey} actionsRegistry={actionsRegistry} workspace={dxContext.workspace} siteKey={dxContext.siteKey} lang={dxContext.lang}/>
+                                                            }/>
+                                                        </ManagerLayout>
+                                                    );
+                                                }}/>
+                                            </ConnectedRouter>
+                                        </DxContext.Provider>
+                                    </Provider>
                                 )}}
                             </I18n>
                         </I18nextProvider>

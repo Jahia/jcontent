@@ -23,6 +23,7 @@
 
 <div id="${targetId}">loading..</div>
 <script type="text/javascript">
+    contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
     contextJsParameters['urlBrowser'] = '/cms/contentmanager';
     contextJsParameters['urlbase'] = '${renderContext.servletPath}';
     contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';

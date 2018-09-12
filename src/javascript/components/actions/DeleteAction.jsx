@@ -22,7 +22,7 @@ class DeleteAction extends React.Component {
 
         return children({
             ...rest,
-            onClick: () => window.parent.authoringApi.deleteContent(context.path, false)
+            onClick: () => window.parent.authoringApi.deleteContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], false)
         });
     }
 }

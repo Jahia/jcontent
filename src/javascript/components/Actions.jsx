@@ -63,7 +63,7 @@ class Actions extends React.Component {
                         ctx.requirementQueryHandler = requirementQueryHandler;
 
                         return (
-                            <ActionComponent {...rest} {...action} context={ctx}>
+                            <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>
                                 {children}
                             </ActionComponent>
                         );

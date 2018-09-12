@@ -12,6 +12,7 @@ import CMLeftNavigation from "./CMLeftNavigation";
 import * as _ from "lodash";
 import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
+import {IFrameLayout} from "./IFrameLayout";
 import defaultActions from "./actions/defaultActions";
 import actionsRegistry from "./actionsRegistry"
 import CallAction from "./actions/CallAction"
@@ -136,6 +137,9 @@ class ContentManager extends React.Component {
                                                         }/>
                                                         <Route path={`${props.match.url}/sql2Search`} render={props =>
                                                             <ContentLayout mode={"sql2Search"} contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/iframe/:actionKey`} render={props =>
+                                                            <IFrameLayout actionKey={props.match.params.actionKey} actionsRegistry={actionsRegistry} workspace={dxContext.workspace} siteKey={dxContext.siteKey} lang={dxContext.lang}/>
                                                         }/>
 
                                                     </ManagerLayout>

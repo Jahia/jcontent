@@ -5399,6 +5399,10 @@ react-i18next@^7.6.1:
     html-parse-stringify2 "2.0.1"
     prop-types "^15.6.0"
 
+react-iframe@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-iframe/-/react-iframe-1.2.0.tgz#c5ce1f21595537f95ff7838288b60d830498b289"
+
 react-input-autosize@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.1.tgz#ec428fa15b1592994fb5f9aa15bb1eb6baf420f8"

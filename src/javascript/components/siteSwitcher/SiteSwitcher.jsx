@@ -140,7 +140,7 @@ class SiteSwitcherDisplay extends React.Component {
             return <span>Loading...</span>
         } else {
             return <div>
-                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick}>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'site-switcher'}>
                     {this.getCurrentSiteName(siteNodes)}
                     &nbsp;
                     <FontAwesomeIcon icon="chevron-down"/>

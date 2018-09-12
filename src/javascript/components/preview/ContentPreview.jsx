@@ -17,6 +17,7 @@ import PDFViewer from "./filePreviewer/PDFViewer";
 import ImageViewer from "./filePreviewer/ImageViewer";
 import DocumentViewer from "./filePreviewer/DocumentViewer";
 import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
+import {DxContext} from "../DxContext";
 
 const styles = theme => ({
     root: {
@@ -88,54 +89,58 @@ class ContentPreview extends React.Component {
     }
 
     mainComponent() {
+
         const { selection, classes, t } = this.props;
         const path = selection ? selection.path : "";
         const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
-        return (
-            <div className={ rootClass } >
-                <Paper className={ classes.previewPaper } elevation={ 0 }>
-                    <Query query={ previewQuery } variables={ this.queryVariables(path) }>
-                        {({loading, error, data}) => {
-                            if (error) {
-                                console.error(error);
-                            }
 
-                            if (!loading) {
-                                return this.previewComponent(data);
-                            }
-                            return null
-                        }}
-                    </Query>
-                </Paper>
-                <Paper className={ classes.controlsPaper } elevation={ 0 }>
-                    <Grid container spacing={0}>
-                        <Grid item xs={ 10 } className={ classes.titleBar }>
-                            <div className={ classes.contentTitle }>{ selection.displayName ? selection.displayName : selection.name }</div>
-                            <PublicationInfo selection={ selection }/>
+        return <DxContext.Consumer>
+            {dxContext => (
+                <div className={ rootClass } >
+                    <Paper className={ classes.previewPaper } elevation={ 0 }>
+                        <Query query={ previewQuery } variables={ this.queryVariables(path) }>
+                            {({loading, error, data}) => {
+                                if (error) {
+                                    console.error(error);
+                                }
+
+                                if (!loading) {
+                                    return this.previewComponent(data);
+                                }
+                                return null
+                            }}
+                        </Query>
+                    </Paper>
+                    <Paper className={ classes.controlsPaper } elevation={ 0 }>
+                        <Grid container spacing={0}>
+                            <Grid item xs={ 10 } className={ classes.titleBar }>
+                                <div className={ classes.contentTitle }>{ selection.displayName ? selection.displayName : selection.name }</div>
+                                <PublicationInfo selection={ selection }/>
+                            </Grid>
+                            <Grid item xs={ 2 }>
+                                <ShareMenu selection={ selection }/>
+                                { this.screenModeButtons() }
+                            </Grid>
+                            <Grid item xs={12}>
+                                {/*Element that will contain image controls if an image is the document being previewed*/}
+                                <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
+                            </Grid>
+                            <Grid item xs={ 4 }>
+                                { selection.isLocked ? this.unlock() : this.lock() }
+                            </Grid>
+                            <Grid item xs={ 8 }>
+                                <Actions menuId={"previewBar"} context={{path: selection.path, lang: dxContext.lang}}>
+                                    {(props) => <CmButton {...props}/>}
+                                </Actions>
+                                <Actions menuId={"additionalMenu"} context={{path: selection.path, lang: dxContext.lang}}>
+                                    {(props) => <CmIconButton {...props}/>}
+                                </Actions>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={ 2 }>
-                            <ShareMenu selection={ selection }/>
-                            { this.screenModeButtons() }
-                        </Grid>
-                        <Grid item xs={12}>
-                            {/*Element that will contain image controls if an image is the document being previewed*/}
-                            <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
-                        </Grid>
-                        <Grid item xs={ 4 }>
-                            { selection.isLocked ? this.unlock() : this.lock() }
-                        </Grid>
-                        <Grid item xs={ 8 }>
-                            <Actions menuId={"previewBar"}  context={{path: selection.path}}>
-                                {(props) => <CmButton {...props}/>}
-                            </Actions>
-                            <Actions menuId={"additionalMenu"}  context={{path: selection.path}}>
-                                {(props) => <CmIconButton {...props}/>}
-                            </Actions>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </div>
-        );
+                    </Paper>
+                </div>
+            )}
+        </DxContext.Consumer>;
     }
 
     previewComponent(data) {

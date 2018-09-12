@@ -2,6 +2,7 @@ import CallAction from "./CallAction"
 import {Edit, Publish} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
 import CreateContentOfTypeAction from "./CreateContentOfTypeAction";
+import DeleteAction from "./DeleteAction";
 import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
@@ -78,6 +79,7 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.edit"
     },
     publish: {
+        priority: 6,
         component: PublishAction,
         call: publish,
         icon: "Publish",
@@ -88,9 +90,9 @@ let defaultActions = {
         allLanguages: false,
         checkForUnpublication: false,
         hideOnNodeTypes: ["jnt:virtualsite"]
-
     },
     advancedPublish: {
+        priority: 6,
         component: "menuAction",
         menuId: "publishMenu",
         icon: "Publish",
@@ -186,12 +188,14 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.copy"
     },
     delete: {
-        component: CallAction,
-        call: () => alert("not implemented yet"),
-        icon: "Edit",
-        target: ["additionalPreviewMenu"],
-        requiredPermission: "",
-        labelKey: "label.contentManager.contentPreview.delete"
+        priority: 4,
+        component: DeleteAction,
+        icon: "Delete",
+        target: ["contentTreeMenuActions", "tableMenuActions", "additionalPreviewMenu"],
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
+        requiredPermission: "jcr:removeNode",
+        labelKey: "label.contentManager.contentPreview.delete",
+        hideOnNodeTypes: ["jnt:page"]
     },
     createMenu: {
         component: "menuAction",
@@ -202,7 +206,7 @@ let defaultActions = {
         hideOnNodeTypes: ["jnt:page"]
     },
     lock: {
-        priority: 2.5,
+        priority: 5,
         action:'lock',
         component: LockManagementAction,
         target: ["contentTreeMenuActions"],
@@ -212,7 +216,7 @@ let defaultActions = {
         showOnNodeTypes: ["jnt:contentFolder"]
     },
     unlock: {
-        priority: 2.5,
+        priority: 5,
         action: 'unlock',
         component: LockManagementAction,
         target: ["contentTreeMenuActions"],
@@ -222,7 +226,7 @@ let defaultActions = {
         showOnNodeTypes: ["jnt:contentFolder"]
     },
     clearAllLocks: {
-        priority: 2.5,
+        priority: 5,
         action: 'clearAllLocks',
         component: LockManagementAction,
         target: ["contentTreeMenuActions"],

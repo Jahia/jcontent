@@ -11,9 +11,9 @@ class WorkflowDashboardAction extends React.Component {
     constructor(props) {
         super(props);
 
-        this.query = gql `query getWorkflows($language: String!){
+        this.query = gql `query getActiveWorkflowTaskCountForUser{
           jcr {
-            result:workflowTasksForUser(language: $language)
+            result:activeWorkflowTaskCountForUser
           }
         }`;
 
@@ -29,10 +29,7 @@ class WorkflowDashboardAction extends React.Component {
                 onClick: () => call(ctx)
             });
 
-            let variables = {
-                language: dxContext.lang
-            };
-            return <Query query={this.query} variables={variables} pollInterval={2000}>
+            return <Query query={this.query} pollInterval={2000}>
                 {
                     ({error, loading, data}) => {
                         if (!loading && !error) {

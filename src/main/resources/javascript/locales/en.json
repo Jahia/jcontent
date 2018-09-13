@@ -91,7 +91,7 @@
       "listColumns": {
         "name": "Name",
         "type": "Type",
-        "created": "Created On",
+        "lastModified": "Last modified on",
         "createdBy": "Created By"
       },
       "browsePages": "Browse Pages",

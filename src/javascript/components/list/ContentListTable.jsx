@@ -24,7 +24,7 @@ const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name'},
     {id: 'actions', label: ''},
     {id: 'type', label: 'label.contentManager.listColumns.type'},
-    {id: 'created', label: 'label.contentManager.listColumns.created'},
+    {id: 'lastModified', label: 'label.contentManager.listColumns.lastModified'},
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
 ];
 

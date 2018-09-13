@@ -44,7 +44,7 @@
       "listColumns": {
         "name": "Name",
         "type": "Typ",
-        "created": "Erstellt am/um",
+        "lastModified": "Geändert am/um",
         "createdBy": "Erstellt von"
       },
       "browsePages": "Seiten durchsuchen",

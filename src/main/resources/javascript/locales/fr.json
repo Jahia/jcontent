@@ -63,7 +63,7 @@
       "leftMenu" : {
         "content" : "Contenu",
         "media" : "Média",
-        "workflows": "Workflows",
+        "workflow": "Workflow",
         "savedSearches" : "Recherches sauvegardées",
         "contentReports" : "Rapport de contenu",
         "manage" : {

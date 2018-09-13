@@ -118,7 +118,7 @@
         "media" : "Media",
         "savedSearches" : "Saved searches",
         "contentReports" : "Content reports",
-        "workflows": "Workflows",
+        "workflow": "Workflow",
         "manage" : {
           "title" : "Manage",
           "users" : {

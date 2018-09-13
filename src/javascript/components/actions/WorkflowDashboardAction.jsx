@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 import Badge from '@material-ui/core/Badge';
 
 
-class WorkflowsAction extends React.Component {
+class WorkflowDashboardAction extends React.Component {
 
     constructor(props) {
         super(props);
@@ -37,9 +37,9 @@ class WorkflowsAction extends React.Component {
                     ({error, loading, data}) => {
                         if (!loading && !error) {
                             let numberOfTasks = data.jcr.result;
-                            if(numberOfTasks !== 0) {
+                            if (numberOfTasks !== 0) {
                                 return <Badge badgeContent={numberOfTasks} color="primary" data-cm-role={'notification-badge'}>{child}</Badge>
-                            }else{
+                            } else {
                                 return child;
                             }
                         }else{
@@ -53,4 +53,4 @@ class WorkflowsAction extends React.Component {
 
 }
 
-export default WorkflowsAction;
+export default WorkflowDashboardAction;

@@ -19,7 +19,7 @@ import CallAction from "./actions/CallAction"
 import MenuAction from "./actions/MenuAction";
 import RouterAction from "./actions/RouterAction";
 import SideMenuAction from "./actions/SideMenuAction";
-import WorkflowsAction from "./actions/WorkflowsAction";
+import WorkflowDashboardAction from "./actions/WorkflowDashboardAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
@@ -30,7 +30,7 @@ const actionComponents = {
     menuAction: MenuAction,
     routerAction : RouterAction,
     sideMenuAction : SideMenuAction,
-    WorkflowsAction : WorkflowsAction
+    workflowDashboardAction : WorkflowDashboardAction
 };
 
 class ContentManager extends React.Component {

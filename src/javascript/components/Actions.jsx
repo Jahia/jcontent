@@ -6,16 +6,18 @@ import {
     getRequirementsQuery,
     ActionRequirementsQueryHandler
 } from "./gqlQueries";
-import {Query} from "react-apollo";
+import {Query, withApollo} from "react-apollo";
 import {replaceFragmentsInDocument} from "@jahia/apollo-dx";
 import {translate} from "react-i18next";
 import {withNotifications} from "@jahia/react-material/index";
+import {setUrl} from "./redux/actions";
+import connect from "react-redux/es/connect/connect";
 
 class Actions extends React.Component {
 
     render() {
 
-        const {menuId, context, children, t, notificationContext, ...rest} = this.props;
+        const {lang, menuId, context, children, t, notificationContext, ...rest} = this.props;
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
 
         return _.map(actionsToDisplayKeys, actionKey => {
@@ -24,7 +26,7 @@ class Actions extends React.Component {
             let action = actionsRegistry[actionKey];
             let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties} = action;
             if (retrieveProperties != null) {
-                action.retrieveProperties.retrievePropertiesLang = ctx.lang;
+                action.retrieveProperties.retrievePropertiesLang = lang;
             }
             if (!ctx.path) {
                 console.warn(`Unable to render action ${actionKey} because the context does not define a path`);
@@ -74,4 +76,18 @@ class Actions extends React.Component {
     }
 }
 
-export default  translate()(withNotifications()(Actions));
+const mapStateToProps = (state, ownProps) => ({
+    lang: state.language,
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setPath: (path, params) => dispatch(setUrl(null, null, null, path, params))
+})
+
+Actions = _.flowRight(
+    translate(),
+    withNotifications(),
+    connect(mapStateToProps, mapDispatchToProps)
+)(Actions);
+
+export default Actions;

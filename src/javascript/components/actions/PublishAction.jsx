@@ -16,7 +16,8 @@ class PublishAction extends React.Component {
             ctx.allLanguages = allLanguages;
             ctx.allSubTree = allSubTree;
             ctx.checkForUnpublication = checkForUnpublication;
-            const display = !checkIfLanguagesMoreThanOne || (checkIfLanguagesMoreThanOne && dxContext.siteLanguages.length > 1);
+            // Todo: fix dxContext.siteLanguages.length > 1 by either set that value in redux or do a graphQL query to get the information ( BACKLOG-8540 )
+            const display = !checkIfLanguagesMoreThanOne || (checkIfLanguagesMoreThanOne /*&& dxContext.siteLanguages.length > 1*/);
             return display ? children({
                     ...rest,
                     labelParams: {language: dxContext.langName},

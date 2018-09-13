@@ -10,7 +10,6 @@ import ContentTrees from "./ContentTrees";
 import {withNotifications} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
-import CmRouter from './CmRouter';
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
@@ -22,6 +21,8 @@ import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
 import {ContentData} from "./ContentData";
 import CMTopBar from "./CMTopBar";
+import {setPath} from "./redux/actions";
+import {connect} from "react-redux";
 
 const styles = theme => ({
     topBar: {
@@ -31,7 +32,7 @@ const styles = theme => ({
 });
 
 const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 1;
+const GRID_PANEL_BUTTONS_SIZE = 3;
 const TREE_SIZE = 3;
 
 class ContentLayout extends React.Component {
@@ -106,11 +107,9 @@ class ContentLayout extends React.Component {
     render() {
 
         const {showPreview, selectedRow, showTree: showTree} = this.state;
-        const {contentSource, contentTreeConfigs, mode, classes} = this.props;
+        const {contentSource, contentTreeConfigs, mode, classes, path} = this.props;
 
         return <DxContext.Consumer>{dxContext => {
-            const rootPath = '/sites/' + dxContext.siteKey;
-            return <CmRouter render={({path, params, goto}) => {
                 let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
                 return <React.Fragment>
                     <Grid container spacing={0}>
@@ -119,10 +118,10 @@ class ContentLayout extends React.Component {
                         </Grid>
                         <Grid container spacing={0} direction="row" alignItems="center">
                             <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                                <ContentBreadcrumbs dxContext={dxContext} lang={dxContext.lang} rootPath={rootPath}/>
+                                <ContentBreadcrumbs/>
                             </Grid>
                             <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
-                                {this.isBrowsing() && path != rootPath &&
+                                {this.isBrowsing() &&
                                 <Actions menuId={"createMenu"} context={{path: path}}>
                                     {(props) => <CmButton {...props}><Add/></CmButton>}
                                 </Actions>
@@ -145,7 +144,7 @@ class ContentLayout extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <ContentData contentSource={contentSource} rootPath={rootPath} page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
+                    <ContentData contentSource={contentSource} page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
                         {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
                             console.log("return data", totalCount, contentSource);
                             return <React.Fragment>
@@ -156,8 +155,6 @@ class ContentLayout extends React.Component {
                                             <ContentTrees
                                                 contentTreeConfigs={contentTreeConfigs}
                                                 path={path}
-                                                rootPath={rootPath}
-                                                lang={dxContext.lang}
                                                 user={dxContext.userName}
                                             />
                                         </Grid>
@@ -174,7 +171,6 @@ class ContentLayout extends React.Component {
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
-                                                    lang={dxContext.lang}
                                                 />
                                                 : <ContentListTable
                                                     totalCount={totalCount}
@@ -184,7 +180,6 @@ class ContentLayout extends React.Component {
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
-                                                    lang={dxContext.lang}
                                                     selectedRow={this.state.selectedRow}
                                                 />
                                             }
@@ -205,16 +200,24 @@ class ContentLayout extends React.Component {
                         }}
                     </ContentData>
                 </React.Fragment>
-            }}/>
         }}</DxContext.Consumer>;
     }
 }
+
+const mapStateToProps = (state, ownProps) => ({
+    path: state.path,
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setPath: (path, params) => dispatch(setPath(path, params))
+})
 
 ContentLayout = _.flowRight(
     withNotifications(),
     translate(),
     withStyles(styles),
-    withApollo
+    withApollo,
+    connect(mapStateToProps, mapDispatchToProps)
 )(ContentLayout);
 
 export {ContentLayout};

@@ -4,57 +4,42 @@ import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem} from '@material-ui/core';
-import CmRouter from "../CmRouter";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {translate} from "react-i18next";
+import connect from "react-redux/es/connect/connect";
+import {setLanguage} from "../redux/actions";
+import {ProgressOverlay, withNotifications} from "@jahia/react-material";
 
 class LanguageSwitcher extends React.Component {
 
     constructor(props) {
         super(props);
-        let {dxContext} = props;
-        this.variables = {
-            path: '/sites/' + dxContext.siteKey,
-        };
-        this.query = gql `query siteLanguages($path: String!) {
-          jcr(workspace: LIVE) {
-            result:nodeByPath(path: $path) {
-              site {
-                defaultLanguage
-                languages {
-                  displayName
-                  language
-                  activeInEdit
+
+        this.query = gql`query siteLanguages($path: String!) {
+            jcr(workspace: LIVE) {
+                result:nodeByPath(path: $path) {
+                    site {
+                        defaultLanguage
+                        languages {
+                            displayName
+                            language
+                            activeInEdit
+                        }
+                    }
+                    ...NodeCacheRequiredFields
                 }
-              }
-              ...NodeCacheRequiredFields
             }
-          }
         }
         ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
     }
 
-    onSelectLanguage = (lang, langLabel, path, switchto, params) => {
-        //Switch language functionality
-        let {dxContext} = this.props;
-        //get part of path from /sites/sitekey/...
-        let extractedPath = path.substring(path.indexOf('/' + dxContext.siteKey + '/' + dxContext.lang));
-        //update the language name in the context
-        dxContext.langName = langLabel;
-        // switch edit mode linker language
-        window.parent.authoringApi.switchLanguage(lang);
-        //update language in url and update route.
-        switchto(extractedPath.replace(dxContext.siteKey + '/' + dxContext.lang, dxContext.siteKey + '/' + lang), params);
-    };
-
-    validateLanguageExists = (languages, data) => {
-        let {dxContext} = this.props;
+    validateLanguageExists = (languages, data, lang) => {
         if (!_.isEmpty(languages)) {
             //If we cant find the selected language in the list of available languages,
             // we will implicitly switch to the default language of the site
             let languageExists = _.find(languages, function(language) {
-                return language.language === dxContext.lang;
+                return language.language === lang;
             });
             if (languageExists === undefined) {
                 let language = _.find(languages, function(language) {
@@ -68,7 +53,6 @@ class LanguageSwitcher extends React.Component {
     };
 
     parseSiteLanguages(data) {
-        let {dxContext} = this.props;
         let parsedSiteLanguages = [];
         if (data && data.jcr != null) {
             let siteLanguages = data.jcr.result.site.languages;
@@ -78,37 +62,42 @@ class LanguageSwitcher extends React.Component {
                 }
             }
         }
-        dxContext.siteLanguages = parsedSiteLanguages;
+        //dxContext.siteLanguages = parsedSiteLanguages;
         return parsedSiteLanguages;
     }
 
     render() {
-        let {dxContext} = this.props;
-        return <CmRouter render={({path, params, goto, switchto}) => {
-            return <Query query={this.query} variables={this.variables}>
-                    {
-                        ({error, loading, data}) => {
-                            if (!loading) {
-                                let displayableLanguages = this.parseSiteLanguages(data);
-                                let languageExists = this.validateLanguageExists(displayableLanguages, data);
-                                if (languageExists === true) {
-                                    return <LanguageSwitcherDisplay
-                                        dxContext={dxContext}
-                                        languages={displayableLanguages}
-                                        loading={loading}
-                                        onSelectLanguage={(lang, langLabel) => this.onSelectLanguage(lang, langLabel, path, switchto, params)}
-                                    />;
-                                } else {
-                                    this.onSelectLanguage(languageExists, path, switchto, params);
-                                    return null;
-                                }
-                            }
-                            return <span>Loading...</span>;
-                        }
+        const { t, notificationContext, siteKey, lang, onSelectLanguage } = this.props;
+        const variables = {
+            path: '/sites/' + siteKey,
+        };
+        return <Query query={this.query} variables={variables}>
+            {
+                ({error, loading, data}) => {
+                    if (error) {
+                        console.log("Error when fetching data: " + error);
+                        let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                        return null;
                     }
-            </Query>
-        }}/>
 
+                    if (loading) {
+                        return <ProgressOverlay/>;
+                    }
+
+                    let displayableLanguages = this.parseSiteLanguages(data);
+                    let languageExists = this.validateLanguageExists(displayableLanguages, data, lang);
+                    if (languageExists === true) {
+                        return <LanguageSwitcherDisplay
+                            languages={displayableLanguages}
+                        />
+                    } else {
+                        onSelectLanguage(languageExists);
+                        return null;
+                    }
+                }
+            }
+        </Query>
     }
 }
 
@@ -122,11 +111,11 @@ class LanguageSwitcherDisplay extends React.Component {
     }
 
     handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+        this.setState({anchorEl: event.currentTarget});
     };
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({anchorEl: null});
     };
 
     uppercaseFirst = (string) => {
@@ -134,27 +123,47 @@ class LanguageSwitcherDisplay extends React.Component {
     };
 
     render() {
-        let {dxContext, languages, loading, onSelectLanguage} = this.props;
+        let {lang, languages, onSelectLanguage} = this.props;
         let {anchorEl} = this.state;
-        if (loading) {
-            return <span>Loading...</span>
-        } else {
-            return <div>
-                <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'language-switcher'}>
-                    {dxContext.lang}
-                    &nbsp;
-                    <FontAwesomeIcon icon="chevron-down"/>
-                </Button>
-                <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                    {languages.map((lang, i) => {
-                        return <MenuItem key={lang.language} onClick={() => {onSelectLanguage(lang.language, lang.displayName); this.handleClose();}}>
-                            {this.uppercaseFirst(lang.displayName)}
-                        </MenuItem>;
-                    })}
-                </Menu>
-            </div>
-        }
+        return <React.Fragment>
+            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true"
+                    onClick={this.handleClick} data-cm-role={'language-switcher'}>
+                {_.find(languages, (language) => language.language === lang).displayName}
+                &nbsp;
+                <FontAwesomeIcon icon="chevron-down"/>
+            </Button>
+            <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
+                {languages.map((lang) => {
+                    return <MenuItem key={lang.language} onClick={() => {
+                        onSelectLanguage(lang.language);
+                        this.handleClose();
+                    }}>
+                        {this.uppercaseFirst(lang.displayName)}
+                    </MenuItem>;
+                })}
+            </Menu>
+        </React.Fragment>
     }
 }
 
-export default translate()(LanguageSwitcher);
+const mapStateToProps = (state, ownProps) => ({
+    siteKey: state.site,
+    lang: state.language
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    onSelectLanguage: (lang) => dispatch(setLanguage(lang))
+});
+
+LanguageSwitcherDisplay = _.flowRight(
+    connect(mapStateToProps, mapDispatchToProps)
+)(LanguageSwitcherDisplay);
+
+LanguageSwitcher = _.flowRight(
+    translate(),
+    withNotifications(),
+    connect(mapStateToProps, mapDispatchToProps)
+)(LanguageSwitcher);
+
+
+export default LanguageSwitcher;

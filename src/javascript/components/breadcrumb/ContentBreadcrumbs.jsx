@@ -5,8 +5,8 @@ import Breadcrumb from "./Breadcrumb";
 import gql from "graphql-tag";
 import {Picker} from "@jahia/react-apollo";
 import {translate} from "react-i18next";
-import CmRouter from "../CmRouter";
-import {getAbsoluteBrowsingPath} from "../utils.js";
+import connect from "react-redux/es/connect/connect";
+import {setUrl} from "../redux/actions";
 
 class ContentBreadcrumbs extends React.Component {
 
@@ -16,21 +16,28 @@ class ContentBreadcrumbs extends React.Component {
     }
 
     generatePathParts(path) {
-        let {dxContext} = this.props;
-        let pathParts = path.replace("/sites/" + dxContext.siteKey, "").split("/");
+        let {siteKey} = this.props;
+        const sitePath = "/sites/" + siteKey;
+        if (path.startsWith(sitePath + "/")) {
+            path = path.substring(("/sites/" + siteKey).length);
+        } else {
+            path = sitePath;
+        }
+        let pathParts = path.replace("/sites/" + siteKey, "").split("/");
         let newPaths = [];
         for (let i in pathParts) {
             if (i > 0) {
                 newPaths.push(newPaths[i - 1] + "/" + pathParts[i]);
             } else {
-                newPaths.push("/sites/" + dxContext.siteKey);
+                newPaths.push("/sites/" + siteKey);
             }
         }
         return newPaths;
     }
 
     getPickerConfiguration(path) {
-        let {t, rootPath} = this.props;
+        let {t, siteKey} = this.props;
+        let rootPath = "/sites/" + siteKey;
         let pickerConfiguration = {};
         if (path.indexOf(rootPath + "/contents") !== -1) {
             pickerConfiguration.selectableTypes = ['jmix:list'];
@@ -53,46 +60,54 @@ class ContentBreadcrumbs extends React.Component {
 
     render() {
 
-        let {lang, dxContext, rootPath} = this.props;
-
+        let {lang, siteKey, path, params, setUrl} = this.props;
+        let rootPath = "/sites/" + siteKey;
+        let pickerConfiguration = this.getPickerConfiguration(path);
+        let paths = this.generatePathParts(path);
         return (
-            <CmRouter render={({path, params, goto}) => {
-                let pickerConfiguration = this.getPickerConfiguration(path);
-                let paths = this.generatePathParts(path);
-                return (
-                    <Picker
-                        fragments={["displayName", {applyFor: "node", gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`}]}
-                        ref={this.picker}
-                        rootPaths={[pickerConfiguration.rootPath]}
-                        openPaths={paths}
-                        selectedPaths={paths}
-                        openableTypes={pickerConfiguration.openableTypes}
-                        selectableTypes={pickerConfiguration.selectableTypes}
-                        queryVariables={{lang: lang}}
-                        openSelection={false}
-                        onSelectItem={(path, newParams) => goto(getAbsoluteBrowsingPath(newParams.type, dxContext.lang, path), newParams)}
-                    >
-                        {({...others}) => {
-                            return <Breadcrumb
-                                {...others}
-                                path={path}
-                                rootPath={rootPath}
-                                rootLabel={pickerConfiguration.rootLabel}
-                                dxContext={dxContext}
-                                handleSelect={others.onSelectItem}
-                            />
-                        }}
-                    </Picker>
-                );
-            }}/>
+            <Picker
+                fragments={["displayName", {
+                    applyFor: "node",
+                    gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`
+                }]}
+                ref={this.picker}
+                rootPaths={[pickerConfiguration.rootPath]}
+                openPaths={paths}
+                selectedPaths={paths}
+                openableTypes={pickerConfiguration.openableTypes}
+                selectableTypes={pickerConfiguration.selectableTypes}
+                queryVariables={{lang: lang}}
+                openSelection={false}
+                onSelectItem={(path, newParams) => setUrl(path, newParams)}
+            >
+                {({...others}) => {
+                    return <Breadcrumb
+                        {...others}
+                        path={path}
+                        rootPath={rootPath}
+                        rootLabel={pickerConfiguration.rootLabel}
+                        handleSelect={others.onSelectItem}
+                    />
+                }}
+            </Picker>
         );
     }
 }
 
-ContentBreadcrumbs.propTypes = {
-    dxContext: PropTypes.object.isRequired,
-    lang: PropTypes.string.isRequired,
-    rootPath: PropTypes.string.isRequired
-};
+const mapStateToProps = (state, ownProps) => ({
+    siteKey: state.site,
+    lang: state.language,
+    path: state.path,
+    params: state.params
+})
 
-export default translate()(ContentBreadcrumbs);
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setUrl: (path, params) => dispatch(setUrl(null, null, null, path, params))
+})
+
+ContentBreadcrumbs = _.flowRight(
+    translate(),
+    connect(mapStateToProps, mapDispatchToProps)
+)(ContentBreadcrumbs);
+
+export default ContentBreadcrumbs;

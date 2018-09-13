@@ -2,12 +2,12 @@ import React from "react";
 import {Picker} from "@jahia/react-apollo";
 import {PickerViewMaterial} from '@jahia/react-material';
 import {List, ListItem, Button} from "@material-ui/core";
-import CmRouter from "./CmRouter";
-import gql from "graphql-tag";
-import {getAbsoluteBrowsingPath} from "./utils.js";
 import {translate} from 'react-i18next';
 import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
+import {lodash as _} from "lodash";
+import connect from "react-redux/es/connect/connect";
+import {setPath, setUrl} from "./redux/actions";
 
 class ContentTree extends React.Component {
     constructor(props) {
@@ -17,6 +17,7 @@ class ContentTree extends React.Component {
 
     render() {
         let {rootPath, path, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes, user} = this.props;
+        console.log("open tree", rootPath, path);
         return (
             <Picker ref={this.picker}
                     rootPaths={[rootPath]}
@@ -56,14 +57,15 @@ class ContentTrees extends React.Component {
     }
 
     render() {
-        const {lang, rootPath, path, t, user, contentTreeConfigs} = this.props;
-
-        return (<CmRouter render={({goto}) => (
+        const {lang, siteKey, path, t, user, contentTreeConfigs, setPath} = this.props;
+        const rootPath = "/sites/" + siteKey;
+        const usedPath = path.startsWith(rootPath) ? path : rootPath;
+        return (
                 <List>
                     {
                         contentTreeConfigs.showAllContents ?
                             <ListItem>
-                                <Button onClick={() => this.openTrees(path)}>{t("label.contentManager.showCurrentPath")}</Button>
+                                <Button onClick={() => this.openTrees(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
                             </ListItem> : ""
                     }
                     {
@@ -75,12 +77,12 @@ class ContentTrees extends React.Component {
                             return <ListItem data-cm-role={contentTreeConfig.key}  key={contentTreeConfig.key}>
                                 <ContentTree
                                     ref={componentRef}
-                                    path={path}
+                                    path={usedPath}
                                     rootPath={rootPath + contentTreeConfig.rootPath}
                                     selectableTypes= {contentTreeConfig.selectableTypes}
                                     lang={lang}
                                     user={user}
-                                    handleSelect={path => goto(getAbsoluteBrowsingPath(contentTreeConfig.type, lang, path), {type: contentTreeConfig.type})}
+                                    handleSelect={path => setPath(path)}
                                     openableTypes={contentTreeConfig.openableTypes}
                                     rootLabel={t(contentTreeConfig.rootLabel)}
                                 />
@@ -90,9 +92,23 @@ class ContentTrees extends React.Component {
 
 
                 </List>
-            )}/>
         )
     }
 }
 
-export default translate()(ContentTrees);
+const mapStateToProps = (state, ownProps) => ({
+    siteKey: state.site,
+    lang: state.language,
+    path: state.path
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setPath: (path, params) => dispatch(setUrl(null, null, null, path, params))
+})
+
+ContentTrees = _.flowRight(
+    translate(),
+    connect(mapStateToProps, mapDispatchToProps)
+)(ContentTrees);
+
+export default ContentTrees;

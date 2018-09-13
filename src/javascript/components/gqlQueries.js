@@ -10,12 +10,12 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, paginationState, dxContext, urlParams, rootPath) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath) {
         const type = urlParams.type || (_.startsWith(path, rootPath + "/contents") ? "contents" : "pages");
         return {
             path: path,
-            language: dxContext.lang,
-            displayLanguage: dxContext.uilang,
+            language: lang,
+            displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
@@ -34,11 +34,11 @@ class FilesQueryHandler {
         return filesQuery;
     }
 
-    getQueryParams(path, paginationState, dxContext) {
+    getQueryParams(path, paginationState, uiLang, lang) {
         return {
             path: path,
-            language: dxContext.lang,
-            displayLanguage: dxContext.uilang,
+            language: lang,
+            displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             typeFilter: "jnt:file",
@@ -57,13 +57,13 @@ class SearchQueryHandler {
         return searchContentQuery;
     }
 
-    getQueryParams(path, paginationState, dxContext, urlParams) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams) {
         return {
             path: path,
             nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
             searchTerms: urlParams.searchTerms,
-            language: dxContext.lang,
-            displayLanguage: dxContext.uilang,
+            language: lang,
+            displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
         };
@@ -80,7 +80,7 @@ class Sql2SearchQueryHandler {
         return sql2SearchContentQuery;
     }
 
-    getQueryParams(path, paginationState, dxContext, urlParams) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams) {
 
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
@@ -90,8 +90,8 @@ class Sql2SearchQueryHandler {
 
         return {
             query: query,
-            language: dxContext.lang,
-            displayLanguage: dxContext.uilang,
+            language: lang,
+            displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage
         };

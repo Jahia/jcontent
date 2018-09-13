@@ -1,12 +1,12 @@
 import React from "react";
-import {withStyles, Paper, IconButton, Drawer, Divider, List} from '@material-ui/core';
-
+import {Divider, Drawer, IconButton, List, Paper, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import {compose} from "react-apollo/index";
 import classNames from "classnames";
-import {Menu, ChevronLeft, ChevronRight} from '@material-ui/icons';
+import {ChevronLeft, ChevronRight, Menu} from '@material-ui/icons';
 import Actions from "./Actions";
 import CmLeftMenuItem from "./renderAction/CmLeftMenuItem";
+import {connect} from "react-redux";
+import * as _ from 'lodash';
 
 const drawerWidth = 240;
 // TODO this styles should be provided by the theme / new structure when available
@@ -82,7 +82,7 @@ class CMLeftNavigation extends React.Component {
     };
 
     render() {
-        const {dxContext, classes} = this.props;
+        const { siteKey, lang, classes } = this.props;
 
         return (
             <Paper elevation={0} data-cm-role={'left-navigation'}>
@@ -101,9 +101,9 @@ class CMLeftNavigation extends React.Component {
                     <Divider/>
                     <List component="nav" data-cm-role={'left-navigation-menu'}>
                         <Actions menuId="leftMenuActions" context={{
-                            path: `/sites/${dxContext.siteKey}`,
-                            siteKey: dxContext.siteKey,
-                            lang: dxContext.lang
+                            path: `/sites/${siteKey}`,
+                            siteKey: siteKey,
+                            lang: lang
                         }}>
                             {(props) =>
                                 <CmLeftMenuItem {...props} icon={<Menu/>}/>
@@ -117,10 +117,19 @@ class CMLeftNavigation extends React.Component {
     }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+    siteKey: state.site,
+    lang: state.language
+})
 
-CMLeftNavigation = compose(
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    //
+})
+
+CMLeftNavigation = _.flowRight(
     translate(),
-    withStyles(styles, {withTheme: true})
+    withStyles(styles, {withTheme: true}),
+    connect(mapStateToProps, mapDispatchToProps)
 )(CMLeftNavigation);
 
 export default CMLeftNavigation;

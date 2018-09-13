@@ -132,27 +132,26 @@ class ContentManager extends React.Component {
                                     <Provider store={this.getStore(dxContext, t)}>
                                         <DxContext.Provider value={dxContext}>
                                             <ConnectedRouter history={this.getHistory(dxContext, t)} >
-                                                <Route path="/:siteKey/:lang" key={"main-route_" + dxContext.siteKey + "_" + dxContext.lang} render={props => {
-                                                    dxContext["siteKey"] = props.match.params.siteKey;
+                                                <Route path="/:siteKey/:lang" render={props => {
                                                     dxContext["lang"] = props.match.params.lang;
                                                     return (
                                                         <ManagerLayout
-                                                            leftSide={<CMLeftNavigation dxContext={dxContext} baseRoutePath={props.match.url}/>}
+                                                            leftSide={<CMLeftNavigation/>}
                                                         >
                                                             <Route path={`${props.match.url}/browse`} render={props =>
-                                                                <ContentLayout mode={"browse"} contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]} key={"browsing_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout mode={"browse"} contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                                <ContentLayout mode={"browse-files"} contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]} key={"browse-files_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout mode={"browse-files"} contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/search`} render={props =>
-                                                                <ContentLayout mode={"search"} contentSource="search"  key={"search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout mode={"search"} contentSource="search"/>
                                                             }/>
                                                             <Route path={`${props.match.url}/sql2Search`} render={props =>
-                                                                <ContentLayout mode={"sql2Search"} contentSource="sql2Search" key={"sql2Search_" + dxContext.siteKey + "_" + dxContext.lang}/>
+                                                                <ContentLayout mode={"sql2Search"} contentSource="sql2Search"/>
                                                             }/>
                                                             <Route path={`${props.match.url}/iframe/:actionKey`} render={props =>
-                                                                <IFrameLayout actionKey={props.match.params.actionKey} actionsRegistry={actionsRegistry} contextPath={dxContext.contextPath} workspace={dxContext.workspace} siteKey={dxContext.siteKey} lang={dxContext.lang}/>
+                                                                <IFrameLayout actionKey={props.match.params.actionKey} actionsRegistry={actionsRegistry} workspace={dxContext.workspace} siteKey={dxContext.siteKey}/>
                                                             }/>
                                                         </ManagerLayout>
                                                     );

@@ -4,7 +4,6 @@ import {translate} from "react-i18next";
 import LanguageSwitcher from "./languageSwitcher/LanguageSwitcher";
 import SiteSwitcher from "./siteSwitcher/SiteSwitcher";
 import {compose} from "react-apollo/index";
-import CmRouter from "./CmRouter";
 import {DxContext} from "./DxContext";
 import {CmSearchBar} from "./CmSearchBar";
 
@@ -36,9 +35,9 @@ class CMTopBar extends React.Component {
         return (
             <Toolbar color={"secondary"} classes={{root: classes.root}}>
                 <div className={classes.head}>
-                    <SiteSwitcher key={"siteSwitcher_" + dxContext.siteKey + "_" + dxContext.lang} dxContext={dxContext}/>
+                    <SiteSwitcher dxContext={dxContext}/>
                     <Typography variant="display1" color="inherit" data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
-                    <LanguageSwitcher key={"languageSwitcher_" + dxContext.siteKey + "_" + dxContext.lang} dxContext={dxContext}/>
+                    <LanguageSwitcher dxContext={dxContext}/>
                 </div>
 
                 {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}
@@ -53,7 +52,7 @@ class CMTopBar extends React.Component {
                 </div>
 
                 <div className={classes.search}>
-                    <CmRouter render={({params}) => <CmSearchBar dxContext={dxContext} urlParams={params}/>}/>
+                    <CmSearchBar/>
                 </div>
             </Toolbar>
         );

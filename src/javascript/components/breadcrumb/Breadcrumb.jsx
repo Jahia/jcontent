@@ -6,7 +6,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Folder from '@material-ui/icons/Folder';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import {PageIcon} from '@jahia/icons';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import {translate} from "react-i18next";
 import * as _ from 'lodash';
 
@@ -52,6 +52,7 @@ const MenuItemLabel = styled.div`
     display: inline;
     position: relative;
     `;
+
 class BreadcrumbDisplay extends React.Component {
 
     constructor(props) {
@@ -135,14 +136,16 @@ class BreadcrumbDisplay extends React.Component {
                     <ArrowDropDown className={classes.chevronIcon}/>
                     <MenuItem className={classes.menuItemHeader}
                               disableRipple={true}
-                              onClick={(event) => {event.preventDefault()}}>
+                              onClick={(event) => {
+                                  event.preventDefault()
+                              }}>
                         {nodes.name}
                     </MenuItem>
                 </MenuItemContainer>
                 {nodes.siblings.map((node, i) => {
                     return <MenuItemContainer key={node.uuid}>
                         <MenuItem className={classes.menuItem}
-                                 onClick={(event) => this.onMenuItemSelected(event, node)}>
+                                  onClick={(event) => this.onMenuItemSelected(event, node)}>
                             {this.renderIcon(node)}
                             <MenuItemLabel>{node.name}</MenuItemLabel>
                         </MenuItem>
@@ -175,7 +178,9 @@ class BreadcrumbDisplay extends React.Component {
                 disableRipple={true}
                 aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
-                onClick={() => {this.props.handleSelect(nodes.siblings[0].path, {type: nodes.siblings[0].pathType});}}>
+                onClick={() => {
+                    this.props.handleSelect(nodes.siblings[0].path, {type: nodes.siblings[0].pathType});
+                }}>
                 {this.renderIcon(nodes)}
                 {nodes.name}
             </Button>
@@ -184,7 +189,7 @@ class BreadcrumbDisplay extends React.Component {
 
     renderIcon(node) {
         let {classes} = this.props;
-        switch(node.type) {
+        switch (node.type) {
             case "jnt:virtualsite" :
                 return <PageIcon className={classes.contentIcon}/>
             case "jnt:folder":
@@ -242,24 +247,28 @@ class Breadcrumb extends React.Component {
         let {breadcrumbs} = this.state;
         return (<div>
             {breadcrumbs.map((breadcrumb, i) => {
-               return <span key={breadcrumb.uuid}>
+                return <span key={breadcrumb.uuid}>
                     <StyledBreadcrumbDisplay
                         id={breadcrumb.uuid}
                         handleSelect={this.props.handleSelect}
                         nodes={breadcrumb}/>
-                   {i < breadcrumbs.length-1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
+                    {i < breadcrumbs.length - 1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
                    </span>
             })}
         </div>)
     }
 
-    static splitPath(path, type, dxContext) {
-        switch(type) {
+    static splitPath(path, type) {
+        switch (type) {
             case 'contents':
-            case 'files':
-                return path.replace("/sites/" + dxContext.siteKey + "/", "").split("/");
-            case 'pages':
-                return path.replace("/sites/", "").split("/");
+            case 'files': {
+                let [, , ...pathElements] = path.split('/');
+                return pathElements;
+            }
+            case 'pages': {
+                let [, ...pathElements] = path.split('/');
+                return pathElements;
+            }
         }
     }
 
@@ -273,27 +282,27 @@ class Breadcrumb extends React.Component {
     }
 
     static parseEntries(props) {
-        let {pickerEntries:entries, path:selectedPath, rootLabel, dxContext, t, rootPath} = props;
+        let {pickerEntries: entries, path: selectedPath, rootLabel, t, rootPath} = props;
         //Process these nodes
         let breadcrumbs = [];
         let rootType = this.parseTypeFromPath(rootPath, selectedPath);
-        let selectedPathParts = this.splitPath(selectedPath, rootType, dxContext);
+        let selectedPathParts = this.splitPath(selectedPath, rootType);
         for (let i in entries) {
-            let entry =  entries[i];
-            let entryPathParts = this.splitPath(entry.path, rootType, dxContext);
+            let entry = entries[i];
+            let entryPathParts = this.splitPath(entry.path, rootType);
             if (entryPathParts.length > selectedPathParts.length) {
                 //skip, our selections does not go this deep.
                 continue;
             }
             //Verify this is the same path along the tree that is currently selected.
             //We are checking parent of current entry
-            let parentIndex = entryPathParts.length -2;
+            let parentIndex = entryPathParts.length - 2;
 
             if (entryPathParts[parentIndex] !== undefined && selectedPathParts[parentIndex] !== entryPathParts[parentIndex]) {
                 //This is a different path, we will skip it as it is not part of our current breadcrumb!
                 continue;
             }
-            let breadcrumb = breadcrumbs[entryPathParts.length-1];
+            let breadcrumb = breadcrumbs[entryPathParts.length - 1];
 
             if (breadcrumb === undefined) {
                 //Start new object, we are at a deeper level then before.
@@ -323,7 +332,7 @@ class Breadcrumb extends React.Component {
                     path: rootPath + "/contents",
                     pathType: "contents",
                     type: "jnt:contentFolder"
-                },{
+                }, {
                     uuid: "pages_id",
                     name: t("label.contentManager.browsePages"),
                     path: rootPath,
@@ -348,15 +357,14 @@ class Breadcrumb extends React.Component {
                 breadcrumb.uuid = entry.node.uuid;
                 breadcrumb.type = entry.node.primaryNodeType.name;
             }
-            breadcrumbs[entryPathParts.length-1] = breadcrumb;
+            breadcrumbs[entryPathParts.length - 1] = breadcrumb;
         }
         return breadcrumbs;
     }
- }
+}
 
 Breadcrumb.propTypes = {
     path: PropTypes.string.isRequired,
-    dxContext: PropTypes.object.isRequired,
     handleSelect: PropTypes.func.isRequired,
     rootLabel: PropTypes.string,
     rootPath: PropTypes.string.isRequired

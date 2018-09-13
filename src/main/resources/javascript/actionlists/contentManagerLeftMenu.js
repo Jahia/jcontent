@@ -18,6 +18,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         target: ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.media',
     },
+    /*
     savedSearchesLeftMenu: {
         priority : 3.0,
         component: "sideMenuAction",
@@ -25,6 +26,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         target: ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.savedSearches',
     },
+    */
     contentReportsLeftMenu : {
         priority : 4.0,
         component: "sideMenuAction",

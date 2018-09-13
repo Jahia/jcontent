@@ -38,7 +38,7 @@ class WorkflowsAction extends React.Component {
                         if (!loading && !error) {
                             let numberOfTasks = data.jcr.result;
                             if(numberOfTasks !== 0) {
-                                return <Badge badgeContent={numberOfTasks} color="primary">{child}</Badge>
+                                return <Badge badgeContent={numberOfTasks} color="primary" data-cm-role={'notification-badge'}>{child}</Badge>
                             }else{
                                 return child;
                             }

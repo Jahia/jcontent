@@ -146,8 +146,8 @@
     i18next-xhr-backend "^1.5.1"
 
 "@jahia/icons@^1.0.0-beta.20180618091411":
-  version "1.0.0-beta.20180803133828"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2ficons/-/icons-1.0.0-beta.20180803133828.tgz#81c956a4be9c57dce10218161bed2aa95d553428"
+  version "1.0.0-beta.20180914131727"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2ficons/-/icons-1.0.0-beta.20180914131727.tgz#cde264fcf184342f92447738ef28d400eff10630"
   dependencies:
     "@material-ui/core" "^1.2.0"
     react "^16.4.1"
@@ -165,8 +165,8 @@
     react-apollo "^2.1.4"
 
 "@jahia/react-material@^1.0.0-beta.20180710133148":
-  version "1.0.0-beta.20180907081145"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20180907081145.tgz#f30f9a767e7a4a59566cc1022ce268ea70a5deb6"
+  version "1.0.0-beta.20180914131729"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20180914131729.tgz#e617a889cd3d79ede3e9a19541e9f13a9670e435"
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20180618091411"
     "@material-ui/core" "^1.2.0"
@@ -4075,9 +4075,13 @@ lodash@^3.5.0:
   version "3.10.1"
   resolved "http://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
+lodash@^4.17.10:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 log-symbols@^1.0.2:
   version "1.0.2"
@@ -5513,7 +5517,7 @@ react@^15.5.4:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react@^16.2.0, react@^16.4.0, react@^16.4.1:
+react@^16.2.0, react@^16.4.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.5.0.tgz#f2c1e754bf9751a549d9c6d9aca41905beb56575"
   dependencies:
@@ -5521,6 +5525,15 @@ react@^16.2.0, react@^16.4.0, react@^16.4.1:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     schedule "^0.3.0"
+
+react@^16.4.1:
+  version "16.5.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.5.1.tgz#8cb8e9f8cdcb4bde41c9a138bfbf907e66132372"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    schedule "^0.4.0"
 
 read-chunk@^2.1.0:
   version "2.1.0"
@@ -5855,6 +5868,12 @@ sax@~1.1.1:
 schedule@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
+  dependencies:
+    object-assign "^4.1.1"
+
+schedule@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.4.0.tgz#fa20cfd0bfbf91c47d02272fd7096780d3170bbb"
   dependencies:
     object-assign "^4.1.1"
 

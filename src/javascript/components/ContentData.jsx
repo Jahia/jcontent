@@ -71,8 +71,8 @@ class ContentData extends React.Component {
     }
 
     render() {
-        const {contentSource, notificationContext, t, children, page, rowsPerPage, siteKey, lang, path, searchTerms, searchContentType, sql2SearchFrom, setPath, uiLang} = this.props;
-        const params = {searchContentType: searchContentType, searchTerms: searchTerms, sql2SearchFrom: sql2SearchFrom};
+        const {contentSource, notificationContext, t, children, page, rowsPerPage, siteKey, lang, path, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere, setPath, uiLang} = this.props;
+        const params = {searchContentType: searchContentType, searchTerms: searchTerms, sql2SearchFrom: sql2SearchFrom, sql2SearchWhere: sql2SearchWhere};
         let queryHandler = contentQueryHandlerBySource[contentSource];
         const rootPath = `/sites/${siteKey}`
         this.gwtEventHandlerContext = {
@@ -156,6 +156,7 @@ const mapStateToProps = (state, ownProps) => ({
     searchTerms: state.params.searchTerms,
     searchContentType: state.params.searchContentType,
     sql2SearchFrom: state.params.sql2SearchFrom,
+    sql2SearchWhere: state.params.sql2SearchWhere,
     uiLang: state.uiLang
 })
 

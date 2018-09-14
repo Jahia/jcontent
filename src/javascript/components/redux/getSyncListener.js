@@ -17,14 +17,12 @@ let select = (state) => {
 };
 
 let buildUrl = (site, language, mode, path, params) => {
-    console.log("remove " + ("/sites/" + site) + " from " + path);
     let sitePath = "/sites/" + site;
     if (path.startsWith(sitePath + "/")) {
         path = path.substring(("/sites/" + site).length);
     } else {
         path = "";
     }
-    console.log("result : " + path);
     let queryString = _.isEmpty(params) ? "" : PARAMS_KEY + encodeURIComponent(encodeURIComponent(JSON.stringify(params)));
     return "/" + [site, language, mode].join("/") + path + queryString;
 };
@@ -33,7 +31,6 @@ let extractParamsFromUrl = (pathname, search) => {
     let [, site, language, mode, ...pathElements] = pathname.split('/');
     const path = "/sites/" + site + (_.isEmpty(pathElements) ? "" : ("/" + pathElements.join("/")));
     let params = deserializeQueryString(search);
-    console.log("things extracted from url : ", site, language, mode, path, params)
     return {site, language, mode, path, params}
 };
 
@@ -51,7 +48,7 @@ let getSyncListener = (store, history) => () => {
         if (previousValue) {
             let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search)
             if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
-                console.log("Path or params changed");
+                console.log("Path or query string changed");
                 if (currentValueFromUrl.site !== previousValue.site ||
                     currentValueFromUrl.language !== previousValue.language ||
                     currentValueFromUrl.mode !== previousValue.mode ||
@@ -71,7 +68,7 @@ let getSyncListener = (store, history) => () => {
                     (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
                     (!_.isEqual(currentValueFromUrl.params, currentValue.params))
                 ) {
-                    console.log("Param changed");
+                    console.log("Application Params changed");
                     history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, currentValue.path, currentValue.params));
                 }
             }

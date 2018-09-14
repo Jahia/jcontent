@@ -14,6 +14,7 @@ import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {setUrl} from "./redux/actions";
 
+
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
     "files": new FilesQueryHandler(),
@@ -70,7 +71,8 @@ class ContentData extends React.Component {
     }
 
     render() {
-        const {contentSource, notificationContext, t, children, page, rowsPerPage, siteKey, lang, path, params, setPath, uiLang} = this.props;
+        const {contentSource, notificationContext, t, children, page, rowsPerPage, siteKey, lang, path, searchTerms, searchContentType, sql2SearchFrom, setPath, uiLang} = this.props;
+        const params = {searchContentType: searchContentType, searchTerms: searchTerms, sql2SearchFrom: sql2SearchFrom};
         let queryHandler = contentQueryHandlerBySource[contentSource];
         const rootPath = `/sites/${siteKey}`
         this.gwtEventHandlerContext = {
@@ -151,7 +153,9 @@ const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
     lang: state.language,
     path: state.path,
-    params: state.params,
+    searchTerms: state.params.searchTerms,
+    searchContentType: state.params.searchContentType,
+    sql2SearchFrom: state.params.sql2SearchFrom,
     uiLang: state.uiLang
 })
 

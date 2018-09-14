@@ -78,7 +78,7 @@ class ContentBreadcrumbs extends React.Component {
                 selectableTypes={pickerConfiguration.selectableTypes}
                 queryVariables={{lang: lang}}
                 openSelection={false}
-                onSelectItem={(path, newParams) => setUrl(path, newParams)}
+                onSelectItem={(mode, path) => setUrl(mode, path)}
             >
                 {({...others}) => {
                     return <Breadcrumb
@@ -102,7 +102,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (path, params) => dispatch(setUrl(null, null, null, path, params))
+    setUrl: (mode, path) => dispatch(setUrl(null, null, mode, path))
 })
 
 ContentBreadcrumbs = _.flowRight(

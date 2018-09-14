@@ -124,7 +124,7 @@ class BreadcrumbDisplay extends React.Component {
     };
 
     onMenuItemSelected(event, node) {
-        this.props.handleSelect(node.path, {type: node.pathType});
+        this.props.handleSelect(node.mode, node.path);
         this.onMenuExit(event);
     }
 
@@ -179,7 +179,7 @@ class BreadcrumbDisplay extends React.Component {
                 aria-owns={"breadcrumbMenu_" + nodes.uuid}
                 aria-haspopup="true"
                 onClick={() => {
-                    this.props.handleSelect(nodes.siblings[0].path, {type: nodes.siblings[0].pathType});
+                    this.props.handleSelect(nodes.siblings[0].mode, nodes.siblings[0].path);
                 }}>
                 {this.renderIcon(nodes)}
                 {nodes.name}
@@ -329,6 +329,7 @@ class Breadcrumb extends React.Component {
                 let siblingsToBeAdded = [{
                     uuid: 'contents_id',
                     name: t("label.contentManager.browseFolders"),
+                    mode: "browse",
                     path: rootPath + "/contents",
                     pathType: "contents",
                     type: "jnt:contentFolder"
@@ -336,12 +337,14 @@ class Breadcrumb extends React.Component {
                     uuid: "pages_id",
                     name: t("label.contentManager.browsePages"),
                     path: rootPath,
+                    mode: "browse",
                     pathType: "pages",
                     type: "jnt:virtualsite"
                 }, {
                     uuid: "files_id",
                     name: t("label.contentManager.browseFiles"),
                     path: rootPath + "/files",
+                    mode: "browse-files",
                     pathType: "files",
                     type: "jnt:folder"
                 }];

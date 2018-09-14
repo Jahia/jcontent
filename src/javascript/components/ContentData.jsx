@@ -133,12 +133,15 @@ class ContentData extends React.Component {
                     });
                 }
 
-                return [loading && <ProgressOverlay/>,children({
-                    rows: rows,
-                    totalCount: totalCount,
-                    layoutQuery: layoutQuery,
-                    layoutQueryParams: layoutQueryParams,
-                })];
+                return <React.Fragment>
+                    {loading && <ProgressOverlay/>}
+                    {children({
+                        rows: rows,
+                        totalCount: totalCount,
+                        layoutQuery: layoutQuery,
+                        layoutQueryParams: layoutQueryParams
+                    })}
+                </React.Fragment>
             }}
         </Query>
     }

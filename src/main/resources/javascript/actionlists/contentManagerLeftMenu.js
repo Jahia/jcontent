@@ -40,14 +40,14 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         menuId : "leftMenuManageActions",
         target : ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.manage.title',
-        hasChildren: true,
+        hasChildren: true
     },
     bottomLeftMenu: {
         component: "sideMenuAction",
         menuId: "bottomLeftMenuActions",
         target: ["bottomLeftMenu"],
         requiredPermission: "",
-        labelKey: 'label.contentManager.bottomLeftMenu',
+        labelKey: 'label.contentManager.bottomLeftMenu'
     },
     workflowsLeftMenu: {
         priority : 6.0,
@@ -56,5 +56,6 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         requiredPermission: "",
         target: ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.workflow',
+        pollInterval: 2000
     },
 });

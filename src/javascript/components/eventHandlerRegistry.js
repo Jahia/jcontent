@@ -1,18 +1,18 @@
 import * as _ from "lodash";
 
-let register = (eventType, eventHandler) => {
-    if (window.parent[eventType]) {
-        let eventHandlers = window.parent[eventType];
+let register = (eventHandler) => {
+    if (window.parent.contentModificationEventHandlers) {
+        let eventHandlers = window.parent.contentModificationEventHandlers;
         if (_.indexOf(eventHandlers, eventHandler) < 0) {
             eventHandlers[eventHandlers.length] = eventHandler;
         }
     } else {
-        window.parent[eventType] = [eventHandler];
+        window.parent.contentModificationEventHandlers = [eventHandler];
     }
 }
 
-let unregister = (eventType, eventHandler) => {
-    _.remove(window.parent[eventType], (eh) => (eh === eventHandler));
+let unregister = (eventHandler) => {
+    _.remove(window.parent.contentModificationEventHandlers, (eh) => (eh === eventHandler));
 }
 
 export {register, unregister}

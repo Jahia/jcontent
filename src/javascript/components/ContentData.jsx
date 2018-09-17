@@ -25,48 +25,35 @@ const contentQueryHandlerBySource = {
 class ContentData extends React.Component {
 
     constructor(props) {
-
         super(props);
-
-        this.onGwtContentCreate = this.onGwtContentCreate.bind(this);
-        this.onGwtContentUpdate = this.onGwtContentUpdate.bind(this);
+        this.onGwtContentModification = this.onGwtContentModification.bind(this);
     }
 
     componentDidMount() {
-        gwtEventHandlerRegister("updateButtonItemEventHandlers", this.onGwtContentUpdate);
-        gwtEventHandlerRegister("createButtonItemEventHandlers", this.onGwtContentCreate);
+        gwtEventHandlerRegister(this.onGwtContentModification);
     }
 
     componentWillUnmount() {
-        gwtEventHandlerUnregister("updateButtonItemEventHandlers", this.onGwtContentUpdate);
-        gwtEventHandlerUnregister("createButtonItemEventHandlers", this.onGwtContentCreate);
+        gwtEventHandlerUnregister(this.onGwtContentModification);
     }
 
-    onGwtContentCreate(enginePath, engineNodeName, uuid) {
-        this.onGwtContentSave(enginePath, engineNodeName, uuid, true);
-    }
-
-    onGwtContentUpdate(enginePath, engineNodeName, uuid) {
-        this.onGwtContentSave(enginePath, engineNodeName, uuid, false);
-    }
-
-    onGwtContentSave(enginePath, engineNodeName, uuid, forceRefresh) {
+    onGwtContentModification(nodePath, nodeName, operation) {
         // clean up the cache entry
-        const path = enginePath.substring(0, enginePath.lastIndexOf("/") + 1) + engineNodeName;
-        if (enginePath === this.gwtEventHandlerContext.path && enginePath !== path) {
+        const path = nodePath.substring(0, nodePath.lastIndexOf("/") + 1) + nodeName;
+        if (nodePath === this.gwtEventHandlerContext.path && nodePath !== path) {
             this.gwtEventHandlerContext.setPath(path, this.gwtEventHandlerContext.params);
         } else {
             // update the parent node to update the current node data (needed for add / remove / move etc ..
             // TODO: do not call forceCMUpdate() but let the application update by itself ( BACKLOG-8369 )
             this.props.client.query({
-                query: GetNodeAndChildrenByPathQuery,
                 fetchPolicy: "network-only",
+                query: GetNodeAndChildrenByPathQuery,
                 variables: {
                     "path": path.substring(0, path.lastIndexOf("/")),
                     "language": this.gwtEventHandlerContext.lang,
                     "displayLanguage": this.gwtEventHandlerContext.uiLang
                 }
-            }).then(forceRefresh && window.forceCMUpdate());
+            }).then(operation === "create" && window.forceCMUpdate());
         }
     }
 
@@ -100,7 +87,6 @@ class ContentData extends React.Component {
                     notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                     return null;
                 }
-
 
                 let rows = [];
                 let totalCount = 0;
@@ -158,11 +144,11 @@ const mapStateToProps = (state, ownProps) => ({
     sql2SearchFrom: state.params.sql2SearchFrom,
     sql2SearchWhere: state.params.sql2SearchWhere,
     uiLang: state.uiLang
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(setUrl(null, null, null, path, params))
-})
+});
 
 ContentData = _.flowRight(
     withNotifications(),

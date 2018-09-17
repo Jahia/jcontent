@@ -227,7 +227,7 @@ class ContentListTable extends React.Component {
                                                 }
                                             })}
                                             <TableCell data-cm-role={'table-content-list-cell-action-menu'}>
-                                                <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name}}>
+                                                <Actions menuId={"tableActions"} context={{path: n.path, displayName: n.name, nodeName: n.nodeName}}>
                                                     {(props) => <CmIconButton {...props} cmRole={'table-content-list-action-menu'}/>}
                                                 </Actions>
                                             </TableCell>

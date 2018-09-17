@@ -52,6 +52,7 @@
           "copy": "Copy",
           "duplicate": "Duplicate",
           "delete": "Delete",
+          "undelete": "UnDelete",
           "notPublished": "Content has never been published",
           "publishedBy" : "Published by {{userName}} on ",
           "modifiedBy" : "Modified by {{userName}} on ",

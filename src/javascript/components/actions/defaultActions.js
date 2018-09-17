@@ -6,12 +6,14 @@ import DeleteAction from "./DeleteAction";
 import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
+import UnDeleteAction from "./UnDeleteAction";
 
 let edit = (context) => window.parent.authoringApi.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:contentFolder"], false);
 let createFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:folder"], false);
 let createContent = (context) =>  window.parent.authoringApi.createContent(context.path, context.nodeTypes, context.includeSubTypes);
 let publish = (context) => window.parent.authoringApi.openPublicationWorkflow(context.uuid, context.allSubTree, context.allLanguages, context.checkForUnpublication);
+let undelete = (context) => window.parent.authoringApi.unDeleteContent(context.path, context.displayName, context.nodeName, context.onGwtContentUndelete);
 
 let defaultActions = {
     edit: {
@@ -195,6 +197,17 @@ let defaultActions = {
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
         requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.delete",
+        hideOnNodeTypes: ["jnt:page"]
+    },
+    unDelete: {
+        priority: 4.1,
+        component: UnDeleteAction,
+        icon: "Delete",
+        call: undelete,
+        target: ["contentTreeMenuActions", "tableMenuActions", "additionalPreviewMenu"],
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
+        requiredPermission: "jcr:removeNode",
+        labelKey: "label.contentManager.contentPreview.undelete",
         hideOnNodeTypes: ["jnt:page"]
     },
     createMenu: {

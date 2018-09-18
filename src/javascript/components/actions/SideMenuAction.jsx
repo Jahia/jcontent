@@ -16,14 +16,9 @@ class SideMenuAction extends React.Component {
         const {t, menuId, children, context, handleDrawer, classes, ...rest} = this.props;
         const actionContent = <List style={{marginLeft: '18px', marginTop: '18px'}}>
             <Actions menuId={menuId} context={context}>
-                {(props) =>
-                    <ListItem key={props.labelKey}
-                              className={classes.childItem }
-                              onClick={() => this.selectItem(el)}>
-                        <VerifiedUser className={classes.childIconLight} />
-                        <Typography  className={classes.childItem}>
-                            {t(props.labelKey)}
-                        </Typography>
+                {(menuConfig) =>
+                    <ListItem button onClick={(event) => menuConfig.onClick(event)}>
+                        {t(menuConfig.labelKey, menuConfig.labelParams)}
                     </ListItem>
                 }
             </Actions>

@@ -3,7 +3,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 1.0,
         component: "routerAction",
         mode: "iframe",
-        iframeUrl : "/cms/editframe/:workspace/:lang/sites/:site.manageUsers.html",
+        iframeUrl : "/:context/cms/editframe/:workspace/:lang/sites/:site.manageUsers.html",
         target : ["leftMenuManageActions"],
         labelKey: 'label.contentManager.leftMenu.manage.users.title'
     }

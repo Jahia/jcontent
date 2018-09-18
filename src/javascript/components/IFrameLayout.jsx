@@ -13,7 +13,7 @@ class IFrameLayout extends React.Component {
             setUrl(null, null, "browse", "/", {});
             return null;
         }
-        let iframeUrl = action.iframeUrl.replace(/:context/g, contextPath);
+        let iframeUrl = action.iframeUrl.replace(/:context/g, contextPath.substring(1)); // remove starting "/"
         iframeUrl = iframeUrl.replace(/:workspace/g, workspace);
         iframeUrl = iframeUrl.replace(/:lang/g, lang);
         iframeUrl = iframeUrl.replace(/:site/g, siteKey);
@@ -31,7 +31,7 @@ class IFrameLayout extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     actionKey: state.params.actionKey,
-    lang: state.lang,
+    lang: state.language,
     siteKey: state.site
 })
 

@@ -58,6 +58,12 @@ class LanguageSwitcher extends React.Component {
         `;
     }
 
+    onSelectLanguage = (lang) => {
+        console.log("Switching language to: " + lang);
+        // switch edit mode linker language
+        window.parent.authoringApi.switchLanguage(lang);
+    };
+
     validateLanguageExists = (languages, data, lang) => {
         if (!_.isEmpty(languages)) {
             //If we cant find the selected language in the list of available languages,
@@ -86,12 +92,11 @@ class LanguageSwitcher extends React.Component {
                 }
             }
         }
-        //dxContext.siteLanguages = parsedSiteLanguages;
         return parsedSiteLanguages;
     }
 
     render() {
-        const {t, notificationContext, siteKey, lang, onSelectLanguage} = this.props;
+        const {t, notificationContext, siteKey, lang, onSelectLanguage, dxContext} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
         };
@@ -114,6 +119,7 @@ class LanguageSwitcher extends React.Component {
                     if (languageExists === true) {
                         return <LanguageSwitcherDisplay
                             languages={displayableLanguages}
+                            onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
                         />
                     } else {
                         onSelectLanguage(languageExists);
@@ -180,7 +186,12 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelectLanguage: (lang) => dispatch(cmSetLanguage(lang))
+    onSelectLanguage: (lang) => {
+        if (ownProps.onSelectLanguage) {
+            ownProps.onSelectLanguage(lang);
+        }
+        dispatch(cmSetLanguage(lang));
+    }
 });
 
 LanguageSwitcherDisplay = _.flowRight(

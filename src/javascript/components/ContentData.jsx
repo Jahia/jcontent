@@ -38,14 +38,8 @@ class ContentData extends React.Component {
     }
 
     onGwtContentModification(nodePath, nodeName, operation) {
-        // clean up the cache entry
-        const path = nodePath.substring(0, nodePath.lastIndexOf("/") + 1) + nodeName;
-        if (nodePath === this.gwtEventHandlerContext.path && nodePath !== path) {
-            this.gwtEventHandlerContext.setPath(path, this.gwtEventHandlerContext.params);
-        } else {
-            // reset all store and reload all data (needed for add / remove / move etc ..
-            this.props.client.resetStore();
-        }
+        // reset all store and reload all data
+        this.props.client.resetStore();
     }
 
     render() {

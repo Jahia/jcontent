@@ -1,6 +1,6 @@
 const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
-const CM_SET_SELECTION = 'SET_SELECTION';
+const CM_SET_SELECTION = 'CM_SET_SELECTION';
 
 function setUiLang(uiLang) {
     return {
@@ -11,7 +11,7 @@ function setUiLang(uiLang) {
 
 function cmSetSelection(selection) {
     return {
-        type: SET_SELECTION,
+        type: CM_SET_SELECTION,
         selection
     }
 }

@@ -43,17 +43,8 @@ class ContentData extends React.Component {
         if (nodePath === this.gwtEventHandlerContext.path && nodePath !== path) {
             this.gwtEventHandlerContext.setPath(path, this.gwtEventHandlerContext.params);
         } else {
-            // update the parent node to update the current node data (needed for add / remove / move etc ..
-            // TODO: do not call forceCMUpdate() but let the application update by itself ( BACKLOG-8369 )
-            this.props.client.query({
-                fetchPolicy: "network-only",
-                query: GetNodeAndChildrenByPathQuery,
-                variables: {
-                    "path": path.substring(0, path.lastIndexOf("/")),
-                    "language": this.gwtEventHandlerContext.lang,
-                    "displayLanguage": this.gwtEventHandlerContext.uiLang
-                }
-            }).then(operation === "create" && window.forceCMUpdate());
+            // reset all store and reload all data (needed for add / remove / move etc ..
+            this.props.client.resetStore();
         }
     }
 

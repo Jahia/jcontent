@@ -3,6 +3,7 @@ import {Edit, Publish} from "@material-ui/icons";
 import CreateContentAction from "./CreateContentAction";
 import CreateContentOfTypeAction from "./CreateContentOfTypeAction";
 import DeleteAction from "./DeleteAction";
+import DeletePermanentlyAction from "./DeletePermanentlyAction";
 import PublishAction from "./PublishAction";
 import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
@@ -202,6 +203,16 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.delete",
         hideOnNodeTypes: ["jnt:page"]
     },
+    deletePermanetly: {
+        priority: 4,
+        component: DeletePermanentlyAction,
+        icon: "Delete",
+        target: ["contentTreeMenuActions", "tableMenuActions", "additionalPreviewMenu"],
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
+        requiredPermission: "jcr:removeNode",
+        labelKey: "label.contentManager.contentPreview.deletePermanently",
+        hideOnNodeTypes: ["jnt:page"]
+},
     unDelete: {
         priority: 4.1,
         component: UnDeleteAction,

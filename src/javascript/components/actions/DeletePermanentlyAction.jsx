@@ -3,7 +3,7 @@ import {translate} from "react-i18next";
 import * as _ from "lodash";
 import {withNotifications} from "@jahia/react-material/index";
 
-class DeleteAction extends React.Component {
+class DeletePermanentlyAction extends React.Component {
 
     render() {
 
@@ -14,19 +14,19 @@ class DeleteAction extends React.Component {
             mixinTypesProperty = _.find(context.node.properties, property => property.name === 'jcr:mixinTypes');
         }
         if (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, "jmix:markedForDeletionRoot")) {
-            return null;
+            return children({
+                ...rest,
+                onClick: () => window.parent.authoringApi.deleteContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], false, true)
+            });
         }
 
-        return children({
-            ...rest,
-            onClick: () => window.parent.authoringApi.deleteContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], false, false)
-        });
+        return null;
     }
 }
 
-DeleteAction = _.flowRight(
+DeletePermanentlyAction = _.flowRight(
     withNotifications(),
     translate()
-)(DeleteAction);
+)(DeletePermanentlyAction);
 
-export default DeleteAction;
+export default DeletePermanentlyAction;

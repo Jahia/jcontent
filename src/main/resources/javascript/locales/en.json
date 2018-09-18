@@ -53,6 +53,7 @@
           "duplicate": "Duplicate",
           "delete": "Delete",
           "undelete": "UnDelete",
+          "deletePermanently": "Delete permanently",
           "notPublished": "Content has never been published",
           "publishedBy" : "Published by {{userName}} on ",
           "modifiedBy" : "Modified by {{userName}} on ",

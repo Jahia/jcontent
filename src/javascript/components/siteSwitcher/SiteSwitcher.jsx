@@ -78,6 +78,26 @@ class SiteSwitcher extends React.Component {
         return siteNodes;
     }
 
+    getTargetSiteLanguageForSwitch(siteNode, currentLang) {
+        let newLang = null;
+        let siteLanguages = siteNode.site.languages;
+        for (let i in siteLanguages) {
+            let lang = siteLanguages[i];
+            if (lang.activeInEdit && lang.language === currentLang) {
+                newLang = currentLang;
+                break;
+            }
+        }
+        return newLang !== null ? newLang : siteNode.site.defaultLanguage;
+    }
+
+    onSelectSite = (siteNode) => {
+        let {dxContext} = this.props;
+        let newLang = this.getTargetSiteLanguageForSwitch(siteNode, dxContext.lang);
+        console.log("Switching to site " + siteNode.name + " in language " + newLang);
+        window.parent.authoringApi.switchSite(siteNode.name, newLang);
+    };
+
     render() {
         const {notificationContext, t} = this.props;
         return <Query query={this.query} variables={this.variables}>
@@ -95,7 +115,7 @@ class SiteSwitcher extends React.Component {
                     }
 
                     let sites = this.getSites(data);
-                    return <SiteSwitcherDisplay siteNodes={sites}/>
+                    return <SiteSwitcherDisplay onSelectSite={(siteNode) => this.onSelectSite(siteNode)} siteNodes={sites}/>
                 }
             }
         </Query>
@@ -133,7 +153,7 @@ class SiteSwitcherDisplay extends React.Component {
         } else {
             const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
             return <React.Fragment>
-                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick}>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'site-switcher'}>
                     <Typography className={classes.typography}>
                         {siteNode.displayName}
                     </Typography>
@@ -159,7 +179,12 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelectSite: (siteNode) => dispatch(cmSetSite(siteNode.name))
+    onSelectSite: (siteNode) => {
+        if (ownProps.onSelectSite) {
+            ownProps.onSelectSite(siteNode);
+        }
+        dispatch(cmSetSite(siteNode.name));
+    }
 })
 
 SiteSwitcherDisplay = _.flowRight(

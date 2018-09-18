@@ -10,7 +10,7 @@ class RouterAction extends React.Component {
         return children({
             ...rest, onClick: (() => {
                 handleDrawerClose && handleDrawerClose()
-                setUrl(context.siteKey, context.lang, mode, actionKey, {});
+                setUrl(context.siteKey, context.lang, mode, mode === "apps" ? actionKey : "", {});
                 return null;
             })
         })

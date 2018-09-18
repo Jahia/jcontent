@@ -86,7 +86,16 @@
         </property>
 
         <property name="topToolbars">
-            <list/>
+            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar" id="Edit.Menu.LeftTop">
+                <property name="items">
+                    <list>
+                        <bean id="editmode.managers.menu" class="org.jahia.services.uicomponents.bean.toolbar.Menu">
+                            <property name="items" ref="bluemenu"/>
+                        </bean>
+
+                    </list>
+                </property>
+            </bean>
         </property>
 
         <property name="sidePanelToolbar">

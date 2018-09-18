@@ -122,7 +122,7 @@ class ContentManager extends React.Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
-                    <ApolloProvider client={client({contextPath: dxContext.contextPath})}>
+                    <ApolloProvider client={client({contextPath: dxContext.contextPath, useBatch:true, httpOptions:{batchMax:50}})}>
                         <I18nextProvider i18n={getI18n({
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,

@@ -49,6 +49,21 @@ class LanguageSwitcher extends React.Component {
                             language
                             activeInEdit
                         }
+                        ...NodeCacheRequiredFields
+                    }
+                    ...NodeCacheRequiredFields
+                }
+            }            
+            wsDefault:jcr {
+                result:nodeByPath(path: $path) {
+                    site {
+                        defaultLanguage
+                        languages {
+                            displayName
+                            language
+                            activeInEdit
+                        }
+                        ...NodeCacheRequiredFields
                     }
                     ...NodeCacheRequiredFields
                 }

@@ -21,7 +21,7 @@ import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
 import {ContentData} from "./ContentData";
 import CMTopBar from "./CMTopBar";
-import {setPath} from "./redux/actions";
+import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 
 const styles = theme => ({
@@ -209,7 +209,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setPath: (path, params) => dispatch(setPath(path, params))
+    setPath: (path, params) => dispatch(cmGoto(path, params))
 })
 
 ContentLayout = _.flowRight(

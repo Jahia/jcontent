@@ -1,69 +1,46 @@
-const SET_UILANGUAGE = 'SET_UILANGUAGE';
+const CM_NAVIGATE = 'CM_NAVIGATE';
+const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
 
 function setUiLang(uiLang) {
     return {
-        type: SET_UILANGUAGE,
+        type: CM_SET_UILANGUAGE,
         uiLang
     }
 }
 
-const SET_URL = 'SET_URL';
-
-function setUrl(site, language, mode, path, params) {
-    return {
-        type: SET_URL,
-        site,
-        language,
-        mode,
-        path,
-        params
-    }
+function cmGoto(data) {
+    return Object.assign(data || {}, {type: CM_NAVIGATE});
 }
 
-function setSite(site) {
-    return {
-        type: SET_URL,
-        site
-    }
+function cmSetSite(site) {
+    return cmGoto({site});
 }
 
 
-function setLanguage(language) {
-    return {
-        type: SET_URL,
-        language
-    }
+function cmSetLanguage(language) {
+    return cmGoto({language});
 }
 
-function setMode(mode) {
-    return {
-        type: SET_URL,
-        mode
-    }
+function cmSetMode(mode) {
+    return cmGoto({mode});
 }
 
-function setPath(path) {
-    return {
-        type: SET_URL,
-        path
-    }
+function cmSetPath(path) {
+    return cmGoto({path});
 }
 
-function setParams(params) {
-    return {
-        type: SET_URL,
-        params
-    }
+function cmSetParams(params) {
+    return cmGoto({params});
 }
 
 export {
-    setLanguage,
-    SET_UILANGUAGE,
-    setUiLang,
-    SET_URL,
-    setUrl,
-    setSite,
-    setMode,
-    setPath,
-    setParams
+    CM_NAVIGATE,
+    CM_SET_UILANGUAGE,
+    cmGoto,
+    cmSetLanguage,
+    cmSetUiLang,
+    cmSetSite,
+    cmSetMode,
+    cmSetPath,
+    cmSetParams
 }

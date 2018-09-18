@@ -1,5 +1,5 @@
 import React from 'react';
-import {setUrl} from "../redux/actions";
+import {cmGoto} from "../redux/actions";
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 
@@ -23,7 +23,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (siteKey, lang, mode, path, params) => dispatch(setUrl(siteKey, lang, mode, path, params))
+    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
 })
 
 RouterAction = _.flowRight(

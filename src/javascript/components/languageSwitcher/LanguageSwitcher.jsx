@@ -8,7 +8,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {setLanguage} from "../redux/actions";
+import {cmSetLanguage} from "../redux/actions";
 
 const styles = theme => ({
     typography: {
@@ -180,7 +180,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelectLanguage: (lang) => dispatch(setLanguage(lang))
+    onSelectLanguage: (lang) => dispatch(cmSetLanguage(lang))
 });
 
 LanguageSwitcherDisplay = _.flowRight(

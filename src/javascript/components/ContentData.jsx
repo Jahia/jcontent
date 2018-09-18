@@ -12,7 +12,7 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
-import {setUrl} from "./redux/actions";
+import {cmGoto} from "./redux/actions";
 
 
 const contentQueryHandlerBySource = {
@@ -148,7 +148,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setPath: (path, params) => dispatch(setUrl(null, null, null, path, params))
+    setPath: (path, params) => dispatch(cmGoto({path, params}))
 });
 
 ContentData = _.flowRight(

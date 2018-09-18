@@ -9,7 +9,7 @@ import {DxContext} from "./DxContext";
 import {NodeDisplayNameQuery} from "./gqlQueries";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import connect from "react-redux/es/connect/connect";
-import {setUrl, setMode} from "./redux/actions";
+import {cmGoto} from "./redux/actions";
 
 const styles = theme => ({
     underneathNode: {
@@ -375,8 +375,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onSearch: (mode, path, params) => dispatch(setUrl(null, null, mode, path, params)),
-        onClear: (params) => dispatch(setUrl(null, null, "browse", null, params))
+        onSearch: (mode, path, params) => dispatch(cmGoto({mode, path, params})),
+        onClear: (params) => dispatch(cmGoto({"mode": "browse", params}))
     }
 }
 

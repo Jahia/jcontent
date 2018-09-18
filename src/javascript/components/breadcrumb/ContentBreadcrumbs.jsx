@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 import {Picker} from "@jahia/react-apollo";
 import {translate} from "react-i18next";
 import connect from "react-redux/es/connect/connect";
-import {setUrl} from "../redux/actions";
+import {cmGoto} from "../redux/actions";
 
 class ContentBreadcrumbs extends React.Component {
 
@@ -102,7 +102,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (mode, path) => dispatch(setUrl(null, null, mode, path))
+    setUrl: (mode, path) => dispatch(cmGoto({mode, path}))
 })
 
 ContentBreadcrumbs = _.flowRight(

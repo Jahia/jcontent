@@ -7,7 +7,7 @@ import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
-import {setPath, setUrl} from "./redux/actions";
+import {cmGoto} from "./redux/actions";
 
 class ContentTree extends React.Component {
     constructor(props) {
@@ -103,7 +103,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setPath: (path, params) => dispatch(setUrl(null, null, null, path, params))
+    setPath: (path, params) => dispatch(cmGoto({path, params}))
 })
 
 ContentTrees = _.flowRight(

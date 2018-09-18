@@ -8,7 +8,7 @@ import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 import {translate} from "react-i18next";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {setSite} from "../redux/actions";
+import {cmSetSite} from "../redux/actions";
 
 
 const styles = theme => ({
@@ -159,7 +159,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelectSite: (siteNode) => dispatch(setSite(siteNode.name))
+    onSelectSite: (siteNode) => dispatch(cmSetSite(siteNode.name))
 })
 
 SiteSwitcherDisplay = _.flowRight(

@@ -10,7 +10,7 @@ import {Query, withApollo} from "react-apollo";
 import {replaceFragmentsInDocument} from "@jahia/apollo-dx";
 import {translate} from "react-i18next";
 import {withNotifications} from "@jahia/react-material/index";
-import {setUrl} from "./redux/actions";
+import {cmGoto} from "./redux/actions";
 import connect from "react-redux/es/connect/connect";
 
 class Actions extends React.Component {
@@ -81,7 +81,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setPath: (path, params) => dispatch(setUrl(null, null, null, path, params))
+    setPath: (path, params) => dispatch(cmGoto({path, params}))
 })
 
 Actions = _.flowRight(

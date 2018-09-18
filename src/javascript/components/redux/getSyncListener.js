@@ -1,4 +1,4 @@
-import {setLanguage, setMode, setParams, setPath, setSite, setUrl} from "./actions";
+import {cmGoto} from "./actions";
 
 const PARAMS_KEY = "?params=";
 let currentValue;
@@ -55,7 +55,7 @@ let getSyncListener = (store, history) => () => {
                     currentValueFromUrl.path !== previousValue.path ||
                     !_.isEqual(currentValueFromUrl.params, previousValue.params)
                 ) {
-                    store.dispatch(setUrl(currentValueFromUrl.site !== previousValue.site ? currentValueFromUrl.site : null,
+                    store.dispatch(cmGoto(currentValueFromUrl.site !== previousValue.site ? currentValueFromUrl.site : null,
                         currentValueFromUrl.language !== previousValue.language ? currentValueFromUrl.language : null,
                         currentValueFromUrl.mode !== previousValue.mode ? currentValueFromUrl.mode : null,
                         currentValueFromUrl.path !== previousValue.path ? currentValueFromUrl.path : null,

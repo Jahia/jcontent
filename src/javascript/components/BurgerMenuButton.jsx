@@ -14,11 +14,18 @@ const styles = theme => ({
 });
 
 class BurgerMenuButton extends React.Component {
+
+    openMenu = () => {
+        const clickEvent = window.top.document.createEvent("MouseEvents");
+        clickEvent.initEvent("click", true, true);
+        window.top.document.getElementsByClassName("editmode-managers-menu")[0].dispatchEvent(clickEvent);
+    }
+
     render() {
         let {classes} = this.props;
 
         return (
-            <div className={classes.menuButton}/>
+            <div className={classes.menuButton}  onClick={() => this.openMenu()}/>
         );
     }
 }

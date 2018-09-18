@@ -13,7 +13,7 @@ class DeleteAction extends React.Component {
         if (context.node.properties != null) {
             mixinTypesProperty = _.find(context.node.properties, property => property.name === 'jcr:mixinTypes');
         }
-        if (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, "jmix:markedForDeletionRoot")) {
+        if (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, "jmix:markedForDeletion")) {
             return null;
         }
 

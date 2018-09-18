@@ -111,7 +111,7 @@ class LanguageSwitcher extends React.Component {
     }
 
     render() {
-        const {t, notificationContext, siteKey, lang, onSelectLanguage, dxContext} = this.props;
+        const {t, notificationContext, siteKey, lang, onSelectLanguage} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
         };

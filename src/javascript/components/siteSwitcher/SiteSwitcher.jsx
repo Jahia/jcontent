@@ -91,9 +91,8 @@ class SiteSwitcher extends React.Component {
         return newLang !== null ? newLang : siteNode.site.defaultLanguage;
     }
 
-    onSelectSite = (siteNode) => {
-        let {dxContext} = this.props;
-        let newLang = this.getTargetSiteLanguageForSwitch(siteNode, dxContext.lang);
+    onSelectSite = (siteNode, currentLang) => {
+        let newLang = this.getTargetSiteLanguageForSwitch(siteNode, currentLang);
         console.log("Switching to site " + siteNode.name + " in language " + newLang);
         window.parent.authoringApi.switchSite(siteNode.name, newLang);
     };
@@ -115,7 +114,7 @@ class SiteSwitcher extends React.Component {
                     }
 
                     let sites = this.getSites(data);
-                    return <SiteSwitcherDisplay onSelectSite={(siteNode) => this.onSelectSite(siteNode)} siteNodes={sites}/>
+                    return <SiteSwitcherDisplay onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)} siteNodes={sites}/>
                 }
             }
         </Query>
@@ -146,7 +145,7 @@ class SiteSwitcherDisplay extends React.Component {
     };
 
     render() {
-        let {siteKey, siteNodes, loading, onSelectSite, classes} = this.props;
+        let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang} = this.props;
         let {anchorEl} = this.state;
         if (loading) {
             return <span>Loading...</span>
@@ -162,7 +161,7 @@ class SiteSwitcherDisplay extends React.Component {
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map((siteNode, i) => {
-                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode); this.handleClose();}}>
+                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode, currentLang); this.handleClose();}}>
                             {siteNode.displayName}
                         </MenuItem>
                     })}
@@ -175,7 +174,7 @@ class SiteSwitcherDisplay extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
-    lang: state.language
+    currentLang: state.language
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

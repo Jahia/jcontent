@@ -3,11 +3,12 @@ import Iframe from 'react-iframe';
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
 import {cmGoto} from "./redux/actions";
+import actionsRegistry from "./actionsRegistry";
 
 class IFrameLayout extends React.Component {
 
     render() {
-        const { actionKey, actionsRegistry, workspace, siteKey, lang, contextPath, setUrl } = this.props;
+        const { actionKey, workspace, siteKey, lang, contextPath, setUrl } = this.props;
         const action = actionsRegistry[actionKey];
         if (!action || !action.iframeUrl) {
             setUrl(null, null, "browse", "/", {});
@@ -30,9 +31,9 @@ class IFrameLayout extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => ({
-    actionKey: state.params.actionKey,
     lang: state.language,
-    siteKey: state.site
+    siteKey: state.site,
+    actionKey: state.path
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

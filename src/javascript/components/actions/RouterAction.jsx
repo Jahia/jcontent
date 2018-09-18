@@ -6,28 +6,23 @@ import {connect} from "react-redux";
 class RouterAction extends React.Component {
 
     render() {
-        const {children, context, mode, actionKey, handleDrawerClose, path, setUrl, ...rest} = this.props;
-        const params = actionKey ? {actionKey: actionKey} : null;
+        const {children, context, mode, actionKey, handleDrawerClose, setUrl, ...rest} = this.props;
         return children({
-            ...rest, onClick: ((params) => {;
+            ...rest, onClick: (() => {
                 handleDrawerClose && handleDrawerClose()
-                setUrl(context.siteKey, context.lang, mode, path, params);
+                setUrl(context.siteKey, context.lang, mode, actionKey, {});
                 return null;
-            }).bind(this, params)
+            })
         })
     }
 }
-
-const mapStateToProps = (state, ownProps) => ({
-    path: state.path
-})
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
 })
 
 RouterAction = _.flowRight(
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(null, mapDispatchToProps)
 )(RouterAction);
 
 export default RouterAction;

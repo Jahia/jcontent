@@ -59,8 +59,19 @@ class ContentLayout extends React.Component {
         })
     };
 
-    handleShowPreview = (selection) => {
-        if (!_.isEmpty(selection)) {
+    //Force can be `show` or `hide`
+    handleShowPreview = (selection, force) => {
+        if (force) {
+            this.setState((prevState, props) => {
+                switch (force) {
+                    case 'show':
+                        return {showPreview: true};
+                    case 'hide':
+                        return {showPreview: false};
+                    default: return {};
+                }
+            });
+        } else if (!_.isEmpty(selection)) {
             this.setState((prevState, props) => {
                 return {
                     showPreview: !prevState.showPreview
@@ -116,10 +127,10 @@ class ContentLayout extends React.Component {
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                                 }
                                 {showPreview &&
-                                <IconButton onClick={this.handleShowPreview.bind(this, selection)}><VisibilityOff/></IconButton>
+                                <IconButton onClick={() => this.handleShowPreview(selection)}><VisibilityOff/></IconButton>
                                 }
                                 {!showPreview &&
-                                <IconButton onClick={this.handleShowPreview.bind(this, selection)}><Visibility/></IconButton>
+                                <IconButton onClick={() => this.handleShowPreview(selection)}><Visibility/></IconButton>
                                 }
                                 {contentSource === "files" &&
                                 <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
@@ -162,12 +173,13 @@ class ContentLayout extends React.Component {
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
+                                                    handleShowPreview={() => this.handleShowPreview(selection, 'show')}
                                                 />
                                             }
                                         </Grid>
                                     </Grid>
                                 </Paper>
-                                <PreviewDrawer open={showPreview} onClose={this.handleShowPreview}>
+                                <PreviewDrawer open={showPreview} onClose={() => this.handleShowPreview(selection, 'hide')}>
                                     {/*Always get row from query not from state to be up to date*/}
                                     <ContentPreview
                                         layoutQuery={layoutQuery}

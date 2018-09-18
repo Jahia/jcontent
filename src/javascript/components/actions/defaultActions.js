@@ -22,7 +22,7 @@ let defaultActions = {
         call: edit,
         icon: Edit,
         priority: 2.5,
-        target: ["previewBar", "tableMenuActions", "contentTreeMenuActions"],
+        target: ["previewBar", "contentTreeMenuActions", "tableEditButtonAction"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.edit"
     },
@@ -86,7 +86,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["previewBar", "tableMenuActions", "contentTreeMenuActions"],
+        target: ["previewBar", "contentTreeMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publish",
         allSubtree: false,
@@ -100,7 +100,7 @@ let defaultActions = {
         component: "menuAction",
         menuId: "publishMenu",
         icon: "Publish",
-        target: ["previewBar", "tableMenuActions", "contentTreeMenuActions"],
+        target: ["previewBar", "contentTreeMenuActions", "tablePublishMenu"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.advancedPublish"
     },
@@ -186,12 +186,22 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.duplicate"
     },
     copy: {
+        priority: 3.8,
         component: CallAction,
         call: () => alert("not implemented yet"),
         icon: "Edit",
-        target: ["additionalPreviewMenu"],
+        target: ["additionalPreviewMenu", "tableMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.copy"
+    },
+    cut: {
+        priority: 3.9,
+        component: CallAction,
+        call: () => alert("not implemented yet"),
+        icon: "Edit",
+        target: ["tableMenuActions"],
+        requiredPermission: "",
+        labelKey: "label.contentManager.contentPreview.cut"
     },
     delete: {
         priority: 4,

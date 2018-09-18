@@ -34,7 +34,6 @@ class ContentListHeader extends React.Component {
                             </TableCell>
                         );
                     }, this)}
-                    <TableCell>&nbsp;{/*empty cell for actions*/} </TableCell>
                 </TableRow>
             </TableHead>
         );

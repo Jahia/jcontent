@@ -91,6 +91,7 @@ let defaultActions = {
         allSubtree: false,
         allLanguages: false,
         checkForUnpublication: false,
+        checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ["jnt:virtualsite"]
     },
     advancedPublish: {
@@ -124,6 +125,7 @@ let defaultActions = {
         allSubTree: true,
         allLanguages: false,
         checkForUnpublication: false,
+        checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ["nt:file"],
         labelKey: "label.contentManager.contentPreview.publishAll"
     },
@@ -149,6 +151,7 @@ let defaultActions = {
         allSubTree: false,
         allLanguages: false,
         checkForUnpublication: true,
+        checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ["jnt:virtualsite"],
         labelKey: "label.contentManager.contentPreview.unpublish"
     },

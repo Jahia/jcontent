@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import { translate } from 'react-i18next';
 import { withStyles, Paper, Grid, IconButton } from "@material-ui/core";
-import { Share, Fullscreen, FullscreenExit, Lock, LockOpen, MoreVert } from "@material-ui/icons";
+import { Fullscreen, FullscreenExit, Lock, LockOpen } from "@material-ui/icons";
 import { previewQuery } from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
 import { Mutation } from 'react-apollo';
@@ -18,6 +18,8 @@ import ImageViewer from "./filePreviewer/ImageViewer";
 import DocumentViewer from "./filePreviewer/DocumentViewer";
 import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
 import {DxContext} from "../DxContext";
+import {lodash as _} from "lodash";
+import {connect} from "react-redux";
 
 const styles = theme => ({
     root: {
@@ -82,7 +84,7 @@ class ContentPreview extends React.Component {
     };
 
     render() {
-        if (this.props.selection === null) {
+        if (_.isEmpty(this.props.selection)) {
             return null;
         }
         return this.mainComponent();
@@ -91,7 +93,8 @@ class ContentPreview extends React.Component {
     mainComponent() {
 
         const { selection, classes, t } = this.props;
-        const path = selection ? selection.path : "";
+        const selectedItem = selection[0];
+        const path = selectedItem ? selectedItem.path : "";
         const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
 
         return <DxContext.Consumer>
@@ -114,11 +117,11 @@ class ContentPreview extends React.Component {
                     <Paper className={ classes.controlsPaper } elevation={ 0 }>
                         <Grid container spacing={0}>
                             <Grid item xs={ 10 } className={ classes.titleBar }>
-                                <div className={ classes.contentTitle }>{ selection.displayName ? selection.displayName : selection.name }</div>
-                                <PublicationInfo selection={ selection }/>
+                                <div className={ classes.contentTitle }>{ selectedItem.displayName ? selectedItem.displayName : selectedItem.name }</div>
+                                <PublicationInfo/>
                             </Grid>
                             <Grid item xs={ 2 }>
-                                <ShareMenu selection={ selection }/>
+                                <ShareMenu/>
                                 { this.screenModeButtons() }
                             </Grid>
                             <Grid item xs={12}>
@@ -126,13 +129,13 @@ class ContentPreview extends React.Component {
                                 <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                             </Grid>
                             <Grid item xs={ 4 }>
-                                { selection.isLocked ? this.unlock() : this.lock() }
+                                { selectedItem.isLocked ? this.unlock() : this.lock() }
                             </Grid>
                             <Grid item xs={ 8 }>
-                                <Actions menuId={"previewBar"} context={{path: selection.path, displayName: selection.name}}>
+                                <Actions menuId={"previewBar"} context={{path: selectedItem.path, displayName: selectedItem.name}}>
                                     {(props) => <CmButton {...props}/>}
                                 </Actions>
-                                <Actions menuId={"additionalMenu"} context={{path: selection.path, displayName: selection.name}}>
+                                <Actions menuId={"additionalMenu"} context={{path: selectedItem.path, displayName: selectedItem.name}}>
                                     {(props) => <CmIconButton {...props}/>}
                                 </Actions>
                             </Grid>
@@ -193,7 +196,7 @@ class ContentPreview extends React.Component {
             }]}>
             {(lockNode) => {
                 return <Tooltip title={ t('label.contentManager.contentPreview.lockNode') } placement="top-start">
-                    <IconButton onClick={ () => lockNode({ variables: { pathOrId: selection.path }}) }><LockOpen/></IconButton>
+                    <IconButton onClick={ () => lockNode({ variables: { pathOrId: selection[0].path }}) }><LockOpen/></IconButton>
                 </Tooltip>
             }}
         </Mutation>
@@ -208,7 +211,7 @@ class ContentPreview extends React.Component {
                 variables: layoutQueryParams
             }]}>
             {(unlockNode) => {
-                return <Tooltip title={ t('label.contentManager.contentPreview.nodeLockedBy', {username: selection.lockOwner}) } placement="top-start">
+                return <Tooltip title={ t('label.contentManager.contentPreview.nodeLockedBy', {username: selection[0].lockOwner}) } placement="top-start">
                     <IconButton onClick={ () => unlockNode({ variables: { pathOrId: selection.path }}) }><Lock/></IconButton>
                 </Tooltip>
             }}
@@ -216,10 +219,20 @@ class ContentPreview extends React.Component {
     }
 }
 
-export default translate()(withStyles(styles)(ContentPreview));
+const mapStateToProps = (state, ownProps) => {
+    return {
+    selection: state.selection
+}}
+
+ContentPreview = _.flowRight(
+    translate(),
+    withStyles(styles),
+    connect(mapStateToProps, null)
+)(ContentPreview);
+
+export default ContentPreview;
 
 ContentPreview.propTypes = {
-    selection: PropTypes.object,
     layoutQuery: PropTypes.object.isRequired,
     layoutQueryParams: PropTypes.object.isRequired,
     rowSelectionFunc: PropTypes.func.isRequired

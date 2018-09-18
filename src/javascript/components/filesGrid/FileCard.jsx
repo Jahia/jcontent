@@ -12,6 +12,8 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 
 import { fileIcon, isImage } from './filesGridUtils';
+import {cmSetSelection} from "../redux/actions";
+import {connect} from "react-redux";
 
 const styles = theme => ({
     card: {
@@ -122,7 +124,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
-                     onClick={ () => this.props.onSelect(node) }>
+                     onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             <CardMedia
                 className={ classes.coverLarge }
@@ -151,7 +153,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
-                     onClick={ () => this.props.onSelect(node) }>
+                     onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             <CardMedia
                 className={ classes.coverMedium }
@@ -177,7 +179,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
-                     onClick={ () => this.props.onSelect(node) }>
+                     onClick={ () => this.props.onSelect([node]) }>
             <CardMedia
                 style={{ flex: 2 }}
                 className={ classes.coverVertical }
@@ -198,7 +200,7 @@ class FileCard extends Component {
         const { classes, t, node } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
-                     onClick={ () => this.props.onSelect(node) }>
+                     onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             {
                 fileIcon(node.path, '6x', {fontSize: "160px"})
@@ -225,7 +227,7 @@ class FileCard extends Component {
         const { classes, t, node } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
-                     onClick={ () => this.props.onSelect(node) }>
+                     onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             {
                 fileIcon(node.path, '6x', {fontSize: "160px"})
@@ -249,7 +251,7 @@ class FileCard extends Component {
         const { classes, t, node } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
-                     onClick={ () => this.props.onSelect(node) }>
+                     onClick={ () => this.props.onSelect([node]) }>
             <div style={{textAlign: "center", flex: 2}}>
                 {
                     fileIcon(node.path, '6x', {fontSize: "100px"})
@@ -285,9 +287,14 @@ FileCard.propTypes = {
     onSelect: PropTypes.func.isRequired
 };
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    onSelect: (selection) => dispatch(cmSetSelection(selection))
+})
+
 const ComposedFileCard = compose(
     withStyles(styles),
-    translate()
+    translate(),
+    connect(null, mapDispatchToProps)
 )(FileCard);
 
 export default ComposedFileCard;

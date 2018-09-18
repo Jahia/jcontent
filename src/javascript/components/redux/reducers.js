@@ -1,4 +1,4 @@
-import {CM_SET_UILANGUAGE, CM_NAVIGATE} from "./actions";
+import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION} from "./actions";
 
 
 
@@ -50,4 +50,12 @@ let paramsReducer = (params) => (state = params, action) => {
     }
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer}
+let selectionReducer = (state = [], action) => {
+    if (action.type === CM_SET_SELECTION) {
+        return action.selection
+    } else {
+        return state;
+    }
+}
+
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer}

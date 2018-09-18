@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { translate } from "react-i18next";
 import { withStyles, IconButton, MenuItem, Menu } from "@material-ui/core";
 import { Share } from "@material-ui/icons";
 import copy from 'copy-to-clipboard';
+import {lodash as _} from "lodash";
+import {connect} from "react-redux";
 
 const styles = theme => ({
     button: {
@@ -27,9 +28,12 @@ class ShareMenu extends Component {
 
 
     render() {
-        const {t, classes, selection} = this.props;
+        const {t, selection} = this.props;
         const {shareMenuAnchor} = this.state;
-
+        if (_.isEmpty(selection)) {
+            return null;
+        }
+        const selectedItem = selection[0];
         return <span>
             <IconButton
                 aria-owns={shareMenuAnchor ? 'share-menu' : null}
@@ -42,10 +46,10 @@ class ShareMenu extends Component {
                 anchorEl={shareMenuAnchor}
                 open={Boolean(shareMenuAnchor)}
                 onClose={() => this.handleMenuClose("shareMenuAnchor")}>
-                <MenuItem onClick={() => this.copy(selection.path)}>
+                <MenuItem onClick={() => this.copy(selectedItem.path)}>
                     {t('label.contentManager.contentPreview.copyPathToClipboard')}
                 </MenuItem>
-                <MenuItem onClick={() => this.copy(selection.uuid)}>
+                <MenuItem onClick={() => this.copy(selectedItem.uuid)}>
                     {t('label.contentManager.contentPreview.copyUUIDToClipboard')}
                 </MenuItem>
             </Menu>
@@ -60,9 +64,12 @@ class ShareMenu extends Component {
         this.setState({[anchorType]: null});
     };
 }
+const mapStateToProps = (state, ownProps) => ({
+    selection: state.selection
+})
 
-export default translate()(withStyles(styles)(ShareMenu));
-
-ShareMenu.propTypes = {
-    selection: PropTypes.object.isRequired
-};
+export default _.flowRight(
+    translate(),
+    withStyles(styles),
+    connect(mapStateToProps)
+)(ShareMenu);

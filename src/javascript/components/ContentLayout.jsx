@@ -44,7 +44,6 @@ class ContentLayout extends React.Component {
         this.state = {
             showTree: true,
             showPreview: false,
-            selectedRow: null,
             filesGridSizeValue: 4,
             showList: false,
             page: 0,
@@ -60,29 +59,13 @@ class ContentLayout extends React.Component {
         })
     };
 
-    handleShowPreview = () => {
-        if (this.state.selectedRow) {
+    handleShowPreview = (selection) => {
+        if (!_.isEmpty(selection)) {
             this.setState((prevState, props) => {
                 return {
                     showPreview: !prevState.showPreview
                 }
             })
-        }
-    };
-
-    handleRowSelection = (row) => {
-        //Remove selection and close preview panel if it is open
-        if (this.state.selectedRow && row.path === this.state.selectedRow.path) {
-            this.setState({
-                selectedRow: null,
-                showPreview: this.state.showPreview ? false : this.state.showPreview
-            });
-        }
-        //Store selection
-        else {
-            this.setState({
-                selectedRow: row
-            });
         }
     };
 
@@ -106,8 +89,8 @@ class ContentLayout extends React.Component {
 
     render() {
 
-        const {showPreview, selectedRow, showTree: showTree} = this.state;
-        const {contentSource, contentTreeConfigs, mode, classes, path} = this.props;
+        const {showPreview, showTree: showTree} = this.state;
+        const {contentSource, contentTreeConfigs, mode, selection, classes, path} = this.props;
 
         return <DxContext.Consumer>{dxContext => {
                 let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
@@ -133,10 +116,10 @@ class ContentLayout extends React.Component {
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                                 }
                                 {showPreview &&
-                                <IconButton onClick={this.handleShowPreview}><VisibilityOff/></IconButton>
+                                <IconButton onClick={this.handleShowPreview.bind(this, selection)}><VisibilityOff/></IconButton>
                                 }
                                 {!showPreview &&
-                                <IconButton onClick={this.handleShowPreview}><Visibility/></IconButton>
+                                <IconButton onClick={this.handleShowPreview.bind(this, selection)}><Visibility/></IconButton>
                                 }
                                 {contentSource === "files" &&
                                 <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
@@ -166,7 +149,6 @@ class ContentLayout extends React.Component {
                                                     totalCount={totalCount}
                                                     rows={rows}
                                                     pageSize={this.state.rowsPerPage}
-                                                    selectedRow={this.state.selectedRow}
                                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
@@ -180,7 +162,6 @@ class ContentLayout extends React.Component {
                                                     onChangePage={this.handleChangePage}
                                                     onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
-                                                    selectedRow={this.state.selectedRow}
                                                 />
                                             }
                                         </Grid>
@@ -189,7 +170,6 @@ class ContentLayout extends React.Component {
                                 <PreviewDrawer open={showPreview} onClose={this.handleShowPreview}>
                                     {/*Always get row from query not from state to be up to date*/}
                                     <ContentPreview
-                                        selection={rows.find((row) => {return selectedRow !== null && row.path === selectedRow.path})}
                                         layoutQuery={layoutQuery}
                                         layoutQueryParams={layoutQueryParams}
                                         rowSelectionFunc={this.handleRowSelection}
@@ -204,9 +184,12 @@ class ContentLayout extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    path: state.path,
-})
+const mapStateToProps = (state, ownProps) => {
+    return {
+        path: state.path,
+        selection: state.selection
+    }
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto(path, params))

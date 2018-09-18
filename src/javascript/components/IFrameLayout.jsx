@@ -2,7 +2,7 @@ import React from 'react';
 import Iframe from 'react-iframe';
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
-import {setUrl} from "./redux/actions";
+import {cmGoto} from "./redux/actions";
 
 class IFrameLayout extends React.Component {
 
@@ -36,7 +36,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (siteKey, lang, mode, path, params) => dispatch(setUrl(siteKey, lang, mode, path, params))
+    setUrl: (siteKey, lang, mode, path, params) => dispatch(cmGoto(siteKey, lang, mode, path, params))
 })
 
 IFrameLayout = _.flowRight(

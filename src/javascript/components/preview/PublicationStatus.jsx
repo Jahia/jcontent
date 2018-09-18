@@ -1,10 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 import { withStyles } from "@material-ui/core";
 import Moment from 'react-moment';
 import 'moment-timezone';
 import Constants from '../constants';
+import {lodash as _} from "lodash";
+import {connect} from "react-redux";
 
 //TODO Here as well as in ContentListTable unpublished status is not clear
 
@@ -28,21 +29,25 @@ const styles = theme => ({
 });
 
 const component = ({ selection, t, classes }) => {
-    switch (selection.publicationStatus) {
+    if (_.isEmpty(selection)) {
+        return null;
+    }
+    const selectedItem = selection[0];
+    switch (selectedItem.publicationStatus) {
         case Constants.availablePublicationStatuses.MARKED_FOR_DELETION :
             return <div className={classes.publicationInfoMarkedForDeletion}>
-                {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selection.deletedBy})}
-                <Moment format={"LLL"}>{selection.deleted}</Moment>
+                {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selectedItem.deletedBy})}
+                <Moment format={"LLL"}>{selectedItem.deleted}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.MODIFIED :
             return <div className={classes.publicationInfoModified}>
-                {t('label.contentManager.contentPreview.modifiedBy', {userName: selection.lastModifiedBy})}
-                <Moment format={"LLL"}>{selection.lastModified}</Moment>
+                {t('label.contentManager.contentPreview.modifiedBy', {userName: selectedItem.lastModifiedBy})}
+                <Moment format={"LLL"}>{selectedItem.lastModified}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.PUBLISHED :
             return <div className={classes.publicationInfoPublished}>
-                {t('label.contentManager.contentPreview.publishedBy', {userName: selection.lastPublishedBy})}
-                <Moment format={"LLL"}>{selection.lastPublished}</Moment>
+                {t('label.contentManager.contentPreview.publishedBy', {userName: selectedItem.lastPublishedBy})}
+                <Moment format={"LLL"}>{selectedItem.lastPublished}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.NOT_PUBLISHED :
             return <div className={classes.publicationInfoUnpublished}>
@@ -52,8 +57,13 @@ const component = ({ selection, t, classes }) => {
     return null;
 };
 
-export default translate()(withStyles(styles)(component));
+const mapStateToProps = (state, ownProps) => ({
+    selection: state.selection
+})
 
-component.propTypes = {
-    selection: PropTypes.object.isRequired
-};
+
+export default _.flowRight(
+    translate(),
+    withStyles(styles),
+    connect(mapStateToProps)
+)(component);

@@ -29,7 +29,6 @@ class FilesGrid extends Component {
                             {
                                 dxContext => <FileCard cardType={ size }
                                                        node={ node }
-                                                       onSelect={ this.props.onRowSelected }
                                                        dxContext={ dxContext }/>
                             }
                         </DxContext.Consumer>
@@ -44,7 +43,6 @@ class FilesGrid extends Component {
 FilesGrid.propTypes = {
     size: PropTypes.number.isRequired,
     rows: PropTypes.array.isRequired,
-    onRowSelected: PropTypes.func.isRequired
 };
 
 const ComposedFilesGrid = compose(

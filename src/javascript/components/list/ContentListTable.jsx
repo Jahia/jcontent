@@ -12,13 +12,14 @@ import ContentListHeader from "./ContentListHeader";
 import {Pagination} from "@jahia/react-material";
 import PropTypes from 'prop-types';
 import * as _ from "lodash";
-import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {Lock, Build} from "@material-ui/icons";
 import {DxContext} from "../DxContext";
 import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
+import {cmSetSelection} from "../redux/actions";
+import {connect} from "react-redux";
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name'},
@@ -168,7 +169,7 @@ class ContentListTable extends React.Component {
     render() {
 
         const {order, orderBy} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, totalCount, t, classes, lang, selectedRow} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -184,7 +185,7 @@ class ContentListTable extends React.Component {
                         {dxContext => (
                             <TableBody>
                                 {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
-                                    let isSelected = selectedRow ? selectedRow.path === n.path : false;
+                                    let isSelected = _.find(selection , item => item.path === n.path);
                                     let classWip = (this.isWip(n, lang) ? classes.activeStatus : classes.inactiveStatus);
                                     let classLock = (n.isLocked ? classes.activeStatus : classes.inactiveStatus);
                                     let lockStatus = (n.isLocked ? t('label.contentManager.locked') : t('label.contentManager.lock'));
@@ -198,7 +199,7 @@ class ContentListTable extends React.Component {
                                             className={classes.row}
                                             classes={{root: classes.contentRow}}
                                             key={n.uuid}
-                                            onClick={() => onRowSelected(n)}
+                                            onClick={() => onRowSelected([n])}
                                             selected={isSelected}
                                             data-cm-role="table-content-list-row"
                                         >
@@ -257,6 +258,15 @@ let EmptyRow = (props) => {
     </TableRow>;
 };
 
+
+const mapStateToProps = (state, ownProps) => ({
+    selection: state.selection
+})
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    onRowSelected: (selection) => dispatch(cmSetSelection(selection))
+})
+
 ContentListTable.propTypes = {
     rows: PropTypes.array.isRequired,
     page: PropTypes.number.isRequired,
@@ -265,9 +275,10 @@ ContentListTable.propTypes = {
     onChangePage: PropTypes.func.isRequired
 };
 
-ContentListTable = compose(
+ContentListTable = _.flowRight(
     withStyles(styles),
-    translate()
+    translate(),
+    connect(mapStateToProps, mapDispatchToProps)
 )(ContentListTable);
 
 export default ContentListTable;

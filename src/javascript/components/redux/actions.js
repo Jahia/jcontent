@@ -1,10 +1,18 @@
 const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
+const CM_SET_SELECTION = 'SET_SELECTION';
 
 function setUiLang(uiLang) {
     return {
         type: CM_SET_UILANGUAGE,
         uiLang
+    }
+}
+
+function cmSetSelection(selection) {
+    return {
+        type: SET_SELECTION,
+        selection
     }
 }
 
@@ -36,9 +44,11 @@ function cmSetParams(params) {
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
+    CM_SET_SELECTION,
     cmGoto,
     cmSetLanguage,
-    cmSetUiLang,
+    setUiLang,
+    cmSetSelection,
     cmSetSite,
     cmSetMode,
     cmSetPath,

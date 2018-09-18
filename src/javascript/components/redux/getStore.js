@@ -1,5 +1,13 @@
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
-import {languageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, uiLanguageReducer} from "./reducers";
+import {
+    languageReducer,
+    siteReducer,
+    modeReducer,
+    pathReducer,
+    paramsReducer,
+    uiLanguageReducer,
+    selectionReducer
+} from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
 
@@ -7,9 +15,10 @@ import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
 let getStore = (dxContext, history) => {
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search)
     const rootReducer = combineReducers({
-        language:languageReducer(currentValueFromUrl.language),
         uiLang:uiLanguageReducer(dxContext),
+        selection:selectionReducer,
         site:siteReducer(currentValueFromUrl.site),
+        language:languageReducer(currentValueFromUrl.language),
         mode:modeReducer(currentValueFromUrl.mode),
         path:pathReducer(currentValueFromUrl.path),
         params:paramsReducer(currentValueFromUrl.params),

@@ -36,7 +36,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (siteKey, lang, mode, path, params) => dispatch(cmGoto(siteKey, lang, mode, path, params))
+    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
 })
 
 IFrameLayout = _.flowRight(

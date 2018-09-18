@@ -3,12 +3,36 @@ import {Query} from 'react-apollo';
 import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import {lodash as _} from 'lodash';
-import {Button, Menu, MenuItem} from '@material-ui/core';
+import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {translate} from "react-i18next";
-import connect from "react-redux/es/connect/connect";
-import {setLanguage} from "../redux/actions";
+import {connect} from "react-redux";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
+import {setLanguage} from "../redux/actions";
+
+const styles = theme => ({
+    typography: {
+        opacity: '0.9',
+        fontFamily: "Nunito sans, sans-serif",
+        fontSize: '1rem',
+        fontWeight: 200,
+        paddingRight: '20px',
+        color: '#504e4d',
+        backgroundSize: '18px'
+    },
+    formControl: {
+        minWidth: 120,
+    },
+    icontest: {
+        fontSize: '0.500rem',
+    },
+    input1: {
+        backgroundColor: "transparent",
+        color: "#ffffff",
+        boxShadow: "none",
+        fontSize: "0.875rem",
+    },
+});
 
 class LanguageSwitcher extends React.Component {
 
@@ -38,11 +62,11 @@ class LanguageSwitcher extends React.Component {
         if (!_.isEmpty(languages)) {
             //If we cant find the selected language in the list of available languages,
             // we will implicitly switch to the default language of the site
-            let languageExists = _.find(languages, function(language) {
+            let languageExists = _.find(languages, function (language) {
                 return language.language === lang;
             });
             if (languageExists === undefined) {
-                let language = _.find(languages, function(language) {
+                let language = _.find(languages, function (language) {
                     return language.language === data.jcr.result.site.defaultLanguage;
                 });
                 return language.language;
@@ -67,7 +91,7 @@ class LanguageSwitcher extends React.Component {
     }
 
     render() {
-        const { t, notificationContext, siteKey, lang, onSelectLanguage } = this.props;
+        const {t, notificationContext, siteKey, lang, onSelectLanguage} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
         };
@@ -123,13 +147,17 @@ class LanguageSwitcherDisplay extends React.Component {
     };
 
     render() {
-        let {lang, languages, onSelectLanguage} = this.props;
+        let {lang, languages, onSelectLanguage, classes} = this.props;
         let {anchorEl} = this.state;
         return <React.Fragment>
             <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true"
                     onClick={this.handleClick} data-cm-role={'language-switcher'}>
-                {_.find(languages, (language) => language.language === lang).displayName}
-                &nbsp;
+                <Typography className={classes.typography}>
+                    {_.find(languages, (language) => language.language === lang).displayName}
+                    &nbsp;
+                    <FontAwesomeIcon icon="chevron-down"/>
+                </Typography>
+
                 <FontAwesomeIcon icon="chevron-down"/>
             </Button>
             <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
@@ -156,6 +184,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 LanguageSwitcherDisplay = _.flowRight(
+    withStyles(styles, {withTheme: true}),
     connect(mapStateToProps, mapDispatchToProps)
 )(LanguageSwitcherDisplay);
 

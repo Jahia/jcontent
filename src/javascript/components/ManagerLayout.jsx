@@ -46,6 +46,7 @@ class ManagerLayout extends React.Component {
         let { leftSide, children } = this.props;
         return (
             <Grid container spacing={0}>
+
                 <Grid item xs={12}>
                     <Main leftSide={leftSide}>
                         {children}

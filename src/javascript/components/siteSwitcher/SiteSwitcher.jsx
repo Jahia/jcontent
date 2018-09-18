@@ -2,13 +2,38 @@ import React from "react";
 import {Query} from 'react-apollo';
 import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
-import {Button, Menu, MenuItem} from '@material-ui/core';
+import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {lodash as _} from "lodash";
-import connect from "react-redux/es/connect/connect";
+import {connect} from "react-redux";
 import {translate} from "react-i18next";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
 import {setSite} from "../redux/actions";
+
+
+const styles = theme => ({
+    typography: {
+        opacity: '0.9',
+        fontFamily: "Nunito sans, sans-serif",
+        fontSize: '1rem',
+        fontWeight: 200,
+        paddingRight: '20px',
+        color: '#504e4d',
+        backgroundSize: '18px'
+    },
+    formControl: {
+        minWidth: 120,
+    },
+    icontest: {
+      fontSize: '0.500rem',
+    },
+    input1: {
+        backgroundColor: "transparent",
+        "color": "#ffffff",
+        "boxShadow": "none",
+        "fontSize": "0.875rem",
+    },
+});
 
 class SiteSwitcher extends React.Component {
 
@@ -101,24 +126,28 @@ class SiteSwitcherDisplay extends React.Component {
     };
 
     render() {
-        const {siteKey, siteNodes, loading, onSelectSite} = this.props;
+        let {siteKey, siteNodes, loading, onSelectSite, classes} = this.props;
         let {anchorEl} = this.state;
         if (loading) {
             return <span>Loading...</span>
         } else {
             const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
-            return <div>
-                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'site-switcher'}>
-                    {siteNode.displayName}
+            return <React.Fragment>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick}>
+                    <Typography className={classes.typography}>
+                        {siteNode.displayName}
+                    </Typography>
                     &nbsp;
-                    <FontAwesomeIcon icon="chevron-down"/>
+                    <FontAwesomeIcon icon="chevron-down" className={classes.icontest} />
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map((siteNode, i) => {
-                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode); this.handleClose();}}>{siteNode.displayName}</MenuItem>
+                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode); this.handleClose();}}>
+                            {siteNode.displayName}
+                        </MenuItem>
                     })}
                 </Menu>
-            </div>
+            </React.Fragment>
         }
     }
 }
@@ -135,5 +164,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 SiteSwitcherDisplay = _.flowRight(
     translate(),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
+    withStyles(styles)
 )(SiteSwitcherDisplay);

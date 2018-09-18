@@ -54,7 +54,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         component: "workflowDashboardAction",
         call: openWorkflowDashboard,
         requiredPermission: "",
-        target: ["leftMenuActions"],
+        target: ["leftMenuBottomAction"],
         labelKey: 'label.contentManager.leftMenu.workflow',
         pollInterval: 2000
     },

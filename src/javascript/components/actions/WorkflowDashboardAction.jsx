@@ -3,10 +3,24 @@ import {DxContext} from "../DxContext";
 import * as _ from "lodash";
 import {Query} from 'react-apollo';
 import gql from "graphql-tag";
-import {Badge, Typography} from '@material-ui/core';
+import {Badge, Typography, withStyles} from '@material-ui/core';
 
+
+const styles = theme => ({
+    badge: {
+        background: '#e40000',
+        fontWeight: 600,
+        fontSize: '11px',
+        color: '#fafafa',
+    },
+    root: {
+        verticalAlign: "top"
+    }
+})
 
 class WorkflowDashboardAction extends React.Component {
+
+
 
     constructor(props) {
         super(props);
@@ -21,7 +35,7 @@ class WorkflowDashboardAction extends React.Component {
 
     render() {
         return <DxContext.Consumer>{dxContext => {
-            const {call, children, context, pollInterval, ...rest} = this.props;
+            const {call, children, context, pollInterval, classes, ...rest} = this.props;
             let ctx = _.cloneDeep(context);
             let child = children({
                 ...rest,
@@ -35,7 +49,7 @@ class WorkflowDashboardAction extends React.Component {
                         if (!loading && !error) {
                             let numberOfTasks = data.jcr.result;
                             if (numberOfTasks !== 0) {
-                                return <Badge badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{numberOfTasks}</Typography>} color="primary">{child}</Badge>
+                                return children({...rest, badge: <Badge  classes={{root: classes.root, badge: classes.badge}} badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{numberOfTasks}</Typography>} color="primary">{numberOfTasks}</Badge>})
                             } else {
                                 return child;
                             }
@@ -49,5 +63,9 @@ class WorkflowDashboardAction extends React.Component {
     }
 
 }
+
+WorkflowDashboardAction = _.flowRight(
+    withStyles(styles, {withTheme: true})
+)(WorkflowDashboardAction);
 
 export default WorkflowDashboardAction;

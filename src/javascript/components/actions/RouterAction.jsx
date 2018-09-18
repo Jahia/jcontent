@@ -4,9 +4,17 @@ import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 
 class RouterAction extends React.Component {
+
     render() {
-        const {children, context, mode, actionKey, iframeUrl, setUrl, path, ...rest } = this.props;
-        return children({...rest, onClick: () => setUrl(context.siteKey, context.lang, mode, (iframeUrl && actionKey) ? ("/" + actionKey) : path)})
+        const {children, context, mode, actionKey, handleDrawerClose, path, setUrl, ...rest} = this.props;
+        const params = actionKey ? {actionKey: actionKey} : null;
+        return children({
+            ...rest, onClick: ((params) => {;
+                handleDrawerClose()
+                setUrl(context.siteKey, context.lang, mode, path, params);
+                return null;
+            }).bind(this, params)
+        })
     }
 }
 
@@ -15,7 +23,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (siteKey, lang, mode, path) => dispatch(setUrl(siteKey, lang, mode, path))
+    setUrl: (siteKey, lang, mode, path, params) => dispatch(setUrl(siteKey, lang, mode, path, params))
 })
 
 RouterAction = _.flowRight(

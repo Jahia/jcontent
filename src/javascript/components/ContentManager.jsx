@@ -24,9 +24,11 @@ import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
 import getStore from './redux/getStore';
+import ListAction from "./actions/ListAction";
 
 const actionComponents = {
     callAction: CallAction,
+    listAction: ListAction,
     menuAction: MenuAction,
     routerAction : RouterAction,
     sideMenuAction : SideMenuAction,
@@ -150,8 +152,8 @@ class ContentManager extends React.Component {
                                                             <Route path={`${props.match.url}/sql2Search`} render={props =>
                                                                 <ContentLayout mode={"sql2Search"} contentSource="sql2Search"/>
                                                             }/>
-                                                            <Route path={`${props.match.url}/iframe/:actionKey`} render={props =>
-                                                                <IFrameLayout actionKey={props.match.params.actionKey} actionsRegistry={actionsRegistry} workspace={dxContext.workspace} siteKey={dxContext.siteKey}/>
+                                                            <Route path={`${props.match.url}/iframe`} render={props =>
+                                                                <IFrameLayout contextPath={dxContext.contextPath} actionsRegistry={actionsRegistry} workspace={dxContext.workspace} siteKey={dxContext.siteKey}/>
                                                             }/>
                                                         </ManagerLayout>
                                                     );

@@ -1,38 +1,43 @@
 import React from "react";
 import Actions from "../Actions";
-import {List, Collapse} from '@material-ui/core';
-import {ArrowForward} from '@material-ui/icons';
-import {compose} from "react-apollo";
-import {translate} from "react-i18next";
-import CmLeftMenuItem from "../renderAction/CmLeftMenuItem";
+import {List, ListItem, withStyles} from '@material-ui/core';
+import {VerifiedUser} from '@material-ui/icons';
+import Typography from "@material-ui/core/Typography";
+import {lodash as _} from "lodash";
+import {translate} from 'react-i18next';
+
+const styles = (theme) => {
+
+}
 
 class SideMenuAction extends React.Component {
-    state = {open: false};
-
-    handleClick = () => {
-        this.setState(state => ({open: !state.open}));
-    };
 
     render() {
-        const {menuId, children, context, ...rest} = this.props;
-        return (<React.Fragment>
-                {children({...rest, onClick: this.handleClick, open: this.state.open})}
-                <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <Actions menuId={menuId} context={context}>
-                            {(props) =>
-                                <CmLeftMenuItem {...props} icon={<ArrowForward/>}/>
-                            }
-                        </Actions>
-                    </List>
-                </Collapse>
+        const {t, menuId, children, context, handleDrawer, classes, ...rest} = this.props;
+        const actionContent = <List style={{marginLeft: '18px', marginTop: '18px'}}>
+            <Actions menuId={menuId} context={context}>
+                {(props) =>
+                    <ListItem key={props.labelKey}
+                              className={classes.childItem }
+                              onClick={() => this.selectItem(el)}>
+                        <VerifiedUser className={classes.childIconLight} />
+                        <Typography  className={classes.childItem}>
+                            {t(props.labelKey)}
+                        </Typography>
+                    </ListItem>
+                }
+            </Actions>
+        </List>
+        return (handleDrawer && <React.Fragment>
+                {children({...rest, onClick: handleDrawer.bind(this, actionContent)})}
             </React.Fragment>
         )
     };
 }
 
-SideMenuAction = compose(
+SideMenuAction = _.flowRight(
     translate(),
+    withStyles(styles),
 )(SideMenuAction);
 
 

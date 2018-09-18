@@ -9,8 +9,11 @@ import {CmSearchBar} from "./CmSearchBar";
 
 const styles = theme => ({
     root: {
+        background: 'transparent',
         flexGrow: 1,
         paddingTop: theme.spacing.unit,
+        minHeight: '160px',
+        maxHeight: '160px',
         paddingRight: theme.spacing.unit,
         paddingBottom: theme.spacing.unit
     },
@@ -26,12 +29,10 @@ const styles = theme => ({
 });
 
 class CMTopBar extends React.Component {
-
     render() {
 
         const {dxContext, classes, mode, t} = this.props;
         let modeTitle = t("label.contentManager.title." + (mode || "browse"));
-
         return (
             <Toolbar color={"secondary"} classes={{root: classes.root}}>
                 <div className={classes.head}>
@@ -39,7 +40,6 @@ class CMTopBar extends React.Component {
                     <Typography variant="display1" color="inherit" data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
                     <LanguageSwitcher dxContext={dxContext}/>
                 </div>
-
                 {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}
                 <div>
                     <DxContext.Consumer>

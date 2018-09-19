@@ -270,7 +270,7 @@ class ContentListTable extends React.Component {
                                                     return <TableCell className={classes.hoveredRowActionsCell} key={column.id} padding={'none'} data-cm-role={'table-content-list-cell-' + column.id}>
                                                         <Actions menuId={"tablePublishMenu"} context={{path: n.path, displayName: n.name, nodeName: n.nodeName}}>
                                                             {(props) => {
-                                                                return <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={"table-content-list-button"}>
+                                                                return <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={"table-content-list-button-publish"}>
                                                                     <Autorenew/>
                                                                 </CmIconButton>
                                                             }}
@@ -280,7 +280,7 @@ class ContentListTable extends React.Component {
                                                         </IconButton>
                                                         <Actions menuId={"tableEditButtonAction"} context={{path: n.path, displayName: n.name, nodeName: n.nodeName}}>
                                                             {(props) => {
-                                                                return <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={"table-content-list-button"}>
+                                                                return <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={"table-content-list-button-edit"}>
                                                                         <Create/>
                                                                     </CmIconButton>
                                                                 }

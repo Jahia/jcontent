@@ -304,9 +304,12 @@ const NodeDisplayNameQuery = gql `
 `;
 
 const ActionRequirementsQuery = gql `
-    query ActionRequirementsQuery($path:String!) {
+    query ActionRequirementsQuery($path:String!, $language:String!) {
         jcr {
             nodeByPath(path:$path) {
+                aggregatedPublicationInfo(language: $language) {
+                    publicationStatus
+                }
                 ...requirements
                 ...NodeCacheRequiredFields
             }
@@ -375,10 +378,13 @@ const ActionRequirementsFragments = {
 
 class ActionRequirementsQueryHandler {
 
-    constructor(path, action) {
+    constructor(path, action, language) {
 
         this.requirementsFragments = [];
-        this.variables = {path: path};
+        this.variables = {
+            path: path,
+            language: language
+        };
 
         if (!_.isEmpty(action.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);

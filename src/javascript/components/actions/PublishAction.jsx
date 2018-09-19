@@ -5,35 +5,37 @@ import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import connect from "react-redux/es/connect/connect";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
+import {hasMixin} from "../utils.js";
 
 class PublishAction extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.query = gql`query siteLanguages($path: String!) {
-            jcr {
-                result:nodeByPath(path: $path) {
-                    site {
-                        defaultLanguage
-                        ...NodeCacheRequiredFields
-                        languages {
-                            displayName
-                            language
-                            activeInEdit
+        this.query = gql`
+            query siteLanguages($path: String!) {
+                jcr {
+                    result:nodeByPath(path: $path) {
+                        site {
+                            defaultLanguage
+                            ...NodeCacheRequiredFields
+                            languages {
+                                displayName
+                                language
+                                activeInEdit
+                            }
                         }
+                        ...NodeCacheRequiredFields
                     }
-                    ...NodeCacheRequiredFields
                 }
             }
-        }
-        ${PredefinedFragments.nodeCacheRequiredFields.gql}
+            ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
     }
 
-    getLanguageLabel(languages, currentLang){
+    getLanguageLabel(languages, currentLang) {
         let lang = _.find(languages, function(language) {
-            if(language.language === currentLang){
+            if (language.language === currentLang) {
                 return language;
             }
         });
@@ -47,24 +49,28 @@ class PublishAction extends React.Component {
     render() {
 
         const {call, notificationContext, children, context, allLanguages, allSubTree, checkForUnpublication, checkIfLanguagesMoreThanOne, ...rest} = this.props;
+
+        if (!checkForUnpublication && hasMixin(context.node, "jmix:markedForDeletion")) {
+            return null;
+        }
+
         let ctx = _.cloneDeep(context);
         ctx.uuid = [context.node.uuid];
         ctx.allLanguages = allLanguages;
         ctx.allSubTree = allSubTree;
         ctx.checkForUnpublication = checkForUnpublication;
-        const variables = {
-            path: ctx.path,
-        };
-        return <Query query={this.query} variables={variables}>
+
+        return <Query query={this.query} variables={{path: ctx.path}}>
             {
                 ({error, loading, data}) => {
-                    if(error){
+
+                    if (error) {
                         console.log("Error when fetching data: " + error);
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         return null;
                     }
-                    if(loading){
+                    if (loading) {
                         return <ProgressOverlay/>;
                     }
 

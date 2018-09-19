@@ -5,6 +5,7 @@ import CreateContentOfTypeAction from "./CreateContentOfTypeAction";
 import DeleteAction from "./DeleteAction";
 import DeletePermanentlyAction from "./DeletePermanentlyAction";
 import PublishAction from "./PublishAction";
+import PublishDeletionAction from "./PublishDeletionAction";
 import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
 import UnDeleteAction from "./UnDeleteAction";
@@ -93,7 +94,8 @@ let defaultActions = {
         allLanguages: false,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
-        hideOnNodeTypes: ["jnt:virtualsite"]
+        hideOnNodeTypes: ["jnt:virtualsite"],
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     advancedPublish: {
         priority: 6,
@@ -115,7 +117,8 @@ let defaultActions = {
         checkForUnpublication: false,
         hideOnNodeTypes: ["nt:file", "nt:folder"],
         checkIfLanguagesMoreThanOne: true,
-        labelKey: "label.contentManager.contentPreview.publishInAllLanguages"
+        labelKey: "label.contentManager.contentPreview.publishInAllLanguages",
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     publishAll: {
         component: PublishAction,
@@ -128,7 +131,8 @@ let defaultActions = {
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ["nt:file"],
-        labelKey: "label.contentManager.contentPreview.publishAll"
+        labelKey: "label.contentManager.contentPreview.publishAll",
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     publishAllInAllLanguages: {
         component: PublishAction,
@@ -141,7 +145,18 @@ let defaultActions = {
         checkForUnpublication: false,
         hideOnNodeTypes: ["nt:file", "nt:folder"],
         checkIfLanguagesMoreThanOne: true,
-        labelKey: "label.contentManager.contentPreview.publishAllInAllLanguages"
+        labelKey: "label.contentManager.contentPreview.publishAllInAllLanguages",
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
+    },
+    publishDeletion: {
+        priority: 6,
+        component: PublishDeletionAction,
+        icon: "Publish",
+        target: ["previewBar", "contentTreeMenuActions"],
+        requiredPermission: "",
+        labelKey: "label.contentManager.contentPreview.publishDeletion",
+        hideOnNodeTypes: ["jnt:virtualsite"],
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     unPublish: {
         component: PublishAction,

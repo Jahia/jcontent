@@ -32,7 +32,7 @@ class Actions extends React.Component {
                 console.warn(`Unable to render action ${actionKey} because the context does not define a path`);
                 return null;
             }
-            let requirementQueryHandler = new ActionRequirementsQueryHandler(ctx.path, action);
+            let requirementQueryHandler = new ActionRequirementsQueryHandler(ctx.path, action, lang);
             let ActionComponent = action.component;
             if (!ActionComponent) {
                 console.warn(`Unable to render action ${actionKey} because Action component ${ActionComponent} does not exists`);

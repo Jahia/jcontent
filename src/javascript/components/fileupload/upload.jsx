@@ -10,6 +10,7 @@ import UploadDrawer from './UploadDrawer';
 import { panelStates, uploadsStatuses } from './constatnts';
 import { setPanelState } from './redux/actions';
 import UploadDropZone from './UploadDropZone';
+import mimetypes from 'mime-types';
 
 const styles = theme => ({
     drawerContent: {
@@ -83,9 +84,9 @@ class Upload extends React.Component {
     }
 
     configureRendering() {
-        const { uploads } = this.props;
+        const { uploads, acceptedFileTypes } = this.props;
         if (uploads.length === 0) {
-            return <UploadDropZone />
+            return <UploadDropZone acceptedFileTypes={ this.getMimeTypes(acceptedFileTypes) }/>
         }
         return <div>Uploading stiff ...</div>
     }
@@ -150,10 +151,20 @@ class Upload extends React.Component {
         }
         return 0;
     }
+
+    getMimeTypes(acceptedFileTypes) {
+        if (acceptedFileTypes) {
+            return acceptedFileTypes.map((type) => {
+                return mimetypes.lookup(type);
+            });
+        }
+        return undefined;
+    }
 }
 
 Upload.propTypes = {
     classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
     acceptedFileTypes: PropTypes.array
 };
 

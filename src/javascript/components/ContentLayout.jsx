@@ -13,7 +13,6 @@ import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
-
 import Upload from './fileupload/upload';
 
 //Files grid
@@ -113,7 +112,6 @@ class ContentLayout extends React.Component {
         return <DxContext.Consumer>{dxContext => {
                 let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
                 return <React.Fragment>
-                    <Upload/>
                     <Grid container spacing={0}>
                         <Grid item xs={GRID_SIZE} className={classes.topBar}>
                             <CMTopBar dxContext={dxContext} mode={mode}/>
@@ -199,6 +197,7 @@ class ContentLayout extends React.Component {
                             </React.Fragment>
                         }}
                     </ContentData>
+                    <Upload />
                 </React.Fragment>
         }}</DxContext.Consumer>;
     }

@@ -1,13 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { uploadFile } from './gqlMutations';
-import { Mutation } from 'react-apollo';
-import { Input, Button, IconButton } from "@material-ui/core";
-import { Close, ExpandMore, ExpandLess } from "@material-ui/icons";
-import {connect} from "react-redux";
-import UploadDrawer from './UploadDrawer';
-import { panelStates, uploadsStatuses } from './constatnts';
-import { setPanelState } from './redux/actions';
+import PropTypes from 'prop-types';
+import { UploadDropZoneFile } from './gqlMutations';
+import { Button } from "@material-ui/core";
+import { panelStates, UploadDropZonesStatuses } from './constatnts';
 import Dropzone from 'react-dropzone';
 
 const styles = theme => ({
@@ -36,7 +32,7 @@ const styles = theme => ({
     }
 });
 
-class Upload extends React.Component {
+class UploadDropZone extends React.Component {
 
     constructor(props) {
         super(props);
@@ -46,9 +42,10 @@ class Upload extends React.Component {
 
     render() {
         // console.log(this.state.file);
-        const { classes } = this.props;
+        const { classes, acceptedFileTypes } = this.props;
         return <div className={ classes.root }>
             <Dropzone ref={ this.dropZone }
+                      accept={ acceptedFileTypes }
                       className={ classes.dropZone }
                       activeClassName={ classes.dropZoneActive }
                       onDrop={ this.onDrop }>
@@ -65,5 +62,9 @@ class Upload extends React.Component {
     }
 }
 
+UploadDropZone.propTypes = {
+    classes: PropTypes.object.isRequired,
+    acceptedFileTypes: PropTypes.array
+};
 
-export default withStyles(styles)(Upload);
+export default withStyles(styles)(UploadDropZone);

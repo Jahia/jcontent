@@ -1,4 +1,5 @@
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
+import { fileUpload } from '../fileupload/redux/reducer';
 import {
     languageReducer,
     siteReducer,
@@ -22,6 +23,7 @@ let getStore = (dxContext, history) => {
         mode:modeReducer(currentValueFromUrl.mode),
         path:pathReducer(currentValueFromUrl.path),
         params:paramsReducer(currentValueFromUrl.params),
+        fileUpload: fileUpload
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

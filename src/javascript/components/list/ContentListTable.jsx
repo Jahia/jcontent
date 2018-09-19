@@ -302,9 +302,9 @@ class ContentListTable extends React.Component {
                                     );
                                 })}
                                 {emptyRows > 0 &&
-                                <TableRow style={{height: 49 * emptyRows}}>
-                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
-                                </TableRow>
+                                    <TableRow style={{height: 49 * emptyRows}}>
+                                        <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
+                                    </TableRow>
                                 }
                             </TableBody>
                         )}

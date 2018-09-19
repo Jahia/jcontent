@@ -129,6 +129,9 @@
             "title" : "Users"
           }
         }
+      },
+      "fileUpload": {
+          "uploadButtonLabel": "Upload file(s)"
       }
     }
   }

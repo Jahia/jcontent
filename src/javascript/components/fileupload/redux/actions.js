@@ -5,9 +5,9 @@ export const setPath = path => {
     }
 };
 
-export const setState = state => {
+export const setPanelState = state => {
     return {
-        type: "FILEUPLOAD_SET_STATE",
+        type: "FILEUPLOAD_SET_PANEL_STATE",
         state: state
     }
 };

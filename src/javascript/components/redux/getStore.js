@@ -1,4 +1,5 @@
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
+import {batchDispatchMiddleware} from 'redux-batched-actions';
 import { fileUpload } from '../fileupload/redux/reducer';
 import {
     languageReducer,
@@ -14,7 +15,7 @@ import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
 
 
 let getStore = (dxContext, history) => {
-    let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search)
+    let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
     const rootReducer = combineReducers({
         uiLang:uiLanguageReducer(dxContext),
         selection:selectionReducer,
@@ -32,7 +33,8 @@ let getStore = (dxContext, history) => {
         connectRouter(history)(rootReducer),
         composeEnhancers(
             applyMiddleware(
-                routerMiddleware(history)
+                routerMiddleware(history),
+                batchDispatchMiddleware
             ),
         ),
     );

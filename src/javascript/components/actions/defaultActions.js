@@ -9,6 +9,7 @@ import PublishDeletionAction from "./PublishDeletionAction";
 import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
 import UnDeleteAction from "./UnDeleteAction";
+import FileUploadAction from './FileUploadAction';
 
 let edit = (context) => window.parent.authoringApi.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"]);
 let createContentFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:contentFolder"], false);
@@ -55,6 +56,14 @@ let defaultActions = {
         contentType: "jnt:folder",
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.create.folder",
+        hideOnNodeTypes: ["jnt:page"]
+    },
+    fileUpload: {
+        component: FileUploadAction,
+        priority: 4,
+        target: ["createMenuActions", "contentTreeMenuActions"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.fileUpload.uploadButtonLabel",
         hideOnNodeTypes: ["jnt:page"]
     },
     translate: {

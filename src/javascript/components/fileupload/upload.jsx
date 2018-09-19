@@ -1,7 +1,50 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import { uploadFile } from './gqlMutations';
 import { Mutation } from 'react-apollo';
-import { Input, Button } from "@material-ui/core";
+import { Input, Button, IconButton } from "@material-ui/core";
+import { Close, ExpandMore, ExpandLess } from "@material-ui/icons";
+import {connect} from "react-redux";
+import UploadDrawer from './UploadDrawer';
+import { panelStates, uploadsStatuses } from './constatnts';
+import { setPanelState } from './redux/actions';
+import UploadDropZone from './UploadDropZone';
+
+const styles = theme => ({
+    drawerContent: {
+        display: "flex",
+        flexDirection: "column",
+        transition: "height 0.5s ease 0s"
+    },
+    contentHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: '0 8px',
+        ...theme.mixins.toolbar,
+    },
+    contentBody: {
+        display: "flex",
+        justifyContent: "center"
+    },
+    drawerContentOrange: {
+        "background-color": "#E67D3A"
+    },
+    drawerContentGreen: {
+        "background-color": "#51a522"
+    },
+    drawerContentRed: {
+        "background-color": "#aa0022"
+    },
+    drawerContentFull: {
+        height: 350
+    },
+    drawerContentPartial: {
+        height: 50,
+        overflow: 'hidden'
+    }
+});
 
 class Upload extends React.Component {
 
@@ -11,20 +54,119 @@ class Upload extends React.Component {
     }
 
     render() {
-        console.log(this.state.file);
-        return (
-            <Mutation mutation={uploadFile}>
-                {(mutationCall, {called, loading, data, error}) =>
-                    <div>
-                        <Input type="file" onChange={
-                            (event) => { this.setState({file:event.target.files[0]})}
-                        } >File</Input>
-                        <Button onClick={() => mutationCall({variables:{fileHandle:this.state.file}})}>Upload</Button>
+        // console.log(this.state.file);
+        const { classes } = this.props;
+        return <React.Fragment>
+            <UploadDrawer open={ this.isDrawerOpen() } transitionDuration={ this.transitionDuration() }>
+                <div className={ this.contentClasses() }>
+                    <div className={classes.contentHeader}>
+                        { this.headerButton() }
                     </div>
-                }
-            </Mutation>
-        )
+                    <div className={ classes.contentBody }>
+                        { this.configureRendering() }
+                    </div>
+                </div>
+            </UploadDrawer>
+        </React.Fragment>
+        // return (
+        //     <Mutation mutation={uploadFile}>
+        //         {(mutationCall, {called, loading, data, error}) =>
+        //             <div>
+        //                 <Input type="file" onChange={
+        //                     (event) => { this.setState({file:event.target.files[0]})}
+        //                 } >File</Input>
+        //                 <Button onClick={() => mutationCall({variables:{fileHandle:this.state.file}})}>Upload</Button>
+        //             </div>
+        //         }
+        //     </Mutation>
+        // )
+    }
+
+    configureRendering() {
+        const { uploads } = this.props;
+        if (uploads.length === 0) {
+            return <UploadDropZone />
+        }
+        return <div>Uploading stiff ...</div>
+    }
+
+    isDrawerOpen() {
+        const { panelState } = this.props;
+        return panelState === panelStates.VISIBLE || panelState === panelStates.PARTIALLY_VISIBLE;
+    }
+
+    contentClasses() {
+        const { panelState, status, classes } = this.props;
+        if (status === uploadsStatuses.HAS_ERROR && panelState === panelStates.PARTIALLY_VISIBLE) {
+            return `${classes.drawerContent} ${classes.drawerContentPartial} ${classes.drawerContentRed}`;
+        }
+        if (status === uploadsStatuses.UPLOADING && panelState === panelStates.PARTIALLY_VISIBLE) {
+            return `${classes.drawerContent} ${classes.drawerContentPartial} ${classes.drawerContentOrange}`;
+        }
+        if (status === uploadsStatuses.UPLOADED && panelState === panelStates.PARTIALLY_VISIBLE) {
+            return `${classes.drawerContent} ${classes.drawerContentPartial} ${classes.drawerContentGreen}`;
+        }
+        if (panelState === panelStates.PARTIALLY_VISIBLE) {
+            return `${classes.drawerContent} ${classes.drawerContentPartial}`;
+        }
+        if (status === uploadsStatuses.NOT_STARTED) {
+            return `${classes.drawerContent} ${classes.drawerContentFull} ${classes.drawerContentOrange}`;
+        }
+        return `${classes.drawerContent} ${classes.drawerContentFull}`;
+    }
+
+    headerButton() {
+        const { panelState, status } = this.props;
+        if (status === uploadsStatuses.NOT_STARTED) {
+            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.INVISIBLE)) }>
+                <Close />
+            </IconButton>
+        }
+        if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.VISIBLE) {
+            return <IconButton onClick={ () => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE)) }>
+                <ExpandLess />
+            </IconButton>
+        }
+        if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.PARTIALLY_VISIBLE) {
+            return <IconButton onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
+                <ExpandMore />
+            </IconButton>
+        }
+        if (status === uploadsStatuses.UPLOADED && (panelState === panelStates.VISIBLE || panelStates.PARTIALLY_VISIBLE)) {
+            return <IconButton onClick={ () => this.props.dispatch(setPanelState(panelStates.INVISIBLE)) }>
+                <Close />
+            </IconButton>
+        }
+    }
+
+    transitionDuration() {
+        //Setting to 0 prevents panel from going up when it is in partial state and close button is clicked
+        const { panelState, status } = this.props;
+        if (status === uploadsStatuses.NOT_STARTED) {
+            return 300;
+        }
+        if (status === uploadsStatuses.UPLOADED && panelState.VISIBLE) {
+            return 300;
+        }
+        return 0;
     }
 }
 
-export default Upload;
+Upload.propTypes = {
+    classes: PropTypes.object.isRequired,
+    acceptedFileTypes: PropTypes.array
+};
+
+const mapStateToProps = (state, ownProps) => {
+    return state.fileUpload
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: dispatch
+    }
+};
+
+export default withStyles(styles)(
+    connect(mapStateToProps, mapDispatchToProps)(Upload)
+);

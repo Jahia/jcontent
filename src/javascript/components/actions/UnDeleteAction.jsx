@@ -6,16 +6,12 @@ import {withNotifications} from "@jahia/react-material/index";
 
 class UnDeleteAction extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
         let {call, children, context, ...rest} = this.props;
         let ctx = _.cloneDeep(context);
 
-        ctx.displayName = ctx.displayName.substring(0, 100)+"...";
+        ctx.displayName = ctx.displayName.substring(0, 100) + "...";
 
         let mixinTypesProperty = null;
         if (context.node.properties != null) {
@@ -25,8 +21,6 @@ class UnDeleteAction extends React.Component {
             return children({...rest, onClick: () => call(ctx)});
         }
         return null;
-
-
     }
 }
 

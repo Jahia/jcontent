@@ -1,5 +1,4 @@
 import React from "react";
-import * as _ from "lodash";
 import {hasMixin} from "../utils.js";
 
 class DeleteAction extends React.Component {

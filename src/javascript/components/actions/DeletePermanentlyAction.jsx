@@ -1,5 +1,5 @@
 import React from "react";
-import * as _ from "lodash";
+import {hasMixin} from "../utils.js";
 
 class DeletePermanentlyAction extends React.Component {
 
@@ -7,18 +7,17 @@ class DeletePermanentlyAction extends React.Component {
 
         let {children, context, ...rest} = this.props;
 
-        let mixinTypesProperty = null;
-        if (context.node.properties != null) {
-            mixinTypesProperty = _.find(context.node.properties, property => property.name === 'jcr:mixinTypes');
+        if (!hasMixin(context.node, "jmix:markedForDeletionRoot")) {
+            return null;
         }
-        if (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, "jmix:markedForDeletionRoot")) {
-            return children({
-                ...rest,
-                onClick: () => window.parent.authoringApi.deleteContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], false, true)
-            });
+        if (context.node.aggregatedPublicationInfo.publicationStatus != "NOT_PUBLISHED") {
+            return null;
         }
 
-        return null;
+        return children({
+            ...rest,
+            onClick: () => window.parent.authoringApi.deleteContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], false, true)
+        });
     }
 }
 

@@ -237,7 +237,7 @@ let defaultActions = {
         requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.deletePermanently",
         hideOnNodeTypes: ["jnt:page"]
-},
+    },
     unDelete: {
         priority: 4.1,
         component: UnDeleteAction,

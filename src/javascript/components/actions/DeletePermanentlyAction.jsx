@@ -1,7 +1,5 @@
 import React from "react";
-import {translate} from "react-i18next";
 import * as _ from "lodash";
-import {withNotifications} from "@jahia/react-material/index";
 
 class DeletePermanentlyAction extends React.Component {
 
@@ -23,10 +21,5 @@ class DeletePermanentlyAction extends React.Component {
         return null;
     }
 }
-
-DeletePermanentlyAction = _.flowRight(
-    withNotifications(),
-    translate()
-)(DeletePermanentlyAction);
 
 export default DeletePermanentlyAction;

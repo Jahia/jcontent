@@ -1,7 +1,5 @@
 import React from "react";
-import {translate} from "react-i18next";
 import * as _ from "lodash";
-import {withNotifications} from "@jahia/react-material/index";
 import {hasMixin} from "../utils.js";
 
 class DeleteAction extends React.Component {
@@ -20,10 +18,5 @@ class DeleteAction extends React.Component {
         });
     }
 }
-
-DeleteAction = _.flowRight(
-    withNotifications(),
-    translate()
-)(DeleteAction);
 
 export default DeleteAction;

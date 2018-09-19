@@ -1,8 +1,5 @@
 import React from "react";
-import {translate} from "react-i18next";
 import * as _ from "lodash";
-import {withApollo} from 'react-apollo';
-import {withNotifications} from "@jahia/react-material/index";
 
 class UnDeleteAction extends React.Component {
 
@@ -23,11 +20,5 @@ class UnDeleteAction extends React.Component {
         return null;
     }
 }
-
-UnDeleteAction = _.flowRight(
-    withNotifications(),
-    translate(),
-    withApollo,
-)(UnDeleteAction);
 
 export default UnDeleteAction;

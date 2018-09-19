@@ -14,7 +14,7 @@ class IFrameLayout extends React.Component {
             setUrl(null, null, "browse", "/", {});
             return null;
         }
-        let iframeUrl = action.iframeUrl.replace(/:context/g, contextPath.substring(1)); // remove starting "/"
+        let iframeUrl = action.iframeUrl.replace(/:context/g, contextPath);
         iframeUrl = iframeUrl.replace(/:workspace/g, workspace);
         iframeUrl = iframeUrl.replace(/:lang/g, lang);
         iframeUrl = iframeUrl.replace(/:site/g, siteKey);

@@ -96,12 +96,17 @@ class ContentLayout extends React.Component {
     isBrowsing() {
         let {contentSource} = this.props;
         return (contentSource === "browsing" || contentSource === "files")
-    }
+    };
+
+    isRootNode() {
+        let {path, siteKey} = this.props;
+        return (path === ("/sites/" + siteKey))
+    };
 
     render() {
 
         const {showPreview, showTree: showTree} = this.state;
-        const {contentSource, contentTreeConfigs, mode, selection, classes, path} = this.props;
+        const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey} = this.props;
 
         return <DxContext.Consumer>{dxContext => {
                 let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
@@ -115,7 +120,7 @@ class ContentLayout extends React.Component {
                                 <ContentBreadcrumbs/>
                             </Grid>
                             <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttonPanel}>
-                                {this.isBrowsing() &&
+                                {this.isBrowsing() && !this.isRootNode() &&
                                 <Actions menuId={"createMenu"} context={{path: path}}>
                                     {(props) => <CmButton {...props}><Add/></CmButton>}
                                 </Actions>
@@ -198,6 +203,7 @@ class ContentLayout extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        siteKey: state.site,
         path: state.path,
         selection: state.selection
     }

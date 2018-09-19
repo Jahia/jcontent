@@ -82,11 +82,11 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.edit"
     },
     publish: {
-        priority: 6,
+        priority: 1,
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["previewBar", "contentTreeMenuActions"],
+        target: ["publishMenu"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publish",
         allSubtree: false,

@@ -127,7 +127,7 @@ class ContentManager extends React.Component {
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,
                             ns: dxContext.i18nNamespaces,
-                            defaultNS: "content-manager",
+                            defaultNS: "content-media-manager",
                         })}>
                             <I18n>{(t) => {
                                 return (

@@ -5,19 +5,19 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
         version="2.0">
 
-    <description>ContentManager module tag library</description>
-    <display-name>Content Manager taglib</display-name>
-    <tlib-version>7.1</tlib-version>
+    <description>Tag library for Content and Media Manager module</description>
+    <display-name>Content and Media Manager Taglib</display-name>
+    <tlib-version>1.0</tlib-version>
     <short-name>cm</short-name>
     <uri>http://www.jahia.org/tags/contentmanager/functions</uri>
     <function>
-        <description>Generates the list of actions for the Content Manager</description>
+        <description>Generates the list of actions for the Content and Media Manager</description>
         <name>generateActionLists</name>
         <function-class>org.jahia.modules.contentmanager.actionlists.TagFunctions</function-class>
         <function-signature>java.lang.String generateActionLists(org.jahia.services.render.RenderContext)</function-signature>
     </function>
     <function>
-        <description>Retrieves a list of namespaces (module names) that contain Javascript locales</description>
+        <description>Retrieves a list of namespaces (module names) that contain JavaScript locales</description>
         <name>getI18nNamespaces</name>
         <function-class>org.jahia.modules.contentmanager.actionlists.TagFunctions</function-class>
         <function-signature>java.lang.String getI18nNameSpaces(org.jahia.services.render.RenderContext)</function-signature>

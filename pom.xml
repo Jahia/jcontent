@@ -55,11 +55,11 @@
         <version>7.3.0.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <artifactId>content-manager</artifactId>
-    <name>Content Manager</name>
+    <artifactId>content-media-manager</artifactId>
+    <name>Content and Media Manager</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <description>This is the custom module (Content Manager) for running on a Digital Experience Manager server.</description>
+    <description>This is the custom module (Content and Media Manager) for running on a Digital Experience Manager server.</description>
 
     <scm>
         <connection>scm:git:git@github.com:Jahia/content-manager.git</connection>

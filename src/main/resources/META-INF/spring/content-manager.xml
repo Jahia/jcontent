@@ -12,15 +12,18 @@
         <property name="cacheService" ref="ehCacheProvider"/>
     </bean>
 
-    <util:list id="menus">
-        <ref bean="bluemenu"/>
+    <util:list id="legacyMenu">
         <ref bean="editmode.managers.menu"/>
         <ref bean="studiomode.managers.menu"/>
     </util:list>
 
+    <util:list id="menu">
+        <ref bean="bluemenu"/>
+    </util:list>
+
     <!-- Content Manager -->
     <bean id="Toolbar.Item.ContentManager" class="org.jahia.services.uicomponents.bean.toolbar.Item">
-        <property name="parent" ref="menus"/>
+        <property name="parent" ref="menu"/>
         <property name="actionItem">
             <bean class="org.jahia.ajax.gwt.client.widget.toolbar.action.OpenWindowActionItem"/>
         </property>
@@ -43,6 +46,12 @@
                 </bean>
             </list>
         </property>
+    </bean>
+
+    <!-- Content Manager -->
+    <bean id="Toolbar.Item.ContentManager.legacy" parent="Toolbar.Item.ContentManager">
+        <property name="parent" ref="legacyMenu"/>
+        <property name="icon" value="content-manager-1616"/>
     </bean>
 
     <bean name="org.jahia.bin.ContentManager" parent="abstractRender" class="org.jahia.bin.Edit">

@@ -26,7 +26,8 @@ import { faChevronDown,
     faCropAlt,
     faExpand,
     faRedoAlt,
-    faUndoAlt
+    faUndoAlt,
+    faUser
 } from '@fortawesome/free-solid-svg-icons';
 
 export const initFontawesomeIcons = function() {
@@ -55,4 +56,5 @@ export const initFontawesomeIcons = function() {
     library.add(faExpand);
     library.add(faRedoAlt);
     library.add(faUndoAlt);
+    library.add(faUser);
 };

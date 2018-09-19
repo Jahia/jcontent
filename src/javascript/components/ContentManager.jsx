@@ -153,7 +153,7 @@ class ContentManager extends React.Component {
                                                                 <ContentLayout mode={"sql2Search"} contentSource="sql2Search"/>
                                                             }/>
                                                             <Route path={`${props.match.url}/apps/:actionKey`} render={props =>
-                                                                <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace} siteKey={dxContext.siteKey}/>
+                                                                <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
                                                             }/>
                                                         </ManagerLayout>
                                                     );

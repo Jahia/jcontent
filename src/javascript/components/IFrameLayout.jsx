@@ -8,10 +8,10 @@ import actionsRegistry from "./actionsRegistry";
 class IFrameLayout extends React.Component {
 
     render() {
-        const { actionKey, workspace, siteKey, lang, contextPath, setUrl } = this.props;
+        const { actionKey, workspace, siteKey, lang, contextPath, redirectToBrowse } = this.props;
         const action = actionsRegistry[actionKey];
         if (!action || !action.iframeUrl) {
-            setUrl(null, null, "browse", "/", {});
+            redirectToBrowse();
             return null;
         }
         let iframeUrl = action.iframeUrl.replace(/:context/g, contextPath);
@@ -37,7 +37,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
+    redirectToBrowse: () => dispatch(cmGoto({mode: 'browse', path: '/'}))
 })
 
 IFrameLayout = _.flowRight(

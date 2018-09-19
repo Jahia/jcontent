@@ -5,6 +5,7 @@ import {VerifiedUser} from '@material-ui/icons';
 import Typography from "@material-ui/core/Typography";
 import {lodash as _} from "lodash";
 import {translate} from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const styles = (theme) => {
 
@@ -13,12 +14,12 @@ const styles = (theme) => {
 class SideMenuAction extends React.Component {
 
     render() {
-        const {t, menuId, children, context, handleDrawer, classes, ...rest} = this.props;
+        const {t, menuId, children, context, handleDrawer, handleDrawerClose, classes, ...rest} = this.props;
         const actionContent = <List style={{marginLeft: '18px', marginTop: '18px'}}>
-            <Actions menuId={menuId} context={context}>
+            <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose}>
                 {(menuConfig) =>
                     <ListItem button onClick={(event) => menuConfig.onClick(event)}>
-                        {t(menuConfig.labelKey, menuConfig.labelParams)}
+                    <FontAwesomeIcon icon={menuConfig.icon != null ? menuConfig.icon : ["far","file"]}/>&nbsp;{t(menuConfig.labelKey, menuConfig.labelParams)}
                     </ListItem>
                 }
             </Actions>

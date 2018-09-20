@@ -54,7 +54,7 @@
           "cut": "Cut",
           "duplicate": "Duplicate",
           "delete": "Delete",
-          "undelete": "UnDelete",
+          "undelete": "undelete",
           "deletePermanently": "Delete permanently",
           "notPublished": "Content has never been published",
           "publishedBy" : "Published by {{userName}} on ",

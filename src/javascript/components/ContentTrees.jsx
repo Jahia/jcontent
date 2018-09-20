@@ -32,7 +32,7 @@ class ContentTree extends React.Component {
                     return entry.depth > 0 ?
                         (<React.Fragment>
                             {entry.node.displayName}
-                            <Actions menuId={"contentTreeActions"} context={{path: path, displayName: entry.node.displayName, lang: lang, user:user}}>
+                            <Actions menuId={"contentTreeActions"} context={{path: path, displayName: entry.node.displayName, lang: lang, user:user, nodeName:entry.node.nodeName}}>
                                 {(props) => <CmIconButton {...props} cmRole={'picker-item-menu'}/>}
                             </Actions>
                         </React.Fragment>)

@@ -132,10 +132,10 @@ class ContentPreview extends React.Component {
                                 { selectedItem.isLocked ? this.unlock() : this.lock() }
                             </Grid>
                             <Grid item xs={ 8 }>
-                                <Actions menuId={"previewBar"} context={{path: selectedItem.path, displayName: selectedItem.name}}>
+                                <Actions menuId={"previewBar"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
                                     {(props) => <CmButton {...props}/>}
                                 </Actions>
-                                <Actions menuId={"additionalMenu"} context={{path: selectedItem.path, displayName: selectedItem.name}}>
+                                <Actions menuId={"additionalMenu"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
                                     {(props) => <CmIconButton {...props}/>}
                                 </Actions>
                             </Grid>

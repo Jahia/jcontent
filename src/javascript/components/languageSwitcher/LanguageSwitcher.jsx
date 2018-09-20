@@ -174,7 +174,7 @@ class LanguageSwitcherDisplay extends React.Component {
             <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true"
                     onClick={this.handleClick} data-cm-role={'language-switcher'}>
                 <Typography className={classes.typography}>
-                    {_.find(languages, (language) => language.language === lang).displayName}
+                    {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
                     &nbsp;
                     <FontAwesomeIcon icon="chevron-down"/>
                 </Typography>

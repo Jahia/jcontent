@@ -238,7 +238,8 @@ class ContentPreview extends React.Component {
             path: path,
             templateType: "html",
             view: "cm",
-            contextConfiguration: "preview"
+            contextConfiguration: "preview",
+            language: this.props.language
         }
     }
 
@@ -279,7 +280,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         selection: state.selection,
         previewMode: state.previewMode,
-        previewModes: state.previewModes
+        previewModes: state.previewModes,
+        language: state.language
     }
 };
 

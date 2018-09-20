@@ -134,7 +134,7 @@ const styles = (theme) => ({
         }
     },
     hoveredRowActionsCell: {
-        minWidth: "110px"
+        minWidth: "150px"
     }
 });
 

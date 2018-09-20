@@ -41,8 +41,10 @@ const styles = theme => ({
         display: 'block',
         padding: '0!important',
         textAlign: 'center',
+        //TODO : put position to absolute after making CM not scrollable
         position: 'relative',
         bottom: '10px',
+        //TODO : remove after making the CM not scrollable
         top: 250,
         width: '48px!important',
         marginLeft: 10,

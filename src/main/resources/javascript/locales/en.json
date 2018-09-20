@@ -17,6 +17,7 @@
           "clearAllLocks": "Clear all locks"
         }
       },
+      "unpublish": "Unpublish",
       "locked": "Content is locked",
       "lock": "Lock content",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
@@ -63,7 +64,9 @@
           "copyPathToClipboard": "Copy path to clipboard",
           "copyUUIDToClipboard": "Copy UUID to clipboard",
           "nodeLockedBy": "Content locked by {{username}}",
-          "lockNode": "Lock content"
+          "lockNode": "Lock content",
+          "live": "Live",
+          "staged": "Staged"
       },
       "contentTypes": {
           "any": "Any content",

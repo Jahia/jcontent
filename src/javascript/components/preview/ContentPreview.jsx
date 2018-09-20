@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import { translate } from 'react-i18next';
-import { withStyles, Paper, Grid, IconButton } from "@material-ui/core";
+import { withStyles, Paper, Grid, IconButton, Button } from "@material-ui/core";
 import { Fullscreen, FullscreenExit, Lock, LockOpen } from "@material-ui/icons";
 import { previewQuery } from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
@@ -20,6 +20,7 @@ import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
 import {DxContext} from "../DxContext";
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
+import {cmSetPreviewMode, cmSetPreviewModes} from "../redux/actions";
 
 const styles = theme => ({
     root: {
@@ -48,9 +49,19 @@ const styles = theme => ({
         left: "0!important",
         height: "1000px!important"
     },
-    controlsPaper: {
+    unpublishButton: {
+        float: "right",
+        margin: theme.spacing.unit
+    },
+    controlsPaperEdit: {
         flex: 3,
         maxHeight: "200px",
+        backgroundColor: "#555",
+        opacity: 0.9
+    },
+    controlsPaperLive: {
+        flex: 3,
+        maxHeight: "52px",
         backgroundColor: "#555",
         opacity: 0.9
     },
@@ -73,8 +84,10 @@ class ContentPreview extends React.Component {
         this.state = {
             additionalActionsMenuAnchor: null,
             fullScreen: false,
-            imageControlElementId: "previewImageControls"
+            imageControlElementId: "previewImageControls",
+            selectedItem: null
         };
+        this.previewDispatched = false;
     }
 
     handleDialogState = () => {
@@ -82,6 +95,12 @@ class ContentPreview extends React.Component {
             fullScreen: !this.state.fullScreen
         });
     };
+
+    componentDidUpdate(prevProps) {
+        if (this.props.selection[0].uuid !== prevProps.selection[0].uuid) {
+            this.previewDispatched = false;
+        }
+    }
 
     render() {
         if (_.isEmpty(this.props.selection)) {
@@ -91,74 +110,109 @@ class ContentPreview extends React.Component {
     }
 
     mainComponent() {
-
-        const { selection, classes, t } = this.props;
+        const { selection, classes, t, previewMode, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
         const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
-
         return <DxContext.Consumer>
             {dxContext => (
                 <div className={ rootClass } >
                     <Paper className={ classes.previewPaper } elevation={ 0 }>
-                        <Query query={ previewQuery } variables={ this.queryVariables(path) }>
+                        <Query query={ previewQuery } errorPolicy={"all"} variables={ this.queryVariables(path) }>
                             {({loading, error, data}) => {
                                 if (error) {
-                                    console.error(error);
+                                    //Ignore error that occurs if node is not published in live mode.
                                 }
-
                                 if (!loading) {
-                                    return this.previewComponent(data);
+                                    if (!_.isEmpty(data)) {
+                                        let modes = ['edit'];
+                                        //Check if the node is published in live.
+                                        if (data.edit.nodeByPath.isPublished.value === "true") {
+                                            modes.push('live');
+                                        }
+                                        let selectedMode = _.find(modes, (mode)=>{ return previewMode === mode}) !== undefined ? previewMode : 'edit';
+                                        if (!this.previewDispatched) {
+                                            setPreviewMode(selectedMode);
+                                            setPreviewModes(modes);
+                                            this.previewDispatched = true;
+                                        }
+                                        return this.previewComponent(data[selectedMode]);
+                                    }
                                 }
                                 return null
                             }}
                         </Query>
                     </Paper>
-                    <Paper className={ classes.controlsPaper } elevation={ 0 }>
-                        <Grid container spacing={0}>
-                            <Grid item xs={ 10 } className={ classes.titleBar }>
-                                <div className={ classes.contentTitle }>{ selectedItem.displayName ? selectedItem.displayName : selectedItem.name }</div>
-                                <PublicationInfo/>
-                            </Grid>
-                            <Grid item xs={ 2 }>
-                                <ShareMenu/>
-                                { this.screenModeButtons() }
-                            </Grid>
-                            <Grid item xs={12}>
-                                {/*Element that will contain image controls if an image is the document being previewed*/}
-                                <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
-                            </Grid>
-                            <Grid item xs={ 4 }>
-                                { selectedItem.isLocked ? this.unlock() : this.lock() }
-                            </Grid>
-                            <Grid item xs={ 8 }>
-                                <Actions menuId={"previewBar"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
-                                    {(props) => <CmButton {...props}/>}
-                                </Actions>
-                                <Actions menuId={"additionalMenu"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
-                                    {(props) => <CmIconButton {...props}/>}
-                                </Actions>
-                            </Grid>
-                        </Grid>
+                    <Paper className={ previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit } elevation={ 0 }>
+                        {this.componentFooter()}
                     </Paper>
                 </div>
             )}
         </DxContext.Consumer>;
     }
 
+    componentFooter() {
+        let {classes, previewMode, selection, t} = this.props;
+        let selectedItem = selection[0];
+        switch (previewMode) {
+            case 'live':
+                return <Grid container spacing={0}>
+                    <Grid item xs={ 12 }>
+                        <Actions menuId={"livePreviewBar"} context={{path: selectedItem.path, displayName: selectedItem.name}}>
+                            {(props) =>
+                                <Button
+                                    className={classes.unpublishButton}
+                                    variant="contained"
+                                    size="medium"
+                                    color="primary"
+                                    onClick={(event) => props.onClick(event)}
+                                >
+                                    {t('label.contentManager.unpublish')}
+                                </Button>}
+                        </Actions>
+                    </Grid>
+                </Grid>;
+            case 'edit':
+                return <Grid container spacing={0}>
+                    <Grid item xs={ 10 } className={ classes.titleBar }>
+                        <div className={ classes.contentTitle }>{ selectedItem.displayName ? selectedItem.displayName : selectedItem.name }</div>
+                        <PublicationInfo/>
+                    </Grid>
+                    <Grid item xs={ 2 }>
+                        <ShareMenu/>
+                        { this.screenModeButtons() }
+                    </Grid>
+                    <Grid item xs={12}>
+                        {/*Element that will contain image controls if an image is the document being previewed*/}
+                        <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
+                    </Grid>
+                    <Grid item xs={ 4 }>
+                        { selectedItem.isLocked ? this.unlock() : this.lock() }
+                    </Grid>
+                    <Grid item xs={ 8 }>
+                        <Actions menuId={"editPreviewBar"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
+                            {(props) => <CmButton {...props}/>}
+                        </Actions>
+                        <Actions menuId={"editAdditionalMenu"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
+                            {(props) => <CmIconButton {...props}/>}
+                        </Actions>
+                    </Grid>
+                </Grid>;
+        }
+    };
     previewComponent(data) {
         const { classes, t, dxContext } = this.props;
-        let displayValue = data && data.jcr ? data.jcr.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
+        let displayValue = data ? data.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
         //If node type is "jnt:file" use pdf viewer
-        if (data && data.jcr && data.jcr.nodeByPath.isFile) {
-            let file = dxContext.contextPath + '/files/default' + data.jcr.nodeByPath.path;
-            if (isPDF(data.jcr.nodeByPath.path)) {
-                return <PDFViewer key={data.jcr.nodeByPath.uuid} file={file}/>;
-            } else if(isImage(data.jcr.nodeByPath.path)) {
-                return <ImageViewer key={data.jcr.nodeByPath.uuid}
+        if (data && data.nodeByPath.isFile) {
+            let file = dxContext.contextPath + '/files/default' + data.nodeByPath.path;
+            if (isPDF(data.nodeByPath.path)) {
+                return <PDFViewer key={data.nodeByPath.uuid} file={file}/>;
+            } else if(isImage(data.nodeByPath.path)) {
+                return <ImageViewer key={data.nodeByPath.uuid}
                              elementId={this.state.imageControlElementId}
                              file={file}/>;
             } else {
@@ -182,7 +236,7 @@ class ContentPreview extends React.Component {
             path: path,
             templateType: "html",
             view: "cm",
-            contextConfiguration: "default"
+            contextConfiguration: "preview"
         }
     }
 
@@ -221,13 +275,25 @@ class ContentPreview extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-    selection: state.selection
-}}
+        selection: state.selection,
+        previewMode: state.previewMode,
+        previewModes: state.previewModes
+    }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setPreviewMode: (mode) => {
+        dispatch(cmSetPreviewMode(mode));
+    },
+    setPreviewModes: (modes) => {
+        dispatch(cmSetPreviewModes(modes));
+    }
+});
 
 ContentPreview = _.flowRight(
     translate(),
     withStyles(styles),
-    connect(mapStateToProps, null)
+    connect(mapStateToProps, mapDispatchToProps)
 )(ContentPreview);
 
 export default ContentPreview;

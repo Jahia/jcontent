@@ -1,6 +1,7 @@
 const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
 const CM_SET_SELECTION = 'CM_SET_SELECTION';
+const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 
 function setUiLang(uiLang) {
     return {
@@ -41,10 +42,24 @@ function cmSetParams(params) {
     return cmGoto({params});
 }
 
+function cmSetPreviewMode(mode) {
+    return {
+        type: CM_SET_PREVIEW,
+        previewMode: mode
+    }
+}
+
+function cmSetPreviewModes(modes) {
+    return {
+        type: CM_SET_PREVIEW,
+        previewModes: modes
+    }
+}
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
     CM_SET_SELECTION,
+    CM_SET_PREVIEW,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -52,5 +67,7 @@ export {
     cmSetSite,
     cmSetMode,
     cmSetPath,
-    cmSetParams
+    cmSetParams,
+    cmSetPreviewMode,
+    cmSetPreviewModes
 }

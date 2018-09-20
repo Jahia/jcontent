@@ -1,4 +1,4 @@
-import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION} from "./actions";
+import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW} from "./actions";
 
 let uiLanguageReducer = (dxContext) => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
@@ -58,4 +58,20 @@ let selectionReducer = (state = [], action) => {
     }
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer};
+let previewModeReducer = (state = 'live', action) => {
+    if (action.previewMode && action.type ===  CM_SET_PREVIEW) {
+        return action.previewMode
+    } else {
+        return state;
+    }
+};
+
+let previewModesReducer = (state = [], action) => {
+    if (action.previewModes && action.type ===  CM_SET_PREVIEW) {
+        return action.previewModes
+    } else {
+        return state;
+    }
+};
+
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer}

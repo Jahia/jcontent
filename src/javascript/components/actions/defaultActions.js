@@ -23,7 +23,7 @@ let defaultActions = {
         call: edit,
         icon: Edit,
         priority: 2.5,
-        target: ["previewBar", "contentTreeMenuActions", "tableEditButtonAction"],
+        target: ["editPreviewBar", "contentTreeMenuActions", "tableEditButtonAction"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.edit"
     },
@@ -70,7 +70,7 @@ let defaultActions = {
         component: "callAction",
         call: () => alert("Translate !!!"),
         icon: "Edit",
-        target: ["previewBar"],
+        target: ["editPreviewBar"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.translate"
     },
@@ -125,7 +125,7 @@ let defaultActions = {
         component: "menuAction",
         menuId: "publishMenu",
         icon: "Publish",
-        target: ["previewBar", "contentTreeMenuActions", "tablePublishMenu"],
+        target: ["editPreviewBar", "contentTreeMenuActions", "tablePublishMenu"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.advancedPublish"
     },
@@ -175,7 +175,7 @@ let defaultActions = {
         priority: 6,
         component: PublishDeletionAction,
         icon: "Publish",
-        target: ["previewBar", "contentTreeMenuActions"],
+        target: ["editPreviewBar", "contentTreeMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publishDeletion",
         hideOnNodeTypes: ["jnt:virtualsite"],
@@ -185,7 +185,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["publishMenu"],
+        target: ["livePreviewBar", "publishMenu"],
         requiredPermission: "",
         allSubTree: false,
         allLanguages: false,
@@ -211,7 +211,7 @@ let defaultActions = {
         component: "menuAction",
         menuId: "additionalPreviewMenu",
         icon: "Edit",
-        target: ["additionalMenu"],
+        target: ["editAdditionalMenu"],
         requiredPermission: "",
         iconButton: true
     },

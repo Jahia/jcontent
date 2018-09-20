@@ -168,7 +168,6 @@ class ContentLayout extends React.Component {
                                                     pageSize={this.state.rowsPerPage}
                                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                                     onChangePage={this.handleChangePage}
-                                                    onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
                                                 />
                                                 : <ContentListTable
@@ -177,7 +176,6 @@ class ContentLayout extends React.Component {
                                                     pageSize={this.state.rowsPerPage}
                                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                                     onChangePage={this.handleChangePage}
-                                                    onRowSelected={this.handleRowSelection}
                                                     page={this.state.page}
                                                     handleShowPreview={() => this.handleShowPreview(selection, 'show')}
                                                 />
@@ -208,11 +206,10 @@ const mapStateToProps = (state, ownProps) => {
         path: state.path,
         selection: state.selection
     }
-}
-
+};
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto(path, params))
-})
+});
 
 ContentLayout = _.flowRight(
     withNotifications(),

@@ -21,6 +21,9 @@
         "show": "Afficher l'arborescence",
         "hide": "Masquer l'arborescence"
       },
+      "contentPreview": {
+        "cut": "Couper"
+      },
       "contentTypes": {
 	      "any": "Tout contenu",      
 	      "error": {

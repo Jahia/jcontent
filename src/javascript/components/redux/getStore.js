@@ -8,7 +8,9 @@ import {
     pathReducer,
     paramsReducer,
     uiLanguageReducer,
-    selectionReducer
+    selectionReducer,
+    previewModeReducer,
+    previewModesReducer
 } from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
@@ -24,7 +26,9 @@ let getStore = (dxContext, history) => {
         mode:modeReducer(currentValueFromUrl.mode),
         path:pathReducer(currentValueFromUrl.path),
         params:paramsReducer(currentValueFromUrl.params),
-        fileUpload: fileUpload
+        fileUpload: fileUpload,
+        previewMode:previewModeReducer,
+        previewModes:previewModesReducer
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

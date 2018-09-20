@@ -21,6 +21,32 @@
         "show": "Navigationsbaum anzeigen",
         "hide": "Navigationsbaum verbergen"
       },
+      "contentPreview": {
+          "edit": "Bearbeiten",
+          "translate": "Übersetzen",
+          "publish": "Veröffentlichen in {{language}}",
+          "publishAll": "Node und alle Sub-nodes in {{language}} veröffentlichen",
+          "publishAllInAllLanguages": "Node und alle Sub-nodes in allen Sprachen veröffentlichen",
+          "publishInAllLanguages": "Veröffentlichen in allen Sprachen",
+          "advancedPublish": "Erweiterte Veröffentlichung...",
+          "publishDeletion": "Löschen veröffentlichen",
+          "unpublish": "Veröffentlichung rückgängig machen in {{language}}",
+          "unpublishInAllLanguages": "Veröffentlichung rückgängig machen in allen Sprachen",
+          "copy": "Kopieren",
+          "cut": "Ausschneiden",
+          "duplicate": "Duplizieren",
+          "delete": "Löschen",
+          "undelete": "Wiederherstellen",
+          "deletePermanently": "Löschen (endgültig)",
+          "notPublished": "Der Content wurde nie veröffentlicht",
+          "publishedBy" : "Veröffentlicht von {{userName}} am ",
+          "modifiedBy" : "Geändert von {{userName}} am ",
+          "markedForDeletionBy" : "Zur Löschung markiert von {{userName}} am ",
+          "copyPathToClipboard": "Pfad in Zwischenablage kopieren",
+          "copyUUIDToClipboard": "UUID in Zwischenablage kopieren",
+          "nodeLockedBy": "Content gesperrt von {{username}}",
+          "lockNode": "Content sperren"
+      },
       "contentTypes": {
         "any": "Jeglicher Content",
         "error": {

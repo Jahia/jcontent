@@ -105,6 +105,21 @@ let defaultActions = {
         hideOnNodeTypes: ["jnt:virtualsite"],
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
+    publishInContentTreeMenu: {
+        priority: 5,
+        component: PublishAction,
+        call: publish,
+        icon: "Publish",
+        target: ["contentTreeMenuActions"],
+        requiredPermission: "",
+        labelKey: "label.contentManager.contentPreview.publish",
+        allSubtree: false,
+        allLanguages: false,
+        checkForUnpublication: false,
+        checkIfLanguagesMoreThanOne: false,
+        hideOnNodeTypes: ["jnt:virtualsite"],
+        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
+    },
     advancedPublish: {
         priority: 6,
         component: "menuAction",

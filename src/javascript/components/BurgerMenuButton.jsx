@@ -25,7 +25,7 @@ class BurgerMenuButton extends React.Component {
         let {classes} = this.props;
 
         return (
-            <div className={classes.menuButton}  onClick={() => this.openMenu()}/>
+            <div className={classes.menuButton}  onClick={() => this.openMenu()} data-cm-role="cm-burger-menu"/>
         );
     }
 }

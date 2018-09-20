@@ -1,7 +1,5 @@
 import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION} from "./actions";
 
-
-
 let uiLanguageReducer = (dxContext) => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
         return action.uiLang;
@@ -53,9 +51,11 @@ let paramsReducer = (params) => (state = params, action) => {
 let selectionReducer = (state = [], action) => {
     if (action.type === CM_SET_SELECTION) {
         return action.selection
+    } else if (action.type === CM_NAVIGATE) {
+        return [];
     } else {
         return state;
     }
-}
+};
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer}
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer};

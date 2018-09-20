@@ -12,8 +12,7 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
-import {cmGoto} from "./redux/actions";
-
+import {cmGoto, cmSetSelection} from "./redux/actions";
 
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
@@ -38,22 +37,29 @@ class ContentData extends React.Component {
     }
 
     onGwtContentModification(nodePath, nodeName, operation) {
-        // reset all store and reload all data
-        this.props.client.resetStore();
+
+        let {client, path, selection, setPath, setSelection} = this.props;
+
+        if (operation == "delete") {
+            if (path == nodePath) {
+                setPath(path.substring(0, path.lastIndexOf("/")));
+            }
+            if (_.find(selection, node => node.path == nodePath)) {
+                let newSelection = _.clone(selection);
+                _.remove(newSelection, node => node.path == nodePath);
+                setSelection(newSelection);
+            }
+        }
+
+        client.resetStore();
     }
 
     render() {
+
         const {contentSource, notificationContext, t, children, page, rowsPerPage, siteKey, lang, path, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere, setPath, uiLang} = this.props;
         const params = {searchContentType: searchContentType, searchTerms: searchTerms, sql2SearchFrom: sql2SearchFrom, sql2SearchWhere: sql2SearchWhere};
+        const rootPath = `/sites/${siteKey}`;
         let queryHandler = contentQueryHandlerBySource[contentSource];
-        const rootPath = `/sites/${siteKey}`
-        this.gwtEventHandlerContext = {
-            path: path,
-            params: params,
-            setPath: setPath,
-            lang: lang,
-            uiLang: uiLang
-        };
 
         const paginationState = {
             page: page,
@@ -129,11 +135,13 @@ const mapStateToProps = (state, ownProps) => ({
     searchContentType: state.params.searchContentType,
     sql2SearchFrom: state.params.sql2SearchFrom,
     sql2SearchWhere: state.params.sql2SearchWhere,
-    uiLang: state.uiLang
+    uiLang: state.uiLang,
+    selection: state.selection
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setPath: (path, params) => dispatch(cmGoto({path, params}))
+    setPath: (path, params) => dispatch(cmGoto({path, params})),
+    setSelection: (selection) => dispatch(cmSetSelection(selection))
 });
 
 ContentData = _.flowRight(

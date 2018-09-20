@@ -59,7 +59,7 @@ let selectionReducer = (state = [], action) => {
 };
 
 let previewModeReducer = (state = 'live', action) => {
-    if (action.previewMode && action.type ===  CM_SET_PREVIEW) {
+    if (action.previewMode && action.type === CM_SET_PREVIEW) {
         return action.previewMode
     } else {
         return state;
@@ -67,7 +67,7 @@ let previewModeReducer = (state = 'live', action) => {
 };
 
 let previewModesReducer = (state = [], action) => {
-    if (action.previewModes && action.type ===  CM_SET_PREVIEW) {
+    if (action.previewModes && action.type === CM_SET_PREVIEW) {
         return action.previewModes
     } else {
         return state;

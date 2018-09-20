@@ -7,6 +7,7 @@ import {translate} from "react-i18next";
 import {IconButton, Paper} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
+import {connect} from "react-redux";
 
 const styles = theme => ({
     root: {},
@@ -108,17 +109,36 @@ class ImageViewer extends React.Component {
         )
     }
 
-    componentDidMount() {
-        this.renderImageControls();
+    componentDidUpdate(prevProps) {
+        if (this.props.previewMode === 'edit' && prevProps.previewMode !== 'edit') {
+            //Disabled for now until controls functionality is implemented
+            // this.renderImageControls();
+        }
     }
 
     componentWillUnmount() {
-        ReactDOM.unmountComponentAtNode(document.getElementById(this.props.elementId))
+        let el = document.getElementById(this.props.elementId);
+        if (el != null) {
+            ReactDOM.unmountComponentAtNode(el);
+        }
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        previewMode: state.previewMode
+    }
+};
 
 ImageViewer.propTypes = {
     elementId: PropTypes.string.isRequired,
     file: PropTypes.string.isRequired
 };
-export default translate()(withStyles(styles)(ImageViewer));
+
+ImageViewer = _.flowRight(
+    translate(),
+    withStyles(styles),
+    connect(mapStateToProps, null)
+)(ImageViewer);
+
+export default ImageViewer;

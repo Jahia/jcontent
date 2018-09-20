@@ -12,7 +12,7 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
-import {cmGoto, cmSetSelection} from "./redux/actions";
+import {cmGoto, cmSetSelection, cmClosePaths} from "./redux/actions";
 
 const contentQueryHandlerBySource = {
     "browsing": new BrowsingQueryHandler(),
@@ -38,20 +38,42 @@ class ContentData extends React.Component {
 
     onGwtContentModification(nodePath, nodeName, operation) {
 
-        let {client, path, selection, setPath, setSelection} = this.props;
+        let {client, path, selection, openPaths, setPath, setSelection, closePaths} = this.props;
 
+        let stateModificationDone = false;
         if (operation == "delete") {
+
+            // Switch to parent node in case of currently selected node deletion.
             if (path == nodePath) {
                 setPath(path.substring(0, path.lastIndexOf("/")));
+                stateModificationDone = true;
             }
+
+            // De-select any removed nodes.
             if (_.find(selection, node => node.path == nodePath)) {
                 let newSelection = _.clone(selection);
                 _.remove(newSelection, node => node.path == nodePath);
                 setSelection(newSelection);
+                stateModificationDone = true;
+            }
+
+            // Close any expanded nodes that have been just removed.
+            let pathsToClose = _.filter(openPaths, openPath => openPath.startsWith(nodePath));
+            if (!_.isEmpty(pathsToClose)) {
+                closePaths(pathsToClose);
+                stateModificationDone = true;
             }
         }
 
-        client.resetStore();
+        if (stateModificationDone) {
+            // In case of any state modifications, wait a second to let components re-render and perform GrpaphQL requests asynchronously,
+            // and avoid store reset done at the same time: Apollo is usually unhappy with this and throws errors.
+            setTimeout(function() {
+                client.resetStore();
+            }, 1000);
+        } else {
+            client.resetStore();
+        }
     }
 
     render() {
@@ -136,12 +158,14 @@ const mapStateToProps = (state, ownProps) => ({
     sql2SearchFrom: state.params.sql2SearchFrom,
     sql2SearchWhere: state.params.sql2SearchWhere,
     uiLang: state.uiLang,
-    selection: state.selection
+    selection: state.selection,
+    openPaths: state.openPaths
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
-    setSelection: (selection) => dispatch(cmSetSelection(selection))
+    setSelection: (selection) => dispatch(cmSetSelection(selection)),
+    closePaths: (paths) => dispatch(cmClosePaths(paths))
 });
 
 ContentData = _.flowRight(

@@ -1,4 +1,4 @@
-import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW} from "./actions";
+import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS} from "./actions";
 
 let uiLanguageReducer = (dxContext) => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
@@ -25,7 +25,7 @@ let languageReducer = (language) => (state = language, action) => {
 };
 
 let modeReducer = (mode) => (state = mode, action) => {
-    if (action.mode && action.type ===  CM_NAVIGATE) {
+    if (action.mode && action.type === CM_NAVIGATE) {
         return action.mode
     } else {
         return state;
@@ -33,7 +33,7 @@ let modeReducer = (mode) => (state = mode, action) => {
 };
 
 let pathReducer = (path) => (state = path, action) => {
-    if (action.path && action.type ===  CM_NAVIGATE) {
+    if (action.path && action.type === CM_NAVIGATE) {
         return action.path
     } else {
         return state;
@@ -41,7 +41,7 @@ let pathReducer = (path) => (state = path, action) => {
 };
 
 let paramsReducer = (params) => (state = params, action) => {
-    if (action.params && action.type ===  CM_NAVIGATE) {
+    if (action.params && action.type === CM_NAVIGATE) {
         return action.params
     } else {
         return state;
@@ -74,4 +74,18 @@ let previewModesReducer = (state = [], action) => {
     }
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer}
+let openPathsReducer = (path) => (state = [path], action) => {
+    if (action.type === CM_SET_OPEN_PATHS) {
+        if (action.open) {
+            return _.union(state, action.open);
+        } else if (action.close) {
+            return _.difference(state, action.close);
+        } else {
+            return state;
+        }
+    } else {
+        return state;
+    }
+};
+
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer};

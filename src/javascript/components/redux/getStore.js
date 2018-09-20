@@ -10,25 +10,27 @@ import {
     uiLanguageReducer,
     selectionReducer,
     previewModeReducer,
-    previewModesReducer
+    previewModesReducer,
+    openPathsReducer
 } from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
 
-
 let getStore = (dxContext, history) => {
+
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
     const rootReducer = combineReducers({
-        uiLang:uiLanguageReducer(dxContext),
-        selection:selectionReducer,
-        site:siteReducer(currentValueFromUrl.site),
-        language:languageReducer(currentValueFromUrl.language),
-        mode:modeReducer(currentValueFromUrl.mode),
-        path:pathReducer(currentValueFromUrl.path),
-        params:paramsReducer(currentValueFromUrl.params),
+        uiLang: uiLanguageReducer(dxContext),
+        selection: selectionReducer,
+        site: siteReducer(currentValueFromUrl.site),
+        language: languageReducer(currentValueFromUrl.language),
+        mode: modeReducer(currentValueFromUrl.mode),
+        path: pathReducer(currentValueFromUrl.path),
+        params: paramsReducer(currentValueFromUrl.params),
         fileUpload: fileUpload,
-        previewMode:previewModeReducer,
-        previewModes:previewModesReducer
+        previewMode: previewModeReducer,
+        previewModes: previewModesReducer,
+        openPaths: openPathsReducer(currentValueFromUrl.path)
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

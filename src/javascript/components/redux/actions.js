@@ -2,6 +2,7 @@ const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
 const CM_SET_SELECTION = 'CM_SET_SELECTION';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
+const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 
 function setUiLang(uiLang) {
     return {
@@ -17,6 +18,20 @@ function cmSetSelection(selection) {
     }
 }
 
+function cmOpenPaths(paths) {
+    return {
+        type: CM_SET_OPEN_PATHS,
+        open: paths
+    }
+}
+
+function cmClosePaths(paths) {
+    return {
+        type: CM_SET_OPEN_PATHS,
+        close: paths
+    }
+}
+
 function cmGoto(data) {
     return Object.assign(data || {}, {type: CM_NAVIGATE});
 }
@@ -24,7 +39,6 @@ function cmGoto(data) {
 function cmSetSite(site) {
     return cmGoto({site});
 }
-
 
 function cmSetLanguage(language) {
     return cmGoto({language});
@@ -55,11 +69,13 @@ function cmSetPreviewModes(modes) {
         previewModes: modes
     }
 }
+
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
     CM_SET_SELECTION,
     CM_SET_PREVIEW,
+    CM_SET_OPEN_PATHS,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -69,5 +85,7 @@ export {
     cmSetPath,
     cmSetParams,
     cmSetPreviewMode,
-    cmSetPreviewModes
-}
+    cmSetPreviewModes,
+    cmOpenPaths,
+    cmClosePaths
+};

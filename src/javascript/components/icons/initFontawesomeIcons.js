@@ -27,7 +27,12 @@ import { faChevronDown,
     faExpand,
     faRedoAlt,
     faUndoAlt,
-    faUser
+
+    faGlobe,
+    faTags,
+    faUser,
+    faUsers,
+    faUserShield,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const initFontawesomeIcons = function() {
@@ -56,5 +61,10 @@ export const initFontawesomeIcons = function() {
     library.add(faExpand);
     library.add(faRedoAlt);
     library.add(faUndoAlt);
+    
+    library.add(faGlobe);
+    library.add(faTags);
     library.add(faUser);
+    library.add(faUsers);
+    library.add(faUserShield);
 };

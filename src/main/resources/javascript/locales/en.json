@@ -125,6 +125,18 @@
         "workflow": "Workflow",
         "manage" : {
           "title" : "Manage",
+          "groups" : {
+            "title" : "Groups"
+          },
+          "languages" : {
+            "title" : "Languages"
+          },
+          "roles" : {
+            "title" : "Site roles"
+          },
+          "tags" : {
+            "title" : "Tag manager"
+          },
           "users" : {
             "title" : "Users"
           }

@@ -94,6 +94,18 @@
         "contentReports": "Content Reports",
         "manage": {
           "title": "Administration",
+          "groups" : {
+            "title" : "Gruppen"
+          },
+          "languages" : {
+            "title" : "Sprachen"
+          },
+          "roles" : {
+            "title" : "Site-Rechte"
+          },
+          "tags" : {
+            "title" : "Tag-Manager"
+          },
           "users": {
             "title": "Benutzer"
           }

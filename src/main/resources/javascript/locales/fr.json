@@ -68,6 +68,18 @@
         "contentReports" : "Rapport de contenu",
         "manage" : {
           "title" : "Gestion",
+          "groups" : {
+            "title" : "Groupes"
+          },
+          "languages" : {
+            "title" : "Langues"
+          },
+          "roles" : {
+            "title" : "Rôles de site"
+          },
+          "tags" : {
+            "title" : "Gestionnaire de tags"
+          },
           "users" : {
             "title" : "Utilisateurs"
           }

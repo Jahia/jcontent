@@ -178,7 +178,7 @@ class ContentPreview extends React.Component {
                         <div className={ classes.contentTitle }>{ selectedItem.displayName ? selectedItem.displayName : selectedItem.name }</div>
                         <PublicationInfo/>
                     </Grid>
-                    <Grid item xs={ 2 }>
+                    <Grid item xs={ 2 } container={true} justify={"flex-end"}>
                         <ShareMenu/>
                         { this.screenModeButtons() }
                     </Grid>
@@ -189,7 +189,7 @@ class ContentPreview extends React.Component {
                     <Grid item xs={ 4 }>
                         { selectedItem.isLocked ? this.unlock() : this.lock() }
                     </Grid>
-                    <Grid item xs={ 8 }>
+                    <Grid item xs={ 8 } container={true} justify={"flex-end"}>
                         <Actions menuId={"editPreviewBar"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
                             {(props) => <CmButton {...props}/>}
                         </Actions>

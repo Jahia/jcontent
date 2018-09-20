@@ -70,7 +70,7 @@ let defaultActions = {
         component: "callAction",
         call: () => alert("Translate !!!"),
         icon: "Edit",
-        target: ["editPreviewBar"],
+        target: [],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.translate"
     },

@@ -190,7 +190,6 @@ class ContentLayout extends React.Component {
                                     <ContentPreview
                                         layoutQuery={layoutQuery}
                                         layoutQueryParams={layoutQueryParams}
-                                        rowSelectionFunc={this.handleRowSelection}
                                         dxContext={dxContext}
                                     />
                                 </PreviewDrawer>

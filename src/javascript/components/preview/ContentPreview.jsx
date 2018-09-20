@@ -234,6 +234,5 @@ export default ContentPreview;
 
 ContentPreview.propTypes = {
     layoutQuery: PropTypes.object.isRequired,
-    layoutQueryParams: PropTypes.object.isRequired,
-    rowSelectionFunc: PropTypes.func.isRequired
+    layoutQueryParams: PropTypes.object.isRequired
 };

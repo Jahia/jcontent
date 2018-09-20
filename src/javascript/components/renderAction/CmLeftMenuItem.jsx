@@ -41,9 +41,10 @@ const styles = theme => ({
         display: 'block',
         padding: '0!important',
         textAlign: 'center',
-        position: 'absolute',
+        position: 'relative',
         bottom: '10px',
         width: '48px!important',
+        marginLeft: 10,
         paddingBottom: '10px!important',
     }
 });

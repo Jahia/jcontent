@@ -11,6 +11,7 @@ import {
     selectionReducer,
     previewModeReducer,
     previewModesReducer,
+    previewStateReducer,
     openPathsReducer
 } from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
@@ -30,6 +31,7 @@ let getStore = (dxContext, history) => {
         fileUpload: fileUpload,
         previewMode: previewModeReducer,
         previewModes: previewModesReducer,
+        previewState: previewStateReducer,
         openPaths: openPathsReducer(currentValueFromUrl.path)
     });
 

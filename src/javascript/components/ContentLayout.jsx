@@ -14,6 +14,8 @@ import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
 import Upload from './fileupload/upload';
+import {cmSetPreviewState, CM_PREVIEW_STATES} from "./redux/actions";
+
 
 //Files grid
 import FilesGrid from './filesGrid/FilesGrid';
@@ -44,7 +46,6 @@ class ContentLayout extends React.Component {
 
         this.state = {
             showTree: true,
-            showPreview: false,
             filesGridSizeValue: 4,
             showList: false,
             page: 0,
@@ -62,22 +63,19 @@ class ContentLayout extends React.Component {
 
     //Force can be `show` or `hide`
     handleShowPreview = (selection, force) => {
-        if (force) {
-            this.setState((prevState, props) => {
-                switch (force) {
-                    case 'show':
-                        return {showPreview: true};
-                    case 'hide':
-                        return {showPreview: false};
-                    default: return {};
-                }
-            });
+        let {previewState, setPreviewState} = this.props;
+        if (force !== undefined) {
+            setPreviewState(force);
         } else if (!_.isEmpty(selection)) {
-            this.setState((prevState, props) => {
-                return {
-                    showPreview: !prevState.showPreview
+            switch(previewState) {
+                case CM_PREVIEW_STATES.SHOW:
+                    setPreviewState(CM_PREVIEW_STATES.HIDE);
+                    break;
+                case CM_PREVIEW_STATES.HIDE: {
+                    setPreviewState(CM_PREVIEW_STATES.SHOW);
+                    break;
                 }
-            })
+            }
         }
     };
 
@@ -106,9 +104,8 @@ class ContentLayout extends React.Component {
 
     render() {
 
-        const {showPreview, showTree: showTree} = this.state;
-        const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey} = this.props;
-
+        const {showTree: showTree} = this.state;
+        const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey, previewState} = this.props;
         return <DxContext.Consumer>{dxContext => {
                 let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
                 return <React.Fragment>
@@ -132,10 +129,10 @@ class ContentLayout extends React.Component {
                                 {contentSource === "files" &&
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                                 }
-                                {showPreview &&
+                                {previewState === CM_PREVIEW_STATES.SHOW &&
                                 <IconButton onClick={() => this.handleShowPreview(selection)}><VisibilityOff/></IconButton>
                                 }
-                                {!showPreview &&
+                                {previewState === CM_PREVIEW_STATES.HIDE &&
                                 <IconButton onClick={() => this.handleShowPreview(selection)}><Visibility/></IconButton>
                                 }
                                 {contentSource === "files" &&
@@ -177,13 +174,13 @@ class ContentLayout extends React.Component {
                                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                                     onChangePage={this.handleChangePage}
                                                     page={this.state.page}
-                                                    handleShowPreview={() => this.handleShowPreview(selection, 'show')}
+                                                    handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
                                                 />
                                             }
                                         </Grid>
                                     </Grid>
                                 </Paper>
-                                <PreviewDrawer open={showPreview} onClose={() => this.handleShowPreview(selection, 'hide')}>
+                                <PreviewDrawer open={previewState === CM_PREVIEW_STATES.SHOW} onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}>
                                     {/*Always get row from query not from state to be up to date*/}
                                     <ContentPreview
                                         layoutQuery={layoutQuery}
@@ -204,11 +201,15 @@ const mapStateToProps = (state, ownProps) => {
     return {
         siteKey: state.site,
         path: state.path,
-        selection: state.selection
+        selection: state.selection,
+        previewState: state.previewState
     }
 };
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setPath: (path, params) => dispatch(cmGoto(path, params))
+    setPath: (path, params) => dispatch(cmGoto(path, params)),
+    setPreviewState: (state) => {
+        dispatch(cmSetPreviewState(state));
+    }
 });
 
 ContentLayout = _.flowRight(

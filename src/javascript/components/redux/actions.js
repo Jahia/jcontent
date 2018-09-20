@@ -4,6 +4,8 @@ const CM_SET_SELECTION = 'CM_SET_SELECTION';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 
+const CM_PREVIEW_STATES = {"HIDE": 0, "SHOW": 1};
+
 function setUiLang(uiLang) {
     return {
         type: CM_SET_UILANGUAGE,
@@ -70,12 +72,20 @@ function cmSetPreviewModes(modes) {
     }
 }
 
+function cmSetPreviewState(state) {
+    return {
+        type: CM_SET_PREVIEW,
+        previewState: state
+    }
+}
+
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
     CM_SET_SELECTION,
     CM_SET_PREVIEW,
     CM_SET_OPEN_PATHS,
+    CM_PREVIEW_STATES,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -87,5 +97,6 @@ export {
     cmSetPreviewMode,
     cmSetPreviewModes,
     cmOpenPaths,
-    cmClosePaths
+    cmClosePaths,
+    cmSetPreviewState
 };

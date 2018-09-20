@@ -1,4 +1,4 @@
-import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS} from "./actions";
+import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS, CM_PREVIEW_STATES} from "./actions";
 
 let uiLanguageReducer = (dxContext) => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
@@ -88,4 +88,12 @@ let openPathsReducer = (path) => (state = [path], action) => {
     }
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer};
+let previewStateReducer = (state = CM_PREVIEW_STATES.HIDE, action) => {
+    if (action.previewState !== undefined && action.type === CM_SET_PREVIEW) {
+        return action.previewState;
+    } else {
+        return state;
+    }
+};
+
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer};

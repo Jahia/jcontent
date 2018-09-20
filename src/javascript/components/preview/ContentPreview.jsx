@@ -20,7 +20,7 @@ import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
 import {DxContext} from "../DxContext";
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
-import {cmSetPreviewMode, cmSetPreviewModes} from "../redux/actions";
+import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATES} from "../redux/actions";
 
 const styles = theme => ({
     root: {
@@ -97,7 +97,9 @@ class ContentPreview extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.selection[0].uuid !== prevProps.selection[0].uuid) {
+        if (this.props.selection[0] === undefined) {
+            this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
+        } else if(this.props.selection[0].uuid !== prevProps.selection[0].uuid) {
             this.previewDispatched = false;
         }
     }
@@ -287,6 +289,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     },
     setPreviewModes: (modes) => {
         dispatch(cmSetPreviewModes(modes));
+    },
+    setPreviewState: (state) => {
+        dispatch(cmSetPreviewState(state))
     }
 });
 

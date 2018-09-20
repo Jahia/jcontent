@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { UploadDropZoneFile } from './gqlMutations';
 import { Button } from "@material-ui/core";
-import { panelStates, UploadDropZonesStatuses } from './constatnts';
+import { UploadDropZonesStatuses } from './constatnts';
 import Dropzone from 'react-dropzone';
 
 const styles = theme => ({
@@ -58,12 +58,13 @@ class UploadDropZone extends React.Component {
     }
 
     onDrop(acceptedFiles, rejectedFiles) {
-        console.log(acceptedFiles, rejectedFiles);
+        this.props.onFilesSelected(acceptedFiles, rejectedFiles);
     }
 }
 
 UploadDropZone.propTypes = {
     classes: PropTypes.object.isRequired,
+    onFilesSelected: PropTypes.func.isRequired,
     acceptedFileTypes: PropTypes.array
 };
 

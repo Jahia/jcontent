@@ -33,6 +33,13 @@ export const updateUpload = upload => {
     }
 };
 
+export const removeUpload = id => {
+    return {
+        type: "FILEUPLOAD_REMOVE_UPLOAD",
+        id: id
+    }
+};
+
 export const takeFromQueue = number => {
     return {
         type: "FILEUPLOAD_TAKE_FROM_QUEUE",

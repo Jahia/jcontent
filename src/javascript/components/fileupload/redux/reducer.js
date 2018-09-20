@@ -1,15 +1,15 @@
-import { uploadStatuses } from '../constatnts';
+import { uploadStatuses, panelStates, uploadsStatuses } from '../constatnts';
 
 const initialState = {
     path: null,  //folder that will get files
-    panelState: "INVISIBLE", //or "VISIBLE", "PARTIALLY_VISIBLE"
-    status: "NOT_STARTED", //or "UPLOADING", "UPLOADED", "HAS_ERROR"
+    panelState: panelStates.INVISIBLE,
+    status: uploadsStatuses.NOT_STARTED,
     uploads: []
 };
 
-const upload = {
+export const uploadSeed = {
     id: "",
-    status: "QUEUED", //or "UPLOADING", "UPLOADED", "HAS_ERROR"
+    status: uploadStatuses.QUEUED,
     error: null
 };
 
@@ -31,24 +31,36 @@ export const fileUpload = (state = initialState, action) => {
             ...state,
             uploads: action.uploads
         };
-        case "FILEUPLOAD_UPDATE_UPLOAD" : return state.uploads.map((upload) => {
-            if (upload.id === action.upload.id) {
-                return action.upload
-            }
-            return upload;
-        });
-        case "FILEUPLOAD_TAKE_FROM_QUEUE" :
-            let numTaken = 0;
-            return state.uploads.map((upload) => {
-                if (upload.status === uploadStatuses.QUEUED && numTaken < action.number) {
-                    numTaken++;
-                    return {
-                        ...upload,
-                        state: uploadStatuses.UPLOADING
-                    }
+        case "FILEUPLOAD_UPDATE_UPLOAD" : return {
+            ...state,
+            uploads: state.uploads.map((upload) => {
+                if (upload.id === action.upload.id) {
+                    return action.upload
                 }
                 return upload;
-            });
+            })
+        };
+        case "FILEUPLOAD_REMOVE_UPLOAD" : return {
+            ...state,
+            uploads: state.uploads.filter((upload) => {
+                return upload.id !== action.id;
+            })
+        };
+        case "FILEUPLOAD_TAKE_FROM_QUEUE" :
+            let numTaken = 0;
+            return {
+                ...state,
+                uploads: state.uploads.map((upload) => {
+                    if (upload.status === uploadStatuses.QUEUED && numTaken < action.number) {
+                        numTaken++;
+                        return {
+                            ...upload,
+                            state: uploadStatuses.UPLOADING
+                        }
+                    }
+                    return upload;
+                })
+            };
 
         default : return state;
     }

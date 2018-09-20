@@ -42,8 +42,8 @@ export const fileUpload = (state = initialState, action) => {
         };
         case "FILEUPLOAD_REMOVE_UPLOAD" : return {
             ...state,
-            uploads: state.uploads.filter((upload) => {
-                return upload.id !== action.id;
+            uploads: state.uploads.filter((upload, index) => {
+                return index !== action.index;
             })
         };
         case "FILEUPLOAD_TAKE_FROM_QUEUE" :

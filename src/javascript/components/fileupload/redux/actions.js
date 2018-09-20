@@ -33,10 +33,10 @@ export const updateUpload = upload => {
     }
 };
 
-export const removeUpload = id => {
+export const removeUpload = index => {
     return {
         type: "FILEUPLOAD_REMOVE_UPLOAD",
-        id: id
+        index: index
     }
 };
 

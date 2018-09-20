@@ -62,6 +62,7 @@ class Upload extends React.Component {
         this.acceptedFiles = [];
         this.rejectedFiles = [];
         this.onFilesSelected = this.onFilesSelected.bind(this);
+        this.removeFile = this.removeFile.bind(this);
     }
 
     render() {
@@ -120,8 +121,16 @@ class Upload extends React.Component {
 
     showUploads() {
         return this.props.uploads.map((upload, index) => (
-            <UploadItem key={`upload_${index}`} index={ index } />
+            <UploadItem key={`upload_${index}`}
+                        index={ index }
+                        removeFile={ this.removeFile } />
         ));
+    }
+
+    removeFile(index) {
+        this.acceptedFiles = this.acceptedFiles.filter((file, i) => {
+            return i !== index;
+        });
     }
 
     isDrawerOpen() {

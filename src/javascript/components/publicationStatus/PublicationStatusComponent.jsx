@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Constants from '../constants';
-import { InfoOutline } from "@material-ui/icons";
+import { InfoOutlined } from "@material-ui/icons";
 import { publicationStatusByName } from "./publicationStatus";
 import {translate} from "react-i18next";
 import injectSheet from 'react-jss'
@@ -81,7 +81,7 @@ class PublicationStatusComponent extends Component {
             <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}>
                 <InfoButton publicationInfoWidth={ this.props.publicationInfoWidth }>
                     <div className={ classes.infoContainer }>
-                        <InfoOutline/>
+                        <InfoOutlined/>
                     </div>
                 </InfoButton>
                 <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }>

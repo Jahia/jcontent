@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { uploadFile } from './gqlMutations';
 import { Mutation } from 'react-apollo';
-import { Input, Button, IconButton, ListItem, ListItemText, Avatar, ListItemSecondaryAction } from "@material-ui/core";
+import { Input, Button, IconButton, List, ListItem, ListItemText, Avatar, ListItemSecondaryAction } from "@material-ui/core";
 import { Close, ExpandMore, ExpandLess, Delete } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
@@ -23,16 +23,28 @@ class UploadItem extends React.Component {
 
     render() {
         // console.log(this.state.file);
-        const { classes, dispatch, id } = this.props;
-        return <ListItem button className={classes.listItem} >
-            <Avatar alt="Remy Sharp" src={ id } />
-            <ListItemText primary={ id } />
-            <ListItemSecondaryAction >
-                <Button component={"a"} onClick={() => dispatch(removeUpload(id))} >
-                    Don't upload
-                </Button>
-            </ListItemSecondaryAction>
-        </ListItem>
+        const { classes, dispatch, removeFile, id, index } = this.props;
+        return <List>
+            {["a", "b", "c"].map((e) => (
+                <ListItem button className={classes.listItem}>
+                    <ListItemText primary={"SOme text"}/>
+                    <ListItemSecondaryAction>
+                        <Delete/>
+                    </ListItemSecondaryAction>
+                </ListItem>
+            ))
+            }
+        </List>
+        // return <ListItem button className={classes.listItem} >
+        //     <Avatar alt="Remy Sharp" src={ id } />
+        //     <ListItemText primary={ id } />
+        //     <ListItemSecondaryAction >
+        //         <Button component={"a"}
+        //                 onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+        //             Don't upload
+        //         </Button>
+        //     </ListItemSecondaryAction>
+        // </ListItem>
         // return (
         //     <Mutation mutation={uploadFile}>
         //         {(mutationCall, {called, loading, data, error}) =>
@@ -46,11 +58,16 @@ class UploadItem extends React.Component {
         //     </Mutation>
         // )
     }
+
+    secondaryActionsList() {
+
+    }
 }
 
 UploadItem.propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    removeFile: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired
 };
 

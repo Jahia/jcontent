@@ -52,7 +52,7 @@ class WorkflowDashboardAction extends React.Component {
                                 return children({...rest,
                                     labelParams: {language: dxContext.langName},
                                     onClick: () => call(ctx),
-                                    badge: <Badge  classes={{root: classes.root, badge: classes.badge}} badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{numberOfTasks}</Typography>} color="primary">{numberOfTasks}</Badge>})
+                                    badge: <Badge  classes={{root: classes.root, badge: classes.badge}} badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{numberOfTasks}</Typography>} color="primary"/>})
                             } else {
                                 return child;
                             }

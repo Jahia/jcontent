@@ -160,7 +160,7 @@ class ContentPreview extends React.Component {
             case 'live':
                 return <Grid container spacing={0}>
                     <Grid item xs={ 12 }>
-                        <Actions menuId={"livePreviewBar"} context={{path: selectedItem.path, displayName: selectedItem.name}}>
+                        <Actions menuId={"livePreviewBar"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name}}>
                             {(props) =>
                                 <Button
                                     className={classes.unpublishButton}
@@ -192,10 +192,10 @@ class ContentPreview extends React.Component {
                         { selectedItem.isLocked ? this.unlock() : this.lock() }
                     </Grid>
                     <Grid item xs={ 8 } container={true} justify={"flex-end"}>
-                        <Actions menuId={"editPreviewBar"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
+                        <Actions menuId={"editPreviewBar"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
                             {(props) => <CmButton {...props}/>}
                         </Actions>
-                        <Actions menuId={"editAdditionalMenu"} context={{path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
+                        <Actions menuId={"editAdditionalMenu"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
                             {(props) => <CmIconButton {...props}/>}
                         </Actions>
                     </Grid>

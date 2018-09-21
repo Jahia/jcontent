@@ -273,7 +273,7 @@ class ContentListTable extends React.Component {
                                                     </TableCell>;
                                                 }  else if (column.id === 'createdBy' && isHoveredRow) {
                                                     return <TableCell className={classes.hoveredRowActionsCell} key={column.id} padding={'none'} data-cm-role={'table-content-list-cell-' + column.id}>
-                                                        <Actions menuId={"tablePublishMenu"} context={{path: n.path, displayName: n.name, nodeName: n.nodeName}}>
+                                                        <Actions menuId={"tablePublishMenu"} context={{uuid: n.uuid, path: n.path, displayName: n.name, nodeName: n.nodeName}}>
                                                             {(props) => {
                                                                 return <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={"table-content-list-button-publish"}>
                                                                     <Autorenew/>
@@ -283,7 +283,7 @@ class ContentListTable extends React.Component {
                                                         <IconButton className={classes.hoveredRowAction} data-cm-role={"table-content-list-button"} onClick={handleShowPreview}>
                                                             <Visibility/>
                                                         </IconButton>
-                                                        <Actions menuId={"tableEditButtonAction"} context={{path: n.path, displayName: n.name, nodeName: n.nodeName}}>
+                                                        <Actions menuId={"tableEditButtonAction"} context={{uuid: n.uuid, path: n.path, displayName: n.name, nodeName: n.nodeName}}>
                                                             {(props) => {
                                                                 return <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={"table-content-list-button-edit"}>
                                                                         <Create/>
@@ -291,7 +291,7 @@ class ContentListTable extends React.Component {
                                                                 }
                                                             }
                                                         </Actions>
-                                                        <Actions  menuId={"tableActions"} context={{path: n.path, displayName: n.name, nodeName: n.nodeName}}>
+                                                        <Actions  menuId={"tableActions"} context={{uuid: n.uuid, path: n.path, displayName: n.name, nodeName: n.nodeName}}>
                                                             {(props) => <CmIconButton className={classes.hoveredRowAction} {...props} cmRole={'table-content-list-action-menu'}/>}
                                                         </Actions>
                                                     </TableCell>;

@@ -36,7 +36,7 @@ class ContentData extends React.Component {
         gwtEventHandlerUnregister(this.onGwtContentModification);
     }
 
-    onGwtContentModification(nodePath, nodeName, operation) {
+    onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
 
         let {client, path, selection, openPaths, setPath, setSelection, closePaths} = this.props;
 

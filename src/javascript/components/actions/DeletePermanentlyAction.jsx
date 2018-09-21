@@ -16,7 +16,7 @@ class DeletePermanentlyAction extends React.Component {
 
         return children({
             ...rest,
-            onClick: () => window.parent.authoringApi.deleteContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], false, true)
+            onClick: () => window.parent.authoringApi.deleteContent(context.uuid, context.path, context.displayName, ["jnt:content"], ["nt:base"], false, true)
         });
     }
 }

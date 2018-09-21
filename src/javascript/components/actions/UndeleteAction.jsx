@@ -16,7 +16,7 @@ class UndeleteAction extends React.Component {
         ctx.displayName = this.splitdisplayName(ctx.displayName);
 
         if (hasMixin(ctx.node, "jmix:markedForDeletion")) {
-            return children({...rest, onClick: () => window.parent.authoringApi.unDeleteContent(ctx.path, ctx.displayName, ctx.nodeName)});
+            return children({...rest, onClick: () => window.parent.authoringApi.unDeleteContent(ctx.uuid, ctx.path, ctx.displayName, ctx.nodeName)});
         }
         return null;
     }

@@ -5,7 +5,7 @@ import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
 import PreviewDrawer from "./preview/PreviewDrawer";
 import {Grid, IconButton, Paper, withStyles} from "@material-ui/core";
-import {Visibility, VisibilityOff, List, Add} from "@material-ui/icons";
+import {List, Add} from "@material-ui/icons";
 import ContentTrees from "./ContentTrees";
 import {withNotifications} from '@jahia/react-material';
 import {translate} from "react-i18next";
@@ -128,12 +128,6 @@ class ContentLayout extends React.Component {
                                 {contentSource === "files" &&
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                                 }
-                                {previewState === CM_PREVIEW_STATES.SHOW &&
-                                <IconButton onClick={() => this.handleShowPreview(selection)}><VisibilityOff/></IconButton>
-                                }
-                                {previewState === CM_PREVIEW_STATES.HIDE &&
-                                <IconButton onClick={() => this.handleShowPreview(selection)}><Visibility/></IconButton>
-                                }
                                 {contentSource === "files" &&
                                 <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
                                 }
@@ -165,6 +159,7 @@ class ContentLayout extends React.Component {
                                                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                                     onChangePage={this.handleChangePage}
                                                     page={this.state.page}
+                                                    handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
                                                 />
                                                 : <ContentListTable
                                                     totalCount={totalCount}

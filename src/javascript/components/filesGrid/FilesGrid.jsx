@@ -11,10 +11,26 @@ class FilesGrid extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            hoveredCard: null
+        }
+    }
+
+    onHoverEnter($event, path) {
+        this.setState({
+            hoveredCard:path
+        })
+    }
+
+    onHoverExit($event) {
+        this.setState({
+            hoveredCard: null
+        })
     }
 
     render() {
-        const { size, t } = this.props;
+        const { size, t, handleShowPreview } = this.props;
+        const {hoveredCard} = this.state;
 
         if (this.props.rows.length === 0) {
             return <h3>
@@ -24,12 +40,16 @@ class FilesGrid extends Component {
         return <Grid container spacing={ 8 }>
             {
                 this.props.rows.map((node) => (
-                    <Grid key={ node.uuid } item xs={ size }>
+                    <Grid key={ node.uuid } item xs={ size }
+                          onMouseEnter={($event) => this.onHoverEnter($event, node.path) }
+                          onMouseLeave={($event) => this.onHoverExit($event)}>
                         <DxContext.Consumer>
                             {
                                 dxContext => <FileCard cardType={ size }
+                                                       isHovered={node.path === hoveredCard}
                                                        node={ node }
-                                                       dxContext={ dxContext }/>
+                                                       dxContext={ dxContext }
+                                                       handleShowPreview={handleShowPreview}/>
                             }
                         </DxContext.Consumer>
                     </Grid>

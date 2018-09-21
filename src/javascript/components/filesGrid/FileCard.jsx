@@ -7,6 +7,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import {Visibility} from "@material-ui/icons";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
@@ -77,6 +79,19 @@ const styles = theme => ({
     selectedCard: {
         backgroundColor: "rgb(250, 250, 250)",
         boxShadow: "1px 0px 15px 4px rgba(247,150,5,1)"
+    },
+    visibilityButton: {
+        position:"absolute",
+        top: "0",
+        right: "0",
+        color: "#fff",
+        '&:hover': {
+            backgroundColor: "transparent"
+        },
+        '& svg': {
+            width:"18px",
+            height:"18px"
+        }
     }
 });
 
@@ -133,6 +148,7 @@ class FileCard extends Component {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
@@ -162,6 +178,7 @@ class FileCard extends Component {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
@@ -189,6 +206,7 @@ class FileCard extends Component {
             <div className={classes.verticalDetails} style={{ flex: 1.5 }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}>
+                    {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
                 </CardContent>
@@ -207,6 +225,7 @@ class FileCard extends Component {
             }
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
@@ -234,6 +253,7 @@ class FileCard extends Component {
             }
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
@@ -260,6 +280,7 @@ class FileCard extends Component {
             <div className={classes.verticalDetails} style={{ flex: 2 }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}>
+                    {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
@@ -274,10 +295,19 @@ class FileCard extends Component {
             </div>
         </Card>
     }
-    
+
     generateCardClass(node, baseClass) {
         const { classes } = this.props;
         return node.isSelected ? `${baseClass} ${classes.selectedCard}` : baseClass;
+    }
+
+    displayVisibilityButton() {
+        let {classes, isHovered, handleShowPreview} = this.props;
+        return isHovered ?<IconButton onClick={handleShowPreview}
+                                      disableRipple={true}
+                                      className={classes.visibilityButton}>
+            <Visibility/>
+        </IconButton> : null;
     }
 }
 

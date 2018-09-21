@@ -1,25 +1,32 @@
 import React from "react";
 import * as _ from "lodash";
 import {hasMixin} from "../utils.js";
+import {translate} from 'react-i18next';
 
 class UndeleteAction extends React.Component {
 
-    splitdisplayName(displayName){
-        return displayName.length > 100 ? displayName.substring(0, 100) + "..." : displayName;
+    abbreviateIfNeeded(displayName) {
+        if (displayName.length <= 100) {
+            return displayName;
+        }
+        return this.props.t("label.ellipsis", {text: displayName.substring(0, 100)});
     }
 
     render() {
 
         let {children, context, ...rest} = this.props;
-        let ctx = _.cloneDeep(context);
 
-        ctx.displayName = this.splitdisplayName(ctx.displayName);
+        context.displayName = this.abbreviateIfNeeded(context.displayName);
 
-        if (hasMixin(ctx.node, "jmix:markedForDeletion")) {
-            return children({...rest, onClick: () => window.parent.authoringApi.unDeleteContent(ctx.uuid, ctx.path, ctx.displayName, ctx.nodeName)});
+        if (hasMixin(context.node, "jmix:markedForDeletion")) {
+            return children({...rest, onClick: () => window.parent.authoringApi.undeleteContent(context.uuid, context.path, context.displayName, context.nodeName)});
         }
         return null;
     }
 }
+
+UndeleteAction = _.flowRight(
+    translate()
+)(UndeleteAction);
 
 export default UndeleteAction;

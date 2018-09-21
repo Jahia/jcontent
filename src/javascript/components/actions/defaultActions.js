@@ -267,7 +267,7 @@ let defaultActions = {
         labelKey: "label.contentManager.contentPreview.deletePermanently",
         hideOnNodeTypes: ["jnt:page"]
     },
-    unDelete: {
+    undelete: {
         priority: 4.1,
         component: UndeleteAction,
         icon: "Delete",

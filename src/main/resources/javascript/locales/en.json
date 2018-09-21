@@ -149,6 +149,7 @@
       "fileUpload": {
           "uploadButtonLabel": "Upload file(s)"
       }
-    }
+    },
+    "ellipsis": "{{text}}..."
   }
 }

@@ -135,6 +135,11 @@ const styles = (theme) => ({
     },
     hoveredRowActionsCell: {
         minWidth: "150px"
+    },
+    contentList: {
+        overflowY: 'scroll',
+        overflowX: 'scroll',
+        height: '100vh',
     }
 });
 
@@ -212,7 +217,7 @@ class ContentListTable extends React.Component {
         const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
         return (
-            <div>
+            <div className={classes.contentList}>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
                     <ContentListHeader
                         order={order}

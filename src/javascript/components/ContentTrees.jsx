@@ -1,13 +1,21 @@
 import React from "react";
 import {Picker} from "@jahia/react-apollo";
 import {PickerViewMaterial} from '@jahia/react-material';
-import {List, ListItem, Button} from "@material-ui/core";
+import {List, ListItem, Button, withStyles} from "@material-ui/core";
 import {translate} from 'react-i18next';
 import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
 import {cmGoto, cmOpenPaths, cmClosePaths} from "./redux/actions";
+
+const styles = theme => ({
+    trees: {
+        overflowY: 'scroll',
+        overflowX: 'scroll',
+        height: '100vh',
+    }
+});
 
 class ContentTree extends React.Component {
 
@@ -56,10 +64,10 @@ class ContentTrees extends React.Component {
 
     render() {
 
-        const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath, closePath} = this.props;
+        const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath, closePath, classes} = this.props;
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
-        return <List>
+        return <List className={classes.trees}>
             {contentTreeConfigs.showAllContents
                 ? <ListItem>
                     <Button onClick={() => openPath(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
@@ -108,6 +116,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 ContentTrees = _.flowRight(
     translate(),
+    withStyles(styles, {withTheme: true}),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentTrees);
 

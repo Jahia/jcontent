@@ -48,6 +48,7 @@
           "publishAllInAllLanguages": "Publish node and all sub nodes in all languages",
           "publishInAllLanguages": "Publish in all languages",
           "advancedPublish": "Advanced publish...",
+          "publishMenu": "Publish...",
           "publishDeletion": "Publish deletion",
           "unpublish": "Un-publish in {{language}}",
           "unpublishInAllLanguages": "Un-publish in all languages",

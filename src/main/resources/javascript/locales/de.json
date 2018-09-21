@@ -29,6 +29,7 @@
           "publishAllInAllLanguages": "Node und alle Sub-nodes in allen Sprachen veröffentlichen",
           "publishInAllLanguages": "Veröffentlichen in allen Sprachen",
           "advancedPublish": "Erweiterte Veröffentlichung...",
+          "publishMenu": "Veröffentlichen...",
           "publishDeletion": "Löschen veröffentlichen",
           "unpublish": "Veröffentlichung rückgängig machen in {{language}}",
           "unpublishInAllLanguages": "Veröffentlichung rückgängig machen in allen Sprachen",

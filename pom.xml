@@ -117,7 +117,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Jahia-ActionList-Resources>/javascript/actionlists/contentManagerLeftMenu.js::0,/javascript/actionlists/siteSettings.js::1</Jahia-ActionList-Resources>
+                        <Jahia-ActionList-Resources>/META-INF/actionlists/contentManagerLeftMenu.js::0,/META-INF/actionlists/siteSettings.js::1</Jahia-ActionList-Resources>
                     </instructions>
                 </configuration>
             </plugin>

@@ -8,10 +8,11 @@ import { Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecon
 import { CheckCircle, Info,  FiberManualRecord } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
-import { panelStates, uploadsStatuses, uploadStatuses } from './constatnts';
-import { updateUpload, removeUpload } from './redux/actions';
+import { panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
+import { updateUpload, removeUpload, takeFromQueue } from './redux/actions';
 import UploadDropZone from './UploadDropZone';
 import mimetypes from 'mime-types';
+import {batchActions} from 'redux-batched-actions';
 
 const styles = theme => ({
     progressText: {
@@ -46,7 +47,7 @@ class UploadItem extends React.Component {
                     status: uploadStatuses.UPLOADED,
                     error: null
                 };
-                this.props.dispatch(updateUpload(upload));
+                this.props.dispatchBatch([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]);
             }).catch((e) => {
                 const upload = {
                     id: this.props.id,
@@ -56,7 +57,7 @@ class UploadItem extends React.Component {
                 if (e.message.indexOf("ItemExistsException") !== -1) {
                     upload.error = "FILE_EXISTS"
                 }
-                this.props.dispatch(updateUpload(upload));
+                this.props.dispatchBatch([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]);
             });
         }
     }
@@ -181,7 +182,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        dispatch: dispatch
+        dispatch: dispatch,
+        dispatchBatch: actions => dispatch(batchActions(actions))
     }
 };
 

@@ -1,36 +1,43 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import {withStyles, Input, MenuItem} from "@material-ui/core";
+import {ArrowDropDown as ArrowDropDownIcon} from "@material-ui/icons";
+import {ListItemIcon, ListItemText, Input, withStyles, MenuItem} from '@material-ui/core';
 import * as _ from 'lodash';
 import {compose} from "react-apollo/index";
+import {translate} from "react-i18next";
 
 const styles = theme => ({
     root: {
-        display: 'inline-block',
-        minWidth: 200
+        width: 'auto',
+        minWidth: '100px',
+        height: 34,
+    },
+    inputSize:  {
+        height: 34,
+        padding: '0!important'
     }
 });
 
 const ITEM_HEIGHT = 48;
 
 const customStyles = {
+    container: () => ({
+        padding: 0,
+    }),
     control: () => ({
         display: "flex",
         alignItems: "center",
-        border: 0,
-        height: "auto",
-        background: "transparent",
+        height: 34,
+        width: '150px',
+        background: "#007bc0",
         "&:hover": {
             boxShadow: "none"
         }
     }),
     menu: () => ({
         backgroundColor: "white",
-        boxShadow: "1px 2px 6px #888888", // should be changed as material-ui
+        // boxShadow: "1px 2px 6px #888888", // should be changed as material-ui
         position: "absolute",
         left: 0,
         top: `calc(100% + 1px)`,
@@ -40,7 +47,29 @@ const customStyles = {
     }),
     menuList: () => ({
         maxHeight: ITEM_HEIGHT * 4.5,
+        display: 'inline-block',
+        color: 'white',
+        background: '#504e4d',
         overflowY: "auto"
+    }),
+    input: () => ({
+        height: 34,
+        padding: "0px !important"
+
+    }),
+    placeholder: () => ({
+        textAlign: 'center'
+    }),
+    singleValue: () => ({
+        color: 'white',
+        marginLeft: '2px',
+        marginRight: '2px',
+        maxWidth: 'calc(100% - 8px)',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        width: '100px',
+        whiteSpace: 'nowrap',
+        top: '50%',
     })
 };
 
@@ -61,7 +90,9 @@ class Option extends React.Component {
                 onClick={this.handleClick}
                 component="div"
                 style={{
-                    fontWeight: isSelected ? 500 : 400
+                    fontWeight: isSelected ? 500 : 400,
+                    color: 'white',
+                    minWidth: '100ox'
                 }}
                 title={data.title}
             >
@@ -93,7 +124,7 @@ class SelectWrapped extends React.Component {
 
     render() {
 
-        const {classes, value, options, ...other} = this.props;
+        const {classes, value, options, t, ...other} = this.props;
         let optionValue = _.find(options, (data) => data.value === value);
 
         return (
@@ -114,31 +145,15 @@ class SelectWrapped extends React.Component {
 
 class FilterSelect extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(data) {
-        let newValue = null;
-        if (data != null) {
-            newValue = data.value;
-        }
-        if (this.props.onSelectionChange !== undefined) {
-            this.props.onSelectionChange(newValue);
-        }
-    };
-
     render() {
 
-        let {classes, options, selectedOption} = this.props;
-
+        let {classes, t, options, selectedOption, handleChange} = this.props;
         return (
             <div className={classes.root} data-cm-role={'filter-select'}>
                 <Input
                     fullWidth
                     inputComponent={SelectWrapped}
-                    onChange={this.handleChange}
+                    onChange={handleChange}
                     value={selectedOption}
                     inputProps={{
                         options
@@ -153,11 +168,12 @@ FilterSelect.propTypes = {
     classes: PropTypes.object.isRequired,
     options: PropTypes.array.isRequired,
     selectedOption: PropTypes.string,
-    onSelectionChange : PropTypes.func
+    handleChange : PropTypes.func
 };
 
 FilterSelect = compose(
-    withStyles(styles)
+    withStyles(styles),
+    translate()
 )(FilterSelect);
 
 export default FilterSelect;

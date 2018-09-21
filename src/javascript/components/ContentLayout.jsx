@@ -29,7 +29,6 @@ import {connect} from "react-redux";
 
 const styles = theme => ({
     topBar: {
-        background: theme.palette.background.paper,
         color: theme.palette.primary.contrastText
     }
 });

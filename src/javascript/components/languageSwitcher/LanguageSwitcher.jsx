@@ -20,6 +20,15 @@ const styles = theme => ({
         color: '#504e4d',
         backgroundSize: '18px'
     },
+    typographyLight: {
+        opacity: '0.9',
+        fontFamily: "Nunito sans, sans-serif",
+        fontSize: '1rem',
+        fontWeight: 200,
+        paddingRight: '20px',
+        color: '#f5f5f5',
+        backgroundSize: '18px'
+    },
     formControl: {
         minWidth: 120,
     },
@@ -168,18 +177,17 @@ class LanguageSwitcherDisplay extends React.Component {
     };
 
     render() {
-        let {lang, languages, onSelectLanguage, classes} = this.props;
+        let {lang, languages, onSelectLanguage, classes, dark} = this.props;
         let {anchorEl} = this.state;
         return <React.Fragment>
             <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true"
                     onClick={this.handleClick} data-cm-role={'language-switcher'}>
-                <Typography className={classes.typography}>
+                <Typography className={dark ? classes.typography : classes.typographyLight}>
                     {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
                     &nbsp;
-                    <FontAwesomeIcon icon="chevron-down"/>
                 </Typography>
+                <FontAwesomeIcon icon="chevron-down" className={classes.icontest} />
 
-                <FontAwesomeIcon icon="chevron-down"/>
             </Button>
             <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                 {languages.map((lang) => {

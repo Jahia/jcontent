@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles, Toolbar, Typography} from "@material-ui/core";
+import {withStyles, Typography, Grid} from "@material-ui/core";
 import {translate} from "react-i18next";
 import LanguageSwitcher from "./languageSwitcher/LanguageSwitcher";
 import SiteSwitcher from "./siteSwitcher/SiteSwitcher";
@@ -9,13 +9,31 @@ import {CmSearchBar} from "./CmSearchBar";
 
 const styles = theme => ({
     root: {
-        background: 'transparent',
         flexGrow: 1,
-        paddingTop: theme.spacing.unit,
         minHeight: '160px',
         maxHeight: '160px',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         paddingRight: theme.spacing.unit,
         paddingBottom: theme.spacing.unit
+    },
+    blockMenu: {
+        // marginTop: -40
+    },
+    typoTitle: {
+        fontSize: '1.7rem',
+        fontFamily: "Nunito sans, sans-serif",
+        lineHeight: '32px',
+        fontWeight: '100',
+        color: '#f5f5f5',
+        width: '260px',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        marginTop: '-3px',
+        marginLeft: '1px'
     },
     head: {
         display: "inline-block",
@@ -31,31 +49,29 @@ const styles = theme => ({
 class CMTopBar extends React.Component {
     render() {
 
-        const {dxContext, classes, mode, t} = this.props;
-        let modeTitle = t("label.contentManager.title." + (mode || "browse"));
+        const {classes} = this.props;
         return (
-            <Toolbar color={"secondary"} classes={{root: classes.root}}>
-                <div className={classes.head}>
-                    <SiteSwitcher dxContext={dxContext}/>
-                    <Typography variant="display1" color="inherit" data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
-                    <LanguageSwitcher dxContext={dxContext}/>
-                </div>
-                {/*ToDo: To be removed before release: use to display the logged user name while working on BACKLOG-8179*/}
-                <div>
-                    <DxContext.Consumer>
-                        { dxContext => (
-                            <Typography variant="subheading" color="inherit">
-                                I am {dxContext.userName}
-                            </Typography>
-                        )}
-                    </DxContext.Consumer>
-                </div>
-
-                <div className={classes.search}>
-                    <CmSearchBar/>
-                </div>
-            </Toolbar>
-        );
+            <div className={classes.root}>
+                <Grid container spacing={24}>
+                    <Grid item xs={2} style={{marginTop: '-22px', marginLeft: '-22px', display: 'inline-grid'}}>
+                        <div style={{marginBottom: '-8px', marginLeft: '-6px'}}>
+                            <SiteSwitcher dark={false}/>
+                        </div>
+                        <Typography className={classes.typoTitle}>
+                            Content
+                        </Typography>
+                        <div style={{marginTop: '-8px', marginLeft: '-6px'}}>
+                            <LanguageSwitcher dark={false}/>
+                        </div>
+                    </Grid>
+                    <Grid item xs={1}>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <CmSearchBar/>
+                    </Grid>
+                </Grid>
+            </div>
+        )
     }
 }
 

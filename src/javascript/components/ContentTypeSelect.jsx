@@ -17,14 +17,14 @@ class ContentTypeSelect extends React.Component {
 
     handleChange(newValue) {
         if (this.props.onSelectionChange !== undefined) {
-            this.props.onSelectionChange(newValue);
+            this.props.onSelectionChange(newValue ? newValue.value : "");
         }
     };
 
     render() {
 
         let { contentType, classes, siteKey, displayLanguage, notificationContext, t } = this.props;
-
+        contentType = contentType || "";
         return (
             <Query query={SiteContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
                 {({ loading, error, data }) => {
@@ -43,7 +43,7 @@ class ContentTypeSelect extends React.Component {
                         }
                     });
                     contentTypes.unshift({
-                        value: null,
+                        value: "",
                         title: t('label.contentManager.contentTypes.any'),
                         label: t('label.contentManager.contentTypes.any'),
                         icon: null
@@ -52,7 +52,7 @@ class ContentTypeSelect extends React.Component {
                 return (<FilterSelect
                     selectedOption={contentType}
                     options={contentTypes}
-                    onSelectionChange={this.handleChange}
+                    handleChange={this.handleChange}
                 />);
             }}
             </Query>

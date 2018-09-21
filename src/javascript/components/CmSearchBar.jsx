@@ -13,7 +13,8 @@ import {cmGoto} from "./redux/actions";
 
 const styles = theme => ({
     underneathNode: {
-        marginTop: 6
+        marginTop: 6,
+        marginRight: 10,
     },
     sql2Form: {
         padding: theme.spacing.unit,
@@ -23,6 +24,7 @@ const styles = theme => ({
     sql2Input: {
         margin: 0,
         padding: 0,
+        width: 100,
         fontFamily: 'monospace'
     },
     footer: {
@@ -34,6 +36,18 @@ const styles = theme => ({
     },
     link: {
         color: 'inherit'
+    },
+    topBar: {
+        marginTop: '0px',
+        alignItems: 'baseline'
+    },
+    iconSize: {
+        fontSize: '20px',
+    },
+    searchSize: {
+        height: '34px',
+        maxHeight: '34px',
+        minHeight: '34px',
     }
 });
 
@@ -67,8 +81,9 @@ class CmSearchBar extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
         return (
-            <div>
+            <div className={classes.topBar}>
                 {this.state.current}
             </div>
         )
@@ -163,7 +178,7 @@ class CmSearchBarNormal extends React.Component {
                         </React.Fragment>
                     }
                 >
-                    <DxContext.Consumer>{(dxContext) => {
+                    <DxContext.Consumer className={classes.searchSize}>{(dxContext) => {
                         return <ContentTypeSelect
                             siteKey={siteKey}
                             displayLanguage={dxContext.uilang}
@@ -190,6 +205,7 @@ class CmSearchBarNormal extends React.Component {
                             return (
                                 <Input
                                     inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
+                                    className={classes.searchSize}
                                     defaultValue={params.searchTerms}
                                     placeholder={t('label.contentManager.search.normalPrompt')}
                                     endAdornment={<InputAdornment position="end"
@@ -326,12 +342,12 @@ class SearchBarLayout extends React.Component {
 
         return (
             <React.Fragment>
-                <Paper square>
-                    <Grid container wrap={'nowrap'}>
+                <Paper square className={classes.searchSize}>
+                    <Grid container wrap={'nowrap'} className={classes.searchSize}>
                         {children}
-                        <IconButton color={'secondary'} onClick={onSearch} data-cm-role={'search-submit'}>
-                            <Search/>
-                        </IconButton>
+                        <Button color={'primary'} onClick={onSearch} data-cm-role={'search-submit'}>
+                            <Search className={classes.iconSize}/>
+                        </Button>
                     </Grid>
                 </Paper>
                 <Grid container>

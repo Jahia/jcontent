@@ -21,6 +21,15 @@ const styles = theme => ({
         color: '#504e4d',
         backgroundSize: '18px'
     },
+    typographyLight: {
+        opacity: '0.9',
+        fontFamily: "Nunito sans, sans-serif",
+        fontSize: '1rem',
+        fontWeight: 200,
+        paddingRight: '20px',
+        color: '#f5f5f5',
+        backgroundSize: '18px'
+    },
     formControl: {
         minWidth: 120,
     },
@@ -145,7 +154,7 @@ class SiteSwitcherDisplay extends React.Component {
     };
 
     render() {
-        let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang} = this.props;
+        let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang, dark} = this.props;
         let {anchorEl} = this.state;
         if (loading) {
             return <span>Loading...</span>
@@ -153,7 +162,7 @@ class SiteSwitcherDisplay extends React.Component {
             const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
             return <React.Fragment>
                 <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'site-switcher'}>
-                    <Typography className={classes.typography}>
+                    <Typography className={dark ? classes.typography : classes.typographyLight}>
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;

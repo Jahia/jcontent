@@ -60,7 +60,7 @@ class PreviewDrawer extends React.Component {
                             size="medium"
                             color={previewMode === 'edit' ? 'primary' : 'secondary'}
                             onClick={() => setPreviewMode('edit')}
-                        >{t('label.contentManager.contentPreview.staged')}</Button>
+                        >{t('label.contentManager.contentPreview.staging')}</Button>
                         <Button
                             className={classes.liveButton}
                             variant="contained"

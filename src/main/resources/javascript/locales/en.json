@@ -67,7 +67,8 @@
           "nodeLockedBy": "Content locked by {{username}}",
           "lockNode": "Lock content",
           "live": "Live",
-          "staged": "Staged"
+          "staged": "Staged",
+          "staging": "Staging"
       },
       "contentTypes": {
           "any": "Any content",

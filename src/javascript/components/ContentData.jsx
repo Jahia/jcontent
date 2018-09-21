@@ -101,6 +101,10 @@ class ContentData extends React.Component {
                     return null;
                 }
 
+                if (loading) {
+                    return <ProgressOverlay/>;
+                }
+
                 let rows = [];
                 let totalCount = 0;
                 notificationContext.closeNotification();

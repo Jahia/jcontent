@@ -18,6 +18,8 @@ class IFrameLayout extends React.Component {
         iframeUrl = iframeUrl.replace(/:workspace/g, workspace);
         iframeUrl = iframeUrl.replace(/:lang/g, lang);
         iframeUrl = iframeUrl.replace(/:site/g, siteKey);
+        // system site uses another frame than others
+        iframeUrl = iframeUrl.replace(/:frame/g, (siteKey === 'systemsite' ? 'adminframe' : 'editframe'));
 
         return <Iframe url={iframeUrl}
                        position="relative"

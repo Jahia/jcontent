@@ -3,8 +3,9 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 10.0,
         component: "routerAction",
         mode: "apps",
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.manageGroups.html",
+        iframeUrl : ":context/cms/:frame/:workspace/:lang/sites/:site.manageGroups.html",
         target : ["leftMenuManageActions"],
+        requiredPermission: "siteAdminGroups",
         labelKey: 'label.contentManager.leftMenu.manage.groups.title',
         icon: 'users'
     },
@@ -12,8 +13,9 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 20.0,
         component: "routerAction",
         mode: "apps",
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.manageLanguages.html",
+        iframeUrl : ":context/cms/:frame/:workspace/:lang/sites/:site.manageLanguages.html",
         target : ["leftMenuManageActions"],
+        requiredPermission: "siteAdminLanguages",
         labelKey: 'label.contentManager.leftMenu.manage.languages.title',
         icon: 'globe'
     },
@@ -21,8 +23,9 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 30.0,
         component: "routerAction",
         mode: "apps",
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.manageSiteRoles.html",
+        iframeUrl : ":context/cms/:frame/:workspace/:lang/sites/:site.manageSiteRoles.html",
         target : ["leftMenuManageActions"],
+        requiredPermission: "siteAdminSiteRoles",
         labelKey: 'label.contentManager.leftMenu.manage.roles.title',
         icon: 'user-shield'
     },
@@ -30,8 +33,9 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 40.0,
         component: "routerAction",
         mode: "apps",
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.manageUsers.html",
+        iframeUrl : ":context/cms/:frame/:workspace/:lang/sites/:site.manageUsers.html",
         target : ["leftMenuManageActions"],
+        requiredPermission: "siteAdminUsers",
         labelKey: 'label.contentManager.leftMenu.manage.users.title',
         icon: 'user'
     },
@@ -39,8 +43,9 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         priority : 50.0,
         component: "routerAction",
         mode: "apps",
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.tagsManager.html",
+        iframeUrl : ":context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html",
         target : ["leftMenuManageActions"],
+        requiredPermission: "tagManager",
         labelKey: 'label.contentManager.leftMenu.manage.tags.title',
         icon: 'tags'
     }

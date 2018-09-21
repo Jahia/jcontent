@@ -23,6 +23,18 @@
 
 <div id="${targetId}">loading..</div>
 <script type="text/javascript">
+    window.top.document.getElementsByClassName("action-bar-tool-item")[0].setAttribute("style", "display: none");
+    // frame in full screen:
+    window.top.document.getElementsByClassName("window-iframe")[0].setAttribute("style", "\n" +
+        "    position: fixed;\n" +
+        "      top: -10px;\n" +
+        "      left: 0;\n" +
+        "      width: 100%;\n" +
+        "      height: 100%;\n" +
+        "      z-index: 999;\n" +
+        "" );
+
+
     contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
     contextJsParameters['urlBrowser'] = '/cms/contentmanager';
     contextJsParameters['urlbase'] = '${renderContext.servletPath}';

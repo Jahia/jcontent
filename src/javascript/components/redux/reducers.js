@@ -1,4 +1,6 @@
 import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS, CM_PREVIEW_STATES} from "./actions";
+import * as _ from 'lodash';
+import {extractPaths} from "../utils.js";
 
 let uiLanguageReducer = (dxContext) => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
@@ -74,7 +76,7 @@ let previewModesReducer = (state = [], action) => {
     }
 };
 
-let openPathsReducer = (path) => (state = [path], action) => {
+let openPathsReducer = (siteKey, path) => (state = _.dropRight(extractPaths(siteKey, path), 1), action) => {
     if (action.type === CM_SET_OPEN_PATHS) {
         if (action.open) {
             return _.union(state, action.open);

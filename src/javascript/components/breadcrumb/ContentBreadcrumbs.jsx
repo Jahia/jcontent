@@ -7,6 +7,7 @@ import {Picker} from "@jahia/react-apollo";
 import {translate} from "react-i18next";
 import connect from "react-redux/es/connect/connect";
 import {cmGoto} from "../redux/actions";
+import {extractPaths} from "../utils.js";
 
 class ContentBreadcrumbs extends React.Component {
 
@@ -23,16 +24,7 @@ class ContentBreadcrumbs extends React.Component {
         } else {
             path = sitePath;
         }
-        let pathParts = path.replace("/sites/" + siteKey, "").split("/");
-        let newPaths = [];
-        for (let i in pathParts) {
-            if (i > 0) {
-                newPaths.push(newPaths[i - 1] + "/" + pathParts[i]);
-            } else {
-                newPaths.push("/sites/" + siteKey);
-            }
-        }
-        return newPaths;
+        return extractPaths(siteKey, path);
     }
 
     getPickerConfiguration(path) {
@@ -64,6 +56,7 @@ class ContentBreadcrumbs extends React.Component {
         let rootPath = "/sites/" + siteKey;
         let pickerConfiguration = this.getPickerConfiguration(path);
         let paths = this.generatePathParts(path);
+
         return (
             <Picker
                 fragments={["displayName", {

@@ -49,7 +49,8 @@ const styles = theme => ({
 class CMTopBar extends React.Component {
     render() {
 
-        const {classes} = this.props;
+        const {classes, mode, t} = this.props;
+        let modeTitle = t("label.contentManager.title." + (mode || "browse"));
         return (
             <div className={classes.root}>
                 <Grid container spacing={24}>
@@ -57,9 +58,7 @@ class CMTopBar extends React.Component {
                         <div style={{marginBottom: '-8px', marginLeft: '-6px'}}>
                             <SiteSwitcher dark={false}/>
                         </div>
-                        <Typography className={classes.typoTitle}>
-                            Content
-                        </Typography>
+                        <Typography className={classes.typoTitle} data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
                         <div style={{marginTop: '-8px', marginLeft: '-6px'}}>
                             <LanguageSwitcher dark={false}/>
                         </div>

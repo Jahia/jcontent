@@ -17,7 +17,7 @@
     <title>${fn:escapeXml(renderContext.mainResource.node.displayableName)}</title>
 </head>
 
-<body>
+<body style="overflow: hidden">
 <template:addResources type="javascript" resources="apps/content-manager.js"/>
 <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 

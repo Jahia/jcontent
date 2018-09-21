@@ -13,7 +13,8 @@ const styles = theme => ({
     trees: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: '100vh',
+        height: '75vh',
+        maxHeight: '75vh'
     }
 });
 

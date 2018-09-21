@@ -139,7 +139,8 @@ const styles = (theme) => ({
     contentList: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: '100vh',
+        height: '75vh',
+        maxHeight: '75vh'
     }
 });
 

@@ -1,18 +1,20 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { ApolloConsumer } from "react-apollo";
 import { uploadFile } from './gqlMutations';
 import { Mutation } from 'react-apollo';
 import { Input, Button, IconButton, List } from "@material-ui/core";
 import { Close, ExpandMore, ExpandLess, Fullscreen, FullscreenExit } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
-import { panelStates, uploadsStatuses } from './constatnts';
+import { panelStates, uploadsStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
 import { uploadSeed } from './redux/reducer';
-import { setPanelState, setUploads } from './redux/actions';
+import { setPanelState, setUploads, takeFromQueue } from './redux/actions';
 import UploadDropZone from './UploadDropZone';
 import UploadItem from './UploadItem';
 import mimetypes from 'mime-types';
+import {batchActions} from 'redux-batched-actions';
 
 const styles = theme => ({
     drawerContent: {
@@ -58,18 +60,16 @@ class Upload extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {file:null};
         this.acceptedFiles = [];
         this.rejectedFiles = [];
+        this.client = null;
         this.onFilesSelected = this.onFilesSelected.bind(this);
         this.removeFile = this.removeFile.bind(this);
     }
 
     render() {
-        // console.log(this.state.file);
         const { classes } = this.props;
-        return <React.Fragment>
-            <UploadDrawer open={ this.isDrawerOpen() } transitionDuration={ this.transitionDuration() }>
+        return <UploadDrawer open={ this.isDrawerOpen() } transitionDuration={ this.transitionDuration() }>
                 <div className={ this.contentClasses() }>
                     <div className={classes.contentHeader}>
                         { this.headerButton() }
@@ -79,19 +79,6 @@ class Upload extends React.Component {
                     </div>
                 </div>
             </UploadDrawer>
-        </React.Fragment>
-        // return (
-        //     <Mutation mutation={uploadFile}>
-        //         {(mutationCall, {called, loading, data, error}) =>
-        //             <div>
-        //                 <Input type="file" onChange={
-        //                     (event) => { this.setState({file:event.target.files[0]})}
-        //                 } >File</Input>
-        //                 <Button onClick={() => mutationCall({variables:{fileHandle:this.state.file}})}>Upload</Button>
-        //             </div>
-        //         }
-        //     </Mutation>
-        // )
     }
 
     configureRendering() {
@@ -116,13 +103,14 @@ class Upload extends React.Component {
             seed.id = file.preview;
             return seed;
         });
-        this.props.dispatch(setUploads(uploads));
+        this.props.dispatchBatch([setUploads(uploads), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]);
     }
 
     showUploads() {
         return this.props.uploads.map((upload, index) => (
             <UploadItem key={`upload_${index}`}
                         index={ index }
+                        file={ this.acceptedFiles[index] }
                         removeFile={ this.removeFile } />
         ));
     }
@@ -227,7 +215,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        dispatch: dispatch
+        dispatch: dispatch,
+        dispatchBatch: (actions) => dispatch(batchActions(actions))
     }
 };
 

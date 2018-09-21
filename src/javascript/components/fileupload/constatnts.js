@@ -17,3 +17,5 @@ export const uploadStatuses = {
     "UPLOADED": "UPLOADED",
     "HAS_ERROR": "HAS_ERROR"
 };
+
+export const NUMBER_OF_SIMULTANEOUS_UPLOADS = 1;

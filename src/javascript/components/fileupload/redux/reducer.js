@@ -55,7 +55,7 @@ export const fileUpload = (state = initialState, action) => {
                         numTaken++;
                         return {
                             ...upload,
-                            state: uploadStatuses.UPLOADING
+                            status: uploadStatuses.UPLOADING
                         }
                     }
                     return upload;

@@ -1,66 +1,169 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import {ApolloConsumer} from "react-apollo";
 import { uploadFile } from './gqlMutations';
 import { Mutation } from 'react-apollo';
-import { Input, Button, IconButton, List, ListItem, ListItemText, Avatar, ListItemSecondaryAction } from "@material-ui/core";
-import { Close, ExpandMore, ExpandLess, Delete } from "@material-ui/icons";
+import { Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction } from "@material-ui/core";
+import { CheckCircle, Info,  FiberManualRecord } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
-import { panelStates, uploadsStatuses } from './constatnts';
-import { setPanelState, removeUpload } from './redux/actions';
+import { panelStates, uploadsStatuses, uploadStatuses } from './constatnts';
+import { updateUpload, removeUpload } from './redux/actions';
 import UploadDropZone from './UploadDropZone';
 import mimetypes from 'mime-types';
 
-const styles = theme => ({});
+const styles = theme => ({
+    progressText: {
+        display: "flex",
+        justifyContent: "start",
+        alignItems: "center",
+        alignContent: "center",
+        justifyItems: "center"
+    }
+});
 
 class UploadItem extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {file:null}
+        this.client = null;
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.status === uploadStatuses.UPLOADING && prevProps.status !== uploadStatuses.UPLOADING) {
+            console.log("Start uploading file");
+            const file = this.props.file;
+            this.client.mutate({
+                mutation: uploadFile,
+                variables: {
+                    fileHandle: "myFile",
+                    file
+                }
+            }).then((r) => {
+                const upload = {
+                    id: this.props.id,
+                    status: uploadStatuses.UPLOADED,
+                    error: null
+                };
+                this.props.dispatch(updateUpload(upload));
+            }).catch((e) => {
+                const upload = {
+                    id: this.props.id,
+                    status: uploadStatuses.HAS_ERROR,
+                    error: null
+                };
+                if (e.message.indexOf("ItemExistsException") !== -1) {
+                    upload.error = "FILE_EXISTS"
+                }
+                this.props.dispatch(updateUpload(upload));
+            });
+        }
     }
 
     render() {
-        // console.log(this.state.file);
-        const { classes, dispatch, removeFile, id, index } = this.props;
-        return <List>
-            {["a", "b", "c"].map((e) => (
-                <ListItem button className={classes.listItem}>
-                    <ListItemText primary={"SOme text"}/>
+        const { classes, id } = this.props;
+        return <ApolloConsumer>{
+            client => {
+                if (this.client === null) this.client = client;
+
+                return <ListItem button className={classes.listItem} >
+                    <Avatar alt="Remy Sharp" src={ id } />
+                    <ListItemText primary={ id } />
+                    <ListItemText primary={ this.statusText() } />
                     <ListItemSecondaryAction>
-                        <Delete/>
+                        { this.secondaryActionsList() }
                     </ListItemSecondaryAction>
                 </ListItem>
-            ))
             }
-        </List>
-        // return <ListItem button className={classes.listItem} >
-        //     <Avatar alt="Remy Sharp" src={ id } />
-        //     <ListItemText primary={ id } />
-        //     <ListItemSecondaryAction >
-        //         <Button component={"a"}
-        //                 onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
-        //             Don't upload
-        //         </Button>
-        //     </ListItemSecondaryAction>
-        // </ListItem>
-        // return (
-        //     <Mutation mutation={uploadFile}>
-        //         {(mutationCall, {called, loading, data, error}) =>
-        //             <div>
-        //                 <Input type="file" onChange={
-        //                     (event) => { this.setState({file:event.target.files[0]})}
-        //                 } >File</Input>
-        //                 <Button onClick={() => mutationCall({variables:{fileHandle:this.state.file}})}>Upload</Button>
-        //             </div>
-        //         }
-        //     </Mutation>
-        // )
+        }</ApolloConsumer>
+    }
+
+    statusText() {
+        const { classes, status, error } = this.props;
+        let text;
+
+        if (status === uploadStatuses.QUEUED) {
+            text = <span className={ classes.progressText }>
+                <FiberManualRecord/>
+                Queued
+            </span>
+        }
+        else if (status === uploadStatuses.UPLOADED) {
+            text = <span className={ classes.progressText }>
+                <CheckCircle/>
+                Uploaded
+            </span>
+        }
+        else if (status === uploadStatuses.HAS_ERROR && error === "FILE_EXISTS") {
+            text = <span className={ classes.progressText }>
+                <Info/>
+                File already exists
+            </span>
+        }
+        else if (status === uploadStatuses.HAS_ERROR) {
+            text = <span className={ classes.progressText }>
+                <Info/>
+                Could not upload
+            </span>
+        }
+        else if (status === uploadStatuses.UPLOADING) {
+            text = <span className={ classes.progressText }>
+                <CircularProgress size={20}/>
+                Uploading ...
+            </span>
+        }
+
+        return text;
     }
 
     secondaryActionsList() {
+        const { status, error, removeFile, index, dispatch } = this.props;
+        const actions = [];
+        if (status === uploadStatuses.QUEUED) {
+            actions.push(
+                <Button key="dontupload"
+                        component={"a"}
+                        onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+                    Don't upload
+                </Button>
+            );
+        }
+        if (status === uploadStatuses.HAS_ERROR) {
+            if (error === "FILE_EXISTS") {
+                actions.push(<Button key="rename"
+                                     component={"a"}
+                                     onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+                        Rename
+                    </Button>,
+                    <Button key="overwrite"
+                            component={"a"}
+                            onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+                            Overwrite
+                    </Button>,
+                    <Button key="dontupload"
+                            component={"a"}
+                            onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+                        Don't upload
+                    </Button>
+                )
+            }
+            else {
+                actions.push(<Button key="dontupload"
+                                     component={"a"}
+                                     onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+                        Don't upload
+                    </Button>,
+                    <Button key="retry"
+                            component={"a"}
+                            onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
+                        Retry
+                    </Button>
+                )
+            }
+        }
 
+        return actions;
     }
 }
 
@@ -68,6 +171,7 @@ UploadItem.propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     removeFile: PropTypes.func.isRequired,
+    file: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired
 };
 

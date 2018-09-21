@@ -119,8 +119,23 @@ class ContentManager extends React.Component {
         }
         let {dxContext, classes} = this.props;
 
+        const newTheme = {
+            ...theme,
+            overrides: {}
+            // overrides: (() => {
+            //     const newOverrides = {};
+            //     for (let property in theme.overrides) {
+            //         if (theme.overrides.hasOwnProperty(property) && !property.startsWith("MuiList")) {
+            //             newOverrides[property] = theme.overrides[property];
+            //         }
+            //     }
+            //     return newOverrides;
+            // })()
+        };
+
+
         return (
-            <MuiThemeProvider theme={theme}>
+            <MuiThemeProvider theme={newTheme}>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({contextPath: dxContext.contextPath, useBatch:true, httpOptions:{batchMax:50}})}>
                         <I18nextProvider i18n={getI18n({

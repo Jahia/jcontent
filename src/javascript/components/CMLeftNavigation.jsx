@@ -192,7 +192,7 @@ class CMLeftNavigation extends React.Component {
         super(props);
         this.state = {
             openDrawer: false,
-            drawerContent: null,
+            drawerContent: {content: null, title: null},
             data: ['Users', 'Groups', 'Tag managers', 'Audit trails'],
             selected: {},
         };
@@ -213,7 +213,7 @@ class CMLeftNavigation extends React.Component {
     };
 
     render() {
-        const {siteKey, lang, classes} = this.props;
+        const {siteKey, lang, t, classes} = this.props;
 
         return (
             <div className={this.state.openDrawer ? classes.root : classes.root1}>
@@ -256,17 +256,17 @@ class CMLeftNavigation extends React.Component {
                     open={this.state.openDrawer}>
                     <div className={classes.blockMenu}>
                         <div style={{marginBottom: '-10px', marginLeft: '-6px'}}>
-                            <SiteSwitcher/>
+                            <SiteSwitcher dark={true}/>
                         </div>
                         <Typography className={classes.typoTitle}>
-                            Content
+                            {this.state.drawerContent && t(this.state.drawerContent.title)}
                         </Typography>
                         <div style={{marginTop: '-10px', marginLeft: '-6px'}}>
-                            <LanguageSwitcher/>
+                            <LanguageSwitcher  dark={true}/>
                         </div>
                     </div>
                     <div>
-                        {this.state.drawerContent}
+                        {this.state.drawerContent && this.state.drawerContent.content}
                     </div>
                 </Drawer>
             </div>

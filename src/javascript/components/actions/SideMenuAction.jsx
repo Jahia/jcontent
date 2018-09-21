@@ -1,8 +1,6 @@
 import React from "react";
 import Actions from "../Actions";
 import {List, ListItem, withStyles} from '@material-ui/core';
-import {VerifiedUser} from '@material-ui/icons';
-import Typography from "@material-ui/core/Typography";
 import {lodash as _} from "lodash";
 import {translate} from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,7 +12,7 @@ const styles = (theme) => {
 class SideMenuAction extends React.Component {
 
     render() {
-        const {t, menuId, children, context, handleDrawer, handleDrawerClose, classes, ...rest} = this.props;
+        const {t, menuId, children, labelKey, context, handleDrawer, handleDrawerClose, classes, ...rest} = this.props;
         const actionContent = <List style={{marginLeft: '18px', marginTop: '18px'}}>
             <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose}>
                 {(menuConfig) =>
@@ -25,7 +23,7 @@ class SideMenuAction extends React.Component {
             </Actions>
         </List>
         return (handleDrawer && <React.Fragment>
-                {children({...rest, onClick: handleDrawer.bind(this, actionContent)})}
+                {children({...rest, labelKey, onClick: handleDrawer.bind(this, {content: actionContent, title: labelKey})})}
             </React.Fragment>
         )
     };

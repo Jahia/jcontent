@@ -120,7 +120,7 @@ class LanguageSwitcher extends React.Component {
     }
 
     render() {
-        const {t, notificationContext, siteKey, lang, onSelectLanguage} = this.props;
+        const {t, notificationContext, siteKey, lang, dark, onSelectLanguage} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
         };
@@ -142,6 +142,7 @@ class LanguageSwitcher extends React.Component {
                     let languageExists = this.validateLanguageExists(displayableLanguages, data, lang);
                     if (languageExists === true) {
                         return <LanguageSwitcherDisplay
+                            dark={dark}
                             languages={displayableLanguages}
                             onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
                         />

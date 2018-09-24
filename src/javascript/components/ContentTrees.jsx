@@ -76,54 +76,58 @@ class ContentTrees extends React.Component {
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
         return (
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            Tree
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>
-                            <List>
-                                {
-                                    contentTreeConfigs.showAllContents ?
-                                        <ListItem>
-                                            <Button
-                                                onClick={() => openPath(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
-                                        </ListItem> : ""
-                                }
-                                {
-                                    _.map(contentTreeConfigs, (contentTreeConfig) => {
+            <div className={classes.trees}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                Tree
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>
+                                <List>
+                                    {
+                                        contentTreeConfigs.showAllContents ?
+                                            <ListItem>
+                                                <Button
+                                                    onClick={() => openPath(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
+                                            </ListItem> : ""
+                                    }
+                                    {
+                                        _.map(contentTreeConfigs, (contentTreeConfig) => {
 
-                                        let componentRef = React.createRef();
-                                        this.componentsRefs.push(componentRef);
-                                        return <ListItem data-cm-role={contentTreeConfig.key}
-                                                         key={contentTreeConfig.key}>
-                                            <ContentTree
-                                                classNames={classes.trees}
-                                                ref={componentRef}
-                                                path={usedPath}
-                                                rootPath={rootPath + contentTreeConfig.rootPath}
-                                                openPaths={openPaths}
-                                                selectableTypes= {contentTreeConfig.selectableTypes}
-                                                lang={lang}
-                                                user={user}
-                                                handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                handleSelect={path => { setPath(path); _.includes(openPaths, path) ? closePath(path) : openPath(path);}}
-                                                openableTypes={contentTreeConfig.openableTypes}
-                                                rootLabel={t(contentTreeConfig.rootLabel)}
-                                            />
-                                        </ListItem>
-                                    })
-                                }
-                            </List>
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+                                            let componentRef = React.createRef();
+                                            this.componentsRefs.push(componentRef);
+                                            return <ListItem data-cm-role={contentTreeConfig.key}
+                                                             key={contentTreeConfig.key}>
+                                                <ContentTree
+                                                    ref={componentRef}
+                                                    path={usedPath}
+                                                    rootPath={rootPath + contentTreeConfig.rootPath}
+                                                    openPaths={openPaths}
+                                                    selectableTypes={contentTreeConfig.selectableTypes}
+                                                    lang={lang}
+                                                    user={user}
+                                                    handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                    handleSelect={path => {
+                                                        setPath(path);
+                                                        _.includes(openPaths, path) ? closePath(path) : openPath(path);
+                                                    }}
+                                                    openableTypes={contentTreeConfig.openableTypes}
+                                                    rootLabel={t(contentTreeConfig.rootLabel)}
+                                                />
+                                            </ListItem>
+                                        })
+                                    }
+                                </List>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </div>
         )
     }
 }

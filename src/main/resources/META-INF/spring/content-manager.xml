@@ -184,18 +184,23 @@
 
     </bean>
 
-    <bean class="org.jahia.modules.contentmanager.actionlists.ActionListInitializer">
-        <property name="jahiaTemplateManagerService" ref="JahiaTemplateManagerService" />
-    </bean>
+    <osgi:list id="org.jahia.modules.contentmanager.actionListRenderers" interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" availability="optional"/>
 
-    <bean id="javascriptActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.JavascriptActionListRenderer">
-        <property name="templateManagerService" ref="JahiaTemplateManagerService" />
-    </bean>
+    <bean id="javascriptActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.JavascriptActionListRenderer"/>
+
+    <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="javascriptActionListRenderer">
+        <osgi:service-properties>
+            <entry key="service.pid" value="org.jahia.modules.contentmanager.actionlists.JavascriptActionListRenderer"/>
+            <entry key="service.description" value="JavaScript action list renderer for Content and Media Manager"/>
+            <entry key="service.vendor" value="Jahia Solutions Group SA"/>
+        </osgi:service-properties>
+    </osgi:service>
+
+    <!--
     <bean id="savedSearchActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.SavedSearchActionListRenderer" />
     <bean id="filtersActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.FiltersActionListRenderer" />
-
-    <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="javascriptActionListRenderer" />
     <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="savedSearchActionListRenderer" />
     <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="filtersActionListRenderer" />
+    -->
 
 </beans>

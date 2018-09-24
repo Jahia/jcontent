@@ -1,13 +1,8 @@
 import React from "react";
 import * as _ from "lodash";
 import actionsRegistry from "./actionsRegistry";
-import {
-    CheckRequirementsQuery,
-    getRequirementsQuery,
-    ActionRequirementsQueryHandler
-} from "./gqlQueries";
-import {Query, withApollo} from "react-apollo";
-import {replaceFragmentsInDocument} from "@jahia/apollo-dx";
+import {ActionRequirementsQueryHandler} from "./gqlQueries";
+import {Query} from "react-apollo";
 import {translate} from "react-i18next";
 import {withNotifications} from "@jahia/react-material/index";
 import {cmGoto} from "./redux/actions";
@@ -24,7 +19,7 @@ class Actions extends React.Component {
 
             let ctx = _.clone(context);
             let actionKey = action.actionKey;
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties} = action;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties, requireModuleInstalledOnSite} = action;
             if (retrieveProperties != null) {
                 action.retrieveProperties.retrievePropertiesLang = lang;
             }
@@ -56,8 +51,8 @@ class Actions extends React.Component {
                         const node = data.jcr.nodeByPath;
                         if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
                             (!_.isEmpty(showOnNodeTypes) && !node.isNodeType) ||
-                            (!_.isEmpty(hideOnNodeTypes) && node.isNotNodeType))
-                        {
+                            (!_.isEmpty(hideOnNodeTypes) && node.isNotNodeType) ||
+                            (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
                             return null;
                         }
 

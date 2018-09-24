@@ -373,7 +373,16 @@ const ActionRequirementsFragments = {
         gql: gql `fragment NodeHasPermission on JCRNode {
             hasPermission(permissionName: $permission)
         }`
-    }
+    },
+    siteInstalledModules: {
+        applyFor: "requirements",
+        gql: gql `fragment SiteInstalledModules on JCRNode {
+          site {
+            installedModulesWithAllDependencies
+            ...NodeCacheRequiredFields
+          }
+        }`
+    }    
 };
 
 class ActionRequirementsQueryHandler {
@@ -401,6 +410,9 @@ class ActionRequirementsQueryHandler {
         if (!_.isEmpty(action.retrieveProperties)) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveProperties);
             this.variables = {...action.retrieveProperties, ...this.variables}
+        }
+        if (!_.isEmpty(action.requireModuleInstalledOnSite)) {
+            this.requirementsFragments.push(ActionRequirementsFragments.siteInstalledModules);
         }
 
         // Assume that child node type info is needed if the action has a content type property configured.

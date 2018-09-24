@@ -10,3 +10,4 @@ node
 node_modules
 yarn-error.log
 /src/main/resources/javascript/apps
+/.externalToolBuilders

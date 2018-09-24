@@ -112,10 +112,7 @@ class ContentTrees extends React.Component {
                                                     lang={lang}
                                                     user={user}
                                                     handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                    handleSelect={path => {
-                                                        setPath(path);
-                                                        _.includes(openPaths, path) ? closePath(path) : openPath(path);
-                                                    }}
+                                                    handleSelect={path => setPath(path)}
                                                     openableTypes={contentTreeConfig.openableTypes}
                                                     rootLabel={t(contentTreeConfig.rootLabel)}
                                                 />

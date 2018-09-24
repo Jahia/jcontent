@@ -126,11 +126,7 @@ let CmPickerViewMaterial = function (props) {
                                 }} disabled={!(entry.openable && entry.hasChildren)}
                                         data-jrm-role={'picker-item-toggle'}
                                         data-jrm-state={entry.open ? 'open' : 'closed'}>
-                                    {entry.open ?
-                                        <div
-                                            className={entry.selected ? (classes.triangle) : classes.triangle_bottom}/> :
-                                        <div
-                                            className={entry.selected ? (classes.triangle_bottom) : classes.triangle}/>}
+                                        <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </ListItemIcon>
 

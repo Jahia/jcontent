@@ -85,7 +85,8 @@ class ContentPreview extends React.Component {
             additionalActionsMenuAnchor: null,
             fullScreen: false,
             imageControlElementId: "previewImageControls",
-            selectedItem: null
+            selectedItem: null,
+            selectionLocked: props.selection[0] ? props.selection[0].isLocked : false
         };
     }
 
@@ -151,6 +152,7 @@ class ContentPreview extends React.Component {
 
     componentFooter() {
         let {classes, previewMode, selection, t} = this.props;
+        let {selectionLocked} = this.state;
         let selectedItem = selection[0];
         switch (previewMode) {
             case 'live':
@@ -185,7 +187,7 @@ class ContentPreview extends React.Component {
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
                     <Grid item xs={ 4 }>
-                        { selectedItem.isLocked ? this.unlock() : this.lock() }
+                        { selectionLocked ? this.unlock() : this.lock() }
                     </Grid>
                     <Grid item xs={ 8 } container={true} justify={"flex-end"}>
                         <Actions menuId={"editPreviewBar"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
@@ -249,7 +251,12 @@ class ContentPreview extends React.Component {
             }]}>
             {(lockNode) => {
                 return <Tooltip title={ t('label.contentManager.contentPreview.lockNode') } placement="top-start">
-                    <IconButton onClick={ () => lockNode({ variables: { pathOrId: selection[0].path }}) }><LockOpen/></IconButton>
+                    <IconButton onClick={ () => {
+                        lockNode({ variables: { pathOrId: selection[0].path }});
+                        this.setState({
+                            selectionLocked: true
+                        });
+                    }}><LockOpen/></IconButton>
                 </Tooltip>
             }}
         </Mutation>
@@ -265,7 +272,12 @@ class ContentPreview extends React.Component {
             }]}>
             {(unlockNode) => {
                 return <Tooltip title={ t('label.contentManager.contentPreview.nodeLockedBy', {username: selection[0].lockOwner}) } placement="top-start">
-                    <IconButton onClick={ () => unlockNode({ variables: { pathOrId: selection.path }}) }><Lock/></IconButton>
+                    <IconButton onClick={ () => {
+                        unlockNode({ variables: { pathOrId: selection[0].path }});
+                        this.setState({
+                            selectionLocked: false
+                        });
+                    }}><Lock/></IconButton>
                 </Tooltip>
             }}
         </Mutation>

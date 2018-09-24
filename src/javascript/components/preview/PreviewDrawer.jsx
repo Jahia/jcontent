@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import {translate} from "react-i18next";
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,18 +22,23 @@ const styles = theme => ({
     },
     liveButton: {
         '&:disabled': {
-            opacity: ".6",
+            opacity: ".4",
             color: "#F5F5F5",
-            backgroundColor: "#E67D3A"
+            backgroundColor: "#686c6f"
         },
-        borderRadius: "0 18px 18px 0",
         margin:"0 0",
         boxShadow: "none"
     },
     editButton: {
-        borderRadius: "18px 0 0 18px",
         margin:"0 0",
         boxShadow: "none"
+    },
+    inactiveButton: {
+        backgroundColor: "#686c6f",
+        color:"#F5F5F5",
+        '&:hover': {
+            backgroundColor: "#686c6f"
+        }
     }
 });
 
@@ -55,17 +61,21 @@ class PreviewDrawer extends React.Component {
                     </IconButton>
                     <Paper elevation={0} className={classes.previewModePaper}>
                         <Button
-                            className={classes.editButton}
+                            className={classNames(classes.editButton,{
+                                [classes.inactiveButton]: previewMode !== 'edit'
+                            })}
                             variant="contained"
                             size="medium"
-                            color={previewMode === 'edit' ? 'primary' : 'secondary'}
+                            color={previewMode === 'edit' ? 'primary' : 'default'}
                             onClick={() => setPreviewMode('edit')}
                         >{t('label.contentManager.contentPreview.staging')}</Button>
                         <Button
-                            className={classes.liveButton}
+                            className={classNames(classes.liveButton,{
+                                [classes.inactiveButton]: previewMode !== 'live'
+                            })}
                             variant="contained"
                             size="medium"
-                            color={previewMode === 'live' ? 'primary' : 'secondary'}
+                            color={previewMode === 'live' ? 'primary' : 'default'}
                             disabled={_.find(previewModes, (mode) => {return mode === 'live'}) === undefined}
                             onClick={() => setPreviewMode('live')}
                         >{t('label.contentManager.contentPreview.live')}</Button>

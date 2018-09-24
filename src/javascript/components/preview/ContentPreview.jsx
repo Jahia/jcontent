@@ -87,7 +87,6 @@ class ContentPreview extends React.Component {
             imageControlElementId: "previewImageControls",
             selectedItem: null
         };
-        this.previewDispatched = false;
     }
 
     handleDialogState = () => {
@@ -99,8 +98,6 @@ class ContentPreview extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.selection[0] === undefined) {
             this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
-        } else if(this.props.selection[0].uuid !== prevProps.selection[0].uuid) {
-            this.previewDispatched = false;
         }
     }
 
@@ -112,7 +109,7 @@ class ContentPreview extends React.Component {
     }
 
     mainComponent() {
-        const { selection, classes, t, previewMode, setPreviewMode, setPreviewModes} = this.props;
+        const { selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
         const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
@@ -133,10 +130,9 @@ class ContentPreview extends React.Component {
                                             modes.push('live');
                                         }
                                         let selectedMode = _.find(modes, (mode)=>{ return previewMode === mode}) !== undefined ? previewMode : 'edit';
-                                        if (!this.previewDispatched) {
+                                        if (previewModes.length !== modes.length) {
                                             setPreviewMode(selectedMode);
                                             setPreviewModes(modes);
-                                            this.previewDispatched = true;
                                         }
                                         return this.previewComponent(data[selectedMode]);
                                     }

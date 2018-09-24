@@ -60,6 +60,7 @@ class SiteSwitcher extends React.Component {
                         displayName
                         site {
                             defaultLanguage
+                            ...NodeCacheRequiredFields
                             languages {
                                 displayName
                                 language

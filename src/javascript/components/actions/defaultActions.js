@@ -181,7 +181,7 @@ let defaultActions = {
         priority: 6,
         component: PublishDeletionAction,
         icon: "Publish",
-        target: ["editPreviewBar", "contentTreeMenuActions"],
+        target: ["editPreviewBar", "contentTreeMenuActions", "publishMenu"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publishDeletion",
         hideOnNodeTypes: ["jnt:virtualsite"],

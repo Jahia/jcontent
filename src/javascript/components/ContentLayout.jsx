@@ -7,7 +7,7 @@ import PreviewDrawer from "./preview/PreviewDrawer";
 import {Grid, IconButton, Paper, withStyles} from "@material-ui/core";
 import {List, Add} from "@material-ui/icons";
 import ContentTrees from "./ContentTrees";
-import {withNotifications, ProgressOverlay} from '@jahia/react-material';
+import {withNotifications} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import {DxContext} from "./DxContext";

@@ -6,6 +6,16 @@ import FileCard from './FileCard';
 import Grid from '@material-ui/core/Grid';
 import { Pagination } from "@jahia/react-material";
 import { DxContext } from "../DxContext";
+import {withStyles} from "@material-ui/core";
+
+const styles = theme => ({
+    grid: {
+        overflowY: 'scroll',
+        overflowX: 'scroll',
+        height: '75vh',
+        maxHeight: '75vh'
+    }
+});
 
 class FilesGrid extends Component {
 
@@ -29,7 +39,7 @@ class FilesGrid extends Component {
     }
 
     render() {
-        const { size, t, handleShowPreview } = this.props;
+        const { size, t, handleShowPreview, classes } = this.props;
         const {hoveredCard} = this.state;
 
         if (this.props.rows.length === 0) {
@@ -37,7 +47,7 @@ class FilesGrid extends Component {
                 { t('label.contentManager.filesGrid.emptyMessage') }
             </h3>
         }
-        return <Grid container spacing={ 8 }>
+        return <Grid container spacing={ 8 } className={classes.grid}>
             {
                 this.props.rows.map((node) => (
                     <Grid key={ node.uuid } item xs={ size }
@@ -66,7 +76,8 @@ FilesGrid.propTypes = {
 };
 
 const ComposedFilesGrid = compose(
-    translate()
+    translate(),
+    withStyles(styles, {withTheme: true}),
 )(FilesGrid);
 
 export default ComposedFilesGrid;

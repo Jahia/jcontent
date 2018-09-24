@@ -103,6 +103,7 @@ class ContentTrees extends React.Component {
                                         return <ListItem data-cm-role={contentTreeConfig.key}
                                                          key={contentTreeConfig.key}>
                                             <ContentTree
+                                                classNames={classes.trees}
                                                 ref={componentRef}
                                                 path={usedPath}
                                                 rootPath={rootPath + contentTreeConfig.rootPath}
@@ -111,7 +112,7 @@ class ContentTrees extends React.Component {
                                                 lang={lang}
                                                 user={user}
                                                 handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                handleSelect={path => setPath(path)}
+                                                handleSelect={path => { setPath(path); _.includes(openPaths, path) ? closePath(path) : openPath(path);}}
                                                 openableTypes={contentTreeConfig.openableTypes}
                                                 rootLabel={t(contentTreeConfig.rootLabel)}
                                             />

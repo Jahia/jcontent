@@ -8,9 +8,9 @@ import { Input, Button, IconButton, List } from "@material-ui/core";
 import { Close, ExpandMore, ExpandLess, Fullscreen, FullscreenExit } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
-import { panelStates, uploadsStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
+import { panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
 import { uploadSeed } from './redux/reducer';
-import { setPanelState, setUploads, takeFromQueue } from './redux/actions';
+import { setPanelState, setUploads, takeFromQueue, setStatus } from './redux/actions';
 import UploadDropZone from './UploadDropZone';
 import UploadItem from './UploadItem';
 import mimetypes from 'mime-types';
@@ -65,6 +65,11 @@ class Upload extends React.Component {
         this.client = null;
         this.onFilesSelected = this.onFilesSelected.bind(this);
         this.removeFile = this.removeFile.bind(this);
+        this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
+    }
+
+    componentDidUpdate() {
+        this.updateUploadsStatus();
     }
 
     render() {
@@ -87,7 +92,7 @@ class Upload extends React.Component {
             return <UploadDropZone acceptedFileTypes={ this.getMimeTypes(acceptedFileTypes) }
                                    onFilesSelected={ this.onFilesSelected } />
         }
-        return <List className={ classes.uploadList } component="nav">
+        return <List className={ classes.uploadList } component="nav" disableTouchRipple={ true }>
             { this.showUploads() }
         </List>
     }
@@ -103,7 +108,10 @@ class Upload extends React.Component {
             seed.id = file.preview;
             return seed;
         });
-        this.props.dispatchBatch([setUploads(uploads), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]);
+        this.props.dispatchBatch([
+            setUploads(uploads),
+            takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]
+        );
     }
 
     showUploads() {
@@ -111,7 +119,9 @@ class Upload extends React.Component {
             <UploadItem key={`upload_${index}`}
                         index={ index }
                         file={ this.acceptedFiles[index] }
-                        removeFile={ this.removeFile } />
+                        path={ this.props.path }
+                        removeFile={ this.removeFile }
+                        updateUploadsStatus={ this.updateUploadsStatus }/>
         ));
     }
 
@@ -119,6 +129,31 @@ class Upload extends React.Component {
         this.acceptedFiles = this.acceptedFiles.filter((file, i) => {
             return i !== index;
         });
+    }
+
+    updateUploadsStatus() {
+        let us;
+
+        if (this.props.uploads.length > 0) {
+            for (let index in this.props.uploads) {
+                const upload = this.props.uploads[index];
+                if (upload.status === uploadStatuses.UPLOADING || upload.status === uploadStatuses.QUEUED) {
+                    us = uploadsStatuses.UPLOADING;
+                    break;
+                }
+                else if (upload.status === uploadStatuses.HAS_ERROR) {
+                    us = uploadsStatuses.HAS_ERROR;
+                }
+            }
+
+            if (us === undefined || (us !== uploadsStatuses.UPLOADING && us !== uploadsStatuses.HAS_ERROR && us !== uploadsStatuses.QUEUED)) {
+                us = uploadsStatuses.UPLOADED;
+            }
+        }
+        else {
+            us = uploadsStatuses.NOT_STARTED;
+        }
+        this.props.dispatch(setStatus(us));
     }
 
     isDrawerOpen() {
@@ -160,7 +195,7 @@ class Upload extends React.Component {
             </IconButton>
         }
         if (status === uploadsStatuses.NOT_STARTED) {
-            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.INVISIBLE)) }>
+            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
                 <Close />
             </IconButton>
         }
@@ -170,12 +205,12 @@ class Upload extends React.Component {
             </IconButton>
         }
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.PARTIALLY_VISIBLE) {
-            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
+            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
                 <Fullscreen />
             </IconButton>
         }
         if (status === uploadsStatuses.UPLOADED && (panelState === panelStates.VISIBLE || panelStates.PARTIALLY_VISIBLE)) {
-            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.INVISIBLE)) }>
+            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
                 <Close />
             </IconButton>
         }

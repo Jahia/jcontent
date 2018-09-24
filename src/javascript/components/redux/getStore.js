@@ -16,6 +16,7 @@ import {
 } from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
+import logger from 'redux-logger'
 
 let getStore = (dxContext, history) => {
 
@@ -42,7 +43,8 @@ let getStore = (dxContext, history) => {
         composeEnhancers(
             applyMiddleware(
                 routerMiddleware(history),
-                batchDispatchMiddleware
+                batchDispatchMiddleware,
+                //logger
             ),
         ),
     );

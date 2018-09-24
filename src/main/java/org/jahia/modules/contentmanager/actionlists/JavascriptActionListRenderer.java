@@ -110,7 +110,7 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
                     } catch (IOException e) {
                         logger.error("Error reading action list resource {}", url, e);
                     }
-                    actionListResourceList.add(new ActionListResource(url, true, priority, contents));
+                    actionListResourceList.add(new ActionListResource(contentsURL.toString(), true, priority, contents));
                 }
             }
         }

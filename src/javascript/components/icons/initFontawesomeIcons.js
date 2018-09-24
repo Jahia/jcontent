@@ -28,6 +28,7 @@ import { faChevronDown,
     faRedoAlt,
     faUndoAlt,
 
+    faChartBar,
     faGlobe,
     faTags,
     faUser,
@@ -62,6 +63,7 @@ export const initFontawesomeIcons = function() {
     library.add(faRedoAlt);
     library.add(faUndoAlt);
     
+    library.add(faChartBar);
     library.add(faGlobe);
     library.add(faTags);
     library.add(faUser);

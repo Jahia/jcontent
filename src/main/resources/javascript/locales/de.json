@@ -92,7 +92,6 @@
         "media": "Medien",
         "workflow": "Workflow",
         "savedSearches": "Gespeicherte Suchen",
-        "contentReports": "Content Reports",
         "manage": {
           "title": "Administration",
           "groups" : {

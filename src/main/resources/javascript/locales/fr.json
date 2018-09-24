@@ -68,7 +68,6 @@
         "media" : "Média",
         "workflow": "Workflow",
         "savedSearches" : "Recherches sauvegardées",
-        "contentReports" : "Rapport de contenu",
         "manage" : {
           "title" : "Gestion",
           "groups" : {

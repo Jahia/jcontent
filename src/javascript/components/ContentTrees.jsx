@@ -1,7 +1,7 @@
 import React from "react";
 import {Picker} from "@jahia/react-apollo";
-import {PickerViewMaterial} from '@jahia/react-material';
-import {List, ListItem, Button, withStyles} from "@material-ui/core";
+import {CmPickerViewMaterial} from "./picker/CmPickerViewMaterial";
+import {List, ListItem, Button, Table, TableCell, TableBody, TableRow, TableHead, withStyles} from "@material-ui/core";
 import {translate} from 'react-i18next';
 import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
@@ -41,11 +41,18 @@ class ContentTree extends React.Component {
                 onOpenItem={(path, open) => handleOpen(path, open)}
                 onSelectItem={(path) => handleSelect(path)}
             >
-                {({handleSelect, ...others}) => <PickerViewMaterial {...others} textRenderer={(entry) => {
+                {({handleSelect, ...others}) => <CmPickerViewMaterial {...others} textRenderer={(entry) => {
                     return entry.depth > 0
                         ? <React.Fragment>
                             {entry.node.displayName}
-                            <Actions menuId={"contentTreeActions"} context={{uuid: entry.node.uuid, path: path, displayName: entry.node.displayName, lang: lang, user:user, nodeName: entry.node.nodeName}}>
+                            <Actions menuId={"contentTreeActions"} context={{
+                                uuid: entry.node.uuid,
+                                path: path,
+                                displayName: entry.node.displayName,
+                                lang: lang,
+                                user: user,
+                                nodeName: entry.node.nodeName
+                            }}>
                                 {(props) => <CmIconButton {...props} cmRole={'picker-item-menu'}/>}
                             </Actions>
                         </React.Fragment>
@@ -68,37 +75,55 @@ class ContentTrees extends React.Component {
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath, closePath, classes} = this.props;
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
-        return <List className={classes.trees}>
-            {contentTreeConfigs.showAllContents
-                ? <ListItem>
-                    <Button onClick={() => openPath(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
-                </ListItem>
-                : ""
-            }
-            {
-                _.map(contentTreeConfigs, (contentTreeConfig) => {
+        return (
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>
+                            Tree
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                        <TableCell>
+                            <List>
+                                {
+                                    contentTreeConfigs.showAllContents ?
+                                        <ListItem>
+                                            <Button
+                                                onClick={() => openPath(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
+                                        </ListItem> : ""
+                                }
+                                {
+                                    _.map(contentTreeConfigs, (contentTreeConfig) => {
 
-                    let componentRef = React.createRef();
-                    this.componentsRefs.push(componentRef);
-
-                    return <ListItem data-cm-role={contentTreeConfig.key}  key={contentTreeConfig.key}>
-                        <ContentTree
-                            ref={componentRef}
-                            path={usedPath}
-                            rootPath={rootPath + contentTreeConfig.rootPath}
-                            openPaths={openPaths}
-                            selectableTypes= {contentTreeConfig.selectableTypes}
-                            lang={lang}
-                            user={user}
-                            handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                            handleSelect={path => setPath(path)}
-                            openableTypes={contentTreeConfig.openableTypes}
-                            rootLabel={t(contentTreeConfig.rootLabel)}
-                        />
-                    </ListItem>
-                })
-            }
-        </List>;
+                                        let componentRef = React.createRef();
+                                        this.componentsRefs.push(componentRef);
+                                        return <ListItem data-cm-role={contentTreeConfig.key}
+                                                         key={contentTreeConfig.key}>
+                                            <ContentTree
+                                                ref={componentRef}
+                                                path={usedPath}
+                                                rootPath={rootPath + contentTreeConfig.rootPath}
+                                                openPaths={openPaths}
+                                                selectableTypes= {contentTreeConfig.selectableTypes}
+                                                lang={lang}
+                                                user={user}
+                                                handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                handleSelect={path => setPath(path)}
+                                                openableTypes={contentTreeConfig.openableTypes}
+                                                rootLabel={t(contentTreeConfig.rootLabel)}
+                                            />
+                                        </ListItem>
+                                    })
+                                }
+                            </List>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        )
     }
 }
 

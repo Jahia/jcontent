@@ -1,5 +1,5 @@
 import React from 'react';
-import {withStyles, IconButton} from "@material-ui/core";
+import {withStyles, Button} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {MoreHoriz} from "@material-ui/icons";
@@ -11,8 +11,12 @@ const styles = theme => ({
         flex: 1,
         transition: "left 0.5s ease 0s",
     },
+    cmIcon: {
+        color: theme.palette.primary.contrastText
+    },
     button: {
-        margin: theme.spacing.unit
+        padding: 0,
+        margin: '0!important'
     }
 });
 
@@ -22,12 +26,12 @@ class CmIconButton extends React.Component {
         const {classes, onClick, labelKey, t, children, cmRole, className} = this.props;
         let childrenCount = React.Children.count(children);
         return (
-            <IconButton className={className} aria-haspopup="true" onClick={(event) => onClick(event)} data-cm-role={cmRole}>
+            <Button className={classes.button + " " + className}  aria-haspopup="true" onClick={(event) => onClick(event)} data-cm-role={cmRole}>
                 {childrenCount > 0
                     ? <React.Fragment>{children}</React.Fragment>
                     : <MoreHoriz/>
                 }
-            </IconButton>
+            </Button>
         )
     }
 }

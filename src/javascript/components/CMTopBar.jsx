@@ -9,18 +9,13 @@ import {CmSearchBar} from "./CmSearchBar";
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        minHeight: '160px',
-        maxHeight: '160px',
-        width: '100%',
+        minHeight: '100px',
+        maxHeight: '100px',
         display: 'flex',
+        marginTop: '12px',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingRight: theme.spacing.unit,
         paddingBottom: theme.spacing.unit
-    },
-    blockMenu: {
-        // marginTop: -40
     },
     typoTitle: {
         fontSize: '1.7rem',
@@ -32,8 +27,20 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
-        marginTop: '-3px',
-        marginLeft: '1px'
+        marginTop: -10,
+        marginBottom: -10,
+    },
+    block: {
+        marginTop: -24,
+        marginLeft: -21,
+        marginRight: 20,
+    },
+    siteSwitcher: {
+        marginLeft: '-8px'
+
+    },
+    languageSwitcher: {
+        marginLeft: '-8px'
     },
     head: {
         display: "inline-block",

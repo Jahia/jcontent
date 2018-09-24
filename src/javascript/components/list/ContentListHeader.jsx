@@ -12,16 +12,14 @@ class ContentListHeader extends React.Component {
     render() {
 
         const { order, orderBy, columnData, t} = this.props;
-
         return (
             <TableHead>
                 <TableRow>
-                    <TableCell padding={'none'}/>
+                    <TableCell/>
                     {columnData.map(column => {
                         return (
                             <TableCell
                                 key={column.id}
-                                padding={column.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === column.id ? order : false}
                             >
                                 <TableSortLabel

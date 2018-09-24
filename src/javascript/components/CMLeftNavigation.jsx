@@ -79,8 +79,9 @@ const styles = theme => ({
     },
     menuBurger: {
         paddingRight: '0px!important',
-        paddingTop: '40px!important',
+        paddingTop: '34px!important',
         paddingLeft: '20px!important',
+        paddingBottom: '22px!important',
         boxShadow: 'none!important',
     },
     drawerPaper: {
@@ -175,6 +176,9 @@ const styles = theme => ({
         fontWeight: 600,
         fontSize: '11px',
         color: '#fafafa',
+    },
+    list: {
+        paddingTop: '0!important',
     },
     listItem : {
         display: 'block',

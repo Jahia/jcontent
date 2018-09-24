@@ -32,7 +32,10 @@ const styles = theme => ({
         marginTop: theme.spacing.unit
     },
     actionButton: {
-        textTransform: 'none'
+        textTransform: 'none',
+        marginTop: -7,
+        padding: 0,
+
     },
     link: {
         color: 'inherit'
@@ -48,6 +51,11 @@ const styles = theme => ({
         height: '34px',
         maxHeight: '34px',
         minHeight: '34px',
+    },
+    inInput: {
+        flexGrow: 10
+    },
+    advanced: {
     }
 });
 
@@ -56,7 +64,6 @@ class CmSearchBar extends React.Component {
     constructor(props) {
 
         super(props);
-
         this.onSql2Click = this.onSql2Click.bind(this);
         this.onNormalClick = this.onNormalClick.bind(this);
         let {params} = props;
@@ -169,6 +176,7 @@ class CmSearchBarNormal extends React.Component {
                             {(params.searchTerms != null) &&
                             <ActionButton label={'label.contentManager.search.clear'} variant={'contained'}
                                           onClick={() => this.onClear(params, onClear)}
+                                          className={classes.advanced}
                                           cmRole={'search-clear'}/>
                             }
                             {(params.searchTerms == null) &&
@@ -213,7 +221,7 @@ class CmSearchBarNormal extends React.Component {
                                         {t('label.contentManager.search.underneathNode', {nodeDisplayName: displayName})}
                                     </InputAdornment>}
                                     inputRef={this.search}
-                                    style={{flexGrow: 10}}
+                                    className={classes.inInput}
                                     onChange={() => this.onSearchInputChange(path, params, onSearch)}
                                     onKeyDown={(e) => this.onSearchInputKeyDown(e, path, params, onSearch)}
                                 />
@@ -292,7 +300,7 @@ class CmSearchBarSql2 extends React.Component {
                                    onSearch={() => this.onSearch(path, params, onSearch)}
                                    cmRole={'sql2search-input-from'}/>
                         ] WHERE ISDESCENDANTNODE('{path}') AND (
-                        <Sql2Input maxLength={2000} style={{flexGrow: 10}} defaultValue={params.sql2SearchWhere}
+                        <Sql2Input maxLength={2000} className={classes.inInput} defaultValue={params.sql2SearchWhere}
                                    inputRef={this.where}
                                    onSearch={() => this.onSearch(path, params, onSearch)}
                                    cmRole={'sql2search-input-where'}/>

@@ -7,7 +7,7 @@ import PreviewDrawer from "./preview/PreviewDrawer";
 import {Grid, IconButton, Paper, withStyles} from "@material-ui/core";
 import {List, Add} from "@material-ui/icons";
 import ContentTrees from "./ContentTrees";
-import {withNotifications} from '@jahia/react-material';
+import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {translate} from "react-i18next";
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import {DxContext} from "./DxContext";
@@ -134,21 +134,21 @@ class ContentLayout extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <ContentData contentSource={contentSource} page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
-                        {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
-                            console.log("return data", totalCount, contentSource);
-                            return <React.Fragment>
-                                <Paper elevation={0}>
-                                    <Grid container spacing={0}>
-                                        {contentTreeConfigs && showTree &&
-                                        <Grid item xs={TREE_SIZE} className={classes.tree}>
-                                            <ContentTrees
-                                                contentTreeConfigs={contentTreeConfigs}
-                                                path={path}
-                                                user={dxContext.userName}
-                                            />
-                                        </Grid>
-                                        }
+                    <Paper elevation={0}>
+                        <Grid container spacing={0}>
+                            {contentTreeConfigs && showTree &&
+                            <Grid item xs={TREE_SIZE} className={classes.tree}>
+                                <ContentTrees
+                                    contentTreeConfigs={contentTreeConfigs}
+                                    path={path}
+                                    user={dxContext.userName}
+                                />
+                            </Grid>
+                            }
+                            <ContentData contentSource={contentSource} page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
+                                {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
+                                    console.log("return data", totalCount, contentSource);
+                                    return <React.Fragment>
                                         <Grid item xs={computedTableSize}>
                                             {contentSource === "files" && !this.state.showList
                                                 ? <FilesGrid
@@ -172,19 +172,19 @@ class ContentLayout extends React.Component {
                                                 />
                                             }
                                         </Grid>
-                                    </Grid>
-                                </Paper>
-                                <PreviewDrawer open={previewState === CM_PREVIEW_STATES.SHOW} onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}>
-                                    {/*Always get row from query not from state to be up to date*/}
-                                    <ContentPreview
-                                        layoutQuery={layoutQuery}
-                                        layoutQueryParams={layoutQueryParams}
-                                        dxContext={dxContext}
-                                    />
-                                </PreviewDrawer>
-                            </React.Fragment>
-                        }}
-                    </ContentData>
+                                        <PreviewDrawer open={previewState === CM_PREVIEW_STATES.SHOW} onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}>
+                                            {/*Always get row from query not from state to be up to date*/}
+                                            <ContentPreview
+                                                layoutQuery={layoutQuery}
+                                                layoutQueryParams={layoutQueryParams}
+                                                dxContext={dxContext}
+                                            />
+                                        </PreviewDrawer>
+                                    </React.Fragment>
+                                }}
+                            </ContentData>
+                        </Grid>
+                    </Paper>
                     <Upload />
                 </React.Fragment>
         }}</DxContext.Consumer>;

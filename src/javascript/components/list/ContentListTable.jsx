@@ -313,11 +313,11 @@ class ContentListTable extends React.Component {
                                                                 </CmIconButton>
                                                             }}
                                                         </Actions>
-                                                        <IconButton className={classes.hoveredRowAction}
+                                                        <CmIconButton className={classes.hoveredRowAction}
                                                                     data-cm-role={"table-content-list-button"}
                                                                     onClick={handleShowPreview}>
                                                             <Visibility/>
-                                                        </IconButton>
+                                                        </CmIconButton>
                                                         <Actions menuId={"tableEditButtonAction"} context={{
                                                             uuid: n.uuid,
                                                             path: n.path,

@@ -23,7 +23,7 @@
 
 <div id="${targetId}">loading..</div>
 <script type="text/javascript">
-    window.top.DX.hideChrome();
+    window.top.DX && window.top.DX.hideChrome();
     contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
     contextJsParameters['urlBrowser'] = '/cms/contentmanager';
     contextJsParameters['urlbase'] = '${renderContext.servletPath}';
@@ -37,7 +37,7 @@
     };
     contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces(renderContext)};
     window.addEventListener('unload', function(event) {
-        window.top.DX.showChrome();
+        window.top.DX && window.top.DX.showChrome();
     });
 
 </script>

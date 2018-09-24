@@ -32,7 +32,6 @@
           "publishMenu": "Veröffentlichen...",
           "publishDeletion": "Löschen veröffentlichen",
           "unpublish": "Veröffentlichung rückgängig machen in {{language}}",
-          "unpublishInAllLanguages": "Veröffentlichung rückgängig machen in allen Sprachen",
           "copy": "Kopieren",
           "cut": "Ausschneiden",
           "duplicate": "Duplizieren",

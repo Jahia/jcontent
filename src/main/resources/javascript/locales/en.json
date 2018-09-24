@@ -51,7 +51,6 @@
           "publishMenu": "Publish...",
           "publishDeletion": "Publish deletion",
           "unpublish": "Un-publish in {{language}}",
-          "unpublishInAllLanguages": "Un-publish in all languages",
           "copy": "Copy",
           "cut": "Cut",
           "duplicate": "Duplicate",

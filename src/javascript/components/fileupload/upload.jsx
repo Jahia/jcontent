@@ -31,7 +31,10 @@ const styles = theme => ({
     },
     contentBody: {
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        height: 300,
+        overflowY: "auto",
+        overflowX: "none"
     },
     drawerContentOrange: {
         "background-color": "#E67D3A"
@@ -92,7 +95,7 @@ class Upload extends React.Component {
             return <UploadDropZone acceptedFileTypes={ this.getMimeTypes(acceptedFileTypes) }
                                    onFilesSelected={ this.onFilesSelected } />
         }
-        return <List className={ classes.uploadList } component="nav" disableTouchRipple={ true }>
+        return <List className={ classes.uploadList } component="nav">
             { this.showUploads() }
         </List>
     }
@@ -134,25 +137,21 @@ class Upload extends React.Component {
     updateUploadsStatus() {
         let us;
 
-        if (this.props.uploads.length > 0) {
-            for (let index in this.props.uploads) {
-                const upload = this.props.uploads[index];
-                if (upload.status === uploadStatuses.UPLOADING || upload.status === uploadStatuses.QUEUED) {
-                    us = uploadsStatuses.UPLOADING;
-                    break;
-                }
-                else if (upload.status === uploadStatuses.HAS_ERROR) {
-                    us = uploadsStatuses.HAS_ERROR;
-                }
-            }
+        const status = this.uploadStatus();
 
-            if (us === undefined || (us !== uploadsStatuses.UPLOADING && us !== uploadsStatuses.HAS_ERROR && us !== uploadsStatuses.QUEUED)) {
-                us = uploadsStatuses.UPLOADED;
-            }
-        }
-        else {
+        if (status === null) {
             us = uploadsStatuses.NOT_STARTED;
         }
+        else if (status.uploading !== 0) {
+            us = uploadsStatuses.UPLOADING;
+        }
+        else if (status.error !== 0) {
+            us = uploadsStatuses.HAS_ERROR;
+        }
+        else {
+            us = uploadsStatuses.UPLOADED;
+        }
+
         this.props.dispatch(setStatus(us));
     }
 
@@ -209,7 +208,12 @@ class Upload extends React.Component {
                 <Fullscreen />
             </IconButton>
         }
-        if (status === uploadsStatuses.UPLOADED && (panelState === panelStates.VISIBLE || panelStates.PARTIALLY_VISIBLE)) {
+        if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
+            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
+                <Close />
+            </IconButton>
+        }
+        if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
             return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
                 <Close />
             </IconButton>
@@ -235,6 +239,33 @@ class Upload extends React.Component {
             });
         }
         return undefined;
+    }
+
+    uploadStatus() {
+        const status = {
+            uploading: 0,
+            uploaded: 0,
+            error: 0,
+            total: this.props.uploads.length
+        };
+
+        if (this.props.uploads.length > 0) {
+            for (let index in this.props.uploads) {
+                const upload = this.props.uploads[index];
+                switch(upload.status) {
+                    case uploadStatuses.QUEUED :
+                    case uploadStatuses.UPLOADING : status.uploading += 1;
+                        break;
+                    case uploadStatuses.UPLOADED : status.uploaded += 1;
+                        break;
+                    case uploadStatuses.HAS_ERROR : status.error += 1;
+                }
+            }
+        }
+        else {
+            return null;
+        }
+        return status;
     }
 }
 

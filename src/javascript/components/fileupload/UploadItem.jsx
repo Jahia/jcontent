@@ -2,10 +2,10 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {ApolloConsumer} from "react-apollo";
-import { uploadFile, uploadImage } from './gqlMutations';
+import { uploadFile, uploadImage, removeFile } from './gqlMutations';
 import { Mutation } from 'react-apollo';
 import { Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField } from "@material-ui/core";
-import { CheckCircle, Info,  FiberManualRecord } from "@material-ui/icons";
+import { CheckCircle, Info,  FiberManualRecord, InsertDriveFile } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
 import { panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
@@ -29,6 +29,18 @@ const styles = theme => ({
     statusIcon: {
         marginRight: 10
     },
+    statusIconRed: {
+        marginRight: 10,
+        color: "#aa0022"
+    },
+    statusIconGreen: {
+        marginRight: 10,
+        color: "#51a522"
+    },
+    statusIconOrange: {
+        marginRight: 10,
+        color: "#E67D3A"
+    },
     renameField: {
         marginLeft: 5,
         marginRight: 5
@@ -50,6 +62,7 @@ class UploadItem extends React.Component {
         this.showChangeNamePopover = this.showChangeNamePopover.bind(this);
         this.hideChangeNamePopover = this.hideChangeNamePopover.bind(this);
         this.rename = this.rename.bind(this);
+        this.replaceFile = this.replaceFile.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -69,7 +82,7 @@ class UploadItem extends React.Component {
                 if (this.client === null) this.client = client;
 
                 return <ListItem button className={classes.listItem}>
-                    <Avatar alt="Remy Sharp" src={ id } />
+                    { this.avatar() }
                     <ListItemText className={ classes.fileNameText } primary={ this.state.userChosenName ? this.state.userChosenName : file.name } />
                     <ListItemText className={ classes.fileNameText } primary={ this.statusText() } />
                     <ListItemSecondaryAction>
@@ -104,19 +117,21 @@ class UploadItem extends React.Component {
     }
 
     rename(e) {
-        if (e.keyCode === 13) {
-            this.setState({
-                userChosenName: e.target.value,
-                anchorEl: null
-            }, () => {
-                const upload = {
-                    id: this.props.id,
-                    status: uploadStatuses.UPLOADING,
-                    error: null
-                };
-                this.props.dispatch(updateUpload(upload));
-            });
-        }
+        const { file } = this.props;
+        //Note that this may have issues
+        this.setState({
+            userChosenName: file.name.replace(".", "-1.")
+        }, () => {
+            this.changeStatusToUploading()
+        })
+        // if (e.keyCode === 13) {
+        //     this.setState({
+        //         userChosenName: e.target.value,
+        //         anchorEl: null
+        //     }, () => {
+        //         this.changeStatusToUploading()
+        //     });
+        // }
     }
 
     doUploadAndStatusUpdate() {
@@ -173,7 +188,8 @@ class UploadItem extends React.Component {
         return this.client.mutate({
             mutation: uploadFile,
             variables: {
-                ...variables
+                ...variables,
+                mimeType: file.type
             }
         });
     }
@@ -190,25 +206,25 @@ class UploadItem extends React.Component {
         }
         else if (status === uploadStatuses.UPLOADED) {
             text = <span className={ classes.progressText }>
-                <CheckCircle className={ classes.statusIcon }/>
+                <CheckCircle className={ classes.statusIconGreen }/>
                 Uploaded
             </span>
         }
         else if (status === uploadStatuses.HAS_ERROR && error === "FILE_EXISTS") {
             text = <span className={ classes.progressText }>
-                <Info className={ classes.statusIcon }/>
+                <Info className={ classes.statusIconRed }/>
                 File already exists
             </span>
         }
         else if (status === uploadStatuses.HAS_ERROR) {
             text = <span className={ classes.progressText }>
-                <Info className={ classes.statusIcon }/>
+                <Info className={ classes.statusIconRed }/>
                 Could not upload
             </span>
         }
         else if (status === uploadStatuses.UPLOADING) {
             text = <span className={ classes.progressText }>
-                <CircularProgress size={20} className={ classes.statusIcon }/>
+                <CircularProgress size={20} className={ classes.statusIconOrange }/>
                 Uploading ...
             </span>
         }
@@ -236,13 +252,14 @@ class UploadItem extends React.Component {
             if (error === "FILE_EXISTS") {
                 actions.push(<Button key="rename"
                                      component={"a"}
-                                     onClick={(e) => { this.showChangeNamePopover(e)}} >
-                        Rename
+                                     // onClick={(e) => { this.showChangeNamePopover(e)}} >
+                                     onClick={(e) => { this.rename(e)}} >
+                        Automatically Rename
                     </Button>,
                     <Button key="overwrite"
                             component={"a"}
-                            onClick={() => { removeFile(index); dispatch(removeUpload(index))}} >
-                            Overwrite
+                            onClick={ this.replaceFile } >
+                            Replace
                     </Button>,
                     <Button key="dontupload"
                             component={"a"}
@@ -287,6 +304,39 @@ class UploadItem extends React.Component {
         this.setState({
             anchorEl: null
         })
+    }
+
+    replaceFile() {
+        const { file, path } = this.props;
+        this.client.mutate({
+            mutation: removeFile,
+            variables: {
+                pathOrId: path + "/" + file.name
+            }
+        }).then(() => {
+            this.changeStatusToUploading()
+        }).catch((e) => {
+            console.error(e);
+        })
+    }
+
+    changeStatusToUploading() {
+        const upload = {
+            id: this.props.id,
+            status: uploadStatuses.UPLOADING,
+            error: null
+        };
+        this.props.dispatch(updateUpload(upload));
+    }
+
+    avatar() {
+        const { file } = this.props;
+        if (isImage(file.name)) {
+            return <Avatar alt={ file.name } src={ file.preview } />
+        }
+        return <Avatar>
+            <InsertDriveFile/>
+        </Avatar>
     }
 }
 

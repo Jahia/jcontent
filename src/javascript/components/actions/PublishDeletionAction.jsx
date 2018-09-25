@@ -16,7 +16,7 @@ class PublishDeletionAction extends React.Component {
 
         return children({
             ...rest,
-            onClick: () => window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, true, false)
+            onClick: () => window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false)
         });
     }
 }

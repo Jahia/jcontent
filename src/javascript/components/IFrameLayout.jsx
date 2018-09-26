@@ -38,8 +38,8 @@ class IFrameLayout extends React.Component {
                     this.showError('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
                     return null;
                 }
-
-                if (loading || !data || !data.jcr) {
+                // Todo: restore loading test BACKLOG-8649
+                if (!data || !data.jcr) {
                     return null;
                 }
 

@@ -12,7 +12,7 @@ class Actions extends React.Component {
 
     render() {
 
-        const {lang, menuId, context, children, t, notificationContext, ...rest} = this.props;
+        const {lang, menuId, context, children, t, notificationContext, siteKey, ...rest} = this.props;
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
         const actions = _.sortBy(_.map(actionsToDisplayKeys, key => {return {...actionsRegistry[key], actionKey:key}}), "priority");
         return _.map(actions, action => {
@@ -55,10 +55,9 @@ class Actions extends React.Component {
                             (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
                             return null;
                         }
-
+                        ctx.actionPath = (ctx.actionPath ?  ctx.actionPath  : "") + "/" + actionKey;
                         ctx.node = node;
                         ctx.requirementQueryHandler = requirementQueryHandler;
-
                         return (
                             <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>
                                 {children}

@@ -33,7 +33,7 @@ let getStore = (dxContext, history) => {
         previewMode: previewModeReducer,
         previewModes: previewModesReducer,
         previewState: previewStateReducer,
-        openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path)
+        openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.mode === "apps" ? "" : currentValueFromUrl.path)
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -4,6 +4,7 @@ import {
     Grid,
 } from '@material-ui/core';
 import {compose} from "react-apollo/index";
+import connect from "react-redux/es/connect/connect";
 
 const styles = theme => ({
         root: {
@@ -17,6 +18,10 @@ const styles = theme => ({
             flexGrow: 1,
             backgroundColor: theme.palette.background.default,
             padding: theme.spacing.unit * 3,
+        },
+        openDrawer: {
+            marginLeft: "289px",
+            padding: 0
         }
     }
 );
@@ -24,11 +29,11 @@ const styles = theme => ({
 class Main extends React.Component {
 
     render() {
-        const {children, leftSide, classes } = this.props;
+        const {children, leftSide, classes, mode } = this.props;
         return (
             <div className={classes.root}>
                 {leftSide}
-                <div className={classes.content}>
+                <div className={classes.content + " " + (mode === "apps" ? classes.openDrawer : "")}>
                     {children}
                 </div>
             </div>
@@ -43,12 +48,12 @@ class ManagerLayout extends React.Component {
     }
 
     render() {
-        let { leftSide, children } = this.props;
+        let { leftSide, children, mode } = this.props;
         return (
             <Grid container spacing={0}>
 
                 <Grid item xs={12}>
-                    <Main leftSide={leftSide}>
+                    <Main leftSide={leftSide} mode={mode}>
                         {children}
                     </Main>
                 </Grid>
@@ -56,8 +61,12 @@ class ManagerLayout extends React.Component {
         );
     }
 }
+const mapStateToProps = (state, ownProps) => ({
+    mode: state.mode
+})
 
 Main = compose(
+    connect(mapStateToProps, null),
     withStyles(styles)
 )(Main);
 

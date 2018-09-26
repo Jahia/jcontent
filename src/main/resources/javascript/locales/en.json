@@ -29,7 +29,8 @@
       },
       "tree": {
         "show": "Show Tree",
-        "hide": "Hide Tree"
+        "hide": "Hide Tree",
+        "title": "Tree"
       },
       "filesGrid": {
         "emptyMessage": "This folder does not contain any files",

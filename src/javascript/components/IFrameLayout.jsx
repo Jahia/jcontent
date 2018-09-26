@@ -10,8 +10,8 @@ import {ActionRequirementsQueryHandler} from "./gqlQueries";
 class IFrameLayout extends React.Component {
 
     render() {
-
-        const { actionKey, workspace, siteKey, lang, contextPath, redirectToBrowse } = this.props;
+        const { actionPath, workspace, siteKey, lang, contextPath, redirectToBrowse } = this.props;
+        let actionKey = actionPath.split("/")[actionPath.split("/").length - 1]
         const action = actionsRegistry[actionKey];
 
         if (!action || !action.iframeUrl) {
@@ -69,8 +69,8 @@ class IFrameLayout extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
     lang: state.language,
     siteKey: state.site,
-    actionKey: state.path
-});
+    actionPath: state.path
+})
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     redirectToBrowse: () => dispatch(cmGoto({mode: 'browse', path: '/'}))

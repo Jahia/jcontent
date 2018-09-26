@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {translate} from "react-i18next";
-import {withStyles, List, ListItem, MenuItem} from "@material-ui/core";
+import {withStyles, List, ListItem} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import Actions from "../Actions";
-import CmMenuItem from "../renderAction/CmMenuItem";
+import CmLeftDrawerContent from "../CmLeftDrawerContent";
 
 const styles = theme => ({
     button: {
@@ -12,59 +12,51 @@ const styles = theme => ({
     }
 });
 
-class MenuAction extends Component {
+class ListAction extends Component {
 
     constructor(props) {
 
         super(props);
 
         this.state = {
-            anchor: null,
+            open: _.includes(this.props.actionPath, this.props.actionKey),
+            actionPath: this.props.actionPath
         };
 
         this.handleListClick = this.handleListClick.bind(this);
-        this.handleListClose = this.handleListClose.bind(this);
     }
 
-    handleListClick(event) {
-        this.setState({anchor: event.currentTarget});
-    };
-
-    handleListClose() {
-        this.setState({anchor: null});
+    handleListClick() {
+        this.setState(prevState => {
+            return {open: !prevState.open, actionPath: []}
+        });
     };
 
     render() {
 
-        const {menuId, children, menuClose, t, ...rest} = this.props;
-        const {anchor} = this.state;
-        let handleListClose = menuClose || this.handleListClose;
+        const {menuId, children, ...rest} = this.props;
+        const {open} = this.state;
         return (<span data-cm-role={'list-action-' + menuId}>
-            {children({...rest, menuId: menuId, onClick: this.handleListClick})}
-            <List
-                id={menuId}
-                anchorEl={anchor}
-                open={Boolean(anchor)}
-                onClose={() => this.handleListClose()}>
-                <Actions menuId={menuId} {...rest} handleListClose={handleListClose}>
-                    {(menuConfig) => {
-                        return  <ListItem button onClick={(event) => menuConfig.onClick(event)}>
-                            {t(menuConfig.labelKey, menuConfig.labelParams)}
-                        </ListItem>
-                        }}
-                </Actions>
-            </List>
+            {children({
+                ...rest,
+                open: open,
+                hasChildren: true,
+                menuId: menuId,
+                onClick: this.handleListClick
+            })}
+            {console.log("ListAction",  this.props.actionKey, open)}
+            {open && <CmLeftDrawerContent {...rest} menuId={menuId} actionPath={this.state.actionPath}/>}
         </span>)
     }
 }
 
-MenuAction = compose(
+ListAction = compose(
     translate(),
     withStyles(styles, {withTheme: true})
-)(MenuAction);
+)(ListAction);
 
-export default MenuAction;
+export default ListAction;
 
-MenuAction.propTypes = {
+ListAction.propTypes = {
     menuId: PropTypes.string.isRequired
 };

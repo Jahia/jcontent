@@ -19,7 +19,8 @@
       },
       "tree": {
         "show": "Navigationsbaum anzeigen",
-        "hide": "Navigationsbaum verbergen"
+        "hide": "Navigationsbaum verbergen",
+        "title": "Navigationsbaum"
       },
       "contentPreview": {
           "edit": "Bearbeiten",

@@ -1,7 +1,5 @@
 import React from "react";
 import {withStyles} from '@material-ui/core';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import LanguageSwitcher from "./languageSwitcher/LanguageSwitcher";
@@ -16,6 +14,8 @@ import Actions from "./Actions";
 import CmLeftMenuItem from "./renderAction/CmLeftMenuItem";
 import {connect} from "react-redux";
 import * as _ from 'lodash';
+import actionsRegistry from "./actionsRegistry";
+import CmLeftDrawerContent from "./CmLeftDrawerContent";
 
 const drawerWidth = 289;
 // TODO this styles should be provided by the theme / new structure when available
@@ -180,7 +180,7 @@ const styles = theme => ({
     list: {
         paddingTop: '0!important',
     },
-    listItem : {
+    listItem: {
         display: 'block',
         padding: '0!important',
         textAlign: 'center',
@@ -194,31 +194,49 @@ const styles = theme => ({
 class CMLeftNavigation extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            openDrawer: false,
-            drawerContent: {content: null, title: null},
-            data: ['Users', 'Groups', 'Tag managers', 'Audit trails'],
-            selected: {},
-        };
-    }
+        if (props.mode === "apps") {
+            let actionPath = this.props.path.split("/");
+            let actionKey = actionPath ? actionPath.shift() : "";
+            let actionContext = {
+                path: `/sites/${this.props.siteKey}`,
+                siteKey: this.props.siteKey,
+                lang: this.props.lang,
+                actionPath: "/" + actionKey
+            };
+            this.state = {
+                openDrawer: true,
+                drawerContent: {
+                    content: <CmLeftDrawerContent context={actionContext} menuId={actionsRegistry[actionKey].menuId} actionPath={actionPath} handleDrawerClose={this.handleDrawerClose}/>,
+                    title: this.props.t(actionsRegistry[actionKey].labelKey)
+                },
+            }
 
-    selectItem = (el) => {
-        const selected = {};
-        selected[el] = !selected[el];
-        this.setState({selected: selected});
-    };
+        } else {
+            this.state = {
+                openDrawer: false,
+                drawerContent: {content: null, title: null},
+            };
+        }
+    }
 
     handleDrawerOpen = (drawerContent) => {
         this.setState({openDrawer: true, drawerContent: drawerContent});
     };
 
     handleDrawerClose = () => {
-        this.setState({openDrawer: false, drawerContent: null});
+        // never close on apps mode
+       this.setState({openDrawer: false, drawerContent: null});
     };
 
     render() {
-        const {siteKey, lang, t, classes} = this.props;
+        const {siteKey, lang, t, classes, mode} = this.props;
 
+        let actionContext = {
+            path: `/sites/${siteKey}`,
+            siteKey: siteKey,
+            lang: lang
+        };
+        // handle menu already opened
         return (
             <div className={this.state.openDrawer ? classes.root : classes.root1}>
                 <div style={{zIndex: 1}}>
@@ -226,28 +244,22 @@ class CMLeftNavigation extends React.Component {
                         <ListItem button className={classes.menuBurger}>
                             <BurgerMenuButton/>
                         </ListItem>
-                        <Actions menuId="leftMenuActions" context={{
-                            path: `/sites/${siteKey}`,
-                            siteKey: siteKey,
-                            lang: lang
-                        }}
+                        <Actions menuId={"leftMenuActions"} context={actionContext}
+                                 drawerOpen={this.state.openDrawer}
                                  handleDrawerClose={this.handleDrawerClose.bind(this)}
-                                 handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}>
+                                 handleDrawer={this.state.openDrawer && mode !== "apps" ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}>
                             {(props) =>
                                 <CmLeftMenuItem {...props} drawer={this.state.openDrawer} icon={<Description
                                     className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}/>
                             }
                         </Actions>
                     </List>
-                    <Actions menuId="leftMenuBottomAction" context={{
-                        path: `/sites/${siteKey}`,
-                        siteKey: siteKey,
-                        lang: lang
-                    }}
+                    <Actions menuId="leftMenuBottomAction" context={actionContext}
                              handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}>
                         {(props) =>
-                            <CmLeftMenuItem {...props} bottom={true} badge={props.badge} drawer={this.state.openDrawer} icon={<Description
-                                className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}/>
+                            <CmLeftMenuItem {...props} bottom={true} badge={props.badge} drawer={this.state.openDrawer}
+                                            icon={<Description
+                                                className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}/>
                         }
                     </Actions>
                 </div>
@@ -266,7 +278,7 @@ class CMLeftNavigation extends React.Component {
                             {this.state.drawerContent && t(this.state.drawerContent.title)}
                         </Typography>
                         <div style={{marginTop: '-10px', marginLeft: '-6px'}}>
-                            <LanguageSwitcher  dark={true}/>
+                            <LanguageSwitcher dark={true}/>
                         </div>
                     </div>
                     <div>
@@ -280,7 +292,9 @@ class CMLeftNavigation extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
-    lang: state.language
+    lang: state.language,
+    mode: state.mode,
+    path: state.path
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

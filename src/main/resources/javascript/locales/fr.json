@@ -19,7 +19,8 @@
       },
       "tree": {
         "show": "Afficher l'arborescence",
-        "hide": "Masquer l'arborescence"
+        "hide": "Masquer l'arborescence",
+        "title": "Arborescence"
       },
       "contentPreview": {
         "cut": "Couper"

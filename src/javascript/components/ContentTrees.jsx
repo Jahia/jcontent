@@ -81,7 +81,7 @@ class ContentTrees extends React.Component {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                Tree
+                                {t("label.contentManager.tree.title")}
                             </TableCell>
                         </TableRow>
                     </TableHead>

@@ -126,7 +126,7 @@ class ContentLayout extends React.Component {
     render() {
 
         const {showTree: showTree} = this.state;
-        const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey, previewState} = this.props;
+        const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey, previewState, t} = this.props;
         let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
 
         return <DxContext.Consumer>{dxContext => {
@@ -150,7 +150,7 @@ class ContentLayout extends React.Component {
                                 </Actions>
                             }
                             {this.isBrowsing() &&
-                                <Button variant="text" className={classes.showTreeButton} onClick={this.handleShowTree}>Show Tree</Button>
+                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleShowTree}>{t("label.contentManager.tree." + (showTree ? "hide" : "show"))}</Button>
                             }
                             {contentSource === "files" &&
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>

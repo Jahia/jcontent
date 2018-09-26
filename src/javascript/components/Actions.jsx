@@ -73,11 +73,11 @@ class Actions extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     lang: state.language,
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto({path, params}))
-})
+});
 
 Actions = _.flowRight(
     translate(),

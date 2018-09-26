@@ -377,12 +377,12 @@ const ActionRequirementsFragments = {
     siteInstalledModules: {
         applyFor: "requirements",
         gql: gql `fragment SiteInstalledModules on JCRNode {
-          site {
-            installedModulesWithAllDependencies
-            ...NodeCacheRequiredFields
-          }
+            site {
+                installedModulesWithAllDependencies
+                ...NodeCacheRequiredFields
+            }
         }`
-    }    
+    }
 };
 
 class ActionRequirementsQueryHandler {

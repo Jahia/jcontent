@@ -10,7 +10,6 @@ import {translate} from "react-i18next";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
 import {cmSetSite} from "../redux/actions";
 
-
 const styles = theme => ({
     typography: {
         opacity: '0.9',
@@ -31,16 +30,16 @@ const styles = theme => ({
         backgroundSize: '18px'
     },
     formControl: {
-        minWidth: 120,
+        minWidth: 120
     },
     icontest: {
-      fontSize: '0.500rem',
+      fontSize: '0.500rem'
     },
     input1: {
         backgroundColor: "transparent",
         "color": "#ffffff",
         "boxShadow": "none",
-        "fontSize": "0.875rem",
+        "fontSize": "0.875rem"
     },
 });
 
@@ -51,28 +50,29 @@ class SiteSwitcher extends React.Component {
         this.variables = {
             query: "select * from [jnt:virtualsite] where ischildnode('/sites')",
         };
-        this.query = gql `query SiteNodes($query: String!){
-            jcr {
-                result:nodesByQuery(query: $query) {
-                    siteNodes:nodes {
-                        name
-                        hasPermission(permissionName: "contentManager")
-                        displayName
-                        site {
-                            defaultLanguage
-                            ...NodeCacheRequiredFields
-                            languages {
-                                displayName
-                                language
-                                activeInEdit
+        this.query = gql `
+            query SiteNodes($query: String!) {
+                jcr {
+                    result:nodesByQuery(query: $query) {
+                        siteNodes:nodes {
+                            name
+                            hasPermission(permissionName: "contentManager")
+                            displayName
+                            site {
+                                defaultLanguage
+                                languages {
+                                    displayName
+                                    language
+                                    activeInEdit
+                                }
+                                ...NodeCacheRequiredFields
                             }
+                            ...NodeCacheRequiredFields
                         }
-                        ...NodeCacheRequiredFields
                     }
                 }
             }
-        }
-        ${PredefinedFragments.nodeCacheRequiredFields.gql}
+            ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
     }
 
@@ -127,15 +127,9 @@ class SiteSwitcher extends React.Component {
                     return <SiteSwitcherDisplay dark={dark} onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)} siteNodes={sites}/>
                 }
             }
-        </Query>
+        </Query>;
     }
 }
-SiteSwitcher = _.flowRight(
-    translate(),
-    withNotifications(),
-)(SiteSwitcher);
-
-export default SiteSwitcher;
 
 class SiteSwitcherDisplay extends React.Component {
 
@@ -158,7 +152,7 @@ class SiteSwitcherDisplay extends React.Component {
         let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang, dark} = this.props;
         let {anchorEl} = this.state;
         if (loading) {
-            return <span>Loading...</span>
+            return <span>Loading...</span>;
         } else {
             const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
             return <React.Fragment>
@@ -176,16 +170,15 @@ class SiteSwitcherDisplay extends React.Component {
                         </MenuItem>
                     })}
                 </Menu>
-            </React.Fragment>
+            </React.Fragment>;
         }
     }
 }
 
-
 const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
     currentLang: state.language
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onSelectSite: (siteNode) => {
@@ -194,10 +187,17 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         }
         dispatch(cmSetSite(siteNode.name));
     }
-})
+});
 
 SiteSwitcherDisplay = _.flowRight(
     translate(),
     connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
 )(SiteSwitcherDisplay);
+
+SiteSwitcher = _.flowRight(
+    translate(),
+    withNotifications(),
+)(SiteSwitcher);
+
+export default SiteSwitcher;

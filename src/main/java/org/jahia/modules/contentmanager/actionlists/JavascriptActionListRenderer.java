@@ -23,6 +23,7 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
     private static final Logger logger = LoggerFactory.getLogger(JavascriptActionListRenderer.class);
 
     public class ActionListResource implements Comparable<ActionListResource> {
+
         private String url;
         private boolean embedded;
         private double priority;
@@ -68,18 +69,17 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
 
     /**
      * Returns a collection of all active bundles, containing action list resources.
-     * 
+     *
      * @return a collection of all active bundles, containing action list resources; if no such bundles are found, returns an empty
      *         collection
      */
     static Collection<Bundle> getBundlesWithActionListResources() {
         List<Bundle> bundles = new LinkedList<>();
-        for (Bundle b : FrameworkService.getBundleContext().getBundles()) {
-            if (b.getState() == Bundle.ACTIVE && b.getHeaders().get(HEADER_ACTION_LIST_RESOURCES) != null) {
-                bundles.add(b);
+        for (Bundle bundle : FrameworkService.getBundleContext().getBundles()) {
+            if (bundle.getState() == Bundle.ACTIVE && bundle.getHeaders().get(HEADER_ACTION_LIST_RESOURCES) != null) {
+                bundles.add(bundle);
             }
         }
-
         return bundles;
     }
 

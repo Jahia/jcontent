@@ -23,7 +23,7 @@ class IFrameLayout extends React.Component {
         const action = actionsRegistry[actionKey];
 
         if (!action || !action.iframeUrl) {
-            this.showError('label.contentManager.error.404');
+            this.showError('label.contentManager.error.contentUnavailable');
             return null;
         }
 
@@ -47,7 +47,7 @@ class IFrameLayout extends React.Component {
                 const node = data.jcr.nodeByPath;
                 if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
                     (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
-                    this.showError('label.contentManager.error.404');
+                    this.showError('label.contentManager.error.contentUnavailable');
                     return null;
                 }
 
@@ -79,7 +79,6 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    // do nothing
 });
 
 IFrameLayout = _.flowRight(

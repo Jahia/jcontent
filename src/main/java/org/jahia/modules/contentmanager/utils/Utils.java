@@ -7,8 +7,14 @@ import java.util.List;
 import org.jahia.osgi.FrameworkService;
 import org.osgi.framework.Bundle;
 
+/**
+ * Content Manager utilities.
+ */
 public final class Utils {
 
+    /**
+     * Bundle header item that keeps the list of bundle's pluggable action list resources.
+     */
     public static final String HEADER_ACTION_LIST_RESOURCES = "Jahia-ActionList-Resources";
 
     /**

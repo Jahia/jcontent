@@ -26,7 +26,7 @@
       "editAction": "Edit",
       "error": {
         "queryingContent": "Error querying content: {{details}}",
-        "404": "The requested URL was not found on this server"
+        "contentUnavailable": "The requested content is unavailable"
       },
       "tree": {
         "show": "Show Tree",

@@ -15,8 +15,7 @@
       "saveAsWip": "Marquer comme travail en cours",
       "editAction": "Editer",
       "error": {
-        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
-        "404": "L'URL demandée n'a pas pu être trouvée sur ce serveur"
+        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}"
       },
       "tree": {
         "show": "Afficher l'arborescence",
@@ -27,10 +26,10 @@
         "cut": "Couper"
       },
       "contentTypes": {
-	      "any": "Tout contenu",      
-	      "error": {
-	           "loading": "Erreur lors de la récupération des types de contenu: {{details}}"
-	      }
+          "any": "Tout contenu",
+          "error": {
+               "loading": "Erreur lors de la récupération des types de contenu: {{details}}"
+          }
       },
       "create": {
           "create": "Créer",

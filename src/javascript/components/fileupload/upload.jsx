@@ -1,11 +1,8 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { ApolloConsumer } from "react-apollo";
-import { uploadFile } from './gqlMutations';
-import { Mutation } from 'react-apollo';
-import { Input, Button, IconButton, List } from "@material-ui/core";
-import { Close, ExpandMore, ExpandLess, Fullscreen, FullscreenExit } from "@material-ui/icons";
+import { Input, Button, IconButton, List, CircularProgress } from "@material-ui/core";
+import { Close, Fullscreen, FullscreenExit, CheckCircle, Info } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';
 import { panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
@@ -15,6 +12,8 @@ import UploadDropZone from './UploadDropZone';
 import UploadItem from './UploadItem';
 import mimetypes from 'mime-types';
 import {batchActions} from 'redux-batched-actions';
+import {translate} from "react-i18next";
+import _ from 'lodash';
 
 const styles = theme => ({
     drawerContent: {
@@ -26,8 +25,23 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
+        flexDirection: "row",
         padding: '0 8px',
         ...theme.mixins.toolbar,
+    },
+    buttonHolder: {
+        display: "flex",
+        flex: 1,
+        justifyContent: "flex-end"
+    },
+    headerText: {
+        display: "flex",
+        flex: 12,
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    justifyCenter: {
+        justifyContent: "center"
     },
     contentBody: {
         display: "flex",
@@ -54,6 +68,22 @@ const styles = theme => ({
     },
     uploadList: {
         width: "100%"
+    },
+    statusIconRed: {
+        marginRight: 10,
+        color: "#aa0022"
+    },
+    statusIconGreen: {
+        marginRight: 10,
+        color: "#51a522"
+    },
+    statusIconOrange: {
+        marginRight: 10,
+        color: "#E67D3A"
+    },
+    statusIconWhite: {
+        marginRight: 10,
+        color: "whitesmoke"
     }
 });
 
@@ -80,6 +110,7 @@ class Upload extends React.Component {
         return <UploadDrawer open={ this.isDrawerOpen() } transitionDuration={ this.transitionDuration() }>
                 <div className={ this.contentClasses() }>
                     <div className={classes.contentHeader}>
+                        { this.headerText() }
                         { this.headerButton() }
                     </div>
                     <div className={ classes.contentBody }>
@@ -101,7 +132,6 @@ class Upload extends React.Component {
     }
 
     onFilesSelected(acceptedFiles, rejectedFiles) {
-        console.log(acceptedFiles, rejectedFiles);
         this.acceptedFiles = acceptedFiles;
         this.rejectedFiles = rejectedFiles;
         const uploads = this.acceptedFiles.map((file) => {
@@ -181,42 +211,42 @@ class Upload extends React.Component {
     }
 
     headerButton() {
-        const { panelState, uploads, status } = this.props;
+        const { panelState, uploads, status, classes } = this.props;
 
         if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.VISIBLE) {
-            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE)) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE)) }>
                 <FullscreenExit />
-            </IconButton>
+            </IconButton></div>
         }
         if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.PARTIALLY_VISIBLE) {
-            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
                 <Fullscreen />
-            </IconButton>
+            </IconButton></div>
         }
         if (status === uploadsStatuses.NOT_STARTED) {
-            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
                 <Close />
-            </IconButton>
+            </IconButton></div>
         }
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.VISIBLE) {
-            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE)) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE)) }>
                 <FullscreenExit />
-            </IconButton>
+            </IconButton></div>
         }
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.PARTIALLY_VISIBLE) {
-            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatch(setPanelState(panelStates.VISIBLE)) }>
                 <Fullscreen />
-            </IconButton>
+            </IconButton></div>
         }
         if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
-            return <IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "#E67D3A"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
                 <Close />
-            </IconButton>
+            </IconButton></div>
         }
         if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
-            return <IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
+            return <div className={ classes.buttonHolder }><IconButton style={{color: "whitesmoke"}} onClick={ () => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]) }>
                 <Close />
-            </IconButton>
+            </IconButton></div>
         }
     }
 
@@ -267,6 +297,68 @@ class Upload extends React.Component {
         }
         return status;
     }
+
+    headerText() {
+        const { panelState, classes, t } = this.props;
+        const status = this.uploadStatus();
+
+
+        if (panelState === panelStates.PARTIALLY_VISIBLE) {
+            if (status === null) {
+                return null;
+            }
+            else if (status.uploading !== 0) {
+                return <div className={ `${classes.headerText} ${classes.justifyCenter}`}>
+                        <CircularProgress size={20} className={ classes.statusIconWhite }/>
+                        <h3 className={ classes.statusIconWhite }>{t("label.contentManager.fileUpload.uploadingMessage", {uploaded: status.uploaded, total: status.total})}</h3>
+                    </div>
+            }
+            else if (status.error !== 0) {
+                return <div className={ `${classes.headerText} ${classes.justifyCenter}`}>
+                        <Info className={ classes.statusIconWhite }/>
+                        <h3 className={ classes.statusIconWhite }>{t("label.contentManager.fileUpload.errorMessage")}</h3>
+                        <a className={ classes.statusIconWhite } href={"#"} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>{t("label.contentManager.fileUpload.errorActionMessage")}</a>
+                    </div>
+            }
+            else {
+                return <div className={ `${classes.headerText} ${classes.justifyCenter}`}>
+                        <CheckCircle className={ classes.statusIconWhite }/>
+                        <h3 className={ classes.statusIconWhite }>{t("label.contentManager.fileUpload.successfulUploadMessage", {number: status.total})}</h3>
+                    </div>
+            }
+        }
+        else if (panelState === panelStates.VISIBLE) {
+            if (status === null) {
+                return null;
+            }
+            else if (status.uploading !== 0) {
+                return <div className={ classes.headerText}>
+                    <CircularProgress size={40} className={ classes.statusIconOrange }/>
+                    <div>
+                        <h3 style={{ marginBottom: 5}}>{t("label.contentManager.fileUpload.uploadingMessage", {uploaded: status.uploaded, total: status.total})}</h3>
+                        { status.error !== 0 && <div>{t("label.contentManager.fileUpload.uploadingActionMessage")}</div>}
+                    </div>
+                </div>
+            }
+            else if (status.error !== 0) {
+                return <div className={ classes.headerText}>
+                    <Info className={ classes.statusIconRed } fontSize={ "large" }/>
+                    <div>
+                        <h3 style={{ marginBottom: 5}}>{t("label.contentManager.fileUpload.errorMessage")}</h3>
+                        <div>{t("label.contentManager.fileUpload.errorActionMessage")}</div>
+                    </div>
+                </div>
+            }
+            else {
+                return <div className={ classes.headerText}>
+                    <CheckCircle className={ classes.statusIconGreen } fontSize={ "large" }/>
+                    <div>
+                        <h3 style={{ marginBottom: 5}}>{t("label.contentManager.fileUpload.successfulUploadMessage", {number: status.total})}</h3>
+                    </div>
+                </div>
+            }
+        }
+    }
 }
 
 Upload.propTypes = {
@@ -286,6 +378,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default withStyles(styles)(
-    connect(mapStateToProps, mapDispatchToProps)(Upload)
-);
+export default _.flowRight(
+    withStyles(styles),
+    translate(),
+    connect(mapStateToProps, mapDispatchToProps))(Upload);

@@ -5,6 +5,8 @@ import { UploadDropZoneFile } from './gqlMutations';
 import { Button } from "@material-ui/core";
 import { UploadDropZonesStatuses } from './constatnts';
 import Dropzone from 'react-dropzone';
+import {translate} from "react-i18next";
+import _ from 'lodash';
 
 const styles = theme => ({
     root: {
@@ -12,7 +14,7 @@ const styles = theme => ({
         flexDirection: "column",
         justifyContent: "center",
         width: "80%",
-        height: "70%"
+        height: "80%"
     },
     dropZone: {
         width: "100%",
@@ -41,19 +43,18 @@ class UploadDropZone extends React.Component {
     }
 
     render() {
-        // console.log(this.state.file);
-        const { classes, acceptedFileTypes } = this.props;
+        const { classes, acceptedFileTypes, t } = this.props;
         return <div className={ classes.root }>
             <Dropzone ref={ this.dropZone }
                       accept={ acceptedFileTypes }
                       className={ classes.dropZone }
                       activeClassName={ classes.dropZoneActive }
                       onDrop={ this.onDrop }>
-                <h2 className={ classes.dropZoneHeader }>Drop files here to upload</h2>
-                <h3>or</h3>
+                <h2 className={ classes.dropZoneHeader }>{t("label.contentManager.fileUpload.dropMessage")}</h2>
+                <h3>{t("label.contentManager.fileUpload.or")}</h3>
             </Dropzone>
             <Button className={ classes.button }
-                    onClick={ () => this.dropZone.current.open() }>Select file from my computer</Button>
+                    onClick={ () => this.dropZone.current.open() }>{t("label.contentManager.fileUpload.selectMessage")}</Button>
         </div>
     }
 
@@ -68,4 +69,6 @@ UploadDropZone.propTypes = {
     acceptedFileTypes: PropTypes.array
 };
 
-export default withStyles(styles)(UploadDropZone);
+export default _.flowRight(
+    withStyles(styles),
+    translate())(UploadDropZone)

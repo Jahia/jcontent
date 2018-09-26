@@ -3,17 +3,15 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {ApolloConsumer} from "react-apollo";
 import { uploadFile, uploadImage, removeFile } from './gqlMutations';
-import { Mutation } from 'react-apollo';
 import { Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField } from "@material-ui/core";
 import { CheckCircle, Info,  FiberManualRecord, InsertDriveFile } from "@material-ui/icons";
 import {connect} from "react-redux";
-import UploadDrawer from './UploadDrawer';
-import { panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
+import { uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
 import { updateUpload, removeUpload, takeFromQueue } from './redux/actions';
-import UploadDropZone from './UploadDropZone';
-import mimetypes from 'mime-types';
 import {batchActions} from 'redux-batched-actions';
 import isImage from 'is-image';
+import {translate} from "react-i18next";
+import _ from 'lodash';
 
 const styles = theme => ({
     progressText: {
@@ -24,7 +22,10 @@ const styles = theme => ({
         justifyItems: "center"
     },
     fileNameText: {
-        maxWidth: 600
+        maxWidth: 600,
+        '& span' : {
+            color: "#555"
+        }
     },
     statusIcon: {
         marginRight: 10
@@ -43,7 +44,11 @@ const styles = theme => ({
     },
     renameField: {
         marginLeft: 5,
-        marginRight: 5
+        marginRight: 5,
+        width: 250
+    },
+    actionButton: {
+        color: "#555"
     }
 });
 
@@ -81,7 +86,7 @@ class UploadItem extends React.Component {
             client => {
                 if (this.client === null) this.client = client;
 
-                return <ListItem button className={classes.listItem}>
+                return <ListItem className={classes.listItem}>
                     { this.avatar() }
                     <ListItemText className={ classes.fileNameText } primary={ this.state.userChosenName ? this.state.userChosenName : file.name } />
                     <ListItemText className={ classes.fileNameText } primary={ this.statusText() } />
@@ -108,6 +113,7 @@ class UploadItem extends React.Component {
                             name="newName"
                             margin="normal"
                             variant="outlined"
+                            defaultValue={ file.name }
                             onKeyUp={ this.rename }
                         />
                     </Popover>
@@ -117,21 +123,21 @@ class UploadItem extends React.Component {
     }
 
     rename(e) {
-        const { file } = this.props;
-        //Note that this may have issues
-        this.setState({
-            userChosenName: file.name.replace(".", "-1.")
-        }, () => {
-            this.changeStatusToUploading()
-        })
-        // if (e.keyCode === 13) {
-        //     this.setState({
-        //         userChosenName: e.target.value,
-        //         anchorEl: null
-        //     }, () => {
-        //         this.changeStatusToUploading()
-        //     });
-        // }
+        // const { file } = this.props;
+        // //Note that this may have issues
+        // this.setState({
+        //     userChosenName: file.name.replace(".", "-1.")
+        // }, () => {
+        //     this.changeStatusToUploading()
+        // })
+        if (e.keyCode === 13) {
+            this.setState({
+                userChosenName: e.target.value,
+                anchorEl: null
+            }, () => {
+                this.changeStatusToUploading()
+            });
+        }
     }
 
     doUploadAndStatusUpdate() {
@@ -195,37 +201,37 @@ class UploadItem extends React.Component {
     }
 
     statusText() {
-        const { classes, status, error } = this.props;
+        const { classes, status, error, t } = this.props;
         let text;
 
         if (status === uploadStatuses.QUEUED) {
             text = <span className={ classes.progressText }>
                 <FiberManualRecord className={ classes.statusIcon }/>
-                Queued
+                {t("label.contentManager.fileUpload.queued")}
             </span>
         }
         else if (status === uploadStatuses.UPLOADED) {
             text = <span className={ classes.progressText }>
                 <CheckCircle className={ classes.statusIconGreen }/>
-                Uploaded
+                {t("label.contentManager.fileUpload.uploaded")}
             </span>
         }
         else if (status === uploadStatuses.HAS_ERROR && error === "FILE_EXISTS") {
             text = <span className={ classes.progressText }>
                 <Info className={ classes.statusIconRed }/>
-                File already exists
+                {t("label.contentManager.fileUpload.exists")}
             </span>
         }
         else if (status === uploadStatuses.HAS_ERROR) {
             text = <span className={ classes.progressText }>
                 <Info className={ classes.statusIconRed }/>
-                Could not upload
+                {t("label.contentManager.fileUpload.failed")}
             </span>
         }
         else if (status === uploadStatuses.UPLOADING) {
             text = <span className={ classes.progressText }>
                 <CircularProgress size={20} className={ classes.statusIconOrange }/>
-                Uploading ...
+                {t("label.contentManager.fileUpload.uploading")}
             </span>
         }
 
@@ -233,59 +239,65 @@ class UploadItem extends React.Component {
     }
 
     secondaryActionsList() {
-        const { status, error, removeFile, index, dispatch } = this.props;
+        const { status, error, removeFile, index, dispatch, t, classes } = this.props;
         const actions = [];
         if (status === uploadStatuses.QUEUED) {
             actions.push(
                 <Button key="dontupload"
+                        className={ classes.actionButton }
                         component={"a"}
                         onClick={() => {
                             removeFile(index);
                             dispatch(removeUpload(index));
                             this.props.updateUploadsStatus();
                         }} >
-                    Don't upload
+                    {t("label.contentManager.fileUpload.dontUpload")}
                 </Button>
             );
         }
         if (status === uploadStatuses.HAS_ERROR) {
             if (error === "FILE_EXISTS") {
                 actions.push(<Button key="rename"
+                                     className={ classes.actionButton }
                                      component={"a"}
-                                     // onClick={(e) => { this.showChangeNamePopover(e)}} >
-                                     onClick={(e) => { this.rename(e)}} >
-                        Automatically Rename
+                                        // onClick={(e) => { this.rename(e)}} >
+                                     onClick={(e) => { this.showChangeNamePopover(e)}} >
+                        {t("label.contentManager.fileUpload.rename")}
                     </Button>,
                     <Button key="overwrite"
+                            className={ classes.actionButton }
                             component={"a"}
                             onClick={ this.replaceFile } >
-                            Replace
+                        {t("label.contentManager.fileUpload.replace")}
                     </Button>,
                     <Button key="dontupload"
+                            className={ classes.actionButton }
                             component={"a"}
                             onClick={() => {
                                 removeFile(index);
                                 dispatch(removeUpload(index));
                             }} >
-                        Don't upload
+                        {t("label.contentManager.fileUpload.dontUpload")}
                     </Button>
                 )
             }
             else {
                 actions.push(<Button key="dontupload"
+                                     className={ classes.actionButton }
                                      component={"a"}
                                      onClick={() => {
                                          removeFile(index);
                                          dispatch(removeUpload(index));
                                      }} >
-                        Don't upload
+                        {t("label.contentManager.fileUpload.dontUpload")}
                     </Button>,
                     <Button key="retry"
+                            className={ classes.actionButton }
                             component={"a"}
                             onClick={() => {
                                 this.doUploadAndStatusUpdate()
                             }} >
-                        Retry
+                        {t("label.contentManager.fileUpload.retry")}
                     </Button>
                 )
             }
@@ -365,6 +377,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default withStyles(styles)(
-    connect(mapStateToProps, mapDispatchToProps)(UploadItem)
-);
+export default _.flowRight(
+    withStyles(styles),
+    translate(),
+    connect(mapStateToProps, mapDispatchToProps))(UploadItem);

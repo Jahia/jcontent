@@ -148,7 +148,24 @@
         }
       },
       "fileUpload": {
-          "uploadButtonLabel": "Upload file(s)"
+          "dropMessage": "Drop files here to upload",
+          "or": "or",
+          "selectMessage": "Select file from my computer",
+          "uploadButtonLabel": "Upload file(s)",
+          "successfulUploadMessage" : "Successfully uploaded {{number}} files",
+          "errorMessage": "There were problems uploading some files",
+          "errorActionMessage": "Please resolve the issue(s)",
+          "uploadingMessage": "Uploading ({{uploaded}} of {{total}} complete)",
+          "uploadingActionMessage": "There are error(s) which need your attention",
+          "queued": "Queued",
+          "uploading": "Uploading ...",
+          "uploaded": "Uploaded",
+          "exists": "File already exists",
+          "failed": "Could not upload file",
+          "rename": "Rename",
+          "replace": "Replace",
+          "dontUpload": "Don't upload",
+          "retry": "Retry"
       }
     },
     "ellipsis": "{{text}}..."

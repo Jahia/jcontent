@@ -197,6 +197,7 @@ class CMLeftNavigation extends React.Component {
         if (props.mode === "apps") {
             let actionPath = this.props.path.split("/");
             let actionKey = actionPath ? actionPath.shift() : "";
+            const menuId = actionsRegistry[actionKey].menuId;
             let actionContext = {
                 path: `/sites/${this.props.siteKey}`,
                 siteKey: this.props.siteKey,
@@ -204,9 +205,10 @@ class CMLeftNavigation extends React.Component {
                 actionPath: "/" + actionKey
             };
             this.state = {
+                openDrawerMenuId: menuId,
                 openDrawer: true,
                 drawerContent: {
-                    content: <CmLeftDrawerContent context={actionContext} menuId={actionsRegistry[actionKey].menuId} actionPath={actionPath} handleDrawerClose={this.handleDrawerClose}/>,
+                    content: <CmLeftDrawerContent context={actionContext} menuId={menuId} actionPath={actionPath} handleDrawerClose={this.handleDrawerClose}/>,
                     title: this.props.t(actionsRegistry[actionKey].labelKey)
                 },
             }
@@ -219,13 +221,13 @@ class CMLeftNavigation extends React.Component {
         }
     }
 
-    handleDrawerOpen = (drawerContent) => {
-        this.setState({openDrawer: true, drawerContent: drawerContent});
+    handleDrawerOpen = (drawerContent, menuId) => {
+        this.setState({openDrawerMenuId: menuId, openDrawer: true, drawerContent: drawerContent});
     };
 
     handleDrawerClose = () => {
         // never close on apps mode
-       this.setState({openDrawer: false, drawerContent: null});
+       this.setState({openDrawerMenuId: null, openDrawer: false, drawerContent: null});
     };
 
     render() {
@@ -245,6 +247,7 @@ class CMLeftNavigation extends React.Component {
                             <BurgerMenuButton/>
                         </ListItem>
                         <Actions menuId={"leftMenuActions"} context={actionContext}
+                                 openDrawerMenuId={this.state.openDrawerMenuId}
                                  drawerOpen={this.state.openDrawer}
                                  handleDrawerClose={this.handleDrawerClose.bind(this)}
                                  handleDrawer={this.state.openDrawer && mode !== "apps" ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}>

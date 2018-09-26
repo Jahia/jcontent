@@ -15,9 +15,6 @@ import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
 import Upload from './fileupload/upload';
 import {cmSetPreviewState, CM_PREVIEW_STATES} from "./redux/actions";
-
-
-//Files grid
 import FilesGrid from './filesGrid/FilesGrid';
 import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
 import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
@@ -130,9 +127,11 @@ class ContentLayout extends React.Component {
 
         const {showTree: showTree} = this.state;
         const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey, previewState} = this.props;
+        let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
+
         return <DxContext.Consumer>{dxContext => {
-            let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
             return <React.Fragment>
+
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
@@ -146,29 +145,26 @@ class ContentLayout extends React.Component {
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
                             {this.isBrowsing() && !this.isRootNode() &&
-                            <Actions menuId={"createMenu"} context={{path: path}}>
-                                {(props) => <CmButton {...props}><Add/></CmButton>}
-                            </Actions>
+                                <Actions menuId={"createMenu"} context={{path: path}}>
+                                    {(props) => <CmButton {...props}><Add/></CmButton>}
+                                </Actions>
                             }
                             {this.isBrowsing() &&
-                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleShowTree}>Show
-                                Tree</Button>
+                                <Button variant="text" className={classes.showTreeButton} onClick={this.handleShowTree}>Show Tree</Button>
                             }
                             {contentSource === "files" &&
-                            <FilesGridModeSelector showList={this.state.showList}
-                                                   onChange={() => this.setState({showList: !this.state.showList})}/>
+                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                             }
                             {contentSource === "files" &&
-                            <FilesGridSizeSelector initValue={4}
-                                                   onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                                <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
                             }
                         </Grid>
                     </Grid>
                 </Grid>
-                <React.Fragment>
-                    <Paper elevation={0} className={classes.paper}>
-                        <Grid container spacing={0}>
-                            {contentTreeConfigs && showTree &&
+
+                <Paper elevation={0} className={classes.paper}>
+                    <Grid container spacing={0}>
+                        {contentTreeConfigs && showTree &&
                             <Grid item xs={TREE_SIZE} className={classes.tree}>
                                 <ContentTrees
                                     contentTreeConfigs={contentTreeConfigs}
@@ -176,12 +172,12 @@ class ContentLayout extends React.Component {
                                     user={dxContext.userName}
                                 />
                             </Grid>
-                            }
-                            <ContentData contentSource={contentSource}
-                                         page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
-                                {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
-                                    console.log("return data", totalCount, contentSource);
-                                    return <React.Fragment><Grid item xs={computedTableSize}>
+                        }
+                        <ContentData contentSource={contentSource} page={this.state.page} rowsPerPage={this.state.rowsPerPage}>
+                            {({rows, totalCount, layoutQuery, layoutQueryParams}) => {
+                                console.log("return data", totalCount, contentSource);
+                                return <React.Fragment>
+                                    <Grid item xs={computedTableSize}>
                                         {contentSource === "files" && !this.state.showList
                                             ? <FilesGrid
                                                 size={valueToSizeTransformation(this.state.filesGridSizeValue)}
@@ -204,23 +200,25 @@ class ContentLayout extends React.Component {
                                             />
                                         }
                                     </Grid>
-                                        <PreviewDrawer open={previewState === CM_PREVIEW_STATES.SHOW}
-                                                       onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}>
-                                            {/*Always get row from query not from state to be up to date*/}
-                                            <ContentPreview
-                                                layoutQuery={layoutQuery}
-                                                layoutQueryParams={layoutQueryParams}
-                                                dxContext={dxContext}
-                                            />
-                                        </PreviewDrawer>
-                                    </React.Fragment>
-                                }}
-                            </ContentData>
-                        </Grid>
-                    </Paper>
+                                    <PreviewDrawer
+                                        open={previewState === CM_PREVIEW_STATES.SHOW}
+                                        onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
+                                    >
+                                        {/*Always get row from query not from state to be up to date*/}
+                                        <ContentPreview
+                                            layoutQuery={layoutQuery}
+                                            layoutQueryParams={layoutQueryParams}
+                                            dxContext={dxContext}
+                                        />
+                                     </PreviewDrawer>
+                                </React.Fragment>
+                            }}
+                        </ContentData>
+                    </Grid>
+                </Paper>
 
-                </React.Fragment>
                 <Upload/>
+
             </React.Fragment>
         }}</DxContext.Consumer>;
     }

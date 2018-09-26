@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.jahia.modules.contentmanager.utils.Utils;
 import org.jahia.osgi.BundleUtils;
 import org.jahia.services.SpringContextSingleton;
 import org.jahia.services.render.RenderContext;
@@ -34,11 +35,10 @@ public class TagFunctions {
     /**
      * Retrieves a list of namespaces (module names) that contain JavaScript locales.
      * 
-     * @param renderContext current render context
      * @return a string representation of an array with all i18n namespaces
      */
-    public static String getI18nNameSpaces(RenderContext renderContext) {
-        Collection<Bundle> bundles = JavascriptActionListRenderer.getBundlesWithActionListResources();
+    public static String getI18nNameSpaces() {
+        Collection<Bundle> bundles = Utils.getBundlesWithActionListResources();
         Set<String> namespaces = new LinkedHashSet<>();
         for (Bundle bundle : bundles) {
             if (bundle.getEntry("/javascript/locales") != null) {

@@ -25,7 +25,8 @@
       "saveAsWip": "Mark as work in progress",
       "editAction": "Edit",
       "error": {
-        "queryingContent": "Error querying content: {{details}}"
+        "queryingContent": "Error querying content: {{details}}",
+        "404": "The requested URL was not found on this server"
       },
       "tree": {
         "show": "Show Tree",

@@ -6,8 +6,16 @@ import {cmGoto} from "./redux/actions";
 import actionsRegistry from "./actionsRegistry";
 import {Query} from "react-apollo";
 import {ActionRequirementsQueryHandler} from "./gqlQueries";
+import {translate} from "react-i18next";
+import {withNotifications} from "@jahia/react-material/index";
 
 class IFrameLayout extends React.Component {
+
+    showError(errorKey, errorData) {
+        let { notificationContext, t } = this.props;
+        let message = errorData != null ? t(errorKey, errorData) : t(errorKey);
+        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+    }
 
     render() {
         const { actionPath, workspace, siteKey, lang, contextPath, redirectToBrowse } = this.props;
@@ -15,7 +23,7 @@ class IFrameLayout extends React.Component {
         const action = actionsRegistry[actionKey];
 
         if (!action || !action.iframeUrl) {
-            redirectToBrowse();
+            this.showError('label.contentManager.error.404');
             return null;
         }
 
@@ -27,9 +35,7 @@ class IFrameLayout extends React.Component {
             {({loading, error, data}) => {
 
                 if (error) {
-                    let message = t('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
-                    notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-                    redirectToBrowse();
+                    this.showError('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
                     return null;
                 }
 
@@ -41,7 +47,7 @@ class IFrameLayout extends React.Component {
                 const node = data.jcr.nodeByPath;
                 if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
                     (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
-                    redirectToBrowse();
+                    this.showError('label.contentManager.error.404');
                     return null;
                 }
 
@@ -73,10 +79,12 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    redirectToBrowse: () => dispatch(cmGoto({mode: 'browse', path: '/'}))
+    // do nothing
 });
 
 IFrameLayout = _.flowRight(
+    translate(),
+    withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(IFrameLayout);
 

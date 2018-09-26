@@ -35,7 +35,7 @@
         actions: {
         }
     };
-    contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces(renderContext)};
+    contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces()};
     window.addEventListener('unload', function(event) {
         window.top.DX && window.top.DX.showChrome();
     });

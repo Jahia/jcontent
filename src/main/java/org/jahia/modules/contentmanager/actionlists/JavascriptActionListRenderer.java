@@ -2,7 +2,7 @@ package org.jahia.modules.contentmanager.actionlists;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jahia.osgi.FrameworkService;
+import org.jahia.modules.contentmanager.utils.Utils;
 import org.jahia.services.render.RenderContext;
 import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
@@ -11,14 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class JavascriptActionListRenderer implements ActionListRenderer {
-
-    private static final String HEADER_ACTION_LIST_RESOURCES = "Jahia-ActionList-Resources";
 
     private static final Logger logger = LoggerFactory.getLogger(JavascriptActionListRenderer.class);
 
@@ -67,31 +63,15 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
         }
     }
 
-    /**
-     * Returns a collection of all active bundles, containing action list resources.
-     *
-     * @return a collection of all active bundles, containing action list resources; if no such bundles are found, returns an empty
-     *         collection
-     */
-    static Collection<Bundle> getBundlesWithActionListResources() {
-        List<Bundle> bundles = new LinkedList<>();
-        for (Bundle bundle : FrameworkService.getBundleContext().getBundles()) {
-            if (bundle.getState() == Bundle.ACTIVE && bundle.getHeaders().get(HEADER_ACTION_LIST_RESOURCES) != null) {
-                bundles.add(bundle);
-            }
-        }
-        return bundles;
-    }
-
     @Override
     public String renderActionList(RenderContext renderContext) {
 
         // here we must scan all the bundles to find all the Javascript files to include that will
         // build the action lists.
-        Collection<Bundle> bundles = getBundlesWithActionListResources();
+        Collection<Bundle> bundles = Utils.getBundlesWithActionListResources();
         Set<ActionListResource> actionListResourceList = new TreeSet<>();
         for (Bundle bundle : bundles) {
-            String actionListResources = bundle.getHeaders().get(HEADER_ACTION_LIST_RESOURCES);
+            String actionListResources = bundle.getHeaders().get(Utils.HEADER_ACTION_LIST_RESOURCES);
             if (StringUtils.isNotEmpty(actionListResources)) {
                 String[] actionListResourceArray = actionListResources.split(",");
                 for (String actionListResourceEntry : actionListResourceArray) {

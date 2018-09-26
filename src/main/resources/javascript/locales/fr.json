@@ -15,7 +15,8 @@
       "saveAsWip": "Marquer comme travail en cours",
       "editAction": "Editer",
       "error": {
-        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}"
+        "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}",
+        "404": "L'URL demandée n'a pas pu être trouvée sur ce serveur"
       },
       "tree": {
         "show": "Afficher l'arborescence",

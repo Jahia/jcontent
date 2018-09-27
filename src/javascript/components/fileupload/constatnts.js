@@ -19,3 +19,4 @@ export const uploadStatuses = {
 };
 
 export const NUMBER_OF_SIMULTANEOUS_UPLOADS = 1;
+export const RENAME_MODE = "MANUAL"; // AUTOMATIC or MANUAL

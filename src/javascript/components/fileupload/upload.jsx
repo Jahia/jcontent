@@ -368,6 +368,9 @@ Upload.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+    if (ownProps.statePartName) {
+        return state[ownProps.statePartName];
+    }
     return state.fileUpload
 };
 

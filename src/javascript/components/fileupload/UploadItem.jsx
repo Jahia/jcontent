@@ -6,7 +6,7 @@ import { uploadFile, uploadImage, removeFile } from './gqlMutations';
 import { Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField } from "@material-ui/core";
 import { CheckCircle, Info,  FiberManualRecord, InsertDriveFile } from "@material-ui/icons";
 import {connect} from "react-redux";
-import { uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS } from './constatnts';
+import { uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE } from './constatnts';
 import { updateUpload, removeUpload, takeFromQueue } from './redux/actions';
 import {batchActions} from 'redux-batched-actions';
 import isImage from 'is-image';
@@ -72,7 +72,6 @@ class UploadItem extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.status === uploadStatuses.UPLOADING && prevProps.status !== uploadStatuses.UPLOADING) {
-            console.log("Start uploading file");
             this.doUploadAndStatusUpdate();
             this.props.updateUploadsStatus()
         }
@@ -123,20 +122,24 @@ class UploadItem extends React.Component {
     }
 
     rename(e) {
-        // const { file } = this.props;
-        // //Note that this may have issues
-        // this.setState({
-        //     userChosenName: file.name.replace(".", "-1.")
-        // }, () => {
-        //     this.changeStatusToUploading()
-        // })
-        if (e.keyCode === 13) {
+        if (RENAME_MODE === "AUTOMATIC") {
+            const { file } = this.props;
+            //Note that this may have issues, better strategy would be to generate name first
             this.setState({
-                userChosenName: e.target.value,
-                anchorEl: null
+                userChosenName: file.name.replace(".", "-1.")
             }, () => {
-                this.changeStatusToUploading()
-            });
+                this.changeStatusToUploading();
+            })
+        }
+        else if (RENAME_MODE === "MANUAL") {
+            if (e.keyCode === 13) {
+                this.setState({
+                    userChosenName: e.target.value,
+                    anchorEl: null
+                }, () => {
+                    this.changeStatusToUploading();
+                });
+            }
         }
     }
 
@@ -257,13 +260,23 @@ class UploadItem extends React.Component {
         }
         if (status === uploadStatuses.HAS_ERROR) {
             if (error === "FILE_EXISTS") {
-                actions.push(<Button key="rename"
-                                     className={ classes.actionButton }
-                                     component={"a"}
-                                        // onClick={(e) => { this.rename(e)}} >
-                                     onClick={(e) => { this.showChangeNamePopover(e)}} >
+                if (RENAME_MODE === "AUTOMATIC") {
+                    actions.push(<Button key="rename"
+                                         className={ classes.actionButton }
+                                         component={"a"}
+                                         onClick={(e) => { this.rename(e)}} >
                         {t("label.contentManager.fileUpload.rename")}
-                    </Button>,
+                    </Button>);
+                }
+                else if (RENAME_MODE === "MANUAL") {
+                    actions.push(<Button key="rename"
+                                         className={ classes.actionButton }
+                                         component={"a"}
+                                         onClick={(e) => { this.showChangeNamePopover(e)}} >
+                        {t("label.contentManager.fileUpload.rename")}
+                    </Button>)
+                }
+                actions.push(
                     <Button key="overwrite"
                             className={ classes.actionButton }
                             component={"a"}

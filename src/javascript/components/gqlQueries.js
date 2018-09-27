@@ -291,18 +291,6 @@ const ContentTypeNamesQuery = gql `
     }
 `;
 
-const NodeDisplayNameQuery = gql `
-    query NodeDisplayNameQuery($path:String!, $language:String!) {
-        jcr {
-            nodeByPath(path: $path) {
-                displayName(language: $language)
-                ...NodeCacheRequiredFields
-            }
-        }
-    }
-    ${PredefinedFragments.nodeCacheRequiredFields.gql}
-`;
-
 const ActionRequirementsQuery = gql `
     query ActionRequirementsQuery($path:String!, $language:String!) {
         jcr {

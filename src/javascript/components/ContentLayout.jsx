@@ -21,6 +21,7 @@ import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
 import {ContentData} from "./ContentData";
 import CMTopBar from "./CMTopBar";
+import CmSearchControlBar from "./CmSearchControlBar";
 import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 
@@ -47,7 +48,7 @@ const styles = theme => ({
     breadCrumbs: {
         marginLeft: -24
     },
-    showTree: {
+    buttons: {
         textAlign: 'right',
     },
     showTreeButton: {
@@ -118,6 +119,11 @@ class ContentLayout extends React.Component {
         return (contentSource === "browsing" || contentSource === "files")
     };
 
+    isSearching() {
+        let {contentSource} = this.props;
+        return (contentSource === "search" || contentSource === "sql2Search")
+    };
+
     isRootNode() {
         let {path, siteKey} = this.props;
         return (path === ("/sites/" + siteKey))
@@ -136,27 +142,37 @@ class ContentLayout extends React.Component {
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
                     </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center"
-                          className={classes.blockCore}>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={classes.blockCore}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                            <div className={classes.breadCrumbs}>
-                                <ContentBreadcrumbs/>
-                            </div>
-                        </Grid>
-                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {this.isBrowsing() && !this.isRootNode() &&
-                                <Actions menuId={"createMenu"} context={{path: path}}>
-                                    {(props) => <CmButton {...props}><Add/></CmButton>}
-                                </Actions>
-                            }
                             {this.isBrowsing() &&
-                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleShowTree}>{t("label.contentManager.tree." + (showTree ? "hide" : "show"))}</Button>
+                                <div className={classes.breadCrumbs}>
+                                    <ContentBreadcrumbs/>
+                                </div>
+                            }
+                            {this.isSearching() &&
+                                <div className={classes.searchControl}>
+                                    <CmSearchControlBar/>
+                                </div>
+                            }
+                        </Grid>
+                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.buttons}>
+                            {this.isBrowsing() &&
+                                <React.Fragment>
+                                    {!this.isRootNode() &&
+                                        <Actions menuId={"createMenu"} context={{path: path}}>
+                                            {(props) => <CmButton {...props}><Add/></CmButton>}
+                                        </Actions>
+                                    }
+                                    <Button variant="text" className={classes.showTreeButton} onClick={this.handleShowTree}>
+                                        {t("label.contentManager.tree." + (showTree ? "hide" : "show"))}
+                                    </Button>
+                                </React.Fragment>
                             }
                             {contentSource === "files" &&
-                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
-                            }
-                            {contentSource === "files" &&
-                                <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                                <React.Fragment>
+                                    <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
+                                    <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                                </React.Fragment>
                             }
                         </Grid>
                     </Grid>
@@ -210,7 +226,7 @@ class ContentLayout extends React.Component {
                                             layoutQueryParams={layoutQueryParams}
                                             dxContext={dxContext}
                                         />
-                                     </PreviewDrawer>
+                                    </PreviewDrawer>
                                 </React.Fragment>
                             }}
                         </ContentData>

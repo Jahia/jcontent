@@ -78,30 +78,30 @@ class CmSearchBarNormal extends React.Component {
         }
     }
 
-    onContentTypeChange(path, params, contentType, onSearch) {
+    onContentTypeChange(path, params, contentType) {
         this.setState({
             contentType: contentType
         });
-        this.onSearch(path, params, contentType, onSearch);
+        this.onSearch(path, params, contentType);
     }
 
-    onSearchInputChange(path, params, onSearch) {
+    onSearchInputChange(path, params) {
         // Perform search only when the user has paused changing search terms for a second.
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
         this.timeout = setTimeout(function () {
-            this.onSearch(path, params, this.state.contentType, onSearch);
+            this.onSearch(path, params, this.state.contentType);
         }.bind(this), 1000);
     }
 
-    onSearchInputKeyDown(e, path, params, onSearch) {
+    onSearchInputKeyDown(e, path, params) {
         if (e.key === 'Enter') {
-            this.onSearch(path, params, this.state.contentType, onSearch);
+            this.onSearch(path, params, this.state.contentType);
         }
     }
 
-    onSearch(path, params, contentType, onSearch) {
+    onSearch(path, params, contentType) {
 
         let searchTerms = this.search.current ? this.search.current.value : params.searchTerms;
         if (!searchTerms) {
@@ -119,15 +119,15 @@ class CmSearchBarNormal extends React.Component {
             _.unset(params, 'searchContentType');
         }
 
-        onSearch("search", path, params);
+        this.props.search("search", path, params);
     }
 
     render() {
 
-        let {onSql2Click, classes, t, notificationContext, siteKey, lang, path, onSearch, params} = this.props;
+        let {onSql2Click, notificationContext, siteKey, lang, path, params, classes, t} = this.props;
 
         return <SearchBarLayout
-            onSearch={() => this.onSearch(path, params, this.state.contentType, onSearch)}
+            onSearch={() => this.onSearch(path, params, this.state.contentType)}
             rightFooter={
                 <React.Fragment>
                     {!params.searchTerms &&
@@ -145,7 +145,7 @@ class CmSearchBarNormal extends React.Component {
                     siteKey={siteKey}
                     displayLanguage={dxContext.uilang}
                     contentType={this.state.contentType}
-                    onSelectionChange={(contentType) => this.onContentTypeChange(path, params, contentType, onSearch)}
+                    onSelectionChange={(contentType) => this.onContentTypeChange(path, params, contentType)}
                 />
             }}</DxContext.Consumer>
             <Input
@@ -155,8 +155,8 @@ class CmSearchBarNormal extends React.Component {
                 placeholder={t('label.contentManager.search.normalPrompt')}
                 inputRef={this.search}
                 className={classes.inInput}
-                onChange={() => this.onSearchInputChange(path, params, onSearch)}
-                onKeyDown={(e) => this.onSearchInputKeyDown(e, path, params, onSearch)}
+                onChange={() => this.onSearchInputChange(path, params)}
+                onKeyDown={(e) => this.onSearchInputKeyDown(e, path, params)}
             />
         </SearchBarLayout>;
     }
@@ -170,7 +170,7 @@ class CmSearchBarSql2 extends React.Component {
         this.where = React.createRef();
     }
 
-    onSearch(path, params, onSearch) {
+    onSearch(path, params) {
 
         params.sql2SearchFrom = this.from.current.value;
         if (this.where.current.value == '') {
@@ -179,14 +179,14 @@ class CmSearchBarSql2 extends React.Component {
             params.sql2SearchWhere = this.where.current.value;
         }
 
-        onSearch("sql2Search", path, params);
+        this.props.search("sql2Search", path, params);
     }
 
     render() {
 
-        let {onNormalClick, classes, t, onSearch, path, params} = this.props;
+        let {onNormalClick, path, params, classes, t} = this.props;
 
-        return <SearchBarLayout onSearch={() => this.onSearch(path, params, onSearch)}
+        return <SearchBarLayout onSearch={() => this.onSearch(path, params)}
             leftFooter={<DxContext.Consumer>{(dxContext) => {
                 return <Trans
                     i18nKey={'label.contentManager.search.sql2Prompt'}
@@ -210,7 +210,7 @@ class CmSearchBarSql2 extends React.Component {
                     size={15}
                     defaultValue={params.sql2SearchFrom}
                     inputRef={this.from}
-                    onSearch={() => this.onSearch(path, params, onSearch)}
+                    onSearch={() => this.onSearch(path, params)}
                     cmRole={'sql2search-input-from'}
                 />
                 ] WHERE ISDESCENDANTNODE('{path}') AND (
@@ -219,7 +219,7 @@ class CmSearchBarSql2 extends React.Component {
                     className={classes.inInput}
                     defaultValue={params.sql2SearchWhere}
                     inputRef={this.where}
-                    onSearch={() => this.onSearch(path, params, onSearch)}
+                    onSearch={() => this.onSearch(path, params)}
                     cmRole={'sql2search-input-where'}
                 />
                 )
@@ -316,7 +316,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         setSearchMode: (searchMode) => dispatch(cmSetSearchMode(searchMode)),
-        onSearch: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
+        search: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
     };
 }
 

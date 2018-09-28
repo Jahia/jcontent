@@ -63,8 +63,8 @@ class CmSearchBar extends React.Component {
         this.onNormalClick = this.onNormalClick.bind(this);
 
         let {params} = props;
-        this.normal = <CmSearchBarNormal contentType={params.searchContentType} onSql2Click={this.onSql2Click} onClear={this.onClear}/>;
-        this.sql2 = <CmSearchBarSql2 onNormalClick={this.onNormalClick} onClear={this.onClear}/>;
+        this.normal = <CmSearchBarNormal contentType={params.searchContentType} onSql2Click={this.onSql2Click}/>;
+        this.sql2 = <CmSearchBarSql2 onNormalClick={this.onNormalClick}/>;
         this.state = {
             current: (params.sql2SearchFrom == null ? this.normal : this.sql2)
         };
@@ -146,36 +146,14 @@ class CmSearchBarNormal extends React.Component {
         onSearch("search", path, params);
     }
 
-    onClear(params, onClear) {
-
-        this.setState({
-            contentType: null
-        });
-        this.search.current.value = '';
-
-        _.unset(params, 'searchContentType');
-        _.unset(params, 'searchTerms');
-
-        onClear(params);
-    }
-
     render() {
 
-        let {onSql2Click, classes, t, notificationContext, siteKey, lang, path, onSearch, onClear, params} = this.props;
+        let {onSql2Click, classes, t, notificationContext, siteKey, lang, path, onSearch, params} = this.props;
 
         return <SearchBarLayout
             onSearch={() => this.onSearch(path, params, this.state.contentType, onSearch)}
             rightFooter={
                 <React.Fragment>
-                    {(params.searchTerms != null) &&
-                        <ActionButton
-                            label={'label.contentManager.search.clear'}
-                            variant={'contained'}
-                            onClick={() => this.onClear(params, onClear)}
-                            className={classes.advanced}
-                            cmRole={'search-clear'}
-                        />
-                    }
                     {(params.searchTerms == null) &&
                         <ActionButton
                             label={'label.contentManager.search.sql2'}
@@ -228,19 +206,9 @@ class CmSearchBarSql2 extends React.Component {
         onSearch("sql2Search", path, params);
     }
 
-    onClear(params, onClear) {
-
-        this.from.current.value = '';
-        this.where.current.value = '';
-
-        params.sql2SearchFrom = '';
-        _.unset(params, 'sql2SearchWhere');
-        onClear(params);
-    }
-
     render() {
 
-        let {onNormalClick, classes, t, onSearch, onClear, path, params} = this.props;
+        let {onNormalClick, classes, t, onSearch, path, params} = this.props;
 
         return <SearchBarLayout onSearch={() => this.onSearch(path, params, onSearch)}
             leftFooter={<DxContext.Consumer>{(dxContext) => {
@@ -250,14 +218,6 @@ class CmSearchBarSql2 extends React.Component {
                 />;
             }}</DxContext.Consumer>}
             rightFooter={<React.Fragment>
-                {(params.sql2SearchFrom != null && params.sql2SearchFrom.length > 0) &&
-                    <ActionButton
-                        label={'label.contentManager.search.clear'}
-                        variant={'contained'}
-                        onClick={() => this.onClear(params, onClear)}
-                        cmRole={'search-clear'}
-                    />
-                }
                 {(params.sql2SearchFrom == null || params.sql2SearchFrom.length === 0) &&
                     <ActionButton
                         label={'label.contentManager.search.normal'}
@@ -378,8 +338,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onSearch: (mode, path, params) => dispatch(cmGoto({mode, path, params})),
-        onClear: (params) => dispatch(cmGoto({"mode": "browse", params}))
+        onSearch: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
     }
 }
 

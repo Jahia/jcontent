@@ -132,7 +132,7 @@ class ContentLayout extends React.Component {
     render() {
 
         const {showTree: showTree} = this.state;
-        const {contentSource, contentTreeConfigs, mode, selection, classes, path, siteKey, previewState, t} = this.props;
+        const {contentSource, contentTreeConfigs, mode, selection, path, siteKey, previewState, params, clearSearch, classes, t} = this.props;
         let computedTableSize = GRID_SIZE - (this.isBrowsing() && showTree ? TREE_SIZE : 0);
 
         return <DxContext.Consumer>{dxContext => {
@@ -173,6 +173,11 @@ class ContentLayout extends React.Component {
                                     <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                                     <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
                                 </React.Fragment>
+                            }
+                            {this.isSearching() &&
+                                <Button variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
+                                    {t("label.contentManager.search.clear")}
+                                </Button>
                             }
                         </Grid>
                     </Grid>
@@ -245,13 +250,21 @@ const mapStateToProps = (state, ownProps) => {
         siteKey: state.site,
         path: state.path,
         selection: state.selection,
-        previewState: state.previewState
+        previewState: state.previewState,
+        params: state.params
     }
 };
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto(path, params)),
-    setPreviewState: (state) => {
-        dispatch(cmSetPreviewState(state));
+    setPreviewState: (state) => dispatch(cmSetPreviewState(state)),
+    clearSearch: (params) => {
+        params = _.clone(params);
+        _.unset(params, "searchContentType");
+        _.unset(params, "searchTerms");
+        _.unset(params, "sql2SearchFrom");
+        _.unset(params, "sql2SearchWhere");
+        dispatch(cmGoto({mode: "browse", params: params}))
     }
 });
 

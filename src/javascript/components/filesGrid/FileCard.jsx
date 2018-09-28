@@ -8,10 +8,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import {Visibility} from "@material-ui/icons";
+import {Visibility, Autorenew} from "@material-ui/icons";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
+import Actions from "../Actions";
+import CmIconButton from "../renderAction/CmIconButton";
 
 import { fileIcon, isImage } from './filesGridUtils';
 import {cmSetSelection} from "../redux/actions";
@@ -82,9 +84,10 @@ const styles = theme => ({
     },
     visibilityButton: {
         position:"absolute",
-        top: "0",
-        right: "0",
+        top: "11",
+        right: "10",
         color: "#fff",
+        padding: 0,
         '&:hover': {
             backgroundColor: "transparent"
         },
@@ -92,7 +95,40 @@ const styles = theme => ({
             width:"18px",
             height:"18px"
         }
+    },
+    publishButton: {
+        position:"absolute",
+        top: "12",
+        right: "35",
+        color: "#fff",
+        '&:hover': {
+            backgroundColor: "transparent"
+        },
+        '&:active': {
+            backgroundColor: "transparent"
+        },
+        '& svg': {
+            width:"18px",
+            height:"18px"
+        }
+    },
+    publishButtonAlternate: {
+        position:"absolute",
+        top: "30",
+        right: "10",
+        color: "#fff",
+        '&:hover': {
+            backgroundColor: "transparent"
+        },
+        '&:active': {
+            backgroundColor: "transparent"
+        },
+        '& svg': {
+            width:"18px",
+            height:"18px"
+        }
     }
+
 });
 
 const PUBLICATION_INFO_WIDTH_LARGE = 400;
@@ -148,6 +184,7 @@ class FileCard extends Component {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -178,6 +215,7 @@ class FileCard extends Component {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -206,6 +244,7 @@ class FileCard extends Component {
             <div className={classes.verticalDetails} style={{ flex: 1.5 }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}>
+                    {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -225,6 +264,7 @@ class FileCard extends Component {
             }
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -253,6 +293,7 @@ class FileCard extends Component {
             }
             <div className={classes.details}>
                 <CardContent className={classes.content}>
+                    {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -280,6 +321,7 @@ class FileCard extends Component {
             <div className={classes.verticalDetails} style={{ flex: 2 }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}>
+                    {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
@@ -308,6 +350,24 @@ class FileCard extends Component {
                                       className={classes.visibilityButton}>
             <Visibility/>
         </IconButton> : null;
+    }
+    displayPublicationAction(publishButtonClass) {
+        let {classes, node, isHovered} = this.props;
+        return isHovered ? <Actions menuId={"thumbnailPublishMenu"} context={{
+            uuid: node.uuid,
+            path: node.path,
+            displayName: node.name,
+            nodeName: node.nodeName
+        }}>
+            {(props) => {
+                return <CmIconButton
+                    className={publishButtonClass ? publishButtonClass : classes.publishButton} {...props}
+                    disableRipple={true}
+                    cmRole={"file-grid-thumbnail-button-publish"}>
+                    <Autorenew/>
+                </CmIconButton>
+            }}
+        </Actions>: null;
     }
 }
 

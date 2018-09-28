@@ -132,7 +132,7 @@ let defaultActions = {
     publishMenu: {
         component: "menuAction",
         menuId: "publishMenu",
-        target: ["editPreviewBar", "tablePublishMenu"],
+        target: ["editPreviewBar", "tablePublishMenu", "thumbnailPublishMenu"],
         labelKey: "label.contentManager.contentPreview.publishMenu"
     },
     publishInAllLanguages: {

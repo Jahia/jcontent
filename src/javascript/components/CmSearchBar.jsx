@@ -7,7 +7,7 @@ import {compose} from "react-apollo/index";
 import {DxContext} from "./DxContext";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import connect from "react-redux/es/connect/connect";
-import {cmGoto} from "./redux/actions";
+import {cmGoto, cmSetSearchMode} from "./redux/actions";
 
 const styles = theme => ({
     sql2Form: {
@@ -48,45 +48,21 @@ const styles = theme => ({
     },
     inInput: {
         flexGrow: 10
-    },
-    advanced: {
     }
 });
 
 class CmSearchBar extends React.Component {
 
-    constructor(props) {
-
-        super(props);
-
-        this.onSql2Click = this.onSql2Click.bind(this);
-        this.onNormalClick = this.onNormalClick.bind(this);
-
-        let {params} = props;
-        this.normal = <CmSearchBarNormal contentType={params.searchContentType} onSql2Click={this.onSql2Click}/>;
-        this.sql2 = <CmSearchBarSql2 onNormalClick={this.onNormalClick}/>;
-        this.state = {
-            current: (params.sql2SearchFrom == null ? this.normal : this.sql2)
-        };
-    }
-
-    onSql2Click() {
-        this.setState({
-            current: this.sql2
-        });
-    }
-
-    onNormalClick() {
-        this.setState({
-            current: this.normal
-        });
-    }
-
     render() {
-        const {classes} = this.props;
+        const {params, searchMode, setSearchMode, classes} = this.props;
         return (
             <div className={classes.topBar}>
-                {this.state.current}
+                {(searchMode === 'normal') &&
+                    <CmSearchBarNormal contentType={params.searchContentType} onSql2Click={() => setSearchMode('sql2')}/>
+                }
+                {(searchMode === 'sql2') &&
+                    <CmSearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>
+                }
             </div>
         )
     }
@@ -154,7 +130,7 @@ class CmSearchBarNormal extends React.Component {
             onSearch={() => this.onSearch(path, params, this.state.contentType, onSearch)}
             rightFooter={
                 <React.Fragment>
-                    {(params.searchTerms == null) &&
+                    {!params.searchTerms &&
                         <ActionButton
                             label={'label.contentManager.search.sql2'}
                             onClick={onSql2Click}
@@ -218,7 +194,7 @@ class CmSearchBarSql2 extends React.Component {
                 />;
             }}</DxContext.Consumer>}
             rightFooter={<React.Fragment>
-                {(params.sql2SearchFrom == null || params.sql2SearchFrom.length === 0) &&
+                {!params.sql2SearchFrom &&
                     <ActionButton
                         label={'label.contentManager.search.normal'}
                         onClick={onNormalClick}
@@ -333,13 +309,15 @@ const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
     lang: state.language,
     path: state.path,
+    searchMode: state.searchMode,
     params: state.params
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        setSearchMode: (searchMode) => dispatch(cmSetSearchMode(searchMode)),
         onSearch: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
-    }
+    };
 }
 
 CmSearchBarNormal = compose(

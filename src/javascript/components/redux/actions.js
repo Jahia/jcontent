@@ -3,6 +3,7 @@ const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
 const CM_SET_SELECTION = 'CM_SET_SELECTION';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
+const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
 
 const CM_PREVIEW_STATES = {"HIDE": 0, "SHOW": 1};
 
@@ -79,6 +80,13 @@ function cmSetPreviewState(state) {
     }
 }
 
+function cmSetSearchMode(searchMode) {
+    return {
+        type: CM_SET_SEARCH_MODE,
+        searchMode: searchMode
+    }
+}
+
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
@@ -86,6 +94,7 @@ export {
     CM_SET_PREVIEW,
     CM_SET_OPEN_PATHS,
     CM_PREVIEW_STATES,
+    CM_SET_SEARCH_MODE,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -98,5 +107,6 @@ export {
     cmSetPreviewModes,
     cmOpenPaths,
     cmClosePaths,
-    cmSetPreviewState
+    cmSetPreviewState,
+    cmSetSearchMode
 };

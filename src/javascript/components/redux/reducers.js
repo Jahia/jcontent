@@ -1,4 +1,4 @@
-import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS, CM_PREVIEW_STATES} from "./actions";
+import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS, CM_PREVIEW_STATES, CM_SET_SEARCH_MODE} from "./actions";
 import * as _ from 'lodash';
 import {extractPaths} from "../utils.js";
 
@@ -98,4 +98,12 @@ let previewStateReducer = (state = CM_PREVIEW_STATES.HIDE, action) => {
     }
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer};
+let searchModeReducer = (params) => (state = (params.sql2SearchFrom ? 'sql2' : 'normal'), action) => {
+    if (action.type === CM_SET_SEARCH_MODE) {
+        return action.searchMode;
+    } else {
+        return state;
+    }
+};
+
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer, searchModeReducer};

@@ -54,11 +54,11 @@ const styles = theme => ({
 class CmSearchBar extends React.Component {
 
     render() {
-        const {params, searchMode, setSearchMode, classes} = this.props;
+        const {searchMode, setSearchMode, classes} = this.props;
         return (
             <div className={classes.topBar}>
                 {(searchMode === 'normal') &&
-                    <CmSearchBarNormal contentType={params.searchContentType} onSql2Click={() => setSearchMode('sql2')}/>
+                    <CmSearchBarNormal onSql2Click={() => setSearchMode('sql2')}/>
                 }
                 {(searchMode === 'sql2') &&
                     <CmSearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>
@@ -73,8 +73,9 @@ class CmSearchBarNormal extends React.Component {
     constructor(props) {
         super(props);
         this.search = React.createRef();
+        let {params} = this.props;
         this.state = {
-            contentType: (props.contentType !== undefined ? props.contentType : null)
+            contentType: (params.searchContentType !== undefined ? params.searchContentType : null)
         }
     }
 

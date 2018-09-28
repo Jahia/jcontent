@@ -117,10 +117,10 @@
       "search": {
         "normalPrompt": "What are you looking for?",
         "sql2Prompt": "You are using SQL queries. Please visit the <0>Academy</0> for more info.",
-        "underneathNode": "Searching under {{path}}",
-        "searchEverywhere": "Search everywhere",
         "normal": "Basic",
         "sql2": "Advanced",
+        "searchPath": "Searching under <0>{{path}}</0>",
+        "searchEverywhere": "Search everywhere",
         "clear": "Clear"
       },
       "showCurrentPath": "Show current path",

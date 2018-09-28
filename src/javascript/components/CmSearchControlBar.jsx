@@ -1,14 +1,17 @@
 import React from 'react';
-import {translate} from "react-i18next";
+import {translate, Trans} from "react-i18next";
 import {connect} from "react-redux";
 import {cmSetPath} from "./redux/actions";
 import {Button, withStyles} from "@material-ui/core";
 
 const styles = theme => ({
-    info: {
+    infoSearchPath: {
         color: theme.palette.text.primary,
-        marginLeft: -3 * theme.spacing.unit,
+        marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit
+    },
+    infoSearchPathValue: {
+        color: "red"
     }
 });
 
@@ -20,8 +23,12 @@ class CmSearchControlBar extends React.Component {
         let siteRootPath = "/sites/" + siteKey;
 
         return <div>
-            <span className={classes.info}>
-                {t("label.contentManager.search.underneathNode", {path: path})}
+            <span className={classes.infoSearchPath}>
+                <Trans
+                    i18nKey={"label.contentManager.search.searchPath"}
+                    values={{path: path}}
+                    components={[<span className={classes.infoSearchPathValue}>univers</span>]}
+                />
             </span>
             {(path != siteRootPath) &&
                 <Button variant={"contained"} size={"small"} onClick={() => setPath(siteRootPath)}>

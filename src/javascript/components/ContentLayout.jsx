@@ -45,6 +45,11 @@ const styles = theme => ({
         marginTop: -28,
         marginBottom: -2,
     },
+    blockCoreSearch: {
+        marginTop: -28,
+        marginBottom: -2,
+        backgroundColor: "orange"
+    },
     breadCrumbs: {
         marginLeft: -24
     },
@@ -142,7 +147,7 @@ class ContentLayout extends React.Component {
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
                     </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={classes.blockCore}>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             {this.isBrowsing() &&
                                 <div className={classes.breadCrumbs}>

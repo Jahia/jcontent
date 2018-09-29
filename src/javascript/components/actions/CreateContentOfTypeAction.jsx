@@ -12,8 +12,7 @@ class CreateContentOfTypeAction extends React.Component {
 
         let {contentType, context, call, children, notificationContext, t, ...rest} = this.props;
 
-        let childNodeTypeNames = _.map(context.node.allowedChildNodeTypes, nodeType => nodeType.name);
-        if (!_.includes(childNodeTypeNames, contentType)) {
+        if (_.isEmpty(context.node.allowedChildNodeTypes)) {
             return null;
         }
 

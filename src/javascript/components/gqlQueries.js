@@ -308,16 +308,30 @@ const ActionRequirementsQuery = gql `
 
 const ActionRequirementsFragments = {
     childNodeTypeInfo: {
+        variables: {
+            filteredType: "String!"
+        },
         applyFor: "requirements",
         gql: gql `fragment ProvideTypes on JCRNode {
-            allowedChildNodeTypes {
+            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
                 name
-                supertypes {
+                supertypes(fieldFilter: {filters: [{fieldName: "name", value: $filteredType}]}) {
                     name
                 }
             }
             contributeTypes: property(name: "j:contributeTypes") {
                 values
+            }
+        }`
+    },
+    allowedChildNodeTypeInfo: {
+        variables: {
+            filteredType: "String!"
+        },
+        applyFor: "requirements",
+        gql: gql `fragment AllowedChildNodeType on JCRNode {
+            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", evaluation: EQUAL, value: $filteredType}]}) {
+                name
             }
         }`
     },
@@ -402,15 +416,13 @@ class ActionRequirementsQueryHandler {
         if (!_.isEmpty(action.requireModuleInstalledOnSite)) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteInstalledModules);
         }
-
-        // Assume that child node type info is needed if the action has a content type property configured.
-        let keys = _.keysIn(action);
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            if (/.*[cC]ontentType/.test(key)) {
-                this.requirementsFragments.push(ActionRequirementsFragments.childNodeTypeInfo);
-                break;
-            }
+        if (!_.isEmpty(action.contentType)) {
+            this.requirementsFragments.push(ActionRequirementsFragments.allowedChildNodeTypeInfo);
+            this.variables.filteredType = action.contentType;
+        }
+        if (!_.isEmpty(action.baseContentType)) {
+            this.requirementsFragments.push(ActionRequirementsFragments.childNodeTypeInfo);
+            this.variables.filteredType = action.baseContentType;
         }
     }
 

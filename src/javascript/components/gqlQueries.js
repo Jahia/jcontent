@@ -445,7 +445,6 @@ export {
     SiteContentTypesQuery,
     ContentTypesQuery,
     ContentTypeNamesQuery,
-    NodeDisplayNameQuery,
     GetNodeAndChildrenByPathQuery,
     ActionRequirementsQueryHandler
 };

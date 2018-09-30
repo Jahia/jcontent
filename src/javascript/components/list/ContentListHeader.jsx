@@ -1,7 +1,8 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, TableSortLabel } from "@material-ui/core";
+import { TableHead, TableRow, TableCell, TableSortLabel, withStyles } from "@material-ui/core";
 import {translate} from "react-i18next";
 import PropTypes from 'prop-types';
+import {compose} from "react-apollo/index";
 
 class ContentListHeader extends React.Component {
 
@@ -11,15 +12,16 @@ class ContentListHeader extends React.Component {
 
     render() {
 
-        const { order, orderBy, columnData, t} = this.props;
+        const { order, orderBy, columnData, t, classes} = this.props;
         return (
-            <TableHead>
-                <TableRow>
-                    <TableCell/>
+            <TableHead className={classes.head}>
+                <TableRow className={classes.row}>
+                    <TableCell />
                     {columnData.map(column => {
                         return (
                             <TableCell
                                 key={column.id}
+                                className={classes[column.id]}
                                 sortDirection={orderBy === column.id ? order : false}
                             >
                                 <TableSortLabel
@@ -43,6 +45,9 @@ ContentListHeader.propTypes = {
     orderBy: PropTypes.string.isRequired,
 };
 
-ContentListHeader = translate()(ContentListHeader);
+ContentListHeader = compose(
+    translate(),
+)(ContentListHeader);
+
 
 export default ContentListHeader;

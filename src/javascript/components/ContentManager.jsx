@@ -25,6 +25,7 @@ import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
 import getStore from './redux/getStore';
 import ListAction from "./actions/ListAction";
+import constants from "./constants";
 
 const actionComponents = {
     callAction: CallAction,
@@ -141,16 +142,16 @@ class ContentManager extends React.Component {
                                                             leftSide={<CMLeftNavigation/>}
                                                         >
                                                             <Route path={`${props.match.url}/browse`} render={props =>
-                                                                <ContentLayout mode={"browse"} contentSource="browsing" contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
+                                                                <ContentLayout contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                                <ContentLayout mode={"browse-files"} contentSource="files" contentTreeConfigs={[contentTreeConfigs["files"]]}/>
+                                                                <ContentLayout contentTreeConfigs={[contentTreeConfigs["files"]]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/search`} render={props =>
-                                                                <ContentLayout mode={"search"} contentSource="search"/>
+                                                                <ContentLayout />
                                                             }/>
                                                             <Route path={`${props.match.url}/sql2Search`} render={props =>
-                                                                <ContentLayout mode={"sql2Search"} contentSource="sql2Search"/>
+                                                                <ContentLayout />
                                                             }/>
                                                             <Route path={`${props.match.url}/apps`} render={props =>
                                                                 <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>

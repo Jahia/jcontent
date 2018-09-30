@@ -42,6 +42,7 @@ const styles = theme => ({
         height: '100%',
         display: 'flex',
     },
+    side: {zIndex: 1, position: "relative"},
     childItem: {
         background: '#007cb0',
         color: '#ffffff',
@@ -208,7 +209,8 @@ class CMLeftNavigation extends React.Component {
                 openDrawerMenuId: menuId,
                 openDrawer: true,
                 drawerContent: {
-                    content: <CmLeftDrawerContent context={actionContext} menuId={menuId} actionPath={actionPath} handleDrawerClose={this.handleDrawerClose}/>,
+                    content: <CmLeftDrawerContent context={actionContext} menuId={menuId} actionPath={actionPath}
+                                                  handleDrawerClose={this.handleDrawerClose}/>,
                     title: this.props.t(actionsRegistry[actionKey].labelKey)
                 },
             }
@@ -227,7 +229,7 @@ class CMLeftNavigation extends React.Component {
 
     handleDrawerClose = () => {
         // never close on apps mode
-       this.setState({openDrawerMenuId: null, openDrawer: false, drawerContent: null});
+        this.setState({openDrawerMenuId: null, openDrawer: false, drawerContent: null});
     };
 
     render() {
@@ -241,7 +243,7 @@ class CMLeftNavigation extends React.Component {
         // handle menu already opened
         return (
             <div className={this.state.openDrawer ? classes.root : classes.root1}>
-                <div style={{zIndex: 1}}>
+                <div className={classes.side}>
                     <List className={classes.list} component="nav">
                         <ListItem button className={classes.menuBurger}>
                             <BurgerMenuButton/>

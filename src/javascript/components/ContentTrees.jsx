@@ -13,18 +13,26 @@ const styles = theme => ({
     trees: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: '75vh',
-        maxHeight: '75vh'
+        maxWidth: '260px',
+        width: '260px',
+        height: 'calc(100vh - 140px)',
+        maxHeight:  'calc(100vh - 140px)'
+    },
+
+    list: {
+        maxWidth: '260px',
+        width: '260px',
+    },
+    disablePad: {
+        padding: '0!important'
     }
 });
 
 class ContentTree extends React.Component {
-
     constructor(props) {
         super(props);
         this.picker = React.createRef();
     }
-
     render() {
         let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes, user} = this.props;
         console.log("open tree", rootPath, path);
@@ -91,18 +99,11 @@ class ContentTrees extends React.Component {
                             <TableCell>
                                 <List>
                                     {
-                                        contentTreeConfigs.showAllContents ?
-                                            <ListItem>
-                                                <Button
-                                                    onClick={() => openPath(usedPath)}>{t("label.contentManager.showCurrentPath")}</Button>
-                                            </ListItem> : ""
-                                    }
-                                    {
                                         _.map(contentTreeConfigs, (contentTreeConfig) => {
 
                                             let componentRef = React.createRef();
                                             this.componentsRefs.push(componentRef);
-                                            return <ListItem data-cm-role={contentTreeConfig.key}
+                                            return <ListItem data-cm-role={contentTreeConfig.key} disableGutters
                                                              key={contentTreeConfig.key}>
                                                 <ContentTree
                                                     ref={componentRef}

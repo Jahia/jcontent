@@ -4,8 +4,7 @@ import {
     BrowsingQueryHandler,
     SearchQueryHandler,
     Sql2SearchQueryHandler,
-    FilesQueryHandler,
-    GetNodeAndChildrenByPathQuery
+    FilesQueryHandler
 } from "./gqlQueries";
 import * as _ from "lodash";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
@@ -13,12 +12,19 @@ import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregi
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmClosePaths} from "./redux/actions";
+import constants from "./constants";
 
-const contentQueryHandlerBySource = {
-    "browsing": new BrowsingQueryHandler(),
-    "files": new FilesQueryHandler(),
-    "search": new SearchQueryHandler(),
-    "sql2Search": new Sql2SearchQueryHandler()
+const contentQueryHandlerByMode = mode => {
+    switch (mode) {
+        case constants.mode.BROWSE:
+            return new BrowsingQueryHandler();
+        case constants.mode.FILES:
+            return new FilesQueryHandler();
+        case constants.mode.SEARCH:
+            return new SearchQueryHandler();
+        case constants.mode.SQL2SEARCH:
+            return new Sql2SearchQueryHandler();
+    }
 };
 
 class ContentData extends React.Component {
@@ -77,22 +83,10 @@ class ContentData extends React.Component {
     }
 
     render() {
-
-        const {contentSource, notificationContext, t, children, page, rowsPerPage, siteKey, lang, path, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere, setPath, uiLang} = this.props;
-        const params = {searchContentType: searchContentType, searchTerms: searchTerms, sql2SearchFrom: sql2SearchFrom, sql2SearchWhere: sql2SearchWhere};
-        const rootPath = `/sites/${siteKey}`;
-        let queryHandler = contentQueryHandlerBySource[contentSource];
-
-        const paginationState = {
-            page: page,
-            rowsPerPage: rowsPerPage
-        };
-
-        const layoutQuery = queryHandler.getQuery();
-        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath);
-
+        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams} = this.props;
         return <Query query={layoutQuery} variables={layoutQueryParams}>
             {({loading, error, data}) => {
+                let queryHandler = contentQueryHandlerByMode(mode);
 
                 if (error) {
                     console.log("Error when fetching data: " + error);
@@ -155,13 +149,7 @@ class ContentData extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
-    lang: state.language,
-    path: state.path,
-    searchTerms: state.params.searchTerms,
-    searchContentType: state.params.searchContentType,
-    sql2SearchFrom: state.params.sql2SearchFrom,
-    sql2SearchWhere: state.params.sql2SearchWhere,
-    uiLang: state.uiLang,
+    mode: state.mode,
     selection: state.selection,
     openPaths: state.openPaths
 });
@@ -179,4 +167,4 @@ ContentData = _.flowRight(
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentData);
 
-export {ContentData};
+export {ContentData, contentQueryHandlerByMode};

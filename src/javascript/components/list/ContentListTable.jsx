@@ -42,8 +42,8 @@ const styles = (theme) => ({
     },
     lastModified: {
         color: "#5E6565",
-        minWidth: "100px",
-        maxWidth: "100px"
+        minWidth: "140px",
+        maxWidth: "140px"
     },
     createdBy: {
         color: "#5E6565",
@@ -51,9 +51,12 @@ const styles = (theme) => ({
         maxWidth: "100px"
     },
     contentRow: {
-        height: 56,
+        height: '36px!important',
+        maxHeight: '36px!important',
         "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
-            width: 24
+            width: 28,
+            height: '36px!important',
+            maxHeight: '36px!important',
         }
     },
     publicationStatusContainer: {
@@ -63,16 +66,17 @@ const styles = (theme) => ({
         position: 'absolute',
         left: -23,
         top: 0,
-        paddingLeft: theme.spacing.unit / 2,
         width: 30,
         minWidth: 30,
-        height: '100%',
+        height: '30px!important',
+        maxHeight: '30px!important',
         overflow: 'hidden',
         justifyContent: 'flex-start',
         textTransform: 'none',
         opacity: 0,
         transition: ["opacity", "0.25s"],
         '&:hover': {
+            height: 350,
             opacity: 1,
             transition: ["opacity", "0.25s"],
             width: 'auto'
@@ -123,7 +127,6 @@ const styles = (theme) => ({
     },
     name: {
         color: theme.palette.primary.main,
-        width: "100%",
         maxWidth: "250px",
     },
     nodeTypeIcon: {
@@ -133,9 +136,8 @@ const styles = (theme) => ({
         position: 'relative',
         display: "flex",
         padding: 0,
-        borderBottom: "none",
-        height: "100%",
-        minHeight: 56 //same as row height
+        height: "37px!important",
+        minHeight: 37 //same as row height
     },
     actionCell: {
         color: "#5E6565",
@@ -155,8 +157,35 @@ const styles = (theme) => ({
     contentList: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: '75vh',
-        maxHeight: '75vh'
+        height: 'calc(100vh - 140px)',
+        maxHeight:  'calc(100vh - 140px)'
+    },
+    row : {
+        backgroundColor: '#efefef',
+        height: '36px!important',
+        maxHeight:  '36px!important',
+        '&:hover': {
+            height: '36px!important',
+            maxHeight:  '36px!important',
+            backgroundColor: '#dad9d9!important',
+        },
+    },
+    rowPair: {
+        backgroundColor: '#f5f5f5',
+        height: '30px!important',
+        maxHeight:  '30px!important',
+        '&:hover': {
+            height: '30px!important',
+            maxHeight:  '30px!important',
+            backgroundColor: '#dad9d9!important',
+        },
+    },
+    textOverflow1 :{
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        width: '100px',
+        display: 'block',
+        overflow: 'hidden'
     }
 });
 
@@ -243,20 +272,21 @@ class ContentListTable extends React.Component {
                         orderBy={orderBy}
                         onRequestSort={this.handleRequestSort}
                         columnData={columnData}
+                        classes={classes}
                     />
                     <DxContext.Consumer>
                         {dxContext => (
                             <TableBody className={classes.tableBody}>
-                                {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map(n => {
+                                {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;
                                     let renderWip = this.renderWip(n, dxContext);
                                     let renderLock = this.renderLock(n);
                                     let icon = this.addIconSuffix(n.icon);
-                                    return (
+                                        return (
                                         <TableRow
                                             hover={true}
-                                            className={classes.row}
+                                            className={(key % 2 === 0) ? classes.row : classes.rowPair}
                                             classes={{root: classes.contentRow}}
                                             key={n.uuid}
                                             onClick={() => onRowSelected([n])}
@@ -269,6 +299,7 @@ class ContentListTable extends React.Component {
                                                        data-cm-role="table-content-list-cell-publication">
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
+                                                {/*<PublicationStatus node={n} publicationInfoWidth={400}/>*/}
                                             {columnData.map(column => {
                                                 if (column.id === 'wip') {
                                                     return <TableCell className={classes.actionCell} key={column.id}
@@ -347,7 +378,7 @@ class ContentListTable extends React.Component {
                                                 } else {
                                                     return <TableCell key={column.id} padding={'none'}
                                                                       data-cm-role={'table-content-list-cell-' + column.id}>
-                                                        <Typography className={classes[column.id]}>
+                                                        <Typography className={classes[column.id] + ' ' + classes.textOverflow1}>
                                                             {n[column.id]}
                                                         </Typography>
                                                     </TableCell>;
@@ -358,7 +389,7 @@ class ContentListTable extends React.Component {
                                 })}
                                 {emptyRows > 0 &&
                                 <TableRow style={{height: 49 * emptyRows}}>
-                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
+                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'} />
                                 </TableRow>
                                 }
                             </TableBody>

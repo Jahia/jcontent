@@ -12,7 +12,13 @@ const constants = {
         "pages": "browse",
         "files": "browse-files"
     },
-    locationModeIndex: 2
+    locationModeIndex: 2,
+    mode: {
+        BROWSE: "browse",
+        FILES: "browse-files",
+        SEARCH: "search",
+        SQL2SEARCH: "sql2Search"
+    }
 };
 
 export default constants;

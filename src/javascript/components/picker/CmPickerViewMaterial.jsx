@@ -18,6 +18,7 @@ import defaultIconRenderer from './iconRenderer'
 let styles = (theme) => ({
     root: {
         position: "relative",
+        padding: '0!important',
         maxWidth: 260
     },
     loading: {
@@ -25,13 +26,13 @@ let styles = (theme) => ({
     },
     listItemSelected: {
         background: '#007cb0',
-        color: '#F5F5F5',
+        color: '#F5F5F5!important',
     },
     listItem: {
         fontFamily: '"Nunito sans", sans-serif',
         backgroundPosition: 'left 10px center',
         backgroundRepeat: 'no-repeat',
-        padding: '4px 3px 4px 0px',
+        padding: '0!important',
         fontWeight: 300,
         fontSize: '0.928rem',
         whiteSpace: 'nowrap',
@@ -40,7 +41,7 @@ let styles = (theme) => ({
         color: '#5E6565',
         fontWeight: '300',
         fontSize: '0.928rem',
-        padding: '0px',
+        padding: '0!important',
         '& h3': {
             fontSize: '0.875rem',
             color: '#5E6565',
@@ -48,12 +49,13 @@ let styles = (theme) => ({
         }
     },
     listItemToggle: {
-        marginRight: '10px',
+        marginRight: '0px',
         borderRadius: '0',
         width: 'auto',
     },
     listItemNodeTypeIcon: {
-        marginRight: '5px'
+        marginRight: '5px',
+        color: '#5c6164'
     },
     selectedText: {
         color: 'whitesmoke!important',
@@ -116,7 +118,7 @@ let CmPickerViewMaterial = function (props) {
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}
                             data-jrm-role={'picker-item'}
                         >
-                            <ListItemIcon
+                            <div
                                 className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
                                 style={{
                                     paddingLeft: (entry.depth + 1) * 20,
@@ -130,7 +132,7 @@ let CmPickerViewMaterial = function (props) {
                                         data-jrm-state={entry.open ? 'open' : 'closed'}>
                                     <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
-                            </ListItemIcon>
+                            </div>
 
                             <ListItemIcon
                                 className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
@@ -148,7 +150,6 @@ let CmPickerViewMaterial = function (props) {
                                 data-jrm-role={'picker-item-text'}
                             />
                             {action && <ListItemText>
-                                {console.log(action, entry)}
                                 {action.call(this, entry)}
                             </ListItemText>}
                         </ListItem>

@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Query } from 'react-apollo';
-import { translate } from 'react-i18next';
-import { withStyles, Paper, Grid, IconButton, Button } from "@material-ui/core";
-import { Fullscreen, FullscreenExit, Lock, LockOpen } from "@material-ui/icons";
-import { previewQuery } from "./gqlQueries";
+import {Query} from 'react-apollo';
+import {translate} from 'react-i18next';
+import {withStyles, Paper, Grid, IconButton, Button} from "@material-ui/core";
+import {Fullscreen, FullscreenExit, Lock, LockOpen} from "@material-ui/icons";
+import {previewQuery} from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
-import { Mutation } from 'react-apollo';
+import {Mutation} from 'react-apollo';
 import ShareMenu from './ShareMenu';
 import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
-import { lockNode, unlockNode } from "./gqlMutations";
+import {lockNode, unlockNode} from "./gqlMutations";
 import Tooltip from '@material-ui/core/Tooltip';
 import PDFViewer from "./filePreviewer/PDFViewer";
 import ImageViewer from "./filePreviewer/ImageViewer";
@@ -30,19 +30,23 @@ const styles = theme => ({
         transition: "width 0.3s ease-in 0s",
         width: 650,
     },
-    rootFullWidth : {
-        width : "99vw"
+    rootFullWidth: {
+        width: "99vw"
     },
     button: {
         margin: theme.spacing.unit
     },
     previewPaper: {
-        flex: 9
+        flex: 9,
+        position: "relative"
     },
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
-        overflow: "auto",
-        padding: theme.spacing.unit * 2
+        padding: theme.spacing.unit * 2,
+        overflowY: 'scroll',
+        overflowX: 'scroll',
+        height: 'calc(100vh - 300px)',
+        maxHeight: 'calc(100vh - 300px)',
     },
     previewContainerFullScreen: {
         top: "0!important",
@@ -54,12 +58,15 @@ const styles = theme => ({
         margin: theme.spacing.unit
     },
     controlsPaperEdit: {
+        bottom: 0,
         flex: 3,
         maxHeight: "200px",
         backgroundColor: "#555",
-        opacity: 0.9
+        opacity: 0.9,
+        position: "absolute"
     },
     controlsPaperLive: {
+        bottom: 0,
         flex: 3,
         maxHeight: "52px",
         backgroundColor: "#555",
@@ -71,7 +78,7 @@ const styles = theme => ({
         paddingBottom: '0px',
         minHeight: "100px"
     },
-    contentTitle : {
+    contentTitle: {
         fontWeight: 500,
         padding: theme.spacing.unit
     }
@@ -110,15 +117,15 @@ class ContentPreview extends React.Component {
     }
 
     mainComponent() {
-        const { selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
+        const {selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
         const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
         return <DxContext.Consumer>
             {dxContext => (
-                <div className={ rootClass } >
-                    <Paper className={ classes.previewPaper } elevation={ 0 }>
-                        <Query query={ previewQuery } errorPolicy={"all"} variables={ this.queryVariables(path) }>
+                <div className={rootClass}>
+                    <Paper className={classes.previewPaper} elevation={0}>
+                        <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path)}>
                             {({loading, error, data}) => {
                                 if (error) {
                                     //Ignore error that occurs if node is not published in live mode.
@@ -130,7 +137,9 @@ class ContentPreview extends React.Component {
                                         if (data.edit.nodeByPath.isPublished && data.edit.nodeByPath.isPublished.value === "true") {
                                             modes.push('live');
                                         }
-                                        let selectedMode = _.find(modes, (mode)=>{ return previewMode === mode}) !== undefined ? previewMode : 'edit';
+                                        let selectedMode = _.find(modes, (mode) => {
+                                            return previewMode === mode
+                                        }) !== undefined ? previewMode : 'edit';
                                         if (previewModes.length !== modes.length) {
                                             setPreviewMode(selectedMode);
                                             setPreviewModes(modes);
@@ -142,7 +151,8 @@ class ContentPreview extends React.Component {
                             }}
                         </Query>
                     </Paper>
-                    <Paper className={ previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit } elevation={ 0 }>
+                    <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
+                           elevation={0}>
                         {this.componentFooter()}
                     </Paper>
                 </div>
@@ -157,8 +167,12 @@ class ContentPreview extends React.Component {
         switch (previewMode) {
             case 'live':
                 return <Grid container spacing={0}>
-                    <Grid item xs={ 12 }>
-                        <Actions menuId={"livePreviewBar"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name}}>
+                    <Grid item xs={12}>
+                        <Actions menuId={"livePreviewBar"} context={{
+                            uuid: selectedItem.uuid,
+                            path: selectedItem.path,
+                            displayName: selectedItem.name
+                        }}>
                             {(props) =>
                                 <Button
                                     className={classes.unpublishButton}
@@ -174,26 +188,37 @@ class ContentPreview extends React.Component {
                 </Grid>;
             case 'edit':
                 return <Grid container spacing={0}>
-                    <Grid item xs={ 10 } className={ classes.titleBar }>
-                        <div className={ classes.contentTitle }>{ selectedItem.displayName ? selectedItem.displayName : selectedItem.name }</div>
+                    <Grid item xs={10} className={classes.titleBar}>
+                        <div
+                            className={classes.contentTitle}>{selectedItem.displayName ? selectedItem.displayName : selectedItem.name}</div>
                         <PublicationInfo/>
                     </Grid>
-                    <Grid item xs={ 2 } container={true} justify={"flex-end"}>
+                    <Grid item xs={2} container={true} justify={"flex-end"}>
                         <ShareMenu/>
-                        { this.screenModeButtons() }
+                        {this.screenModeButtons()}
                     </Grid>
                     <Grid item xs={12}>
                         {/*Element that will contain image controls if an image is the document being previewed*/}
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
-                    <Grid item xs={ 4 }>
-                        { selectionLocked ? this.unlock() : this.lock() }
+                    <Grid item xs={4}>
+                        {selectionLocked ? this.unlock() : this.lock()}
                     </Grid>
-                    <Grid item xs={ 8 } container={true} justify={"flex-end"}>
-                        <Actions menuId={"editPreviewBar"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
+                    <Grid item xs={8} container={true} justify={"flex-end"}>
+                        <Actions menuId={"editPreviewBar"} context={{
+                            uuid: selectedItem.uuid,
+                            path: selectedItem.path,
+                            displayName: selectedItem.name,
+                            nodeName: selectedItem.nodeName
+                        }}>
                             {(props) => <CmButton {...props}/>}
                         </Actions>
-                        <Actions menuId={"editAdditionalMenu"} context={{uuid: selectedItem.uuid, path: selectedItem.path, displayName: selectedItem.name, nodeName: selectedItem.nodeName}}>
+                        <Actions menuId={"editAdditionalMenu"} context={{
+                            uuid: selectedItem.uuid,
+                            path: selectedItem.path,
+                            displayName: selectedItem.name,
+                            nodeName: selectedItem.nodeName
+                        }}>
                             {(props) => <CmIconButton {...props}/>}
                         </Actions>
                     </Grid>
@@ -201,7 +226,7 @@ class ContentPreview extends React.Component {
         }
     };
     previewComponent(data) {
-        const { classes, t, dxContext } = this.props;
+        const {classes, t, dxContext} = this.props;
         let displayValue = data ? data.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
@@ -211,24 +236,25 @@ class ContentPreview extends React.Component {
             let file = dxContext.contextPath + '/files/default' + data.nodeByPath.path;
             if (isPDF(data.nodeByPath.path)) {
                 return <PDFViewer key={data.nodeByPath.uuid} file={file}/>;
-            } else if(isImage(data.nodeByPath.path)) {
+            } else if (isImage(data.nodeByPath.path)) {
                 return <ImageViewer key={data.nodeByPath.uuid}
-                             elementId={this.state.imageControlElementId}
-                             file={file}/>;
+                                    elementId={this.state.imageControlElementId}
+                                    file={file}/>;
             } else {
                 let type = getFileType(file);
                 return <DocumentViewer file={file} type={type}/>
             }
         } else {
-            return <div id="previewContent" className={ classes.previewContainer } dangerouslySetInnerHTML={{__html: displayValue}} />
+            return <div id="previewContent" className={classes.previewContainer}
+                        dangerouslySetInnerHTML={{__html: displayValue}}/>
         }
     }
 
     screenModeButtons() {
         if (this.state.fullScreen) {
-            return <IconButton onClick={ this.handleDialogState }><FullscreenExit/></IconButton>
+            return <IconButton onClick={this.handleDialogState}><FullscreenExit/></IconButton>
         }
-        return <IconButton onClick={ this.handleDialogState }><Fullscreen/></IconButton>
+        return <IconButton onClick={this.handleDialogState}><Fullscreen/></IconButton>
     }
 
     queryVariables(path) {
@@ -242,17 +268,17 @@ class ContentPreview extends React.Component {
     }
 
     lock() {
-        const { t, selection, layoutQuery, layoutQueryParams } = this.props;
+        const {t, selection, layoutQuery, layoutQueryParams} = this.props;
         return <Mutation
-            mutation={ lockNode }
+            mutation={lockNode}
             refetchQueries={[{
                 query: layoutQuery,
                 variables: layoutQueryParams
             }]}>
             {(lockNode) => {
-                return <Tooltip title={ t('label.contentManager.contentPreview.lockNode') } placement="top-start">
-                    <IconButton onClick={ () => {
-                        lockNode({ variables: { pathOrId: selection[0].path }});
+                return <Tooltip title={t('label.contentManager.contentPreview.lockNode')} placement="top-start">
+                    <IconButton onClick={() => {
+                        lockNode({variables: {pathOrId: selection[0].path}});
                         this.setState({
                             selectionLocked: true
                         });
@@ -263,17 +289,20 @@ class ContentPreview extends React.Component {
     }
 
     unlock() {
-        const { t, selection, layoutQuery, layoutQueryParams } = this.props;
+        const {t, selection, layoutQuery, layoutQueryParams} = this.props;
+
         return <Mutation
-            mutation={ unlockNode }
+            mutation={unlockNode}
             refetchQueries={[{
                 query: layoutQuery,
                 variables: layoutQueryParams
             }]}>
             {(unlockNode) => {
-                return <Tooltip title={ t('label.contentManager.contentPreview.nodeLockedBy', {username: selection[0].lockOwner}) } placement="top-start">
-                    <IconButton onClick={ () => {
-                        unlockNode({ variables: { pathOrId: selection[0].path }});
+                return <Tooltip
+                    title={t('label.contentManager.contentPreview.nodeLockedBy', {username: selection[0].lockOwner})}
+                    placement="top-start">
+                    <IconButton onClick={() => {
+                        unlockNode({variables: {pathOrId: selection[0].path}});
                         this.setState({
                             selectionLocked: false
                         });

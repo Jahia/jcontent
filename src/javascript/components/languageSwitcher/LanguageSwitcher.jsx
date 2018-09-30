@@ -97,7 +97,8 @@ class LanguageSwitcher extends React.Component {
             });
             if (languageExists === undefined) {
                 let language = _.find(languages, function (language) {
-                    return language.language === data.jcr.result.site.defaultLanguage;
+                    const result = data.jcr ? data.jcr.result : data.wsDefault.result;
+                    return language.language === result.site.defaultLanguage;
                 });
                 return language.language;
             }
@@ -108,8 +109,8 @@ class LanguageSwitcher extends React.Component {
 
     parseSiteLanguages(data) {
         let parsedSiteLanguages = [];
-        if (data && data.jcr != null) {
-            let siteLanguages = data.jcr.result.site.languages;
+        if (data && (data.jcr || data.wsDefault)) {
+            let siteLanguages = data.jcr ? data.jcr.result.site.languages :  data.wsDefault.result.site.languages;
             for (let i in siteLanguages) {
                 if (siteLanguages[i].activeInEdit) {
                     parsedSiteLanguages.push(siteLanguages[i]);
@@ -142,6 +143,7 @@ class LanguageSwitcher extends React.Component {
                     let languageExists = this.validateLanguageExists(displayableLanguages, data, lang);
                     if (languageExists === true) {
                         return <LanguageSwitcherDisplay
+                            lang={lang}
                             dark={dark}
                             languages={displayableLanguages}
                             onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
@@ -219,8 +221,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 LanguageSwitcherDisplay = _.flowRight(
-    withStyles(styles, {withTheme: true}),
-    connect(mapStateToProps, mapDispatchToProps)
+    withStyles(styles, {withTheme: true})
 )(LanguageSwitcherDisplay);
 
 LanguageSwitcher = _.flowRight(

@@ -127,7 +127,7 @@ class ContentPreview extends React.Component {
                                     if (!_.isEmpty(data)) {
                                         let modes = ['edit'];
                                         //Check if the node is published in live.
-                                        if (data.edit.nodeByPath.isPublished.value === "true") {
+                                        if (data.edit.nodeByPath.isPublished && data.edit.nodeByPath.isPublished.value === "true") {
                                             modes.push('live');
                                         }
                                         let selectedMode = _.find(modes, (mode)=>{ return previewMode === mode}) !== undefined ? previewMode : 'edit';

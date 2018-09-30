@@ -104,14 +104,13 @@ let styles = (theme) => ({
 });
 
 let CmPickerViewMaterial = function (props) {
-    let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, iconRenderer, loading} = props;
+    let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, action, iconRenderer, loading} = props;
     return (
         <div className={classes.root}>
             {loading && <div className={classes.loadingContainer}/>}
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
                 {pickerEntries.map((entry) =>
                     (<ListItem
-                            onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : onOpenItem(entry.path, !entry.open)}
                             key={entry.path}
                             divider={true}
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}
@@ -119,21 +118,24 @@ let CmPickerViewMaterial = function (props) {
                         >
                             <ListItemIcon
                                 className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
-                                style={{paddingLeft: (entry.depth + 1) * 20, opacity:(entry.openable && entry.hasChildren ? 1:0)}}>
+                                style={{
+                                    paddingLeft: (entry.depth + 1) * 20,
+                                    opacity: (entry.openable && entry.hasChildren ? 1 : 0)
+                                }}>
                                 <Button className={classes.buttonContainer} onClick={(event) => {
                                     onOpenItem(entry.path, !entry.open);
                                     event.stopPropagation()
                                 }} disabled={!(entry.openable && entry.hasChildren)}
                                         data-jrm-role={'picker-item-toggle'}
                                         data-jrm-state={entry.open ? 'open' : 'closed'}>
-                                        <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
+                                    <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </ListItemIcon>
 
-                            <ListItemIcon className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon} >
-                                { iconRenderer ? iconRenderer.call(this,entry) : defaultIconRenderer.call(this,entry) }
+                            <ListItemIcon
+                                className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
+                                {iconRenderer ? iconRenderer.call(this, entry) : defaultIconRenderer.call(this, entry)}
                             </ListItemIcon>
-
                             <ListItemText
                                 inset
                                 classes={entry.selected ? {
@@ -141,9 +143,14 @@ let CmPickerViewMaterial = function (props) {
                                     primary: classes.selectedText
                                 } : {root: classes.listItemLabel}}
                                 disableTypography={true}
+                                onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
                                 primary={textRenderer ? textRenderer.call(this, entry) : entry.name}
                                 data-jrm-role={'picker-item-text'}
                             />
+                            {action && <ListItemText>
+                                {console.log(action, entry)}
+                                {action.call(this, entry)}
+                            </ListItemText>}
                         </ListItem>
                     )
                 )}

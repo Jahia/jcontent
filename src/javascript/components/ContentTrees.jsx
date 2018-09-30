@@ -41,23 +41,24 @@ class ContentTree extends React.Component {
                 onOpenItem={(path, open) => handleOpen(path, open)}
                 onSelectItem={(path) => handleSelect(path)}
             >
-                {({handleSelect, ...others}) => <CmPickerViewMaterial {...others} textRenderer={(entry) => {
-                    return entry.depth > 0
-                        ? <React.Fragment>
-                            {entry.node.displayName}
-                            <Actions menuId={"contentTreeActions"} context={{
-                                uuid: entry.node.uuid,
-                                path: path,
-                                displayName: entry.node.displayName,
-                                lang: lang,
-                                user: user,
-                                nodeName: entry.node.nodeName
-                            }}>
-                                {(props) => <CmIconButton {...props} cmRole={'picker-item-menu'}/>}
-                            </Actions>
-                        </React.Fragment>
-                        : rootLabel;
-                }}/>}
+                {({handleSelect, ...others}) =>
+                    <CmPickerViewMaterial {...others}
+                                          textRenderer={(entry) => {
+                                              return entry.depth > 0 ? entry.node.displayName : rootLabel;
+                                          }}
+                                          action={(entry) =>
+                                              entry.depth > 0 ? <Actions menuId={"contentTreeActions"} context={{
+                                                  uuid: entry.node.uuid,
+                                                  path: entry.node.path,
+                                                  displayName: entry.node.displayName,
+                                                  lang: lang,
+                                                  user: user,
+                                                  nodeName: entry.node.nodeName
+                                              }}>
+                                                  {(props) => <CmIconButton {...props}
+                                                                            cmRole={'picker-item-menu'}/>}
+                                              </Actions> : null
+                                          }/>}
             </Picker>
         )
     }

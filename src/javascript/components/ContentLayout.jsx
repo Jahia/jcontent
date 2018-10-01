@@ -268,7 +268,7 @@ class ContentLayout extends React.Component {
                             </React.Fragment>
                             }
                             {this.isSearching() &&
-                            <Button variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
+                            <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
                                 {t("label.contentManager.search.clear")}
                             </Button>
                             }

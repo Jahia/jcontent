@@ -11,9 +11,9 @@ import {
     withStyles,
     withTheme
 } from '@material-ui/core';
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
+import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
-import defaultIconRenderer from './iconRenderer'
+import defaultIconRenderer from './iconRenderer';
 
 let styles = (theme) => ({
     root: {
@@ -26,7 +26,7 @@ let styles = (theme) => ({
     },
     listItemSelected: {
         background: '#007cb0',
-        color: '#F5F5F5!important',
+        color: '#F5F5F5!important'
     },
     listItem: {
         fontFamily: '"Nunito sans", sans-serif',
@@ -35,7 +35,7 @@ let styles = (theme) => ({
         padding: '0!important',
         fontWeight: 300,
         fontSize: '0.928rem',
-        whiteSpace: 'nowrap',
+        whiteSpace: 'nowrap'
     },
     listItemLabel: {
         color: '#5E6565',
@@ -45,20 +45,20 @@ let styles = (theme) => ({
         '& h3': {
             fontSize: '0.875rem',
             color: '#5E6565',
-            fontWeight: '100',
+            fontWeight: '100'
         }
     },
     listItemToggle: {
         marginRight: '0px',
         borderRadius: '0',
-        width: 'auto',
+        width: 'auto'
     },
     listItemNodeTypeIcon: {
         marginRight: '5px',
         color: '#5c6164'
     },
     selectedText: {
-        color: 'whitesmoke!important',
+        color: 'whitesmoke!important'
     },
     loadingContainer: {
         position: "absolute",
@@ -67,10 +67,10 @@ let styles = (theme) => ({
         zIndex: 999
     },
     toggleUnSelected: {
-        color: '#00a0e3',
+        color: '#00a0e3'
     },
     toggleSelected: {
-        color: 'whitesmoke',
+        color: 'whitesmoke'
     },
     buttonContainer: {
         padding: 0,
@@ -105,14 +105,20 @@ let styles = (theme) => ({
     }
 });
 
-let CmPickerViewMaterial = function (props) {
-    let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, action, iconRenderer, loading} = props;
-    return (
-        <div className={classes.root}>
-            {loading && <div className={classes.loadingContainer}/>}
+class CmPickerViewMaterial extends React.Component {
+
+    render() {
+
+        let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
+
+        return <div className={classes.root}>
+            {loading &&
+                <div className={classes.loadingContainer}/>
+            }
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
-                {pickerEntries.map((entry) =>
-                    (<ListItem
+                {
+                    pickerEntries.map((entry) =>
+                        <ListItem
                             key={entry.path}
                             divider={true}
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}
@@ -123,41 +129,40 @@ let CmPickerViewMaterial = function (props) {
                                 style={{
                                     paddingLeft: (entry.depth + 1) * 20,
                                     opacity: (entry.openable && entry.hasChildren ? 1 : 0)
-                                }}>
-                                <Button className={classes.buttonContainer} onClick={(event) => {
-                                    onOpenItem(entry.path, !entry.open);
-                                    event.stopPropagation()
-                                }} disabled={!(entry.openable && entry.hasChildren)}
-                                        data-jrm-role={'picker-item-toggle'}
-                                        data-jrm-state={entry.open ? 'open' : 'closed'}>
+                                }}
+                            >
+                                <Button
+                                    className={classes.buttonContainer}
+                                    onClick={(event) => {onOpenItem(entry.path, !entry.open); event.stopPropagation()}}
+                                    disabled={!(entry.openable && entry.hasChildren)}
+                                    data-jrm-role={'picker-item-toggle'}
+                                    data-jrm-state={entry.open ? 'open' : 'closed'}
+                                >
                                     <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </div>
-
-                            <ListItemIcon
-                                className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
+                            <ListItemIcon className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
                                 {iconRenderer ? iconRenderer.call(this, entry) : defaultIconRenderer.call(this, entry)}
                             </ListItemIcon>
                             <ListItemText
                                 inset
-                                classes={entry.selected ? {
-                                    root: classes.listItemLabel,
-                                    primary: classes.selectedText
-                                } : {root: classes.listItemLabel}}
+                                classes={entry.selected ? {root: classes.listItemLabel, primary: classes.selectedText} : {root: classes.listItemLabel}}
                                 disableTypography={true}
                                 onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
                                 primary={textRenderer ? textRenderer.call(this, entry) : entry.name}
                                 data-jrm-role={'picker-item-text'}
                             />
-                            {action && <ListItemText>
-                                {action.call(this, entry)}
-                            </ListItemText>}
+                            {actionsRenderer &&
+                                <ListItemText>
+                                    {actionsRenderer.call(this, entry)}
+                                </ListItemText>
+                            }
                         </ListItem>
                     )
-                )}
+                }
             </List>
-        </div>
-    )
+        </div>;
+    }
 };
 
 CmPickerViewMaterial.propTypes = {

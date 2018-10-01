@@ -18,10 +18,9 @@ const styles = theme => ({
         height: 'calc(100vh - 140px)',
         maxHeight:  'calc(100vh - 140px)'
     },
-
     list: {
         maxWidth: '260px',
-        width: '260px',
+        width: '260px'
     },
     disablePad: {
         padding: '0!important'
@@ -29,46 +28,53 @@ const styles = theme => ({
 });
 
 class ContentTree extends React.Component {
+
     constructor(props) {
         super(props);
         this.picker = React.createRef();
     }
+
     render() {
+
         let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes, user} = this.props;
         console.log("open tree", rootPath, path);
-        return (
-            <Picker
-                ref={this.picker}
-                rootPaths={[rootPath]}
-                openPaths={openPaths}
-                openableTypes={openableTypes}
-                selectableTypes={selectableTypes}
-                queryVariables={{lang: lang}}
-                selectedPaths={[path]}
-                openSelection={false}
-                onOpenItem={(path, open) => handleOpen(path, open)}
-                onSelectItem={(path) => handleSelect(path)}
-            >
-                {({handleSelect, ...others}) =>
-                    <CmPickerViewMaterial {...others}
-                                          textRenderer={(entry) => {
-                                              return entry.depth > 0 ? entry.node.displayName : rootLabel;
-                                          }}
-                                          action={(entry) =>
-                                              entry.depth > 0 ? <Actions menuId={"contentTreeActions"} context={{
-                                                  uuid: entry.node.uuid,
-                                                  path: entry.node.path,
-                                                  displayName: entry.node.displayName,
-                                                  lang: lang,
-                                                  user: user,
-                                                  nodeName: entry.node.nodeName
-                                              }}>
-                                                  {(props) => <CmIconButton {...props}
-                                                                            cmRole={'picker-item-menu'}/>}
-                                              </Actions> : null
-                                          }/>}
-            </Picker>
-        )
+
+        return <Picker
+            ref={this.picker}
+            rootPaths={[rootPath]}
+            openPaths={openPaths}
+            openableTypes={openableTypes}
+            selectableTypes={selectableTypes}
+            queryVariables={{lang: lang}}
+            selectedPaths={[path]}
+            openSelection={false}
+            onOpenItem={(path, open) => handleOpen(path, open)}
+            onSelectItem={(path) => handleSelect(path)}
+        >
+            {({handleSelect, ...others}) =>
+                <CmPickerViewMaterial
+                    {...others}
+                    textRenderer={(entry) => entry.depth > 0 ? entry.node.displayName : rootLabel}
+                    actionsRenderer={(entry) =>
+
+                        entry.depth > 0
+
+                        ? <Actions menuId={"contentTreeActions"} context={{
+                            uuid: entry.node.uuid,
+                            path: entry.node.path,
+                            displayName: entry.node.displayName,
+                            lang: lang,
+                            user: user,
+                            nodeName: entry.node.nodeName
+                        }}>
+                            {(props) => <CmIconButton {...props} cmRole={'picker-item-menu'}/>}
+                        </Actions>
+
+                        : null
+                    }
+                />
+            }
+        </Picker>;
     }
 }
 
@@ -103,8 +109,7 @@ class ContentTrees extends React.Component {
 
                                             let componentRef = React.createRef();
                                             this.componentsRefs.push(componentRef);
-                                            return <ListItem data-cm-role={contentTreeConfig.key} disableGutters
-                                                             key={contentTreeConfig.key}>
+                                            return <ListItem data-cm-role={contentTreeConfig.key} disableGutters key={contentTreeConfig.key}>
                                                 <ContentTree
                                                     ref={componentRef}
                                                     path={usedPath}
@@ -118,7 +123,7 @@ class ContentTrees extends React.Component {
                                                     openableTypes={contentTreeConfig.openableTypes}
                                                     rootLabel={t(contentTreeConfig.rootLabel)}
                                                 />
-                                            </ListItem>
+                                            </ListItem>;
                                         })
                                     }
                                 </List>

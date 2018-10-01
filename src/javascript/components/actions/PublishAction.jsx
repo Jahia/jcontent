@@ -5,7 +5,6 @@ import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import connect from "react-redux/es/connect/connect";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {hasMixin} from "../utils.js";
 
 class PublishAction extends React.Component {
 
@@ -49,10 +48,6 @@ class PublishAction extends React.Component {
     render() {
 
         const {call, notificationContext, children, context, allLanguages, allSubTree, checkForUnpublication, checkIfLanguagesMoreThanOne, ...rest} = this.props;
-
-        if (!checkForUnpublication && hasMixin(context.node, "jmix:markedForDeletion")) {
-            return null;
-        }
 
         let ctx = _.cloneDeep(context);
         ctx.uuid = [context.node.uuid];

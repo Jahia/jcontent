@@ -190,7 +190,7 @@ class ContentPreview extends React.Component {
                 return <Grid container spacing={0}>
                     <Grid item xs={10} className={classes.titleBar}>
                         <div
-                            className={classes.contentTitle}>{selectedItem.displayName ? selectedItem.displayName : selectedItem.name}</div>
+                            className={classes.contentTitle}>{selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}</div>
                         <PublicationInfo/>
                     </Grid>
                     <Grid item xs={2} container={true} justify={"flex-end"}>
@@ -310,6 +310,19 @@ class ContentPreview extends React.Component {
                 </Tooltip>
             }}
         </Mutation>
+    }
+
+    ellipsisText(text) {
+        let {t} = this.props;
+        if (text !== undefined && text.length > 50) {
+            let subtext = text.substring(0, 50);
+            let words = subtext.split(" ");
+            let allWords = text.split(" ");
+            words[words.length-1] = allWords[words.length-1];
+            return t("label.ellipsis", {text: words.join(" ")})
+        } else {
+            return text;
+        }
     }
 }
 

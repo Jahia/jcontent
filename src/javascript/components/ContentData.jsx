@@ -83,10 +83,18 @@ class ContentData extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams} = this.props;
+        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch} = this.props;
         return <Query query={layoutQuery} variables={layoutQueryParams}>
-            {({loading, error, data}) => {
+            {({loading, error, data, refetch}) => {
                 let queryHandler = contentQueryHandlerByMode(mode);
+
+                if (setRefetch) {
+                    setRefetch({
+                        query: layoutQuery,
+                        queryParams: layoutQueryParams,
+                        refetch: refetch
+                    });
+                }
 
                 if (error) {
                     console.log("Error when fetching data: " + error);

@@ -108,6 +108,7 @@
       "browseFolders": "Browse Folders",
       "browseFiles": "Browse Files",
       "noResults": "No Results",
+      "refresh": "Refresh",
       "title": {
         "browse": "Content",
         "browse-files": "Media",

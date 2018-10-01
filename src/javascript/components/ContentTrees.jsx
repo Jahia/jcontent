@@ -36,7 +36,10 @@ class ContentTree extends React.Component {
 
     render() {
 
-        let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, filterTypes, recurTypes, user} = this.props;
+        let {rootPath, path, openPaths, handleOpen,
+            handleSelect, lang, openableTypes,
+            selectableTypes, rootLabel,
+            filterTypes, recurTypes, user, setRefetch} = this.props;
         console.log("open tree", rootPath, path);
 
         return <Picker
@@ -50,6 +53,7 @@ class ContentTree extends React.Component {
             openSelection={false}
             onOpenItem={(path, open) => handleOpen(path, open)}
             onSelectItem={(path) => handleSelect(path)}
+            setRefetch={ setRefetch }
         >
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial
@@ -87,7 +91,9 @@ class ContentTrees extends React.Component {
 
     render() {
 
-        const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath, closePath, classes} = this.props;
+        const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
+            closePath, classes, setRefetch} = this.props;
+        console.log(contentTreeConfigs);
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
         return (
@@ -109,7 +115,9 @@ class ContentTrees extends React.Component {
 
                                             let componentRef = React.createRef();
                                             this.componentsRefs.push(componentRef);
-                                            return <ListItem data-cm-role={contentTreeConfig.key} disableGutters key={contentTreeConfig.key}>
+                                            return <ListItem data-cm-role={contentTreeConfig.key}
+                                                             disableGutters
+                                                             key={contentTreeConfig.key}>
                                                 <ContentTree
                                                     ref={componentRef}
                                                     path={usedPath}
@@ -122,6 +130,7 @@ class ContentTrees extends React.Component {
                                                     handleSelect={path => setPath(path)}
                                                     openableTypes={contentTreeConfig.openableTypes}
                                                     rootLabel={t(contentTreeConfig.rootLabel)}
+                                                    setRefetch={ setRefetch(contentTreeConfig.key) }
                                                 />
                                             </ListItem>;
                                         })

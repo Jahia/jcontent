@@ -26,6 +26,7 @@ import CmSearchControlBar from "./CmSearchControlBar";
 import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 import constants from "./constants";
+import { setRefetcher, triggerRefetch, refetchTypes } from './refetches';
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -135,6 +136,7 @@ class ContentLayout extends React.Component {
             page: 0,
             rowsPerPage: 25
         };
+
     }
 
     handleDrawerOpen = () => {
@@ -190,6 +192,14 @@ class ContentLayout extends React.Component {
         }
     };
 
+    setContentRefetcher = refetchingData => {
+        setRefetcher(refetchTypes.CONTENT_DATA, refetchingData);
+    };
+
+    setTreeRefetcher = type => {
+        return (refetchingData) => setRefetcher(type, refetchingData);
+    };
+
     isBrowsing() {
         let {mode} = this.props;
         return (mode === constants.mode.BROWSE || mode === constants.mode.FILES)
@@ -205,10 +215,10 @@ class ContentLayout extends React.Component {
         return (path === ("/sites/" + siteKey))
     };
 
-
     render() {
         const {anchor, open_view, open} = this.state;
-        const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
+        const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
+            searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
         const paginationState = {
@@ -255,6 +265,16 @@ class ContentLayout extends React.Component {
                                 {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                             </Button>}
 
+                            <Button variant="text" className={classes.showTreeButton} onClick={() => {
+                                    triggerRefetch(refetchTypes.CONTENT_DATA);
+                                    contentTreeConfigs.forEach((config) => {
+                                        triggerRefetch(config.key);
+                                    });
+                                }
+                            }>
+                                {t("label.contentManager.refresh")}
+                            </Button>
+
                             {mode === constants.mode.FILES &&
                             <FilesGridModeSelector showList={this.state.showList}
                                                    onChange={() => this.setState({showList: !this.state.showList})}/>
@@ -287,6 +307,7 @@ class ContentLayout extends React.Component {
                             <ContentTrees
                                 contentTreeConfigs={contentTreeConfigs}
                                 path={path}
+                                setRefetch={ this.setTreeRefetcher }
                             />
                         </Drawer>
                     </Paper>}
@@ -300,7 +321,9 @@ class ContentLayout extends React.Component {
                             [classes[`contentShift-right`]]: open_view,
                         })
                         }>
-                        <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams}>
+                        <ContentData layoutQuery={layoutQuery}
+                                     layoutQueryParams={layoutQueryParams}
+                                     setRefetch={ this.setContentRefetcher }>
                             {({rows, totalCount}) => {
                                 return <Paper className={classes.paper}>
                                     {mode === constants.mode.FILES && !this.state.showList

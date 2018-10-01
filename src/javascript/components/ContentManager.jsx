@@ -87,9 +87,9 @@ class ContentManager extends React.Component {
 
     // !!this method should never be called but is necessary until BACKLOG-8369 fixed!!
     forceCMUpdate = () => {
-        console.warn("update application, this should not happen ..")
+        console.warn("update application, this should not happen ..");
         this.forceUpdate();
-    }
+    };
 
     render() {
         let contentTreeConfigs = {
@@ -117,7 +117,8 @@ class ContentManager extends React.Component {
                 rootLabel: "label.contentManager.browseFiles",
                 key: "browse-tree-files"
             }
-        }
+        };
+
         let {dxContext, classes} = this.props;
 
         return (

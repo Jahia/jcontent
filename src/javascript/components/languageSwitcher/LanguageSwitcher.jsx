@@ -40,45 +40,47 @@ const styles = theme => ({
         color: "#ffffff",
         boxShadow: "none",
         fontSize: "0.875rem",
-    },
+    }
 });
 
 class LanguageSwitcher extends React.Component {
 
     constructor(props) {
+
         super(props);
 
-        this.query = gql`query siteLanguages($path: String!) {
-            jcr(workspace: LIVE) {
-                result:nodeByPath(path: $path) {
-                    site {
-                        defaultLanguage
-                        languages {
-                            displayName
-                            language
-                            activeInEdit
+        this.query = gql`
+            query siteLanguages($path: String!) {
+                jcr(workspace: LIVE) {
+                    result:nodeByPath(path: $path) {
+                        site {
+                            defaultLanguage
+                            languages {
+                                displayName
+                                language
+                                activeInEdit
+                            }
+                            ...NodeCacheRequiredFields
                         }
                         ...NodeCacheRequiredFields
                     }
-                    ...NodeCacheRequiredFields
                 }
-            }            
-            wsDefault:jcr {
-                result:nodeByPath(path: $path) {
-                    site {
-                        defaultLanguage
-                        languages {
-                            displayName
-                            language
-                            activeInEdit
+                wsDefault:jcr {
+                    result:nodeByPath(path: $path) {
+                        site {
+                            defaultLanguage
+                            languages {
+                                displayName
+                                language
+                                activeInEdit
+                            }
+                            ...NodeCacheRequiredFields
                         }
                         ...NodeCacheRequiredFields
                     }
-                    ...NodeCacheRequiredFields
                 }
             }
-        }
-        ${PredefinedFragments.nodeCacheRequiredFields.gql}
+            ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
     }
 
@@ -91,12 +93,12 @@ class LanguageSwitcher extends React.Component {
 
     validateLanguageExists = (languages, data, lang) => {
         if (!_.isEmpty(languages)) {
-            //If we cant find the selected language in the list of available languages,
-            // we will implicitly switch to the default language of the site
-            let languageExists = _.find(languages, function (language) {
+            // If we can't find the selected language in the list of available languages,
+            // we will implicitly switch to the default language of the site.
+            let existingLanguage = _.find(languages, function (language) {
                 return language.language === lang;
             });
-            if (languageExists === undefined) {
+            if (existingLanguage === undefined) {
                 let language = _.find(languages, function (language) {
                     const result = data.jcr ? data.jcr.result : data.wsDefault.result;
                     return language.language === result.site.defaultLanguage;
@@ -122,10 +124,12 @@ class LanguageSwitcher extends React.Component {
     }
 
     render() {
+
         const {t, notificationContext, siteKey, lang, dark} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
         };
+
         return <Query query={this.query} variables={variables}>
             {
                 ({error, loading, data}) => {
@@ -141,8 +145,8 @@ class LanguageSwitcher extends React.Component {
                     }
 
                     let displayableLanguages = this.parseSiteLanguages(data);
-                    let languageExists = this.validateLanguageExists(displayableLanguages, data, lang);
-                    if (languageExists === true) {
+                    let existingLanguage = this.validateLanguageExists(displayableLanguages, data, lang);
+                    if (existingLanguage === true) {
                         return <LanguageSwitcherDisplay
                             lang={lang}
                             dark={dark}
@@ -150,12 +154,12 @@ class LanguageSwitcher extends React.Component {
                             onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
                         />
                     } else {
-                        this.onSelectLanguage(languageExists);
+                        this.onSelectLanguage(existingLanguage);
                         return null;
                     }
                 }
             }
-        </Query>
+        </Query>;
     }
 }
 
@@ -181,24 +185,27 @@ class LanguageSwitcherDisplay extends React.Component {
     };
 
     render() {
+
         let {lang, languages, onSelectLanguage, classes, dark} = this.props;
         let {anchorEl} = this.state;
+
         return <React.Fragment>
-            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true"
-                    onClick={this.handleClick} data-cm-role={'language-switcher'}>
+            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'language-switcher'}>
                 <Typography className={dark ? classes.typography : classes.typographyLight}>
                     {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
                     &nbsp;
                 </Typography>
-                <FontAwesomeIcon icon="chevron-down" className={classes.icontest} />
-
+                <FontAwesomeIcon icon="chevron-down" className={classes.icontest}/>
             </Button>
             <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                 {languages.map((lang) => {
-                    return <MenuItem key={lang.language} onClick={() => {
-                        onSelectLanguage(lang.language);
-                        this.handleClose();
-                    }}>
+                    return <MenuItem
+                        key={lang.language}
+                        onClick={() => {
+                            onSelectLanguage(lang.language);
+                            this.handleClose();
+                        }}
+                    >
                         {this.uppercaseFirst(lang.displayName)}
                     </MenuItem>;
                 })}
@@ -227,6 +234,5 @@ LanguageSwitcher = _.flowRight(
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(LanguageSwitcher);
-
 
 export default LanguageSwitcher;

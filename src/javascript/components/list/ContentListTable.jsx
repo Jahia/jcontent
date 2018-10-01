@@ -262,7 +262,7 @@ class ContentListTable extends React.Component {
     render() {
 
         const {order, orderBy, hoveredRow} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview, displayContextualMenu} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
         return (
             <div className={classes.contentList}>
@@ -294,6 +294,7 @@ class ContentListTable extends React.Component {
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={($event) => this.onHoverEnter($event, n.path)}
                                             onMouseLeave={($event) => this.onHoverExit($event)}
+                                            onContextMenu={(event) => {displayContextualMenu(event, n.path, n.uuid, n.displayName, lang, n.nodeName)}}
                                         >
                                             <TableCell className={classes.publicationCell}
                                                        data-cm-role="table-content-list-cell-publication">

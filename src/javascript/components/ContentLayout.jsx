@@ -1,19 +1,21 @@
 import React from 'react';
 import {withApollo} from 'react-apollo';
+import {ApolloProvider} from "react-apollo";
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import ContentPreview from "./preview/ContentPreview";
 import PreviewDrawer from "./preview/PreviewDrawer";
-import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
+import {Grid, Button, Paper, withStyles, Drawer, Menu} from "@material-ui/core";
 import {Add} from "@material-ui/icons";
 import classNames from 'classnames'
 import ContentTrees from "./ContentTrees";
 import {withNotifications} from '@jahia/react-material';
-import {translate} from "react-i18next";
+import {translate, I18nextProvider} from "react-i18next";
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
 import CmButton from "./renderAction/CmButton";
+import CmMenuItem from "./renderAction/CmMenuItem";
 import Upload from './fileupload/upload';
 import {cmSetPreviewState, CM_PREVIEW_STATES} from "./redux/actions";
 import FilesGrid from './filesGrid/FilesGrid';
@@ -27,6 +29,8 @@ import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 import constants from "./constants";
 import { setRefetcher, triggerRefetch, refetchTypes } from './refetches';
+import ReactDOM  from 'react-dom';
+import {client} from "@jahia/apollo-dx/index";
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -114,6 +118,12 @@ const styles = theme => ({
         width: '100%'
 
     },
+    contextualMenu: {
+        position: "absolute",
+        top: "-150px",
+        left: "-150px",
+        zIndex:1000
+    }
 });
 
 const GRID_SIZE = 12;
@@ -235,7 +245,7 @@ class ContentLayout extends React.Component {
         const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath);
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
-
+                <div id={"floatingContextualMenu"} className={classes.contextualMenu}></div>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
@@ -308,6 +318,7 @@ class ContentLayout extends React.Component {
                                 contentTreeConfigs={contentTreeConfigs}
                                 path={path}
                                 setRefetch={ this.setTreeRefetcher }
+                                displayContextualMenu={(...rest) => this.contextualMenu(dxContext, ...rest)}
                             />
                         </Drawer>
                     </Paper>}
@@ -345,6 +356,7 @@ class ContentLayout extends React.Component {
                                             onChangePage={this.handleChangePage}
                                             page={this.state.page}
                                             handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
+                                            displayContextualMenu={(...rest) => this.contextualMenu(dxContext, ...rest)}
                                         />
                                     }
                                 </Paper>
@@ -366,6 +378,38 @@ class ContentLayout extends React.Component {
 
             </React.Fragment>
         }}</DxContext.Consumer>;
+    }
+
+    contextualMenu = (dxContext, event, path, uuid, displayName, lang, nodeName) => {
+        event.preventDefault();
+        let {i18n, store} = this.props;
+        let el = document.getElementById("floatingContextualMenu");
+        if (el != null) {
+            let contextualMenuComponent = <Menu
+                data-cm-role={'contextual-menu-action'}
+                anchorEl={el}
+                open={true}
+                onClose={() => {ReactDOM.unmountComponentAtNode(el);}}>
+                <Actions store={store} menuId={"contextualMenuAction"} context={{
+                    uuid: uuid,
+                    path: path,
+                    displayName: displayName,
+                    lang: lang,
+                    nodeName: nodeName
+                }}>{(props) => {
+                    return <CmMenuItem {...props} menuClose={()=>{ReactDOM.unmountComponentAtNode(el);}}/>
+                }}
+                </Actions>;
+            </Menu>;
+
+            ReactDOM.render(<ApolloProvider client={client({contextPath: dxContext.contextPath, useBatch:true, httpOptions:{batchMax:50}})}>
+                    <I18nextProvider i18n={ i18n }>
+                        {contextualMenuComponent}
+                    </I18nextProvider>
+                </ApolloProvider>, el);
+            el.style.top = (event.screenY-85) + "px";
+            el.style.left = event.screenX + "px";
+        }
     }
 }
 

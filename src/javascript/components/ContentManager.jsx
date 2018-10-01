@@ -143,10 +143,10 @@ class ContentManager extends React.Component {
                                                             leftSide={<CMLeftNavigation/>}
                                                         >
                                                             <Route path={`${props.match.url}/browse`} render={props =>
-                                                                <ContentLayout contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
+                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                                <ContentLayout contentTreeConfigs={[contentTreeConfigs["files"]]}/>
+                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["files"]]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/search`} render={props =>
                                                                 <ContentLayout />

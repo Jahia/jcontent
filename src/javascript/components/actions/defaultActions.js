@@ -23,7 +23,7 @@ let defaultActions = {
         call: edit,
         icon: Edit,
         priority: 2.5,
-        target: ["editPreviewBar", "contentTreeMenuActions", "tableEditButtonAction"],
+        target: ["editPreviewBar", "contentTreeMenuActions", "tableEditButtonAction", "contextualMenuAction"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.edit"
     },
@@ -110,7 +110,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["contentTreeMenuActions"],
+        target: ["contentTreeMenuActions", "contextualMenuAction"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publish",
         allSubtree: false,
@@ -125,7 +125,7 @@ let defaultActions = {
         component: "menuAction",
         menuId: "advancedPublish",
         icon: "Publish",
-        target: ["contentTreeMenuActions"],
+        target: ["contentTreeMenuActions", "contextualMenuAction"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.advancedPublish"
     },

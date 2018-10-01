@@ -39,7 +39,7 @@ class ContentTree extends React.Component {
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel,
-            filterTypes, recurTypes, user, setRefetch} = this.props;
+            filterTypes, recurTypes, user, setRefetch, displayContextualMenu} = this.props;
         console.log("open tree", rootPath, path);
 
         return <Picker
@@ -58,7 +58,12 @@ class ContentTree extends React.Component {
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial
                     {...others}
-                    textRenderer={(entry) => entry.depth > 0 ? entry.node.displayName : rootLabel}
+                    textRenderer={(entry) => {
+                        return <span onContextMenu={(event) => {displayContextualMenu(event, path, entry.node.uuid, entry.node.displayName, lang, entry.node.nodeName)}}>
+                            {entry.depth > 0 ? entry.node.displayName : rootLabel}
+                        </span>
+                        }
+                    }
                     actionsRenderer={(entry) =>
 
                         entry.depth > 0
@@ -92,7 +97,7 @@ class ContentTrees extends React.Component {
     render() {
 
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
-            closePath, classes, setRefetch} = this.props;
+            closePath, classes, setRefetch, displayContextualMenu} = this.props;
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
         return (
@@ -118,6 +123,7 @@ class ContentTrees extends React.Component {
                                                              disableGutters
                                                              key={contentTreeConfig.key}>
                                                 <ContentTree
+                                                    displayContextualMenu={displayContextualMenu}
                                                     ref={componentRef}
                                                     path={usedPath}
                                                     rootPath={rootPath + contentTreeConfig.rootPath}

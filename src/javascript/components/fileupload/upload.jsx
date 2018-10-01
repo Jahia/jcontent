@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { Input, Button, IconButton, List, CircularProgress } from "@material-ui/core";
+import { IconButton, List, CircularProgress } from "@material-ui/core";
 import { Close, Fullscreen, FullscreenExit, CheckCircle, Info } from "@material-ui/icons";
 import {connect} from "react-redux";
 import UploadDrawer from './UploadDrawer';

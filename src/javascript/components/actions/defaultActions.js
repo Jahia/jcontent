@@ -63,7 +63,7 @@ let defaultActions = {
         target: ["createMenuActions", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.fileUpload.uploadButtonLabel",
-        hideOnNodeTypes: ["jnt:page"]
+        hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"]
     },
     translate: {
         priority: 2.51,

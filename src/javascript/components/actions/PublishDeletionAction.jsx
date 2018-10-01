@@ -10,9 +10,6 @@ class PublishDeletionAction extends React.Component {
         if (!hasMixin(context.node, "jmix:markedForDeletionRoot")) {
             return null;
         }
-        if (context.node.aggregatedPublicationInfo.publicationStatus == "NOT_PUBLISHED") {
-            return null;
-        }
 
         return children({
             ...rest,

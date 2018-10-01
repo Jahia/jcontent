@@ -28,7 +28,7 @@ import {connect} from "react-redux";
 import constants from "./constants";
 
 const drawerWidth = 260;
-const drawerPreviewWidth = 370;
+const drawerPreviewWidth = 600;
 
 const styles = theme => ({
     topBar: {
@@ -159,14 +159,6 @@ class ContentLayout extends React.Component {
         this.setState({open_view: false});
     };
 
-    handleShowTree = () => {
-        this.setState((prevState, props) => {
-            return {
-                showTree: !prevState.showTree
-            }
-        })
-    };
-
     //Force can be `show` or `hide`
     handleShowPreview = (selection, force) => {
         let {previewState, setPreviewState} = this.props;
@@ -215,8 +207,7 @@ class ContentLayout extends React.Component {
 
 
     render() {
-        const {anchor, open, open_view} = this.state;
-        const {showTree: showTree} = this.state;
+        const {anchor, open_view, open} = this.state;
         const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
@@ -261,7 +252,7 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() &&
                             <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                {t("label.contentManager.tree." + (showTree ? "hide" : "show"))}
+                                {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                             </Button>}
 
                             {mode === constants.mode.FILES &&
@@ -285,7 +276,7 @@ class ContentLayout extends React.Component {
                     </Grid>
                 </Grid>
                 <div className={classes.appFrame}>
-                    <Paper style={{background: '#f5f5f5'}}>
+                    {this.isBrowsing() && <Paper style={{background: '#f5f5f5'}}>
                         <Drawer
                             variant="persistent"
                             anchor={anchor}
@@ -298,7 +289,7 @@ class ContentLayout extends React.Component {
                                 path={path}
                             />
                         </Drawer>
-                    </Paper>
+                    </Paper>}
                     <main
                         className={classNames(classes.content, classes[`content-left`], {
                             [classes.contentShift]: open,

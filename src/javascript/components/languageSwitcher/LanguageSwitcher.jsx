@@ -84,6 +84,7 @@ class LanguageSwitcher extends React.Component {
 
     onSelectLanguage = (lang) => {
         console.log("Switching language to: " + lang);
+        this.props.onSelectLanguage(lang);
         // switch edit mode linker language
         window.parent.authoringApi.switchLanguage(lang);
     };
@@ -121,7 +122,7 @@ class LanguageSwitcher extends React.Component {
     }
 
     render() {
-        const {t, notificationContext, siteKey, lang, dark, onSelectLanguage} = this.props;
+        const {t, notificationContext, siteKey, lang, dark} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
         };
@@ -149,7 +150,7 @@ class LanguageSwitcher extends React.Component {
                             onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
                         />
                     } else {
-                        onSelectLanguage(languageExists);
+                        this.onSelectLanguage(languageExists);
                         return null;
                     }
                 }
@@ -213,9 +214,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onSelectLanguage: (lang) => {
-        if (ownProps.onSelectLanguage) {
-            ownProps.onSelectLanguage(lang);
-        }
         dispatch(cmSetLanguage(lang));
     }
 });

@@ -142,19 +142,19 @@ class CmPickerViewMaterial extends React.Component {
                                 </Button>
                             </div>
                             <ListItemIcon className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
-                                {iconRenderer ? iconRenderer.call(this, entry) : defaultIconRenderer.call(this, entry)}
+                                {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
                             </ListItemIcon>
                             <ListItemText
                                 inset
                                 classes={entry.selected ? {root: classes.listItemLabel, primary: classes.selectedText} : {root: classes.listItemLabel}}
                                 disableTypography={true}
                                 onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
-                                primary={textRenderer ? textRenderer.call(this, entry) : entry.name}
+                                primary={textRenderer ? textRenderer(entry) : entry.name}
                                 data-jrm-role={'picker-item-text'}
                             />
                             {actionsRenderer &&
                                 <ListItemText>
-                                    {actionsRenderer.call(this, entry)}
+                                    {actionsRenderer(entry)}
                                 </ListItemText>
                             }
                         </ListItem>

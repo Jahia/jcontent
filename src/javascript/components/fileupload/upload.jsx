@@ -103,6 +103,9 @@ class Upload extends React.Component {
 
     componentDidUpdate() {
         this.updateUploadsStatus();
+        if (this.props.uploadUpdateCallback) {
+            this.props.uploadUpdateCallback(this.uploadStatus())
+        }
     }
 
     render() {
@@ -364,7 +367,8 @@ class Upload extends React.Component {
 Upload.propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    acceptedFileTypes: PropTypes.array
+    acceptedFileTypes: PropTypes.array,
+    uploadUpdateCallback: PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {

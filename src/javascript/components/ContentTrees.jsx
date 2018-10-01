@@ -93,7 +93,6 @@ class ContentTrees extends React.Component {
 
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
             closePath, classes, setRefetch} = this.props;
-        console.log(contentTreeConfigs);
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
         return (

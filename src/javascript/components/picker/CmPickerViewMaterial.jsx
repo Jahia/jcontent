@@ -102,6 +102,10 @@ let styles = (theme) => ({
         fontSize: '0.928rem',
         whiteSpace: 'nowrap',
         color: '#F5F5F5'
+    },
+    treeEntry: {
+        display: 'inherit',
+        cursor: "pointer !important"
     }
 });
 
@@ -113,7 +117,7 @@ class CmPickerViewMaterial extends React.Component {
 
         return <div className={classes.root}>
             {loading &&
-                <div className={classes.loadingContainer}/>
+            <div className={classes.loadingContainer}/>
             }
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
                 {
@@ -133,7 +137,10 @@ class CmPickerViewMaterial extends React.Component {
                             >
                                 <Button
                                     className={classes.buttonContainer}
-                                    onClick={(event) => {onOpenItem(entry.path, !entry.open); event.stopPropagation()}}
+                                    onClick={(event) => {
+                                        onOpenItem(entry.path, !entry.open);
+                                        event.stopPropagation()
+                                    }}
                                     disabled={!(entry.openable && entry.hasChildren)}
                                     data-jrm-role={'picker-item-toggle'}
                                     data-jrm-state={entry.open ? 'open' : 'closed'}
@@ -141,21 +148,27 @@ class CmPickerViewMaterial extends React.Component {
                                     <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </div>
-                            <ListItemIcon className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
+                            <span className={classes.treeEntry}
+                                  onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
+                            <ListItemIcon
+                                className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
                                 {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
                             </ListItemIcon>
                             <ListItemText
                                 inset
-                                classes={entry.selected ? {root: classes.listItemLabel, primary: classes.selectedText} : {root: classes.listItemLabel}}
+                                classes={entry.selected ? {
+                                    root: classes.listItemLabel,
+                                    primary: classes.selectedText
+                                } : {root: classes.listItemLabel}}
                                 disableTypography={true}
-                                onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
                                 primary={textRenderer ? textRenderer(entry) : entry.name}
                                 data-jrm-role={'picker-item-text'}
                             />
+                            </span>
                             {actionsRenderer &&
-                                <ListItemText>
-                                    {actionsRenderer(entry)}
-                                </ListItemText>
+                            <ListItemText>
+                                {actionsRenderer(entry)}
+                            </ListItemText>
                             }
                         </ListItem>
                     )

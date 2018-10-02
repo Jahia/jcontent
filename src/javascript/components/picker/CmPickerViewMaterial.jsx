@@ -73,7 +73,7 @@ let styles = (theme) => ({
         color: 'whitesmoke'
     },
     buttonContainer: {
-        padding: 0,
+        padding: '6px 4px 6px 4px',
         '&:hover': {
             backgroundColor: 'transparent'
         }
@@ -123,6 +123,7 @@ class CmPickerViewMaterial extends React.Component {
                 {
                     pickerEntries.map((entry) =>
                         <ListItem
+                            onDoubleClick={() => {onOpenItem(entry.path, !entry.open);}}
                             key={entry.path}
                             divider={true}
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}

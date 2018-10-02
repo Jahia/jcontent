@@ -123,7 +123,7 @@ class CmPickerViewMaterial extends React.Component {
                 {
                     pickerEntries.map((entry) =>
                         <ListItem
-                            onDoubleClick={() => {onOpenItem(entry.path, !entry.open);}}
+                            onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                             key={entry.path}
                             divider={true}
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}

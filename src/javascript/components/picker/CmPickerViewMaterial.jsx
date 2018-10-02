@@ -117,7 +117,7 @@ class CmPickerViewMaterial extends React.Component {
 
         return <div className={classes.root}>
             {loading &&
-            <div className={classes.loadingContainer}/>
+                <div className={classes.loadingContainer}/>
             }
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
                 {
@@ -149,27 +149,27 @@ class CmPickerViewMaterial extends React.Component {
                                     <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </div>
-                            <span className={classes.treeEntry}
-                                  onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
-                            <ListItemIcon
-                                className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
-                                {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
-                            </ListItemIcon>
-                            <ListItemText
-                                inset
-                                classes={entry.selected ? {
-                                    root: classes.listItemLabel,
-                                    primary: classes.selectedText
-                                } : {root: classes.listItemLabel}}
-                                disableTypography={true}
-                                primary={textRenderer ? textRenderer(entry) : entry.name}
-                                data-jrm-role={'picker-item-text'}
-                            />
+                            <span className={classes.treeEntry} onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
+                                <ListItemIcon className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
+                                    {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                </ListItemIcon>
+                                <ListItemText
+                                    inset
+                                    classes={entry.selected ? {
+                                        root: classes.listItemLabel,
+                                        primary: classes.selectedText
+                                    } : {
+                                        root: classes.listItemLabel
+                                    }}
+                                    disableTypography={true}
+                                    primary={textRenderer ? textRenderer(entry) : entry.name}
+                                    data-jrm-role={'picker-item-text'}
+                                />
                             </span>
                             {actionsRenderer &&
-                            <ListItemText>
-                                {actionsRenderer(entry)}
-                            </ListItemText>
+                                <ListItemText>
+                                    {actionsRenderer(entry)}
+                                </ListItemText>
                             }
                         </ListItem>
                     )

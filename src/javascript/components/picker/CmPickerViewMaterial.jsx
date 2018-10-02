@@ -104,8 +104,9 @@ let styles = (theme) => ({
         color: '#F5F5F5'
     },
     treeEntry: {
-        display: 'inherit',
-        cursor: "pointer !important"
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer !important'
     }
 });
 

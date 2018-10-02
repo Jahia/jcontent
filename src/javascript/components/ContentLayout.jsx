@@ -254,7 +254,7 @@ class ContentLayout extends React.Component {
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             {this.isBrowsing() &&
                             <div className={classes.breadCrumbs}>
-                                <ContentBreadcrumbs/>
+                                <ContentBreadcrumbs mode={ this.props.mode }/>
                             </div>
                             }
                             {this.isSearching() &&

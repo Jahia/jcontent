@@ -8,7 +8,7 @@ import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import {PageIcon} from '@jahia/icons';
 import {withStyles} from '@material-ui/core/styles';
 import {translate} from "react-i18next";
-import * as _ from 'lodash';
+import Constants from '../constants';
 
 const styles = theme => ({
     root: {
@@ -278,11 +278,11 @@ class Breadcrumb extends React.Component {
         } else if (path.indexOf(rootPath + "/files") !== -1) {
             return "files";
         }
-        return "pages";
+        return "files";
     }
 
     static parseEntries(props) {
-        let {pickerEntries: entries, path: selectedPath, rootLabel, t, rootPath} = props;
+        let {pickerEntries: entries, path: selectedPath, rootLabel, t, rootPath, mode} = props;
         //Process these nodes
         let breadcrumbs = [];
         let rootType = this.parseTypeFromPath(rootPath, selectedPath);
@@ -326,28 +326,35 @@ class Breadcrumb extends React.Component {
             //handle root siblings
             if (i == 0) {
                 //@TODO update using gql query to retrieve root nodes when component is loaded
-                let siblingsToBeAdded = [{
-                    uuid: 'contents_id',
-                    name: t("label.contentManager.browseFolders"),
-                    mode: "browse",
-                    path: rootPath + "/contents",
-                    pathType: "contents",
-                    type: "jnt:contentFolder"
-                }, {
-                    uuid: "pages_id",
-                    name: t("label.contentManager.browsePages"),
-                    path: rootPath,
-                    mode: "browse",
-                    pathType: "pages",
-                    type: "jnt:virtualsite"
-                }, {
-                    uuid: "files_id",
-                    name: t("label.contentManager.browseFiles"),
-                    path: rootPath + "/files",
-                    mode: "browse-files",
-                    pathType: "files",
-                    type: "jnt:folder"
-                }];
+                const siblingsToBeAdded = [];
+                if (mode === Constants.mode.FILES) {
+                    siblingsToBeAdded.push({
+                        uuid: "files_id",
+                        name: t("label.contentManager.browseFiles"),
+                        path: rootPath + "/files",
+                        mode: "browse-files",
+                        pathType: "files",
+                        type: "jnt:folder"
+                    });
+                }
+                else {
+                    siblingsToBeAdded.push({
+                        uuid: 'contents_id',
+                        name: t("label.contentManager.browseFolders"),
+                        mode: "browse",
+                        path: rootPath + "/contents",
+                        pathType: "contents",
+                        type: "jnt:contentFolder"
+                    });
+                    siblingsToBeAdded.push({
+                        uuid: "pages_id",
+                        name: t("label.contentManager.browsePages"),
+                        path: rootPath,
+                        mode: "browse",
+                        pathType: "pages",
+                        type: "jnt:virtualsite"
+                    });
+                }
                 for (let j in siblingsToBeAdded) {
                     breadcrumb.siblings.push(siblingsToBeAdded[j].type !== breadcrumb.type ? siblingsToBeAdded[j] : sibling);
                 }
@@ -362,6 +369,7 @@ class Breadcrumb extends React.Component {
             }
             breadcrumbs[entryPathParts.length - 1] = breadcrumb;
         }
+
         return breadcrumbs;
     }
 }
@@ -370,6 +378,7 @@ Breadcrumb.propTypes = {
     path: PropTypes.string.isRequired,
     handleSelect: PropTypes.func.isRequired,
     rootLabel: PropTypes.string,
-    rootPath: PropTypes.string.isRequired
+    rootPath: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired
 };
 export default translate()(withStyles(styles)(Breadcrumb));

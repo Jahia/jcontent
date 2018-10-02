@@ -8,6 +8,7 @@ import {translate} from "react-i18next";
 import connect from "react-redux/es/connect/connect";
 import {cmGoto} from "../redux/actions";
 import {extractPaths} from "../utils.js";
+import Constants from '../constants';
 
 class ContentBreadcrumbs extends React.Component {
 
@@ -28,31 +29,35 @@ class ContentBreadcrumbs extends React.Component {
     }
 
     getPickerConfiguration(path) {
-        let {t, siteKey} = this.props;
+        let {t, siteKey, mode} = this.props;
         let rootPath = "/sites/" + siteKey;
         let pickerConfiguration = {};
-        if (path.indexOf(rootPath + "/contents") !== -1) {
-            pickerConfiguration.selectableTypes = ['jmix:list'];
-            pickerConfiguration.openableTypes = ['jmix:list', 'jnt:contentFolder'];
-            pickerConfiguration.rootLabel = t("label.contentManager.browseFolders");
-            pickerConfiguration.rootPath = rootPath + "/contents";
-        } else if (path.indexOf(rootPath + "/files") !== -1) {
+
+        if (mode === Constants.mode.FILES) {
             pickerConfiguration.selectableTypes = ['jnt:folder'];
             pickerConfiguration.openableTypes = ['jnt:folder'];
             pickerConfiguration.rootLabel = t("label.contentManager.browseFiles");
             pickerConfiguration.rootPath = rootPath + "/files";
-        } else {
+        }
+        else if (path.indexOf(rootPath + "/contents") !== -1) {
+            pickerConfiguration.selectableTypes = ['jmix:list'];
+            pickerConfiguration.openableTypes = ['jmix:list', 'jnt:contentFolder'];
+            pickerConfiguration.rootLabel = t("label.contentManager.browseFolders");
+            pickerConfiguration.rootPath = rootPath + "/contents";
+        }
+        else {
             pickerConfiguration.selectableTypes = ["jnt:page"];
             pickerConfiguration.openableTypes = ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'];
             pickerConfiguration.rootLabel = t("label.contentManager.browsePages");
             pickerConfiguration.rootPath = rootPath
         }
+
         return pickerConfiguration;
     }
 
     render() {
 
-        let {lang, siteKey, path, params, setUrl} = this.props;
+        let {lang, siteKey, path, setUrl, mode} = this.props;
         let rootPath = "/sites/" + siteKey;
         let pickerConfiguration = this.getPickerConfiguration(path);
         let paths = this.generatePathParts(path);
@@ -79,6 +84,7 @@ class ContentBreadcrumbs extends React.Component {
                         path={path}
                         rootPath={rootPath}
                         rootLabel={pickerConfiguration.rootLabel}
+                        mode={ mode }
                         handleSelect={others.onSelectItem}
                     />
                 }}

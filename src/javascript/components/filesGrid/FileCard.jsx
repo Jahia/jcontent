@@ -16,7 +16,7 @@ import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
 
 import { fileIcon, isImage } from './filesGridUtils';
-import {cmSetSelection} from "../redux/actions";
+import {cmContextualMenu, cmSetSelection} from "../redux/actions";
 import {connect} from "react-redux";
 
 const styles = theme => ({
@@ -172,9 +172,10 @@ class FileCard extends Component {
     }
 
     largeMediaCard() {
-        const { classes, t, node, dxContext } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             <CardMedia
@@ -203,9 +204,10 @@ class FileCard extends Component {
     }
 
     mediumMediaCard() {
-        const { classes, t, node, dxContext } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             <CardMedia
@@ -231,9 +233,10 @@ class FileCard extends Component {
     }
 
     verticalMediaCard() {
-        const { classes, t, node, dxContext } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <CardMedia
                 style={{ flex: 2 }}
@@ -254,9 +257,10 @@ class FileCard extends Component {
     }
 
     largeFileCard() {
-        const { classes, t, node } = this.props;
+        const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             {
@@ -283,9 +287,10 @@ class FileCard extends Component {
     }
 
     mediumFileCard() {
-        const { classes, t, node } = this.props;
+        const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             {
@@ -309,9 +314,10 @@ class FileCard extends Component {
     }
 
     verticalFileCard(cardType) {
-        const { classes, t, node } = this.props;
+        const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <div style={{textAlign: "center", flex: 2}}>
                 {
@@ -378,8 +384,11 @@ FileCard.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelect: (selection) => dispatch(cmSetSelection(selection))
-})
+    onSelect: (selection) => dispatch(cmSetSelection(selection)),
+    onContextualMenu: (params) => {
+        dispatch(cmContextualMenu(params));
+    }
+});
 
 const ComposedFileCard = compose(
     withStyles(styles),

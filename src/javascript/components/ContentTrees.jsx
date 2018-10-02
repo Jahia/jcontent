@@ -7,7 +7,7 @@ import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
-import {cmGoto, cmOpenPaths, cmClosePaths} from "./redux/actions";
+import {cmGoto, cmOpenPaths, cmClosePaths, cmContextualMenu} from "./redux/actions";
 
 const styles = theme => ({
     trees: {
@@ -39,7 +39,7 @@ class ContentTree extends React.Component {
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel,
-            filterTypes, recurTypes, user, setRefetch, displayContextualMenu} = this.props;
+            filterTypes, recurTypes, user, setRefetch, onContextualMenu} = this.props;
         console.log("open tree", rootPath, path);
 
         return <Picker
@@ -59,7 +59,7 @@ class ContentTree extends React.Component {
                 <CmPickerViewMaterial
                     {...others}
                     textRenderer={(entry) => {
-                        return <span onContextMenu={(event) => {displayContextualMenu(event, path, entry.node.uuid, entry.node.displayName, lang, entry.node.nodeName)}}>
+                        return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
                             {entry.depth > 0 ? entry.node.displayName : rootLabel}
                         </span>
                         }
@@ -97,7 +97,7 @@ class ContentTrees extends React.Component {
     render() {
 
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
-            closePath, classes, setRefetch, displayContextualMenu} = this.props;
+            closePath, classes, setRefetch, onContextualMenu} = this.props;
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
         return (
@@ -123,7 +123,7 @@ class ContentTrees extends React.Component {
                                                              disableGutters
                                                              key={contentTreeConfig.key}>
                                                 <ContentTree
-                                                    displayContextualMenu={displayContextualMenu}
+                                                    onContextualMenu={onContextualMenu}
                                                     ref={componentRef}
                                                     path={usedPath}
                                                     rootPath={rootPath + contentTreeConfig.rootPath}
@@ -160,7 +160,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     openPath: (path) => dispatch(cmOpenPaths([path])),
-    closePath: (path) => dispatch(cmClosePaths([path]))
+    closePath: (path) => dispatch(cmClosePaths([path])),
+    onContextualMenu: (params) => {
+        dispatch(cmContextualMenu(params));
+    }
 });
 
 ContentTrees = _.flowRight(

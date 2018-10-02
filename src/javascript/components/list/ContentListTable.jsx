@@ -22,7 +22,7 @@ import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
-import {cmSetSelection} from "../redux/actions";
+import {cmContextualMenu, cmSetSelection} from "../redux/actions";
 import {connect} from "react-redux";
 
 const columnData = [
@@ -262,7 +262,7 @@ class ContentListTable extends React.Component {
     render() {
 
         const {order, orderBy, hoveredRow} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview, displayContextualMenu} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview, onContextualMenu} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
         return (
             <div className={classes.contentList}>
@@ -294,7 +294,7 @@ class ContentListTable extends React.Component {
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={($event) => this.onHoverEnter($event, n.path)}
                                             onMouseLeave={($event) => this.onHoverExit($event)}
-                                            onContextMenu={(event) => {displayContextualMenu(event, n.path, n.uuid, n.displayName, lang, n.nodeName)}}
+                                            onContextMenu={(event) => {onContextualMenu({isOpen:true, event:event, path:n.path, uuid: n.uuid, displayName: n.name, nodeName:n.nodeName})}}
                                         >
                                             <TableCell className={classes.publicationCell}
                                                        data-cm-role="table-content-list-cell-publication">
@@ -415,11 +415,14 @@ let EmptyRow = (props) => {
 
 const mapStateToProps = (state, ownProps) => ({
     selection: state.selection
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onRowSelected: (selection) => dispatch(cmSetSelection(selection))
-})
+    onRowSelected: (selection) => dispatch(cmSetSelection(selection)),
+    onContextualMenu: (params) => {
+        dispatch(cmContextualMenu(params));
+    }
+});
 
 ContentListTable.propTypes = {
     rows: PropTypes.array.isRequired,

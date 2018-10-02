@@ -4,6 +4,7 @@ const CM_SET_SELECTION = 'CM_SET_SELECTION';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
+const CM_CONTEXTUAL_MENU = 'CM_CONTEXTUAL_MENU';
 
 const CM_PREVIEW_STATES = {"HIDE": 0, "SHOW": 1};
 
@@ -87,6 +88,13 @@ function cmSetSearchMode(searchMode) {
     }
 }
 
+function cmContextualMenu(params) {
+    return {
+        type: CM_CONTEXTUAL_MENU,
+        contextualMenu: params
+    }
+}
+
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
@@ -95,6 +103,7 @@ export {
     CM_SET_OPEN_PATHS,
     CM_PREVIEW_STATES,
     CM_SET_SEARCH_MODE,
+    CM_CONTEXTUAL_MENU,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -108,5 +117,6 @@ export {
     cmOpenPaths,
     cmClosePaths,
     cmSetPreviewState,
-    cmSetSearchMode
+    cmSetSearchMode,
+    cmContextualMenu
 };

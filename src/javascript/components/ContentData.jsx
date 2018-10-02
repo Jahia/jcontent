@@ -11,8 +11,9 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
-import {cmGoto, cmSetSelection, cmClosePaths} from "./redux/actions";
+import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
 import constants from "./constants";
+import {extractPaths} from "./utils";
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -42,16 +43,41 @@ class ContentData extends React.Component {
         gwtEventHandlerUnregister(this.onGwtContentModification);
     }
 
-    onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
+    onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {
 
-        let {client, path, selection, openPaths, setPath, setSelection, closePaths} = this.props;
+        let {client, siteKey, path, selection, openedPaths, setPath, setSelection, openPaths, closePaths} = this.props;
 
         let stateModificationDone = false;
-        if (operation == "delete") {
 
-            // Switch to parent node in case of currently selected node deletion.
-            if (path == nodePath) {
-                setPath(path.substring(0, path.lastIndexOf("/")));
+        if (operation == "create") {
+
+            let parentPath = nodePath.substring(0, nodePath.lastIndexOf("/"));
+            if (nodeType === "jnt:folder" || nodeType === "jnt:contentFolder") {
+                // Make sure the created folder is visible in the tree.
+                if (!_.includes(openedPaths, parentPath)) {
+                    openPaths(extractPaths(siteKey, parentPath));
+                    stateModificationDone = true;
+                }
+            } else {
+                // Make sure the created content is visible in the main panel.
+                if (path != parentPath) {
+                    setPath(parentPath);
+                    stateModificationDone = true;
+                }
+            }
+
+        } else if (operation == "delete") {
+
+            // Switch to ancestor node in case of currently selected node deletion.
+            if (path.startsWith(nodePath)) {
+                setPath(nodePath.substring(0, nodePath.lastIndexOf("/")));
+                stateModificationDone = true;
+            }
+
+            // Close any expanded nodes that have been just removed.
+            let pathsToClose = _.filter(openedPaths, openPath => openPath.startsWith(nodePath));
+            if (!_.isEmpty(pathsToClose)) {
+                closePaths(pathsToClose);
                 stateModificationDone = true;
             }
 
@@ -60,13 +86,6 @@ class ContentData extends React.Component {
                 let newSelection = _.clone(selection);
                 _.remove(newSelection, node => node.path == nodePath);
                 setSelection(newSelection);
-                stateModificationDone = true;
-            }
-
-            // Close any expanded nodes that have been just removed.
-            let pathsToClose = _.filter(openPaths, openPath => openPath.startsWith(nodePath));
-            if (!_.isEmpty(pathsToClose)) {
-                closePaths(pathsToClose);
                 stateModificationDone = true;
             }
         }
@@ -157,14 +176,16 @@ class ContentData extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
+    path: state.path,
     mode: state.mode,
     selection: state.selection,
-    openPaths: state.openPaths
+    openedPaths: state.openPaths
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     setSelection: (selection) => dispatch(cmSetSelection(selection)),
+    openPaths: (paths) => dispatch(cmOpenPaths(paths)),
     closePaths: (paths) => dispatch(cmClosePaths(paths))
 });
 

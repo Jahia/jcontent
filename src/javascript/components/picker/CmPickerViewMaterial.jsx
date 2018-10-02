@@ -19,7 +19,6 @@ let styles = (theme) => ({
     root: {
         position: "relative",
         padding: '0!important',
-        maxWidth: 260
     },
     loading: {
         opacity: 0.8

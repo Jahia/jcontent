@@ -76,7 +76,7 @@ class ContentTree extends React.Component {
                 <CmPickerViewMaterial
                     {...others}
                     textRenderer={(entry) => {
-                        return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
+                        return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: this.resolveMenuId(entry.node.path), path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
                             {entry.depth > 0 ? entry.node.displayName : rootLabel}
                         </span>
                         }
@@ -102,6 +102,15 @@ class ContentTree extends React.Component {
             }
         </Picker>;
     }
+    resolveMenuId(path) {
+        let {mode , siteKey} = this.props;
+        switch (mode) {
+            case 'browse-files':
+                return "contextualMenuFilesAction";
+            case 'browse':
+                return path.indexOf(`/sites/${siteKey}/contents`) !== -1  ? "contextualMenuFoldersAction" : "contextualMenuPagesAction"
+        }
+    }
 }
 
 class ContentTrees extends React.Component {
@@ -114,7 +123,7 @@ class ContentTrees extends React.Component {
     render() {
 
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
-            closePath, classes, setRefetch, onContextualMenu} = this.props;
+            closePath, classes, setRefetch, onContextualMenu, mode} = this.props;
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
         return (
@@ -141,6 +150,8 @@ class ContentTrees extends React.Component {
                                                              className={classes.disablePad}
                                                              key={contentTreeConfig.key}>
                                                 <ContentTree
+                                                    mode={mode}
+                                                    siteKey={siteKey}
                                                     onContextualMenu={onContextualMenu}
                                                     ref={componentRef}
                                                     path={usedPath}
@@ -172,6 +183,7 @@ const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
     lang: state.language,
     path: state.path,
+    mode: state.mode,
     openPaths: state.openPaths
 });
 

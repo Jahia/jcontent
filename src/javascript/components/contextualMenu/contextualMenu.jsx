@@ -23,7 +23,7 @@ class ContextualMenu extends React.Component {
                 anchorReference={"anchorPosition"}
                 open={contextualMenu.isOpen}
                 onClose={() => {onContextualMenu({isOpen: false})}}>
-                    <Actions menuId={"contextualMenuAction"} context={{
+                    <Actions menuId={contextualMenu.menuId} context={{
                         uuid: contextualMenu.uuid,
                         path: contextualMenu.path,
                         displayName: contextualMenu.displayName,

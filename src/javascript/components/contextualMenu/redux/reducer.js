@@ -6,7 +6,8 @@ const defaultContextualMenuState = {
     path: null,
     uuid: null,
     displayName:null,
-    nodeName: null
+    nodeName: null,
+    menuId: null
 };
 
 export const contextualMenuReducer = (state = defaultContextualMenuState, action) => {
@@ -23,7 +24,8 @@ export const contextualMenuReducer = (state = defaultContextualMenuState, action
                     path: null,
                     uuid: null,
                     displayName:null,
-                    nodeName: null
+                    nodeName: null,
+                    menuId: null
                 }
             }
         default: return state;

@@ -176,7 +176,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
-                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             <CardMedia
@@ -208,7 +208,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
-                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             <CardMedia
@@ -237,7 +237,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
-                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <CardMedia
                 style={{ flex: 2 }}
@@ -261,7 +261,7 @@ class FileCard extends Component {
         const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
-                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
             {
@@ -291,7 +291,7 @@ class FileCard extends Component {
         const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
-                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             {
@@ -318,7 +318,7 @@ class FileCard extends Component {
         const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
-                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
+                     onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <div style={{textAlign: "center", flex: 2}}>
                 {

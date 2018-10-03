@@ -118,6 +118,9 @@ class CmPickerViewMaterial extends React.Component {
 
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
 
+        //Sorts entries if they contain "contents" folder
+        this.sortContentsEntriesAlphabetical(pickerEntries);
+
         return <div className={classes.root}>
             {loading &&
                 <div className={classes.loadingContainer}/>
@@ -180,6 +183,17 @@ class CmPickerViewMaterial extends React.Component {
                 }
             </List>
         </div>;
+    }
+
+    sortContentsEntriesAlphabetical(entries) {
+        if (entries[0] && entries[0].path === "/sites/systemsite/contents") {
+            entries.sort(function(a, b) {
+                if (a.path === "/sites/systemsite/contents") {
+                    return false;
+                }
+                return a.name > b.name;
+            })
+        }
     }
 };
 

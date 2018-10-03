@@ -261,11 +261,11 @@ class ContentLayout extends React.Component {
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {/*{this.isBrowsing() && !this.isRootNode() &&*/}
-                            {/*<Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>*/}
-                                {/*{(props) => <CmButton {...props}><Add/></CmButton>}*/}
-                            {/*</Actions>*/}
-                            {/*}*/}
+                            {this.isBrowsing() && !this.isRootNode() &&
+                            <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
+                                {(props) => <CmButton {...props}><Add/></CmButton>}
+                            </Actions>
+                            }
                             {this.isBrowsing() &&
                             <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
                                 {t("label.contentManager.tree." + (open ? "hide" : "show"))}

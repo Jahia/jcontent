@@ -19,6 +19,7 @@ let styles = (theme) => ({
     root: {
         position: "relative",
         padding: '0!important',
+        width: '100%',
     },
     loading: {
         opacity: 0.8
@@ -35,7 +36,7 @@ let styles = (theme) => ({
         fontWeight: 300,
         fontSize: '0.928rem',
         whiteSpace: 'nowrap',
-        minWidth: 260,
+        width: '100%',
         color: '#5E6565',
     },
     listItemLabel: {

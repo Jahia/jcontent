@@ -33,7 +33,7 @@ let buildUrl = (site, language, mode, path, params) => {
 let extractParamsFromUrl = (pathname, search) => {
     let [, site, language, mode, ...pathElements] = pathname.split('/');
     // if mode is apps, get action key value from pathElements
-    const path = mode === "apps" ? (pathElements.join("/")) : "/sites/" + site + (_.isEmpty(pathElements) ? "" : ("/" + pathElements.join("/")));
+    const path = mode === "apps" ? (pathElements.join("/")) : "/sites/" + site  + (_.isEmpty(pathElements) ? (mode === 'browse-files' ? '/files' : '') : ("/" + pathElements.join("/")));
     let params = deserializeQueryString(search);
     return {site, language, mode, path, params}
 };

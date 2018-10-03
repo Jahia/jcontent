@@ -236,7 +236,7 @@ class CMLeftNavigation extends React.Component {
         const {siteKey, lang, t, classes, mode} = this.props;
 
         let actionContext = {
-            path: `/sites/${siteKey}`,
+            path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
             siteKey: siteKey,
             lang: lang
         };
@@ -300,11 +300,11 @@ const mapStateToProps = (state, ownProps) => ({
     lang: state.language,
     mode: state.mode,
     path: state.path
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     //
-})
+});
 
 CMLeftNavigation = _.flowRight(
     translate(),

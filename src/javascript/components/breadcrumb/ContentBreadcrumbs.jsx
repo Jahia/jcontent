@@ -18,14 +18,14 @@ class ContentBreadcrumbs extends React.Component {
     }
 
     generatePathParts(path) {
-        let {siteKey} = this.props;
-        const sitePath = "/sites/" + siteKey;
+        let {siteKey, mode} = this.props;
+        const sitePath = "/sites/" + siteKey + (mode === 'browse-files' ? '/files' : '');
         if (path.startsWith(sitePath + "/")) {
-            path = path.substring(("/sites/" + siteKey).length);
+            path = path.substring(sitePath.length);
         } else {
             path = sitePath;
         }
-        return extractPaths(siteKey, path);
+        return extractPaths(siteKey, path, mode);
     }
 
     getPickerConfiguration(path) {
@@ -58,7 +58,7 @@ class ContentBreadcrumbs extends React.Component {
     render() {
 
         let {lang, siteKey, path, setUrl, mode} = this.props;
-        let rootPath = "/sites/" + siteKey;
+        let rootPath =  "/sites/" + siteKey  + (mode === 'browse-files' ? '/files' : '');
         let pickerConfiguration = this.getPickerConfiguration(path);
         let paths = this.generatePathParts(path);
 
@@ -97,11 +97,11 @@ const mapStateToProps = (state, ownProps) => ({
     lang: state.language,
     path: state.path,
     params: state.params
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setUrl: (mode, path) => dispatch(cmGoto({mode, path}))
-})
+});
 
 ContentBreadcrumbs = _.flowRight(
     translate(),

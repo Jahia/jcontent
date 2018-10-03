@@ -5,14 +5,15 @@ function hasMixin(node, mixin) {
     return (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, mixin));
 }
 
-function extractPaths(siteKey, path) {
-    let pathParts = path.replace("/sites/" + siteKey, "").split("/");
+function extractPaths(siteKey, path, mode) {
+    let pathBase = "/sites/" + siteKey + (mode === 'browse-files' ? '/files' : '');
+    let pathParts = path.replace(pathBase, "").split("/");
     let paths = [];
     for (let i in pathParts) {
         if (i > 0) {
             paths.push(paths[i - 1] + "/" + pathParts[i]);
         } else {
-            paths.push("/sites/" + siteKey);
+            paths.push(pathBase);
         }
     }
     return paths;

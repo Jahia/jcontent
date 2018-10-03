@@ -76,7 +76,7 @@ let previewModesReducer = (state = [], action) => {
     }
 };
 
-let openPathsReducer = (siteKey, path) => (state = _.dropRight(extractPaths(siteKey, path), 1), action) => {
+let openPathsReducer = (siteKey, path, mode) => (state = _.dropRight(extractPaths(siteKey, path, mode), 1), action) => {
     if (action.type === CM_SET_OPEN_PATHS) {
         if (action.open) {
             return _.union(state, action.open);

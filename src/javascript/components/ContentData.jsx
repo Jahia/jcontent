@@ -45,7 +45,7 @@ class ContentData extends React.Component {
 
     onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {
 
-        let {client, siteKey, path, selection, openedPaths, setPath, setSelection, openPaths, closePaths} = this.props;
+        let {client, siteKey, path, selection, openedPaths, setPath, setSelection, openPaths, closePaths, mode} = this.props;
 
         let stateModificationDone = false;
 
@@ -55,7 +55,7 @@ class ContentData extends React.Component {
             if (nodeType === "jnt:folder" || nodeType === "jnt:contentFolder") {
                 // Make sure the created folder is visible in the tree.
                 if (!_.includes(openedPaths, parentPath)) {
-                    openPaths(extractPaths(siteKey, parentPath));
+                    openPaths(extractPaths(siteKey, parentPath, mode));
                     stateModificationDone = true;
                 }
             } else {

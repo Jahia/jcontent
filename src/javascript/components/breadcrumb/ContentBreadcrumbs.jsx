@@ -75,7 +75,6 @@ class ContentBreadcrumbs extends React.Component {
                 openableTypes={pickerConfiguration.openableTypes}
                 selectableTypes={pickerConfiguration.selectableTypes}
                 queryVariables={{lang: lang}}
-                openSelection={false}
                 onSelectItem={(mode, path) => setUrl(mode, path)}
             >
                 {({...others}) => {

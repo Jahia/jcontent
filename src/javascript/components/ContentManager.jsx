@@ -103,7 +103,7 @@ class ContentManager extends React.Component {
             },
             pages: {
                 rootPath: "",
-                selectableTypes: ['jnt:page'],
+                selectableTypes: ['jnt:page', 'jnt:virtualsite'],
                 type: "pages",
                 openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
                 rootLabel: "label.contentManager.browsePages",

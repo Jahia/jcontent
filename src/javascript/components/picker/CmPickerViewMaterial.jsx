@@ -34,10 +34,12 @@ let styles = (theme) => ({
         padding: '0!important',
         fontWeight: 300,
         fontSize: '0.928rem',
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        minWidth: 260,
+        color: '#5E6565',
     },
     listItemLabel: {
-        color: '#5E6565',
+        userSelect: 'none',
         fontWeight: '300',
         fontSize: '0.928rem',
         padding: '0!important',
@@ -75,7 +77,9 @@ let styles = (theme) => ({
         padding: '6px 4px 6px 4px',
         '&:hover': {
             backgroundColor: 'transparent'
-        }
+        },
+        minHeight: 20,
+        minWidth: 18,
     },
     triangle: {
         width: 0,

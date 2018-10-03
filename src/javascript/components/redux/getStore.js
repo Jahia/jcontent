@@ -1,6 +1,7 @@
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {batchDispatchMiddleware} from 'redux-batched-actions';
 import { fileUpload } from '../fileupload/redux/reducer';
+import { contextualMenuReducer } from '../contextualMenu/redux/reducer';
 import {
     languageReducer,
     siteReducer,
@@ -13,8 +14,7 @@ import {
     previewModesReducer,
     previewStateReducer,
     openPathsReducer,
-    searchModeReducer,
-    contextualMenuReducer
+    searchModeReducer
 } from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';

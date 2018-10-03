@@ -1,4 +1,4 @@
-import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS, CM_PREVIEW_STATES, CM_SET_SEARCH_MODE, CM_CONTEXTUAL_MENU} from "./actions";
+import {CM_SET_UILANGUAGE, CM_NAVIGATE, CM_SET_SELECTION, CM_SET_PREVIEW, CM_SET_OPEN_PATHS, CM_PREVIEW_STATES, CM_SET_SEARCH_MODE } from "./actions";
 import * as _ from 'lodash';
 import {extractPaths} from "../utils.js";
 
@@ -106,26 +106,4 @@ let searchModeReducer = (params) => (state = (params.sql2SearchFrom ? 'sql2' : '
     }
 };
 
-const defaultContextualMenu = {
-    isOpen: false,
-    event: null,
-    path: null,
-    uuid: null,
-    displayName:null,
-    nodeName: null
-};
-let contextualMenuReducer = (state = defaultContextualMenu, action) => {
-    if (action.type === CM_CONTEXTUAL_MENU) {
-        if (action.contextualMenu.isOpen) {
-            action.contextualMenu.event.preventDefault();
-            action.contextualMenu.event.persist();
-            return action.contextualMenu
-        } else {
-            return defaultContextualMenu
-        }
-    } else {
-        return state;
-    }
-};
-
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer, searchModeReducer, contextualMenuReducer};
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer, searchModeReducer };

@@ -16,7 +16,8 @@ import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
 
 import { fileIcon, isImage } from './filesGridUtils';
-import {cmContextualMenu, cmSetSelection} from "../redux/actions";
+import {cmSetSelection} from "../redux/actions";
+import { invokeContextualMenu } from "../contextualMenu/redux/actions";
 import {connect} from "react-redux";
 
 const styles = theme => ({
@@ -386,7 +387,7 @@ FileCard.propTypes = {
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onSelect: (selection) => dispatch(cmSetSelection(selection)),
     onContextualMenu: (params) => {
-        dispatch(cmContextualMenu(params));
+        dispatch(invokeContextualMenu(params));
     }
 });
 

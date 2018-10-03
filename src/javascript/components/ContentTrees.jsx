@@ -7,7 +7,8 @@ import Actions from "./Actions";
 import CmIconButton from "./renderAction/CmIconButton";
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
-import {cmGoto, cmOpenPaths, cmClosePaths, cmContextualMenu} from "./redux/actions";
+import {cmGoto, cmOpenPaths, cmClosePaths } from "./redux/actions";
+import { invokeContextualMenu } from "./contextualMenu/redux/actions";
 
 const styles = theme => ({
     trees: {
@@ -178,7 +179,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     openPath: (path) => dispatch(cmOpenPaths([path])),
     closePath: (path) => dispatch(cmClosePaths([path])),
     onContextualMenu: (params) => {
-        dispatch(cmContextualMenu(params));
+        dispatch(invokeContextualMenu(params));
     }
 });
 

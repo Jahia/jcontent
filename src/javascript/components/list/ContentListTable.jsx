@@ -22,7 +22,8 @@ import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
-import {cmContextualMenu, cmSetSelection} from "../redux/actions";
+import {cmSetSelection} from "../redux/actions";
+import { invokeContextualMenu } from '../contextualMenu/redux/actions';
 import {connect} from "react-redux";
 
 const columnData = [
@@ -425,7 +426,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onRowSelected: (selection) => dispatch(cmSetSelection(selection)),
     onContextualMenu: (params) => {
-        dispatch(cmContextualMenu(params));
+        dispatch(invokeContextualMenu(params));
     }
 });
 

@@ -6,7 +6,7 @@ import {Menu} from "@material-ui/core";
 import * as _ from "lodash";
 import CmMenuItem from "../renderAction/CmMenuItem";
 import Actions from "../Actions";
-import {cmContextualMenu} from "../redux/actions";
+import {invokeContextualMenu} from "./redux/actions";
 
 
 class ContextualMenu extends React.Component {
@@ -15,12 +15,6 @@ class ContextualMenu extends React.Component {
         super(props);
     }
 
-    setRef() {
-        return this.ref = React.createRef();
-    }
-    getRef() {
-        return this.ref;
-    }
     render() {
         let {contextualMenu, lang, onContextualMenu} = this.props;
              return contextualMenu.isOpen ? <Menu
@@ -47,8 +41,9 @@ const mapStateToProps = (state, ownProps) => ({
     contextualMenu: state.contextualMenu,
     lang: state.lang
 });
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onContextualMenu: (params) => dispatch(cmContextualMenu(params))
+    onContextualMenu: (params) => dispatch(invokeContextualMenu(params))
 });
 
 ContextualMenu = _.flowRight(

@@ -218,7 +218,7 @@ class ContentPreview extends React.Component {
                     <Grid container spacing={0}>
                         <Grid container item xs={10} className={classes.titleBar}>
                             <div className={classes.contentTitle}>
-                                {selectedItem.displayName ? selectedItem.displayName : selectedItem.name}
+                                {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
                                 </div>
                         </Grid>
                         <Grid container item xs={2} justify={"flex-end"} className={classes.footerButton}>

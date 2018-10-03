@@ -31,7 +31,8 @@ const styles = theme => ({
         width: 650,
     },
     rootFullWidth: {
-        width: "99vw"
+        width: '100%',
+        transition: "width 0.3s ease-in 0s",
     },
     button: {
         margin: theme.spacing.unit
@@ -46,12 +47,14 @@ const styles = theme => ({
         overflowY: 'scroll',
         overflowX: 'scroll',
         height: 'calc(100vh - 300px)',
+        width: '100%!important',
         maxHeight: 'calc(100vh - 300px)',
     },
     previewContainerFullScreen: {
         top: "0!important",
         left: "0!important",
-        height: "1000px!important"
+        width: '100%!important',
+        height: "100%!important"
     },
     unpublishButton: {
         float: "right",
@@ -62,7 +65,8 @@ const styles = theme => ({
         flex: 3,
         maxHeight: "200px",
         backgroundColor: "#555",
-        opacity: 0.9,
+        width: '100%',
+        marginLeft: theme.spacing.unit * (-1),
         position: "absolute"
     },
     controlsPaperLive: {
@@ -70,17 +74,40 @@ const styles = theme => ({
         flex: 3,
         maxHeight: "52px",
         backgroundColor: "#555",
-        opacity: 0.9
     },
     titleBar: {
-        color: "whitesmoke",
-        padding: theme.spacing.unit,
+        color: theme.palette.background.paper,
         paddingBottom: '0px',
-        minHeight: "100px"
     },
     contentTitle: {
-        fontWeight: 500,
-        padding: theme.spacing.unit
+        fontSize: '27px',
+        paddingLeft: theme.spacing.unit,
+        fontWeight: 100,
+    },
+    contentSubTitle: {
+        color: theme.palette.background.paper,
+        paddingLeft: theme.spacing.unit,
+        fontSize: '18px',
+        fontWeight: 100,
+    },
+    drawerWidth: {
+        boxShadow: 'none',
+        backgroundColor: theme.palette.background.paper,
+        height: 'calc(100vh - 140px)',
+        overflow: 'hidden!important',
+        maxHeight: 'calc(100vh - 140px)',
+    },
+    drawerRoot: {
+        top: '140px!important',
+        overflow: 'hidden!important',
+        right: '24px!important',
+    },
+    footerGrid: {
+        backgroundColor: '#e8ebed',
+        padding: '0px!important'
+    },
+    footerButton : {
+        textAlign: 'right'
     }
 });
 
@@ -120,7 +147,7 @@ class ContentPreview extends React.Component {
         const {selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
-        const rootClass = this.state.fullScreen ? `${ classes.root } ${ classes.rootFullWidth }` : classes.root;
+        const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
         return <DxContext.Consumer>
             {dxContext => (
                 <div className={rootClass}>
@@ -161,7 +188,7 @@ class ContentPreview extends React.Component {
     }
 
     componentFooter() {
-        let {classes, previewMode, selection, t} = this.props;
+        let {classes, previewMode, selection, t, handleFullScreen} = this.props;
         let {selectionLocked} = this.state;
         let selectedItem = selection[0];
         switch (previewMode) {
@@ -187,15 +214,22 @@ class ContentPreview extends React.Component {
                     </Grid>
                 </Grid>;
             case 'edit':
-                return <Grid container spacing={0}>
-                    <Grid item xs={10} className={classes.titleBar}>
-                        <div
-                            className={classes.contentTitle}>{selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}</div>
-                        <PublicationInfo/>
+                return <Grid container spacing={0} className={classes.footerGrid}>
+                    <Grid container spacing={0}>
+                        <Grid container item xs={10} className={classes.titleBar}>
+                            <div className={classes.contentTitle}>
+                                {selectedItem.displayName ? selectedItem.displayName : selectedItem.name}
+                                </div>
+                        </Grid>
+                        <Grid container item xs={2} justify={"flex-end"} className={classes.footerButton}>
+                            <ShareMenu/>
+                            {this.screenModeButtons(handleFullScreen)}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={2} container={true} justify={"flex-end"}>
-                        <ShareMenu/>
-                        {this.screenModeButtons()}
+                    <Grid container xs={12}>
+                        <div className={classes.contentSubTitle}>
+                        <PublicationInfo/>
+                        </div>
                     </Grid>
                     <Grid item xs={12}>
                         {/*Element that will contain image controls if an image is the document being previewed*/}
@@ -219,7 +253,7 @@ class ContentPreview extends React.Component {
                             displayName: selectedItem.name,
                             nodeName: selectedItem.nodeName
                         }}>
-                            {(props) => <CmIconButton {...props}/>}
+                            {(props) => <CmIconButton {...props} horizontal={true}/>}
                         </Actions>
                     </Grid>
                 </Grid>;
@@ -250,7 +284,8 @@ class ContentPreview extends React.Component {
         }
     }
 
-    screenModeButtons() {
+    screenModeButtons(handleFullScreen) {
+        handleFullScreen(this.state.fullScreen);
         if (this.state.fullScreen) {
             return <IconButton onClick={this.handleDialogState}><FullscreenExit/></IconButton>
         }

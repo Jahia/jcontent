@@ -44,27 +44,27 @@ const styles = theme => ({
     },
     paper: {
         backgroundColor: theme.palette.primary.contrastText,
-        // marginLeft: -24
     },
     blockCore: {
         marginTop: -28,
+        marginLeft: -24,
         marginBottom: -2,
     },
     blockCoreSearch: {
         marginTop: -28,
-        marginBottom: -2,
         backgroundColor: "orange"
     },
     breadCrumbs: {
         marginLeft: -24
-
     },
-    breadCrumbs: {},
     buttons: {
         textAlign: 'right',
     },
     showTreeButton: {
         color: 'pink'
+    },
+    showTree: {
+        textAlign: 'right!important',
     },
     drawerPaper: {
         backgroundColor: 'transparent',
@@ -104,7 +104,6 @@ const styles = theme => ({
     },
     root: {
         flexGrow: 1,
-
     },
     appFrame: {
         zIndex: 0,
@@ -351,13 +350,12 @@ class ContentLayout extends React.Component {
                         </ContentData>
                     </main>
                     <PreviewDrawer open={previewState === CM_PREVIEW_STATES.SHOW}
-                                   onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}>
+                                   onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
+                                   layoutQuery={layoutQuery}
+                                   layoutQueryParams={layoutQueryParams}
+                                   dxContext={dxContext}>
                         {/*Always get row from query not from state to be up to date*/}
-                        <ContentPreview
-                            layoutQuery={layoutQuery}
-                            layoutQueryParams={layoutQueryParams}
-                            dxContext={dxContext}
-                        />
+
                     </PreviewDrawer>
                 </div>
 

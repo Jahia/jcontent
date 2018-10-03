@@ -22,6 +22,22 @@ const styles = theme => ({
         maxWidth: '260px',
         width: '260px'
     },
+    tableHeight: {
+        height: '28px',
+        maxHeight: '28px',
+        minHeight: '28px'
+    },
+    tableCellHeight: {
+        padding: '0px 0px 0px 10px',
+        color: '#5E6565',
+        '&:hover': {
+            height: '28px',
+            padding: '0px 0px 0px 10px',
+            maxHeight: '28px',
+            minHeight: '28px',
+            color: '#d1d1d1',
+        },
+    },
     disablePad: {
         padding: '0!important'
     }
@@ -104,8 +120,8 @@ class ContentTrees extends React.Component {
             <div className={classes.trees}>
                 <Table>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>
+                        <TableRow className={classes.tableHeight}>
+                            <TableCell className={classes.tableCellHeight}>
                                 {t("label.contentManager.tree.title")}
                             </TableCell>
                         </TableRow>
@@ -113,7 +129,7 @@ class ContentTrees extends React.Component {
                     <TableBody>
                         <TableRow>
                             <TableCell>
-                                <List>
+                                <List disablePadding>
                                     {
                                         _.map(contentTreeConfigs, (contentTreeConfig) => {
 

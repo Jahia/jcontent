@@ -5,7 +5,7 @@ import ContentTypeSelect from './ContentTypeSelect';
 import {translate, Trans} from 'react-i18next';
 import {compose} from "react-apollo/index";
 import {DxContext} from "./DxContext";
-import {withNotifications, ProgressOverlay} from '@jahia/react-material';
+import {withNotifications} from '@jahia/react-material';
 import connect from "react-redux/es/connect/connect";
 import {cmGoto, cmSetSearchMode} from "./redux/actions";
 

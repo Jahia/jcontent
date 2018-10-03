@@ -133,10 +133,11 @@ class CmPickerViewMaterial extends React.Component {
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}
                             data-jrm-role={'picker-item'}
                         >
+                            {console.log(entry.depth)}
                             <div
                                 className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
                                 style={{
-                                    paddingLeft: (entry.depth + 1) * 20,
+                                    paddingLeft: (entry.depth + 0) * 20,
                                     opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                 }}
                             >

@@ -126,7 +126,7 @@ const styles = (theme) => ({
         height: "20px"
     },
     name: {
-        color: theme.palette.primary.main,
+        color: "#5E6565",
         maxWidth: "250px",
     },
     nodeTypeIcon: {
@@ -162,11 +162,13 @@ const styles = (theme) => ({
     },
     row : {
         backgroundColor: '#efefef',
-        height: '36px!important',
-        maxHeight:  '36px!important',
+        height: '28px',
+        maxHeight: '28px',
+        minHeight: '28px',
         '&:hover': {
-            height: '36px!important',
-            maxHeight:  '36px!important',
+            height: '28px',
+            maxHeight: '28px',
+            minHeight: '28px',
             backgroundColor: '#dad9d9!important',
         },
     },
@@ -186,7 +188,10 @@ const styles = (theme) => ({
         width: '100px',
         display: 'block',
         overflow: 'hidden'
-    }
+    },
+    tableCellHeight: {
+        padding: 0,
+    },
 });
 
 class ContentListTable extends React.Component {

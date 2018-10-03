@@ -152,6 +152,14 @@ const nodeFields = gql `
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
         }
+        ancestors(fieldFilter: {filters: {fieldName: "deletionDate", evaluation: NOT_EMPTY}}) {
+            deletionDate:property(name: "j:deletionDate") {
+                value
+            }
+            deletionUser: property(name: "j:deletionUser") {
+                value
+            }
+        }
         site {
             ...NodeCacheRequiredFields
         }

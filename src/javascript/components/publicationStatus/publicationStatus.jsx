@@ -74,13 +74,13 @@ class PublicationStatusModified {
 class PublicationStatusMarkedForDeletion {
 
     getDetailsMessage(node, t) {
-        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: node.deleted});
+        return t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy!==''? node.deletedBy : node.parentDeletionUser[0], timestamp: node.deleted!==''? node.deleted : node.parentDeletionDate[0]});
     }
 
     geti18nDetailsMessage(node, t, locale = "en") {
         return <React.Fragment>
-            { t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy, timestamp: ""}) }
-            <Moment format={"LLL"} locale={ locale }>{node.deleted}</Moment>
+            { t("label.contentManager.publicationStatus.markedForDeletion", {userName: node.deletedBy!=='' ? node.deletedBy : node.parentDeletionUser[0], timestamp: ""}) }
+            <Moment format={"LLL"} locale={ locale }>{node.deleted!==''? node.deleted : node.parentDeletionDate[0]}</Moment>
         </React.Fragment>
     }
 

@@ -153,6 +153,8 @@ class ContentData extends React.Component {
                             deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
                             wipStatus: (contentNode.wipStatus != null ? contentNode.wipStatus.value : ''),
                             wipLangs: (contentNode.wipLangs != null ? contentNode.wipLangs.values : []),
+                            parentDeletionDate: _.map(contentNode.ancestors, ancestor => {return ancestor.deletionDate!==null ? ancestor.deletionDate.value : ''}),
+                            parentDeletionUser: _.map(contentNode.ancestors, ancestor => {return ancestor.deletionUser!==null ? ancestor.deletionUser.value : ''}),
                             icon: contentNode.primaryNodeType.icon,
                             width: (contentNode.width != null ? contentNode.width.value : ''),
                             height: (contentNode.width != null ? contentNode.height.value : '')

@@ -47,10 +47,10 @@ const styles = theme => ({
     },
     blockCore: {
         marginTop: -28,
-        marginLeft: -24,
         marginBottom: -2,
     },
     blockCoreSearch: {
+        marginLeft: -17,
         marginTop: -28,
         backgroundColor: "orange"
     },

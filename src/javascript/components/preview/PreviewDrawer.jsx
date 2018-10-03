@@ -14,6 +14,7 @@ const styles = theme => ({
     drawerHeader: {
         display: 'flex',
         alignItems: 'center',
+        backgroundColor: theme.palette.common.white,
         justifyContent: 'space-between',
         padding: '0 8px',
         ...theme.mixins.toolbar,
@@ -48,7 +49,7 @@ const styles = theme => ({
     },
     modalTransition: {
         transition: '.23s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
-        width: 370,
+        width: 550,
         top: '140px!important',
         right: '24px!important',
     },
@@ -72,7 +73,8 @@ const styles = theme => ({
         transitionDuration: '.3s',
         // transition: 'inherit!important',
         boxShadow: 'none',
-        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.background.paper,
+        backgroundColor: theme.palette.common.white,
         height: 'calc(100vh - 140px)',
         maxHeight: 'calc(100vh - 140px)',
     },
@@ -81,7 +83,8 @@ const styles = theme => ({
         transitionDuration: '.3s',
         width: '100%',
         boxShadow: 'none',
-        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.background.paper,
+        backgroundColor: theme.palette.common.white,
         right: '0px!important',
         height: '100vh',
         maxHeight: '100vh'
@@ -169,9 +172,9 @@ class PreviewDrawer extends React.Component {
                     </TableHead>
                     <TableBody>
                         <TableRow>
-                            <TableCell>
+                            <TableCell padding='none'>
                                 <div className={classes.drawerHeader}>
-                                    <IconButton onClick={this.props.onClose}>
+                                    <IconButton onClick={this.props.onClose} color={'inherit'}>
                                         <ChevronRightIcon/>
                                     </IconButton>
                                 </div>

@@ -138,6 +138,7 @@ class ContentTrees extends React.Component {
                                             this.componentsRefs.push(componentRef);
                                             return <ListItem data-cm-role={contentTreeConfig.key}
                                                              disableGutters
+                                                             className={classes.disablePad}
                                                              key={contentTreeConfig.key}>
                                                 <ContentTree
                                                     onContextualMenu={onContextualMenu}

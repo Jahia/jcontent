@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { translate } from "react-i18next";
-import { withStyles, IconButton, MenuItem, Menu } from "@material-ui/core";
+import { withStyles, IconButton, Button, MenuItem, Menu } from "@material-ui/core";
 import { Share } from "@material-ui/icons";
 import copy from 'copy-to-clipboard';
 import {lodash as _} from "lodash";
@@ -9,6 +9,9 @@ import {connect} from "react-redux";
 const styles = theme => ({
     button: {
         margin: theme.spacing.unit
+    },
+    colorIcon: {
+        color: '#303030'
     }
 });
 
@@ -28,19 +31,20 @@ class ShareMenu extends Component {
 
 
     render() {
-        const {t, selection} = this.props;
+        const {t, selection, classes} = this.props;
         const {shareMenuAnchor} = this.state;
         if (_.isEmpty(selection)) {
             return null;
         }
         const selectedItem = selection[0];
         return <span>
-            <IconButton
+            <Button
                 aria-owns={shareMenuAnchor ? 'share-menu' : null}
                 aria-haspopup="true"
+                className={classes.colorIcon}
                 onClick={(event) => this.handleMenuClick(event, "shareMenuAnchor")}>
                 <Share/>
-            </IconButton>
+            </Button>
             <Menu
                 id="share-menu"
                 anchorEl={shareMenuAnchor}

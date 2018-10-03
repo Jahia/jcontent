@@ -113,6 +113,9 @@ const styles = theme => ({
         display: 'flex',
         width: '100%'
 
+    },
+    ButtonAction: {
+        margin: 0,
     }
 });
 
@@ -147,19 +150,15 @@ class ContentLayout extends React.Component {
 
         }
     };
-
     handleDrawerViewOpen = () => {
         this.setState({open_view: true});
     };
-
     handleDrawerOpenView = () => {
         this.setState({open_view: true, open: false});
     };
-
     handleDrawerCloseView = () => {
         this.setState({open_view: false});
     };
-
     //Force can be `show` or `hide`
     handleShowPreview = (selection, force) => {
         let {previewState, setPreviewState} = this.props;
@@ -262,11 +261,11 @@ class ContentLayout extends React.Component {
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {this.isBrowsing() && !this.isRootNode() &&
-                            <Actions menuId={"createMenu"} context={{path: path}}>
-                                {(props) => <CmButton {...props}><Add/></CmButton>}
-                            </Actions>
-                            }
+                            {/*{this.isBrowsing() && !this.isRootNode() &&*/}
+                            {/*<Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>*/}
+                                {/*{(props) => <CmButton {...props}><Add/></CmButton>}*/}
+                            {/*</Actions>*/}
+                            {/*}*/}
                             {this.isBrowsing() &&
                             <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
                                 {t("label.contentManager.tree." + (open ? "hide" : "show"))}

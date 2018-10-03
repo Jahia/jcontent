@@ -24,14 +24,11 @@ import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATE
 
 const styles = theme => ({
     root: {
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
         transition: "width 0.3s ease-in 0s",
-        width: 650,
+        width: 550,
     },
     rootFullWidth: {
-        width: '100%',
+        width: '100vw',
         transition: "width 0.3s ease-in 0s",
     },
     button: {
@@ -39,41 +36,49 @@ const styles = theme => ({
     },
     previewPaper: {
         flex: 9,
+        width: '550',
         position: "relative"
     },
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
-        padding: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 7,
+        padding: theme.spacing.unit * 1,
+        color: theme.palette.background.paper,
+        backgroundColor: theme.palette.common.white,
+        height: 'calc(100vh - 300px)',
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: 'calc(100vh - 300px)',
         width: '100%!important',
         maxHeight: 'calc(100vh - 300px)',
     },
     previewContainerFullScreen: {
-        top: "0!important",
-        left: "0!important",
-        width: '100%!important',
+        width: '100vw!important',
+        textAlign: 'center',
+        overflowY: 'scroll',
+        overflowX: 'scroll',
+        color: theme.palette.background.paper,
+        backgroundColor: theme.palette.common.white,
+        padding: theme.spacing.unit * 1,
+        paddingBottom: theme.spacing.unit * 7,
         height: "100%!important"
     },
     unpublishButton: {
-        float: "right",
+        textAlign: 'center',
         margin: theme.spacing.unit
     },
     controlsPaperEdit: {
-        bottom: 0,
-        flex: 3,
-        maxHeight: "200px",
-        backgroundColor: "#555",
+        position: 'fixed',
+        left: '0',
+        bottom: '0',
         width: '100%',
-        marginLeft: theme.spacing.unit * (-1),
-        position: "absolute"
+        textAlign: 'center',
     },
     controlsPaperLive: {
-        bottom: 0,
-        flex: 3,
-        maxHeight: "52px",
-        backgroundColor: "#555",
+        position: 'fixed',
+        left: '0',
+        bottom: '0',
+        width: '100%',
+        textAlign: 'center',
     },
     titleBar: {
         color: theme.palette.background.paper,
@@ -92,7 +97,7 @@ const styles = theme => ({
     },
     drawerWidth: {
         boxShadow: 'none',
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.common.white,
         height: 'calc(100vh - 140px)',
         overflow: 'hidden!important',
         maxHeight: 'calc(100vh - 140px)',
@@ -108,9 +113,11 @@ const styles = theme => ({
     },
     footerButton : {
         textAlign: 'right'
-    }
+    },
+    colorIcon: {
+        color: '#303030'
+    },
 });
-
 class ContentPreview extends React.Component {
 
     constructor(props) {
@@ -216,14 +223,14 @@ class ContentPreview extends React.Component {
             case 'edit':
                 return <Grid container spacing={0} className={classes.footerGrid}>
                     <Grid container spacing={0}>
-                        <Grid container item xs={10} className={classes.titleBar}>
+                        <Grid container item xs={8} className={classes.titleBar}>
                             <div className={classes.contentTitle}>
                                 {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
                                 </div>
                         </Grid>
-                        <Grid container item xs={2} justify={"flex-end"} className={classes.footerButton}>
+                        <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
                             <ShareMenu/>
-                            {this.screenModeButtons(handleFullScreen)}
+                            {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
                     </Grid>
                     <Grid container xs={12}>
@@ -279,17 +286,18 @@ class ContentPreview extends React.Component {
                 return <DocumentViewer file={file} type={type}/>
             }
         } else {
-            return <div id="previewContent" className={classes.previewContainer}
+            return <div
+                        id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}
                         dangerouslySetInnerHTML={{__html: displayValue}}/>
         }
     }
 
-    screenModeButtons(handleFullScreen) {
+    screenModeButtons(handleFullScreen, classes) {
         handleFullScreen(this.state.fullScreen);
         if (this.state.fullScreen) {
-            return <IconButton onClick={this.handleDialogState}><FullscreenExit/></IconButton>
+            return <Button><FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/></Button>
         }
-        return <IconButton onClick={this.handleDialogState}><Fullscreen/></IconButton>
+        return <Button><Fullscreen onClick={this.handleDialogState} className={classes.colorIcon} /></Button>
     }
 
     queryVariables(path) {

@@ -18,32 +18,31 @@ import defaultIconRenderer from './iconRenderer';
 let styles = (theme) => ({
     root: {
         position: "relative",
-        padding: '0!important',
-        width: '100%',
+        padding: '0 !important',
+        width: '100%'
     },
     loading: {
         opacity: 0.8
     },
     listItemSelected: {
         background: '#007cb0',
-        color: '#F5F5F5!important'
+        color: '#F5F5F5 !important'
     },
     listItem: {
         fontFamily: '"Nunito sans", sans-serif',
         backgroundPosition: 'left 10px center',
         backgroundRepeat: 'no-repeat',
-        padding: '0!important',
+        padding: '0 !important',
         fontWeight: 300,
         fontSize: '0.928rem',
         whiteSpace: 'nowrap',
-        width: '100%',
-        color: '#5E6565',
+        color: '#5E6565'
     },
     listItemLabel: {
         userSelect: 'none',
         fontWeight: '300',
         fontSize: '0.928rem',
-        padding: '0!important',
+        padding: '0 !important',
         '& h3': {
             fontSize: '0.875rem',
             color: '#5E6565',
@@ -60,7 +59,7 @@ let styles = (theme) => ({
         color: '#5c6164'
     },
     selectedText: {
-        color: 'whitesmoke!important'
+        color: 'whitesmoke !important'
     },
     loadingContainer: {
         position: "absolute",
@@ -75,12 +74,11 @@ let styles = (theme) => ({
         color: 'whitesmoke'
     },
     buttonContainer: {
-        padding: '6px 4px 6px 4px',
         '&:hover': {
             backgroundColor: 'transparent'
         },
         minHeight: 20,
-        minWidth: 18,
+        minWidth: 18
     },
     triangle: {
         width: 0,

@@ -186,9 +186,9 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     sortContentsEntriesAlphabetical(entries) {
-        if (entries[0] && entries[0].path === "/sites/systemsite/contents") {
+        if (entries[0] && entries[0].name === "contents") {
             entries.sort(function(a, b) {
-                if (a.path === "/sites/systemsite/contents") {
+                if (a.name === "contents") {
                     return false;
                 }
                 return a.name > b.name;

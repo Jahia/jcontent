@@ -17,7 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.1.0-11",
     "@jahia/apollo-dx": "^1.0.0-beta.20180918132438",
     "@jahia/i18next": "^1.0.0-beta.20180628145923",
-    "@jahia/react-apollo": "^1.0.0-beta.20180605080720",
+    "@jahia/react-apollo": "^1.0.0-beta.20181001180752",
     "@jahia/react-material": "^1.0.0-beta.20180921145242",
     "@material-ui/core": "^3.1.0",
     "@material-ui/icons": "^3.0.1",

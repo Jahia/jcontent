@@ -199,6 +199,13 @@ class ContentLayout extends React.Component {
         return (refetchingData) => setRefetcher(type, refetchingData);
     };
 
+    refreshContentsAndTree(contentTreeConfigs) {
+        triggerRefetch(refetchTypes.CONTENT_DATA);
+        contentTreeConfigs.forEach((config) => {
+            triggerRefetch(config.key);
+        });
+    }
+
     isBrowsing() {
         let {mode} = this.props;
         return (mode === constants.mode.BROWSE || mode === constants.mode.FILES)
@@ -213,6 +220,8 @@ class ContentLayout extends React.Component {
         let {path, siteKey} = this.props;
         return (path === ("/sites/" + siteKey))
     };
+
+
 
     render() {
         const {anchor, open_view, open} = this.state;
@@ -263,13 +272,7 @@ class ContentLayout extends React.Component {
                                 {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                             </Button>}
 
-                            <Button variant="text" className={classes.showTreeButton} onClick={() => {
-                                    triggerRefetch(refetchTypes.CONTENT_DATA);
-                                    contentTreeConfigs.forEach((config) => {
-                                        triggerRefetch(config.key);
-                                    });
-                                }
-                            }>
+                            <Button variant="text" className={classes.showTreeButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 {t("label.contentManager.refresh")}
                             </Button>
 
@@ -353,13 +356,14 @@ class ContentLayout extends React.Component {
                                    onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
                                    layoutQuery={layoutQuery}
                                    layoutQueryParams={layoutQueryParams}
-                                   dxContext={dxContext}>
-                        {/*Always get row from query not from state to be up to date*/}
-
-                    </PreviewDrawer>
+                                   dxContext={dxContext} />
                 </div>
 
-                <Upload/>
+                <Upload uploadUpdateCallback={(status) => {
+                    if (status && status.uploading === 0) {
+                        this.refreshContentsAndTree(contentTreeConfigs)
+                    }
+                }} />
                 <ContextualMenu/>
 
             </React.Fragment>

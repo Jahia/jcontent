@@ -200,8 +200,28 @@ class ContentPreview extends React.Component {
         let selectedItem = selection[0];
         switch (previewMode) {
             case 'live':
-                return <Grid container spacing={0}>
+                return <Grid container spacing={0} className={classes.footerGrid}>
+                    <Grid container spacing={0}>
+                        <Grid container item xs={8} className={classes.titleBar}>
+                            <div className={classes.contentTitle}>
+                                {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
+                            </div>
+                        </Grid>
+                        <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
+                            <ShareMenu/>
+                            {this.screenModeButtons(handleFullScreen, classes)}
+                        </Grid>
+                    </Grid>
+                    <Grid container xs={12}>
+                        <div className={classes.contentSubTitle}>
+                            <PublicationInfo/>
+                        </div>
+                    </Grid>
                     <Grid item xs={12}>
+                        {/*Element that will contain image controls if an image is the document being previewed*/}
+                        <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
+                    </Grid>
+                    <Grid item xs={12} style={{ display: "flex", justifyContent: "flex-end"}}>
                         <Actions menuId={"livePreviewBar"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,

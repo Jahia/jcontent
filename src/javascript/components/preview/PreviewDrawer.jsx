@@ -109,7 +109,6 @@ class PreviewDrawer extends React.Component {
         this.state = {
             fullScreen: false,
         };
-
     }
 
     handleFullScreen = (value) => {
@@ -135,6 +134,9 @@ class PreviewDrawer extends React.Component {
                         <TableRow className={classes.drawerTableHead}>
                             <TableCell className={classes.drawerTableCell}>
                                 <Toolbar disableGutters>
+                                    <IconButton onClick={this.props.onClose} color={'inherit'} style={{padding: 0, marginRight: 10}}>
+                                        <ChevronRightIcon fontSize="small"/>
+                                    </IconButton>
                                     <Typography className={classes.insideCell}>
                                         Preview
                                     </Typography>
@@ -173,11 +175,6 @@ class PreviewDrawer extends React.Component {
                     <TableBody>
                         <TableRow>
                             <TableCell padding='none'>
-                                <div className={classes.drawerHeader}>
-                                    <IconButton onClick={this.props.onClose} color={'inherit'}>
-                                        <ChevronRightIcon/>
-                                    </IconButton>
-                                </div>
                                 <ContentPreview
                                     layoutQuery={layoutQuery}
                                     layoutQueryParams={layoutQueryParams}

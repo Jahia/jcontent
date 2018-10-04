@@ -325,7 +325,7 @@ class ContentLayout extends React.Component {
                                      layoutQueryParams={layoutQueryParams}
                                      setRefetch={ this.setContentRefetcher }>
                             {({rows, totalCount}) => {
-                                return <Paper className={classes.paper}>
+                                return <Paper className={classes.paper} >
                                     {mode === constants.mode.FILES && !this.state.showList
                                         ? <FilesGrid
                                             size={valueToSizeTransformation(this.state.filesGridSizeValue)}

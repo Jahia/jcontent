@@ -337,20 +337,6 @@ class ContentListTable extends React.Component {
                                                     return <TableCell className={classes.hoveredRowActionsCell}
                                                                       key={column.id} padding={'none'}
                                                                       data-cm-role={'table-content-list-cell-' + column.id}>
-                                                        <Actions menuId={"tablePublishMenu"} context={{
-                                                            uuid: n.uuid,
-                                                            path: n.path,
-                                                            displayName: n.name,
-                                                            nodeName: n.nodeName
-                                                        }}>
-                                                            {(props) => {
-                                                                return <CmIconButton
-                                                                    className={classes.hoveredRowAction} {...props}
-                                                                    cmRole={"table-content-list-button-publish"}>
-                                                                    <Autorenew/>
-                                                                </CmIconButton>
-                                                            }}
-                                                        </Actions>
                                                         <CmIconButton className={classes.hoveredRowAction}
                                                                     data-cm-role={"table-content-list-button"}
                                                                     onClick={handleShowPreview}>

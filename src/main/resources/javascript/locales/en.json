@@ -69,7 +69,8 @@
           "lockNode": "Lock content",
           "live": "Live",
           "staged": "Staged",
-          "staging": "Staging"
+          "staging": "Staging",
+          "publishTableMenu": "Publish"
       },
       "contentTypes": {
           "any": "Any content",

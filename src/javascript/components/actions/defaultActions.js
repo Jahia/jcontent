@@ -95,7 +95,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["publishMenu"],
+        target: ["publishMenu", "publishTableMenu"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.publish",
         allSubtree: false,
@@ -125,21 +125,27 @@ let defaultActions = {
         component: "menuAction",
         menuId: "advancedPublish",
         icon: "Publish",
-        target: ["contentTreeMenuActions", "contextualMenuPagesAction", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
+        target: ["contentTreeMenuActions", "contextualMenuPagesAction", "contextualMenuFoldersAction", "contextualMenuFilesAction"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.advancedPublish"
     },
     publishMenu: {
         component: "menuAction",
         menuId: "publishMenu",
-        target: ["editPreviewBar", "tablePublishMenu", "thumbnailPublishMenu"],
+        target: ["editPreviewBar", "thumbnailPublishMenu"],
         labelKey: "label.contentManager.contentPreview.publishMenu"
+    },
+    publishTableMenu: {
+        component: "menuAction",
+        menuId: "publishTableMenu",
+        target: ["tableMenuActions"],
+        labelKey: "label.contentManager.contentPreview.publishTableMenu"
     },
     publishInAllLanguages: {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["publishMenu", "advancedPublish"],
+        target: ["publishMenu", "advancedPublish", "publishTableMenu", "contextualMenuContentAction"],
         requiredPermission: "",
         allSubTree: false,
         allLanguages: true,
@@ -191,7 +197,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["livePreviewBar", "publishMenu", "advancedPublish"],
+        target: ["livePreviewBar", "publishMenu", "advancedPublish", "publishTableMenu", "contextualMenuContentAction"],
         requiredPermission: "",
         allSubTree: false,
         allLanguages: false,

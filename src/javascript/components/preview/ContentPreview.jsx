@@ -46,21 +46,19 @@ const styles = theme => ({
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
         height: 'calc(100vh - 300px)',
-        overflowY: 'scroll',
-        overflowX: 'scroll',
+        overflow: 'scroll',
         width: '100%!important',
         maxHeight: 'calc(100vh - 300px)',
     },
     previewContainerFullScreen: {
-        width: '100vw!important',
+        width: '100vw',
         textAlign: 'center',
-        overflowY: 'scroll',
-        overflowX: 'scroll',
+        overflow: 'scroll',
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
         padding: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 7,
-        height: "100%!important"
+        height: "100vh"
     },
     unpublishButton: {
         textAlign: 'center',

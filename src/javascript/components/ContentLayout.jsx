@@ -2,9 +2,8 @@ import React from 'react';
 import {withApollo} from 'react-apollo';
 import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
-import ContentPreview from "./preview/ContentPreview";
 import PreviewDrawer from "./preview/PreviewDrawer";
-import {Grid, Button, Paper, withStyles, Drawer, Menu} from "@material-ui/core";
+import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
 import {Add} from "@material-ui/icons";
 import classNames from 'classnames'
 import ContentTrees from "./ContentTrees";
@@ -47,7 +46,8 @@ const styles = theme => ({
     },
     blockCore: {
         marginTop: -28,
-        marginBottom: -2
+        marginBottom: -2,
+        marginLeft: -24,
     },
     blockCoreSearch: {
         marginLeft: -17,
@@ -55,8 +55,7 @@ const styles = theme => ({
         backgroundColor: "orange"
     },
     breadCrumbs: {
-        marginLeft: -24
-    },
+        },
     buttons: {
         textAlign: 'right'
     },
@@ -120,7 +119,7 @@ const styles = theme => ({
 });
 
 const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 4;
+const GRID_PANEL_BUTTONS_SIZE = 7;
 
 class ContentLayout extends React.Component {
 
@@ -149,18 +148,6 @@ class ContentLayout extends React.Component {
             this.setState({open: true});
 
         }
-    };
-
-    handleDrawerViewOpen = () => {
-        this.setState({open_view: true});
-    };
-
-    handleDrawerOpenView = () => {
-        this.setState({open_view: true, open: false});
-    };
-
-    handleDrawerCloseView = () => {
-        this.setState({open_view: false});
     };
 
     //Force can be `show` or `hide`
@@ -264,10 +251,22 @@ class ContentLayout extends React.Component {
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
+                            {mode === constants.mode.FILES &&
+                            <React.Fragment>
+
+                                <FilesGridSizeSelector initValue={4}
+                                                       onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                            </React.Fragment>
+                            }
+                            {mode === constants.mode.FILES &&
+                            <FilesGridModeSelector showList={this.state.showList}
+                                                   onChange={() => this.setState({showList: !this.state.showList})}/>
+                            }
                             {this.isBrowsing() && !this.isRootNode() &&
-                                <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
-                                    {(props) => <CmButton {...props}><Add/></CmButton>}
-                                </Actions>
+
+                            <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
+                                {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
+                            </Actions>
                             }
                             {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
@@ -277,15 +276,7 @@ class ContentLayout extends React.Component {
                             <Button variant="text" className={classes.showTreeButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 {t("label.contentManager.refresh")}
                             </Button>
-                            {mode === constants.mode.FILES &&
-                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
-                            }
-                            {mode === constants.mode.FILES &&
-                                <React.Fragment>
-                                    <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
-                                    <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
-                                </React.Fragment>
-                            }
+
                             {this.isSearching() &&
                                 <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
                                     {t("label.contentManager.search.clear")}
@@ -373,7 +364,7 @@ class ContentLayout extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
         mode: state.mode,
         siteKey: state.site,

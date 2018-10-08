@@ -1,8 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GridIcon from '@material-ui/icons/GridOn';
 import ListIcon from '@material-ui/icons/Menu';
-import IconButton from '@material-ui/core/IconButton';
+import ViewModule from '@material-ui/icons/ViewModule';
+import Button from '@material-ui/core/Button';
+import {withStyles} from "@material-ui/core/styles/index";
+
+const styles = ({
+    iconSize: {
+        fontSize: '1.5em'
+    },
+});
 
 class FilesGridModeSelector extends React.Component {
 
@@ -11,11 +18,12 @@ class FilesGridModeSelector extends React.Component {
     }
 
     render() {
-        return <IconButton onClick={ this.props.onChange }>
+        const { classes } = this.props;
+        return <Button onClick={ this.props.onChange }>
             {
-                this.props.showList ? <GridIcon /> : <ListIcon />
+                this.props.showList ? <ViewModule className={classes.iconSize} /> : <ListIcon className={classes.iconSize}/>
             }
-        </IconButton>;
+        </Button>;
     }
 }
 
@@ -24,4 +32,4 @@ FilesGridModeSelector.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-export default FilesGridModeSelector;
+export default withStyles(styles)(FilesGridModeSelector);

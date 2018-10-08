@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import classNames from 'classnames'
 import ContentPreview from "../preview/ContentPreview";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import {Drawer, Paper, Button, Table, TableCell, TableHead, TableBody, TableRow, Typography, Toolbar} from '@material-ui/core';
+import {Drawer, Button, Table, TableCell, TableHead, TableBody, TableRow, Typography, Toolbar} from '@material-ui/core';
 import {connect} from "react-redux";
 import {cmSetPreviewMode} from "../redux/actions";
 
@@ -71,7 +71,6 @@ const styles = theme => ({
     drawerWidth: {
         overflow: 'hidden!important',
         transitionDuration: '.3s',
-        // transition: 'inherit!important',
         boxShadow: 'none',
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,

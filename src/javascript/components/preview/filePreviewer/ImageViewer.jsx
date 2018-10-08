@@ -104,7 +104,7 @@ class ImageViewer extends React.Component {
         let {cropEnabled, file, angle} = this.state;
         return (
             <ImagePreviewContainer>
-                <Canvas crop={cropEnabled} source={file} angle={angle} width={650} height={650} />
+                <Canvas crop={cropEnabled} source={file} angle={angle} width={550} height={550} />
             </ImagePreviewContainer>
         )
     }

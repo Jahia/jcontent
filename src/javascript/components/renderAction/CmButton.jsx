@@ -12,26 +12,46 @@ const styles = theme => ({
     },
     button: {
         margin: theme.spacing.unit
+    },
+    buttonText: {
+        margin: theme.spacing.unit * 0,
+        marginRight: theme.spacing.unit * 1,
+        color: theme.palette.common.white,
     }
 });
 
 class CmButton extends React.Component {
 
     render() {
-        const {classes, onClick, labelKey, t, children} = this.props;
+        const {classes, onClick, labelKey, t, children, text} = this.props;
         let childrenCount = React.Children.count(children);
-        return (
-            <Button
-                className={classes.button}
-                variant="contained"
-                size="medium"
-                color="primary"
-                onClick={(event) => onClick(event)}
-            >
-                {childrenCount > 0 && children}
-                {t(labelKey)}
-            </Button>
-        )
+        if (text) {
+            return (
+                <Button
+                    className={classes.buttonText}
+                    variant="text"
+                    size="medium"
+                    onClick={(event) => onClick(event)}
+                >
+                    {childrenCount > 0 && children}
+                    {t(labelKey)}
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    size="medium"
+                    color="primary"
+                    onClick={(event) => onClick(event)}
+                >
+                    {childrenCount > 0 && children}
+                    {t(labelKey)}
+                </Button>
+            )
+        }
     }
 }
 

@@ -15,7 +15,7 @@ const styles = theme => ({
     },
     inputSize:  {
         height: 34,
-        padding: '0!important'
+        padding: '0!important',
     }
 });
 

@@ -3,12 +3,22 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/lab/Slider';
 
-const styles = {
+const styles = theme => ({
     root: {
-        flex: "0 0 auto",
-        width: 150,
+        width: 110,
+        color: theme.palette.common.white,
+        padding: 0,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        display: 'inline-grid',
     },
-};
+    track: {
+        backgroundColor: theme.palette.common.white
+    },
+    thumb: {
+        backgroundColor: theme.palette.common.white
+    }
+});
 
 const totalsValues = 5; // 2, 3, 4, 6, 12
 const step = 1;
@@ -33,9 +43,10 @@ class FilesGridSizeSelector extends React.Component {
         const { value } = this.state;
 
         return (
-            <span className={classes.root}>
-                <Slider value={ value } min={ 1 } max={ totalsValues } step={ step } onChange={ this.handleChange } />
-            </span>
+            <Slider value={ value }
+                    classes={{root: classes.root, track: classes.track, thumb: classes.thumb}}
+                    min={ 1 }
+                    max={ totalsValues } step={ step } onChange={ this.handleChange } />
         );
     }
 }

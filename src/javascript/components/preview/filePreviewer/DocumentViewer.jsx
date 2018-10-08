@@ -31,14 +31,14 @@ const styles = theme => ({
     },
     defaultPaper: {
         flex:1,
-        position: "absolute",
+        position: "relative",
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -72.5%)"
     },
     videoPaper: {
         flex:1,
-        position: "absolute",
+        position: "relative",
         left: "50%",
         top: "50%",
         transform: "translate(-52.5%, -72.5%)"

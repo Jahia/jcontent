@@ -12,8 +12,35 @@ const styles = theme => ({
     grid: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: '75vh',
-        maxHeight: '75vh'
+        height: 'calc(100vh - 140px)',
+        maxHeight:  'calc(100vh - 140px)',
+        margin: '0!important',
+        backgroundColor: '#efefef',
+    },
+    gridEmpty: {
+        overflowY: 'scroll',
+        overflowX: 'scroll',
+        height: 'calc(100vh - 140px)',
+        maxHeight:  'calc(100vh - 140px)',
+        margin: '0!important',
+        backgroundColor: '#efefef',
+    },
+    centerGrid: {
+        paddingTop: '24px!important',
+        paddingBottom: '24px!important',
+        paddingRight: '24px!important',
+        paddingLeft: '24px!important',
+
+    },
+    row : {
+        backgroundColor: 'red',
+    },
+    rowPair: {
+        backgroundColor: 'black',
+    },
+    empty: {
+        width: '100%',
+        textAlign: 'center'
     }
 });
 
@@ -43,14 +70,19 @@ class FilesGrid extends Component {
         const {hoveredCard} = this.state;
 
         if (this.props.rows.length === 0) {
-            return <h3>
-                { t('label.contentManager.filesGrid.emptyMessage') }
-            </h3>
+            return (
+            <Grid container spacing={ 8 } className={classes.gridEmpty}>
+                <h3 className={classes.empty}>
+                    { t('label.contentManager.filesGrid.emptyMessage') }
+                </h3>
+            </Grid>
+            )
         }
         return <Grid container spacing={ 8 } className={classes.grid}>
             {
                 this.props.rows.map((node) => (
                     <Grid key={ node.uuid } item xs={ size }
+                          className={classes.centerGrid}
                           onMouseEnter={($event) => this.onHoverEnter($event, node.path) }
                           onMouseLeave={($event) => this.onHoverExit($event)}>
                         <DxContext.Consumer>

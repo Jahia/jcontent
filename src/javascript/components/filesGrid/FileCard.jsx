@@ -52,6 +52,7 @@ const styles = theme => ({
     },
     details: {
         display: 'flex',
+        color: 'red',
         flexDirection: 'row',
     },
     verticalDetails: {
@@ -70,6 +71,7 @@ const styles = theme => ({
     },
     coverLarge: {
         width: 300,
+        backgroundColor: theme.palette.common.white,
         height: 300,
     },
     coverMedium: {
@@ -87,7 +89,7 @@ const styles = theme => ({
         position:"absolute",
         top: "11",
         right: "10",
-        color: "#fff",
+        color: theme.palette.background.paper,
         padding: 0,
         '&:hover': {
             backgroundColor: "transparent"
@@ -101,7 +103,7 @@ const styles = theme => ({
         position:"absolute",
         top: "12",
         right: "35",
-        color: "#fff",
+        color: theme.palette.background.paper,
         '&:hover': {
             backgroundColor: "transparent"
         },
@@ -128,8 +130,21 @@ const styles = theme => ({
             width:"18px",
             height:"18px"
         }
+    },
+    cardStyle: {
+        marginLeft: 0,
+        marginRight: 0,
+        padding: 0,
+        backgroundColor: 'transparent'
+    },
+    cardContent: {
+        marginLeft: '0!important',
+        marginRight:'0!important',
+        padding: '0!important',
+    },
+    textTypo: {
+        color: theme.palette.background.paper,
     }
-
 });
 
 const PUBLICATION_INFO_WIDTH_LARGE = 400;
@@ -176,6 +191,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
+                     classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
@@ -185,20 +201,20 @@ class FileCard extends Component {
                 title={ node.name }
             />
             <div className={classes.details}>
-                <CardContent className={classes.content}>
+                <CardContent className={classes.content} classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ `${node.width} x ${node.height}` }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -208,6 +224,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
+                     classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
@@ -217,14 +234,14 @@ class FileCard extends Component {
                 title={ node.name }
             />
             <div className={classes.details}>
-                <CardContent className={classes.content}>
+                <CardContent className={classes.content} classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
@@ -237,6 +254,7 @@ class FileCard extends Component {
         const { classes, t, node, dxContext, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
+                     classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <CardMedia
@@ -247,11 +265,11 @@ class FileCard extends Component {
             />
             <div className={classes.verticalDetails} style={{ flex: 1.5 }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
-                <CardContent className={classes.content}>
+                <CardContent className={classes.content} classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -261,6 +279,8 @@ class FileCard extends Component {
         const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
+                     classes={{ root: classes.cardStyle}}
+
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_LARGE }/>
@@ -268,20 +288,20 @@ class FileCard extends Component {
                 fileIcon(node.path, '6x', {fontSize: "160px"})
             }
             <div className={classes.details}>
-                <CardContent className={classes.content}>
+                <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ `${node.width} x ${node.height}` }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -291,6 +311,7 @@ class FileCard extends Component {
         const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
+                     classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
@@ -298,14 +319,14 @@ class FileCard extends Component {
                 fileIcon(node.path, '6x', {fontSize: "160px"})
             }
             <div className={classes.details}>
-                <CardContent className={classes.content}>
+                <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
 
-                    <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
@@ -318,6 +339,7 @@ class FileCard extends Component {
         const { classes, t, node, onContextualMenu } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
+                     classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", path: node.path, uuid: node.uuid, displayName: node.name, nodeName: node.nodeName})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <div style={{textAlign: "center", flex: 2}}>
@@ -327,15 +349,15 @@ class FileCard extends Component {
             </div>
             <div className={classes.verticalDetails} style={{ flex: 2 }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
-                <CardContent className={classes.content}>
+                <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
                     <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
 
                     { cardType !== 2 && <React.Fragment>
-                        <Typography variant="caption">{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                        <Typography variant="body2" color="textSecondary">
+                        <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                        <Typography variant="body2" className={classes.textTypo}>
                             { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                             <Moment format={"LLL"}>{node.created}</Moment>
                         </Typography>

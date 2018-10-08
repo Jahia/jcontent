@@ -42,12 +42,11 @@ const styles = theme => ({
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         paddingBottom: theme.spacing.unit * 7,
+        width: 550,
         padding: theme.spacing.unit * 1,
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
-        height: 'calc(100vh - 300px)',
         overflow: 'scroll',
-        width: '100%!important',
         maxHeight: 'calc(100vh - 300px)',
     },
     previewContainerFullScreen: {
@@ -55,10 +54,10 @@ const styles = theme => ({
         textAlign: 'center',
         overflow: 'scroll',
         color: theme.palette.background.paper,
+        paddingBottom: theme.spacing.unit * 16,
         backgroundColor: theme.palette.common.white,
         padding: theme.spacing.unit * 1,
-        paddingBottom: theme.spacing.unit * 7,
-        height: "100vh"
+        height: 'calc(100vh - 28px)',
     },
     unpublishButton: {
         textAlign: 'center',
@@ -69,7 +68,6 @@ const styles = theme => ({
         left: '0',
         bottom: '0',
         width: '100%',
-        textAlign: 'center',
     },
     controlsPaperLive: {
         position: 'fixed',
@@ -83,6 +81,7 @@ const styles = theme => ({
         paddingBottom: '0px',
     },
     contentTitle: {
+        textAlign: 'left',
         fontSize: '27px',
         paddingLeft: theme.spacing.unit,
         fontWeight: 100,
@@ -113,8 +112,12 @@ const styles = theme => ({
         textAlign: 'right'
     },
     colorIcon: {
+        marginTop: 6,
         color: '#303030'
     },
+    lockButton: {
+        textAlign: 'left'
+    }
 });
 class ContentPreview extends React.Component {
 
@@ -153,6 +156,7 @@ class ContentPreview extends React.Component {
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
+        console.log(this.state.fullScreen);
         return <DxContext.Consumer>
             {dxContext => (
                 <div className={rootClass}>
@@ -260,7 +264,7 @@ class ContentPreview extends React.Component {
                         {/*Element that will contain image controls if an image is the document being previewed*/}
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={4} className={classes.lockButton}>
                         {selectionLocked ? this.unlock() : this.lock()}
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
@@ -294,14 +298,20 @@ class ContentPreview extends React.Component {
         if (data && data.nodeByPath.isFile) {
             let file = dxContext.contextPath + '/files/default' + data.nodeByPath.path;
             if (isPDF(data.nodeByPath.path)) {
-                return <PDFViewer key={data.nodeByPath.uuid} file={file}/>;
+                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                <PDFViewer key={data.nodeByPath.uuid} file={file}/>
+                </div>;
             } else if (isImage(data.nodeByPath.path)) {
-                return <ImageViewer key={data.nodeByPath.uuid}
+                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                <ImageViewer key={data.nodeByPath.uuid}
                                     elementId={this.state.imageControlElementId}
-                                    file={file}/>;
+                                    file={file}/>
+                </div>;
             } else {
                 let type = getFileType(file);
-                return <DocumentViewer file={file} type={type}/>
+                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                <DocumentViewer file={file} type={type}/>
+                </div>
             }
         } else {
             return <div
@@ -313,9 +323,9 @@ class ContentPreview extends React.Component {
     screenModeButtons(handleFullScreen, classes) {
         handleFullScreen(this.state.fullScreen);
         if (this.state.fullScreen) {
-            return <Button><FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/></Button>
+            return <FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/>
         }
-        return <Button><Fullscreen onClick={this.handleDialogState} className={classes.colorIcon} /></Button>
+        return <Fullscreen onClick={this.handleDialogState} className={classes.colorIcon} />
     }
 
     queryVariables(path) {

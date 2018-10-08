@@ -23,24 +23,35 @@ const styles = (theme) => ({
     }
 });
 
-let CmLeftDrawerContent = ({menuId, context, handleDrawerClose, actionPath, t, classes}) => <List
-    style={{marginLeft: '18px', marginTop: '18px'}}>
-    {console.log("CmLeftDrawerContent", menuId, _.includes(actionPath, menuId))}
-    <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose} actionPath={actionPath}>
-        {(menuConfig) =>
-            <ListItem selected={_.includes(actionPath, menuConfig.actionKey)} button onClick={(event) => menuConfig.onClick(event)}>
-                {menuConfig.hasChildren ? <div className={ (menuConfig.open || menuConfig.selected) ? classes.triangle_bottom : classes.triangle}/> : null}
+class CmLeftDrawerContent extends React.Component {
 
-                {console.log("CmLeftDrawerContent",  menuConfig.actionKey, _.includes(actionPath, menuConfig.actionKey))}
-                <FontAwesomeIcon
-                    icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>&nbsp;{t(menuConfig.labelKey, menuConfig.labelParams)}
-            </ListItem>
-        }
-    </Actions>
-</List>
+    render() {
 
-export default CmLeftDrawerContent = _.flowRight(
+        let {menuId, context, handleDrawerClose, actionPath, t, classes} = this.props;
+
+        return <List style={{marginLeft: '18px', marginTop: '18px'}}>
+            {console.log("CmLeftDrawerContent", menuId, _.includes(actionPath, menuId))}
+            <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose} actionPath={actionPath}>
+                {(menuConfig) =>
+                    <ListItem selected={_.includes(actionPath, menuConfig.actionKey)} button onClick={(event) => menuConfig.onClick(event)}>
+                        {menuConfig.hasChildren
+                            ? <div className={ (menuConfig.open || menuConfig.selected) ? classes.triangle_bottom : classes.triangle}/>
+                            : null
+                        }
+                        {console.log("CmLeftDrawerContent",  menuConfig.actionKey, _.includes(actionPath, menuConfig.actionKey))}
+                        <FontAwesomeIcon icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                        &nbsp;
+                        {t(menuConfig.labelKey, menuConfig.labelParams)}
+                    </ListItem>
+                }
+            </Actions>
+        </List>;
+    }
+}
+
+CmLeftDrawerContent = _.flowRight(
     translate(),
-    withStyles(styles),
+    withStyles(styles)
 )(CmLeftDrawerContent);
 
+export default CmLeftDrawerContent;

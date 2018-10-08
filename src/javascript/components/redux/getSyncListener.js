@@ -47,40 +47,41 @@ let deserializeQueryString = search => {
 };
 
 let getSyncListener = (store, history) => () => {
-        let previousValue = currentValue;
-        currentValue = select(store.getState());
-        if (previousValue) {
-            let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search)
-            if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
-                console.log("Path or query string changed");
-                if (currentValueFromUrl.site !== previousValue.site ||
-                    currentValueFromUrl.language !== previousValue.language ||
-                    currentValueFromUrl.mode !== previousValue.mode ||
-                    currentValueFromUrl.path !== previousValue.path ||
-                    !_.isEqual(currentValueFromUrl.params, previousValue.params)
-                ) {
-                    let data = {};
-                    Object.assign(data, 
-                            currentValueFromUrl.site !== previousValue.site ? {'site': currentValueFromUrl.site} : {},
-                            currentValueFromUrl.language !== previousValue.language ? {'language': currentValueFromUrl.language} : {},
-                            currentValueFromUrl.mode !== previousValue.mode ? {'mode': currentValueFromUrl.mode} : {},
-                            currentValueFromUrl.path !== previousValue.path ? {'path': currentValueFromUrl.path} : {},
-                            !_.isEqual(currentValueFromUrl.params, previousValue.params) ? {'params': currentValueFromUrl.params} : {});
-                    store.dispatch(cmGoto(data));
-                }
-            } else {
-                if ((previousValue.site !== currentValue.site && currentValueFromUrl.site !== currentValue.site) ||
-                    (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
-                    (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
-                    (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
-                    (!_.isEqual(currentValueFromUrl.params, currentValue.params))
-                ) {
-                    console.log("Application Params changed");
-                    history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, currentValue.path, currentValue.params));
-                }
+    let previousValue = currentValue;
+    currentValue = select(store.getState());
+    if (previousValue) {
+        let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search)
+        if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
+            console.log("Path or query string changed");
+            if (currentValueFromUrl.site !== previousValue.site ||
+                currentValueFromUrl.language !== previousValue.language ||
+                currentValueFromUrl.mode !== previousValue.mode ||
+                currentValueFromUrl.path !== previousValue.path ||
+                !_.isEqual(currentValueFromUrl.params, previousValue.params)
+            ) {
+                let data = {};
+                Object.assign(data,
+                    currentValueFromUrl.site !== previousValue.site ? {'site': currentValueFromUrl.site} : {},
+                    currentValueFromUrl.language !== previousValue.language ? {'language': currentValueFromUrl.language} : {},
+                    currentValueFromUrl.mode !== previousValue.mode ? {'mode': currentValueFromUrl.mode} : {},
+                    currentValueFromUrl.path !== previousValue.path ? {'path': currentValueFromUrl.path} : {},
+                    !_.isEqual(currentValueFromUrl.params, previousValue.params) ? {'params': currentValueFromUrl.params} : {}
+                );
+                store.dispatch(cmGoto(data));
+            }
+        } else {
+            if ((previousValue.site !== currentValue.site && currentValueFromUrl.site !== currentValue.site) ||
+                (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
+                (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
+                (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
+                (!_.isEqual(currentValueFromUrl.params, currentValue.params))
+            ) {
+                console.log("Application Params changed");
+                history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, currentValue.path, currentValue.params));
             }
         }
     }
-;
-export {extractParamsFromUrl}
+};
+
+export {extractParamsFromUrl};
 export default getSyncListener;

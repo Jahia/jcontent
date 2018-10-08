@@ -14,12 +14,11 @@ class Actions extends React.Component {
 
         const {lang, menuId, context, children, t, notificationContext, siteKey, ...rest} = this.props;
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
-        const actions = _.sortBy(_.map(actionsToDisplayKeys, key => {return {...actionsRegistry[key], actionKey:key}}), "priority");
+        const actions = _.sortBy(_.map(actionsToDisplayKeys, key => {return {...actionsRegistry[key], actionKey: key}}), "priority");
         return _.map(actions, action => {
 
             let ctx = _.clone(context);
-            let actionKey = action.actionKey;
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties, requireModuleInstalledOnSite} = action;
+            let {actionKey, requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties, requireModuleInstalledOnSite} = action;
             if (retrieveProperties != null) {
                 action.retrieveProperties.retrievePropertiesLang = lang;
             }
@@ -58,11 +57,9 @@ class Actions extends React.Component {
                         ctx.actionPath = (ctx.actionPath ?  ctx.actionPath  : "") + "/" + actionKey;
                         ctx.node = node;
                         ctx.requirementQueryHandler = requirementQueryHandler;
-                        return (
-                            <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>
-                                {children}
-                            </ActionComponent>
-                        );
+                        return <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>
+                            {children}
+                        </ActionComponent>;
                     }}
                 </Query>
             );
@@ -71,7 +68,7 @@ class Actions extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    lang: state.language,
+    lang: state.language
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -28,7 +28,10 @@ class ListAction extends Component {
 
     handleListClick() {
         this.setState(prevState => {
-            return {open: !prevState.open, actionPath: []}
+            return {
+                open: !prevState.open,
+                actionPath: []
+            };
         });
     };
 
@@ -36,7 +39,8 @@ class ListAction extends Component {
 
         const {menuId, children, ...rest} = this.props;
         const {open} = this.state;
-        return (<span data-cm-role={'list-action-' + menuId}>
+
+        return <span data-cm-role={'list-action-' + menuId}>
             {children({
                 ...rest,
                 open: open,
@@ -45,8 +49,10 @@ class ListAction extends Component {
                 onClick: this.handleListClick
             })}
             {console.log("ListAction",  this.props.actionKey, open)}
-            {open && <CmLeftDrawerContent {...rest} menuId={menuId} actionPath={this.state.actionPath}/>}
-        </span>)
+            {open &&
+                <CmLeftDrawerContent {...rest} menuId={menuId} actionPath={this.state.actionPath}/>
+            }
+        </span>;
     }
 }
 
@@ -55,8 +61,8 @@ ListAction = compose(
     withStyles(styles, {withTheme: true})
 )(ListAction);
 
-export default ListAction;
-
 ListAction.propTypes = {
     menuId: PropTypes.string.isRequired
 };
+
+export default ListAction;

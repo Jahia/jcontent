@@ -92,6 +92,7 @@ class ContentManager extends React.Component {
     };
 
     render() {
+
         let contentTreeConfigs = {
             contents: {
                 rootPath: "/contents",
@@ -138,33 +139,29 @@ class ContentManager extends React.Component {
                                             <ConnectedRouter history={this.getHistory(dxContext, t)} >
                                                 <Route path="/:siteKey/:lang" render={props => {
                                                     dxContext["lang"] = props.match.params.lang;
-                                                    return (
-                                                        <ManagerLayout
-                                                            leftSide={<CMLeftNavigation/>}
-                                                        >
-                                                            <Route path={`${props.match.url}/browse`} render={props =>
-                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
-                                                            }/>
-                                                            <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["files"]]}/>
-                                                            }/>
-                                                            <Route path={`${props.match.url}/search`} render={props =>
-                                                                <ContentLayout />
-                                                            }/>
-                                                            <Route path={`${props.match.url}/sql2Search`} render={props =>
-                                                                <ContentLayout />
-                                                            }/>
-                                                            <Route path={`${props.match.url}/apps`} render={props =>
-                                                                <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
-                                                            }/>
-                                                        </ManagerLayout>
-                                                    );
+                                                    return <ManagerLayout leftSide={<CMLeftNavigation/>}>
+                                                        <Route path={`${props.match.url}/browse`} render={props =>
+                                                            <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/browse-files`} render={props =>
+                                                            <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["files"]]}/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/search`} render={props =>
+                                                            <ContentLayout/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/sql2Search`} render={props =>
+                                                            <ContentLayout/>
+                                                        }/>
+                                                        <Route path={`${props.match.url}/apps`} render={props =>
+                                                            <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
+                                                        }/>
+                                                    </ManagerLayout>;
                                                 }}/>
                                             </ConnectedRouter>
                                         </DxContext.Provider>
                                     </Provider>
-                                )}}
-                            </I18n>
+                                );
+                            }}</I18n>
                         </I18nextProvider>
                     </ApolloProvider>
                 </NotificationProvider>

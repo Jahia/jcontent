@@ -1,10 +1,6 @@
 import React from "react";
 import CmLeftDrawerContent from "../CmLeftDrawerContent";
 
-const styles = (theme) => {
-
-}
-
 class SideMenuAction extends React.Component {
 
     componentWillUnmount() {
@@ -16,12 +12,11 @@ class SideMenuAction extends React.Component {
     render() {
         const {t, menuId, children, labelKey, context, handleDrawer, handleDrawerClose, ...rest} = this.props;
         const actionContent = <CmLeftDrawerContent menuId={menuId} context={context} handleDrawerClose={handleDrawerClose}/>
-        return (handleDrawer && <React.Fragment>
+        return handleDrawer &&
+            <React.Fragment>
                 {children({...rest, labelKey, onClick: handleDrawer.bind(this, {content: actionContent, title: labelKey}, menuId)})}
-            </React.Fragment>
-        )
+            </React.Fragment>;
     };
 }
-
 
 export default SideMenuAction;

@@ -36,7 +36,7 @@ const styles = theme => ({
             padding: '0px 0px 0px 10px',
             maxHeight: '28px',
             minHeight: '28px',
-            color: '#d1d1d1',
+            color: '#d1d1d1'
         },
     },
     disablePad: {
@@ -102,13 +102,14 @@ class ContentTree extends React.Component {
             }
         </Picker>;
     }
+
     resolveMenuId(path) {
-        let {mode , siteKey} = this.props;
+        let {mode, siteKey} = this.props;
         switch (mode) {
             case 'browse-files':
                 return "contextualMenuFilesAction";
             case 'browse':
-                return path.indexOf(`/sites/${siteKey}/contents`) !== -1  ? "contextualMenuFoldersAction" : "contextualMenuPagesAction"
+                return path.indexOf(`/sites/${siteKey}/contents`) !== -1  ? "contextualMenuFoldersAction" : "contextualMenuPagesAction";
         }
     }
 }
@@ -126,6 +127,7 @@ class ContentTrees extends React.Component {
             closePath, classes, setRefetch, onContextualMenu, mode} = this.props;
         const rootPath = "/sites/" + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
+
         return (
             <div className={classes.trees}>
                 <Table>
@@ -145,10 +147,12 @@ class ContentTrees extends React.Component {
 
                                             let componentRef = React.createRef();
                                             this.componentsRefs.push(componentRef);
-                                            return <ListItem data-cm-role={contentTreeConfig.key}
-                                                             disableGutters
-                                                             className={classes.disablePad}
-                                                             key={contentTreeConfig.key}>
+                                            return <ListItem
+                                                data-cm-role={contentTreeConfig.key}
+                                                disableGutters
+                                                className={classes.disablePad}
+                                                key={contentTreeConfig.key}
+                                            >
                                                 <ContentTree
                                                     mode={mode}
                                                     siteKey={siteKey}

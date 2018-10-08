@@ -18,8 +18,11 @@ class IFrameLayout extends React.Component {
     }
 
     render() {
+
         const { actionPath, workspace, siteKey, lang, contextPath, redirectToBrowse } = this.props;
-        let actionKey = actionPath.split("/")[actionPath.split("/").length - 1]
+
+        let actionPathParts = actionPath.split("/");
+        let actionKey = actionPathParts[actionPathParts.length - 1];
         const action = actionsRegistry[actionKey];
 
         if (!action || !action.iframeUrl) {
@@ -38,6 +41,7 @@ class IFrameLayout extends React.Component {
                     this.showError('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
                     return null;
                 }
+
                 // Todo: restore loading test BACKLOG-8649
                 if (!data || !data.jcr) {
                     return null;
@@ -46,7 +50,8 @@ class IFrameLayout extends React.Component {
                 // check display of the action
                 const node = data.jcr.nodeByPath;
                 if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
-                    (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
+                    (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite)))
+                {
                     this.showError('label.contentManager.error.contentUnavailable');
                     return null;
                 }
@@ -76,7 +81,7 @@ const mapStateToProps = (state, ownProps) => ({
     lang: state.language,
     siteKey: state.site,
     actionPath: state.path
-})
+});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
 });

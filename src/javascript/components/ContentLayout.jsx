@@ -43,11 +43,11 @@ const styles = theme => ({
         color: theme.palette.text.secondary
     },
     paper: {
-        backgroundColor: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.contrastText
     },
     blockCore: {
         marginTop: -28,
-        marginBottom: -2,
+        marginBottom: -2
     },
     blockCoreSearch: {
         marginLeft: -17,
@@ -58,52 +58,52 @@ const styles = theme => ({
         marginLeft: -24
     },
     buttons: {
-        textAlign: 'right',
+        textAlign: 'right'
     },
     showTreeButton: {
         color: 'pink'
     },
     showTree: {
-        textAlign: 'right!important',
+        textAlign: 'right!important'
     },
     drawerPaper: {
         backgroundColor: 'transparent',
         position: 'relative',
-        width: drawerWidth,
+        width: drawerWidth
     },
     drawerPaperPreview: {
         backgroundColor: 'transparent',
         position: 'relative',
-        width: drawerPreviewWidth,
+        width: drawerPreviewWidth
     },
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
+            duration: theme.transitions.duration.leavingScreen
         }),
     },
     'content-left': {
-        marginLeft: -drawerWidth,
+        marginLeft: -drawerWidth
     },
     'content-right': {
-        marginRight: -drawerPreviewWidth,
+        marginRight: -drawerPreviewWidth
     },
     contentShift: {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
+            duration: theme.transitions.duration.enteringScreen
         }),
     },
     'contentShift-left': {
-        marginLeft: 0,
+        marginLeft: 0
     },
     'contentShift-right': {
-        marginRight: 0,
+        marginRight: 0
     },
     root: {
-        flexGrow: 1,
+        flexGrow: 1
     },
     appFrame: {
         zIndex: 0,
@@ -115,7 +115,7 @@ const styles = theme => ({
 
     },
     ButtonAction: {
-        margin: 0,
+        margin: 0
     }
 });
 
@@ -150,15 +150,19 @@ class ContentLayout extends React.Component {
 
         }
     };
+
     handleDrawerViewOpen = () => {
         this.setState({open_view: true});
     };
+
     handleDrawerOpenView = () => {
         this.setState({open_view: true, open: false});
     };
+
     handleDrawerCloseView = () => {
         this.setState({open_view: false});
     };
+
     //Force can be `show` or `hide`
     handleShowPreview = (selection, force) => {
         let {previewState, setPreviewState} = this.props;
@@ -220,9 +224,8 @@ class ContentLayout extends React.Component {
         return (path === ("/sites/" + siteKey))
     };
 
-
-
     render() {
+
         const {anchor, open_view, open} = this.state;
         const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
             searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
@@ -240,77 +243,76 @@ class ContentLayout extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
         const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath);
+
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
                     </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center"
-                          className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             {this.isBrowsing() &&
-                            <div className={classes.breadCrumbs}>
-                                <ContentBreadcrumbs mode={ this.props.mode }/>
-                            </div>
+                                <div className={classes.breadCrumbs}>
+                                    <ContentBreadcrumbs mode={ this.props.mode }/>
+                                </div>
                             }
                             {this.isSearching() &&
-                            <div className={classes.searchControl}>
-                                <CmSearchControlBar/>
-                            </div>
+                                <div className={classes.searchControl}>
+                                    <CmSearchControlBar/>
+                                </div>
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
                             {this.isBrowsing() && !this.isRootNode() &&
-                            <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
-                                {(props) => <CmButton {...props}><Add/></CmButton>}
-                            </Actions>
+                                <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
+                                    {(props) => <CmButton {...props}><Add/></CmButton>}
+                                </Actions>
                             }
                             {this.isBrowsing() &&
-                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                {t("label.contentManager.tree." + (open ? "hide" : "show"))}
-                            </Button>}
-
+                                <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
+                                    {t("label.contentManager.tree." + (open ? "hide" : "show"))}
+                                </Button>
+                            }
                             <Button variant="text" className={classes.showTreeButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 {t("label.contentManager.refresh")}
                             </Button>
-
                             {mode === constants.mode.FILES &&
-                            <FilesGridModeSelector showList={this.state.showList}
-                                                   onChange={() => this.setState({showList: !this.state.showList})}/>
+                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                             }
                             {mode === constants.mode.FILES &&
-                            <React.Fragment>
-                                <FilesGridModeSelector showList={this.state.showList}
-                                                       onChange={() => this.setState({showList: !this.state.showList})}/>
-                                <FilesGridSizeSelector initValue={4}
-                                                       onChange={(value) => this.setState({filesGridSizeValue: value})}/>
-                            </React.Fragment>
+                                <React.Fragment>
+                                    <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
+                                    <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                                </React.Fragment>
                             }
                             {this.isSearching() &&
-                            <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
-                                {t("label.contentManager.search.clear")}
-                            </Button>
+                                <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
+                                    {t("label.contentManager.search.clear")}
+                                </Button>
                             }
                         </Grid>
                     </Grid>
                 </Grid>
                 <div className={classes.appFrame}>
-                    {this.isBrowsing() && <Paper style={{background: '#f5f5f5'}}>
-                        <Drawer
-                            variant="persistent"
-                            anchor={anchor}
-                            open={open}
-                            classes={{
-                                paper: classes.drawerPaper,
-                            }}>
-                            <ContentTrees
-                                contentTreeConfigs={contentTreeConfigs}
-                                path={path}
-                                setRefetch={ this.setTreeRefetcher }
-                            />
-                        </Drawer>
-                    </Paper>}
+                    {this.isBrowsing() &&
+                        <Paper style={{background: '#f5f5f5'}}>
+                            <Drawer
+                                variant="persistent"
+                                anchor={anchor}
+                                open={open}
+                                classes={{
+                                    paper: classes.drawerPaper,
+                                }}
+                            >
+                                <ContentTrees
+                                    contentTreeConfigs={contentTreeConfigs}
+                                    path={path}
+                                    setRefetch={ this.setTreeRefetcher }
+                                />
+                            </Drawer>
+                        </Paper>
+                    }
                     <main
                         className={classNames(classes.content, classes[`content-left`], {
                             [classes.contentShift]: open,
@@ -319,11 +321,9 @@ class ContentLayout extends React.Component {
                         classNames(classes.content, classes[`content-right`], {
                             [classes.contentShift]: open_view,
                             [classes[`contentShift-right`]]: open_view,
-                        })
-                        }>
-                        <ContentData layoutQuery={layoutQuery}
-                                     layoutQueryParams={layoutQueryParams}
-                                     setRefetch={ this.setContentRefetcher }>
+                        })}
+                    >
+                        <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams} setRefetch={this.setContentRefetcher}>
                             {({rows, totalCount}) => {
                                 return <Paper className={classes.paper} >
                                     {mode === constants.mode.FILES && !this.state.showList
@@ -351,18 +351,21 @@ class ContentLayout extends React.Component {
                             }}
                         </ContentData>
                     </main>
-                    <PreviewDrawer open={previewState === CM_PREVIEW_STATES.SHOW}
-                                   onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
-                                   layoutQuery={layoutQuery}
-                                   layoutQueryParams={layoutQueryParams}
-                                   dxContext={dxContext} />
+                    <PreviewDrawer
+                        open={previewState === CM_PREVIEW_STATES.SHOW}
+                        onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
+                        layoutQuery={layoutQuery}
+                        layoutQueryParams={layoutQueryParams}
+                        dxContext={dxContext}
+                    />
                 </div>
 
                 <Upload uploadUpdateCallback={(status) => {
                     if (status && status.uploading === 0) {
                         this.refreshContentsAndTree(contentTreeConfigs)
                     }
-                }} />
+                }}/>
+
                 <ContextualMenu/>
 
             </React.Fragment>
@@ -383,7 +386,7 @@ const mapStateToProps = (state, ownProps) => {
         searchTerms: state.params.searchTerms,
         searchContentType: state.params.searchContentType,
         sql2SearchFrom: state.params.sql2SearchFrom,
-        sql2SearchWhere: state.params.sql2SearchWhere,
+        sql2SearchWhere: state.params.sql2SearchWhere
     }
 };
 

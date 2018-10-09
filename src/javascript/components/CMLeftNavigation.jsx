@@ -189,6 +189,9 @@ const styles = theme => ({
         bottom: '10px',
         width: '48px!important',
         paddingBottom: '10px!important',
+    },
+    drawerTree: {
+        marginTop: '18px'
     }
 });
 
@@ -313,9 +316,9 @@ class CMLeftNavigation extends React.Component {
                             <LanguageSwitcher dark={true}/>
                         </div>
                     </div>
-                    <div>
+                    <div className={classes.drawerTree}>
                         {this.state.drawerContent &&
-                            this.state.drawerContent.content
+                        this.state.drawerContent.content
                         }
                     </div>
                 </Drawer>

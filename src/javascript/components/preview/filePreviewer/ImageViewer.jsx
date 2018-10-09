@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {Canvas} from 'react-darkroom';
 import { withStyles } from '@material-ui/core/styles';
 import {translate} from "react-i18next";
-import {IconButton, Paper} from '@material-ui/core';
+import {IconButton, Paper, CardMedia, Card} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 import {connect} from "react-redux";
@@ -24,7 +24,16 @@ const styles = theme => ({
         fontWeight: 500,
         fontSize: '.95em',
         fontFamily: 'sans-serif'
+    },
+    littleImage: {
+        width: 550,
+        height: 550,
+    },
+    bigImage: {
+        width: '100vw',
+        height: '100vh'
     }
+
 });
 const ImageControls = styled.div`
 `;
@@ -102,10 +111,13 @@ class ImageViewer extends React.Component {
 
     render() {
         let {cropEnabled, file, angle} = this.state;
+        let {fullScreen, classes} = this.props;
+        //Remove Canvas Tag but react-darkroom still in dependency
         return (
-            <ImagePreviewContainer>
-                <Canvas crop={cropEnabled} source={file} angle={angle} width={550} height={550} />
-            </ImagePreviewContainer>
+                <CardMedia
+                    className={fullScreen ? classes.bigImage : classes.littleImage}
+                    image={file}>
+                </CardMedia>
         )
     }
 

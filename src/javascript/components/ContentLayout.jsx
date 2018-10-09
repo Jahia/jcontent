@@ -46,7 +46,7 @@ const styles = theme => ({
     },
     blockCore: {
         marginTop: -28,
-        marginBottom: -2,
+        marginBottom: theme.spacing.unit * (-1),
         marginLeft: -24,
     },
     blockCoreSearch: {

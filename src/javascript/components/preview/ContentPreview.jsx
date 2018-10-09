@@ -305,6 +305,7 @@ class ContentPreview extends React.Component {
                 return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
                 <ImageViewer key={data.nodeByPath.uuid}
                                     elementId={this.state.imageControlElementId}
+                                    fullScreen={this.state.fullScreen}
                                     file={file}/>
                 </div>;
             } else {

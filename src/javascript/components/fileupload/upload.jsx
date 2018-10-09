@@ -30,11 +30,13 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
     },
     buttonHolder: {
+        marginBottom: "15px",
         display: "flex",
         flex: 1,
         justifyContent: "flex-end"
     },
     headerText: {
+        marginBottom: "15px",
         display: "flex",
         flex: 12,
         flexDirection: "row",

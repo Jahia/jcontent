@@ -3,12 +3,12 @@ import {Query} from 'react-apollo';
 import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 import {translate} from "react-i18next";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {cmSetSite} from "../redux/actions";
+import {cmGoto} from "../redux/actions";
 
 const styles = theme => ({
     typography: {
@@ -33,7 +33,7 @@ const styles = theme => ({
         minWidth: 120
     },
     icontest: {
-      fontSize: '0.500rem'
+        fontSize: '0.500rem'
     },
     input1: {
         backgroundColor: "transparent",
@@ -50,7 +50,7 @@ class SiteSwitcher extends React.Component {
         this.variables = {
             query: "select * from [jnt:virtualsite] where ischildnode('/sites')",
         };
-        this.query = gql `
+        this.query = gql`
             query SiteNodes($query: String!) {
                 jcr {
                     result:nodesByQuery(query: $query) {
@@ -103,12 +103,13 @@ class SiteSwitcher extends React.Component {
 
     onSelectSite = (siteNode, currentLang) => {
         let newLang = this.getTargetSiteLanguageForSwitch(siteNode, currentLang);
+        this.props.onSelectSite(siteNode, newLang);
         console.log("Switching to site " + siteNode.name + " in language " + newLang);
         window.parent.authoringApi.switchSite(siteNode.name, newLang);
     };
 
     render() {
-        const {notificationContext, dark, t} = this.props;
+        const {siteKey, currentLang, notificationContext, dark, t} = this.props;
         return <Query query={this.query} variables={this.variables}>
             {
                 ({error, loading, data}) => {
@@ -124,7 +125,9 @@ class SiteSwitcher extends React.Component {
                     }
 
                     let sites = this.getSites(data);
-                    return <SiteSwitcherDisplay dark={dark} onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)} siteNodes={sites}/>
+                    return <SiteSwitcherDisplay siteKey={siteKey} currentLang={currentLang} dark={dark}
+                                                onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)}
+                                                siteNodes={sites}/>
                 }
             }
         </Query>;
@@ -141,11 +144,11 @@ class SiteSwitcherDisplay extends React.Component {
     }
 
     handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+        this.setState({anchorEl: event.currentTarget});
     };
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({anchorEl: null});
     };
 
     render() {
@@ -156,16 +159,20 @@ class SiteSwitcherDisplay extends React.Component {
         } else {
             const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
             return <React.Fragment>
-                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'site-switcher'}>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick}
+                        data-cm-role={'site-switcher'}>
                     <Typography className={dark ? classes.typography : classes.typographyLight}>
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;
-                    <FontAwesomeIcon icon="chevron-down" className={classes.icontest} />
+                    <FontAwesomeIcon icon="chevron-down" className={classes.icontest}/>
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map((siteNode, i) => {
-                        return <MenuItem key={siteNode.uuid} onClick={() => {onSelectSite(siteNode, currentLang); this.handleClose();}}>
+                        return <MenuItem key={siteNode.uuid} onClick={() => {
+                            onSelectSite(siteNode, currentLang);
+                            this.handleClose();
+                        }}>
                             {siteNode.displayName}
                         </MenuItem>
                     })}
@@ -181,22 +188,19 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelectSite: (siteNode) => {
-        if (ownProps.onSelectSite) {
-            ownProps.onSelectSite(siteNode);
-        }
-        dispatch(cmSetSite(siteNode.name));
+    onSelectSite: (siteNode, language) => {
+        dispatch(cmGoto({site: siteNode.name, language: language}));
     }
 });
 
 SiteSwitcherDisplay = _.flowRight(
     translate(),
-    connect(mapStateToProps, mapDispatchToProps),
     withStyles(styles)
 )(SiteSwitcherDisplay);
 
 SiteSwitcher = _.flowRight(
     translate(),
+    connect(mapStateToProps, mapDispatchToProps),
     withNotifications(),
 )(SiteSwitcher);
 

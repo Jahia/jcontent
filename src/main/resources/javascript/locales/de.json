@@ -22,6 +22,10 @@
         "hide": "Navigationsbaum verbergen",
         "title": "Navigationsbaum"
       },
+      "filesGrid": {
+        "toggleGridDisplay": "Zur Raster-Ansicht wechseln",
+        "toggleListDisplay": "Zur Listen-Ansicht wechseln"
+      },
       "contentPreview": {
           "edit": "Bearbeiten",
           "translate": "Übersetzen",

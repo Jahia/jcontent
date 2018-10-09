@@ -22,6 +22,10 @@
         "hide": "Masquer l'arborescence",
         "title": "Arborescence"
       },
+      "filesGrid": {
+        "toggleGridDisplay": "Vue grille",
+        "toggleListDisplay": "Vue liste"
+      },
       "contentPreview": {
         "cut": "Couper"
       },

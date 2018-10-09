@@ -38,7 +38,9 @@
         "name": "Name:",
         "createdBy": "Created by:",
         "author": "{{author}} on ",
-        "fileInfo": "File info:"
+        "fileInfo": "File info:",
+        "toggleGridDisplay": "Toggle grid display",
+        "toggleListDisplay": "Toggle list display"
       },
       "contentPreview": {
           "emptyMessage": "Generating...",

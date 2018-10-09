@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ListIcon from '@material-ui/icons/Menu';
-import ViewModule from '@material-ui/icons/ViewModule';
-import Button from '@material-ui/core/Button';
+import {Menu as ListIcon, ViewModule} from '@material-ui/icons';
+import {Button} from '@material-ui/core';
 import {withStyles} from "@material-ui/core/styles/index";
 
 const styles = ({

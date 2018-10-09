@@ -25,7 +25,7 @@ import CmSearchControlBar from "./CmSearchControlBar";
 import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 import constants from "./constants";
-import { setRefetcher, triggerRefetch, refetchTypes } from './refetches';
+import {setRefetcher, triggerRefetch, refetchTypes} from './refetches';
 import ContextualMenu from './contextualMenu/contextualMenu';
 
 const drawerWidth = 260;
@@ -54,8 +54,7 @@ const styles = theme => ({
         marginTop: -28,
         backgroundColor: "orange"
     },
-    breadCrumbs: {
-        },
+    breadCrumbs: {},
     buttons: {
         textAlign: 'right'
     },
@@ -214,8 +213,10 @@ class ContentLayout extends React.Component {
     render() {
 
         const {anchor, open_view, open} = this.state;
-        const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
-            searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
+        const {
+            contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
+            searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t
+        } = this.props;
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
         const paginationState = {
@@ -237,72 +238,68 @@ class ContentLayout extends React.Component {
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
                     </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center"
+                          className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             {this.isBrowsing() &&
-                                <div className={classes.breadCrumbs}>
-                                    <ContentBreadcrumbs mode={ this.props.mode }/>
-                                </div>
+                            <div className={classes.breadCrumbs}>
+                                <ContentBreadcrumbs mode={this.props.mode}/>
+                            </div>
                             }
                             {this.isSearching() &&
-                                <div className={classes.searchControl}>
-                                    <CmSearchControlBar/>
-                                </div>
+                            <div className={classes.searchControl}>
+                                <CmSearchControlBar/>
+                            </div>
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {mode === constants.mode.FILES &&
-                            <React.Fragment>
-
-                                <FilesGridSizeSelector initValue={4}
-                                                       onChange={(value) => this.setState({filesGridSizeValue: value})}/>
-                            </React.Fragment>
-                            }
+                            {mode === constants.mode.FILES && <FilesGridSizeSelector initValue={4}
+                                                                                     onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
                             {mode === constants.mode.FILES &&
                             <FilesGridModeSelector showList={this.state.showList}
-                                                   onChange={() => this.setState({showList: !this.state.showList})}/>
-                            }
+                                                   onChange={() => this.setState({showList: !this.state.showList})}/>}
                             {this.isBrowsing() && !this.isRootNode() &&
-
                             <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
                                 {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
                             </Actions>
                             }
                             {this.isBrowsing() &&
-                                <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                    {t("label.contentManager.tree." + (open ? "hide" : "show"))}
-                                </Button>
+                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
+                                {t("label.contentManager.tree." + (open ? "hide" : "show"))}
+                            </Button>
                             }
-                            <Button variant="text" className={classes.showTreeButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                            <Button variant="text" className={classes.showTreeButton}
+                                    onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 {t("label.contentManager.refresh")}
                             </Button>
 
                             {this.isSearching() &&
-                                <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
-                                    {t("label.contentManager.search.clear")}
-                                </Button>
+                            <Button data-cm-role="search-clear" variant={"contained"} size={"small"}
+                                    onClick={() => clearSearch(params)}>
+                                {t("label.contentManager.search.clear")}
+                            </Button>
                             }
                         </Grid>
                     </Grid>
                 </Grid>
                 <div className={classes.appFrame}>
                     {this.isBrowsing() &&
-                        <Paper style={{background: '#f5f5f5'}}>
-                            <Drawer
-                                variant="persistent"
-                                anchor={anchor}
-                                open={open}
-                                classes={{
-                                    paper: classes.drawerPaper,
-                                }}
-                            >
-                                <ContentTrees
-                                    contentTreeConfigs={contentTreeConfigs}
-                                    path={path}
-                                    setRefetch={ this.setTreeRefetcher }
-                                />
-                            </Drawer>
-                        </Paper>
+                    <Paper style={{background: '#f5f5f5'}}>
+                        <Drawer
+                            variant="persistent"
+                            anchor={anchor}
+                            open={open}
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                        >
+                            <ContentTrees
+                                contentTreeConfigs={contentTreeConfigs}
+                                path={path}
+                                setRefetch={this.setTreeRefetcher}
+                            />
+                        </Drawer>
+                    </Paper>
                     }
                     <main
                         className={classNames(classes.content, classes[`content-left`], {
@@ -314,9 +311,10 @@ class ContentLayout extends React.Component {
                             [classes[`contentShift-right`]]: open_view,
                         })}
                     >
-                        <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams} setRefetch={this.setContentRefetcher}>
+                        <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams}
+                                     setRefetch={this.setContentRefetcher}>
                             {({rows, totalCount}) => {
-                                return <Paper className={classes.paper} >
+                                return <Paper className={classes.paper}>
                                     {mode === constants.mode.FILES && !this.state.showList
                                         ? <FilesGrid
                                             size={valueToSizeTransformation(this.state.filesGridSizeValue)}

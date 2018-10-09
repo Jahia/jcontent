@@ -52,7 +52,6 @@ const styles = theme => ({
     },
     details: {
         display: 'flex',
-        color: 'red',
         flexDirection: 'row',
     },
     verticalDetails: {

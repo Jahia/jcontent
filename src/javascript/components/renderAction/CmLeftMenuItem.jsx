@@ -1,9 +1,8 @@
 import React from 'react';
-import {withStyles} from "@material-ui/core/es/index";
-import {compose} from "react-apollo/index";
+import {withStyles} from "@material-ui/core";
+import {compose} from "react-apollo";
 import {translate} from "react-i18next";
-import {ListItem, ListItemIcon, ListItemText, Button, Typography} from "@material-ui/core";
-import {ExpandMore, ChevronLeft, Description} from "@material-ui/icons";
+import {Button, Typography} from "@material-ui/core";
 
 const styles = theme => ({
     nested: {

@@ -34,7 +34,6 @@ class CmButton extends React.Component {
                 {childrenCount > 0 && children}
                 {t(labelKey)}
             </Button>
-        )
     }
 }
 

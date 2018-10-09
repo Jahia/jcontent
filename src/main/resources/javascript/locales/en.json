@@ -39,8 +39,8 @@
         "createdBy": "Created by:",
         "author": "{{author}} on ",
         "fileInfo": "File info:",
-        "toggleGridDisplay": "Toggle grid display",
-        "toggleListDisplay": "Toggle list display"
+        "toggleGridDisplay": "Thumbnails display",
+        "toggleListDisplay": "List display"
       },
       "contentPreview": {
           "emptyMessage": "Generating...",

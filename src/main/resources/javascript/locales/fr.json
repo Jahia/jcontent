@@ -23,7 +23,7 @@
         "title": "Arborescence"
       },
       "filesGrid": {
-        "toggleGridDisplay": "Vue grille",
+        "toggleGridDisplay": "Vue vignettes",
         "toggleListDisplay": "Vue liste"
       },
       "contentPreview": {

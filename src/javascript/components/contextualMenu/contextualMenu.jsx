@@ -15,10 +15,18 @@ class ContextualMenu extends React.Component {
         super(props);
     }
 
+    closeContextMenu(event) {
+        event.preventDefault();
+        let clickEvent = new MouseEvent('click', {bubbles:true, cancelable: false});
+        //Dispatch event to close backdrop
+        event.target.dispatchEvent(clickEvent);
+    }
+
     render() {
         let {contextualMenu, lang, onContextualMenu} = this.props;
              return contextualMenu.isOpen ? <Menu
                 data-cm-role={'contextual-menu-action'}
+                BackdropProps={{invisible:true, onContextMenu: (event) => this.closeContextMenu(event)}}
                 anchorPosition={{top: contextualMenu.event.clientY, left: contextualMenu.event.clientX}}
                 anchorReference={"anchorPosition"}
                 open={contextualMenu.isOpen}

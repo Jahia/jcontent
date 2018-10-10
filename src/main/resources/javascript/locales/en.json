@@ -155,7 +155,7 @@
       "fileUpload": {
           "dropMessage": "Drop files here to upload",
           "or": "or",
-          "selectMessage": "Select file from my computer",
+          "selectMessage": "Select files from my computer",
           "uploadButtonLabel": "Upload file(s)",
           "successfulUploadMessage" : "Successfully uploaded {{number}} files",
           "errorMessage": "There were problems uploading some files",

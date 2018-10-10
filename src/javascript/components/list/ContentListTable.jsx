@@ -27,7 +27,7 @@ import { invokeContextualMenu } from '../contextualMenu/redux/actions';
 import {connect} from "react-redux";
 
 const columnData = [
-    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'name'},
+    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
     {id: 'wip', label: '', sortable: false, property: ''},
     {id: 'lock', label: '', sortable: false, property: ''},
     {id: 'type', label: 'label.contentManager.listColumns.type', sortable: true, property: 'primaryNodeType.displayName'},

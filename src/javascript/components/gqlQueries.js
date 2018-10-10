@@ -19,7 +19,11 @@ class BrowsingQueryHandler {
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
-            recursionTypesFilter: browseType[type].recursionTypesFilter || Constants.contentType
+            recursionTypesFilter: browseType[type].recursionTypesFilter || Constants.contentType,
+            fieldSorter: orderBy === '' ? null : {
+                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                fieldName: orderBy === '' ? null : orderBy,
+            }
         };
     }
 
@@ -173,10 +177,10 @@ const nodeFields = gql `
 `;
 
 const getNodeSubTree = gql `
-    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
+    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!,$fieldSorter: InputFieldSorterInput) {
         jcr {
             results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter) {
                     pageInfo {
                         totalCount
                     }

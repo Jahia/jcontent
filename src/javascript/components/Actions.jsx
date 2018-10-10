@@ -42,7 +42,7 @@ class Actions extends React.Component {
                             return null;
                         }
 
-                        if (loading || !data || !data.jcr) {
+                        if (!data || !data.jcr) {
                             return null;
                         }
 
@@ -54,7 +54,7 @@ class Actions extends React.Component {
                             (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
                             return null;
                         }
-                        ctx.actionPath = (ctx.actionPath ?  ctx.actionPath  : "") + "/" + actionKey;
+                        ctx.actionPath = (ctx.actionPath ? ctx.actionPath : "") + "/" + actionKey;
                         ctx.node = node;
                         ctx.requirementQueryHandler = requirementQueryHandler;
                         return <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>

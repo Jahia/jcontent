@@ -1,4 +1,4 @@
-import {List, ListItem, withStyles} from "@material-ui/core";
+import {List, ListItem, withStyles, withTheme} from "@material-ui/core";
 import {ExpandMore, ChevronRight} from "@material-ui/icons";
 import Actions from "./Actions";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -59,12 +59,15 @@ const styles = (theme) => ({
         borderWidth: '6.5px 4px 0 4px',
         borderColor: '#5c6164 transparent transparent transparent'
     },
-    iconTree : {
+    iconTree: {
         fontSize: '15px',
     },
     textPadding: {
-        paddingLeft: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing.unit,
         textAlign: 'left'
+    },
+    expand: {
+        width: '15px'
     }
 });
 
@@ -72,7 +75,7 @@ class CmLeftDrawerContent extends React.Component {
 
     render() {
 
-        let {menuId, context, handleDrawerClose, actionPath, t, classes} = this.props;
+        let {menuId, context, handleDrawerClose, actionPath, t, classes, theme} = this.props;
 
         return <List className={classes.root} classes={{root: classes.ListRoot}}>
             {console.log("CmLeftDrawerContent", menuId, _.includes(actionPath, menuId))}
@@ -80,22 +83,24 @@ class CmLeftDrawerContent extends React.Component {
                 {(menuConfig) =>
                     <ListItem className={classes.clearList}
                               classes={{root: classes.overList}}
-                              selected={_.includes(actionPath, menuConfig.actionKey)} button onClick={(event) => menuConfig.onClick(event)}>
+                              selected={_.includes(actionPath, menuConfig.actionKey)} button
+                              onClick={(event) => menuConfig.onClick(event)}
+                              style={{
+                                  paddingLeft: (_.split(context.actionPath, "/").length) * theme.spacing.unit
+                              }}>
 
-                        {menuConfig.hasChildren
-                            ?
-                            <div>
-                                {(menuConfig.open || menuConfig.selected) ?
+                        <div className={classes.expand}>
+                            {menuConfig.hasChildren ?
+                                ((menuConfig.open || menuConfig.selected) ?
                                     <ExpandMore classes={{root: classes.iconTree}}/> :
-                                    <ChevronRight classes={{root: classes.iconTree}}/>
-                                }
-                            </div>
-                            : null
-                        }
-                        {console.log("CmLeftDrawerContent",  menuConfig.actionKey, _.includes(actionPath, menuConfig.actionKey))}
-                        <FontAwesomeIcon className={classes.iconDrawer} icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                                    <ChevronRight classes={{root: classes.iconTree}}/>)
+                                : null
+                            }
+                        </div>
+                        {console.log("CmLeftDrawerContent", menuConfig.actionKey, _.includes(actionPath, menuConfig.actionKey))}
+                        <FontAwesomeIcon className={classes.iconDrawer}
+                                         icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
                         <div className={classes.textPadding}>
-                            &nbsp;
                             {t(menuConfig.labelKey, menuConfig.labelParams)}
                         </div>
                     </ListItem>
@@ -107,6 +112,7 @@ class CmLeftDrawerContent extends React.Component {
 
 CmLeftDrawerContent = _.flowRight(
     translate(),
+    withTheme(),
     withStyles(styles)
 )(CmLeftDrawerContent);
 

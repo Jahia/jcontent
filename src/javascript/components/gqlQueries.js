@@ -23,6 +23,7 @@ class BrowsingQueryHandler {
             fieldSorter: orderBy === '' ? null : {
                 sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
                 fieldName: orderBy === '' ? null : orderBy,
+                ignoreCase: true,
             }
         };
     }
@@ -73,6 +74,7 @@ class SearchQueryHandler {
             fieldSorter: orderBy === '' ? null : {
                 sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
                 fieldName: orderBy === '' ? null : orderBy,
+                ignoreCase: true,
             }
         };
     }

@@ -10,7 +10,7 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
         const type = urlParams.type || (_.startsWith(path, rootPath + "/contents") ? "contents" : "pages");
         return {
             path: path,
@@ -34,7 +34,7 @@ class FilesQueryHandler {
         return filesQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
         return {
             path: path,
             language: lang,
@@ -57,7 +57,7 @@ class SearchQueryHandler {
         return searchContentQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
         return {
             path: path,
             nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
@@ -66,6 +66,10 @@ class SearchQueryHandler {
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
+            fieldSorter: orderBy === '' ? null : {
+                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                fieldName: orderBy === '' ? null : orderBy,
+            }
         };
     }
 
@@ -80,7 +84,7 @@ class Sql2SearchQueryHandler {
         return sql2SearchContentQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
 
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
@@ -204,9 +208,9 @@ const GetNodeAndChildrenByPathQuery = gql `
 `;
 
 const searchContentQuery = gql `
-    query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
+    query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
         jcr {
-            results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit) {
+            results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
                 pageInfo {
                     totalCount
                 }
@@ -454,5 +458,5 @@ export {
     ContentTypesQuery,
     ContentTypeNamesQuery,
     GetNodeAndChildrenByPathQuery,
-    ActionRequirementsQueryHandler
+    ActionRequirementsQueryHandler,
 };

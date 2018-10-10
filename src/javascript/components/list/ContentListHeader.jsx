@@ -4,35 +4,54 @@ import {translate} from "react-i18next";
 import PropTypes from 'prop-types';
 import {compose} from "react-apollo/index";
 
+const styles = (theme) => ({
+    sortLabel:{
+        color: '#1E1E1F',
+    },
+});
+
 class ContentListHeader extends React.Component {
 
-    handleSort = property => event => {
-        this.props.onRequestSort(event, property);
+    handleSort(order, orderBy){
+        this.props.onRequestSort(order, orderBy);
     };
 
     render() {
 
         const { order, orderBy, columnData, t, classes} = this.props;
+        let direction = order==="DESC" ? "ASC" : "DESC";
         return (
             <TableHead className={classes.head}>
                 <TableRow className={classes.row}>
                     <TableCell />
                     {columnData.map(column => {
-                        return (
-                            <TableCell
+                        if(column.sortable) {
+                            return (
+                                <TableCell
+                                    key={column.id}
+                                    className={classes[column.id] + ' ' + classes.tableCellHeight}
+                                    sortDirection={orderBy === column.property ? order : false}
+                                >
+                                    <TableSortLabel
+                                        classes={{active: classes.sortLabel}}
+                                        active={orderBy === column.property}
+                                        direction={direction.toLowerCase()}
+                                        onClick={() => this.handleSort(direction, column.property)}
+                                    >
+                                        {t(column.label)}
+                                    </TableSortLabel>
+                                </TableCell>
+                            );
+                        }else{
+                            return(
+                                <TableCell
                                 key={column.id}
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
-                                sortDirection={orderBy === column.id ? order : false}
-                            >
-                                <TableSortLabel
-                                    active={orderBy === column.id}
-                                    direction={order}
-                                    onClick={() => this.handleSort(column.id)}
-                                >
+                                sortDirection={orderBy === column.property ? order : false}>
                                     {t(column.label)}
-                                </TableSortLabel>
                             </TableCell>
-                        );
+                            );
+                        }
                     }, this)}
                 </TableRow>
             </TableHead>
@@ -46,6 +65,7 @@ ContentListHeader.propTypes = {
 };
 
 ContentListHeader = compose(
+    withStyles(styles),
     translate(),
 )(ContentListHeader);
 

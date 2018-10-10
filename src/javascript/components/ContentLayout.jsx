@@ -134,8 +134,12 @@ class ContentLayout extends React.Component {
             filesGridSizeValue: 4,
             showList: false,
             page: 0,
-            rowsPerPage: 25
+            rowsPerPage: 25,
+            order: 'ASC',
+            orderBy: '',
         };
+
+        this.handleSort = this.handleSort.bind(this);
 
     }
 
@@ -195,6 +199,13 @@ class ContentLayout extends React.Component {
         });
     }
 
+    handleSort(order, orderBy){
+        this.setState({
+            order: order,
+            orderBy: orderBy,
+        });
+    }
+
     isBrowsing() {
         let {mode} = this.props;
         return (mode === constants.mode.BROWSE || mode === constants.mode.FILES)
@@ -211,12 +222,9 @@ class ContentLayout extends React.Component {
     };
 
     render() {
-
-        const {anchor, open_view, open} = this.state;
-        const {
-            contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
-            searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t
-        } = this.props;
+        const {anchor, open_view, open, order, orderBy} = this.state;
+        const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
+            searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
         const paginationState = {
@@ -230,7 +238,7 @@ class ContentLayout extends React.Component {
             sql2SearchFrom: sql2SearchFrom,
             sql2SearchWhere: sql2SearchWhere
         };
-        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath);
+        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy);
 
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
@@ -334,6 +342,9 @@ class ContentLayout extends React.Component {
                                             onChangePage={this.handleChangePage}
                                             page={this.state.page}
                                             handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
+                                            handleSort={this.handleSort}
+                                            order={order}
+                                            orderBy={orderBy}
                                         />
                                     }
                                 </Paper>

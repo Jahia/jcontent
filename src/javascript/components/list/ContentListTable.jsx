@@ -27,12 +27,12 @@ import { invokeContextualMenu } from '../contextualMenu/redux/actions';
 import {connect} from "react-redux";
 
 const columnData = [
-    {id: 'name', label: 'label.contentManager.listColumns.name'},
-    {id: 'wip', label: ''},
-    {id: 'lock', label: ''},
-    {id: 'type', label: 'label.contentManager.listColumns.type'},
-    {id: 'lastModified', label: 'label.contentManager.listColumns.lastModified'},
-    {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy'}
+    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
+    {id: 'wip', label: '', sortable: false, property: ''},
+    {id: 'lock', label: '', sortable: false, property: ''},
+    {id: 'type', label: 'label.contentManager.listColumns.type', sortable: true, property: 'primaryNodeType.displayName'},
+    {id: 'lastModified', label: 'label.contentManager.listColumns.lastModified', sortable: true, property: 'lastModified.value'},
+    {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy', sortable: true, property: 'createdBy.value'}
 ];
 
 const APP_TABLE_CELLS = 2;
@@ -199,28 +199,9 @@ class ContentListTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            order: 'asc',
-            orderBy: 'name'
+
         };
     }
-
-    handleRequestSort = (event, column) => {
-        let order;
-        if (this.state.orderBy === column) {
-            if (this.state.order === 'asc') {
-                order = 'desc';
-            } else if (this.state.order === 'desc') {
-                order = 'asc';
-            }
-        } else {
-            order = 'asc';
-        }
-
-        this.setState({
-            order: order,
-            orderBy: column
-        });
-    };
 
     isWip(node, lang) {
         switch (node.wipStatus) {
@@ -267,8 +248,8 @@ class ContentListTable extends React.Component {
 
     render() {
 
-        const {order, orderBy, hoveredRow} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview, onContextualMenu} = this.props;
+        const {hoveredRow} = this.state;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview, onContextualMenu, handleSort, order, orderBy} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
         return (
             <div className={classes.contentList}>
@@ -276,7 +257,7 @@ class ContentListTable extends React.Component {
                     <ContentListHeader
                         order={order}
                         orderBy={orderBy}
-                        onRequestSort={this.handleRequestSort}
+                        onRequestSort={handleSort}
                         columnData={columnData}
                         classes={classes}
                     />

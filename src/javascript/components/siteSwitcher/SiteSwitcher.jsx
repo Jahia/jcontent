@@ -8,7 +8,7 @@ import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 import {translate} from "react-i18next";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {cmGoto} from "../redux/actions";
+import {cmSetSite} from "../redux/actions";
 
 const styles = theme => ({
     typography: {
@@ -46,9 +46,11 @@ const styles = theme => ({
 class SiteSwitcher extends React.Component {
 
     constructor(props) {
+
         super(props);
+
         this.variables = {
-            query: "select * from [jnt:virtualsite] where ischildnode('/sites')",
+            query: "select * from [jnt:virtualsite] where ischildnode('/sites')"
         };
         this.query = gql`
             query SiteNodes($query: String!) {
@@ -103,7 +105,7 @@ class SiteSwitcher extends React.Component {
 
     onSelectSite = (siteNode, currentLang) => {
         let newLang = this.getTargetSiteLanguageForSwitch(siteNode, currentLang);
-        this.props.onSelectSite(siteNode, newLang);
+        this.props.selectSite(siteNode, newLang);
         console.log("Switching to site " + siteNode.name + " in language " + newLang);
         window.parent.authoringApi.switchSite(siteNode.name, newLang);
     };
@@ -113,6 +115,7 @@ class SiteSwitcher extends React.Component {
         return <Query query={this.query} variables={this.variables}>
             {
                 ({error, loading, data}) => {
+
                     if (error) {
                         console.log("Error when fetching data: " + error);
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
@@ -125,9 +128,13 @@ class SiteSwitcher extends React.Component {
                     }
 
                     let sites = this.getSites(data);
-                    return <SiteSwitcherDisplay siteKey={siteKey} currentLang={currentLang} dark={dark}
-                                                onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)}
-                                                siteNodes={sites}/>
+                    return <SiteSwitcherDisplay
+                        siteKey={siteKey}
+                        currentLang={currentLang}
+                        dark={dark}
+                        onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)}
+                        siteNodes={sites}
+                    />;
                 }
             }
         </Query>;
@@ -152,15 +159,16 @@ class SiteSwitcherDisplay extends React.Component {
     };
 
     render() {
+
         let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang, dark} = this.props;
         let {anchorEl} = this.state;
+
         if (loading) {
             return <span>Loading...</span>;
         } else {
             const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
             return <React.Fragment>
-                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick}
-                        data-cm-role={'site-switcher'}>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'site-switcher'}>
                     <Typography className={dark ? classes.typography : classes.typographyLight}>
                         {siteNode.displayName}
                     </Typography>
@@ -188,8 +196,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onSelectSite: (siteNode, language) => {
-        dispatch(cmGoto({site: siteNode.name, language: language}));
+    selectSite: (siteNode, language) => {
+        dispatch(cmSetSite(siteNode.name, language));
     }
 });
 

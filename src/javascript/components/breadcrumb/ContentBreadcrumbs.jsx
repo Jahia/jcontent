@@ -77,7 +77,10 @@ class ContentBreadcrumbs extends React.Component {
                 queryVariables={{lang: lang}}
                 onSelectItem={(mode, path) => setUrl(mode, path)}
             >
-                {({...others}) => {
+                {({error, ...others}) => {
+                    if (error) {
+                        return null;
+                    }
                     return <Breadcrumb
                         {...others}
                         path={path}

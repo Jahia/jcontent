@@ -37,8 +37,10 @@ class Actions extends React.Component {
                     {({loading, error, data}) => {
 
                         if (error) {
-                            let message = t('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
-                            notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                            const message = t('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
+                            //I commented out this notification because it was in conflict with notification in ContentData
+                            //notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                            console.error(message);
                             return null;
                         }
 

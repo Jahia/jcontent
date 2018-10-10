@@ -69,7 +69,7 @@ class FilesGrid extends Component {
         const { size, t, handleShowPreview, classes } = this.props;
         const {hoveredCard} = this.state;
 
-        if (this.props.rows.length === 0) {
+        if (!this.props.rows || this.props.rows.length === 0) {
             return (
             <Grid container spacing={ 8 } className={classes.gridEmpty}>
                 <h3 className={classes.empty}>

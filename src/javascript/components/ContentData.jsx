@@ -116,10 +116,15 @@ class ContentData extends React.Component {
                 }
 
                 if (error) {
-                    console.log("Error when fetching data: " + error);
                     let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-                    notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-                    return null;
+                    console.error(message);
+                    //notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                    return children({
+                                     rows: 0,
+                                     totalCount: 0,
+                                     layoutQuery: layoutQuery,
+                                     layoutQueryParams: layoutQueryParams
+                                 });
                 }
 
                 if (loading) {

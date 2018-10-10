@@ -160,9 +160,9 @@
     react "^16.4.1"
     recompose "^0.27.1"
 
-"@jahia/react-apollo@^1.0.0-beta.20181001180752":
-  version "1.0.0-beta.20181001180752"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20181001180752.tgz#9dd8524d8f610fa4553b6fca71a313e3b59741ed"
+"@jahia/react-apollo@^1.0.0-beta.20181010153044":
+  version "1.0.0-beta.20181010153044"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20181010153044.tgz#e1df87489a8c1624eb79f087cfe8204528c0b832"
   dependencies:
     "@jahia/apollo-dx" "^1.0.0-beta.1"
     apollo-client "^2.3.2"

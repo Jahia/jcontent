@@ -70,9 +70,7 @@
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>
         <jahia-module-type>system</jahia-module-type>
-        <!--
         <webpack.arguments>-p</webpack.arguments>
-        -->
     </properties>
 
     <repositories>

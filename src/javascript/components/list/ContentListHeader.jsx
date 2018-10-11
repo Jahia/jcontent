@@ -4,12 +4,6 @@ import {translate} from "react-i18next";
 import PropTypes from 'prop-types';
 import {compose} from "react-apollo/index";
 
-const styles = (theme) => ({
-    sortLabel:{
-        color: '#1E1E1F',
-    },
-});
-
 class ContentListHeader extends React.Component {
 
     handleSort(order, orderBy){
@@ -30,7 +24,7 @@ class ContentListHeader extends React.Component {
                                 <TableCell
                                     key={column.id}
                                     className={classes[column.id] + ' ' + classes.tableCellHeight}
-                                    sortDirection={orderBy === column.property ? order : false}
+                                    sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                 >
                                     <TableSortLabel
                                         classes={{active: classes.sortLabel}}
@@ -65,7 +59,6 @@ ContentListHeader.propTypes = {
 };
 
 ContentListHeader = compose(
-    withStyles(styles),
     translate(),
 )(ContentListHeader);
 

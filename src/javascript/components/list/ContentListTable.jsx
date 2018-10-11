@@ -193,6 +193,9 @@ const styles = (theme) => ({
     tableCellHeight: {
         padding: 0,
     },
+    sortLabel:{
+        color: '#1E1E1F',
+    }
 });
 
 class ContentListTable extends React.Component {

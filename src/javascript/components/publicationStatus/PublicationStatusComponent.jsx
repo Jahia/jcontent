@@ -5,7 +5,6 @@ import Constants from '../constants';
 import { InfoOutlined } from "@material-ui/icons";
 import { publicationStatusByName } from "./publicationStatus";
 import {translate} from "react-i18next";
-import injectSheet from 'react-jss'
 
 const styles = theme => ({
     root: {
@@ -120,7 +119,7 @@ const infoButtonStyles = theme => ({
     }
 });
 
-const InfoButton = injectSheet(infoButtonStyles)(({classes, children}) => (
+const InfoButton = withStyles(infoButtonStyles)(({classes, children}) => (
     <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
         {children}
     </div>

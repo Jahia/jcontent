@@ -277,12 +277,12 @@ class SearchBarLayout extends React.Component {
                 </Paper>
                 <Grid container>
                     <Grid item xs={8}>
-                        <Typography color="inherit" variant="body1" gutterBottom align="left">
+                        <Typography color="inherit" gutterBottom align="left">
                             {leftFooter}
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography color="inherit" variant="body1" gutterBottom align="right">
+                        <Typography color="inherit"  gutterBottom align="right">
                             {rightFooter}
                         </Typography>
                     </Grid>

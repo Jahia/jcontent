@@ -120,10 +120,10 @@ class ContentManager extends React.Component {
             }
         };
 
-        let {dxContext, classes} = this.props;
+        let {dxContext} = this.props;
 
         return (
-            <MuiThemeProvider theme={theme}>
+            <MuiThemeProvider theme={theme} >
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({contextPath: dxContext.contextPath, useBatch:true, httpOptions:{batchMax:50}})}>
                         <I18nextProvider i18n={getI18n({

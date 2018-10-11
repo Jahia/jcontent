@@ -204,16 +204,16 @@ class FileCard extends Component {
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ node.name }</Typography>
 
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>
+                    <Typography variant="body1" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
 
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -237,10 +237,10 @@ class FileCard extends Component {
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ node.name }</Typography>
 
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>
+                    <Typography variant="body1" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
@@ -268,7 +268,7 @@ class FileCard extends Component {
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ node.name }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -291,16 +291,16 @@ class FileCard extends Component {
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ node.name }</Typography>
 
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>
+                    <Typography variant="body1" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
 
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -322,10 +322,10 @@ class FileCard extends Component {
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Typography variant="body1" className={classes.textTypo}>{ node.name }</Typography>
 
                     <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography variant="body2" className={classes.textTypo}>
+                    <Typography variant="body1" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
@@ -352,11 +352,11 @@ class FileCard extends Component {
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
                     <Typography variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Typography variant="body1" color="textSecondary">{ node.name }</Typography>
 
                     { cardType !== 2 && <React.Fragment>
                         <Typography variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                        <Typography variant="body2" className={classes.textTypo}>
+                        <Typography variant="body1" className={classes.textTypo}>
                             { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                             <Moment format={"LLL"}>{node.created}</Moment>
                         </Typography>

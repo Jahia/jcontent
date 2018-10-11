@@ -18,6 +18,9 @@ export const contextualMenuReducer = (state = defaultContextualMenuState, action
                 action.contextualMenu.event.persist();
                 return action.contextualMenu
             } else {
+                if (state.onClose != null) {
+                    state.onClose(state);
+                }
                 return {
                     isOpen: false,
                     event: null,

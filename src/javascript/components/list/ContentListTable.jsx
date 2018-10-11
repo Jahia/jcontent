@@ -221,18 +221,30 @@ class ContentListTable extends React.Component {
         return (!icon.includes('.png') ? icon + '.png' : icon);
     }
 
-    onHoverEnter($event, n) {
+    onHoverEnter($event) {
         this.setState({
-            hoveredRow: n
+            hoveredRow: $event.currentTarget != null ? $event.currentTarget.getAttribute("data-cm-node-path") : null
         })
     }
 
     onHoverExit($event) {
-        this.setState({
-            hoveredRow: null
-        })
+        if (!this.props.contextualMenu.isOpen) {
+            this.setState({
+                hoveredRow: null
+            });
+        }
     }
 
+    contextualMenuClosed = () => {
+        setTimeout(()=>{
+            let hoveredEl = document.querySelector('tr[data-cm-role="table-content-list-row"]:hover');
+            if (hoveredEl != null) {
+                this.setState({
+                    hoveredRow: hoveredEl.getAttribute("data-cm-node-path")
+                });
+            }
+        }, 100);
+    };
     renderLock(row) {
         let {classes, t} = this.props;
         return row.isLocked ?
@@ -279,12 +291,13 @@ class ContentListTable extends React.Component {
                                             className={(key % 2 === 0) ? classes.row : classes.rowPair}
                                             classes={{root: classes.contentRow}}
                                             key={n.uuid}
+                                            data-cm-node-path={n.path}
                                             onClick={() => onRowSelected([n])}
                                             selected={isSelected}
                                             data-cm-role="table-content-list-row"
-                                            onMouseEnter={($event) => this.onHoverEnter($event, n.path)}
+                                            onMouseEnter={($event) => this.onHoverEnter($event)}
                                             onMouseLeave={($event) => this.onHoverExit($event)}
-                                            onContextMenu={(event) => {onContextualMenu({isOpen:true, event:event, menuId: "contextualMenuContentAction", path:n.path, uuid: n.uuid, nodeType: n.primaryNodeType, displayName: n.name, nodeName:n.nodeName})}}
+                                            onContextMenu={(event) => {onContextualMenu({isOpen:true, event:event, menuId: "contextualMenuContentAction", path:n.path, uuid: n.uuid, nodeType: n.primaryNodeType, displayName: n.name, nodeName:n.nodeName, onClose: this.contextualMenuClosed})}}
                                         >
                                             <TableCell className={classes.publicationCell}
                                                        data-cm-role="table-content-list-cell-publication">
@@ -390,7 +403,8 @@ let EmptyRow = (props) => {
 
 
 const mapStateToProps = (state, ownProps) => ({
-    selection: state.selection
+    selection: state.selection,
+    contextualMenu: state.contextualMenu
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -156,4 +156,12 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <webpack.arguments></webpack.arguments>
+            </properties>
+        </profile>
+    </profiles>
 </project>

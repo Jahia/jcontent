@@ -55,6 +55,22 @@ const styles = theme => ({
     },
     infoContainer: {
         overflow: "hidden"
+    },
+    infoButton: {
+        flex: "auto",
+        display: "flex",
+        alignItems: "center",
+        width: 0,
+        backgroundColor: "inherit",
+        transition: "width 0.2s ease-in 0s",
+        overflow: "hidden",
+        cursor: "pointer",
+        color: theme.palette.getContrastText(theme.palette.publish.main),
+        "&:hover ~ div.CM_PUBLICATION_INFO": {
+            width: 0,
+            opacity: 1,
+            visibility: "visible"
+        }
     }
 });
 
@@ -68,6 +84,16 @@ class PublicationStatusComponent extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            publicationInfoWidth: 0
+        }
+
+    }
+
+    setPublicationInfoWidth(width) {
+        this.setState({
+            publicationInfoWidth: width
+        });
     }
 
     render() {
@@ -78,13 +104,18 @@ class PublicationStatusComponent extends Component {
         return <React.Fragment>
             <div className={ `${publicationStatusClass} ${classes.root}` } />
             <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}>
-                <InfoButton publicationInfoWidth={ this.props.publicationInfoWidth }>
-                    <div className={ classes.infoContainer }>
+                <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
+                    <div className={ classes.infoContainer }
+                         onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
+                         onMouseLeave={() => this.setPublicationInfoWidth(0)}>
                         <InfoOutlined/>
                     </div>
-                </InfoButton>
-                <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }>
-                    <div className={ classes.infoContainer } style={{paddingLeft: 20}} data-cm-role={'publication-info'} data-cm-value={node.publicationStatus}>
+                </div>
+                <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` } style={{width: this.state.publicationInfoWidth}}>
+                    <div className={ classes.infoContainer }
+                         style={{paddingLeft: 20, width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
+                         data-cm-role={'publication-info'}
+                         data-cm-value={node.publicationStatus}>
                         { publicationStatus.geti18nDetailsMessage(node, t, i18n.language ) }
                     </div>
                 </div>
@@ -100,27 +131,3 @@ PublicationStatusComponent.propTypes = {
 
 
 export default translate()(withStyles(styles)(PublicationStatusComponent));
-
-const infoButtonStyles = theme => ({
-    infoButton: {
-        flex: "auto",
-        display: "flex",
-        alignItems: "center",
-        width: 0,
-        backgroundColor: "inherit",
-        transition: "width 0.2s ease-in 0s",
-        overflow: "hidden",
-        color: theme.palette.getContrastText(theme.palette.publish.main),
-        "&:hover ~ div.CM_PUBLICATION_INFO": {
-            width: props => props.publicationInfoWidth,
-            opacity: 1,
-            visibility: "visible"
-        }
-    }
-});
-
-const InfoButton = withStyles(infoButtonStyles)(({classes, children}) => (
-    <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
-        {children}
-    </div>
-));

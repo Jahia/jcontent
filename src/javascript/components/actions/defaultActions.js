@@ -254,7 +254,7 @@ let defaultActions = {
         priority: 4,
         component: DeletePermanentlyAction,
         icon: "Delete",
-        target: ["contentTreeMenuActions", "tableMenuActions", "additionalPreviewMenu", "contextualMenuFoldersAction"],
+        target: ["contentTreeMenuActions", "tableMenuActions", "additionalPreviewMenu", "contextualMenuFoldersAction", "contextualMenuFilesAction"],
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
         requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.deletePermanently",

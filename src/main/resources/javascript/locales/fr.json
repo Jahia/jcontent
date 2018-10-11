@@ -93,24 +93,24 @@
         }
       },
       "fileUpload": {
-        "dropMessage": "Drop files here to upload",
-        "or": "or",
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
-        "uploadButtonLabel": "Upload file(s)",
-        "successfulUploadMessage" : "Successfully uploaded {{number}} files",
-        "errorMessage": "There were problems uploading some files",
-        "errorActionMessage": "Please resolve the issue(s)",
-        "uploadingMessage": "Uploading ({{uploaded}} of {{total}} complete)",
-        "uploadingActionMessage": "There are error(s) which need your attention",
-        "queued": "Queued",
-        "uploading": "Uploading ...",
-        "uploaded": "Uploaded",
-        "exists": "File already exists",
-        "failed": "Could not upload file",
-        "rename": "Rename",
-        "replace": "Replace",
-        "dontUpload": "Don't upload",
-        "retry": "Retry"
+        "dropMessage": "Déposez les fichiers ici pour les télécharger",
+        "or": "ou",
+        "uploadButtonLabel": "Télécharger le(s) fichier(s)",
+        "successfulUploadMessage" : "{{number}} Fichiers téléchargés avec succès",
+        "errorMessage": "Il y a eu des problèmes lors du téléchargement de certains fichiers",
+        "errorActionMessage": "Veuillez résoudre le(s) problème(s)",
+        "uploadingMessage": "Téléchargement ({{uploaded}} sur {{total}} terminé)",
+        "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
+        "queued": "Mis en file d'attente",
+        "uploading": "Téléchargement ...",
+        "uploaded": "Téléchargé",
+        "exists": "Le fichier existe déjà",
+        "failed": "Impossible de télécharger le fichier",
+        "rename": "Renommer",
+        "replace": "Remplacer",
+        "dontUpload": "Ne téléchargez pas",
+        "retry": "Réessayer"
       }
     }
   }

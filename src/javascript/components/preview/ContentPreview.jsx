@@ -291,6 +291,8 @@ class ContentPreview extends React.Component {
     previewComponent(data) {
         const {classes, t, dxContext} = this.props;
         let displayValue = data ? data.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
+        const assets = data ? data.nodeByPath.renderedContent.staticAssets : [];
+        console.log(assets);
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
@@ -315,9 +317,12 @@ class ContentPreview extends React.Component {
                 </div>
             }
         } else {
-            return <div
-                        id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}
-                        dangerouslySetInnerHTML={{__html: displayValue}}/>
+            return <React.Fragment>
+                { this.css(assets) }
+                <div
+                    id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}
+                    dangerouslySetInnerHTML={{__html: displayValue}} />;
+            </React.Fragment>
         }
     }
 
@@ -395,6 +400,14 @@ class ContentPreview extends React.Component {
         } else {
             return text;
         }
+    }
+
+    css(scripts) {
+        const css = [];
+        for (let index in scripts) {
+            css.push(<link key={`cssAsset${index}`} rel="stylesheet" type="text/css" href={ scripts[index].key } />);
+        }
+        return css;
     }
 }
 

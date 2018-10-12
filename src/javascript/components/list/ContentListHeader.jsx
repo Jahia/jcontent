@@ -41,7 +41,7 @@ class ContentListHeader extends React.Component {
                                 <TableCell
                                 key={column.id}
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
-                                sortDirection={orderBy === column.property ? order : false}>
+                                sortDirection={orderBy === column.property ? order.toLowerCase() : false}>
                                     {t(column.label)}
                             </TableCell>
                             );

@@ -13,7 +13,18 @@ class RouterAction extends React.Component {
             ...rest,
             onClick: () => {
                 mode !== "apps" && handleDrawerClose && handleDrawerClose();
-                setUrl(siteKey, language, mode, (mode === "apps" ? context.actionPath : "/sites/" + siteKey), {});
+                let pathSuffix = '';
+                switch(mode) {
+                    case 'browse':
+                        pathSuffix = '/contents';
+                        break;
+                    case 'browse-files':
+                        pathSuffix =  '/files';
+                        break;
+                    default:
+                        pathSuffix = '';
+                }
+                setUrl(siteKey, language, mode, (mode === "apps" ? context.actionPath : `/sites/${siteKey}${pathSuffix}`), {});
                 return null;
             }
         });

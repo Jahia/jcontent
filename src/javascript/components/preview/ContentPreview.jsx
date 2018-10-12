@@ -321,7 +321,7 @@ class ContentPreview extends React.Component {
                 { this.css(assets) }
                 <div
                     id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}
-                    dangerouslySetInnerHTML={{__html: displayValue}} />;
+                    dangerouslySetInnerHTML={{__html: displayValue}} />
             </React.Fragment>
         }
     }

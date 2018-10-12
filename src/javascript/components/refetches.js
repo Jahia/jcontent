@@ -5,12 +5,15 @@
  * Note that calling refetch() will use the same query parameters as used for the last call, but you can also supply new
  * parameters if needed.
  */
+import * as _ from 'lodash';
+import Constants from "./constants";
 
 const refetches = {};
 
 export const refetchTypes = {
     "CONTENT_DATA": "CONTENT_DATA",
-    "CONTENT_TREE": "CONTENT_TREE"
+    "CONTENT_TREE": "CONTENT_TREE",
+    "ACTIVE_WORKFLOW_TASKS": "ACTIVE_WORKFLOW_TASKS"
 };
 
 export const setRefetcher = (name, refetcherData) => {
@@ -18,10 +21,31 @@ export const setRefetcher = (name, refetcherData) => {
 };
 
 export const triggerRefetch = (name, queryParams) => {
-    if (refetches[name]) {
-        if (queryParams) {
-            refetches[name].refetch(queryParams)
-        }
-        refetches[name].refetch()
-    }
+    getRefetches(name).forEach(function(ref) {
+        console.log("REFETCH: " + name);
+        doTriggerRefetch(ref, queryParams);
+    });
 };
+
+function doTriggerRefetch(refetch, queryParams) {
+    if (queryParams) {
+        refetch.refetch(queryParams)
+    } else {
+        refetch.refetch()
+    }
+}
+
+function getRefetches(name) {
+    if (refetchTypes.CONTENT_TREE === name) {
+        let refs = new Array();
+        _.forOwn(Constants.contentTreeConfigs, function(cfg) {
+            let ref = refetches[cfg.key];
+            if (ref) {
+                refs.push(ref);
+            }
+        });
+        return refs;
+    } else {
+        return [refetches[name]];
+    }
+}

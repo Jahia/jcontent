@@ -81,6 +81,7 @@
         <property name="needFrameParsing" value="false"/>
         <property name="sitesLocation" value="/sites/*"/>
         <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
+        <property name="eventDispatchingEnabled" value="true"/>
 
         <property name="nonEditableTypes">
             <set>

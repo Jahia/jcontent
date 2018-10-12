@@ -8,22 +8,22 @@ import {
 } from "./gqlQueries";
 import * as _ from "lodash";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
-import {register as gwtEventHandlerRegister, unregister as gwtEventHandlerUnregister} from "./eventHandlerRegistry";
+import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from "./eventHandlerRegistry";
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
-import constants from "./constants";
+import Constants from "./constants";
 import {extractPaths} from "./utils";
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
-        case constants.mode.BROWSE:
+        case Constants.mode.BROWSE:
             return new BrowsingQueryHandler();
-        case constants.mode.FILES:
+        case Constants.mode.FILES:
             return new FilesQueryHandler();
-        case constants.mode.SEARCH:
+        case Constants.mode.SEARCH:
             return new SearchQueryHandler();
-        case constants.mode.SQL2SEARCH:
+        case Constants.mode.SQL2SEARCH:
             return new Sql2SearchQueryHandler();
     }
 };
@@ -36,11 +36,11 @@ class ContentData extends React.Component {
     }
 
     componentDidMount() {
-        gwtEventHandlerRegister(this.onGwtContentModification);
+        registerContentModificationEventHandler(this.onGwtContentModification);
     }
 
     componentWillUnmount() {
-        gwtEventHandlerUnregister(this.onGwtContentModification);
+        unregisterContentModificationEventHandler(this.onGwtContentModification);
     }
 
     onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {

@@ -48,7 +48,6 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         call: openWorkflowDashboard,
         requiredPermission: "",
         target: ["leftMenuBottomAction"],
-        labelKey: 'label.contentManager.leftMenu.workflow',
-        pollInterval: 2000
+        labelKey: 'label.contentManager.leftMenu.workflow'
     },
 });

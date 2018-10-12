@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import {Query} from 'react-apollo';
 import gql from "graphql-tag";
 import {Badge, Typography, withStyles} from '@material-ui/core';
-
+import {setRefetcher, refetchTypes} from './../refetches';
 
 const styles = theme => ({
     badge: {
@@ -43,9 +43,10 @@ class WorkflowDashboardAction extends React.Component {
                 onClick: () => call(ctx)
             });
 
-            return <Query query={this.query} pollInterval={pollInterval != null ? pollInterval : 2000}>
+            return <Query query={this.query}>
                 {
-                    ({error, loading, data}) => {
+                    ({error, loading, data, refetch}) => {
+                        setRefetcher(refetchTypes.ACTIVE_WORKFLOW_TASKS, {refetch: refetch});
                         if (!loading && !error) {
                             let numberOfTasks = data.jcr.result;
                             if (numberOfTasks !== 0) {

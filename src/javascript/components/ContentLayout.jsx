@@ -24,7 +24,7 @@ import CMTopBar from "./CMTopBar";
 import CmSearchControlBar from "./CmSearchControlBar";
 import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
-import constants from "./constants";
+import Constants from "./constants";
 import {setRefetcher, triggerRefetch, refetchTypes} from './refetches';
 import ContextualMenu from './contextualMenu/contextualMenu';
 
@@ -208,12 +208,12 @@ class ContentLayout extends React.Component {
 
     isBrowsing() {
         let {mode} = this.props;
-        return (mode === constants.mode.BROWSE || mode === constants.mode.FILES)
+        return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES)
     };
 
     isSearching() {
         let {mode} = this.props;
-        return (mode === constants.mode.SEARCH || mode === constants.mode.SQL2SEARCH)
+        return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH)
     };
 
     isRootNode() {
@@ -261,9 +261,9 @@ class ContentLayout extends React.Component {
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {mode === constants.mode.FILES && <FilesGridSizeSelector initValue={4}
+                            {mode === Constants.mode.FILES && <FilesGridSizeSelector initValue={4}
                                                                                      onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
-                            {mode === constants.mode.FILES &&
+                            {mode === Constants.mode.FILES &&
                             <FilesGridModeSelector showList={this.state.showList}
                                                    onChange={() => this.setState({showList: !this.state.showList})}/>}
                             {this.isBrowsing() && !this.isRootNode() &&
@@ -323,7 +323,7 @@ class ContentLayout extends React.Component {
                                      setRefetch={this.setContentRefetcher}>
                             {({rows, totalCount}) => {
                                 return <Paper className={classes.paper}>
-                                    {mode === constants.mode.FILES && !this.state.showList
+                                    {mode === Constants.mode.FILES && !this.state.showList
                                         ? <FilesGrid
                                             size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                             totalCount={totalCount}

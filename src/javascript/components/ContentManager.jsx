@@ -25,7 +25,8 @@ import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
 import getStore from './redux/getStore';
 import ListAction from "./actions/ListAction";
-import constants from "./constants";
+import Constants from "./constants";
+import {PushEventConsumer} from "./PushEventConsumer";
 
 const actionComponents = {
     callAction: CallAction,
@@ -93,32 +94,7 @@ class ContentManager extends React.Component {
 
     render() {
 
-        let contentTreeConfigs = {
-            contents: {
-                rootPath: "/contents",
-                selectableTypes: ['jmix:list'],
-                type: "contents",
-                openableTypes: ['jmix:list', 'jnt:contentFolder'],
-                rootLabel: "label.contentManager.browseFolders",
-                key: "browse-tree-content"
-            },
-            pages: {
-                rootPath: "",
-                selectableTypes: ['jnt:page', 'jnt:virtualsite'],
-                type: "pages",
-                openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
-                rootLabel: "label.contentManager.browsePages",
-                key: "browse-tree-pages"
-            },
-            files: {
-                rootPath: "/files",
-                selectableTypes: ['jnt:folder'],
-                type: "files",
-                openableTypes: ['jnt:folder'],
-                rootLabel: "label.contentManager.browseFiles",
-                key: "browse-tree-files"
-            }
-        };
+        let contentTreeConfigs = Constants.contentTreeConfigs;
 
         let {dxContext} = this.props;
         // Work around to restore table headers color
@@ -139,6 +115,7 @@ class ContentManager extends React.Component {
                                 return (
                                     <Provider store={this.getStore(dxContext, t)}>
                                         <DxContext.Provider value={dxContext}>
+                                            <PushEventConsumer/>
                                             <ConnectedRouter history={this.getHistory(dxContext, t)} >
                                                 <Route path="/:siteKey/:lang" render={props => {
                                                     dxContext["lang"] = props.match.params.lang;

@@ -103,7 +103,12 @@ class Sql2SearchQueryHandler {
             language: lang,
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
-            limit: paginationState.rowsPerPage
+            limit: paginationState.rowsPerPage,
+            fieldSorter: orderBy === '' ? null : {
+                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                fieldName: orderBy === '' ? null : orderBy,
+                ignoreCase: true,
+            }
         };
     }
 
@@ -230,9 +235,9 @@ const searchContentQuery = gql `
 `;
 
 const sql2SearchContentQuery = gql `
-    query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int) {
+    query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
         jcr {
-            results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit) {
+            results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
                 pageInfo {
                     totalCount
                 }

@@ -118,7 +118,7 @@ const styles = theme => ({
 });
 
 const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 7;
+const GRID_PANEL_BUTTONS_SIZE = 4;
 
 class ContentLayout extends React.Component {
 

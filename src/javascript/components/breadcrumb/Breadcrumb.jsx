@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {Button, Menu, MenuItem} from "@material-ui/core";
 import styled from "styled-components/dist/styled-components";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import Folder from '@material-ui/icons/Folder';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import {PageIcon} from '@jahia/icons';
@@ -40,6 +41,11 @@ const styles = theme => ({
     },
     menu: {
         background: 'red'
+    },
+    moreHoriz : {
+        fill: '#d7dce0',
+        marginBottom: '-7px'
+
     }
 });
 
@@ -168,7 +174,7 @@ class BreadcrumbDisplay extends React.Component {
                 aria-haspopup="true"
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(nodes)}
-                {nodes.name}
+                {nodes.name.substring(0,6)+'...'}
             </Button>
         } else {
             return <Button
@@ -247,14 +253,29 @@ class Breadcrumb extends React.Component {
         let {breadcrumbs} = this.state;
         return (<div>
             {breadcrumbs.map((breadcrumb, i) => {
-                return <span key={breadcrumb.uuid}>
+                if(breadcrumbs.length > 5){
+                    if(i > breadcrumbs.length - 5 || i === 0){
+                        return <span key={breadcrumb.uuid}>
                     <StyledBreadcrumbDisplay
                         id={breadcrumb.uuid}
                         handleSelect={this.props.handleSelect}
                         nodes={breadcrumb}/>
-                    {i < breadcrumbs.length - 1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
+                            {i < breadcrumbs.length - 1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
+                            {i === 0 ? <span><MoreHoriz className={classes.moreHoriz}/>
+                                <ChevronRightIcon className={classes.chevronIcon}/></span> : null}
                    </span>
-            })}
+                    }else{
+                        return null;
+                    }
+                }else {
+                    return <span key={breadcrumb.uuid}>
+                    <StyledBreadcrumbDisplay
+                        id={breadcrumb.uuid}
+                        handleSelect={this.props.handleSelect}
+                        nodes={breadcrumb}/>
+                        {i < breadcrumbs.length - 1 ? <ChevronRightIcon className={classes.chevronIcon}/> : null}
+                   </span>
+                }})}
         </div>)
     }
 

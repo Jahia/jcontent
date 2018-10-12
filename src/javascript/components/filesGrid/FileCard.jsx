@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Card, CardContent, CardMedia, Typography,IconButton } from '@material-ui/core';
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import {Visibility, Autorenew} from "@material-ui/icons";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';

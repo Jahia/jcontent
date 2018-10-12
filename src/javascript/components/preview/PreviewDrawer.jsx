@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {translate} from "react-i18next";
-import {withStyles} from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
+import {withStyles, IconButton} from '@material-ui/core';
 import classNames from 'classnames'
 import ContentPreview from "../preview/ContentPreview";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';

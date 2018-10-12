@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import FileCard from './FileCard';
-import Grid from '@material-ui/core/Grid';
+import { Grid } from '@material-ui/core';
 import { Pagination } from "@jahia/react-material";
 import { DxContext } from "../DxContext";
 import {withStyles} from "@material-ui/core";

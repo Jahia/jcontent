@@ -1,5 +1,5 @@
 import React from 'react';
-import {withStyles, Button} from "@material-ui/core/es/index";
+import {withStyles, Button} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 

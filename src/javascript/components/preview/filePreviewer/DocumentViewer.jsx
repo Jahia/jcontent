@@ -2,7 +2,7 @@ import React  from 'react';
 import PropTypes from 'prop-types';
 import FileViewer from 'react-file-viewer';
 import {Paper} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 import styled from 'styled-components/dist/styled-components.js';
 import {fileIcon} from '../../filesGrid/filesGridUtils';
 

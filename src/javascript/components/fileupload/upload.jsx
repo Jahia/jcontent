@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { IconButton, List, CircularProgress } from "@material-ui/core";
 import { Close, Fullscreen, FullscreenExit, CheckCircle, Info } from "@material-ui/icons";

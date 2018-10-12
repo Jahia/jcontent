@@ -1,11 +1,7 @@
 import React from "react";
-import {withStyles} from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import {List, ListItem, withStyles, Typography, Drawer} from '@material-ui/core';
 import LanguageSwitcher from "./languageSwitcher/LanguageSwitcher";
 import SiteSwitcher from "./siteSwitcher/SiteSwitcher";
-import Typography from '@material-ui/core/Typography';
-import Drawer from '@material-ui/core/Drawer';
 import {translate} from 'react-i18next';
 import classNames from "classnames";
 import BurgerMenuButton from "./BurgerMenuButton";

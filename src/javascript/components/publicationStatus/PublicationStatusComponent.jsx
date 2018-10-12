@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Constants from '../constants';
+import { withStyles } from '@material-ui/core';
 import { InfoOutlined } from "@material-ui/icons";
 import { publicationStatusByName } from "./publicationStatus";
 import {translate} from "react-i18next";

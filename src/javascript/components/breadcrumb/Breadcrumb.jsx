@@ -7,7 +7,7 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import Folder from '@material-ui/icons/Folder';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import {PageIcon} from '@jahia/icons';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core';
 import {translate} from "react-i18next";
 import Constants from '../constants';
 

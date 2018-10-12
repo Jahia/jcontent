@@ -12,7 +12,7 @@ import Actions from "../Actions";
 import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 import {lockNode, unlockNode} from "./gqlMutations";
-import Tooltip from '@material-ui/core/Tooltip';
+import {Tooltip} from '@material-ui/core';
 import PDFViewer from "./filePreviewer/PDFViewer";
 import ImageViewer from "./filePreviewer/ImageViewer";
 import DocumentViewer from "./filePreviewer/DocumentViewer";

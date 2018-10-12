@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu as ListIcon, ViewModule} from '@material-ui/icons';
-import {Button} from '@material-ui/core';
-import {withStyles} from "@material-ui/core/styles/index";
+import {Button, Tooltip, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {lodash as _} from "lodash";
-import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = ({
     iconSize: {

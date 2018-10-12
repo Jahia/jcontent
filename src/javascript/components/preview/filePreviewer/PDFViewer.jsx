@@ -1,9 +1,8 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
 import PDF from 'react-pdf-js';
-import { withStyles } from '@material-ui/core/styles';
 import {translate} from "react-i18next";
-import {IconButton, Paper} from '@material-ui/core';
+import {IconButton, Paper, withStyles} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 

@@ -47,7 +47,12 @@ class FilesQueryHandler {
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             typeFilter: "jnt:file",
-            recursionTypesFilter: "jnt:folder"
+            recursionTypesFilter: "jnt:folder",
+            fieldSorter: orderBy === '' ? null : {
+                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                fieldName: orderBy === '' ? null : orderBy,
+                ignoreCase: true,
+            }
         };
     }
 
@@ -251,11 +256,11 @@ const sql2SearchContentQuery = gql `
 `;
 
 const filesQuery = gql `
-    query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!) {
+    query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput) {
         jcr {
             results: nodeByPath(path: $path) {
                 id : uuid
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter) {
                     pageInfo {
                         totalCount
                     }

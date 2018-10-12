@@ -29,10 +29,13 @@ const customStyles = {
         display: "flex",
         alignItems: "center",
         height: 34,
-        width: '150px',
+        width: '155px',
         background: "#007bc0",
         "&:hover": {
             boxShadow: "none"
+        },
+        "&>div": {
+            overflow: "visible!important"
         }
     }),
     menu: () => ({

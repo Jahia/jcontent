@@ -46,7 +46,7 @@ const styles = theme => ({
     },
     blockCore: {
         marginTop: -28,
-        marginBottom: theme.spacing.unit * (-1),
+        marginBottom: -2,
         marginLeft: -24,
     },
     blockCoreSearch: {
@@ -113,7 +113,7 @@ const styles = theme => ({
 
     },
     ButtonAction: {
-        margin: 0
+        margin: '0!important'
     }
 });
 

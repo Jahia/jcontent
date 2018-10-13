@@ -41,24 +41,26 @@ const styles = theme => ({
     },
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
-        paddingBottom: theme.spacing.unit * 7,
         width: 550,
-        padding: theme.spacing.unit * 1,
+        // display: 'flex',
+        justifyContent: 'center',
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
+        paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
-        maxHeight: 'calc(100vh - 300px)',
+        height: 'calc(100vh - 28px)',
     },
     previewContainerFullScreen: {
         width: '100vw',
-        textAlign: 'center',
-        overflow: 'scroll',
+        // display: 'flex',
+        justifyContent: 'center',
         color: theme.palette.background.paper,
-        paddingBottom: theme.spacing.unit * 16,
         backgroundColor: theme.palette.common.white,
         padding: theme.spacing.unit * 1,
+        paddingBottom: theme.spacing.unit * 16,
+        overflow: 'scroll',
         height: 'calc(100vh - 28px)',
-    },
+        },
     unpublishButton: {
         textAlign: 'center',
         margin: theme.spacing.unit

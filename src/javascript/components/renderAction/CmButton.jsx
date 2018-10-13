@@ -11,12 +11,15 @@ const styles = theme => ({
         transition: "left 0.5s ease 0s",
     },
     button: {
-        margin: theme.spacing.unit
     },
     buttonText: {
         margin: theme.spacing.unit * 0,
         marginRight: theme.spacing.unit * 1,
         color: theme.palette.common.white,
+    },
+    buttonSize: {
+        maxHeight: '36px',
+        margin: '0px!important'
     }
 });
 
@@ -26,6 +29,7 @@ class CmButton extends React.Component {
         const {classes, onClick, labelKey, t, children, text} = this.props;
         let childrenCount = React.Children.count(children);
         return <Button
+                classes={{root: classes.buttonSize}}
                 className={text ? classes.button : classes.buttonText}
                 variant={text ? "text" : "contained"}
                 size="medium"

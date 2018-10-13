@@ -77,6 +77,9 @@ const styles = theme => ({
     showScale: {
         opacity: 1,
         transition: "opacity 0.3s ease-in 0s"
+    },
+    PaperPdf : {
+        backgroundColor: theme.palette.common.white,
     }
 });
 
@@ -190,7 +193,7 @@ class PDFViewer extends React.Component {
         return <div>
                 <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
                 <PDFContainer>
-                    <Paper elevation={0} className={classes.pdfPaper}>
+                    <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
                         <PDF
                             file={file}
                             scale={scaleSizes[scaleSize]}
@@ -200,8 +203,9 @@ class PDFViewer extends React.Component {
                         />
                     </Paper>
                 </PDFContainer>
-                {pagination}
-            </div>
+            {pagination}
+
+        </div>
     }
 }
 

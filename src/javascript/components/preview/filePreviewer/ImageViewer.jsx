@@ -30,8 +30,11 @@ const styles = theme => ({
         height: 550,
     },
     bigImage: {
-        width: '100vw',
+        width: '100%',
         height: '100vh'
+    },
+    CardRoot: {
+        backgroundSize: 'contain'
     }
 
 });
@@ -115,6 +118,7 @@ class ImageViewer extends React.Component {
         //Remove Canvas Tag but react-darkroom still in dependency
         return (
                 <CardMedia
+                    classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}
                     className={fullScreen ? classes.bigImage : classes.littleImage}
                     image={file}>
                 </CardMedia>

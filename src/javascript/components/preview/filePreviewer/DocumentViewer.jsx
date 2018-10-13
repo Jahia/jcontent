@@ -7,42 +7,44 @@ import styled from 'styled-components/dist/styled-components.js';
 import {fileIcon} from '../../filesGrid/filesGridUtils';
 
 const DocumentPreviewContainer = styled.div`
-    width:600px;
+    width:100%;
     height:700px;
     display: flex;
     justify-content: space-around;
     -webkit-flex-flow: row wrap;
     video {
-        width:630px;    
-        margin-left: 30px;
+        width: 100%;
     }
     div.document-container {
         position:absolute;
         height: 700px;
-        width: 600px;
+        width:100%;
         overflow: hidden auto;
         margin: 0 auto;
     }
 `;
-const styles = theme => ({
+    const styles = theme => ({
     documentPaper: {
         flex:1,
-        width: '650px'
+        width: '100%'
     },
     defaultPaper: {
-        flex:1,
-        position: "relative",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -72.5%)"
+        width: '550',
+        display: 'flex',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     videoPaper: {
-        flex:1,
-        position: "relative",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-52.5%, -72.5%)"
-    }
+        width: '550',
+        display: 'flex',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+        paperChange: {
+            background: theme.palette.common.white,
+        },
 });
 class DocumentViewer extends React.Component {
     constructor(props) {
@@ -55,19 +57,19 @@ class DocumentViewer extends React.Component {
         switch(type) {
             case "docx":
             case "doc":
-                return <Paper className={classes.documentPaper} elevation={0}>
+                return <Paper className={classes.documentPaper} classes={{root: classes.paperChange}} elevation={0}>
                     <FileViewer fileType={type}
                                 filePath={file}/>
                 </Paper>;
             case "avi":
             case "mp4":
             case "video":
-                return <Paper className={classes.videoPaper} elevation={0}>
+                return <Paper className={classes.videoPaper} classes={{root: classes.paperChange}}  elevation={0}>
                     <FileViewer fileType={type}
                                 filePath={file}/>
                 </Paper>;
             default:
-                return <Paper className={classes.defaultPaper} elevation={0}>
+                return <Paper className={classes.defaultPaper} classes={{root: classes.paperChange}}    elevation={0}>
                     {fileIcon(file, null, {"fontSize": "24em"})}
                 </Paper>;
         }

@@ -9,7 +9,6 @@ const styles = theme => ({
         color: theme.palette.common.white,
         padding: 0,
         paddingRight: theme.spacing.unit,
-        paddingBottom: theme.spacing.unit,
         display: 'inline-grid',
     },
     track: {

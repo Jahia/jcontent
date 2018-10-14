@@ -34,7 +34,7 @@ const styles = theme => ({
         height: '100vh'
     },
     CardRoot: {
-        backgroundSize: 'contain'
+        backgroundSize: 'contain',
     }
 
 });

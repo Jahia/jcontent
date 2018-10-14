@@ -12,12 +12,15 @@ const PDFContainer = styled.div`
     display: flex;
     div {
         position:relative;
-        width: 640px;
+        width: 100%;
+        max-width: 100%;
         overflow: auto;
         margin: 0 auto;
     }
     div > canvas {
         position:relative;
+        width: 100%;
+        max-width: 100%;
         display: block;
         margin: 0 auto;
     }
@@ -64,7 +67,6 @@ const styles = theme => ({
         background: 'transparent'
     },
     pdfPaper: {
-        border: "1px solid #b0b5b6",
         flex:1,
         left: "50%",
         top: "50%",

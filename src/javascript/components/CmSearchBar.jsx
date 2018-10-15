@@ -29,7 +29,6 @@ const styles = theme => ({
         textTransform: 'none',
         marginTop: -7,
         padding: 0,
-
     },
     link: {
         color: 'inherit'
@@ -45,10 +44,12 @@ const styles = theme => ({
         height: '34px',
         maxHeight: '34px',
         minHeight: '34px',
+        flexGrow: 10,
+        boxShadow: 'none!important',
     },
-    inInput: {
-        flexGrow: 10
-    }
+    inputShadow: {
+        boxShadow: '0',
+    },
 });
 
 class CmSearchBar extends React.Component {
@@ -153,9 +154,9 @@ class CmSearchBarNormal extends React.Component {
                 inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
                 className={classes.searchSize}
                 defaultValue={params.searchTerms}
+                classes={{root: classes.inputShadow}}
                 placeholder={t('label.contentManager.search.normalPrompt')}
                 inputRef={this.search}
-                className={classes.inInput}
                 onChange={() => this.onSearchInputChange(path, params)}
                 onKeyDown={(e) => this.onSearchInputKeyDown(e, path, params)}
             />

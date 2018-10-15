@@ -13,10 +13,18 @@ const styles = theme => ({
         minWidth: '100px',
         height: 34,
     },
+    inputDetails: {
+        borderBottom: 'none!important',
+        boxShadow: 'none!important',
+    },
+    selectDetails: {
+        borderBottom: 'none!important',
+        boxShadow: 'none!important',
+    },
     inputSize:  {
         height: 34,
         padding: '0!important',
-    }
+    },
 });
 
 const ITEM_HEIGHT = 48;
@@ -39,7 +47,7 @@ const customStyles = {
         }
     }),
     menu: () => ({
-        backgroundColor: "white",
+        backgroundColor: "#333537",
         // boxShadow: "1px 2px 6px #888888", // should be changed as material-ui
         position: "absolute",
         left: 0,
@@ -47,6 +55,9 @@ const customStyles = {
         width: "100%",
         zIndex: 2,
         maxHeight: ITEM_HEIGHT * 4.5
+    }),
+    dropdownIndicator: () => ({
+        color: '#fff',
     }),
     menuList: () => ({
         maxHeight: ITEM_HEIGHT * 4.5,
@@ -56,12 +67,11 @@ const customStyles = {
         overflowY: "auto"
     }),
     input: () => ({
-        height: 34,
-        padding: "0px !important"
-
+        color: '#fff!important'
     }),
     placeholder: () => ({
-        textAlign: 'center'
+        textAlign: 'center',
+        color : '#fff!important'
     }),
     singleValue: () => ({
         color: 'white',
@@ -73,7 +83,7 @@ const customStyles = {
         width: '100px',
         whiteSpace: 'nowrap',
         top: '50%',
-    })
+    }),
 };
 
 class Option extends React.Component {
@@ -155,8 +165,10 @@ class FilterSelect extends React.Component {
             <div className={classes.root} data-cm-role={'filter-select'}>
                 <Input
                     fullWidth
+                    classe={{ root: classes.inputDetails}}
                     inputComponent={SelectWrapped}
                     onChange={handleChange}
+                    disableUnderline={true}
                     value={selectedOption}
                     inputProps={{
                         options

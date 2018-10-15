@@ -22,7 +22,6 @@ export const setRefetcher = (name, refetcherData) => {
 
 export const triggerRefetch = (name, queryParams) => {
     getRefetches(name).forEach(function(ref) {
-        console.log("REFETCH: " + name);
         doTriggerRefetch(ref, queryParams);
     });
 };

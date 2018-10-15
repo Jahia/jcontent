@@ -19,18 +19,18 @@ class PushEventConsumer extends React.Component {
 
     onPushEvent(eventData) {
         if (eventData) {
-            console.log("Event recieved: " + JSON.stringify(eventData));
-            if (eventData.type === "workflowTask") {
+            let evtType = eventData.type;
+            if (evtType === "workflowTask") {
                 triggerRefetch(refetchTypes.ACTIVE_WORKFLOW_TASKS);
                 if (eventData.endedWorkflow != null) {
-                    triggerRefetch(refetchTypes.CONTENT_DATA);
-                    triggerRefetch(refetchTypes.CONTENT_TREE);
+                    triggerDataRefetch();
                 }
-            } else if (eventData.type === "job") {
+            } else if (evtType === "job") {
                 if (this.hasProcessJob(eventData.startedJob) || this.hasProcessJob(eventData.endedJob)) {
-                    triggerRefetch(refetchTypes.CONTENT_DATA);
-                    triggerRefetch(refetchTypes.CONTENT_TREE);
+                    triggerDataRefetch();
                 }
+            } else if (evtType === "contentUnpublished") {
+                triggerDataRefetch();
             }
         }
     }
@@ -43,6 +43,11 @@ class PushEventConsumer extends React.Component {
             });
         }
         return found;
+    }
+
+    triggerDataRefetch() {
+        triggerRefetch(refetchTypes.CONTENT_DATA);
+        triggerRefetch(refetchTypes.CONTENT_TREE);
     }
 
     render() {

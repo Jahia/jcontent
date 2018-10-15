@@ -12,7 +12,7 @@ import {cmGoto, cmSetSearchMode} from "./redux/actions";
 const styles = theme => ({
     sql2Form: {
         padding: theme.spacing.unit,
-        color: theme.palette.text.secondary,
+        color: theme.palette.background.paper,
         fontFamily: 'monospace'
     },
     sql2Input: {
@@ -205,7 +205,7 @@ class CmSearchBarSql2 extends React.Component {
                 }
                 </React.Fragment>}
         >
-            <Grid container alignItems={'center'} classes={{container: classes.sql2Form}}>
+            <Grid container alignItems={'center'} classes={{container: classes.sql2Form}} className={classes.test}>
                 SELECT * FROM [
                 <Sql2Input
                     maxLength={100}
@@ -283,7 +283,7 @@ class SearchBarLayout extends React.Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography color="inherit"  gutterBottom align="right">
+                        <Typography color="inherit" gutterBottom align="right">
                             {rightFooter}
                         </Typography>
                     </Grid>

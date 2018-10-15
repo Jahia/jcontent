@@ -30,7 +30,7 @@ const styles = (theme) => ({
         fontWeight: '400',
         background: 'transparent',
         padding: '5px 10px',
-        color: theme.palette.background.paper
+        color: theme.palette.background.default
 
     },
     selectedList: {

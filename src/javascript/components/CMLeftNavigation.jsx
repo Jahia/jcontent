@@ -33,7 +33,7 @@ const styles = theme => ({
         zIndex: 0,
         minWidth: '105px',
         paddingLeft: '38px',
-        background: '#333537',
+        background: theme.palette.background.default,
         overflow: 'hidden',
         height: '100%',
         display: 'flex',

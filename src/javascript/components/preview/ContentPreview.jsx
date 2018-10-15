@@ -44,7 +44,7 @@ const styles = theme => ({
         width: 550,
         display: 'flex',
         justifyContent: 'center',
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
@@ -54,7 +54,7 @@ const styles = theme => ({
         width: '100vw',
         display: 'flex',
         justifyContent: 'center',
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         padding: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 16,
@@ -64,14 +64,14 @@ const styles = theme => ({
     previewContainerPdf: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: 550,
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
     },
     previewContainerFullScreenPdf: {
         width: '100%',
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         padding: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 16,
@@ -96,7 +96,7 @@ const styles = theme => ({
         textAlign: 'center',
     },
     titleBar: {
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         paddingBottom: '0px',
     },
     contentTitle: {
@@ -106,7 +106,7 @@ const styles = theme => ({
         fontWeight: 100,
     },
     contentSubTitle: {
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         paddingLeft: theme.spacing.unit,
         fontSize: '18px',
         fontWeight: 100,
@@ -373,7 +373,7 @@ class ContentPreview extends React.Component {
             }]}>
             {(lockNode) => {
                 return <Tooltip title={t('label.contentManager.contentPreview.lockNode')} placement="top-start">
-                    <IconButton onClick={() => {
+                    <IconButton color="secondary" onClick={() => {
                         lockNode({variables: {pathOrId: selection[0].path}});
                         this.setState({
                             selectionLocked: true

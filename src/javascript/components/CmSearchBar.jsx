@@ -12,7 +12,7 @@ import {cmGoto, cmSetSearchMode} from "./redux/actions";
 const styles = theme => ({
     sql2Form: {
         padding: theme.spacing.unit,
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         fontFamily: 'monospace'
     },
     sql2Input: {

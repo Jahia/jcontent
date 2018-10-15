@@ -5,6 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
 import {lodash as _} from "lodash";
 import {translate} from "react-i18next";
+import connect from "react-redux/es/connect/connect";
 
 const styles = (theme) => ({
     root: {
@@ -78,13 +79,12 @@ class CmLeftDrawerContent extends React.Component {
         let {menuId, context, handleDrawerClose, actionPath, t, classes, theme} = this.props;
 
         return <List className={classes.root} classes={{root: classes.listRoot}}>
-            {console.log("CmLeftDrawerContent", menuId, _.includes(actionPath, menuId))}
-            <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose} actionPath={actionPath}>
+            <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose}>
                 {(menuConfig) =>
                     <ListItem
                         className={classes.clearList}
                         classes={{root: classes.overList}}
-                        selected={_.includes(actionPath, menuConfig.actionKey)}
+                        selected={_.includes(actionPath.split("/"), menuConfig.actionKey)}
                         button
                         onClick={(event) => menuConfig.onClick(event)}
                         style={{
@@ -100,7 +100,6 @@ class CmLeftDrawerContent extends React.Component {
                                 : null
                             }
                         </div>
-                        {console.log("CmLeftDrawerContent", menuConfig.actionKey, _.includes(actionPath, menuConfig.actionKey))}
                         <FontAwesomeIcon className={classes.iconDrawer} icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
                         <div className={classes.textPadding}>
                             {t(menuConfig.labelKey, menuConfig.labelParams)}
@@ -112,10 +111,15 @@ class CmLeftDrawerContent extends React.Component {
     }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+    actionPath: state.path
+});
+
 CmLeftDrawerContent = _.flowRight(
     translate(),
     withTheme(),
-    withStyles(styles)
+    withStyles(styles),
+    connect(mapStateToProps)
 )(CmLeftDrawerContent);
 
 export default CmLeftDrawerContent;

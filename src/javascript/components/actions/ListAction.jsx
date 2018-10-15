@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {translate} from "react-i18next";
-import {withStyles, List, ListItem} from "@material-ui/core";
+import {withStyles, List, ListItem, withTheme} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import Actions from "../Actions";
 import CmLeftDrawerContent from "../CmLeftDrawerContent";
+import {lodash as _} from "lodash";
+import connect from "react-redux/es/connect/connect";
 
 const styles = theme => ({
     button: {
@@ -19,8 +21,7 @@ class ListAction extends Component {
         super(props);
 
         this.state = {
-            open: _.includes(this.props.actionPath, this.props.actionKey),
-            actionPath: this.props.actionPath
+            open: _.includes(this.props.actionPath.split("/"), this.props.actionKey)
         };
 
         this.handleListClick = this.handleListClick.bind(this);
@@ -30,7 +31,6 @@ class ListAction extends Component {
         this.setState(prevState => {
             return {
                 open: !prevState.open,
-                actionPath: []
             };
         });
     };
@@ -50,15 +50,20 @@ class ListAction extends Component {
             })}
             {console.log("ListAction",  this.props.actionKey, open)}
             {open &&
-                <CmLeftDrawerContent {...rest} menuId={menuId} actionPath={this.state.actionPath}/>
+                <CmLeftDrawerContent {...rest} menuId={menuId}/>
             }
         </span>;
     }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+    actionPath: state.path
+});
+
 ListAction = compose(
     translate(),
-    withStyles(styles, {withTheme: true})
+    withStyles(styles, {withTheme: true}),
+    connect(mapStateToProps)
 )(ListAction);
 
 ListAction.propTypes = {

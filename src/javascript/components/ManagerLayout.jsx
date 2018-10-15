@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core';
 import {compose} from "react-apollo/index";
 import connect from "react-redux/es/connect/connect";
+import {drawerWidth} from "./CMLeftNavigation";
 
 const styles = theme => ({
     root: {
@@ -20,7 +21,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 3
     },
     openDrawer: {
-        marginLeft: "289px",
+        marginLeft: drawerWidth,
         padding: 0
     }
 });

@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 import actionsRegistry from "./actionsRegistry";
 import CmLeftDrawerContent from "./CmLeftDrawerContent";
 
-const drawerWidth = 289;
+export const drawerWidth = 289;
 // TODO this styles should be provided by the theme / new structure when available
 
 const styles = theme => ({
@@ -211,7 +211,7 @@ class CMLeftNavigation extends React.Component {
                 openDrawerMenuId: menuId,
                 openDrawer: true,
                 drawerContent: {
-                    content: <CmLeftDrawerContent context={actionContext} menuId={menuId} actionPath={actionPath} handleDrawerClose={this.handleDrawerClose}/>,
+                    content: <CmLeftDrawerContent context={actionContext} menuId={menuId} handleDrawerClose={this.handleDrawerClose}/>,
                     title: this.props.t(actionsRegistry[menuActionKey].labelKey)
                 }
             }

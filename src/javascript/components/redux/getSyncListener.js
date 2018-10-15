@@ -22,7 +22,7 @@ let buildUrl = (site, language, mode, path, params) => {
         path = path.substring(("/sites/" + site).length);
     } else if (mode === "apps") {
         // path is an action Key
-        path = path.startsWith("/") ? path : "/" + path;
+        // do nothing
     } else {
         path = "";
     }

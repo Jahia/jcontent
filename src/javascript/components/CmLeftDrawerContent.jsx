@@ -11,11 +11,11 @@ const styles = (theme) => ({
         marginLeft: theme.spacing.unit * 2,
         marginTop: '0px'
     },
-    ListRoot: {
-        paddingTop: '0',
+    listRoot: {
+        paddingTop: '0'
     },
     iconDrawer: {
-        color: '#504e4d',
+        color: '#504e4d'
     },
     overList: {
         paddingTop: '4px',
@@ -30,7 +30,7 @@ const styles = (theme) => ({
         fontWeight: '400',
         background: 'transparent',
         padding: '5px 10px',
-        color: theme.palette.background.paper,
+        color: theme.palette.background.paper
 
     },
     selectedList: {
@@ -41,7 +41,7 @@ const styles = (theme) => ({
         fontWeight: '400',
         padding: '5px 10px',
         background: theme.palette.primary.main,
-        color: theme.palette.common.white,
+        color: theme.palette.common.white
     },
     triangle: {
         width: 0,
@@ -60,7 +60,7 @@ const styles = (theme) => ({
         borderColor: '#5c6164 transparent transparent transparent'
     },
     iconTree: {
-        fontSize: '15px',
+        fontSize: '15px'
     },
     textPadding: {
         paddingLeft: theme.spacing.unit,
@@ -77,29 +77,31 @@ class CmLeftDrawerContent extends React.Component {
 
         let {menuId, context, handleDrawerClose, actionPath, t, classes, theme} = this.props;
 
-        return <List className={classes.root} classes={{root: classes.ListRoot}}>
+        return <List className={classes.root} classes={{root: classes.listRoot}}>
             {console.log("CmLeftDrawerContent", menuId, _.includes(actionPath, menuId))}
             <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose} actionPath={actionPath}>
                 {(menuConfig) =>
-                    <ListItem className={classes.clearList}
-                              classes={{root: classes.overList}}
-                              selected={_.includes(actionPath, menuConfig.actionKey)} button
-                              onClick={(event) => menuConfig.onClick(event)}
-                              style={{
-                                  paddingLeft: (_.split(context.actionPath, "/").length) * theme.spacing.unit
-                              }}>
-
+                    <ListItem
+                        className={classes.clearList}
+                        classes={{root: classes.overList}}
+                        selected={_.includes(actionPath, menuConfig.actionKey)}
+                        button
+                        onClick={(event) => menuConfig.onClick(event)}
+                        style={{
+                            paddingLeft: (_.split(context.actionPath, "/").length) * theme.spacing.unit
+                        }}
+                    >
                         <div className={classes.expand}>
-                            {menuConfig.hasChildren ?
-                                ((menuConfig.open || menuConfig.selected) ?
-                                    <ExpandMore classes={{root: classes.iconTree}}/> :
-                                    <ChevronRight classes={{root: classes.iconTree}}/>)
+                            {menuConfig.hasChildren
+                                ? ((menuConfig.open || menuConfig.selected)
+                                    ? <ExpandMore classes={{root: classes.iconTree}}/>
+                                    : <ChevronRight classes={{root: classes.iconTree}}/>
+                                )
                                 : null
                             }
                         </div>
                         {console.log("CmLeftDrawerContent", menuConfig.actionKey, _.includes(actionPath, menuConfig.actionKey))}
-                        <FontAwesomeIcon className={classes.iconDrawer}
-                                         icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                        <FontAwesomeIcon className={classes.iconDrawer} icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
                         <div className={classes.textPadding}>
                             {t(menuConfig.labelKey, menuConfig.labelParams)}
                         </div>

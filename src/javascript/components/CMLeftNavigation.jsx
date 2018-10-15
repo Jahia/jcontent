@@ -199,20 +199,20 @@ class CMLeftNavigation extends React.Component {
 
         if (props.mode === "apps") {
             let actionPath = this.props.path.split("/");
-            let actionKey = actionPath ? actionPath.shift() : "";
-            const menuId = actionsRegistry[actionKey].menuId;
+            let menuActionKey = actionPath ? actionPath.shift() : "";
+            const menuId = actionsRegistry[menuActionKey].menuId;
             let actionContext = {
                 path: `/sites/${this.props.siteKey}`,
                 siteKey: this.props.siteKey,
                 lang: this.props.lang,
-                actionPath: "/" + actionKey
+                actionPath: "/" + menuActionKey
             };
             this.state = {
                 openDrawerMenuId: menuId,
                 openDrawer: true,
                 drawerContent: {
                     content: <CmLeftDrawerContent context={actionContext} menuId={menuId} actionPath={actionPath} handleDrawerClose={this.handleDrawerClose}/>,
-                    title: this.props.t(actionsRegistry[actionKey].labelKey)
+                    title: this.props.t(actionsRegistry[menuActionKey].labelKey)
                 }
             }
         } else {
@@ -314,7 +314,7 @@ class CMLeftNavigation extends React.Component {
                     </div>
                     <div className={classes.drawerTree}>
                         {this.state.drawerContent &&
-                        this.state.drawerContent.content
+                            this.state.drawerContent.content
                         }
                     </div>
                 </Drawer>

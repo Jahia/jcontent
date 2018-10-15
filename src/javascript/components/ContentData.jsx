@@ -102,8 +102,8 @@ class ContentData extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch} = this.props;
-        return <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={'network-only'}>
+        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy} = this.props;
+        return <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={orderBy==='displayName'?'network-only':''}>
             {({loading, error, data, refetch}) => {
                 let queryHandler = contentQueryHandlerByMode(mode);
 

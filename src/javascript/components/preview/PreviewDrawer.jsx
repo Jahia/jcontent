@@ -64,8 +64,10 @@ const styles = theme => ({
     },
     insideCell : {
         display: 'inline',
+        fontWeight: 700,
+        fontSize: '0.75rem',
+        color: '#5E6565',
         flexGrow: 1
-
     },
     drawerWidth: {
         overflow: 'hidden!important',
@@ -97,6 +99,9 @@ const styles = theme => ({
         height: '22px!important',
         minHeight: '22px!important',
         maxHeight: '22px!important',
+    },
+    chevron : {
+        color: '#5E6565', // color is not in the theme
     }
 });
 
@@ -133,7 +138,7 @@ class PreviewDrawer extends React.Component {
                             <TableCell className={classes.drawerTableCell}>
                                 <Toolbar disableGutters>
                                     <IconButton onClick={this.props.onClose} color={'inherit'} style={{padding: 0, marginRight: 10}}>
-                                        <ChevronRightIcon fontSize="small"/>
+                                        <ChevronRightIcon className={classes.chevron} fontSize="small"/>
                                     </IconButton>
                                     <Typography className={classes.insideCell}>
                                         Preview

@@ -51,6 +51,10 @@ const styles = theme => ({
         marginLeft: "auto",
         width: "80%"
     },
+    topBarwidth: {
+        width: 'min-content',
+        maxWidth: '100%',
+    }
 });
 
 class CMTopBar extends React.Component {
@@ -72,7 +76,7 @@ class CMTopBar extends React.Component {
                     </Grid>
                     <Grid item xs={1}>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid item xs={9} className={classes.topBarwidth}>
                         <CmSearchBar/>
                     </Grid>
                 </Grid>

@@ -35,7 +35,7 @@ let getStore = (dxContext, history) => {
         previewMode: previewModeReducer,
         previewModes: previewModesReducer,
         previewState: previewStateReducer,
-        openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.mode === "apps" ? "" : currentValueFromUrl.path, currentValueFromUrl.mode),
+        openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode),
         searchMode: searchModeReducer(currentValueFromUrl.params),
         contextualMenu: contextualMenuReducer
     });

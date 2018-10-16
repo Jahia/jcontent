@@ -19,7 +19,8 @@ const styles = theme => ({
         margin: '0!important'
     },
     colorVert: {
-        color: theme.palette.background.default
+        color: theme.palette.background.default,
+        paddingTop: '6px!important',
     },
     buttonFooter: {
         padding: 0,

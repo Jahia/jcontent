@@ -321,15 +321,6 @@ class ContentPreview extends React.Component {
                         {selectionLocked ? this.unlock() : this.lock()}
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <Actions menuId={"editAdditionalMenu"} context={{
-                            uuid: selectedItem.uuid,
-                            path: selectedItem.path,
-                            displayName: selectedItem.name,
-                            primaryNodeType: selectedItem.primaryNodeType,
-                            nodeName: selectedItem.nodeName
-                        }}>
-                            {(props) => <CmIconButton footer={true} {...props} horizontal={true}/>}
-                        </Actions>
                         <Actions menuId={"editPreviewBar"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
@@ -339,7 +330,15 @@ class ContentPreview extends React.Component {
                         }}>
                             {(props) => <CmButton {...props}/>}
                         </Actions>
-
+                        <Actions menuId={"editAdditionalMenu"} context={{
+                            uuid: selectedItem.uuid,
+                            path: selectedItem.path,
+                            displayName: selectedItem.name,
+                            primaryNodeType: selectedItem.primaryNodeType,
+                            nodeName: selectedItem.nodeName
+                        }}>
+                            {(props) => <CmIconButton footer={true} {...props} horizontal={true}/>}
+                        </Actions>
                     </Grid>
                 </Grid>;
         }

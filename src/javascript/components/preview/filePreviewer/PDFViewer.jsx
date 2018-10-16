@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 
 const PDFContainer = styled.div`
-    height:800;
+    height:100%;
     margin: 5px;
     display: flex;
     div {

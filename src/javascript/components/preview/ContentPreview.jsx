@@ -61,14 +61,16 @@ const styles = theme => ({
         },
     previewContainerPdf: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
-        width: 550,
+        width: '100%',
+        height: 'auto',
+        maxHeight: '525px',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
     },
     previewContainerFullScreenPdf: {
-        width: '100%',
+        width: '100vw',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         padding: theme.spacing.unit * 1,
@@ -77,8 +79,11 @@ const styles = theme => ({
         height: 'calc(100vh - 28px)',
     },
     unpublishButton: {
-        textAlign: 'center',
-        margin: theme.spacing.unit
+        margin: '0!important',
+        marginRight: '8px!important',
+        display: 'flex',
+        height: 36,
+        maxHeight: 36,
     },
     controlsPaperEdit: {
         position: 'fixed',
@@ -132,8 +137,20 @@ const styles = theme => ({
         marginTop: 6,
         color: '#303030'
     },
+    gridUnpublish: {
+        marginTop: theme.spacing.unit * 1,
+        marginBottom: theme.spacing.unit * 1,
+    },
+    paddingButton: {
+        // padding: '12px'
+    },
     lockButton: {
         textAlign: 'left'
+    },
+    lockButtonLive: {
+        padding: '12px',
+        height: '48px!important',
+        width: '48px!important',
     }
 });
 
@@ -256,7 +273,12 @@ class ContentPreview extends React.Component {
                         {/*Element that will contain image controls if an image is the document being previewed*/}
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
-                    <Grid item xs={12} style={{ display: "flex", justifyContent: "flex-end"}}>
+
+                    <Grid item xs={4} className={classes.lockButton}>
+                        <IconButton className={classes.lockButtonLive}>
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={8} container={true} justify={"flex-end"}>
                         <Actions menuId={"livePreviewBar"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
@@ -264,16 +286,17 @@ class ContentPreview extends React.Component {
                         }}>
                             {(props) =>
                                 <Button
-                                    className={classes.unpublishButton}
                                     variant="contained"
-                                    size="medium"
+                                    className={classes.unpublishButton}
                                     color="primary"
                                     onClick={(event) => props.onClick(event)}
                                 >
                                     {t('label.contentManager.unpublish')}
                                 </Button>}
                         </Actions>
+
                     </Grid>
+
                 </Grid>;
             case 'edit':
                 return <Grid container spacing={0} className={classes.footerGrid}>
@@ -301,24 +324,25 @@ class ContentPreview extends React.Component {
                         {selectionLocked ? this.unlock() : this.lock()}
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <Actions menuId={"editPreviewBar"} context={{
+                        <Actions menuId={"editAdditionalMenu"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
                             displayName: selectedItem.name,
                             primaryNodeType: selectedItem.primaryNodeType,
+                            nodeName: selectedItem.nodeName
+                        }}>
+                            {(props) => <CmIconButton footer={true} {...props} horizontal={true}/>}
+                        </Actions>
+                        <Actions menuId={"editPreviewBar"} context={{
+                            uuid: selectedItem.uuid,
+                            path: selectedItem.path,
+                            primaryNodeType: selectedItem.primaryNodeType,
+                            displayName: selectedItem.name,
                             nodeName: selectedItem.nodeName
                         }}>
                             {(props) => <CmButton {...props}/>}
                         </Actions>
-                        <Actions menuId={"editAdditionalMenu"} context={{
-                            uuid: selectedItem.uuid,
-                            path: selectedItem.path,
-                            primaryNodeType: selectedItem.primaryNodeType,
-                            displayName: selectedItem.name,
-                            nodeName: selectedItem.nodeName
-                        }}>
-                            {(props) => <CmIconButton {...props} horizontal={true}/>}
-                        </Actions>
+
                     </Grid>
                 </Grid>;
         }
@@ -335,7 +359,7 @@ class ContentPreview extends React.Component {
         if (data && data.nodeByPath.isFile) {
             let file = dxContext.contextPath + '/files/default' + data.nodeByPath.path;
             if (isPDF(data.nodeByPath.path)) {
-                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                return <div className={this.state.fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
                 <PDFViewer key={data.nodeByPath.uuid} file={file}/>
                 </div>;
             } else if (isImage(data.nodeByPath.path)) {

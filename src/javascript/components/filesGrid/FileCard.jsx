@@ -83,7 +83,7 @@ const styles = theme => ({
         position:"absolute",
         top: "11",
         right: "10",
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         padding: 0,
         '&:hover': {
             backgroundColor: "transparent"
@@ -93,11 +93,14 @@ const styles = theme => ({
             height:"18px"
         }
     },
+    renewIcon: {
+        color: theme.palette.background.default,
+    },
     publishButton: {
         position:"absolute",
         top: "12",
         right: "35",
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
         '&:hover': {
             backgroundColor: "transparent"
         },
@@ -129,6 +132,8 @@ const styles = theme => ({
         marginLeft: 0,
         marginRight: 0,
         padding: 0,
+        minHeight: 200,
+        maxHeight: 200,
         backgroundColor: 'transparent'
     },
     cardContent: {
@@ -137,14 +142,16 @@ const styles = theme => ({
         padding: '0!important',
     },
     textTypo: {
-        color: theme.palette.background.paper,
+        color: theme.palette.background.default,
     },
     TypoBody:{
         fontSize: '0.800rem',
         fontWeight: '800',
+        color: theme.palette.background.default,
         paddingBottom: theme.spacing.unit * 1,
     },
     TypoCaption: {
+        color: theme.palette.background.default,
         fontSize: '0.872rem!important',
         fontStyle: 'italic!important'
     },
@@ -407,7 +414,7 @@ class FileCard extends Component {
                     className={publishButtonClass ? publishButtonClass : classes.publishButton} {...props}
                     disableRipple={true}
                     cmRole={"file-grid-thumbnail-button-publish"}>
-                    <Autorenew/>
+                    <Autorenew className={classes.renewIcon}/>
                 </CmIconButton>
             }}
         </Actions>: null;

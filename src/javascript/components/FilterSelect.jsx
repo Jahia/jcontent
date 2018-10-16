@@ -25,6 +25,9 @@ const styles = theme => ({
         height: 34,
         padding: '0!important',
     },
+    typo1: {
+        color: 'red',
+    }
 });
 
 const ITEM_HEIGHT = 48;
@@ -32,9 +35,11 @@ const ITEM_HEIGHT = 48;
 const customStyles = {
     container: () => ({
         padding: 0,
+        color: '#fff',
     }),
     control: () => ({
         display: "flex",
+        color: '#fff',
         alignItems: "center",
         height: 34,
         width: '155px',
@@ -46,8 +51,12 @@ const customStyles = {
             overflow: "visible!important"
         }
     }),
+    group: () => ({
+        color: '#fff',
+    }),
     menu: () => ({
-        backgroundColor: "#333537",
+        backgroundColor: "#ecebeb",
+        color: '#3a3c3f!important',
         // boxShadow: "1px 2px 6px #888888", // should be changed as material-ui
         position: "absolute",
         left: 0,
@@ -59,22 +68,24 @@ const customStyles = {
     dropdownIndicator: () => ({
         color: '#fff',
     }),
+    MultiSelect: () => ({
+       color: 'red!important',
+    }),
     menuList: () => ({
         maxHeight: ITEM_HEIGHT * 4.5,
+        boxShadow: '1px 3px 4px 0px rgba(38, 38, 38, 0.4)',
         display: 'inline-block',
-        color: 'white',
-        background: '#504e4d',
+        background: '#ecebeb',
         overflowY: "auto"
     }),
     input: () => ({
-        color: '#fff!important'
+        color: '#fff!important',
     }),
     placeholder: () => ({
         textAlign: 'center',
         color : '#fff!important'
     }),
     singleValue: () => ({
-        color: 'white',
         marginLeft: '2px',
         marginRight: '2px',
         maxWidth: 'calc(100% - 8px)',

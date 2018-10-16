@@ -48,7 +48,7 @@ const styles = theme => ({
         boxShadow: 'none!important',
     },
     inputShadow: {
-        boxShadow: '0',
+        boxShadow: 'none',
     },
 });
 
@@ -154,7 +154,7 @@ class CmSearchBarNormal extends React.Component {
                 inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
                 className={classes.searchSize}
                 defaultValue={params.searchTerms}
-                classes={{root: classes.inputShadow}}
+                classes={{input: classes.inputShadow}}
                 placeholder={t('label.contentManager.search.normalPrompt')}
                 inputRef={this.search}
                 onChange={() => this.onSearchInputChange(path, params)}

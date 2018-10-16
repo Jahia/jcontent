@@ -1,18 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Button, Menu, MenuItem} from "@material-ui/core";
+import {Button, Menu, MenuItem, Divider} from "@material-ui/core";
 import styled from "styled-components/dist/styled-components";
 import { ChevronRight as ChevronRightIcon, MoreHoriz, Folder, ArrowDropDown} from '@material-ui/icons';
 import {PageIcon} from '@jahia/icons';
 import {withStyles} from '@material-ui/core';
 import {translate} from "react-i18next";
 import Constants from '../constants';
+import * as icons from '@jahia/icons';
 
 const styles = theme => ({
     root: {
         color: theme.palette.text.primary,
     },
     menuItemHeader: {
+        width: '100%',
         display: "inline-block",
         outline: "none"
     },
@@ -43,6 +45,9 @@ const styles = theme => ({
         fill: '#d7dce0',
         marginBottom: '-7px'
 
+    },
+    divider:{
+        border: 'inset',
     }
 });
 
@@ -56,8 +61,8 @@ const MenuItemLabel = styled.div`
     position: relative;
     `;
 const MAX_ITEMS_DISPLAYED = 5;
-const MAX_LABELS_DISPLAYED = 3;
-const MAX_ICONS_DISPLAYED = 7;
+const MAX_LABELS_DISPLAYED = 4;
+const MAX_ICONS_DISPLAYED = 9;
 
 class BreadcrumbDisplay extends React.Component {
 
@@ -136,17 +141,19 @@ class BreadcrumbDisplay extends React.Component {
 
     generateMenu(nodes) {
         let {classes} = this.props;
+        let haveSiblings = nodes.siblings.length > 1 ? true : false;
         return <span>
                 <MenuItemContainer key={"dropdown_" + nodes.uuid}>
-                    <ArrowDropDown className={classes.chevronIcon}/>
                     <MenuItem className={classes.menuItemHeader}
                               disableRipple={true}
                               onClick={(event) =>
                                   this.onMenuItemSelected(event, nodes)
                               }>
-                        {nodes.name}
+                        {this.renderIcon(nodes)}
+                        <MenuItemLabel>{nodes.name}</MenuItemLabel>
                     </MenuItem>
                 </MenuItemContainer>
+            {haveSiblings && <Divider className={classes.divider}/>}
             {nodes.siblings.map((node, i) => {
                 if(node.name === nodes.name){
                     return null;
@@ -198,7 +205,7 @@ class BreadcrumbDisplay extends React.Component {
         let {classes} = this.props;
         switch (node.type) {
             case "jnt:virtualsite" :
-                return <PageIcon className={classes.contentIcon}/>;
+                return <icons.VirtualsiteIcon/>;
             case "jnt:folder":
             case "jnt:contentFolder":
                 return <Folder className={classes.contentIcon}/>;
@@ -256,7 +263,7 @@ class Breadcrumb extends React.Component {
             {breadcrumbs.map((breadcrumb, i) => {
                 let trimLabel = false;
                 if (breadcrumbs.length > MAX_ITEMS_DISPLAYED) {
-                    if(i > breadcrumbs.length - MAX_LABELS_DISPLAYED || ((mode === 'browse' && i === 0) || (mode === 'browse-files' && i === 1))) {
+                    if(i > breadcrumbs.length - MAX_LABELS_DISPLAYED) {
                         return <span key={breadcrumb.uuid}>
                     <StyledBreadcrumbDisplay
                         id={breadcrumb.uuid}

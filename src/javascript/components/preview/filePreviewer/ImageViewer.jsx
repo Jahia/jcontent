@@ -1,10 +1,9 @@
 import React  from 'react';
 import ReactDOM  from 'react-dom';
 import PropTypes from 'prop-types';
-import {Canvas} from 'react-darkroom';
 import { withStyles } from '@material-ui/core';
 import {translate} from "react-i18next";
-import {IconButton, Paper, CardMedia, Card} from '@material-ui/core';
+import {IconButton, Paper, CardMedia} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 import {connect} from "react-redux";

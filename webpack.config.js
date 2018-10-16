@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     entry: path.resolve(__dirname, 'src/javascript', 'ContentManagerApp.jsx'),
@@ -31,6 +33,10 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        //new BundleAnalyzerPlugin({analyzerMode: "static"}),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/)
+    ],
     mode: 'development',
     devtool: 'source-map'
 };

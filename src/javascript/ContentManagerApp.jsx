@@ -5,6 +5,7 @@ import {CssBaseline} from "@material-ui/core";
 
 // react is loaded by jnt_template/html/template.content-manager.jsp
 window.reactRender = function(target, id, dxContext) {
+    __webpack_public_path__ = dxContext.contextPath + "/modules/content-media-manager/javascript/apps/";
     ReactDOM.render(
         <React.Fragment>
             <CssBaseline />

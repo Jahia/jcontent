@@ -34,7 +34,7 @@ class CmButton extends React.Component {
         return <Button
                 classes={text ? {root: classes.buttonSize} : {root: classes.buttonSizeText}}
                 className={text ? classes.button : classes.buttonText}
-                color={text ? '' : 'primary'}
+                color={text ? 'default' : 'primary'}
                 variant={text ? "text" : "contained"}
                 size="medium"
                 onClick={(event) => onClick(event)}

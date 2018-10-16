@@ -4,7 +4,7 @@ import {translate} from "react-i18next";
 import {withStyles, IconButton} from '@material-ui/core';
 import classNames from 'classnames'
 import ContentPreview from "../preview/ContentPreview";
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
 import {Drawer, Button, Table, TableCell, TableHead, TableBody, TableRow, Typography, Toolbar} from '@material-ui/core';
 import {connect} from "react-redux";
 import {cmSetPreviewMode} from "../redux/actions";

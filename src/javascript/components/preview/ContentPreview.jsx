@@ -13,14 +13,12 @@ import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 import {lockNode, unlockNode} from "./gqlMutations";
 import {Tooltip} from '@material-ui/core';
-import PDFViewer from "./filePreviewer/PDFViewer";
-import ImageViewer from "./filePreviewer/ImageViewer";
-import DocumentViewer from "./filePreviewer/DocumentViewer";
 import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
 import {DxContext} from "../DxContext";
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATES} from "../redux/actions";
+import Loadable from "react-loadable";
 
 const styles = theme => ({
     root: {
@@ -138,6 +136,22 @@ const styles = theme => ({
         textAlign: 'left'
     }
 });
+
+const DocumentViewer = Loadable({
+    loader: () => import('./filePreviewer/DocumentViewer'),
+    loading: () => <div/>,
+});
+
+const PDFViewer = Loadable({
+    loader: () => import('./filePreviewer/PDFViewer'),
+    loading: () => <div/>,
+});
+
+const ImageViewer = Loadable({
+    loader: () => import('./filePreviewer/ImageViewer'),
+    loading: () => <div/>,
+});
+
 class ContentPreview extends React.Component {
 
     constructor(props) {
@@ -233,12 +247,12 @@ class ContentPreview extends React.Component {
                             {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
                     </Grid>
-                    <Grid container xs={12}>
+                    <Grid item xs={12}>
                         <div className={classes.contentSubTitle}>
                             <PublicationInfo/>
                         </div>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid container item xs={12}>
                         {/*Element that will contain image controls if an image is the document being previewed*/}
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
@@ -274,7 +288,7 @@ class ContentPreview extends React.Component {
                             {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
                     </Grid>
-                    <Grid container xs={12}>
+                    <Grid container item xs={12}>
                         <div className={classes.contentSubTitle}>
                         <PublicationInfo/>
                         </div>

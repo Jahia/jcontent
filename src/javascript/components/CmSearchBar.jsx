@@ -1,6 +1,6 @@
 import React from "react";
 import {withStyles, Typography, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
-import Search from '@material-ui/icons/Search';
+import {Search} from '@material-ui/icons';
 import ContentTypeSelect from './ContentTypeSelect';
 import {translate, Trans} from 'react-i18next';
 import {compose} from "react-apollo/index";

@@ -127,9 +127,6 @@ class ContentData extends React.Component {
                                  });
                 }
 
-                if (loading) {
-                    return <ProgressOverlay/>;
-                }
 
                 let rows = [];
                 let totalCount = 0;

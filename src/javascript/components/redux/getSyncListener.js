@@ -21,8 +21,8 @@ let buildUrl = (site, language, mode, path, params) => {
     if (path.startsWith(sitePath + "/")) {
         path = path.substring(("/sites/" + site).length);
     } else if (mode === "apps") {
-        // path is an action Key
-        // do nothing
+        // path is an action key
+        path = path.startsWith("/") ? path : "/" + path;
     } else {
         path = "";
     }
@@ -36,7 +36,7 @@ let extractParamsFromUrl = (pathname, search) => {
 
     let path;
     if (mode === "apps") {
-        path = "/" + pathElements.join("/");
+        path = pathElements.join("/");
     } else {
         path = "/sites/" + site;
         if (_.isEmpty(pathElements)) {

@@ -23,14 +23,14 @@ class PushEventConsumer extends React.Component {
             if (evtType === "workflowTask") {
                 triggerRefetch(refetchTypes.ACTIVE_WORKFLOW_TASKS);
                 if (eventData.endedWorkflow != null) {
-                    triggerDataRefetch();
+                    this.triggerDataRefetch();
                 }
             } else if (evtType === "job") {
                 if (this.hasProcessJob(eventData.startedJob) || this.hasProcessJob(eventData.endedJob)) {
-                    triggerDataRefetch();
+                    this.triggerDataRefetch();
                 }
             } else if (evtType === "contentUnpublished") {
-                triggerDataRefetch();
+                this.triggerDataRefetch();
             }
         }
     }

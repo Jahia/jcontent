@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 
 const PDFContainer = styled.div`
-    height:100%;
+    height:350;
     margin: 5px;
     display: flex;
     div {
@@ -21,6 +21,20 @@ const PDFContainer = styled.div`
         position:relative;
         width: 100%;
         max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+`;
+const PDFContainerFull = styled.div`
+    div {
+    height: 525!important;
+    max-height: 100%;
+    }
+    div > canvas {
+        position:relative;
+        width: 400!important;
+        max-width: 400!important;
+        height: 491!important;
         display: block;
         margin: 0 auto;
     }
@@ -67,10 +81,12 @@ const styles = theme => ({
         background: 'transparent'
     },
     pdfPaper: {
-        flex:1,
-        left: "50%",
-        top: "50%",
-        transform : "translate(-50%, -50%)"
+        display: 'flex',
+        justifyContent: 'center'
+    },
+    pdfPaperFull: {
+        display: 'flex',
+        justifyContent: 'center',
     },
     hideScale: {
         opacity:0,
@@ -190,10 +206,23 @@ class PDFViewer extends React.Component {
 
     render() {
         let {page, file, scaleSize, showScale} = this.state;
-        let {classes} = this.props;
+        let {classes, fullscreen} = this.props;
         let pagination = this.renderPagination();
         return <div>
                 <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
+            {fullscreen ?
+                <PDFContainerFull>
+                    <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
+                        <PDF
+                            file={file}
+                            scale={scaleSizes[scaleSize]}
+                            onDocumentComplete={this.onDocumentComplete}
+                            onPageComplete={this.onPageComplete}
+                            page={page}
+                        />
+                    </Paper>
+                </PDFContainerFull>
+                :
                 <PDFContainer>
                     <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
                         <PDF
@@ -205,6 +234,7 @@ class PDFViewer extends React.Component {
                         />
                     </Paper>
                 </PDFContainer>
+            }
             {pagination}
 
         </div>

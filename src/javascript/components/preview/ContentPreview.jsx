@@ -63,7 +63,6 @@ const styles = theme => ({
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: '100%',
         height: 'auto',
-        maxHeight: '525px',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
@@ -73,8 +72,6 @@ const styles = theme => ({
         width: '100vw',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
-        padding: theme.spacing.unit * 1,
-        paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 28px)',
     },
@@ -360,7 +357,7 @@ class ContentPreview extends React.Component {
             let file = dxContext.contextPath + '/files/default' + data.nodeByPath.path;
             if (isPDF(data.nodeByPath.path)) {
                 return <div className={this.state.fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
-                <PDFViewer key={data.nodeByPath.uuid} file={file}/>
+                <PDFViewer fullscreen={this.state.fullScreen} key={data.nodeByPath.uuid} file={file}/>
                 </div>;
             } else if (isImage(data.nodeByPath.path)) {
                 return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>

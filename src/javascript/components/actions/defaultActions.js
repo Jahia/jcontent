@@ -11,7 +11,7 @@ import Constants from "../constants";
 import FileUploadAction from './FileUploadAction';
 import UndeleteAction from "./UndeleteAction";
 
-let edit = (context) => window.parent.authoringApi.editContent(context.path, context.displayName, ["jnt:content"], ["nt:base"], context.uuid, false);
+let edit = (context) => window.parent.authoringApi.editContent(context.path, context.displayName, ["jnt:content"], [context.primaryNodeType], context.uuid, false);
 let createContentFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:contentFolder"], false);
 let createFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:folder"], false);
 let createContent = (context) =>  window.parent.authoringApi.createContent(context.path, context.nodeTypes, context.includeSubTypes);

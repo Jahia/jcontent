@@ -297,7 +297,7 @@ class ContentListTable extends React.Component {
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={($event) => this.onHoverEnter($event)}
                                             onMouseLeave={($event) => this.onHoverExit($event)}
-                                            onContextMenu={(event) => {onContextualMenu({isOpen:true, event:event, menuId: "contextualMenuContentAction", path:n.path, uuid: n.uuid, nodeType: n.primaryNodeType, displayName: n.name, nodeName:n.nodeName, onClose: this.contextualMenuClosed})}}
+                                            onContextMenu={(event) => {onContextualMenu({isOpen:true, event:event, menuId: "contextualMenuContentAction", path:n.path, uuid: n.uuid, primaryNodeType: n.primaryNodeType, displayName: n.name, nodeName:n.nodeName, onClose: this.contextualMenuClosed})}}
                                         >
                                             <TableCell className={classes.publicationCell}
                                                        data-cm-role="table-content-list-cell-publication">
@@ -342,6 +342,7 @@ class ContentListTable extends React.Component {
                                                         <Actions menuId={"tableEditButtonAction"} context={{
                                                             uuid: n.uuid,
                                                             path: n.path,
+                                                            primaryNodeType: n.primaryNodeType,
                                                             displayName: n.name,
                                                             nodeName: n.nodeName
                                                         }}>

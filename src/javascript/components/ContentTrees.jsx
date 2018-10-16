@@ -76,7 +76,7 @@ class ContentTree extends React.Component {
                 <CmPickerViewMaterial
                     {...others}
                     textRenderer={(entry) => {
-                        return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: this.resolveMenuId(entry.node.path), path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
+                        return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: this.resolveMenuId(entry.node.path), primaryNodeType: entry.node.primaryNodeType.name, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
                             {entry.depth > 0 ? entry.node.displayName : rootLabel}
                         </span>
                         }
@@ -89,6 +89,7 @@ class ContentTree extends React.Component {
                             uuid: entry.node.uuid,
                             path: entry.node.path,
                             displayName: entry.node.displayName,
+                            primaryNodeType: entry.node.primaryNodeType.name,
                             lang: lang,
                             user: user,
                             nodeName: entry.node.nodeName

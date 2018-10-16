@@ -143,6 +143,7 @@ class ContentData extends React.Component {
                             uuid: contentNode.uuid,
                             name: contentNode.displayName,
                             nodeName: contentNode.name,
+                            primaryNodeType: contentNode.primaryNodeType.name,
                             type: contentNode.primaryNodeType.displayName,
                             created: contentNode.created.value,
                             createdBy: contentNode.createdBy.value,

@@ -291,6 +291,7 @@ class ContentPreview extends React.Component {
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
                             displayName: selectedItem.name,
+                            primaryNodeType: selectedItem.primaryNodeType,
                             nodeName: selectedItem.nodeName
                         }}>
                             {(props) => <CmButton {...props}/>}
@@ -298,6 +299,7 @@ class ContentPreview extends React.Component {
                         <Actions menuId={"editAdditionalMenu"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
+                            primaryNodeType: selectedItem.primaryNodeType,
                             displayName: selectedItem.name,
                             nodeName: selectedItem.nodeName
                         }}>

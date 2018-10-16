@@ -35,6 +35,7 @@ class ContextualMenu extends React.Component {
                         uuid: contextualMenu.uuid,
                         path: contextualMenu.path,
                         displayName: contextualMenu.displayName,
+                        primaryNodeType: contextualMenu.primaryNodeType,
                         lang: lang,
                         nodeName: contextualMenu.nodeName
                     }}>{(props) => {

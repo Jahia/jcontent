@@ -10,7 +10,7 @@ class CreateContentOfTypeAction extends React.Component {
 
     render() {
 
-        let {contentType, context, call, children, notificationContext, t, ...rest} = this.props;
+        let {contentType, context, call, children, notificationContext, t, labelKey, ...rest} = this.props;
 
         if (_.isEmpty(context.node.allowedChildNodeTypes)) {
             return null;
@@ -37,7 +37,7 @@ class CreateContentOfTypeAction extends React.Component {
 
                     return children({
                         ...rest,
-                        labelKey: "label.contentManager.create.contentOfType",
+                        labelKey: labelKey || "label.contentManager.create.contentOfType",
                         labelParams: {typeName: nodeType.displayName},
                         onClick: () => call(ctx)
                     });

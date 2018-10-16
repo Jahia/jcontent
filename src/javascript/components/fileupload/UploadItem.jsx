@@ -78,7 +78,7 @@ class UploadItem extends React.Component {
     }
 
     render() {
-        const { classes, id, file } = this.props;
+        const { classes, id, file, t } = this.props;
         const open = Boolean(this.state.anchorEl);
 
         return <ApolloConsumer>{
@@ -106,7 +106,7 @@ class UploadItem extends React.Component {
                         }}
                     >
                         <TextField
-                            label="New name"
+                            label={t("label.contentManager.fileUpload.newName")}
                             className={ `${classes.textField} ${classes.renameField}`}
                             type="text"
                             name="newName"

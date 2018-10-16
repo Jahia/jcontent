@@ -328,7 +328,7 @@ class Upload extends React.Component {
             else {
                 return <div className={ `${classes.headerText} ${classes.justifyCenter}`}>
                         <CheckCircle className={ classes.statusIconWhite }/>
-                        <h3 className={ classes.statusIconWhite }>{t("label.contentManager.fileUpload.successfulUploadMessage", {number: status.total})}</h3>
+                        <h3 className={ classes.statusIconWhite }>{t("label.contentManager.fileUpload.successfulUploadMessage", {count: status.total, number: status.total})}</h3>
                     </div>
             }
         }
@@ -358,7 +358,7 @@ class Upload extends React.Component {
                 return <div className={ classes.headerText}>
                     <CheckCircle className={ classes.statusIconGreen } fontSize={ "large" }/>
                     <div>
-                        <h3 style={{ marginBottom: 5}}>{t("label.contentManager.fileUpload.successfulUploadMessage", {number: status.total})}</h3>
+                        <h3 style={{ marginBottom: 5}}>{t("label.contentManager.fileUpload.successfulUploadMessage", {count: status.total, number: status.total})}</h3>
                     </div>
                 </div>
             }

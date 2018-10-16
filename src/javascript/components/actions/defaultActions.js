@@ -10,6 +10,8 @@ import LockManagementAction from "./LockManagementAction";
 import Constants from "../constants";
 import FileUploadAction from './FileUploadAction';
 import UndeleteAction from "./UndeleteAction";
+import CopyAction from '../copyPaste/CopyAction';
+import PasteAction from '../copyPaste/PasteAction';
 
 let edit = (context) => window.parent.authoringApi.editContent(context.path, context.displayName, ["jnt:content"], [context.primaryNodeType], context.uuid, false);
 let createContentFolder = (context) => window.parent.authoringApi.createContent(context.path, ["jnt:contentFolder"], false);
@@ -224,18 +226,25 @@ let defaultActions = {
     },
     copy: {
         priority: 3.8,
-        component: CallAction,
-        call: () => alert("not implemented yet"),
-        icon: "Edit",
-        target: ["additionalPreviewMenu", "tableMenuActions"],
-        requiredPermission: "",
+        component: CopyAction,
+        icon: "Copy",
+        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
+        requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.copy"
+    },
+    paste: {
+        priority: 3.8,
+        component: PasteAction,
+        icon: "Paste",
+        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
+        requiredPermission: "jcr:removeNode",
+        labelKey: "label.contentManager.contentPreview.paste"
     },
     cut: {
         priority: 3.9,
         component: CallAction,
         call: () => alert("not implemented yet"),
-        icon: "Edit",
+        icon: "Cut",
         target: ["tableMenuActions"],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.cut"

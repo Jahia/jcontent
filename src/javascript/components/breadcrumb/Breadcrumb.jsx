@@ -16,7 +16,7 @@ const styles = theme => ({
     menuItemHeader: {
         width: '100%',
         display: "inline-block",
-        outline: "none"
+        backgroundColor: "#e3e1e1",
     },
     menuItem: {
         width: "100%",

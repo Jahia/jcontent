@@ -136,7 +136,7 @@ class ContentLayout extends React.Component {
             page: 0,
             rowsPerPage: 25,
             order: 'ASC',
-            orderBy: '',
+            orderBy: 'lastModified.value',
         };
 
         this.handleSort = this.handleSort.bind(this);

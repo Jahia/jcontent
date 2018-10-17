@@ -24,9 +24,6 @@ const styles = theme => ({
     inputSize:  {
         height: 34,
         padding: '0!important',
-    },
-    typo1: {
-        color: 'red',
     }
 });
 

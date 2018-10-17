@@ -1,5 +1,5 @@
 import React from 'react';
-import {registerPushEventConsumer, unregisterPushEventConsumer} from "./eventHandlerRegistry";
+import {registerPushEventHandler, unregisterPushEventHandler} from "./eventHandlerRegistry";
 import {triggerRefetch, refetchTypes} from './refetches';
 
 class PushEventConsumer extends React.Component {
@@ -10,11 +10,11 @@ class PushEventConsumer extends React.Component {
     }
 
     componentDidMount() {
-        registerPushEventConsumer(this.onPushEvent);
+        registerPushEventHandler(this.onPushEvent);
     }
 
     componentWillUnmount() {
-        unregisterPushEventConsumer(this.onPushEvent);
+        unregisterPushEventHandler(this.onPushEvent);
     }
 
     onPushEvent(eventData) {

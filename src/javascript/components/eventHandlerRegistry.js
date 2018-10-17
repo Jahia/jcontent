@@ -24,19 +24,19 @@ let unregisterContentModificationEventHandler = (eventHandler) => {
     doUnregister(eventHandler, window.parent.contentModificationEventHandlers);
 }
 
-let registerPushEventConsumer = (eventHandler) => {
+let registerPushEventHandler = (eventHandler) => {
     window.parent.authoringApi = window.parent.authoringApi || {};
     window.parent.authoringApi.pushEventHandlers = window.parent.authoringApi.pushEventHandlers || [];
     doRegister(eventHandler, window.parent.authoringApi.pushEventHandlers);
 }
 
-let unregisterPushEventConsumer = (eventHandler) => {
+let unregisterPushEventHandler = (eventHandler) => {
     doUnregister(eventHandler, window.parent.authoringApi.pushEventHandlers);
 }
 
 export {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler,
-    registerPushEventConsumer,
-    unregisterPushEventConsumer
+    registerPushEventHandler,
+    unregisterPushEventHandler
 }

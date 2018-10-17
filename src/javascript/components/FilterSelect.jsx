@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
 import {ArrowDropDown as ArrowDropDownIcon} from "@material-ui/icons";
+import {Close as CloseIcon} from "@material-ui/icons";
 import {ListItemIcon, ListItemText, Input, withStyles, MenuItem} from '@material-ui/core';
 import * as _ from 'lodash';
 import {compose} from "react-apollo/index";
@@ -24,6 +25,8 @@ const styles = theme => ({
     inputSize:  {
         height: 34,
         padding: '0!important',
+    },
+    colorText: {
     }
 });
 
@@ -51,6 +54,13 @@ const customStyles = {
     group: () => ({
         color: '#fff',
     }),
+    noOptionsMessage: () => ({
+        width: '155px',
+        color: '#8f9498',
+        padding: '8px 16px',
+        minWidth: '155px',
+        maxWidth: '155px',
+    }),
     menu: () => ({
         backgroundColor: "#ecebeb",
         color: '#3a3c3f!important',
@@ -62,11 +72,19 @@ const customStyles = {
         zIndex: 2,
         maxHeight: ITEM_HEIGHT * 4.5
     }),
-    dropdownIndicator: () => ({
+    dropdownIndicator: base => ({
+        ...base,
         color: '#fff',
+        cursor: '-webkit-grabbing',
     }),
-    MultiSelect: () => ({
-       color: 'red!important',
+    clearIndicator: base => ({
+        ...base,
+        color: 'white',
+        cursor: '-webkit-grabbing',
+    }),
+    indicatorSeparator: base => ({
+        ...base,
+        display: 'none'
     }),
     menuList: () => ({
         maxHeight: ITEM_HEIGHT * 4.5,
@@ -110,11 +128,18 @@ class Option extends React.Component {
                 selected={isFocused}
                 onClick={this.handleClick}
                 component="div"
-                style={{
+                style={isFocused ?
+                    {
                     fontWeight: isSelected ? 500 : 400,
-                    color: 'white',
-                    minWidth: '100ox'
-                }}
+                    color: '#ffffff',
+                    minWidth: '155px'
+                    } :
+                    {
+                        fontWeight: isSelected ? 500 : 400,
+                        color: '#3a3c3f',
+                        minWidth: '155px'
+                    }
+                }
                 title={data.title}
             >
                 {data.icon != null &&
@@ -122,7 +147,7 @@ class Option extends React.Component {
                         <img src={data.icon + '.png'}/>
                     </ListItemIcon>
                 }
-                <ListItemText>
+                <ListItemText disableTypography>
                     {children}
                 </ListItemText>
             </MenuItem>
@@ -133,29 +158,53 @@ class Option extends React.Component {
 class DropdownIndicator extends React.Component {
 
     render() {
-        return (
-            <components.DropdownIndicator {...this.props}>
-                <ArrowDropDownIcon/>
-            </components.DropdownIndicator>
-        );
+        let {open} = this.props;
+        if (!this.props.selectProps.open) {
+            return (
+                <components.DropdownIndicator {...this.props}>
+                    <ArrowDropDownIcon/>
+                </components.DropdownIndicator>
+            );
+        }
+        else {
+            return <div />
+        }
+    }
+};
+
+class ClearIndicator extends React.Component {
+    render() {
+        let {open} = this.props;
+        if (this.props.selectProps.open) {
+            return (
+                <components.ClearIndicator {...this.props}>
+                    <CloseIcon style={{fontSize: '18px', }}/>
+                </components.ClearIndicator>
+            );
+        }
+        else {
+            return <div />
+        }
     }
 };
 
 class SelectWrapped extends React.Component {
-
     render() {
 
-        const {classes, value, options, t, ...other} = this.props;
+        const {classes, value, open, options, t, ...other} = this.props;
         let optionValue = _.find(options, (data) => data.value === value);
 
         return (
             <Select
                 components={{
                     Option,
-                    DropdownIndicator
+                    ClearIndicator,
+                    DropdownIndicator,
+                    ...other
                 }}
                 styles={customStyles}
-                isClearable={true}
+                open={open}
+                isClearable={open}
                 options={options}
                 value={optionValue}
                 {...other}
@@ -167,19 +216,20 @@ class SelectWrapped extends React.Component {
 class FilterSelect extends React.Component {
 
     render() {
-
-        let {classes, t, options, selectedOption, handleChange} = this.props;
+        let {classes, t, options, selectedOption, open, handleIndicator, children, handleChange} = this.props;
         return (
             <div className={classes.root} data-cm-role={'filter-select'}>
                 <Input
                     fullWidth
-                    classe={{ root: classes.inputDetails}}
+                    classes={{ root: classes.inputDetails}}
                     inputComponent={SelectWrapped}
                     onChange={handleChange}
+                    open={open}
+                    onKeyPress={handleIndicator}
                     disableUnderline={true}
                     value={selectedOption}
                     inputProps={{
-                        options
+                        options, open
                     }}
                 />
             </div>

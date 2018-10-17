@@ -13,17 +13,7 @@ class CmMenuItem extends Component {
             anchorEl: null,
         };
     }
-
     anchor = null;
-
-        handleClick = (event: SyntheticEvent<HTMLElement>) => {
-        event.stopPropagation();
-        this.setState({
-            open: true,
-            anchorEl: this.anchor,
-        });
-    }
-
     onClick(event) {
         let {menuClose, onClick, menuId} = this.props;
         !menuId && menuClose();

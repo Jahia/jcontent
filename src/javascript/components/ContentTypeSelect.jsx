@@ -15,8 +15,17 @@ class ContentTypeSelect extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
+    state = {
+        open: false,
+    };
+
+    handleIndicator = () => {
+        this.setState({open: true})
+    };
+
     handleChange(newValue) {
         if (this.props.onSelectionChange !== undefined) {
+            this.setState({open: false});
             this.props.onSelectionChange(newValue ? newValue.value : "");
         }
     };
@@ -52,6 +61,8 @@ class ContentTypeSelect extends React.Component {
                 return (<FilterSelect
                     selectedOption={contentType}
                     options={contentTypes}
+                    open={this.state.open}
+                    handleIndicator={this.handleIndicator}
                     handleChange={this.handleChange}
                 />);
             }}

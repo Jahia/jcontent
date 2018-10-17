@@ -18,7 +18,7 @@ class UndeleteAction extends React.Component {
 
         context.displayName = this.abbreviateIfNeeded(context.displayName);
 
-        if (hasMixin(context.node, "jmix:markedForDeletion" && context.node.parentDeletionDate===null)) {
+        if (hasMixin(context.node, "jmix:markedForDeletionRoot")) {
             return children({...rest, onClick: () => window.parent.authoringApi.undeleteContent(context.uuid, context.path, context.displayName, context.nodeName)});
         }
         return null;

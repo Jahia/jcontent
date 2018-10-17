@@ -20,7 +20,7 @@ class LockManagementAction extends React.Component {
     }
 
     lock = () => {
-        const {target:menuId, children, context, layoutQuery, layoutQueryParams, ...rest} = this.props;
+        const {children, context, layoutQuery, layoutQueryParams, ...rest} = this.props;
         return <Mutation
             mutation={ lockNode }
             refetchQueries={[{
@@ -30,7 +30,6 @@ class LockManagementAction extends React.Component {
             {(lockNode) => {
                 return children({
                     ...rest,
-                    menuId,
                     onClick: () => lockNode({variables: {pathOrId: context.path}})
                 });
             }}
@@ -38,7 +37,7 @@ class LockManagementAction extends React.Component {
     };
 
     unlock = () => {
-        const {target:menuId, children, context, close, ...rest} = this.props;
+        const {children, context, close, ...rest} = this.props;
         return <Mutation
             mutation={ unlockNode }
             refetchQueries={[{
@@ -48,7 +47,6 @@ class LockManagementAction extends React.Component {
             {(unlockNode) => {
                 return children({
                     ...rest,
-                    menuId,
                     onClick: () => {unlockNode({variables: {pathOrId: context.path}})}
                 });
             }}
@@ -56,7 +54,7 @@ class LockManagementAction extends React.Component {
     };
 
     clearAllLocks = () => {
-        const {target:menuId, children, context, close, ...rest} = this.props;
+        const {children, context, close, ...rest} = this.props;
         return <Mutation
             mutation={ clearAllLocks }
             refetchQueries={[{
@@ -66,7 +64,6 @@ class LockManagementAction extends React.Component {
             {(clearAllLocks) => {
                 return children({
                     ...rest,
-                    menuId,
                     onClick: () => {clearAllLocks({variables: {pathOrId: context.path}})}
                 });
             }}

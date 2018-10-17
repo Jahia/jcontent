@@ -1,16 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {translate} from "react-i18next";
-import {withStyles, Menu} from "@material-ui/core";
+import {Menu} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import Actions from "../Actions";
 import CmMenuItem from "../renderAction/CmMenuItem";
-
-const styles = theme => ({
-    button: {
-        margin: theme.spacing.unit
-    }
-});
 
 class MenuAction extends Component {
 
@@ -35,22 +29,25 @@ class MenuAction extends Component {
     };
 
     render() {
-
+        let items = [];
         const {menuId, children, menuClose, ...rest} = this.props;
         const {anchor} = this.state;
         let handleMenuClose = menuClose || this.handleMenuClose;
+        let open = Boolean(anchor);
         return (<span data-cm-role={'menu-action-' + menuId}>
+            {<Actions menuId={menuId} {...rest} menuClose={handleMenuClose}>
+                    {(props) => {
+                        items.push(<CmMenuItem key={props.actionKey} {...props} menuClose={handleMenuClose}/>);
+                        return false;
+                    }}</Actions>}
             {children({...rest, menuId: menuId, onClick: this.handleMenuClick})}
             <Menu
                 id={menuId}
                 anchorEl={anchor}
-                open={Boolean(anchor)}
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                open={open}
                 onClose={() => this.handleMenuClose()}>
-                <Actions menuId={menuId} {...rest} menuClose={handleMenuClose}>
-                    {(props) => {
-                        return <CmMenuItem {...props} menuClose={handleMenuClose}/>
-                        }}
-                </Actions>
+                {items}
             </Menu>
         </span>)
     }
@@ -58,7 +55,6 @@ class MenuAction extends Component {
 
 MenuAction = compose(
     translate(),
-    withStyles(styles, {withTheme: true})
 )(MenuAction);
 
 export default MenuAction;

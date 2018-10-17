@@ -114,6 +114,21 @@ let styles = (theme) => ({
 
 class CmPickerViewMaterial extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            hover: false
+        }
+    }
+
+    hoverOn = (path) => {
+        this.setState({ hover: path });
+    }
+
+    hoverOff = () => {
+        this.setState({ hover: false });
+    }
+
     render() {
 
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
@@ -129,13 +144,15 @@ class CmPickerViewMaterial extends React.Component {
                 {
                     pickerEntries.map((entry) =>
                         <ListItem
+                            onMouseEnter={() => this.hoverOn(entry.path)}
+                            onClick={() => this.hoverOn(entry.path)}
+                            onMouseLeave={this.hoverOff}
                             onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                             key={entry.path}
                             divider={true}
                             className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}
                             data-jrm-role={'picker-item'}
                         >
-                            {console.log(entry.depth)}
                             <div
                                 className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
                                 style={{
@@ -175,7 +192,7 @@ class CmPickerViewMaterial extends React.Component {
                             </span>
                             {actionsRenderer &&
                                 <ListItemText>
-                                    {actionsRenderer(entry)}
+                                    {this.state.hover === entry.path  && actionsRenderer(entry)}
                                 </ListItemText>
                             }
                         </ListItem>

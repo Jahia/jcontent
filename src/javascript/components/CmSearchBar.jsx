@@ -205,7 +205,7 @@ class CmSearchBarSql2 extends React.Component {
                 }
                 </React.Fragment>}
         >
-            <Grid container alignItems={'center'} classes={{container: classes.sql2Form}} className={classes.test}>
+            <Grid container alignItems={'center'} classes={{container: classes.sql2Form}}>
                 SELECT * FROM [
                 <Sql2Input
                     maxLength={100}

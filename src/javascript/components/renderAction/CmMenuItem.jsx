@@ -31,11 +31,11 @@ class CmMenuItem extends Component {
     }
 
     render() {
-        const {labelKey, labelParams, t} = this.props;
+        const {menuId, labelKey, labelParams, t} = this.props;
         return (
             <MenuItem onClick={(event) => this.onClick(event)}>
                 {t(labelKey, labelParams)}
-                {t(labelKey, labelParams) === 'Advanced publish...' &&
+                {menuId &&
                     <ArrowRight/>
                 }
             </MenuItem>

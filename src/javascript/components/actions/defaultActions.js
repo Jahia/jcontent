@@ -229,25 +229,59 @@ let defaultActions = {
         component: CopyAction,
         icon: "Copy",
         target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
-        requiredPermission: "jcr:removeNode",
-        labelKey: "label.contentManager.contentPreview.copy"
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.contentPreview.copy",
+        hideOnNodeTypes: ["jnt:page"]
     },
-    paste: {
+    pasteFile: {
         priority: 3.8,
         component: PasteAction,
         icon: "Paste",
-        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
-        requiredPermission: "jcr:removeNode",
-        labelKey: "label.contentManager.contentPreview.paste"
+        target: ["contextualMenuFilesAction"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.contentPreview.paste",
+        hideOnNodeTypes: ["jnt:page"],
+        baseContentType: "jnt:file"
     },
+    pasteFolder: {
+        priority: 3.8,
+        component: PasteAction,
+        icon: "Paste",
+        target: ["contextualMenuFilesAction"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.contentPreview.paste",
+        hideOnNodeTypes: ["jnt:page"],
+        baseContentType: "jnt:folder"
+    },
+    pasteContentFolderContent: {
+        priority: 3.8,
+        component: PasteAction,
+        icon: "Paste",
+        target: ["contextualMenuFoldersAction"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.contentPreview.paste",
+        hideOnNodeTypes: ["jnt:page"],
+        baseContentType: "jmix:editorialContent"
+    },
+    // pasteContentFolder: {
+    //     priority: 3.8,
+    //     component: PasteAction,
+    //     icon: "Paste",
+    //     target: ["contextualMenuFoldersAction"],
+    //     requiredPermission: "jcr:addChildNodes",
+    //     labelKey: "label.contentManager.contentPreview.paste",
+    //     hideOnNodeTypes: ["jnt:page"],
+    //     baseContentType: "jnt:contentFolder"
+    // },
     cut: {
         priority: 3.9,
         component: CallAction,
         call: () => alert("not implemented yet"),
         icon: "Cut",
         target: ["tableMenuActions"],
-        requiredPermission: "",
-        labelKey: "label.contentManager.contentPreview.cut"
+        requiredPermission: "jcr:removeNode",
+        labelKey: "label.contentManager.contentPreview.cut",
+        hideOnNodeTypes: ["jnt:page"]
     },
     delete: {
         priority: 4,

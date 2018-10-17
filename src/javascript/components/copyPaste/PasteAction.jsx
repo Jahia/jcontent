@@ -11,9 +11,17 @@ import {triggerRefetch, refetchTypes} from '../refetches';
 class PasteAction extends React.Component {
 
     render() {
-        let {children, context, t, labelKey, ...rest} = this.props;
+        let {children, context, t, labelKey, notificationContext, ...rest} = this.props;
 
         if (NodesInfo.getNodes().length === 0) {
+            return null;
+        }
+
+        const node = NodesInfo.getNodes()[0];
+        const allowedChildren = context.node.allowedChildNodeTypes;
+
+        if (!this.pasteAllowed(allowedChildren, node.primaryNodeType)) {
+            console.log("P", allowedChildren, node.primaryNodeType);
             return null;
         }
 
@@ -25,13 +33,12 @@ class PasteAction extends React.Component {
                         ...rest,
                         labelKey: labelKey,
                         onClick: () => {
-                            const node = NodesInfo.getNodes()[0];
                             pasteNode({variables: {
                                     pathOrId: node.path,
                                     destParentPathOrId: context.path,
                                     destName: node.displayName
                                 }}).then(() => {
-                                    NodesInfo.removeAll();
+                                    notificationContext.notify(`Pasted`);
                                     triggerRefetch(refetchTypes.CONTENT_TREE);
                                     triggerRefetch(refetchTypes.CONTENT_DATA);
                             })
@@ -40,6 +47,16 @@ class PasteAction extends React.Component {
                 }}
             </Mutation>
         )
+    }
+
+    pasteAllowed(allowedTypes, pastedType) {
+        return allowedTypes.find((entry) => {
+            if (entry.supertypes.find((e) => { return e.name === pastedType})) {
+                return true;
+            }
+            return entry.name === pastedType;
+        });
+
     }
 }
 

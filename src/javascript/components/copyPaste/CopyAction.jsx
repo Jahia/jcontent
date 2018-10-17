@@ -13,10 +13,10 @@ class CopyAction extends React.Component {
                         ...rest,
                         labelKey: labelKey,
                         onClick: () => {
-                            console.log(context);
-                            const {path, uuid, nodeName, displayName} = context;
+                            console.log("Copy", context);
+                            const {path, uuid, nodeName, displayName, primaryNodeType} = context;
                             NodesInfo.removeAll();
-                            NodesInfo.addNode(new Node(path, uuid, nodeName, displayName));
+                            NodesInfo.addNode(new Node(path, uuid, nodeName, displayName, primaryNodeType));
                         }
                     });
 

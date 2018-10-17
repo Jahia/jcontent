@@ -6,6 +6,10 @@ import {translate} from 'react-i18next';
 class UndeleteAction extends React.Component {
 
     abbreviateIfNeeded(displayName) {
+        if (!displayName) {
+            return "";
+        }
+
         if (displayName.length <= 100) {
             return displayName;
         }

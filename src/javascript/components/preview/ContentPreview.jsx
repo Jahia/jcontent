@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {withStyles, Paper, Grid, IconButton, Button} from "@material-ui/core";
-import {Fullscreen, FullscreenExit, Lock, LockOpen} from "@material-ui/icons";
+import {Fullscreen, FullscreenExit, Lock, LockOpen, CloudDownload} from "@material-ui/icons";
 import {previewQuery} from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
 import {Mutation} from 'react-apollo';
@@ -257,6 +257,7 @@ class ContentPreview extends React.Component {
                             </div>
                         </Grid>
                         <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
+                            {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'live')}
                             <ShareMenu/>
                             {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
@@ -304,6 +305,7 @@ class ContentPreview extends React.Component {
                                 </div>
                         </Grid>
                         <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
+                            {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'default')}
                             <ShareMenu/>
                             {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
@@ -381,6 +383,24 @@ class ContentPreview extends React.Component {
         }
     }
 
+    downloadButton(selectedItem, workspace) {
+        let {classes} = this.props;
+        if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {
+            return <a className={classes.colorIcon}
+                      title="download"
+                      target="_blank"
+                      href={`/files/${workspace}${selectedItem.path}`}>
+                <CloudDownload/>
+            </a>
+        } else {
+            return <a className={classes.colorIcon}
+                      title="download"
+                      href={`/files/${workspace}${selectedItem.path}`}
+                      download>
+                <CloudDownload/>
+            </a>
+        }
+    }
     screenModeButtons(handleFullScreen, classes) {
         handleFullScreen(this.state.fullScreen);
         if (this.state.fullScreen) {

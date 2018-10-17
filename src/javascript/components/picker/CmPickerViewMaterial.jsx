@@ -208,7 +208,11 @@ class CmPickerViewMaterial extends React.Component {
                 if (a.name === "contents") {
                     return false;
                 }
-                return a.name > b.name;
+                let asort = a.path.split('/');
+                asort[asort.length-1] = a.node.displayName;
+                let bsort = b.path.split('/');
+                bsort[bsort.length-1] = b.node.displayName;
+                return asort.join('/') > bsort.join('/');
             })
         }
     }

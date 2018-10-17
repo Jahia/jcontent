@@ -20,8 +20,6 @@ const styles = theme => ({
 
 class WorkflowDashboardAction extends React.Component {
 
-
-
     constructor(props) {
         super(props);
 

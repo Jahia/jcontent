@@ -26,7 +26,7 @@ class PushEventConsumer extends React.Component {
                     this.triggerDataRefetch();
                 }
             } else if (evtType === "job") {
-                if (this.hasProcessJob(eventData.startedJob) || this.hasProcessJob(eventData.endedJob)) {
+                if (this.hasProcessJob(eventData.startedJobs) || this.hasProcessJob(eventData.endedJobs)) {
                     this.triggerDataRefetch();
                 }
             } else if (evtType === "contentUnpublished") {

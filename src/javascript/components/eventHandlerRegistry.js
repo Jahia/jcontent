@@ -26,12 +26,12 @@ let unregisterContentModificationEventHandler = (eventHandler) => {
 
 let registerPushEventConsumer = (eventHandler) => {
     window.parent.authoringApi = window.parent.authoringApi || {};
-    window.parent.authoringApi.pushEventConsumers = window.parent.authoringApi.pushEventConsumers || [];
-    doRegister(eventHandler, window.parent.authoringApi.pushEventConsumers);
+    window.parent.authoringApi.pushEventHandlers = window.parent.authoringApi.pushEventHandlers || [];
+    doRegister(eventHandler, window.parent.authoringApi.pushEventHandlers);
 }
 
 let unregisterPushEventConsumer = (eventHandler) => {
-    doUnregister(eventHandler, window.parent.authoringApi.pushEventConsumers);
+    doUnregister(eventHandler, window.parent.authoringApi.pushEventHandlers);
 }
 
 export {

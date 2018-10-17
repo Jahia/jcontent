@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import {withNotifications} from "@jahia/react-material/index";
 import NodesInfo from './nodesInfo';
 import Node from './node';
-import {pasteNode} from "./gqlMutations";
+import { pasteNode, moveNode } from "./gqlMutations";
 import {Mutation} from 'react-apollo';
 import {triggerRefetch, refetchTypes} from '../refetches';
 
@@ -22,6 +22,31 @@ class PasteAction extends React.Component {
 
         if (!this.pasteAllowed(allowedChildren, node.primaryNodeType)) {
             return null;
+        }
+
+        if (node.mutationToUse === Node.PASTE_MODES.MOVE) {
+            return (
+                <Mutation
+                    mutation={moveNode}>
+                    {(moveNode) => {
+                        return children({
+                            ...rest,
+                            labelKey: labelKey,
+                            onClick: () => {
+                                moveNode({variables: {
+                                        pathOrId: node.path,
+                                        destParentPathOrId: context.path,
+                                        destName: node.displayName
+                                    }}).then(() => {
+                                    notificationContext.notify(`Pasted`);
+                                    triggerRefetch(refetchTypes.CONTENT_TREE);
+                                    triggerRefetch(refetchTypes.CONTENT_DATA);
+                                })
+                            }
+                        });
+                    }}
+                </Mutation>
+            )
         }
 
         return (

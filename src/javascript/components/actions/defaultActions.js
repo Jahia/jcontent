@@ -285,10 +285,9 @@ let defaultActions = {
     },
     cut: {
         priority: 3.9,
-        component: CallAction,
-        call: () => alert("not implemented yet"),
+        component: CopyAction,
         icon: "Cut",
-        target: ["tableMenuActions"],
+        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
         requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.cut",
         hideOnNodeTypes: ["jnt:page"]

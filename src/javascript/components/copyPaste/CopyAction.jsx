@@ -8,15 +8,21 @@ import Node from './node';
 class CopyAction extends React.Component {
 
     render() {
-        let {children, context, labelKey, ...rest} = this.props;
+        let {children, context, labelKey, actionKey, ...rest} = this.props;
         return children({
                         ...rest,
                         labelKey: labelKey,
                         onClick: () => {
-                            console.log("Copy", context);
                             const {path, uuid, nodeName, displayName, primaryNodeType} = context;
                             NodesInfo.removeAll();
-                            NodesInfo.addNode(new Node(path, uuid, nodeName, displayName, primaryNodeType));
+                            if (actionKey === "cut") {
+                                console.log("Cut", context);
+                                NodesInfo.addNode(new Node(path, uuid, nodeName, displayName, primaryNodeType, Node.PASTE_MODES.MOVE));
+                            }
+                            else {
+                                console.log("Copy", context);
+                                NodesInfo.addNode(new Node(path, uuid, nodeName, displayName, primaryNodeType, Node.PASTE_MODES.COPY));
+                            }
                         }
                     });
 

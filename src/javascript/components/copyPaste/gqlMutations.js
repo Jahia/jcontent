@@ -10,6 +10,16 @@ const pasteNode = gql`mutation pasteNode($pathOrId: String!, $destParentPathOrId
     }
 }`;
 
+const moveNode = gql`mutation moveNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String) {
+    jcr {
+        pasteNode(mode: MOVE, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, destName: $destName, namingConflictResolution: RENAME) {
+            node {
+                path
+            }
+        }
+    }
+}`;
+
 const pasteNodes = gql`mutation pasteNodes($pathOrId: String!) {
     jcr {
         mutateNode(pathOrId: $pathOrId) {
@@ -18,4 +28,4 @@ const pasteNodes = gql`mutation pasteNodes($pathOrId: String!) {
     }
 }`;
 
-export { pasteNode, pasteNodes };
+export { pasteNode, moveNode, pasteNodes };

@@ -63,7 +63,7 @@ class CMTopBar extends React.Component {
         const {classes, mode, t} = this.props;
         let modeTitle = t("label.contentManager.title." + (mode || "browse"));
         return (
-            <div className={classes.root}>
+            <div className={classes.root} data-cm-role={'cm-top-bar'}>
                 <Grid container spacing={24}>
                     <Grid item xs={2} style={{marginTop: '-22px', marginLeft: '-22px', display: 'inline-grid'}}>
                         <div style={{marginBottom: '-8px', marginLeft: '-6px'}}>

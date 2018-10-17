@@ -1,13 +1,8 @@
 import * as _ from "lodash";
 
-let doRegister = (eventHandler, registry) => {
-    if (registry) {
-        let eventHandlers = registry;
-        if (!_.includes(eventHandlers, eventHandler)) {
-            eventHandlers[eventHandlers.length] = eventHandler;
-        }
-    } else {
-        registry = [eventHandler];
+let doRegister = (eventHandler, eventHandlers) => {
+    if (!_.includes(eventHandlers, eventHandler)) {
+        eventHandlers[eventHandlers.length] = eventHandler;
     }
 }
 

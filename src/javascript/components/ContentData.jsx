@@ -8,7 +8,13 @@ import {
 } from "./gqlQueries";
 import * as _ from "lodash";
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
-import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from "./eventHandlerRegistry";
+import {
+    registerContentModificationEventHandler,
+    unregisterContentModificationEventHandler,
+    registerPushEventHandler,
+    unregisterPushEventHandler
+} from "./eventHandlerRegistry";
+import {triggerRefetch, refetchTypes} from './refetches';
 import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
@@ -31,16 +37,21 @@ const contentQueryHandlerByMode = mode => {
 class ContentData extends React.Component {
 
     constructor(props) {
+
         super(props);
+
         this.onGwtContentModification = this.onGwtContentModification.bind(this);
+        this.onPushEvent = this.onPushEvent.bind(this);
     }
 
     componentDidMount() {
         registerContentModificationEventHandler(this.onGwtContentModification);
+        registerPushEventHandler(this.onPushEvent);
     }
 
     componentWillUnmount() {
         unregisterContentModificationEventHandler(this.onGwtContentModification);
+        unregisterPushEventHandler(this.onPushEvent);
     }
 
     onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {
@@ -99,6 +110,37 @@ class ContentData extends React.Component {
         } else {
             client.resetStore();
         }
+    }
+
+    onPushEvent(eventData) {
+        let evtType = eventData.type;
+        if (evtType === "workflowTask") {
+            triggerRefetch(refetchTypes.ACTIVE_WORKFLOW_TASKS);
+            if (eventData.endedWorkflow != null) {
+                this.triggerDataRefetch();
+            }
+        } else if (evtType === "job") {
+            if (this.hasProcessJob(eventData.startedJobs) || this.hasProcessJob(eventData.endedJobs)) {
+                this.triggerDataRefetch();
+            }
+        } else if (evtType === "contentUnpublished") {
+            this.triggerDataRefetch();
+        }
+    }
+
+    hasProcessJob(jobs) {
+        let found = false;
+        if (jobs) {
+            found = jobs.some(function(job) {
+                return (job.group === "StartProcessJob" || job.group === "PublicationJob");
+            });
+        }
+        return found;
+    }
+
+    triggerDataRefetch() {
+        triggerRefetch(refetchTypes.CONTENT_DATA);
+        triggerRefetch(refetchTypes.CONTENT_TREE);
     }
 
     render() {

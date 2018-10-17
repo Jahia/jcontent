@@ -21,7 +21,6 @@ class PasteAction extends React.Component {
         const allowedChildren = context.node.allowedChildNodeTypes;
 
         if (!this.pasteAllowed(allowedChildren, node.primaryNodeType)) {
-            console.log("P", allowedChildren, node.primaryNodeType);
             return null;
         }
 

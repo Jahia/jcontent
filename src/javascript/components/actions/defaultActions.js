@@ -240,17 +240,17 @@ let defaultActions = {
         target: ["contextualMenuFilesAction"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.paste",
-        hideOnNodeTypes: ["jnt:page"],
+        hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
         baseContentType: "jnt:file"
     },
     pasteFolder: {
-        priority: 3.8,
+        priority: 3.9,
         component: PasteAction,
         icon: "Paste",
         target: ["contextualMenuFilesAction"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.paste",
-        hideOnNodeTypes: ["jnt:page"],
+        hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
         baseContentType: "jnt:folder"
     },
     pasteContentFolderContent: {
@@ -260,19 +260,29 @@ let defaultActions = {
         target: ["contextualMenuFoldersAction"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.paste",
-        hideOnNodeTypes: ["jnt:page"],
+        hideOnNodeTypes: ["jnt:page", "jnt:folder"],
         baseContentType: "jmix:editorialContent"
     },
     // pasteContentFolder: {
-    //     priority: 3.8,
+    //     priority: 3.9,
     //     component: PasteAction,
     //     icon: "Paste",
     //     target: ["contextualMenuFoldersAction"],
     //     requiredPermission: "jcr:addChildNodes",
     //     labelKey: "label.contentManager.contentPreview.paste",
-    //     hideOnNodeTypes: ["jnt:page"],
+    //     hideOnNodeTypes: ["jnt:page", "jnt:folder"],
     //     baseContentType: "jnt:contentFolder"
     // },
+    pastePageContent: {
+        priority: 3.8,
+        component: PasteAction,
+        icon: "Paste",
+        target: ["contextualMenuPagesAction"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.contentPreview.paste",
+        hideOnNodeTypes: ["jnt:contentFolder", "jnt:folder"],
+        baseContentType: "jmix:editorialContent"
+    },
     cut: {
         priority: 3.9,
         component: CallAction,

@@ -90,8 +90,8 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        let {nodes} = nextProps;
-        let anchorEl = document.getElementById("menuToggleButton_" + nodes.uuid);
+        let {node} = nextProps;
+        let anchorEl = document.getElementById("menuToggleButton_" + node.uuid);
         if (anchorEl != null) {
             let anchorElPosition = anchorEl.getBoundingClientRect();
             return {
@@ -105,8 +105,8 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     componentDidMount() {
-        let {nodes} = this.props;
-        let position = document.getElementById("menuToggleButton_" + nodes.uuid).getBoundingClientRect();
+        let {node} = this.props;
+        let position = document.getElementById("menuToggleButton_" + node.uuid).getBoundingClientRect();
         this.setState({
             anchorPosition: {
                 top: position.top - 5,
@@ -116,9 +116,9 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     addMenuExitListener() {
-        let {nodes} = this.props;
+        let {node} = this.props;
         setTimeout(() => {
-            let backdropEl = document.getElementById("breadcrumbMenu_" + nodes.uuid).children[0];
+            let backdropEl = document.getElementById("breadcrumbMenu_" + node.uuid).children[0];
             backdropEl.addEventListener("mouseover", this.onMenuExit);
         }, 10);
 
@@ -143,29 +143,29 @@ class BreadcrumbDisplay extends React.Component {
         this.onMenuExit(event);
     }
 
-    generateMenu(nodes) {
+    generateMenu(node) {
         let {classes} = this.props;
         return <span>
-            <MenuItemContainer key={"dropdown_" + nodes.uuid}>
-                <MenuItem className={classes.menuItemHeader} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, nodes)}>
-                    {this.renderIcon(nodes)}
+            <MenuItemContainer key={"dropdown_" + node.uuid}>
+                <MenuItem className={classes.menuItemHeader} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, node)}>
+                    {this.renderIcon(node)}
                     <MenuItemLabel>
-                        {nodes.name}
+                        {node.name}
                     </MenuItemLabel>
                 </MenuItem>
             </MenuItemContainer>
-            {nodes.siblings.length > 1 &&
+            {node.siblings.length > 1 &&
                 <Divider className={classes.divider}/>
             }
-            {nodes.siblings.map((node, i) => {
-                if (node.name === nodes.name) {
+            {node.siblings.map((siblingNode, i) => {
+                if (siblingNode.name === node.name) {
                     return null;
                 }
-                return <MenuItemContainer key={node.uuid}>
-                    <MenuItem className={classes.menuItem} onClick={(event) => this.onMenuItemSelected(event, node)}>
-                        {this.renderIcon(node)}
+                return <MenuItemContainer key={siblingNode.uuid}>
+                    <MenuItem className={classes.menuItem} onClick={(event) => this.onMenuItemSelected(event, siblingNode)}>
+                        {this.renderIcon(siblingNode)}
                         <MenuItemLabel>
-                            {node.name}
+                            {siblingNode.name}
                         </MenuItemLabel>
                     </MenuItem>
                 </MenuItemContainer>;
@@ -173,34 +173,34 @@ class BreadcrumbDisplay extends React.Component {
         </span>;
     }
 
-    generateMenuButton(nodes, trimLabel) {
+    generateMenuButton(node, trimLabel) {
         let {classes} = this.props;
-        if (nodes.siblings.length > 1) {
+        if (node.siblings.length > 1) {
             return <Button
-                id={"menuToggleButton_" + nodes.uuid}
+                id={"menuToggleButton_" + node.uuid}
                 ref={this.anchorButton}
                 className={classes.menuButton}
                 disableRipple={true}
-                aria-owns={"breadcrumbMenu_" + nodes.uuid}
+                aria-owns={"breadcrumbMenu_" + node.uuid}
                 aria-haspopup="true"
                 onMouseOver={this.onMenuButtonActivatorEnter}>
-                {this.renderIcon(nodes)}
-                {!trimLabel ? (nodes.name.length > 13 ? nodes.name.substring(0, 13) + '...' : nodes.name) : ''}
+                {this.renderIcon(node)}
+                {!trimLabel ? (node.name.length > 13 ? node.name.substring(0, 13) + '...' : node.name) : ''}
             </Button>;
         } else {
             return <Button
-                id={"menuToggleButton_" + nodes.uuid}
+                id={"menuToggleButton_" + node.uuid}
                 ref={this.anchorButton}
                 className={classes.menuButton}
                 disableRipple={true}
-                aria-owns={"breadcrumbMenu_" + nodes.uuid}
+                aria-owns={"breadcrumbMenu_" + node.uuid}
                 aria-haspopup="true"
                 onClick={() => {
-                    this.props.handleSelect(nodes.siblings[0].mode, nodes.siblings[0].path);
+                    this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
                 }}
                 onMouseOver={this.onMenuButtonActivatorEnter}>
-                {this.renderIcon(nodes)}
-                {!trimLabel ? (nodes.name.length > 13 ? nodes.name.substring(0, 13) + '...' : nodes.name) : ''}
+                {this.renderIcon(node)}
+                {!trimLabel ? (node.name.length > 13 ? node.name.substring(0, 13) + '...' : node.name) : ''}
             </Button>;
         }
     }
@@ -221,20 +221,20 @@ class BreadcrumbDisplay extends React.Component {
 
     render() {
         let {menuActive, anchorPosition} = this.state;
-        let {nodes, trimLabel} = this.props;
-        return <span ref={this.menu} id={"breadcrumbSpan_" + nodes.uuid}>
-            {this.generateMenuButton(nodes, trimLabel)}
+        let {node, trimLabel} = this.props;
+        return <span ref={this.menu} id={"breadcrumbSpan_" + node.uuid}>
+            {this.generateMenuButton(node, trimLabel)}
             <Menu
                 disableAutoFocusItem={true}
                 container={this.menu.current}
                 anchorPosition={anchorPosition}
-                key={nodes.uuid}
-                id={"breadcrumbMenu_" + nodes.uuid}
+                key={node.uuid}
+                id={"breadcrumbMenu_" + node.uuid}
                 anchorReference={"anchorPosition"}
                 open={menuActive}
                 onEnter={this.addMenuExitListener}
             >
-                {this.generateMenu(nodes)}
+                {this.generateMenu(node)}
             </Menu>
         </span>;
     }
@@ -272,7 +272,7 @@ class Breadcrumb extends React.Component {
                 if (breadcrumbs.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) {
                     if (i > breadcrumbs.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY) {
                         return <span key={breadcrumb.uuid}>
-                            <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={false}/>
+                            <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} node={breadcrumb} trimLabel={false}/>
                             {i < breadcrumbs.length - 1 &&
                                 <ChevronRightIcon className={classes.chevronIcon}/>
                             }
@@ -290,7 +290,7 @@ class Breadcrumb extends React.Component {
                     }
                 }
                 return <span key={breadcrumb.uuid}>
-                    <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={trimLabel}/>
+                    <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} node={breadcrumb} trimLabel={trimLabel}/>
                     {i < breadcrumbs.length - 1 &&
                         <ChevronRightIcon className={classes.chevronIcon}/>
                     }

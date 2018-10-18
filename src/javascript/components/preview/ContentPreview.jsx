@@ -400,18 +400,18 @@ class ContentPreview extends React.Component {
         return null;
     }
     downloadButton(selectedItem, workspace) {
-        let {classes} = this.props;
+        let {classes, dxContext} = this.props;
         if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {
             return <a className={classes.colorIcon}
                       title="download"
                       target="_blank"
-                      href={`/files/${workspace}${selectedItem.path}`}>
+                      href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}>
                 <CloudDownload/>
             </a>
         } else {
             return <a className={classes.colorIcon}
                       title="download"
-                      href={`/files/${workspace}${selectedItem.path}`}
+                      href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
                       download>
                 <CloudDownload/>
             </a>

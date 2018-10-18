@@ -19,7 +19,7 @@ import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
 import Constants from "./constants";
-import {extractPaths} from "./utils";
+import {extractPaths, refetchContentTreeData} from "./utils";
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -140,7 +140,7 @@ class ContentData extends React.Component {
 
     triggerDataRefetch() {
         triggerRefetch(refetchTypes.CONTENT_DATA);
-        triggerRefetch(refetchTypes.CONTENT_TREE);
+        refetchContentTreeData();
     }
 
     render() {

@@ -240,7 +240,7 @@ class BreadcrumbDisplay extends React.Component {
     }
 }
 
-const StyledBreadcrumbDisplay = withStyles(styles)(BreadcrumbDisplay);
+BreadcrumbDisplay = withStyles(styles)(BreadcrumbDisplay);
 
 class Breadcrumb extends React.Component {
 
@@ -272,7 +272,7 @@ class Breadcrumb extends React.Component {
                 if (breadcrumbs.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) {
                     if (i > breadcrumbs.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY) {
                         return <span key={breadcrumb.uuid}>
-                            <StyledBreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={false}/>
+                            <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={false}/>
                             {i < breadcrumbs.length - 1 &&
                                 <ChevronRightIcon className={classes.chevronIcon}/>
                             }
@@ -290,7 +290,7 @@ class Breadcrumb extends React.Component {
                     }
                 }
                 return <span key={breadcrumb.uuid}>
-                    <StyledBreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={trimLabel}/>
+                    <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={trimLabel}/>
                     {i < breadcrumbs.length - 1 &&
                         <ChevronRightIcon className={classes.chevronIcon}/>
                     }

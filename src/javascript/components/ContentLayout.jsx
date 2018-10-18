@@ -62,7 +62,7 @@ const styles = theme => ({
         color: 'pink'
     },
     showTree: {
-        textAlign: 'right!important'
+        textAlign: 'right !important'
     },
     drawerPaper: {
         backgroundColor: 'transparent',
@@ -113,7 +113,7 @@ const styles = theme => ({
 
     },
     ButtonAction: {
-        margin: '0!important'
+        margin: '0 !important'
     }
 });
 
@@ -140,16 +140,13 @@ class ContentLayout extends React.Component {
         };
 
         this.handleSort = this.handleSort.bind(this);
-
     }
 
     handleDrawerOpen = () => {
         if (this.state.open) {
             this.setState({open: false});
-        }
-        else {
+        } else {
             this.setState({open: true});
-
         }
     };
 
@@ -208,17 +205,17 @@ class ContentLayout extends React.Component {
 
     isBrowsing() {
         let {mode} = this.props;
-        return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES)
+        return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES);
     };
 
     isSearching() {
         let {mode} = this.props;
-        return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH)
+        return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH);
     };
 
     isRootNode() {
         let {path, siteKey} = this.props;
-        return (path === ("/sites/" + siteKey))
+        return (path === ("/sites/" + siteKey));
     };
 
     render() {
@@ -246,68 +243,65 @@ class ContentLayout extends React.Component {
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>
                     </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center"
-                          className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             {this.isBrowsing() &&
-                            <div className={classes.breadCrumbs}>
-                                <ContentBreadcrumbs mode={this.props.mode}/>
-                            </div>
+                                <div className={classes.breadCrumbs}>
+                                    <ContentBreadcrumbs mode={this.props.mode}/>
+                                </div>
                             }
                             {this.isSearching() &&
-                            <div className={classes.searchControl}>
-                                <CmSearchControlBar/>
-                            </div>
+                                <div className={classes.searchControl}>
+                                    <CmSearchControlBar/>
+                                </div>
                             }
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {mode === Constants.mode.FILES && <FilesGridSizeSelector initValue={4}
-                                                                                     onChange={(value) => this.setState({filesGridSizeValue: value})}/>}
                             {mode === Constants.mode.FILES &&
-                            <FilesGridModeSelector showList={this.state.showList}
-                                                   onChange={() => this.setState({showList: !this.state.showList})}/>}
+                                <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                            }
+                            {mode === Constants.mode.FILES &&
+                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
+                            }
                             {this.isBrowsing() && !this.isRootNode() &&
-                            <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
-                                {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
-                            </Actions>
+                                <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
+                                    {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
+                                </Actions>
                             }
                             {this.isBrowsing() &&
-                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                {t("label.contentManager.tree." + (open ? "hide" : "show"))}
-                            </Button>
+                                <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
+                                    {t("label.contentManager.tree." + (open ? "hide" : "show"))}
+                                </Button>
                             }
-                            <Button variant="text" className={classes.showTreeButton}
-                                    onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                            <Button variant="text" className={classes.showTreeButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 {t("label.contentManager.refresh")}
                             </Button>
-
                             {this.isSearching() &&
-                            <Button data-cm-role="search-clear" variant={"contained"} size={"small"}
-                                    onClick={() => clearSearch(params)}>
-                                {t("label.contentManager.search.clear")}
-                            </Button>
+                                <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
+                                    {t("label.contentManager.search.clear")}
+                                </Button>
                             }
                         </Grid>
                     </Grid>
                 </Grid>
                 <div className={classes.appFrame}>
                     {this.isBrowsing() &&
-                    <Paper style={{background: '#f5f5f5'}}>
-                        <Drawer
-                            variant="persistent"
-                            anchor={anchor}
-                            open={open}
-                            classes={{
-                                paper: classes.drawerPaper,
-                            }}
-                        >
-                            <ContentTrees
-                                contentTreeConfigs={contentTreeConfigs}
-                                path={path}
-                                setRefetch={this.setTreeRefetcher}
-                            />
-                        </Drawer>
-                    </Paper>
+                        <Paper style={{background: '#f5f5f5'}}>
+                            <Drawer
+                                variant="persistent"
+                                anchor={anchor}
+                                open={open}
+                                classes={{
+                                    paper: classes.drawerPaper,
+                                }}
+                            >
+                                <ContentTrees
+                                    contentTreeConfigs={contentTreeConfigs}
+                                    path={path}
+                                    setRefetch={this.setTreeRefetcher}
+                                />
+                            </Drawer>
+                        </Paper>
                     }
                     <main
                         className={classNames(classes.content, classes[`content-left`], {

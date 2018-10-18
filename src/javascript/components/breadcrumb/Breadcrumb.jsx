@@ -8,6 +8,7 @@ import {withStyles} from '@material-ui/core';
 import {translate} from "react-i18next";
 import Constants from '../constants';
 import * as icons from '@jahia/icons';
+import {abbreviateIfNeeded} from "../utils.js";
 
 const styles = theme => ({
     root: {
@@ -65,6 +66,7 @@ const MenuItemLabel = styled.div`
 const MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY = 5;
 const MAX_UNCUT_ITEMS_ON_CUT_DISPLAY = 4;
 const MAX_TOTAL_ITEMS_ON_CUT_DISPLAY = 9;
+const MAX_LABEL_LENGTH = 13;
 
 class BreadcrumbDisplay extends React.Component {
 
@@ -174,7 +176,7 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     generateMenuButton(node, trimLabel) {
-        let {classes} = this.props;
+        let {classes, t} = this.props;
         if (node.siblings.length > 1) {
             return <Button
                 id={"menuToggleButton_" + node.uuid}
@@ -185,7 +187,9 @@ class BreadcrumbDisplay extends React.Component {
                 aria-haspopup="true"
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(node)}
-                {!trimLabel ? (node.name.length > 13 ? node.name.substring(0, 13) + '...' : node.name) : ''}
+                {!trimLabel &&
+                    abbreviateIfNeeded(node.name, MAX_LABEL_LENGTH, t)
+                }
             </Button>;
         } else {
             return <Button
@@ -200,7 +204,9 @@ class BreadcrumbDisplay extends React.Component {
                 }}
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(node)}
-                {!trimLabel ? (node.name.length > 13 ? node.name.substring(0, 13) + '...' : node.name) : ''}
+                {!trimLabel &&
+                    abbreviateIfNeeded(node.name, MAX_LABEL_LENGTH, t)
+                }
             </Button>;
         }
     }
@@ -240,7 +246,7 @@ class BreadcrumbDisplay extends React.Component {
     }
 }
 
-BreadcrumbDisplay = withStyles(styles)(BreadcrumbDisplay);
+BreadcrumbDisplay = translate()(withStyles(styles)(BreadcrumbDisplay));
 
 class Breadcrumb extends React.Component {
 

@@ -27,8 +27,19 @@ function refetchContentTreeData() {
     });
 }
 
+function abbreviateIfNeeded(text, maxLength, t) {
+    if (!text) {
+        return null;
+    }
+    if (text.length <= maxLength) {
+        return text;
+    }
+    return t("label.ellipsis", {text: text.substring(0, maxLength)});
+}
+
 export {
     hasMixin,
     extractPaths,
-    refetchContentTreeData
+    refetchContentTreeData,
+    abbreviateIfNeeded
 };

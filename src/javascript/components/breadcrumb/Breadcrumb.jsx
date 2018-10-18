@@ -273,31 +273,26 @@ class Breadcrumb extends React.Component {
                     if (i > breadcrumbs.length - MAX_LABELS_DISPLAYED) {
                         return <span key={breadcrumb.uuid}>
                             <StyledBreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={false}/>
-                            {i < breadcrumbs.length - 1
-                                ? <ChevronRightIcon className={classes.chevronIcon}/>
-                                : null
+                            {i < breadcrumbs.length - 1 &&
+                                <ChevronRightIcon className={classes.chevronIcon}/>
                             }
-                            {(mode === 'browse' && i === 0) || (mode === 'browse-files' && i === 1)
-                                ? <span>
+                            {((mode === 'browse' && i === 0) || (mode === 'browse-files' && i === 1)) &&
+                                <span>
                                     <MoreHoriz className={classes.moreHoriz}/>
                                     <ChevronRightIcon className={classes.chevronIcon}/>
                                 </span>
-                                : null
                             }
-                       </span>
+                       </span>;
                     } else if (i > breadcrumbs.length - MAX_ICONS_DISPLAYED) {
                         trimLabel = true;
                     } else {
                         return null;
                     }
-                } else {
-                    trimLabel = false;
                 }
                 return <span key={breadcrumb.uuid}>
                     <StyledBreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={trimLabel}/>
-                    {i < breadcrumbs.length - 1
-                        ? <ChevronRightIcon className={classes.chevronIcon}/>
-                        : null
+                    {i < breadcrumbs.length - 1 &&
+                        <ChevronRightIcon className={classes.chevronIcon}/>
                     }
                 </span>;
             })}

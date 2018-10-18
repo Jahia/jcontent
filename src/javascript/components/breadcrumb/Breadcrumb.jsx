@@ -62,9 +62,9 @@ const MenuItemLabel = styled.div`
     position: relative;
 `;
 
-const MAX_ITEMS_DISPLAYED = 5;
-const MAX_LABELS_DISPLAYED = 4;
-const MAX_ICONS_DISPLAYED = 9;
+const MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY = 5;
+const MAX_UNCUT_ITEMS_ON_CUT_DISPLAY = 4;
+const MAX_TOTAL_ITEMS_ON_CUT_DISPLAY = 9;
 
 class BreadcrumbDisplay extends React.Component {
 
@@ -269,8 +269,8 @@ class Breadcrumb extends React.Component {
         return <div>
             {breadcrumbs.map((breadcrumb, i) => {
                 let trimLabel = false;
-                if (breadcrumbs.length > MAX_ITEMS_DISPLAYED) {
-                    if (i > breadcrumbs.length - MAX_LABELS_DISPLAYED) {
+                if (breadcrumbs.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) {
+                    if (i > breadcrumbs.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY) {
                         return <span key={breadcrumb.uuid}>
                             <StyledBreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} nodes={breadcrumb} trimLabel={false}/>
                             {i < breadcrumbs.length - 1 &&
@@ -282,8 +282,8 @@ class Breadcrumb extends React.Component {
                                     <ChevronRightIcon className={classes.chevronIcon}/>
                                 </span>
                             }
-                       </span>;
-                    } else if (i > breadcrumbs.length - MAX_ICONS_DISPLAYED) {
+                        </span>;
+                    } else if (i > breadcrumbs.length - MAX_TOTAL_ITEMS_ON_CUT_DISPLAY) {
                         trimLabel = true;
                     } else {
                         return null;

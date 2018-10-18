@@ -492,14 +492,6 @@ class ContentPreview extends React.Component {
             return text;
         }
     }
-
-    css(scripts) {
-        const css = [];
-        for (let index in scripts) {
-            css.push(<link key={`cssAsset${index}`} rel="stylesheet" type="text/css" href={ scripts[index].key } />);
-        }
-        return css;
-    }
 }
 
 const mapStateToProps = (state, ownProps) => {

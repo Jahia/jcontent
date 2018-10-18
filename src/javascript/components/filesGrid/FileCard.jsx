@@ -47,6 +47,7 @@ const styles = theme => ({
     },
     details: {
         display: 'flex',
+        overflow: 'scroll',
         flexDirection: 'row',
     },
     verticalDetails: {
@@ -197,9 +198,10 @@ class FileCard extends Component {
     }
 
     fileCard(cardType) {
+        console.log(cardType);
         switch(cardType) {
-            case 2 :
-            case 3 : return this.verticalFileCard(cardType);
+            case 2 : return this.verticalFileCard(cardType);
+            case 3 : return this.mediumFileCard();
             case 6 :
             case 12 : return this.largeFileCard();
             default : return this.mediumFileCard();
@@ -254,7 +256,7 @@ class FileCard extends Component {
                 title={ node.name }
             />
             <div className={classes.details}>
-                <CardContent className={classes.content} classes={{ root: classes.cardContent}}>
+                <CardContent className={classes.content} classes={{ root: classes.cardContent}} style={{overflow: 'scroll', width: '100%'}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
@@ -283,7 +285,7 @@ class FileCard extends Component {
                 image={ `${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
-            <div className={classes.verticalDetails} style={{ flex: 1.5 }}>
+            <div className={classes.verticalDetails} style={{ flex: 1.5, overflow: 'scroll' }}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content} classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
@@ -312,17 +314,17 @@ class FileCard extends Component {
                 <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
-                    <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
+                    <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>{ node.name }</Typography>
 
-                    <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>
+                    <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
+                    <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
                         <Moment format={"LLL"}>{node.created}</Moment>
                     </Typography>
 
-                    <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
+                    <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
+                    <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>{ `${node.width} x ${node.height}` }</Typography>
                 </CardContent>
             </div>
         </Card>
@@ -330,14 +332,13 @@ class FileCard extends Component {
 
     mediumFileCard() {
         const { classes, t, node, onContextualMenu } = this.props;
-
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", ...node})}}
                      onClick={ () => this.props.onSelect([node]) }>
             <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_MED }/>
             {
-                fileIcon(node.path, '6x', {fontSize: "160px"})
+                fileIcon(node.path, '6x', {fontSize: "110px"})
             }
             <div className={classes.details}>
                 <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
@@ -358,17 +359,14 @@ class FileCard extends Component {
 
     verticalFileCard(cardType) {
         const { classes, t, node, onContextualMenu } = this.props;
-
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
                      classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", ...node})}}
                      onClick={ () => this.props.onSelect([node]) }>
-            <div style={{textAlign: "center", flex: 2}}>
                 {
-                    fileIcon(node.path, '6x', {fontSize: "100px"})
+                    fileIcon(node.path, '6x', {fontSize: "110px"})
                 }
-            </div>
-            <div className={classes.verticalDetails} style={{ flex: 2 }}>
+            <div className={classes.details} style={{overflow: 'scroll', height: '100%'}}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction(classes.publishButtonAlternate)}

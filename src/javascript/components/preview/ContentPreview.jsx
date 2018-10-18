@@ -257,7 +257,7 @@ class ContentPreview extends React.Component {
                             {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid container item xs={12}>
                         <div className={classes.contentSubTitle}>
                             <PublicationInfo/>
                         </div>

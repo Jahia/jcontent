@@ -18,6 +18,9 @@ const styles = theme => ({
         borderBottom: 'none!important',
         boxShadow: 'none!important',
     },
+    inputPadding: {
+      padding: '0!important'
+    },
     selectDetails: {
         borderBottom: 'none!important',
         boxShadow: 'none!important',
@@ -221,7 +224,7 @@ class FilterSelect extends React.Component {
             <div className={classes.root} data-cm-role={'filter-select'}>
                 <Input
                     fullWidth
-                    classes={{ root: classes.inputDetails}}
+                    classes={{ root: classes.inputDetails, input: classes.inputPadding}}
                     inputComponent={SelectWrapped}
                     onChange={handleChange}
                     open={open}

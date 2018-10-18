@@ -382,8 +382,7 @@ class Breadcrumb extends React.Component {
                         pathType: "files",
                         type: "jnt:folder"
                     });
-                }
-                else {
+                } else {
                     siblingsToBeAdded.push({
                         uuid: 'contents_id',
                         name: t("label.contentManager.browseFolders"),

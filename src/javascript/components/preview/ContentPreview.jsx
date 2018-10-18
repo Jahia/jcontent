@@ -40,7 +40,6 @@ const styles = theme => ({
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: 550,
-        display: 'flex',
         justifyContent: 'center',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
@@ -50,7 +49,6 @@ const styles = theme => ({
     },
     previewContainerFullScreen: {
         width: '100vw',
-        display: 'flex',
         justifyContent: 'center',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,

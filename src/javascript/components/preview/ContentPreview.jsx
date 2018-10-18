@@ -40,22 +40,19 @@ const styles = theme => ({
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: 550,
-        justifyContent: 'center',
-        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
-        height: 'calc(100vh - 28px)',
+        height: 'calc(100vh - 155px)',
+        border: "none"
     },
     previewContainerFullScreen: {
         width: '100vw',
-        justifyContent: 'center',
-        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
-        padding: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 28px)',
+        border: "none"
         },
     previewContainerPdf: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
@@ -347,7 +344,6 @@ class ContentPreview extends React.Component {
         const {classes, t, dxContext} = this.props;
         let displayValue = data ? data.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
         const assets = data ? data.nodeByPath.renderedContent.staticAssets : [];
-        console.log(assets);
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
@@ -373,14 +369,36 @@ class ContentPreview extends React.Component {
             }
         } else {
             return <React.Fragment>
-                { this.css(assets) }
-                <div
-                    id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}
-                    dangerouslySetInnerHTML={{__html: displayValue}} />
+                <iframe id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
+                {this.iframeLoadContent(assets, displayValue)}
             </React.Fragment>
         }
     }
 
+    iframeLoadContent(assets, displayValue) {
+        setTimeout(()=>{
+            let iframe = document.getElementById("previewContent");
+            let frameDoc = iframe.document;
+            if (iframe.contentWindow) {
+                frameDoc = iframe.contentWindow.document;
+            }
+            frameDoc.open();
+            frameDoc.writeln(displayValue);
+            frameDoc.close();
+            if (assets != null) {
+                let iframeHeadEl = frameDoc.getElementsByTagName("head")[0];
+                for(let i in assets) {
+                    let linkEl = document.createElement("link");
+                    linkEl.setAttribute("rel", "stylesheet");
+                    linkEl.setAttribute("type", "text/css");
+                    linkEl.setAttribute("href", assets[i].key);
+                    iframeHeadEl.appendChild(linkEl);
+                }
+            }
+
+        },200);
+        return null;
+    }
     downloadButton(selectedItem, workspace) {
         let {classes} = this.props;
         if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {

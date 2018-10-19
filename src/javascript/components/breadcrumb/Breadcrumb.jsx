@@ -31,6 +31,9 @@ const styles = theme => ({
             backgroundColor: "transparent !important",
         },
     },
+    contentIcon: {
+        fontSize: "14px"
+    },
     contentLabel: {
         paddingLeft: "10px"
     },
@@ -58,10 +61,11 @@ const MenuItemLabel = styled.div`
     position: relative;
 `;
 
-const MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY = 5;
-const MAX_UNCUT_ITEMS_ON_CUT_DISPLAY = 4;
-const MAX_TOTAL_ITEMS_ON_CUT_DISPLAY = 9;
-const MAX_LABEL_LENGTH = 13;
+const MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY = 4;
+const MAX_UNCUT_ITEMS_ON_CUT_DISPLAY = 3;
+const MAX_TOTAL_ITEMS_ON_CUT_DISPLAY = 6;
+const MAX_FIRST_LABEL_LENGTH = 20;
+const MAX_LABEL_LENGTH = 10;
 
 class BreadcrumbDisplay extends React.Component {
 
@@ -170,7 +174,7 @@ class BreadcrumbDisplay extends React.Component {
         </span>;
     }
 
-    generateMenuButton(node, trimLabel) {
+    generateMenuButton(node, maxLabelLength, trimLabel) {
         let {classes} = this.props;
         if (node.siblings.length > 1) {
             return <Button
@@ -181,10 +185,10 @@ class BreadcrumbDisplay extends React.Component {
                 aria-owns={"breadcrumbMenu_" + node.uuid}
                 aria-haspopup="true"
                 onMouseOver={this.onMenuButtonActivatorEnter}>
-                {this.renderIcon(node)}
+                {this.renderIcon(node, classes.contentIcon)}
                 {!trimLabel &&
                     <span className={classes.contentLabel}>
-                        {ellipsizeText(node.name, MAX_LABEL_LENGTH)}
+                        {ellipsizeText(node.name, maxLabelLength)}
                     </span>
                 }
             </Button>;
@@ -200,35 +204,34 @@ class BreadcrumbDisplay extends React.Component {
                     this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
                 }}
                 onMouseOver={this.onMenuButtonActivatorEnter}>
-                {this.renderIcon(node)}
+                {this.renderIcon(node, classes.contentIcon)}
                 {!trimLabel &&
                     <span className={classes.contentLabel}>
-                        {ellipsizeText(node.name, MAX_LABEL_LENGTH)}
+                        {ellipsizeText(node.name, maxLabelLength)}
                     </span>
                 }
             </Button>;
         }
     }
 
-    renderIcon(node) {
-        let {classes} = this.props;
+    renderIcon(node, className) {
         switch (node.type) {
             case "jnt:virtualsite" :
-                return <icons.VirtualsiteIcon/>;
+                return <icons.VirtualsiteIcon className={className}/>;
             case "jnt:folder":
             case "jnt:contentFolder":
-                return <Folder/>;
+                return <Folder className={className}/>;
             case "jnt:page" :
             default:
-                return <PageIcon/>;
+                return <PageIcon className={className}/>;
         }
     }
 
     render() {
         let {menuActive, anchorPosition} = this.state;
-        let {node, trimLabel} = this.props;
+        let {node, maxLabelLength, trimLabel} = this.props;
         return <span ref={this.menu} id={"breadcrumbSpan_" + node.uuid}>
-            {this.generateMenuButton(node, trimLabel)}
+            {this.generateMenuButton(node, maxLabelLength, trimLabel)}
             <Menu
                 disableAutoFocusItem={true}
                 container={this.menu.current}
@@ -291,7 +294,7 @@ class Breadcrumb extends React.Component {
         return <div>
 
             {/* The very first element is always visible. */}
-            {this.generateBreadcrumbItem(breadcrumbs, 0)}
+            {this.generateBreadcrumbItem(breadcrumbs, 0, MAX_FIRST_LABEL_LENGTH)}
 
             {/* Render an ellipsis in case we are about to cut any intermediate breadcrumb items. */}
             {firstVisibleIndex > 1 &&
@@ -302,12 +305,12 @@ class Breadcrumb extends React.Component {
                 if (i < firstVisibleIndex) {
                     return null;
                 }
-                return this.generateBreadcrumbItem(breadcrumbs, i);
+                return this.generateBreadcrumbItem(breadcrumbs, i, MAX_LABEL_LENGTH);
             })}
         </div>;
     }
 
-    generateBreadcrumbItem(items, itemIndex) {
+    generateBreadcrumbItem(items, itemIndex, maxLabelLength) {
         let {handleSelect, classes} = this.props;
         let item = items[itemIndex];
         return <span key={item.uuid}>
@@ -315,6 +318,7 @@ class Breadcrumb extends React.Component {
                 id={item.uuid}
                 handleSelect={handleSelect}
                 node={item}
+                maxLabelLength={maxLabelLength}
                 trimLabel={(items.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) && (itemIndex < items.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY)}
             />
             {itemIndex < items.length - 1 &&

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Card, CardContent, CardMedia, Typography,IconButton } from '@material-ui/core';
+import { withStyles, Card, CardContent, CardMedia, Typography,IconButton, Tooltip } from '@material-ui/core';
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {Visibility, Autorenew} from "@material-ui/icons";
@@ -14,6 +14,7 @@ import { fileIcon, isImage } from './filesGridUtils';
 import {cmSetSelection} from "../redux/actions";
 import { invokeContextualMenu } from "../contextualMenu/redux/actions";
 import {connect} from "react-redux";
+import {ellipsizeText} from "../utils";
 
 const styles = theme => ({
     card: {
@@ -47,7 +48,6 @@ const styles = theme => ({
     },
     details: {
         display: 'flex',
-        overflow: 'scroll',
         flexDirection: 'row',
     },
     verticalDetails: {
@@ -157,7 +157,7 @@ const styles = theme => ({
         fontStyle: 'italic!important'
     },
     typoCaptionLarge: {
-        fontSize: '1.1rem!important',
+        fontSize: '1rem!important',
         fontStyle: 'italic!important'
     },
     typoBodyLarge: {
@@ -165,11 +165,20 @@ const styles = theme => ({
         fontWeight: '800',
         paddingBottom: theme.spacing.unit * 1,
     },
+    tooltip: {
+        opacity: 0,
+        color: theme.palette.background.default,
+        backgroundColor : theme.palette.background.paper,
+    },
 });
 
 const PUBLICATION_INFO_WIDTH_LARGE = 400;
 const PUBLICATION_INFO_WIDTH_MED = 300;
 const PUBLICATION_INFO_WIDTH_SMALL = 150;
+const MAX_LENGTH_MEDIA_LABELS_LARGE = 30;
+const MAX_LENGTH_MEDIA_LABELS_MEDIUM = 25;
+const MAX_LENGTH_MEDIA_LABELS_VERTICAL = 25;
+const MAX_LENGTH_FILES_LABELS_VERTICAL = 15;
 
 class FileCard extends Component {
 
@@ -209,7 +218,7 @@ class FileCard extends Component {
     }
 
     largeMediaCard() {
-        const { classes, t, node, dxContext, onContextualMenu } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu, cardType } = this.props;
         
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
@@ -227,7 +236,9 @@ class FileCard extends Component {
                     {this.displayVisibilityButton()}
 
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption"  className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography classes={{body2: classes.typoBodyLarge}}  variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Tooltip title={cardType === 6 && node.name.length > MAX_LENGTH_MEDIA_LABELS_LARGE ? node.name : ''} classes={{tooltip:classes.tooltip}}>
+                        <Typography classes={{body2: classes.typoBodyLarge}}  variant="body2" className={classes.textTypo}>{ cardType === 6 ? ellipsizeText(node.name, MAX_LENGTH_MEDIA_LABELS_LARGE) : node.name }</Typography>
+                    </Tooltip>
 
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>
@@ -243,7 +254,7 @@ class FileCard extends Component {
     }
 
     mediumMediaCard() {
-        const { classes, t, node, dxContext, onContextualMenu } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu, cardType } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
                      classes={{ root: classes.cardStyle}}
@@ -260,7 +271,9 @@ class FileCard extends Component {
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_MEDIUM ? node.name : ''} classes={{tooltip:classes.tooltip}}>
+                        <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ ellipsizeText(node.name, MAX_LENGTH_MEDIA_LABELS_MEDIUM) }</Typography>
+                    </Tooltip>
 
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>
@@ -292,7 +305,9 @@ class FileCard extends Component {
                     {this.displayVisibilityButton()}
 
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_VERTICAL ? node.name : ''} classes={{tooltip:classes.tooltip}}>
+                        <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ ellipsizeText(node.name, MAX_LENGTH_MEDIA_LABELS_VERTICAL) }</Typography>
+                    </Tooltip>
                 </CardContent>
             </div>
         </Card>
@@ -331,7 +346,7 @@ class FileCard extends Component {
     }
 
     mediumFileCard() {
-        const { classes, t, node, onContextualMenu } = this.props;
+        const { classes, t, node, onContextualMenu, cardType } = this.props;
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", ...node})}}
@@ -345,7 +360,10 @@ class FileCard extends Component {
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ node.name }</Typography>
+                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_VERTICAL && cardType === 3 ? node.name : ''} classes={{tooltip:classes.tooltip}}>
+                        <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>{ cardType === 3 ? ellipsizeText(node.name, MAX_LENGTH_FILES_LABELS_VERTICAL) :
+                            node.name}</Typography>
+                    </Tooltip>
 
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>
@@ -372,7 +390,9 @@ class FileCard extends Component {
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
                     {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption">{ t("label.contentManager.filesGrid.name") }</Typography>
-                    <Typography classes={{body2: classes.TypoBody}} variant="body2" color="textSecondary">{ node.name }</Typography>
+                    <Tooltip title={node.name.length > MAX_LENGTH_FILES_LABELS_VERTICAL ? node.name : ''} classes={{tooltip:classes.tooltip}}>
+                        <Typography classes={{body2: classes.TypoBody}} variant="body2" color="textSecondary">{ ellipsizeText(node.name, MAX_LENGTH_FILES_LABELS_VERTICAL) }</Typography>
+                    </Tooltip>
 
                     { cardType !== 2 && <React.Fragment>
                         <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>

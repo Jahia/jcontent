@@ -10,7 +10,7 @@ class UndeleteAction extends React.Component {
         let {children, context, ...rest} = this.props;
 
         if (hasMixin(context.node, "jmix:markedForDeletionRoot")) {
-            return children({...rest, onClick: () => window.parent.authoringApi.undeleteContent(context.uuid, context.path, (displayName ? ellipsizeText(context.displayName, 100) : ""), context.nodeName)});
+            return children({...rest, onClick: () => window.parent.authoringApi.undeleteContent(context.uuid, context.path, (context.displayName ? ellipsizeText(context.displayName, 100) : ""), context.nodeName)});
         }
         return null;
     }

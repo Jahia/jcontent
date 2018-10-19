@@ -8,7 +8,7 @@ import {withStyles} from '@material-ui/core';
 import {translate} from "react-i18next";
 import Constants from '../constants';
 import * as icons from '@jahia/icons';
-import {abbreviateIfNeeded} from "../utils.js";
+import {ellipsizeText} from "../utils.js";
 
 const styles = theme => ({
     root: {
@@ -176,7 +176,7 @@ class BreadcrumbDisplay extends React.Component {
     }
 
     generateMenuButton(node, trimLabel) {
-        let {classes, t} = this.props;
+        let {classes} = this.props;
         if (node.siblings.length > 1) {
             return <Button
                 id={"menuToggleButton_" + node.uuid}
@@ -188,7 +188,7 @@ class BreadcrumbDisplay extends React.Component {
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(node)}
                 {!trimLabel &&
-                    abbreviateIfNeeded(node.name, MAX_LABEL_LENGTH, t)
+                    ellipsizeText(node.name, MAX_LABEL_LENGTH)
                 }
             </Button>;
         } else {
@@ -205,7 +205,7 @@ class BreadcrumbDisplay extends React.Component {
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(node)}
                 {!trimLabel &&
-                    abbreviateIfNeeded(node.name, MAX_LABEL_LENGTH, t)
+                    ellipsizeText(node.name, MAX_LABEL_LENGTH)
                 }
             </Button>;
         }

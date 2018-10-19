@@ -19,6 +19,7 @@ import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATES} from "../redux/actions";
 import Loadable from "react-loadable";
+import {ellipsizeText} from "../utils.js";
 
 const styles = theme => ({
     root: {
@@ -248,7 +249,7 @@ class ContentPreview extends React.Component {
                     <Grid container spacing={0}>
                         <Grid container item xs={8} className={classes.titleBar}>
                             <div className={classes.contentTitle}>
-                                {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
+                                {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
                             </div>
                         </Grid>
                         <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
@@ -296,8 +297,8 @@ class ContentPreview extends React.Component {
                     <Grid container spacing={0}>
                         <Grid container item xs={8} className={classes.titleBar}>
                             <div className={classes.contentTitle}>
-                                {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
-                                </div>
+                                {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
+                            </div>
                         </Grid>
                         <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
                             {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'default')}
@@ -481,16 +482,7 @@ class ContentPreview extends React.Component {
     }
 
     ellipsisText(text) {
-        let {t} = this.props;
-        if (text !== undefined && text.length > 50) {
-            let subtext = text.substring(0, 50);
-            let words = subtext.split(" ");
-            let allWords = text.split(" ");
-            words[words.length-1] = allWords[words.length-1];
-            return t("label.ellipsis", {text: words.join(" ")})
-        } else {
-            return text;
-        }
+        return ellipsizeText(text, 50);
     }
 }
 

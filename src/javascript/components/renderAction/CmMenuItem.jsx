@@ -21,10 +21,11 @@ class CmMenuItem extends Component {
     }
 
     render() {
-        const {menuId, labelKey, labelParams, t} = this.props;
+        const {menuId, labelKey, labelParams, labelHtml, t} = this.props;
         return (
             <MenuItem onClick={(event) => this.onClick(event)}>
-                {t(labelKey, labelParams)}
+                {!labelHtml && t(labelKey, labelParams)}
+                {labelHtml && <span dangerouslySetInnerHTML={{__html: labelHtml}}/>}
                 {menuId &&
                     <ArrowRight/>
                 }

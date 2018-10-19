@@ -52,6 +52,7 @@ const styles = theme => ({
     blockCoreSearch: {
         marginLeft: -17,
         marginTop: -28,
+        maxHeight: 31,
         backgroundColor: "orange"
     },
     breadCrumbs: {},
@@ -114,11 +115,16 @@ const styles = theme => ({
     },
     ButtonAction: {
         margin: '0 !important'
+    },
+    searchClear: {
+        maxHeight: 25,
+        minHeight: 25,
+        padding: '3px 7px',
     }
 });
 
 const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 4;
+const GRID_PANEL_BUTTONS_SIZE = 5;
 
 class ContentLayout extends React.Component {
 
@@ -274,7 +280,9 @@ class ContentLayout extends React.Component {
                                 {t("label.contentManager.refresh")}
                             </Button>
                             {this.isSearching() &&
-                                <Button data-cm-role="search-clear" variant={"contained"} size={"small"} onClick={() => clearSearch(params)}>
+                                <Button data-cm-role="search-clear" variant={"contained"}
+                                        classes={{sizeSmall: classes.searchClear}}
+                                        size={"small"} onClick={() => clearSearch(params)}>
                                     {t("label.contentManager.search.clear")}
                                 </Button>
                             }

@@ -50,7 +50,7 @@ const styles = theme => ({
         transition: '.23s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
         width: 550,
         top: '140px!important',
-        right: '24px!important',
+        right: '41px!important',
     },
     drawerTableHead: {
         maxHeight: '28px',

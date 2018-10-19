@@ -12,6 +12,11 @@ const styles = theme => ({
     },
     infoSearchPathValue: {
         color: "red"
+    },
+    searchClear: {
+        maxHeight: 25,
+        minHeight: 25,
+        padding: '3px 7px',
     }
 });
 
@@ -31,7 +36,9 @@ class CmSearchControlBar extends React.Component {
                 />
             </span>
             {(path != siteRootPath) &&
-                <Button variant={"contained"} size={"small"} onClick={() => setPath(siteRootPath)}>
+                <Button variant={"contained"}
+                        classes={{sizeSmall: classes.searchClear}}
+                        size={"small"} onClick={() => setPath(siteRootPath)}>
                     {t("label.contentManager.search.searchEverywhere")}
                 </Button>
             }

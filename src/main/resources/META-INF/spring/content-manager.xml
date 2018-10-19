@@ -12,6 +12,14 @@
         <property name="cacheService" ref="ehCacheProvider"/>
     </bean>
 
+    <bean class="org.jahia.ajax.gwt.helper.ModuleGWTResources">
+        <property name="javascriptResources">
+            <list>
+                <value>/modules/content-media-manager/javascript/loader.js</value>
+            </list>
+        </property>
+    </bean>
+
     <util:list id="legacyMenu">
         <ref bean="editmode.managers.menu"/>
         <ref bean="studiomode.managers.menu"/>

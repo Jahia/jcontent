@@ -16,7 +16,6 @@ class Actions extends React.Component {
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
         const actions = _.sortBy(_.map(actionsToDisplayKeys, key => {return {...actionsRegistry[key], actionKey: key}}), "priority");
         return _.map(actions, action => {
-
             let ctx = _.clone(context);
             let {actionKey, requiredPermission, showOnNodeTypes, hideOnNodeTypes, retrieveProperties, requireModuleInstalledOnSite} = action;
             if (retrieveProperties != null) {
@@ -32,9 +31,14 @@ class Actions extends React.Component {
                 console.warn(`Unable to render action ${actionKey} because Action component ${ActionComponent} does not exists`);
                 return null;
             }
+
             return ActionComponent && (
-                <Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey}>
+                <Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey}  >
+                {/*<Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey} fetchPolicy={"network-only"}>*/}
                     {({loading, error, data}) => {
+                        if (loading) {
+                            return null;
+                        }
 
                         if (error) {
                             const message = t('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
@@ -59,6 +63,12 @@ class Actions extends React.Component {
                         ctx.actionPath = (ctx.actionPath ? ctx.actionPath : "") + "/" + actionKey;
                         ctx.node = node;
                         ctx.requirementQueryHandler = requirementQueryHandler;
+                        if (action.actionKey.indexOf("paste") !== -1) {
+                            console.log("done", data);
+                            // console.log(JSON.stringify(requirementQueryHandler.getQuery()));
+                            // console.log(JSON.stringify(requirementQueryHandler.getVariables()));
+                        }
+                        console.log(children);
                         return <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>
                             {children}
                         </ActionComponent>;

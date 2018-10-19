@@ -228,7 +228,7 @@ let defaultActions = {
         priority: 3.8,
         component: CopyAction,
         icon: "Copy",
-        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
+        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.copy",
         hideOnNodeTypes: ["jnt:page"]
@@ -237,7 +237,7 @@ let defaultActions = {
         priority: 3.8,
         component: PasteAction,
         icon: "Paste",
-        target: ["contextualMenuFilesAction"],
+        target: ["contextualMenuFilesAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.paste",
         hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
@@ -247,47 +247,37 @@ let defaultActions = {
         priority: 3.9,
         component: PasteAction,
         icon: "Paste",
-        target: ["contextualMenuFilesAction"],
+        target: ["contextualMenuFilesAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.paste",
         hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
         baseContentType: "jnt:folder"
     },
+    pasteContentFolder: {
+        priority: 3.9,
+        component: PasteAction,
+        icon: "Paste",
+        target: ["contextualMenuFoldersAction", "contentTreeMenuActions"],
+        requiredPermission: "jcr:addChildNodes",
+        labelKey: "label.contentManager.contentPreview.paste",
+        hideOnNodeTypes: ["jnt:page", "jnt:folder"],
+        baseContentType: "jnt:contentFolder"
+    },
     pasteContentFolderContent: {
         priority: 3.8,
         component: PasteAction,
         icon: "Paste",
-        target: ["contextualMenuFoldersAction"],
+        target: ["contextualMenuFoldersAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.paste",
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-        baseContentType: "jmix:editorialContent"
-    },
-    // pasteContentFolder: {
-    //     priority: 3.9,
-    //     component: PasteAction,
-    //     icon: "Paste",
-    //     target: ["contextualMenuFoldersAction"],
-    //     requiredPermission: "jcr:addChildNodes",
-    //     labelKey: "label.contentManager.contentPreview.paste",
-    //     hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-    //     baseContentType: "jnt:contentFolder"
-    // },
-    pastePageContent: {
-        priority: 3.8,
-        component: PasteAction,
-        icon: "Paste",
-        target: ["contextualMenuPagesAction"],
-        requiredPermission: "jcr:addChildNodes",
-        labelKey: "label.contentManager.contentPreview.paste",
-        hideOnNodeTypes: ["jnt:contentFolder", "jnt:folder"],
         baseContentType: "jmix:editorialContent"
     },
     cut: {
         priority: 3.9,
         component: CopyAction,
         icon: "Cut",
-        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],
+        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.cut",
         hideOnNodeTypes: ["jnt:page"]

@@ -12,7 +12,8 @@ class PasteAction extends React.Component {
 
     render() {
 
-        let {children, context, t, labelKey, notificationContext, ...rest} = this.props;
+        let {children, baseContentType, context, t, labelKey, notificationContext, ...rest} = this.props;
+        console.log("Paste", this.props);
 
         if (NodesInfo.getNodes().length === 0) {
             return null;
@@ -21,7 +22,7 @@ class PasteAction extends React.Component {
         const node = NodesInfo.getNodes()[0];
         const allowedChildren = context.node.allowedChildNodeTypes;
 
-        if (!this.pasteAllowed(allowedChildren, node.primaryNodeType)) {
+        if (!this.pasteAllowed(allowedChildren, baseContentType, node.primaryNodeType)) {
             return null;
         }
 
@@ -72,7 +73,11 @@ class PasteAction extends React.Component {
         )
     }
 
-    pasteAllowed(allowedTypes, pastedType) {
+    pasteAllowed(allowedTypes, baseChildType, pastedType) {
+        if (baseChildType === pastedType) {
+            return true;
+        }
+
         return allowedTypes.find((entry) => {
             if (entry.supertypes.find((e) => { return e.name === pastedType})) {
                 return true;

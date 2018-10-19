@@ -19,6 +19,7 @@ import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATES} from "../redux/actions";
 import Loadable from "react-loadable";
+import {ellipsizeText} from "../utils.js";
 
 const styles = theme => ({
     root: {
@@ -40,22 +41,19 @@ const styles = theme => ({
     previewContainer: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: 550,
-        justifyContent: 'center',
-        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
-        height: 'calc(100vh - 28px)',
+        height: 'calc(100vh - 155px)',
+        border: "none"
     },
     previewContainerFullScreen: {
         width: '100vw',
-        justifyContent: 'center',
-        color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
-        padding: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 28px)',
+        border: "none"
         },
     previewContainerPdf: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
@@ -251,7 +249,7 @@ class ContentPreview extends React.Component {
                     <Grid container spacing={0}>
                         <Grid container item xs={8} className={classes.titleBar}>
                             <div className={classes.contentTitle}>
-                                {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
+                                {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
                             </div>
                         </Grid>
                         <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
@@ -260,7 +258,7 @@ class ContentPreview extends React.Component {
                             {this.screenModeButtons(handleFullScreen, classes)}
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid container item xs={12}>
                         <div className={classes.contentSubTitle}>
                             <PublicationInfo/>
                         </div>
@@ -299,8 +297,8 @@ class ContentPreview extends React.Component {
                     <Grid container spacing={0}>
                         <Grid container item xs={8} className={classes.titleBar}>
                             <div className={classes.contentTitle}>
-                                {selectedItem.displayName ? this.ellipsisText(selectedItem.displayName) : this.ellipsisText(selectedItem.name)}
-                                </div>
+                                {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
+                            </div>
                         </Grid>
                         <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
                             {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'default')}
@@ -347,7 +345,6 @@ class ContentPreview extends React.Component {
         const {classes, t, dxContext} = this.props;
         let displayValue = data ? data.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
         const assets = data ? data.nodeByPath.renderedContent.staticAssets : [];
-        console.log(assets);
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
@@ -373,27 +370,49 @@ class ContentPreview extends React.Component {
             }
         } else {
             return <React.Fragment>
-                { this.css(assets) }
-                <div
-                    id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}
-                    dangerouslySetInnerHTML={{__html: displayValue}} />
+                <iframe id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
+                {this.iframeLoadContent(assets, displayValue)}
             </React.Fragment>
         }
     }
 
+    iframeLoadContent(assets, displayValue) {
+        setTimeout(()=>{
+            let iframe = document.getElementById("previewContent");
+            let frameDoc = iframe.document;
+            if (iframe.contentWindow) {
+                frameDoc = iframe.contentWindow.document;
+            }
+            frameDoc.open();
+            frameDoc.writeln(displayValue);
+            frameDoc.close();
+            if (assets != null) {
+                let iframeHeadEl = frameDoc.getElementsByTagName("head")[0];
+                for(let i in assets) {
+                    let linkEl = document.createElement("link");
+                    linkEl.setAttribute("rel", "stylesheet");
+                    linkEl.setAttribute("type", "text/css");
+                    linkEl.setAttribute("href", assets[i].key);
+                    iframeHeadEl.appendChild(linkEl);
+                }
+            }
+
+        },200);
+        return null;
+    }
     downloadButton(selectedItem, workspace) {
-        let {classes} = this.props;
+        let {classes, dxContext} = this.props;
         if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {
             return <a className={classes.colorIcon}
                       title="download"
                       target="_blank"
-                      href={`/files/${workspace}${selectedItem.path}`}>
+                      href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}>
                 <CloudDownload/>
             </a>
         } else {
             return <a className={classes.colorIcon}
                       title="download"
-                      href={`/files/${workspace}${selectedItem.path}`}
+                      href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
                       download>
                 <CloudDownload/>
             </a>
@@ -463,24 +482,7 @@ class ContentPreview extends React.Component {
     }
 
     ellipsisText(text) {
-        let {t} = this.props;
-        if (text !== undefined && text.length > 50) {
-            let subtext = text.substring(0, 50);
-            let words = subtext.split(" ");
-            let allWords = text.split(" ");
-            words[words.length-1] = allWords[words.length-1];
-            return t("label.ellipsis", {text: words.join(" ")})
-        } else {
-            return text;
-        }
-    }
-
-    css(scripts) {
-        const css = [];
-        for (let index in scripts) {
-            css.push(<link key={`cssAsset${index}`} rel="stylesheet" type="text/css" href={ scripts[index].key } />);
-        }
-        return css;
+        return ellipsizeText(text, 50);
     }
 }
 

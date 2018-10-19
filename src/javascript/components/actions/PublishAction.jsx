@@ -5,7 +5,8 @@ import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import connect from "react-redux/es/connect/connect";
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {hasMixin} from "../utils.js";
+import {hasMixin, ellipsizeText} from "../utils.js";
+import {translate} from "react-i18next";
 
 class PublishAction extends React.Component {
 
@@ -48,7 +49,7 @@ class PublishAction extends React.Component {
 
     render() {
 
-        const {call, notificationContext, children, context, allLanguages, allSubTree, checkForUnpublication, checkIfLanguagesMoreThanOne, ...rest} = this.props;
+        const {call, notificationContext, children, context, allLanguages, allSubTree, checkForUnpublication, checkIfLanguagesMoreThanOne, labelKey, t, ...rest} = this.props;
 
         if (!checkForUnpublication && hasMixin(context.node, "jmix:markedForDeletion")) {
             return null;
@@ -74,11 +75,10 @@ class PublishAction extends React.Component {
                         return <ProgressOverlay/>;
                     }
 
-                    const display = !checkIfLanguagesMoreThanOne || (checkIfLanguagesMoreThanOne && data.jcr.result.site.languages.length > 1);
-                    const currentLangLabel = this.getLanguageLabel(data.jcr.result.site.languages, this.props.language);
+                    let display = !checkIfLanguagesMoreThanOne || (checkIfLanguagesMoreThanOne && data.jcr.result.site.languages.length > 1);
                     return display ? children({
                         ...rest,
-                        labelParams: {language: this.uppercaseFirst(currentLangLabel.displayName)},
+                        labelHtml: t(labelKey, {displayName: _.escape(ellipsizeText(ctx.displayName, 40)), language: _.escape(this.uppercaseFirst(this.getLanguageLabel(data.jcr.result.site.languages, this.props.language).displayName))}),
                         onClick: () => call(ctx)
                     }) : null;
                 }
@@ -95,6 +95,7 @@ const mapStateToProps = state => {
 };
 
 PublishAction = _.flowRight(
+    translate(),
     withNotifications(),
     connect(mapStateToProps)
 )(PublishAction);

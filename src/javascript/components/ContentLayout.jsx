@@ -25,7 +25,7 @@ import CmSearchControlBar from "./CmSearchControlBar";
 import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 import Constants from "./constants";
-import {setRefetcher, triggerRefetch, refetchTypes} from './refetches';
+import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
 import ContextualMenu from './contextualMenu/contextualMenu';
 
 const drawerWidth = 260;
@@ -182,18 +182,15 @@ class ContentLayout extends React.Component {
     };
 
     setContentRefetcher = refetchingData => {
-        setRefetcher(refetchTypes.CONTENT_DATA, refetchingData);
+        setContentListDataRefetcher(refetchingData);
     };
 
     setTreeRefetcher = type => {
         return (refetchingData) => setRefetcher(type, refetchingData);
     };
 
-    refreshContentsAndTree(contentTreeConfigs) {
-        triggerRefetch(refetchTypes.CONTENT_DATA);
-        contentTreeConfigs.forEach((config) => {
-            triggerRefetch(config.key);
-        });
+    refreshContentsAndTree() {
+        refetchContentTreeAndListData();
     }
 
     handleSort(order, orderBy){

@@ -176,6 +176,7 @@ const styles = theme => ({
     },
     list: {
         paddingTop: '0!important',
+        height: '100vh'
     },
     listItem: {
         display: 'block',

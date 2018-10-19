@@ -26,6 +26,7 @@ import {Provider} from 'react-redux'
 import getStore from './redux/getStore';
 import ListAction from "./actions/ListAction";
 import Constants from "./constants";
+import {PushEventHandler} from "./PushEventHandler";
 
 const actionComponents = {
     callAction: CallAction,
@@ -114,6 +115,7 @@ class ContentManager extends React.Component {
                                 return (
                                     <Provider store={this.getStore(dxContext, t)}>
                                         <DxContext.Provider value={dxContext}>
+                                            <PushEventHandler/>
                                             <ConnectedRouter history={this.getHistory(dxContext, t)} >
                                                 <Route path="/:siteKey/:lang" render={props => {
                                                     dxContext["lang"] = props.match.params.lang;

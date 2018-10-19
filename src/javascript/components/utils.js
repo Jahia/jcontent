@@ -1,6 +1,5 @@
 import * as _ from "lodash";
-import Constants from "./constants";
-import {triggerRefetch} from "./refetches.js";
+import ellipsize from "ellipsize";
 
 function hasMixin(node, mixin) {
     let mixinTypesProperty = _.find(node.properties, property => property.name === 'jcr:mixinTypes');
@@ -21,14 +20,12 @@ function extractPaths(siteKey, path, mode) {
     return paths;
 }
 
-function refetchContentTreeData() {
-    _.forOwn(Constants.contentTreeConfigs, function(cfg) {
-        triggerRefetch(cfg.key);
-    });
+function ellipsizeText(text, maxLength) {
+    return ellipsize(text, maxLength || 100, { chars: [' ', '&']});
 }
 
 export {
     hasMixin,
     extractPaths,
-    refetchContentTreeData
+    ellipsizeText
 };

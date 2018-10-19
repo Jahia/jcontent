@@ -50,6 +50,11 @@ const styles = theme => ({
     inputShadow: {
         boxShadow: 'none',
     },
+    replaceButtonStyle: {
+        minHeight: 32,
+        maxHeight: 32,
+        height: 32,
+    }
 });
 
 class CmSearchBar extends React.Component {
@@ -132,12 +137,14 @@ class CmSearchBarNormal extends React.Component {
             onSearch={() => this.onSearch(path, params, this.state.contentType)}
             rightFooter={
                 <React.Fragment>
-                    {!params.searchTerms &&
+                    {!params.searchTerms ?
                         <ActionButton
                             label={'label.contentManager.search.sql2'}
                             onClick={onSql2Click}
                             cmRole={'search-type-sql2search'}
                         />
+                        :
+                        <div className={classes.replaceButtonStyle}/>
                     }
                 </React.Fragment>
             }
@@ -196,12 +203,14 @@ class CmSearchBarSql2 extends React.Component {
                 />;
             }}</DxContext.Consumer>}
             rightFooter={<React.Fragment>
-                {!params.sql2SearchFrom &&
+                {!params.sql2SearchFrom ?
                     <ActionButton
                         label={'label.contentManager.search.normal'}
                         onClick={onNormalClick}
                         cmRole={'search-type-normal'}
                     />
+                    :
+                    <div className={classes.replaceButtonStyle}/>
                 }
                 </React.Fragment>}
         >

@@ -6,8 +6,7 @@ import NodesInfo from './nodesInfo';
 import Node from './node';
 import { pasteNode, moveNode } from "./gqlMutations";
 import {Mutation} from 'react-apollo';
-import {triggerRefetch, refetchTypes} from '../refetches';
-import {refetchContentTreeData} from '../utils';
+import {refetchContentTreeAndListData} from '../refetches';
 
 class PasteAction extends React.Component {
 
@@ -41,8 +40,7 @@ class PasteAction extends React.Component {
                                         destName: node.displayName
                                     }}).then(() => {
                                     notificationContext.notify(`Pasted`);
-                                    refetchContentTreeData();
-                                    triggerRefetch(refetchTypes.CONTENT_DATA);
+                                    refetchContentTreeAndListData();
                                 })
                             }
                         });
@@ -65,8 +63,7 @@ class PasteAction extends React.Component {
                                     destName: node.displayName
                                 }}).then(() => {
                                     notificationContext.notify(`Pasted`);
-                                    refetchContentTreeData();
-                                    triggerRefetch(refetchTypes.CONTENT_DATA);
+                                    refetchContentTreeAndListData();
                             })
                         }
                     });

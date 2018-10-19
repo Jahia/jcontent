@@ -1,5 +1,5 @@
 import React from 'react';
-import {cmGoto} from "../redux/actions";
+import {CM_PREVIEW_STATES, cmGoto, cmSetPreviewState} from "../redux/actions";
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
 
@@ -7,7 +7,7 @@ class RouterAction extends React.Component {
 
     render() {
 
-        const {children, context, mode, siteKey, language, handleDrawerClose, setUrl, ...rest} = this.props;
+        const {children, context, mode, siteKey, language, handleDrawerClose, setUrl, setPreviewState, ...rest} = this.props;
 
         return children({
             ...rest,
@@ -24,6 +24,7 @@ class RouterAction extends React.Component {
                     default:
                         pathSuffix = '';
                 }
+                setPreviewState(CM_PREVIEW_STATES.HIDE);
                 setUrl(siteKey, language, mode, (mode === "apps" ? context.actionPath : `/sites/${siteKey}${pathSuffix}`), {});
                 return null;
             }
@@ -32,7 +33,10 @@ class RouterAction extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
+    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params})),
+    setPreviewState: (state) => {
+        dispatch(cmSetPreviewState(state))
+    }
 });
 
 const mapStateToProps = (state, ownProps) => ({

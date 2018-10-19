@@ -60,7 +60,7 @@ class ContentData extends React.Component {
 
         let stateModificationDone = false;
 
-        if (operation == "create") {
+        if (operation === "create") {
 
             let parentPath = nodePath.substring(0, nodePath.lastIndexOf("/"));
             if (nodeType === "jnt:folder" || nodeType === "jnt:contentFolder") {
@@ -77,7 +77,7 @@ class ContentData extends React.Component {
                 }
             }
 
-        } else if (operation == "delete") {
+        } else if (operation === "delete") {
 
             // Switch to ancestor node in case of currently selected node deletion.
             if (path.startsWith(nodePath)) {
@@ -97,6 +97,20 @@ class ContentData extends React.Component {
                 let newSelection = _.clone(selection);
                 _.remove(newSelection, node => node.path == nodePath);
                 setSelection(newSelection);
+                stateModificationDone = true;
+            }
+        } else if (operation === "update") {
+
+            //update node
+            let name = path.substring(path.lastIndexOf("/")+1, path.length);
+            if(name !== nodeName){
+                let ancestorPath = path.substring(0, path.lastIndexOf("/")+1);
+                let newPath = ancestorPath.concat(nodeName);
+                setPath(newPath);
+                if (!_.includes(openedPaths, newPath)) {
+                    _.remove(openedPaths, openedPath => (openedPath === path || _.includes(openedPath, path.concat("/"))));
+                    openPaths(extractPaths(siteKey, newPath, mode));
+                }
                 stateModificationDone = true;
             }
         }

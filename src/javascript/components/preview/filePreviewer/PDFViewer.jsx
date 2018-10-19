@@ -7,18 +7,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 
 const PDFContainer = styled.div`
-    height:350;
+    height:100%;
     margin: 5px;
     display: flex;
     div {
         position:relative;
         width: 100%;
+        maxHeight: 350px;
         max-width: 100%;
         overflow: auto;
         margin: 0 auto;
     }
+    canvas {
+        height: 100%;
+    }
     div > canvas {
         position:relative;
+       
         width: 100%;
         max-width: 100%;
         display: block;
@@ -52,12 +57,12 @@ const ZoomScaleDisplay = styled.div`
     z-index: 1300;
     top: 85px;
     right: 20px;
-    background-color: #4c4c4ddb;
+    background-color: # ;
     width: 60px !important;
     text-align: center;
     height: 30px;
     padding-top: 7px;
-    color: white;
+    color: #454545;
     font-family: sans-serif;
     font-weight: 700;
     border-radius: 5px;
@@ -73,6 +78,9 @@ const styles = theme => ({
         alignSelf: 'center',
         margin: 'auto',
         background: 'transparent'
+    },
+    colorPagination:{
+      color: theme.palette.background.default,
     },
     controlRight: {
         flex: 1,
@@ -163,23 +171,31 @@ class PDFViewer extends React.Component {
     renderPagination = () => {
         let {classes} = this.props;
         let {page, pages, scaleSize} = this.state;
-        let firstPageButton = <IconButton disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'first')}}>
+        let firstPageButton = <IconButton className={classes.colorPagination}
+                                          disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'first')}}>
             <FontAwesomeIcon size="xs" icon={"step-backward"}/>
         </IconButton>;
-        let lastPageButton = <IconButton disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'last')}}>
+        let lastPageButton = <IconButton className={classes.colorPagination}
+                                         disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'last')}}>
             <FontAwesomeIcon size="xs" icon={"step-forward"}/>
         </IconButton>;
-        let previousButton = <IconButton disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'previous')}}>
+        let previousButton = <IconButton className={classes.colorPagination}
+                                         disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'previous')}}>
             <FontAwesomeIcon size="xs" icon={"chevron-left"}/>
         </IconButton>;
-        let nextButton = <IconButton disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'next')}}>
+        let nextButton = <IconButton
+            className={classes.colorPagination}
+            disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'next')}}>
             <FontAwesomeIcon size="xs" icon={"chevron-right"}/>
         </IconButton>;
 
-        let zoomInButton = <IconButton disabled={scaleSize === scaleSizes.length-1} onClick={(event) => {this.handleZoom(event, 'in')}}>
+        let zoomInButton = <IconButton
+            className={classes.colorPagination}
+            disabled={scaleSize === scaleSizes.length-1} onClick={(event) => {this.handleZoom(event, 'in')}}>
             <FontAwesomeIcon size="xs" icon={"search-plus"}/>
         </IconButton>;
-        let zoomOutButton = <IconButton disabled={scaleSize === 0} onClick={(event) => {this.handleZoom(event, 'out')}}>
+        let zoomOutButton = <IconButton className={classes.colorPagination}
+                                        disabled={scaleSize === 0} onClick={(event) => {this.handleZoom(event, 'out')}}>
             <FontAwesomeIcon size="xs" icon={"search-minus"}/>
         </IconButton>;
         return (

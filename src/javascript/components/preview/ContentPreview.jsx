@@ -59,6 +59,7 @@ const styles = theme => ({
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: '100%',
         height: 'auto',
+        maxHeight: '530px',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,

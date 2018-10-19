@@ -1,6 +1,4 @@
 import * as _ from "lodash";
-import Constants from "./constants";
-import {triggerRefetch} from "./refetches.js";
 import ellipsize from "ellipsize";
 
 function hasMixin(node, mixin) {
@@ -22,12 +20,6 @@ function extractPaths(siteKey, path, mode) {
     return paths;
 }
 
-function refetchContentTreeData() {
-    _.forOwn(Constants.contentTreeConfigs, function(cfg) {
-        triggerRefetch(cfg.key);
-    });
-}
-
 function ellipsizeText(text, maxLength) {
     return ellipsize(text, maxLength || 100, { chars: [' ', '&']});
 }
@@ -35,6 +27,5 @@ function ellipsizeText(text, maxLength) {
 export {
     hasMixin,
     extractPaths,
-    refetchContentTreeData,
     ellipsizeText
 };

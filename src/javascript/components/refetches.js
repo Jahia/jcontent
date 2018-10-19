@@ -1,3 +1,4 @@
+import Constants from "./constants";
 /**
  * Apollo's Query component allows one to use refetch function to rerun a query bound to the component.
  * The purpose of this code is to be able to create hooks to refetch functions and call them outside of Query components.
@@ -8,16 +9,24 @@
 
 const refetches = {};
 
-export const refetchTypes = {
+const refetchTypes = {
     "CONTENT_DATA": "CONTENT_DATA",
     "ACTIVE_WORKFLOW_TASKS": "ACTIVE_WORKFLOW_TASKS"
 };
 
-export const setRefetcher = (name, refetcherData) => {
+let setRefetcher = (name, refetcherData) => {
     refetches[name] = refetcherData;
 };
 
-export const triggerRefetch = (name, queryParams) => {
+let setActiveWorkflowTaskRefetcher = (refetcherData) => {
+    setRefetcher(refetchTypes.ACTIVE_WORKFLOW_TASKS, refetcherData);
+};
+
+let setContentListDataRefetcher = (refetcherData) => {
+    setRefetcher(refetchTypes.CONTENT_DATA, refetcherData);
+};
+
+let triggerRefetch = (name, queryParams) => {
     let refetch = refetches[name];
     if (!refetch) {
         return;
@@ -28,3 +37,36 @@ export const triggerRefetch = (name, queryParams) => {
         refetch.refetch();
     }
 };
+
+let refetchActiveWorkflowTasks = () => {
+    triggerRefetch(refetchTypes.ACTIVE_WORKFLOW_TASKS);
+};
+
+let refetchContentListData = () => {
+    triggerRefetch(refetchTypes.CONTENT_DATA);
+};
+
+let refetchContentTreeData = () => {
+    _.forOwn(Constants.contentTreeConfigs, function(cfg) {
+        triggerRefetch(cfg.key);
+    });
+};
+
+let refetchContentTreeAndListData = () => {
+    refetchContentTreeData();
+    refetchContentListData();
+};
+
+export {
+    refetchTypes,
+
+    setRefetcher,
+    setActiveWorkflowTaskRefetcher,
+    setContentListDataRefetcher,
+
+    triggerRefetch,
+    refetchActiveWorkflowTasks,
+    refetchContentListData,
+    refetchContentTreeData,
+    refetchContentTreeAndListData
+}

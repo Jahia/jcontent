@@ -8,10 +8,10 @@ import Node from './node';
 class CopyAction extends React.Component {
 
     render() {
-        let {children, context, labelKey, actionKey, ...rest} = this.props;
+        let {children, context, actionKey, ...rest} = this.props;
         return children({
                         ...rest,
-                        labelKey: labelKey,
+                        actionKey: actionKey,
                         onClick: () => {
                             const {path, uuid, nodeName, displayName, primaryNodeType} = context;
                             NodesInfo.removeAll();

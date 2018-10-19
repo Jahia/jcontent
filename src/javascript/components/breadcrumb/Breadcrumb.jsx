@@ -31,21 +31,16 @@ const styles = theme => ({
             backgroundColor: "transparent !important",
         },
     },
-    contentIcon: {
-        paddingRight: "10px"
+    contentLabel: {
+        paddingLeft: "10px"
     },
-    chevronIcon: {
+    betweenIcon: {
         verticalAlign: "bottom",
         position: "relative",
         bottom: "6px"
     },
     menu: {
         background: 'red'
-    },
-    moreHoriz : {
-        fill: '#d7dce0',
-        marginBottom: '-7px'
-
     },
     divider:{
         border: 'inset',
@@ -151,7 +146,7 @@ class BreadcrumbDisplay extends React.Component {
             <MenuItemContainer key={"dropdown_" + node.uuid}>
                 <MenuItem className={classes.menuItemHeader} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, node)}>
                     {this.renderIcon(node)}
-                    <MenuItemLabel>
+                    <MenuItemLabel className={classes.contentLabel}>
                         {node.name}
                     </MenuItemLabel>
                 </MenuItem>
@@ -164,9 +159,9 @@ class BreadcrumbDisplay extends React.Component {
                     return null;
                 }
                 return <MenuItemContainer key={siblingNode.uuid}>
-                    <MenuItem className={classes.menuItem} onClick={(event) => this.onMenuItemSelected(event, siblingNode)}>
+                    <MenuItem className={classes.menuItem} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, siblingNode)}>
                         {this.renderIcon(siblingNode)}
-                        <MenuItemLabel>
+                        <MenuItemLabel className={classes.contentLabel}>
                             {siblingNode.name}
                         </MenuItemLabel>
                     </MenuItem>
@@ -188,7 +183,9 @@ class BreadcrumbDisplay extends React.Component {
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(node)}
                 {!trimLabel &&
-                    ellipsizeText(node.name, MAX_LABEL_LENGTH)
+                    <span className={classes.contentLabel}>
+                        {ellipsizeText(node.name, MAX_LABEL_LENGTH)}
+                    </span>
                 }
             </Button>;
         } else {
@@ -205,7 +202,9 @@ class BreadcrumbDisplay extends React.Component {
                 onMouseOver={this.onMenuButtonActivatorEnter}>
                 {this.renderIcon(node)}
                 {!trimLabel &&
-                    ellipsizeText(node.name, MAX_LABEL_LENGTH)
+                    <span className={classes.contentLabel}>
+                        {ellipsizeText(node.name, MAX_LABEL_LENGTH)}
+                    </span>
                 }
             </Button>;
         }
@@ -218,10 +217,10 @@ class BreadcrumbDisplay extends React.Component {
                 return <icons.VirtualsiteIcon/>;
             case "jnt:folder":
             case "jnt:contentFolder":
-                return <Folder className={classes.contentIcon}/>;
+                return <Folder/>;
             case "jnt:page" :
             default:
-                return <PageIcon className={classes.contentIcon}/>;
+                return <PageIcon/>;
         }
     }
 
@@ -270,39 +269,58 @@ class Breadcrumb extends React.Component {
     }
 
     render() {
+
         let {classes, mode} = this.props;
         let {breadcrumbs} = this.state;
+
+        if (_.isEmpty(breadcrumbs)) {
+            return null;
+        }
+
+        // There is an issue likely originating from the Picker component that the first element of the array is empty when browsing files or content folders.
+        // Remove that first element if so.
+        if (breadcrumbs[0] == null) {
+            breadcrumbs = _.tail(breadcrumbs);
+        }
+
+        let firstVisibleIndex = 1;
+        if (breadcrumbs.length > MAX_TOTAL_ITEMS_ON_CUT_DISPLAY) {
+            firstVisibleIndex += (breadcrumbs.length - MAX_TOTAL_ITEMS_ON_CUT_DISPLAY);
+        }
+
         return <div>
+
+            {/* The very first element is always visible. */}
+            {this.generateBreadcrumbItem(breadcrumbs, 0)}
+
+            {/* Render an ellipsis in case we are about to cut any intermediate breadcrumb items. */}
+            {firstVisibleIndex > 1 &&
+                <MoreHoriz className={classes.betweenIcon}/>
+            }
+
             {breadcrumbs.map((breadcrumb, i) => {
-                let trimLabel = false;
-                if (breadcrumbs.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) {
-                    if (i > breadcrumbs.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY) {
-                        return <span key={breadcrumb.uuid}>
-                            <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} node={breadcrumb} trimLabel={false}/>
-                            {i < breadcrumbs.length - 1 &&
-                                <ChevronRightIcon className={classes.chevronIcon}/>
-                            }
-                            {((mode === 'browse' && i === 0) || (mode === 'browse-files' && i === 1)) &&
-                                <span>
-                                    <MoreHoriz className={classes.moreHoriz}/>
-                                    <ChevronRightIcon className={classes.chevronIcon}/>
-                                </span>
-                            }
-                        </span>;
-                    } else if (i > breadcrumbs.length - MAX_TOTAL_ITEMS_ON_CUT_DISPLAY) {
-                        trimLabel = true;
-                    } else {
-                        return null;
-                    }
+                if (i < firstVisibleIndex) {
+                    return null;
                 }
-                return <span key={breadcrumb.uuid}>
-                    <BreadcrumbDisplay id={breadcrumb.uuid} handleSelect={this.props.handleSelect} node={breadcrumb} trimLabel={trimLabel}/>
-                    {i < breadcrumbs.length - 1 &&
-                        <ChevronRightIcon className={classes.chevronIcon}/>
-                    }
-                </span>;
+                return this.generateBreadcrumbItem(breadcrumbs, i);
             })}
         </div>;
+    }
+
+    generateBreadcrumbItem(items, itemIndex) {
+        let {handleSelect, classes} = this.props;
+        let item = items[itemIndex];
+        return <span key={item.uuid}>
+            <BreadcrumbDisplay
+                id={item.uuid}
+                handleSelect={handleSelect}
+                node={item}
+                trimLabel={(items.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) && (itemIndex < items.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY)}
+            />
+            {itemIndex < items.length - 1 &&
+                <ChevronRightIcon className={classes.betweenIcon}/>
+            }
+        </span>;
     }
 
     static splitPath(path, type) {

@@ -28,6 +28,7 @@ import Constants from "./constants";
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
 import ContextualMenu from './contextualMenu/contextualMenu';
 import PasteActionButton from './copyPaste/PasteActionButton';
+import Icon from "./icons/Icon";
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -61,11 +62,11 @@ const styles = theme => ({
         textAlign: 'right'
     },
     showTreeButton: {
-        color: 'pink',
+        color: '#F5F5F5',
         padding: '0 5 0 0',
     },
     refreshButton: {
-        color: 'pink',
+        color: '#F5F5F5',
         padding: 0,
     },
     showTree: {
@@ -282,10 +283,12 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
+                                    <Icon name={'folder'} fill={'#F5F5F5'}/>
                                     {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                                 </Button>
                             }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                                <Icon name={'refresh'} fill={'#F5F5F5'}/>
                                 {t("label.contentManager.refresh")}
                             </Button>
                             {this.isSearching() &&

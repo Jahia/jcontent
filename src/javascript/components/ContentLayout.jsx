@@ -276,7 +276,7 @@ class ContentLayout extends React.Component {
                                 <React.Fragment>
                                     { NodesInfoForCopyPaste.getNodes().length > 0
                                     && <Actions menuId={"copyPasteActions"} context={{path: path}} className={classes.ButtonAction}>
-                                        {(props) => { console.log("RRR"); return <CmButton text={true} {...props} />}}
+                                        {(props) => <CmButton text={true} {...props} />}
                                     </Actions>
                                     }
                                     <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>

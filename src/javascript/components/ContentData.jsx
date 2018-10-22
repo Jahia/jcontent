@@ -90,7 +90,23 @@ class ContentData extends React.Component {
                 setSelection(newSelection);
                 stateModificationDone = true;
             }
+        } else if (operation === "update") {
+            //update node
+            let name = nodePath.substring(nodePath.lastIndexOf("/")+1, nodePath.length);
+            //this condition ensures that we're on a specific case : editing a page and not a content as the two operations
+            // are "update", it ensures also we're not on delete (1st step) or undelete, that are considered as "update" operations
+            if(name !== nodeName && nodePath === path){
+                let ancestorPath = nodePath.substring(0, nodePath.lastIndexOf("/")+1);
+                let newPath = ancestorPath.concat(nodeName);
+                setPath(newPath);
+                if (!_.includes(openedPaths, newPath)) {
+                    _.remove(openedPaths, openedPath => (openedPath === path || _.includes(openedPath, path.concat("/"))));
+                    openPaths(extractPaths(siteKey, newPath, mode));
+                }
+                stateModificationDone = true;
+            }
         }
+
 
         if (stateModificationDone) {
             // In case of any state modifications, wait a second to let components re-render and perform GrpaphQL requests asynchronously,

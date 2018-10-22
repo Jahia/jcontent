@@ -12,6 +12,7 @@ import {connect} from "react-redux";
 import * as _ from 'lodash';
 import actionsRegistry from "./actionsRegistry";
 import CmLeftDrawerContent from "./CmLeftDrawerContent";
+import Icon from "./icons/Icon";
 
 export const drawerWidth = 289;
 // TODO this styles should be provided by the theme / new structure when available
@@ -272,7 +273,7 @@ class CMLeftNavigation extends React.Component {
                                 <CmLeftMenuItem
                                     {...props}
                                     drawer={this.state.openDrawer}
-                                    icon={<Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}
+                                    icon={props.customIcon ? <Icon name={props.customIcon.name} viewBox={props.customIcon.viewBox} fill={this.state.openDrawer ? '#504e4d' : '#F5F5F5'}/> : <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}
                                 />
                             }
                         </Actions>
@@ -288,7 +289,7 @@ class CMLeftNavigation extends React.Component {
                                 bottom={true}
                                 badge={props.badge}
                                 drawer={this.state.openDrawer}
-                                icon={<Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}
+                                icon={props.customIcon ? <Icon name={props.customIcon.name} viewBox={props.customIcon.viewBox} fill={this.state.openDrawer ? '#504e4d' : '#F5F5F5'}/> : <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}
                             />
                         }
                     </Actions>

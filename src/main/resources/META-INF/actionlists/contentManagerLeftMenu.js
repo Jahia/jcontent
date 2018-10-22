@@ -7,12 +7,14 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
         component: "routerAction",
         mode : "browse",
         menuId: "leftMenuContentActions",
+        customIcon: {name: 'content', viewBox: '0 0 512 512'},
         target: ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.content',
     },
     mediaLeftMenu: {
         priority : 2.0,
         component: "routerAction",
+        customIcon: {name: 'media', viewBox: '0 0 512 512'},
         mode : "browse-files",
         menuId : "leftMenuMediaActions",
         target: ["leftMenuActions"],
@@ -30,6 +32,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
     manageLeftMenu : {
         priority : 5.0,
         component: "sideMenuAction",
+        customIcon: {name: 'manage'},
         menuId : "leftMenuManageActions",
         target : ["leftMenuActions"],
         labelKey: 'label.contentManager.leftMenu.manage.title',
@@ -45,6 +48,7 @@ contextJsParameters['config'].actions = Object.assign(contextJsParameters['confi
     workflowsLeftMenu: {
         priority : 6.0,
         component: "workflowDashboardAction",
+        customIcon: {name: 'workflow', viewBox: '0 0 512 512'},
         call: openWorkflowDashboard,
         requiredPermission: "",
         target: ["leftMenuBottomAction"],

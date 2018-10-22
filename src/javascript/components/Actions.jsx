@@ -15,6 +15,7 @@ class Actions extends React.Component {
         const {lang, menuId, context, children, t, notificationContext, siteKey, ...rest} = this.props;
         const actionsToDisplayKeys = _.sortBy(_.filter(Object.keys(actionsRegistry), actionKey => _.includes(actionsRegistry[actionKey].target, menuId)), "priority");
         const actions = _.sortBy(_.map(actionsToDisplayKeys, key => {return {...actionsRegistry[key], actionKey: key}}), "priority");
+
         return _.map(actions, action => {
             let ctx = _.clone(context);
             let {actionKey, requiredPermission, showOnNodeTypes, hideOnNodeTypes,

@@ -27,6 +27,7 @@ import {connect} from "react-redux";
 import Constants from "./constants";
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
 import ContextualMenu from './contextualMenu/contextualMenu';
+import NodesInfoForCopyPaste from './copyPaste/nodesInfo';
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -272,9 +273,16 @@ class ContentLayout extends React.Component {
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
-                                <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
-                                    {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
-                                </Actions>
+                                <React.Fragment>
+                                    { NodesInfoForCopyPaste.getNodes().length > 0
+                                    && <Actions menuId={"copyPasteActions"} context={{path: path}} className={classes.ButtonAction}>
+                                        {(props) => { console.log("RRR"); return <CmButton text={true} {...props} />}}
+                                    </Actions>
+                                    }
+                                    <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
+                                        {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
+                                    </Actions>
+                                </React.Fragment>
                             }
                             {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>

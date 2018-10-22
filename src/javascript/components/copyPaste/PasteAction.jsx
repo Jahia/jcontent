@@ -13,7 +13,6 @@ class PasteAction extends React.Component {
     render() {
 
         let {children, baseContentType, context, t, labelKey, notificationContext, ...rest} = this.props;
-        console.log("Paste", this.props);
 
         if (NodesInfo.getNodes().length === 0) {
             return null;

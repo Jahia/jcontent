@@ -285,7 +285,7 @@ class ContentListTable extends React.Component {
                                     let renderWip = this.renderWip(n, dxContext);
                                     let renderLock = this.renderLock(n);
                                     let icon = this.addIconSuffix(n.icon);
-                                        return (
+                                    return (
                                         <TableRow
                                             hover={true}
                                             className={(key % 2 === 0) ? classes.row : classes.rowPair}
@@ -303,7 +303,7 @@ class ContentListTable extends React.Component {
                                                        data-cm-role="table-content-list-cell-publication">
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
-                                                {/*<PublicationStatus node={n} publicationInfoWidth={400}/>*/}
+                                            {/*<PublicationStatus node={n} publicationInfoWidth={400}/>*/}
                                             {columnData.map(column => {
                                                 if (column.id === 'wip') {
                                                     return <TableCell className={classes.actionCell} key={column.id}

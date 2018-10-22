@@ -19,7 +19,10 @@ const PDFContainer = styled.div`
         margin: 0 auto;
     }
     canvas {
-        height: 100%;
+        max-height: 550px;
+        height: 550px;
+        max-width: 550px;
+        width: 550px;
     }
     div > canvas {
         position:relative;
@@ -48,7 +51,20 @@ const PDFContainerFull = styled.div`
 const Controls = styled.div`
     width:100%;
     height: 48px;
-    background: #eeeeee96;
+    position: absolute;
+    bottom: 98;
+    opacity: 0.9;
+    background: #f5f5f5;
+    display: flex;
+`;
+
+const ControlsFullScreen = styled.div`
+    width:100vw;
+    height: 48px;
+    position: absolute;
+    bottom: 117;
+    opacity: 0.9;
+    background: #f5f5f5;
     display: flex;
 `;
 
@@ -168,7 +184,7 @@ class PDFViewer extends React.Component {
             return {scaleSize: newScaleSize, showScale: true}
         });
     };
-    renderPagination = () => {
+    renderPagination = (fullScreen) => {
         let {classes} = this.props;
         let {page, pages, scaleSize} = this.state;
         let firstPageButton = <IconButton className={classes.colorPagination}
@@ -199,20 +215,40 @@ class PDFViewer extends React.Component {
             <FontAwesomeIcon size="xs" icon={"search-minus"}/>
         </IconButton>;
         return (
-            <Controls>
-                <Paper className={classes.controlLeft} elevation={0}/>
-                <Paper className={classes.controlCenter} elevation={0}>
-                    {firstPageButton}
-                    {previousButton}
-                    <span>{page}/{pages}</span>
-                    {nextButton}
-                    {lastPageButton}
-                </Paper>
-                <Paper className={classes.controlRight} elevation={0}>
-                    {zoomOutButton}
-                    {zoomInButton}
-                </Paper>
-            </Controls>
+            <div>
+            {!fullScreen ?
+                    <Controls>
+                        <Paper className={classes.controlLeft} elevation={0}/>
+                        <Paper className={classes.controlCenter} elevation={0}>
+                            {firstPageButton}
+                            {previousButton}
+                            <span>{page}/{pages}</span>
+                            {nextButton}
+                            {lastPageButton}
+                        </Paper>
+                        <Paper className={classes.controlRight} elevation={0}>
+                            {zoomOutButton}
+                            {zoomInButton}
+                        </Paper>
+                    </Controls>
+                    :
+                    <ControlsFullScreen>
+                        <Paper className={classes.controlLeft} elevation={0}/>
+                        <Paper className={classes.controlCenter} elevation={0}>
+                            {firstPageButton}
+                            {previousButton}
+                            <span>{page}/{pages}</span>
+                            {nextButton}
+                            {lastPageButton}
+                        </Paper>
+                        <Paper className={classes.controlRight} elevation={0}>
+                            {zoomOutButton}
+                            {zoomInButton}
+                        </Paper>
+                    </ControlsFullScreen>
+            }
+            </div>
+
         )
     };
 
@@ -223,7 +259,7 @@ class PDFViewer extends React.Component {
     render() {
         let {page, file, scaleSize, showScale} = this.state;
         let {classes, fullscreen} = this.props;
-        let pagination = this.renderPagination();
+        let pagination = this.renderPagination(fullscreen);
         return <div>
                 <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
             {fullscreen ?

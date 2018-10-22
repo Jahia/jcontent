@@ -267,7 +267,7 @@ class FileCard extends Component {
                 title={ node.name }
             />
             <div className={classes.details}>
-                <CardContent className={classes.content} classes={{ root: classes.cardContent}} style={{overflow: 'scroll', width: '100%'}}>
+                <CardContent className={classes.content} classes={{ root: classes.cardContent}} style={{width: '100%'}}>
                     {this.displayPublicationAction()}
                     {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.name") }</Typography>
@@ -298,7 +298,7 @@ class FileCard extends Component {
                 image={ `${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2` }
                 title={ node.name }
             />
-            <div className={classes.verticalDetails} style={{ flex: 1.5, overflow: 'scroll' }}>
+            <div className={classes.verticalDetails} style={{ flex: 1.5}}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content} classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction(classes.publishButtonAlternate)}
@@ -384,7 +384,7 @@ class FileCard extends Component {
                 {
                     fileIcon(node.path, '6x', {fontSize: "110px"})
                 }
-            <div className={classes.details} style={{overflow: 'scroll', height: '100%'}}>
+            <div className={classes.details} style={{height: '100%'}}>
                 <PublicationStatus node={ node } publicationInfoWidth={ PUBLICATION_INFO_WIDTH_SMALL }/>
                 <CardContent className={classes.content}  classes={{ root: classes.cardContent}}>
                     {this.displayPublicationAction(classes.publishButtonAlternate)}

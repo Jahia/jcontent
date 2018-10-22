@@ -99,6 +99,10 @@ const styles = theme => ({
     contentTitle: {
         textAlign: 'left',
         fontSize: '27px',
+        maxWidth: 360,
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
         paddingLeft: theme.spacing.unit,
         fontWeight: 100,
     },

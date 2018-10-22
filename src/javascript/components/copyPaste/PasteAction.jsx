@@ -39,6 +39,10 @@ class PasteAction extends React.Component {
                                         destParentPathOrId: context.path,
                                         destName: node.displayName
                                     }}).then(() => {
+                                    notificationContext.notify(
+                                        t("label.contentManager.copyPaste.success"),
+                                        ['closeButton']
+                                    );
                                     refetchContentTreeAndListData();
                                 })
                             }
@@ -61,6 +65,10 @@ class PasteAction extends React.Component {
                                     destParentPathOrId: context.path,
                                     destName: node.displayName
                                 }}).then(() => {
+                                    notificationContext.notify(
+                                        t("label.contentManager.copyPaste.success"),
+                                        ['closeButton']
+                                    );
                                     refetchContentTreeAndListData();
                             })
                         }
@@ -88,7 +96,6 @@ class PasteAction extends React.Component {
 const mapStateToProps = (state, ownProps) => {
     return state.copyPaste;
 };
-;
 
 PasteAction = _.flowRight(
     withNotifications(),

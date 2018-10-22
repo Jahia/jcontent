@@ -36,7 +36,6 @@ class Actions extends React.Component {
 
             return ActionComponent && (
                 <Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey} >
-                {/*<Query query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()} key={actionKey} fetchPolicy={"network-only"}>*/}
                     {({loading, error, data}) => {
                         if (error) {
                             const message = t('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});

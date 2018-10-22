@@ -60,7 +60,12 @@ const styles = theme => ({
         textAlign: 'right'
     },
     showTreeButton: {
-        color: 'pink'
+        color: 'pink',
+        padding: '0 5 0 0',
+    },
+    refreshButton: {
+        color: 'pink',
+        padding: 0,
     },
     showTree: {
         textAlign: 'right !important'
@@ -276,7 +281,7 @@ class ContentLayout extends React.Component {
                                     {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                                 </Button>
                             }
-                            <Button variant="text" className={classes.showTreeButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                            <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 {t("label.contentManager.refresh")}
                             </Button>
                             {this.isSearching() &&

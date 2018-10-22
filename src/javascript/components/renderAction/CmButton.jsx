@@ -11,6 +11,7 @@ const styles = theme => ({
         transition: "left 0.5s ease 0s",
     },
     button: {
+        padding: '0 10 0 0'
     },
     buttonText: {
         margin: theme.spacing.unit * 0,

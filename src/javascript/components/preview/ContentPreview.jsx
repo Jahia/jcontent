@@ -402,29 +402,34 @@ class ContentPreview extends React.Component {
         return null;
     }
     downloadButton(selectedItem, workspace) {
-        let {classes, dxContext} = this.props;
+        let {classes, dxContext, t} = this.props;
         if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {
             return <a className={classes.colorIcon}
                       title="download"
                       target="_blank"
                       href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}>
-                <CloudDownload/>
+                <Tooltip title={t('label.contentManager.contentPreview.download')}><CloudDownload/></Tooltip>
             </a>
         } else {
             return <a className={classes.colorIcon}
                       title="download"
                       href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
                       download>
-                <CloudDownload/>
+                <Tooltip title={t('label.contentManager.contentPreview.download')}><CloudDownload/></Tooltip>
             </a>
         }
     }
     screenModeButtons(handleFullScreen, classes) {
+        const {t} = this.props;
         handleFullScreen(this.state.fullScreen);
         if (this.state.fullScreen) {
-            return <FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/>
+            return <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
+                <FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/>
+            </Tooltip>
         }
-        return <Fullscreen onClick={this.handleDialogState} className={classes.colorIcon} />
+        return <Tooltip title={t('label.contentManager.contentPreview.expand')}>
+            <Fullscreen onClick={this.handleDialogState} className={classes.colorIcon} />
+        </Tooltip>
     }
 
     queryVariables(path) {

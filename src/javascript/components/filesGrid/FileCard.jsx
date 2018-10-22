@@ -420,7 +420,7 @@ class FileCard extends Component {
         </IconButton> : null;
     }
     displayPublicationAction(publishButtonClass) {
-        let {classes, node, isHovered} = this.props;
+        let {classes, node, isHovered, t} = this.props;
         return isHovered ? <Actions menuId={"thumbnailPublishMenu"} context={{
             uuid: node.uuid,
             path: node.path,
@@ -432,7 +432,7 @@ class FileCard extends Component {
                     className={publishButtonClass ? publishButtonClass : classes.publishButton} {...props}
                     disableRipple={true}
                     cmRole={"file-grid-thumbnail-button-publish"}>
-                    <Autorenew className={classes.renewIcon}/>
+                    <Tooltip title={t('label.contentManager.filesGrid.publish')}><Autorenew className={classes.renewIcon}/></Tooltip>
                 </CmIconButton>
             }}
         </Actions>: null;

@@ -231,7 +231,8 @@ let defaultActions = {
         target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:addChildNodes",
         labelKey: "label.contentManager.contentPreview.copy",
-        hideOnNodeTypes: ["jnt:page"]
+        hideOnNodeTypes: ["jnt:page"],
+        showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     },
     pasteFile: {
         priority: 3.8,
@@ -280,7 +281,8 @@ let defaultActions = {
         target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction", "contentTreeMenuActions"],
         requiredPermission: "jcr:removeNode",
         labelKey: "label.contentManager.contentPreview.cut",
-        hideOnNodeTypes: ["jnt:page"]
+        hideOnNodeTypes: ["jnt:page"],
+        showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     },
     delete: {
         priority: 4,

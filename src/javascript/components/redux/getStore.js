@@ -15,7 +15,8 @@ import {
     previewModesReducer,
     previewStateReducer,
     openPathsReducer,
-    searchModeReducer
+    searchModeReducer,
+    siteDisplayableNameReducer
 } from "./reducers";
 import {connectRouter, routerMiddleware} from "connected-react-router";
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
@@ -28,6 +29,7 @@ let getStore = (dxContext, history) => {
         uiLang: uiLanguageReducer(dxContext),
         selection: selectionReducer,
         site: siteReducer(currentValueFromUrl.site),
+        siteDisplayableName: siteDisplayableNameReducer(dxContext.siteDisplayableName),
         language: languageReducer(currentValueFromUrl.language),
         mode: modeReducer(currentValueFromUrl.mode),
         path: pathReducer(currentValueFromUrl.path),

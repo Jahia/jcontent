@@ -3,20 +3,38 @@ import {translate, Trans} from "react-i18next";
 import {connect} from "react-redux";
 import {cmSetPath} from "./redux/actions";
 import {Button, withStyles} from "@material-ui/core";
+import {Search} from "@material-ui/icons";
 
 const styles = theme => ({
     infoSearchPath: {
-        color: theme.palette.text.primary,
+        position: 'relative',
+        display: "inline-block",
+        bottom: "5px",
+        fontFamily: "Nunito Sans, sans-serif",
+        color: "#eaeaea",
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit
     },
     infoSearchPathValue: {
-        color: "red"
+        fontFamily: "Nunito Sans, sans-serif",
+        color: "#c5c5c5"
     },
     searchClear: {
         maxHeight: 25,
         minHeight: 25,
         padding: '3px 7px',
+        fontFamily: "Nunito Sans, sans-serif",
+        color: "#eaeaea",
+        fontWeight: 600,
+        backgroundColor: '#007bc0'
+    },
+    searchIcon: {
+        marginLeft: theme.spacing.unit,
+        color: "#c5c5c5"
+    },
+    container: {
+        display: "flex",
+        alignItems: "center"
     }
 });
 
@@ -24,30 +42,36 @@ class CmSearchControlBar extends React.Component {
 
     render() {
 
-        let {siteKey, path, setPath, t, classes} = this.props;
+        let {siteKey, path, setPath, t, classes, siteDisplayableName} = this.props;
         let siteRootPath = "/sites/" + siteKey;
 
-        return <div>
-            <span className={classes.infoSearchPath}>
-                <Trans
-                    i18nKey={"label.contentManager.search.searchPath"}
-                    values={{path: path}}
-                    components={[<span className={classes.infoSearchPathValue}>univers</span>]}
-                />
-            </span>
-            {(path != siteRootPath) &&
-                <Button variant={"contained"}
-                        classes={{sizeSmall: classes.searchClear}}
-                        size={"small"} onClick={() => setPath(siteRootPath)}>
-                    {t("label.contentManager.search.searchEverywhere")}
-                </Button>
-            }
+        return <div className={classes.container}>
+            <div>
+                <Search className={classes.searchIcon}/>
+                <div className={classes.infoSearchPath}>
+                    <Trans
+                        i18nKey={"label.contentManager.search.searchPath"}
+                        values={{path: path}}
+                        components={[<span className={classes.infoSearchPathValue}>univers</span>]}
+                    />
+                </div>
+            </div>
+            <div>
+                {(path != siteRootPath) &&
+                    <Button variant={"contained"}
+                            classes={{sizeSmall: classes.searchClear}}
+                            size={"small"} onClick={() => setPath(siteRootPath)}>
+                        {t("label.contentManager.search.searchEverywhere", {site: siteDisplayableName})}
+                    </Button>
+                }
+            </div>
         </div>;
     }
 }
 
 const mapStateToProps = (state, ownProps) => {
     return {
+        siteDisplayableName: state.siteDisplayableName,
         siteKey: state.site,
         path: state.path
     }

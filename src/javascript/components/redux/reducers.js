@@ -18,6 +18,14 @@ let siteReducer = (siteKey) => (state = siteKey, action) => {
     }
 };
 
+let siteDisplayableNameReducer = (siteDisplayableName) => (state = siteDisplayableName, action) => {
+    if (action.siteDisplayableName && action.type === CM_NAVIGATE) {
+        return action.siteDisplayableName
+    } else {
+        return state;
+    }
+};
+
 let languageReducer = (language) => (state = language, action) => {
     if (action.language && action.type === CM_NAVIGATE) {
         return action.language;
@@ -115,4 +123,4 @@ let searchModeReducer = (params) => (state = (params.sql2SearchFrom ? 'sql2' : '
     }
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer, searchModeReducer };
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, previewModesReducer, openPathsReducer, previewStateReducer, searchModeReducer, siteDisplayableNameReducer };

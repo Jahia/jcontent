@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import ContentListTable from "./list/ContentListTable";
 import PreviewDrawer from "./preview/PreviewDrawer";
 import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
-import {Add} from "@material-ui/icons";
+import {Add, Close} from "@material-ui/icons";
 import classNames from 'classnames'
 import ContentTrees from "./ContentTrees";
 import {withNotifications} from '@jahia/react-material';
@@ -54,19 +54,19 @@ const styles = theme => ({
     blockCoreSearch: {
         marginLeft: -17,
         marginTop: -28,
-        maxHeight: 31,
-        backgroundColor: "orange"
+        backgroundColor: "#44464a",
+        maxHeight: 31
     },
     breadCrumbs: {},
     buttons: {
         textAlign: 'right'
     },
     showTreeButton: {
-        color: '#F5F5F5',
+        color: '#eaeaea',
         padding: '0 5 0 0',
     },
     refreshButton: {
-        color: '#F5F5F5',
+        color: '#eaeaea',
         padding: 0,
     },
     showTree: {
@@ -127,6 +127,12 @@ const styles = theme => ({
         maxHeight: 25,
         minHeight: 25,
         padding: '3px 7px',
+    },
+    searchClearButton: {
+        color: '#eaeaea'
+    },
+    searchClearIcon: {
+        color: '#d4d9dd'
     }
 });
 
@@ -283,18 +289,19 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                    <Icon name={'folder'} fill={'#F5F5F5'}/>
+                                    <Icon name={'folder'} fill={'#d4d9dd'}/>
                                     {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                                 </Button>
                             }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                <Icon name={'refresh'} fill={'#F5F5F5'}/>
-                                {t("label.contentManager.refresh")}
+                                <Icon name={'refresh'} fill={'#d4d9dd'}/>
+                                {t(this.isSearching() ? "label.contentManager.search.refresh" : "label.contentManager.refresh")}
                             </Button>
                             {this.isSearching() &&
-                                <Button data-cm-role="search-clear" variant={"contained"}
-                                        classes={{sizeSmall: classes.searchClear}}
-                                        size={"small"} onClick={() => clearSearch(params)}>
+                                <Button data-cm-role="search-clear" variant={"text"}
+                                        className={classes.searchClearButton}
+                                        classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
+                                    <Close className={classes.searchClearIcon}/>
                                     {t("label.contentManager.search.clear")}
                                 </Button>
                             }

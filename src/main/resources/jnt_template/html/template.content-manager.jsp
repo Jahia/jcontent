@@ -29,6 +29,7 @@
 <script type="text/javascript">
     window.top.DX && window.top.DX.switch("contentmanager", {chrome: false});
     contextJsParameters['siteKey'] = '${renderContext.mainResource.node.resolveSite.name}';
+    contextJsParameters['siteDisplayableName'] = '${renderContext.mainResource.node.resolveSite.displayableName}';
     contextJsParameters['urlBrowser'] = '/cms/contentmanager';
     contextJsParameters['urlbase'] = '${renderContext.servletPath}';
     contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';

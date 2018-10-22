@@ -39,8 +39,8 @@ function cmGoto(data) {
     return Object.assign(data || {}, {type: CM_NAVIGATE});
 }
 
-function cmSetSite(site, language) {
-    return cmGoto({site, language});
+function cmSetSite(site, language, siteDisplayableName) {
+    return cmGoto({site, language, siteDisplayableName});
 }
 
 function cmSetLanguage(language) {

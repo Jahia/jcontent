@@ -197,7 +197,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     selectSite: (siteNode, language) => {
-        dispatch(cmSetSite(siteNode.name, language));
+        dispatch(cmSetSite(siteNode.name, language, siteNode.displayName));
     }
 });
 

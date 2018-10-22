@@ -37,7 +37,7 @@ class MenuAction extends Component {
         return (<span data-cm-role={'menu-action-' + menuId}>
             {<Actions menuId={menuId} {...rest} menuClose={handleMenuClose}>
                     {(props) => {
-                        items.push(<CmMenuItem key={props.actionKey} {...props} menuClose={handleMenuClose}/>);
+                        !_.find(items, item => props.actionKey === item.key) && items.push(<CmMenuItem key={props.actionKey} {...props} menuClose={handleMenuClose}/>);
                         return false;
                     }}</Actions>}
             {children({...rest, menuId: menuId, onClick: this.handleMenuClick})}

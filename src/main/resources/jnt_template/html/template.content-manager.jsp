@@ -15,6 +15,10 @@
 <head>
     <meta charset="utf-8">
     <title>${fn:escapeXml(renderContext.mainResource.node.displayableName)}</title>
+    <script>
+        //  used  by webpack to replace __dx_module_path__
+        window.__webpack_public_path__ =  '${url.context}${url.currentModule}/javascript/apps/';
+    </script>
 </head>
 
 <body style="overflow: hidden">

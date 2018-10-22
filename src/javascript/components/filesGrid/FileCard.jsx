@@ -412,11 +412,11 @@ class FileCard extends Component {
     }
 
     displayVisibilityButton() {
-        let {classes, isHovered, handleShowPreview} = this.props;
+        let {classes, isHovered, handleShowPreview, t} = this.props;
         return isHovered ?<IconButton onClick={handleShowPreview}
                                       disableRipple={true}
                                       className={classes.visibilityButton}>
-            <Visibility/>
+            <Tooltip title={t('label.contentManager.contentPreview.preview')}><Visibility/></Tooltip>
         </IconButton> : null;
     }
     displayPublicationAction(publishButtonClass) {

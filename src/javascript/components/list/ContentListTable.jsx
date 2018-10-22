@@ -337,7 +337,7 @@ class ContentListTable extends React.Component {
                                                         <CmIconButton className={classes.hoveredRowAction}
                                                                     data-cm-role={"table-content-list-button"}
                                                                     onClick={handleShowPreview}>
-                                                            <Visibility/>
+                                                            <Tooltip title={t('label.contentManager.contentPreview.preview')}><Visibility/></Tooltip>
                                                         </CmIconButton>
                                                         <Actions menuId={"tableEditButtonAction"} context={{
                                                             uuid: n.uuid,
@@ -350,7 +350,7 @@ class ContentListTable extends React.Component {
                                                                 return <CmIconButton
                                                                     className={classes.hoveredRowAction} {...props}
                                                                     cmRole={"table-content-list-button-edit"}>
-                                                                    <Create/>
+                                                                    <Tooltip title={t('label.contentManager.contentPreview.edit')}><Create/></Tooltip>
                                                                 </CmIconButton>
                                                             }
                                                             }

@@ -90,23 +90,27 @@ class ContentData extends React.Component {
                 setSelection(newSelection);
                 stateModificationDone = true;
             }
-        } else if (operation === "update") {
-            //update node
-            let name = nodePath.substring(nodePath.lastIndexOf("/")+1, nodePath.length);
-            //this condition ensures that we're on a specific case : editing a page and not a content as the two operations
-            // are "update", it ensures also we're not on delete (1st step) or undelete, that are considered as "update" operations
-            if(name !== nodeName && nodePath === path){
-                let ancestorPath = nodePath.substring(0, nodePath.lastIndexOf("/")+1);
-                let newPath = ancestorPath.concat(nodeName);
-                setPath(newPath);
-                if (!_.includes(openedPaths, newPath)) {
-                    _.remove(openedPaths, openedPath => (openedPath === path || _.includes(openedPath, path.concat("/"))));
-                    openPaths(extractPaths(siteKey, newPath, mode));
-                }
-                stateModificationDone = true;
-            }
-        }
 
+        } else if (operation === "update") {
+
+            let name = nodePath.substring(nodePath.lastIndexOf("/") + 1, nodePath.length);
+
+            if (nodePath === path) {
+                // This is an update of an element displayed in the tree (either a page or folder) and not in the content table.
+                if (name !== nodeName) {
+                    // This a node name change and not any other kind of update: change current CM path to reflect the changed path of the node.
+                    let parentPath = nodePath.substring(0, nodePath.lastIndexOf("/"));
+                    let newPath = parentPath + "/" + nodeName;
+                    setPath(newPath);
+                    if (!_.includes(openedPaths, newPath)) {
+                        _.remove(openedPaths, openedPath => (openedPath === path || _.includes(openedPath, path.concat("/"))));
+                        openPaths(extractPaths(siteKey, newPath, mode));
+                    }
+                    stateModificationDone = true;
+                }
+            }
+
+        }
 
         if (stateModificationDone) {
             // In case of any state modifications, wait a second to let components re-render and perform GrpaphQL requests asynchronously,

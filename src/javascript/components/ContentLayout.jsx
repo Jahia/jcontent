@@ -27,7 +27,7 @@ import {connect} from "react-redux";
 import Constants from "./constants";
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
 import ContextualMenu from './contextualMenu/contextualMenu';
-import NodesInfoForCopyPaste from './copyPaste/nodesInfo';
+import PasteActionButton from './copyPaste/PasteActionButton';
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -274,11 +274,7 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
-                                    { NodesInfoForCopyPaste.getNodes().length > 0
-                                    && <Actions menuId={"copyPasteActions"} context={{path: path}} className={classes.ButtonAction}>
-                                        {(props) => <CmButton text={true} {...props} />}
-                                    </Actions>
-                                    }
+                                    <PasteActionButton path={ path } buttonClass={ classes.ButtonAction }/>
                                     <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
                                         {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
                                     </Actions>

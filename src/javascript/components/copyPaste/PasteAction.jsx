@@ -2,23 +2,23 @@ import React from "react";
 import {translate} from "react-i18next";
 import * as _ from "lodash";
 import {withNotifications} from "@jahia/react-material/index";
-import NodesInfo from './nodesInfo';
 import Node from './node';
 import { pasteNode, moveNode } from "./gqlMutations";
 import {Mutation} from 'react-apollo';
 import {refetchContentTreeAndListData} from '../refetches';
+import {connect} from "react-redux";
 
 class PasteAction extends React.Component {
 
     render() {
 
-        let {children, baseContentType, context, t, labelKey, notificationContext, ...rest} = this.props;
+        let {children, baseContentType, context, t, labelKey, items, notificationContext, ...rest} = this.props;
 
-        if (NodesInfo.getNodes().length === 0) {
+        if (items.length === 0) {
             return null;
         }
 
-        const node = NodesInfo.getNodes()[0];
+        const node = items[0];
         const allowedChildren = context.node.allowedChildNodeTypes;
 
         if (!this.pasteAllowed(allowedChildren, baseContentType, node.primaryNodeType)) {
@@ -39,7 +39,6 @@ class PasteAction extends React.Component {
                                         destParentPathOrId: context.path,
                                         destName: node.displayName
                                     }}).then(() => {
-                                    notificationContext.notify(`Pasted`);
                                     refetchContentTreeAndListData();
                                 })
                             }
@@ -62,7 +61,6 @@ class PasteAction extends React.Component {
                                     destParentPathOrId: context.path,
                                     destName: node.displayName
                                 }}).then(() => {
-                                    notificationContext.notify(`Pasted`);
                                     refetchContentTreeAndListData();
                             })
                         }
@@ -87,10 +85,15 @@ class PasteAction extends React.Component {
     }
 }
 
+const mapStateToProps = (state, ownProps) => {
+    return state.copyPaste;
+};
+;
 
 PasteAction = _.flowRight(
     withNotifications(),
-    translate()
+    translate(),
+    connect(mapStateToProps)
 )(PasteAction);
 
 export default PasteAction;

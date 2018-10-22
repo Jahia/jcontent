@@ -93,10 +93,10 @@ class ContentData extends React.Component {
 
         } else if (operation === "update") {
 
-            let name = nodePath.substring(nodePath.lastIndexOf("/") + 1, nodePath.length);
-
             if (nodePath === path) {
-                // This is an update of an element displayed in the tree (either a page or folder) and not in the content table.
+                // This is an update of the element currently selected in the tree.
+
+                let name = nodePath.substring(nodePath.lastIndexOf("/") + 1, nodePath.length);
                 if (name !== nodeName) {
                     // This a node name change and not any other kind of update: change current CM path to reflect the changed path of the node.
                     let parentPath = nodePath.substring(0, nodePath.lastIndexOf("/"));

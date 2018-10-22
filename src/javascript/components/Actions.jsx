@@ -63,12 +63,6 @@ class Actions extends React.Component {
                         ctx.actionPath = (ctx.actionPath ? ctx.actionPath : "") + "/" + actionKey;
                         ctx.node = node;
                         ctx.requirementQueryHandler = requirementQueryHandler;
-                        if (action.actionKey.indexOf("paste") !== -1) {
-                            console.log("done", data);
-                            // console.log(JSON.stringify(requirementQueryHandler.getQuery()));
-                            // console.log(JSON.stringify(requirementQueryHandler.getVariables()));
-                        }
-                        console.log(children);
                         return <ActionComponent {...rest} {...action} actionKey={actionKey} context={ctx}>
                             {children}
                         </ActionComponent>;

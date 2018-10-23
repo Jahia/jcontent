@@ -195,6 +195,10 @@ const styles = (theme) => ({
     },
     sortLabel:{
         color: '#1E1E1F',
+    },
+    noResults: {
+        color: '#5E6565',
+        fontWeight: 600
     }
 });
 
@@ -279,7 +283,7 @@ class ContentListTable extends React.Component {
                     <DxContext.Consumer>
                         {dxContext => (
                             <TableBody className={classes.tableBody}>
-                                {_.isEmpty(rows) ? <EmptyRow translate={t}/> : rows.map((n, key) => {
+                                {_.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;
                                     let renderWip = this.renderWip(n, dxContext);
@@ -397,7 +401,7 @@ class ContentListTable extends React.Component {
 
 let EmptyRow = (props) => {
     return <TableRow>
-        <TableCell colSpan={columnData.length + APP_TABLE_CELLS}>
+        <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
             {props.translate("label.contentManager.noResults")}
         </TableCell>
     </TableRow>;

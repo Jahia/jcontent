@@ -6,6 +6,14 @@ function hasMixin(node, mixin) {
     return (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, mixin));
 }
 
+function isDescendant(path, ancestorPath) {
+    return path.startsWith(ancestorPath + "/");
+}
+
+function isDescendantOrSelf(path, ancestorOrSelfPath) {
+    return (path === ancestorOrSelfPath || isDescendant(path, ancestorOrSelfPath));
+}
+
 function extractPaths(siteKey, path, mode) {
     let pathBase = "/sites/" + siteKey + (mode === 'browse-files' ? '/files' : '');
     let pathParts = path.replace(pathBase, "").split("/");
@@ -26,6 +34,8 @@ function ellipsizeText(text, maxLength) {
 
 export {
     hasMixin,
+    isDescendant,
+    isDescendantOrSelf,
     extractPaths,
     ellipsizeText
 };

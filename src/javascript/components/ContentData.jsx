@@ -13,7 +13,7 @@ import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
 import Constants from "./constants";
-import {extractPaths} from "./utils";
+import {extractPaths, isDescendantOrSelf} from "./utils";
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -70,14 +70,14 @@ class ContentData extends React.Component {
 
         } else if (operation == "delete") {
 
-            // Switch to ancestor node in case of currently selected node deletion.
-            if (path.startsWith(nodePath)) {
+            // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
+            if (isDescendantOrSelf(path, nodePath)) {
                 setPath(nodePath.substring(0, nodePath.lastIndexOf("/")));
                 stateModificationDone = true;
             }
 
             // Close any expanded nodes that have been just removed.
-            let pathsToClose = _.filter(openedPaths, openPath => openPath.startsWith(nodePath));
+            let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
             if (!_.isEmpty(pathsToClose)) {
                 closePaths(pathsToClose);
                 stateModificationDone = true;
@@ -93,20 +93,25 @@ class ContentData extends React.Component {
 
         } else if (operation === "update") {
 
-            if (nodePath === path) {
-                // This is an update of the element currently selected in the tree (and not one selected in the content table).
+            if (isDescendantOrSelf(path, nodePath)) {
+                // This is an update of either the element currently selected in the tree or one of its ancestors.
 
                 let name = nodePath.substring(nodePath.lastIndexOf("/") + 1, nodePath.length);
                 if (name !== nodeName) {
-                    // This a node name change and not any other kind of update: change current CM path to reflect the changed path of the node.
+                    // This is a node name change: update current CM path to reflect the changed path of the node.
 
-                    let parentPath = nodePath.substring(0, nodePath.lastIndexOf("/"));
-                    let newPath = parentPath + "/" + nodeName;
-                    setPath(newPath);
-                    if (!_.includes(openedPaths, newPath)) {
-                        _.remove(openedPaths, openedPath => (openedPath === path || _.includes(openedPath, path.concat("/"))));
-                        openPaths(extractPaths(siteKey, newPath, mode));
+                    let ancestorPath = nodePath;
+                    let ancestorParentPath = ancestorPath.substring(0, ancestorPath.lastIndexOf("/"));
+                    let newAncestorPath = ancestorParentPath + "/" + nodeName;
+                    setPath(ContentData.getNewNodePath(path, ancestorPath, newAncestorPath));
+
+                    let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, ancestorPath));
+                    if (!_.isEmpty(pathsToReopen)) {
+                        closePaths(pathsToReopen);
+                        pathsToReopen = _.map(pathsToReopen, pathToReopen => ContentData.getNewNodePath(pathToReopen, ancestorPath, newAncestorPath));
+                        openPaths(pathsToReopen);
                     }
+
                     stateModificationDone = true;
                 }
             }
@@ -122,6 +127,11 @@ class ContentData extends React.Component {
         } else {
             client.resetStore();
         }
+    }
+
+    static getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
+        let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
+        return (newAncestorPath + relativePath);
     }
 
     render() {

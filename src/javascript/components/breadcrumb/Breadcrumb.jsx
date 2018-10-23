@@ -433,6 +433,7 @@ class Breadcrumb extends React.Component {
             if (selectedPathParts.slice(0, entryPathParts.length).join("/") === entryPathParts.join("/")) {
                 breadcrumb.name = breadcrumbs.length === 0 ? rootLabel : entry.node.displayName;
                 breadcrumb.uuid = entry.node.uuid;
+                breadcrumb.path = entry.node.path;
                 breadcrumb.type = entry.node.primaryNodeType.name;
             }
             breadcrumbs[entryPathParts.length - 1] = breadcrumb;

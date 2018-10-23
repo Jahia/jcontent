@@ -32,26 +32,45 @@ const styles = theme => ({
         },
     },
     contentIcon: {
-        fontSize: "14px"
+        fontSize: "18px",
+    },
+    contentIcon2: {
+        fontSize: "20px",
     },
     contentLabel: {
-        paddingLeft: "10px"
+        color: theme.palette.text.dark,
+        marginLeft: '1px',
+        marginRight: '-3px',
+        fontSize: '12px',
     },
     betweenIcon: {
-        verticalAlign: "bottom",
+        verticalAlign: "middle",
         position: "relative",
-        bottom: "6px"
     },
     menu: {
         background: 'red'
     },
     divider:{
-        border: 'inset',
+        background: '#bdbdbd',
+        lineHeight: '1px',
+        height: '1px',
+    },
+    chevronSvg: {
+        fontSize: '18px',
+        color: theme.palette.text.primary,
+        marginRight: '-5px',
+    },
+    menuItemSize: {
+        paddingLeft: '10px!important',
+    },
+    colorMenu: {
+        background: '#f5f5f5',
     }
 });
 
 const MenuItemContainer = styled.div`
     width:100%;
+    background: #F5F5f5;
     outline: none;
 `;
 
@@ -147,24 +166,24 @@ class BreadcrumbDisplay extends React.Component {
     generateMenu(node) {
         let {classes} = this.props;
         return <span>
-            <MenuItemContainer key={"dropdown_" + node.uuid}>
-                <MenuItem className={classes.menuItemHeader} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, node)}>
-                    {this.renderIcon(node)}
+            <MenuItemContainer key={"dropdown_" + node.uuid} >
+                <MenuItem className={classes.menuItemHeader} classes={{root: classes.menuItemSize}} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, node)}>
+                    {this.renderIcon(node, classes)}
                     <MenuItemLabel className={classes.contentLabel}>
                         {node.name}
                     </MenuItemLabel>
                 </MenuItem>
             </MenuItemContainer>
-            {node.siblings.length > 1 &&
-                <Divider className={classes.divider}/>
-            }
+                {node.siblings.length > 1 &&
+                    <div className={classes.divider}/>
+                }
             {node.siblings.map((siblingNode, i) => {
                 if (siblingNode.name === node.name) {
                     return null;
                 }
                 return <MenuItemContainer key={siblingNode.uuid}>
-                    <MenuItem className={classes.menuItem} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, siblingNode)}>
-                        {this.renderIcon(siblingNode)}
+                    <MenuItem className={classes.menuItem} classes={{root: classes.menuItemSize}} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, siblingNode)}>
+                        {this.renderIcon(siblingNode, classes)}
                         <MenuItemLabel className={classes.contentLabel}>
                             {siblingNode.name}
                         </MenuItemLabel>
@@ -185,7 +204,7 @@ class BreadcrumbDisplay extends React.Component {
                 aria-owns={"breadcrumbMenu_" + node.uuid}
                 aria-haspopup="true"
                 onMouseOver={this.onMenuButtonActivatorEnter}>
-                {this.renderIcon(node, classes.contentIcon)}
+                {this.renderIcon(node, classes)}
                 {!trimLabel &&
                     <span className={classes.contentLabel}>
                         {ellipsizeText(node.name, maxLabelLength)}
@@ -204,7 +223,7 @@ class BreadcrumbDisplay extends React.Component {
                     this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
                 }}
                 onMouseOver={this.onMenuButtonActivatorEnter}>
-                {this.renderIcon(node, classes.contentIcon)}
+                {this.renderIcon(node, classes)}
                 {!trimLabel &&
                     <span className={classes.contentLabel}>
                         {ellipsizeText(node.name, maxLabelLength)}
@@ -214,16 +233,16 @@ class BreadcrumbDisplay extends React.Component {
         }
     }
 
-    renderIcon(node, className) {
+    renderIcon(node, classes) {
         switch (node.type) {
             case "jnt:virtualsite" :
-                return <icons.VirtualsiteIcon className={className}/>;
+                return <icons.VirtualsiteIcon className={classes.contentIcon2}/>;
             case "jnt:folder":
             case "jnt:contentFolder":
-                return <Folder className={className}/>;
+                return <Folder className={classes.contentIcon}/>;
             case "jnt:page" :
             default:
-                return <PageIcon className={className}/>;
+                return <PageIcon className={classes.contentIcon}/>;
         }
     }
 
@@ -322,7 +341,7 @@ class Breadcrumb extends React.Component {
                 trimLabel={(items.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) && (itemIndex < items.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY)}
             />
             {itemIndex < items.length - 1 &&
-                <ChevronRightIcon className={classes.betweenIcon}/>
+                <ChevronRightIcon classes={{root: classes.chevronSvg}} className={classes.betweenIcon}/>
             }
         </span>;
     }

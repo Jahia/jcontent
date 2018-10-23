@@ -13,20 +13,18 @@ const PDFContainer = styled.div`
     div {
         position:relative;
         width: 100%;
-        maxHeight: 350px;
+        max-height: 100%;
         max-width: 100%;
-        overflow: auto;
         margin: 0 auto;
     }
     canvas {
-        max-height: 550px;
-        height: 550px;
+        max-height: 100%;
+        max-width: 100%;        
         max-width: 550px;
         width: 550px;
     }
     div > canvas {
         position:relative;
-       
         width: 100%;
         max-width: 100%;
         display: block;
@@ -35,25 +33,21 @@ const PDFContainer = styled.div`
 `;
 const PDFContainerFull = styled.div`
     div {
-    height: 525!important;
     max-height: 100%;
     }
     div > canvas {
         position:relative;
-        width: 400!important;
-        max-width: 400!important;
-        height: 491!important;
         display: block;
         margin: 0 auto;
     }
 `;
 
 const Controls = styled.div`
+    z-index: 1;
+    position: fixed;
+    bottom: 120;
     width:100%;
     height: 48px;
-    position: absolute;
-    bottom: 98;
-    opacity: 0.9;
     background: #f5f5f5;
     display: flex;
 `;
@@ -61,9 +55,9 @@ const Controls = styled.div`
 const ControlsFullScreen = styled.div`
     width:100vw;
     height: 48px;
-    position: absolute;
-    bottom: 117;
-    opacity: 0.9;
+    z-index: 1;
+    position: fixed;
+    bottom: 125;
     background: #f5f5f5;
     display: flex;
 `;
@@ -261,7 +255,8 @@ class PDFViewer extends React.Component {
         let {classes, fullscreen} = this.props;
         let pagination = this.renderPagination(fullscreen);
         return <div>
-                <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
+            {pagination}
+            <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
             {fullscreen ?
                 <PDFContainerFull>
                     <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
@@ -287,7 +282,6 @@ class PDFViewer extends React.Component {
                     </Paper>
                 </PDFContainer>
             }
-            {pagination}
 
         </div>
     }

@@ -84,7 +84,7 @@ class PasteAction extends React.Component {
         }
 
         return allowedTypes.find((entry) => {
-            if (entry.supertypes.find((e) => { return e.name === pastedType})) {
+            if (entry.supertypes && entry.supertypes.find((e) => { return e.name === pastedType})) {
                 return true;
             }
             return entry.name === pastedType;

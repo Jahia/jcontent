@@ -244,28 +244,28 @@ let defaultActions = {
         hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
         baseContentType: "jnt:file"
     },
-    pasteFolder: {
-        priority: 3.9,
-        component: PasteAction,
-        icon: "Paste",
-        target: ["contextualMenuFilesAction", "contentTreeMenuActions", "copyPasteActions"],
-        requiredPermission: "jcr:addChildNodes",
-        labelKey: "label.contentManager.contentPreview.paste",
-        hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
-        baseContentType: "jnt:folder"
-    },
-    pasteContentFolder: {
-        priority: 3.9,
-        component: PasteAction,
-        icon: "Paste",
-        target: ["contextualMenuFoldersAction", "contentTreeMenuActions", "copyPasteActions"],
-        requiredPermission: "jcr:addChildNodes",
-        labelKey: "label.contentManager.contentPreview.paste",
-        hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-        baseContentType: "jnt:contentFolder"
-    },
+    // pasteFolder: {
+    //     priority: 3.9,
+    //     component: PasteAction,
+    //     icon: "Paste",
+    //     target: ["contextualMenuFilesAction", "contentTreeMenuActions", "copyPasteActions"],
+    //     requiredPermission: "jcr:addChildNodes",
+    //     labelKey: "label.contentManager.contentPreview.paste",
+    //     hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
+    //     baseContentType: "jnt:folder"
+    // },
+    // pasteContentFolder: {
+    //     priority: 3.9,
+    //     component: PasteAction,
+    //     icon: "Paste",
+    //     target: ["contextualMenuFoldersAction", "contentTreeMenuActions", "copyPasteActions"],
+    //     requiredPermission: "jcr:addChildNodes",
+    //     labelKey: "label.contentManager.contentPreview.paste",
+    //     hideOnNodeTypes: ["jnt:page", "jnt:folder"],
+    //     baseContentType: "jnt:contentFolder"
+    // },
     pasteContentFolderContent: {
-        priority: 3.8,
+        priority: 3.9,
         component: PasteAction,
         icon: "Paste",
         target: ["contextualMenuFoldersAction", "contentTreeMenuActions", "copyPasteActions"],
@@ -351,7 +351,7 @@ let defaultActions = {
         retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
         labelKey: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
         showOnNodeTypes: ["jnt:contentFolder"]
-    },
+    }
 };
 
 export default defaultActions;

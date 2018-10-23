@@ -218,7 +218,7 @@ class FileCard extends Component {
     }
 
     largeMediaCard() {
-        const { classes, t, node, dxContext, onContextualMenu, cardType } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu, cardType, uiLang } = this.props;
         
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
@@ -243,7 +243,8 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
-                        <Moment format={"LLL"}>{node.created}</Moment>
+                        &nbsp;
+                        <Moment format={"LLL"} locale={uiLang}>{node.created}</Moment>
                     </Typography>
 
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
@@ -254,7 +255,7 @@ class FileCard extends Component {
     }
 
     mediumMediaCard() {
-        const { classes, t, node, dxContext, onContextualMenu, cardType } = this.props;
+        const { classes, t, node, dxContext, onContextualMenu, cardType, uiLang } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.cardMedium) }
                      classes={{ root: classes.cardStyle}}
@@ -278,7 +279,8 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
-                        <Moment format={"LLL"}>{node.created}</Moment>
+                        &nbsp;
+                        <Moment format={"LLL"} locale={uiLang}>{node.created}</Moment>
                     </Typography>
                 </CardContent>
             </div>
@@ -314,7 +316,7 @@ class FileCard extends Component {
     }
 
     largeFileCard() {
-        const { classes, t, node, onContextualMenu } = this.props;
+        const { classes, t, node, onContextualMenu, uiLang } = this.props;
 
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
@@ -335,7 +337,8 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
-                        <Moment format={"LLL"}>{node.created}</Moment>
+                        &nbsp;
+                        <Moment format={"LLL"} locale={uiLang}>{node.created}</Moment>
                     </Typography>
 
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.fileInfo") }</Typography>
@@ -346,7 +349,7 @@ class FileCard extends Component {
     }
 
     mediumFileCard() {
-        const { classes, t, node, onContextualMenu, cardType } = this.props;
+        const { classes, t, node, onContextualMenu, cardType, uiLang } = this.props;
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", ...node})}}
@@ -368,7 +371,8 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                     <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>
                         { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
-                        <Moment format={"LLL"}>{node.created}</Moment>
+                        &nbsp;
+                        <Moment format={"LLL"} locale={uiLang}>{node.created}</Moment>
                     </Typography>
                 </CardContent>
             </div>
@@ -376,7 +380,7 @@ class FileCard extends Component {
     }
 
     verticalFileCard(cardType) {
-        const { classes, t, node, onContextualMenu } = this.props;
+        const { classes, t, node, onContextualMenu, uiLang } = this.props;
         return <Card className={ this.generateCardClass(node, classes.cardVertical) }
                      classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", ...node})}}
@@ -398,7 +402,8 @@ class FileCard extends Component {
                         <Typography classes={{caption: classes.TypoCaption}} variant="caption" className={classes.textTypo}>{ t("label.contentManager.filesGrid.createdBy") }</Typography>
                         <Typography classes={{body2: classes.TypoBody}} variant="body2" className={classes.textTypo}>
                             { t("label.contentManager.filesGrid.author", { author: node.createdBy}) }
-                            <Moment format={"LLL"}>{node.created}</Moment>
+                            &nbsp;
+                            <Moment format={"LLL"} locale={uiLang}>{node.created}</Moment>
                         </Typography>
                     </React.Fragment> }
                 </CardContent>
@@ -445,6 +450,10 @@ FileCard.propTypes = {
     onSelect: PropTypes.func.isRequired
 };
 
+const mapStateToProps = (state, ownProps) => ({
+    uiLang : state.uiLang
+});
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onSelect: (selection) => dispatch(cmSetSelection(selection)),
     onContextualMenu: (params) => {
@@ -455,7 +464,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 const ComposedFileCard = compose(
     withStyles(styles),
     translate(),
-    connect(null, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps)
 )(FileCard);
 
 export default ComposedFileCard;

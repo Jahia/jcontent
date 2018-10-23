@@ -32,7 +32,7 @@ const styles = theme => ({
     }
 });
 
-const component = ({ selection, t, classes }) => {
+const component = ({ selection, t, classes, uiLang }) => {
     if (_.isEmpty(selection)) {
         return null;
     }
@@ -41,17 +41,20 @@ const component = ({ selection, t, classes }) => {
         case Constants.availablePublicationStatuses.MARKED_FOR_DELETION :
             return <div className={classes.publicationInfoMarkedForDeletion}>
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selectedItem.deletedBy})}
-                <Moment format={"LLL"}>{selectedItem.deleted}</Moment>
+                &nbsp;
+                <Moment format={"LLL"} locale={uiLang}>{selectedItem.deleted}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.MODIFIED :
             return <div className={classes.publicationInfoModified}>
                 {t('label.contentManager.contentPreview.modifiedBy', {userName: selectedItem.lastModifiedBy})}
-                <Moment format={"LLL"}>{selectedItem.lastModified}</Moment>
+                &nbsp;
+                <Moment format={"LLL"} locale={uiLang}>{selectedItem.lastModified}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.PUBLISHED :
             return <div className={classes.publicationInfoPublished}>
                 {t('label.contentManager.contentPreview.publishedBy', {userName: selectedItem.lastPublishedBy})}
-                <Moment format={"LLL"}>{selectedItem.lastPublished}</Moment>
+                &nbsp;
+                <Moment format={"LLL"} locale={uiLang}>{selectedItem.lastPublished}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.NOT_PUBLISHED :
             return <div className={classes.publicationInfoUnpublished}>
@@ -62,7 +65,8 @@ const component = ({ selection, t, classes }) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    selection: state.selection
+    selection: state.selection,
+    uiLang: state.uiLang
 })
 
 

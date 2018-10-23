@@ -268,7 +268,7 @@ class ContentListTable extends React.Component {
     render() {
 
         const {hoveredRow} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, lang, handleShowPreview, onContextualMenu, handleSort, order, orderBy} = this.props;
+        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, uiLang, lang, handleShowPreview, onContextualMenu, handleSort, order, orderBy} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
         return (
             <div className={classes.contentList}>
@@ -331,7 +331,7 @@ class ContentListTable extends React.Component {
                                                     return <TableCell key={column.id} padding={'none'}
                                                                       data-cm-role={'table-content-list-cell-' + column.id}>
                                                         <Typography className={classes[column.id]}>
-                                                            <Moment format={"ll"} locale={lang}>{n[column.id]}</Moment>
+                                                            <Moment format={"ll"} locale={uiLang}>{n[column.id]}</Moment>
                                                         </Typography>
                                                     </TableCell>;
                                                 } else if (column.id === 'createdBy' && isHoveredRow) {
@@ -410,7 +410,9 @@ let EmptyRow = (props) => {
 
 const mapStateToProps = (state, ownProps) => ({
     selection: state.selection,
-    contextualMenu: state.contextualMenu
+    contextualMenu: state.contextualMenu,
+    uiLang : state.uiLang,
+    lang : state.language
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

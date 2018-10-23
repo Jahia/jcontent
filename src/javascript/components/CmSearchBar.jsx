@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles, Typography, Button, Input, Paper, IconButton, Grid} from "@material-ui/core";
+import {withStyles, Typography, Button, Input, Paper, IconButton, Grid, Tooltip} from "@material-ui/core";
 import {Search} from '@material-ui/icons';
 import ContentTypeSelect from './ContentTypeSelect';
 import {translate, Trans} from 'react-i18next';
@@ -148,6 +148,7 @@ class CmSearchBarNormal extends React.Component {
                     }
                 </React.Fragment>
             }
+            t={t}
         >
             <DxContext.Consumer className={classes.searchSize}>{(dxContext) => {
                 return <ContentTypeSelect
@@ -273,16 +274,18 @@ class SearchBarLayout extends React.Component {
 
     render() {
 
-        let {children, leftFooter, rightFooter, onSearch, classes} = this.props;
+        let {children, leftFooter, rightFooter, onSearch, classes, t} = this.props;
 
         return (
             <React.Fragment>
                 <Paper square className={classes.searchSize}>
                     <Grid container wrap={'nowrap'} className={classes.searchSize}>
                         {children}
-                        <Button color={'primary'} onClick={onSearch} data-cm-role={'search-submit'}>
-                            <Search className={classes.iconSize}/>
-                        </Button>
+                        <Tooltip title={t('label.contentManager.search.search')}>
+                            <Button color={'primary'} onClick={onSearch} data-cm-role={'search-submit'}>
+                                <Search className={classes.iconSize}/>
+                            </Button>
+                        </Tooltip>
                     </Grid>
                 </Paper>
                 <Grid container>

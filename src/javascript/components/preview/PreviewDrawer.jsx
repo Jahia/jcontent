@@ -141,7 +141,7 @@ class PreviewDrawer extends React.Component {
                                         <ChevronRightIcon className={classes.chevron} fontSize="small"/>
                                     </IconButton>
                                     <Typography className={classes.insideCell}>
-                                        Preview
+                                        {t('label.contentManager.contentPreview.preview')}
                                     </Typography>
                                     <div style={{display: 'inline', textAlign: 'right', marginRight: '5px'}}>
                                         <Button

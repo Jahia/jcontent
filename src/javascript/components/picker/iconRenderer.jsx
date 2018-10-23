@@ -1,9 +1,10 @@
 import React from 'react';
 import * as _ from 'lodash';
-import * as icons from '@jahia/icons'
+import PageIcon from '@jahia/icons/PageIcon';
+import {getIcon} from '@jahia/icons/iconRegistry';
 
 function iconRenderer(entry) {
-    let Icon = _.find(icons, icon => icon.primaryNodeType === entry.node.primaryNodeType.name) || icons.PageIcon;
+    let Icon = getIcon(entry.node.primaryNodeType.name) || PageIcon;
     return <Icon/>
 }
 

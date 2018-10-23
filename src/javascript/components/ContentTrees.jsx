@@ -9,8 +9,6 @@ import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
 import {cmGoto, cmOpenPaths, cmClosePaths } from "./redux/actions";
 import { invokeContextualMenu } from "./contextualMenu/redux/actions";
-import defaultIconRenderer from './picker/iconRenderer';
-import Icon from "./icons/Icon";
 
 const styles = theme => ({
     trees: {
@@ -77,9 +75,6 @@ class ContentTree extends React.Component {
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial
                     {...others}
-                    iconRenderer={(entry)=> {
-                        return entry.node.primaryNodeType.name === 'jnt:contentFolder' ? <Icon name={'folder'} fill={entry.selected ? '#F5F5F5' : '#504E4D'}/> : defaultIconRenderer(entry);
-                    }}
                     textRenderer={(entry) => {
                         return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: this.resolveMenuId(entry.node.path), primaryNodeType: entry.node.primaryNodeType.name, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
                             {entry.depth > 0 ? entry.node.displayName : rootLabel}

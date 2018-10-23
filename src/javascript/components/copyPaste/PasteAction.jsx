@@ -7,13 +7,13 @@ import { pasteNode, moveNode } from "./gqlMutations";
 import {Mutation} from 'react-apollo';
 import {refetchContentTreeAndListData} from '../refetches';
 import {connect} from "react-redux";
+import {clear} from "./redux/actions";
 
 class PasteAction extends React.Component {
 
     render() {
 
-        let {children, baseContentType, context, t, labelKey, items, notificationContext, ...rest} = this.props;
-
+        let {children, baseContentType, context, t, labelKey, items, notificationContext, dispatch, ...rest} = this.props;
         if (items.length === 0) {
             return null;
         }
@@ -34,6 +34,7 @@ class PasteAction extends React.Component {
                             ...rest,
                             labelKey: labelKey,
                             onClick: () => {
+                                dispatch(clear());
                                 moveNode({variables: {
                                         pathOrId: node.path,
                                         destParentPathOrId: context.path,
@@ -60,6 +61,7 @@ class PasteAction extends React.Component {
                         ...rest,
                         labelKey: labelKey,
                         onClick: () => {
+                            dispatch(clear());
                             pasteNode({variables: {
                                     pathOrId: node.path,
                                     destParentPathOrId: context.path,
@@ -95,6 +97,12 @@ class PasteAction extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     return state.copyPaste;
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatch: dispatch
+    }
 };
 
 PasteAction = _.flowRight(

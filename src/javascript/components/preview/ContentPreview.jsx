@@ -348,8 +348,8 @@ class ContentPreview extends React.Component {
     };
     previewComponent(data) {
         const {classes, t, dxContext} = this.props;
-        let displayValue = data ? data.nodeByPath.renderedContent.output : t('label.contentManager.contentPreview.emptyMessage');
-        const assets = data ? data.nodeByPath.renderedContent.staticAssets : [];
+        let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
+        const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
         if (displayValue === "") {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }

@@ -359,7 +359,8 @@ class ContentListTable extends React.Component {
                                                             uuid: n.uuid,
                                                             path: n.path,
                                                             displayName: n.name,
-                                                            nodeName: n.nodeName
+                                                            nodeName: n.nodeName,
+                                                            primaryNodeType: n.primaryNodeType
                                                         }}>
                                                             {(props) => <CmIconButton
                                                                 className={classes.hoveredRowAction} {...props}

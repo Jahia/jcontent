@@ -119,7 +119,7 @@ class ContentManager extends React.Component {
                                             <ConnectedRouter history={this.getHistory(dxContext, t)} >
                                                 <Route path="/:siteKey/:lang" render={props => {
                                                     dxContext["lang"] = props.match.params.lang;
-                                                    return <ManagerLayout leftSide={<CMLeftNavigation/>}>
+                                                    return <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
                                                         <Route path={`${props.match.url}/browse`} render={props =>
                                                             <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
                                                         }/>

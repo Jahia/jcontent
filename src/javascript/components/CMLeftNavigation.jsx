@@ -247,7 +247,7 @@ class CMLeftNavigation extends React.Component {
 
     render() {
 
-        const {siteKey, lang, t, classes, mode} = this.props;
+        const {siteKey, lang, t, classes, mode, contextPath} = this.props;
 
         let actionContext = {
             path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
@@ -260,7 +260,7 @@ class CMLeftNavigation extends React.Component {
                 <div className={classes.side}>
                     <List className={classes.list} component="nav">
                         <ListItem button className={classes.menuBurger}>
-                            <BurgerMenuButton/>
+                            <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
                         </ListItem>
                         <Actions
                             menuId={"leftMenuActions"}

@@ -20,7 +20,7 @@ const styles = theme => ({
     },
     buttonSize: {
         maxHeight: '36px',
-        margin: '0px!important'
+        margin: '0px !important'
     },
     buttonSizeText: {
         maxHeight: '36px',
@@ -30,19 +30,23 @@ const styles = theme => ({
 class CmButton extends React.Component {
 
     render() {
+
         const {classes, onClick, labelKey, t, children, text} = this.props;
         let childrenCount = React.Children.count(children);
+
         return <Button
-                classes={text ? {root: classes.buttonSize} : {root: classes.buttonSizeText}}
-                className={text ? classes.button : classes.buttonText}
-                color={text ? 'default' : 'primary'}
-                variant={text ? "text" : "contained"}
-                size="medium"
-                onClick={(event) => onClick(event)}
-            >
-                {childrenCount > 0 && children}
-                {t(labelKey)}
-            </Button>
+            classes={text ? {root: classes.buttonSize} : {root: classes.buttonSizeText}}
+            className={text ? classes.button : classes.buttonText}
+            color={text ? 'default' : 'primary'}
+            variant={text ? "text" : "contained"}
+            size="medium"
+            onClick={(event) => onClick(event)}
+        >
+            {childrenCount > 0 &&
+                children
+            }
+            {t(labelKey)}
+        </Button>;
     }
 }
 
@@ -52,4 +56,3 @@ CmButton = compose(
 )(CmButton);
 
 export default CmButton;
-

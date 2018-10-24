@@ -57,7 +57,8 @@ const styles = theme => ({
         backgroundColor: "#44464a",
         maxHeight: 31
     },
-    breadCrumbs: {},
+    breadCrumbs: {
+    },
     buttons: {
         textAlign: 'right'
     },
@@ -118,7 +119,6 @@ const styles = theme => ({
         marginLeft: '-17px',
         display: 'flex',
         width: '100%'
-
     },
     ButtonAction: {
         margin: '0 !important'
@@ -235,6 +235,7 @@ class ContentLayout extends React.Component {
     };
 
     render() {
+
         const {anchor, open_view, open, order, orderBy} = this.state;
         const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
             searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
@@ -365,7 +366,7 @@ class ContentLayout extends React.Component {
                                             orderBy={orderBy}
                                         />
                                     }
-                                </Paper>
+                                </Paper>;
                             }}
                         </ContentData>
                     </main>

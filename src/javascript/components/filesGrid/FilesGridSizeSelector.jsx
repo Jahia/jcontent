@@ -19,7 +19,7 @@ const styles = theme => ({
     }
 });
 
-const totalsValues = 5; // 2, 3, 4, 6, 12
+const totalsValues = 5;
 const step = 1;
 
 class FilesGridSizeSelector extends React.Component {
@@ -33,12 +33,14 @@ class FilesGridSizeSelector extends React.Component {
     }
 
     handleChange(event, value) {
-        this.setState({ value });
+        this.setState({
+            value
+        });
         this.props.onChange(value);
     };
 
-    getTooltipTitle(value){
-        switch(value){
+    getTooltipTitle(value) {
+        switch(value) {
             case 1:
                 return "x 6";
             case 2:
@@ -53,16 +55,20 @@ class FilesGridSizeSelector extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { value } = this.state;
 
-        return (
-            <Tooltip title={this.getTooltipTitle(value)}><Slider value={ value }
-                    classes={{root: classes.root, track: classes.track, thumb: classes.thumb}}
-                    min={ 1 }
-                    max={ totalsValues } step={ step } onChange={ this.handleChange } />
-            </Tooltip>
-        );
+        const {classes} = this.props;
+        const {value} = this.state;
+
+        return <Tooltip title={this.getTooltipTitle(value)}>
+            <Slider
+                value={value}
+                classes={{root: classes.root, track: classes.track, thumb: classes.thumb}}
+                min={1}
+                max={totalsValues}
+                step={step}
+                onChange={this.handleChange}
+            />
+        </Tooltip>;
     }
 }
 

@@ -43,6 +43,12 @@ const styles = theme => ({
         marginRight: '-3px',
         fontSize: '12px',
     },
+    contentLabelMenu: {
+        color: theme.palette.text.dark,
+        marginLeft: '1px',
+        marginRight: '-3px',
+        fontSize: '12px',
+    },
     betweenIcon: {
         verticalAlign: "middle",
         position: "relative",
@@ -169,7 +175,7 @@ class BreadcrumbDisplay extends React.Component {
             <MenuItemContainer key={"dropdown_" + node.uuid} >
                 <MenuItem className={classes.menuItemHeader} classes={{root: classes.menuItemSize}} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, node)}>
                     {this.renderIcon(node, classes)}
-                    <MenuItemLabel className={classes.contentLabel}>
+                    <MenuItemLabel className={classes.contentLabelMenu}>
                         {node.name}
                     </MenuItemLabel>
                 </MenuItem>
@@ -184,7 +190,7 @@ class BreadcrumbDisplay extends React.Component {
                 return <MenuItemContainer key={siblingNode.uuid}>
                     <MenuItem className={classes.menuItem} classes={{root: classes.menuItemSize}} disableRipple={true} onClick={(event) => this.onMenuItemSelected(event, siblingNode)}>
                         {this.renderIcon(siblingNode, classes)}
-                        <MenuItemLabel className={classes.contentLabel}>
+                        <MenuItemLabel className={classes.contentLabelMenu}>
                             {siblingNode.name}
                         </MenuItemLabel>
                     </MenuItem>

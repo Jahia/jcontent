@@ -62,7 +62,7 @@ const styles = theme => ({
         flex: "auto",
         display: "flex",
         alignItems: "center",
-        width: 8,
+        width: 6,
         backgroundColor: "inherit",
         transition: "width 0.2s ease-in 0s",
         overflow: "hidden",
@@ -120,9 +120,10 @@ class PublicationStatusComponent extends Component {
                     </div>
                 </div>
                 <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }
-                     style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-30px', fontSize: '12px'}}>
+                     style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '12px'}}>
+
                     <div className={classes.infoContainer}
-                         style={{marginLeft: 7, width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
+                         style={{width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
                          data-cm-role={'publication-info'}
                          data-cm-value={node.publicationStatus}>
                         { publicationStatus.geti18nDetailsMessage(node, t, i18n.language ) }

@@ -62,10 +62,9 @@ const styles = (theme) => ({
         "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 20,
             zIndex: -1,
-            marginRight: '30px',
             marginLeft: '6px',
-            height: '36px!important',
-            maxHeight: '36px!important',
+            height: '37px!important',
+            maxHeight: '37px!important',
         },
         "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
             display: "block",
@@ -139,8 +138,9 @@ const styles = (theme) => ({
     },
     name: {
         color: "#313131",
-        marginLeft: '-2px',
+        marginLeft: '-10px',
         fontSize: '13px',
+        width: "598px",
         maxWidth: "598px",
     },
     nodeTypeIcon: {
@@ -226,7 +226,7 @@ const styles = (theme) => ({
     paddingCell: {
         paddingLeft: 5,
         paddingRight: 5,
-    }
+    },
 });
 
 class ContentListTable extends React.Component {

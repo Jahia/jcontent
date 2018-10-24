@@ -9,7 +9,6 @@ import connect from "react-redux/es/connect/connect";
 
 const styles = (theme) => ({
     root: {
-        marginLeft: theme.spacing.unit * 2,
         marginTop: '0px'
     },
     listRoot: {

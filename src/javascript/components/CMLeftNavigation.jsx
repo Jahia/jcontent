@@ -21,11 +21,10 @@ const styles = theme => ({
     root: {
         zIndex: 1,
         paddingLeft: '38px',
-        background: '#fbfbfb',
+        background: '#f7f7f7',
         fontFamily: "Nunito sans, sans-serif",
         minWidth: '105px',
         maxWidth: '105px',
-        opacity: '0.98',
         overflow: 'hidden',
         height: '100%',
         display: 'flex',
@@ -64,7 +63,6 @@ const styles = theme => ({
         width: '100%',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        opacity: '0.8',
         fontSize: '0.828rem'
     },
     childIcon: {
@@ -84,9 +82,9 @@ const styles = theme => ({
         boxShadow: 'none!important',
     },
     drawerPaper: {
-        background: '#ffffff',
+        background: '#f7f7f7',
         position: 'absolute',
-        boxShadow: '5px 0 5px -2px rgba(0, 0, 21, 0.29)',
+        boxShadow: '1px 0 5px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 0,
         left: 105,
         width: drawerWidth,
@@ -98,7 +96,7 @@ const styles = theme => ({
     drawerPaperPersistent: {
         background: '#ffffff',
         position: 'relative',
-        boxShadow: '5px 0 5px -2px rgba(0, 0, 21, 0.29)',
+        boxShadow: '1px 0 5px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
         left: 105,
         width: drawerWidth,

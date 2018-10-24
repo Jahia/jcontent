@@ -4,12 +4,21 @@ import {withStyles} from '@material-ui/core';
 
 const styles = theme => ({
     menuButton: {
+        background: "url(" + contextJsParameters.contextPath + "/engines/jahia-anthracite/images/logos/dx_logo_solid-white.png) center center no-repeat",
         marginLeft: -12,
         marginRight: 6,
         width: "3.5em",
         height: "3.5em",
         backgroundSize: "100%"
-    }
+    },
+    menuButtonBlue: {
+        background: "url(" + contextJsParameters.contextPath + "/engines/jahia-anthracite/images/dx_logo_solid.png) center center no-repeat",
+        marginLeft: -12,
+        marginRight: 6,
+        width: "3.5em",
+        height: "3.5em",
+        backgroundSize: "100%"
+    },
 });
 
 class BurgerMenuButton extends React.Component {
@@ -22,12 +31,14 @@ class BurgerMenuButton extends React.Component {
 
     render() {
         let {classes, contextPath, isDrawerOpen} = this.props;
-        let backgroundImageURL = contextPath + "/engines/jahia-anthracite/images/logos/" + (isDrawerOpen ? "dx_logo_solid-black.png" :  "dx_logo_solid-white.png");
         return (
-            <div className={classes.menuButton}
-                 style={{backgroundImage: `url(${backgroundImageURL})`, backgroundPosition: 'center', backgroundSize: 'center', backgroundRepeat: 'noRepeat'}}
-                 onClick={() => this.openMenu()}
-                 data-cm-role="cm-burger-menu"/>
+            <div>
+             { isDrawerOpen ?
+                <div className={classes.menuButtonBlue}  onClick={() => this.openMenu()} data-cm-role="cm-burger-menu"/>
+                 :
+                 <div className={classes.menuButton}  onClick={() => this.openMenu()} data-cm-role="cm-burger-menu"/>
+             }
+            </div>
         );
     }
 }

@@ -8,6 +8,8 @@ import {Search} from "@material-ui/icons";
 const styles = theme => ({
     infoSearchPath: {
         position: 'relative',
+        fontSize: '14px',
+        paddingTop: '10px',
         display: "inline-block",
         bottom: "5px",
         fontFamily: "Nunito Sans, sans-serif",
@@ -22,7 +24,8 @@ const styles = theme => ({
     searchClear: {
         maxHeight: 25,
         minHeight: 25,
-        padding: '3px 7px',
+        marginLeft: '18',
+        padding: '4px 7px',
         fontFamily: "Nunito Sans, sans-serif",
         color: "#eaeaea",
         fontWeight: 600,
@@ -30,7 +33,8 @@ const styles = theme => ({
     },
     searchIcon: {
         marginLeft: theme.spacing.unit,
-        color: "#c5c5c5"
+        fontSize: '20',
+        color: "#d4d9dd"
     },
     container: {
         display: "flex",

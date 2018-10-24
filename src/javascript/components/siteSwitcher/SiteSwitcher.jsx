@@ -16,7 +16,7 @@ const styles = theme => ({
         fontFamily: "Nunito sans, sans-serif",
         fontSize: '1rem',
         fontWeight: 200,
-        marginRight: '7px',
+        marginRight: '5px',
         color: '#504e4d',
         backgroundSize: '18px'
     },
@@ -25,15 +25,20 @@ const styles = theme => ({
         fontFamily: "Nunito sans, sans-serif",
         fontSize: '1rem',
         fontWeight: 200,
-        marginRight: '7px',
-        color: '#f5f5f5',
+        marginRight: '5px',
+        color: theme.palette.background.paper,
         backgroundSize: '18px'
     },
     formControl: {
         minWidth: 120
     },
-    icontest: {
-        fontSize: '0.500rem'
+    iconLight: {
+        color: theme.palette.background.paper,
+        fontSize: '10px'
+    },
+    iconDark: {
+        color: '#504e4d',
+        fontSize: '10px',
     },
     input1: {
         backgroundColor: "transparent",
@@ -173,7 +178,7 @@ class SiteSwitcherDisplay extends React.Component {
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;
-                    <FontAwesomeIcon icon="chevron-down" className={classes.icontest}/>
+                    <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map((siteNode, i) => {

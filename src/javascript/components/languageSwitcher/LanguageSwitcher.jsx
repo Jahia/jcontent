@@ -32,8 +32,13 @@ const styles = theme => ({
     formControl: {
         minWidth: 120,
     },
-    icontest: {
-        fontSize: '0.500rem',
+    iconLight: {
+        color: theme.palette.background.paper,
+        fontSize: '10px'
+    },
+    iconDark: {
+        color: '#504e4d',
+        fontSize: '10px',
     },
     input1: {
         backgroundColor: "transparent",
@@ -195,7 +200,7 @@ class LanguageSwitcherDisplay extends React.Component {
                     {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
                     &nbsp;
                 </Typography>
-                <FontAwesomeIcon icon="chevron-down" className={classes.icontest}/>
+                <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
             </Button>
             <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                 {languages.map((lang) => {

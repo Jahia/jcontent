@@ -295,8 +295,11 @@ class ContentListTable extends React.Component {
     render() {
 
         const {hoveredRow} = this.state;
-        const {rows, page, pageSize, onChangeRowsPerPage, onChangePage, onRowSelected, selection, totalCount, t, classes, uiLang, lang, handleShowPreview, onContextualMenu, handleSort, order, orderBy} = this.props;
+        const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
+            onChangePage, onRowSelected, selection, totalCount, t, classes,
+            uiLang, lang, handleShowPreview, onContextualMenu, handleSort, order, orderBy} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
+
         return (
             <div className={classes.contentList}>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
@@ -310,7 +313,7 @@ class ContentListTable extends React.Component {
                     <DxContext.Consumer>
                         {dxContext => (
                             <TableBody className={classes.tableBody}>
-                                {_.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
+                                {contentNotFound ? <ContentNotFound classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;
                                     let renderWip = this.renderWip(n, dxContext);
@@ -438,6 +441,14 @@ let EmptyRow = (props) => {
     return <TableRow>
         <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
             {props.translate("label.contentManager.noResults")}
+        </TableCell>
+    </TableRow>;
+};
+
+let ContentNotFound = (props) => {
+    return <TableRow>
+        <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
+            {props.translate("label.contentManager.contentNotFound")}
         </TableCell>
     </TableRow>;
 };

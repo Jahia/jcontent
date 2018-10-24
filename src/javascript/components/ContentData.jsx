@@ -153,8 +153,9 @@ class ContentData extends React.Component {
                     console.error(message);
                     //notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                     return children({
-                                     rows: 0,
+                                     rows: [],
                                      totalCount: 0,
+                                     contentNotFound: true,
                                      layoutQuery: layoutQuery,
                                      layoutQueryParams: layoutQueryParams
                                  });

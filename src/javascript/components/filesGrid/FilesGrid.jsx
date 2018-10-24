@@ -63,8 +63,18 @@ class FilesGrid extends Component {
     }
 
     render() {
-        const { size, t, handleShowPreview, classes } = this.props;
+        const { size, t, handleShowPreview, contentNotFound, classes } = this.props;
         const {hoveredCard} = this.state;
+
+        if (contentNotFound) {
+            return (
+                <Grid container className={classes.gridEmpty}>
+                    <h3 className={classes.empty}>
+                        { t("label.contentManager.contentNotFound") }
+                    </h3>
+                </Grid>
+            )
+        }
 
         if (!this.props.rows || this.props.rows.length === 0) {
             return (

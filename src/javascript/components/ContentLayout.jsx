@@ -358,13 +358,14 @@ class ContentLayout extends React.Component {
                     >
                         <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams}
                                      setRefetch={this.setContentRefetcher} orderBy={orderBy}>
-                            {({rows, totalCount}) => {
+                            {({rows, contentNotFound, totalCount}) => {
                                 return <Paper className={classes.paper}>
                                     {mode === Constants.mode.FILES && !this.state.showList
                                         ? <FilesGrid
                                             size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                             totalCount={totalCount}
                                             rows={rows}
+                                            contentNotFound={contentNotFound}
                                             pageSize={this.state.rowsPerPage}
                                             onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                             onChangePage={this.handleChangePage}
@@ -374,6 +375,7 @@ class ContentLayout extends React.Component {
                                         : <ContentListTable
                                             totalCount={totalCount}
                                             rows={rows}
+                                            contentNotFound={contentNotFound}
                                             pageSize={this.state.rowsPerPage}
                                             onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                             onChangePage={this.handleChangePage}

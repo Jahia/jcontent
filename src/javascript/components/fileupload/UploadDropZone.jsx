@@ -24,7 +24,7 @@ const styles = theme => ({
         flex: 3
     },
     dropZoneHeader: {
-        marginTop: 120
+        marginTop: 100
     },
     dropZoneActive: {
         border: "2px dashed #cecece",

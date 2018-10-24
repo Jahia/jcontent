@@ -346,6 +346,7 @@ class ContentPreview extends React.Component {
                 </Grid>;
         }
     };
+
     previewComponent(data) {
         const {classes, t, dxContext} = this.props;
         let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
@@ -405,35 +406,48 @@ class ContentPreview extends React.Component {
         },200);
         return null;
     }
+
     downloadButton(selectedItem, workspace) {
+
         let {classes, dxContext, t} = this.props;
+
         if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {
-            return <a className={classes.colorIcon}
-                      title="download"
-                      target="_blank"
-                      href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}>
-                <Tooltip title={t('label.contentManager.contentPreview.download')}><CloudDownload/></Tooltip>
-            </a>
+            return <a
+                className={classes.colorIcon}
+                target="_blank"
+                href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
+            >
+                <Tooltip title={t('label.contentManager.contentPreview.download')}>
+                    <CloudDownload/>
+                </Tooltip>
+            </a>;
         } else {
-            return <a className={classes.colorIcon}
-                      title="download"
-                      href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
-                      download>
-                <Tooltip title={t('label.contentManager.contentPreview.download')}><CloudDownload/></Tooltip>
-            </a>
+            return <a
+                className={classes.colorIcon}
+                href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
+                download
+            >
+                <Tooltip title={t('label.contentManager.contentPreview.download')}>
+                    <CloudDownload/>
+                </Tooltip>
+            </a>;
         }
     }
+
     screenModeButtons(handleFullScreen, classes) {
+
         const {t} = this.props;
         handleFullScreen(this.state.fullScreen);
+
         if (this.state.fullScreen) {
             return <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
                 <FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/>
-            </Tooltip>
+            </Tooltip>;
+        } else {
+            return <Tooltip title={t('label.contentManager.contentPreview.expand')}>
+                <Fullscreen onClick={this.handleDialogState} className={classes.colorIcon}/>
+            </Tooltip>;
         }
-        return <Tooltip title={t('label.contentManager.contentPreview.expand')}>
-            <Fullscreen onClick={this.handleDialogState} className={classes.colorIcon} />
-        </Tooltip>
     }
 
     queryVariables(path) {

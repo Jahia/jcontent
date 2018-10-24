@@ -29,22 +29,28 @@ class ShareMenu extends Component {
         copy(value);
     }
 
-
     render() {
+
         const {t, selection, classes} = this.props;
         const {shareMenuAnchor} = this.state;
+
         if (_.isEmpty(selection)) {
             return null;
         }
+
         const selectedItem = selection[0];
+
         return <span>
-            <Tooltip title={t('label.contentManager.contentPreview.share')}><Button
-                aria-owns={shareMenuAnchor ? 'share-menu' : null}
-                aria-haspopup="true"
-                className={classes.colorIcon}
-                onClick={(event) => this.handleMenuClick(event, "shareMenuAnchor")}>
-                <Share/>
-            </Button></Tooltip>
+            <Tooltip title={t('label.contentManager.contentPreview.share')}>
+                <Button
+                    aria-owns={shareMenuAnchor ? 'share-menu' : null}
+                    aria-haspopup="true"
+                    className={classes.colorIcon}
+                    onClick={(event) => this.handleMenuClick(event, "shareMenuAnchor")}
+                >
+                    <Share/>
+                </Button>
+            </Tooltip>
             <Menu
                 id="share-menu"
                 anchorEl={shareMenuAnchor}
@@ -57,7 +63,7 @@ class ShareMenu extends Component {
                     {t('label.contentManager.contentPreview.copyUUIDToClipboard')}
                 </MenuItem>
             </Menu>
-        </span>
+        </span>;
     }
 
     handleMenuClick(event, anchorType) {
@@ -68,9 +74,10 @@ class ShareMenu extends Component {
         this.setState({[anchorType]: null});
     };
 }
+
 const mapStateToProps = (state, ownProps) => ({
     selection: state.selection
-})
+});
 
 export default _.flowRight(
     translate(),

@@ -219,7 +219,7 @@ class FileCard extends Component {
 
     largeMediaCard() {
         const { classes, t, node, dxContext, onContextualMenu, cardType, uiLang } = this.props;
-        
+
         return <Card className={ this.generateCardClass(node, classes.card) }
                      classes={{ root: classes.cardStyle}}
                      onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: "contextualMenuContentAction", ...node})}}
@@ -424,9 +424,16 @@ class FileCard extends Component {
             <Tooltip title={t('label.contentManager.contentPreview.preview')}><Visibility/></Tooltip>
         </IconButton> : null;
     }
+
     displayPublicationAction(publishButtonClass) {
+
         let {classes, node, isHovered, t} = this.props;
-        return isHovered ? <Actions menuId={"thumbnailPublishMenu"} context={{
+
+        if (!isHovered) {
+            return null;
+        }
+
+        return <Actions menuId={"thumbnailPublishMenu"} context={{
             uuid: node.uuid,
             path: node.path,
             displayName: node.name,
@@ -434,13 +441,17 @@ class FileCard extends Component {
         }}>
             {(props) => {
                 return <CmIconButton
-                    className={publishButtonClass ? publishButtonClass : classes.publishButton} {...props}
+                    className={publishButtonClass ? publishButtonClass : classes.publishButton}
+                    {...props}
                     disableRipple={true}
-                    cmRole={"file-grid-thumbnail-button-publish"}>
-                    <Tooltip title={t('label.contentManager.filesGrid.publish')}><Autorenew className={classes.renewIcon}/></Tooltip>
-                </CmIconButton>
+                    cmRole={"file-grid-thumbnail-button-publish"}
+                >
+                    <Tooltip title={t('label.contentManager.filesGrid.publish')}>
+                        <Autorenew className={classes.renewIcon}/>
+                    </Tooltip>
+                </CmIconButton>;
             }}
-        </Actions>: null;
+        </Actions>;
     }
 }
 

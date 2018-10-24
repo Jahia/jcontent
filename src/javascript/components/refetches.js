@@ -46,14 +46,14 @@ let refetchContentListData = () => {
     triggerRefetch(refetchTypes.CONTENT_DATA);
 };
 
-let refetchContentTreeData = () => {
-    _.forOwn(Constants.contentTreeConfigs, function(cfg) {
+let refetchContentTreeData = (contentTreeConfigs) => {
+    _.forOwn(contentTreeConfigs || Constants.contentTreeConfigs, function(cfg) {
         triggerRefetch(cfg.key);
     });
 };
 
-let refetchContentTreeAndListData = () => {
-    refetchContentTreeData();
+let refetchContentTreeAndListData = (contentTreeConfigs) => {
+    refetchContentTreeData(contentTreeConfigs);
     refetchContentListData();
 };
 

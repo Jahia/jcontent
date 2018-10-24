@@ -224,8 +224,8 @@ class ContentLayout extends React.Component {
         return (refetchingData) => setRefetcher(type, refetchingData);
     };
 
-    refreshContentsAndTree() {
-        refetchContentTreeAndListData();
+    refreshContentsAndTree(contentTreeConfigs) {
+        refetchContentTreeAndListData(contentTreeConfigs);
     }
 
     handleSort(order, orderBy){

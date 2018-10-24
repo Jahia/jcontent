@@ -27,14 +27,14 @@ class PushEventHandler extends React.Component {
             if (evtType === "workflowTask") {
                 refetchActiveWorkflowTasks();
                 if (eventData.endedWorkflow != null) {
-                    refetchContentTreeAndListData();
+                    this.refetchData();
                 }
             } else if (evtType === "job") {
                 if (this.hasProcessJob(eventData.startedJobs) || this.hasProcessJob(eventData.endedJobs)) {
-                    refetchContentTreeAndListData();
+                    this.refetchData();
                 }
             } else if (evtType === "contentUnpublished") {
-                refetchContentTreeAndListData();
+                this.refetchData();
             }
         }
     }
@@ -47,6 +47,10 @@ class PushEventHandler extends React.Component {
             });
         }
         return found;
+    }
+
+    refetchData() {
+        refetchContentTreeAndListData();
     }
 
     render() {

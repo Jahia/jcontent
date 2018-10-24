@@ -1,11 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 
 module.exports = {
-    entry: path.resolve(__dirname, 'src/javascript', 'ContentManagerApp.jsx'),
+    entry: [ path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx')],
     output: {
         path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
         filename: 'content-manager.js'
@@ -39,7 +38,7 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         name: '[name].[ext]',
-                        outputPath: '__dx_module_path__/fonts/'
+                        outputPath: 'fonts/'
                     }
                 }]
             },
@@ -48,15 +47,6 @@ module.exports = {
     plugins: [
         //new BundleAnalyzerPlugin({analyzerMode: "static"}),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/),
-        // replace __dx_module_path__ to __webpack_public_path__ variable (set in template jsp file)
-        new ReplaceInFileWebpackPlugin([{
-            dir: 'src/main/resources/javascript/apps/',
-            test:/\.js$/,
-            rules: [{
-                search: /__dx_module_path__/g,
-                replace: '" + __webpack_public_path__ +"'
-            }]
-        }])
     ],
     mode: 'development',
     devtool: 'source-map'

@@ -54,7 +54,6 @@
     "redux": "^4.0.0",
     "redux-batched-actions": "^0.4.0",
     "redux-logger": "^3.0.6",
-    "replace-in-file-webpack-plugin": "^1.0.6",
     "styled-components": "^3.3.3",
     "underscore": "^1.9.0"
   },

@@ -140,7 +140,7 @@ const styles = theme => ({
     cardContent: {
         marginLeft: theme.spacing.unit * 1,
         marginRight:'0!important',
-        padding: '0!important',
+        padding: '5!important',
     },
     textTypo: {
         color: theme.palette.background.default,

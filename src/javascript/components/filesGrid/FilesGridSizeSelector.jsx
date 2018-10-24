@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Tooltip } from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
+import {translate} from "react-i18next";
+import {compose} from "react-apollo";
 
 const styles = theme => ({
     root: {
@@ -39,27 +41,12 @@ class FilesGridSizeSelector extends React.Component {
         this.props.onChange(value);
     };
 
-    getTooltipTitle(value) {
-        switch(value) {
-            case 1:
-                return "x 6";
-            case 2:
-                return "x 4";
-            case 3:
-                return "x 3";
-            case 4:
-                return "x 2";
-            case 5:
-                return "x 1";
-        }
-    }
-
     render() {
 
-        const {classes} = this.props;
+        const {classes, t} = this.props;
         const {value} = this.state;
 
-        return <Tooltip title={this.getTooltipTitle(value)}>
+        return <Tooltip title={t('label.contentManager.filesGrid.fileSizeSelector')}>
             <Slider
                 value={value}
                 classes={{root: classes.root, track: classes.track, thumb: classes.thumb}}
@@ -78,4 +65,9 @@ FilesGridSizeSelector.propTypes = {
     initValue: PropTypes.number.isRequired
 };
 
-export default withStyles(styles)(FilesGridSizeSelector);
+FilesGridSizeSelector = compose(
+    translate(),
+    withStyles(styles)
+)(FilesGridSizeSelector);
+
+export default FilesGridSizeSelector;

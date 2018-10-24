@@ -27,7 +27,7 @@ const styles = theme => ({
         backgroundColor: '#efefef',
     },
     centerGrid: {
-        padding: 16,
+        padding: theme.spacing.unit * 2,
     },
     row : {
         backgroundColor: 'red',

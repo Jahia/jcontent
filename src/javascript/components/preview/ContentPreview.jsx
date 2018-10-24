@@ -13,7 +13,7 @@ import CmButton from "../renderAction/CmButton";
 import CmIconButton from "../renderAction/CmIconButton";
 import {lockNode, unlockNode} from "./gqlMutations";
 import {Tooltip} from '@material-ui/core';
-import {isPDF, isImage, getFileType} from "../filesGrid/filesGridUtils";
+import {isPDF, isBrowserImage, getFileType} from "../filesGrid/filesGridUtils";
 import {DxContext} from "../DxContext";
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
@@ -361,7 +361,7 @@ class ContentPreview extends React.Component {
                 return <div className={this.state.fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
                 <PDFViewer fullscreen={this.state.fullScreen} key={data.nodeByPath.uuid} file={file}/>
                 </div>;
-            } else if (isImage(data.nodeByPath.path)) {
+            } else if (isBrowserImage(data.nodeByPath.path)) {
                 return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
                 <ImageViewer key={data.nodeByPath.uuid}
                                     elementId={this.state.imageControlElementId}
@@ -411,7 +411,7 @@ class ContentPreview extends React.Component {
 
         let {classes, dxContext, t} = this.props;
 
-        if (isImage(selectedItem.path) || isPDF(selectedItem.path)) {
+        if (isBrowserImage(selectedItem.path) || isPDF(selectedItem.path)) {
             return <a
                 className={classes.colorIcon}
                 target="_blank"

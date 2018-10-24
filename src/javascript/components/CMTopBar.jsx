@@ -53,7 +53,6 @@ const styles = theme => ({
     },
     topBarwidth: {
         width: 'min-content',
-        maxWidth: '100%',
     }
 });
 

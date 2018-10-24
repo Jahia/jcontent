@@ -4,7 +4,9 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 
 module.exports = {
-    entry: [ path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx')],
+    entry: {
+        main: [ '@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx')]
+    },
     output: {
         path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
         filename: 'content-manager.js'

@@ -85,7 +85,7 @@ const styles = theme => ({
         background: '#f7f7f7',
         position: 'absolute',
         boxShadow: '1px 0 5px -2px rgba(0, 0, 21, 0.29)',
-        zIndex: 0,
+        zIndex: 1,
         left: 105,
         width: drawerWidth,
         transition: theme.transitions.create('width', {

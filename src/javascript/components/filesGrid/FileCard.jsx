@@ -10,7 +10,7 @@ import 'moment-timezone';
 import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
 
-import { fileIcon, isImage } from './filesGridUtils';
+import { fileIcon, isBrowserImage } from './filesGridUtils';
 import {cmSetSelection} from "../redux/actions";
 import { invokeContextualMenu } from "../contextualMenu/redux/actions";
 import {connect} from "react-redux";
@@ -203,7 +203,7 @@ class FileCard extends Component {
     render() {
         const { cardType, node  } = this.props;
 
-        if (isImage(node.path)) {
+        if (isBrowserImage(node.path)) {
             //Media cards are used for images
             return this.regularMediaCard(cardType);
         }

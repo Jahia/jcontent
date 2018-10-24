@@ -18,6 +18,7 @@
 </head>
 
 <body style="overflow: hidden">
+<template:addResources type="javascript" resources="polyfills.js"/>
 <template:addResources type="javascript" resources="apps/content-manager.js"/>
 <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 
@@ -45,7 +46,9 @@
 ${cmFunctions:generateActionLists(renderContext)}
 
 <script type="text/javascript">
-    reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
+    document.addEventListener("DOMContentLoaded", function(event) {
+        reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
+    });
 </script>
 
 </body>

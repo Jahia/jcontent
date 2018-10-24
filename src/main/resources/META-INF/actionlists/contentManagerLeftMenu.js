@@ -1,5 +1,5 @@
 
-let openWorkflowDashboard = (context) => window.parent.authoringApi.openWorkflowDashboard();
+openWorkflowDashboard = function(context) { window.parent.authoringApi.openWorkflowDashboard(); }
 
 contextJsParameters['config'].actions = Object.assign(contextJsParameters['config'].actions, {
     contentLeftMenu: {

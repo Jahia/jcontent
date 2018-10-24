@@ -1,5 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import imageExtensions from 'image-extensions';
+
+const imageExtensionSet = new Set(imageExtensions);
 
 export const valueToSizeTransformation = function(value) {
     switch(value) {
@@ -19,6 +22,7 @@ export const fileIcon = function(filename, size = "lg", style = {}){
         case "jpeg":
         case "jpg":
         case "gif":
+        case "svg":
         case "img": return <FontAwesomeIcon icon={ ["far", "image"] }
                                             size={ size }
                                             color={ "#cecece" }
@@ -87,17 +91,22 @@ export const fileIcon = function(filename, size = "lg", style = {}){
     }
 };
 
-export const isImage = function(filename) {
+export const isBrowserImage = function(filename) {
     switch (filename.split('.').pop().toLowerCase()) {
         case "png":
         case "jpeg":
         case "jpg":
         case "gif":
         case "img":
+        case "svg":
             return true;
         default :
             return false;
     }
+};
+
+export const isImageFile = function (filename) {
+    return imageExtensionSet.has(filename.split('.').pop().toLowerCase());
 };
 
 export const isPDF = function(filename) {

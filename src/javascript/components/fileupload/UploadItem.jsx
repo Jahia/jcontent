@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import { uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE } from './constatnts';
 import { updateUpload, removeUpload, takeFromQueue } from './redux/actions';
 import {batchActions} from 'redux-batched-actions';
-import isImage from 'is-image';
+import { isImageFile } from '../filesGrid/filesGridUtils';
 import {translate} from "react-i18next";
 import _ from 'lodash';
 
@@ -185,7 +185,7 @@ class UploadItem extends React.Component {
             path: this.props.path
         };
 
-        if (isImage(file.name)) {
+        if (isImageFile(file.name)) {
             return this.client.mutate({
                 mutation: uploadImage,
                 variables: {
@@ -357,7 +357,7 @@ class UploadItem extends React.Component {
 
     avatar() {
         const { file } = this.props;
-        if (isImage(file.name)) {
+        if (isImageFile(file.name)) {
             return <Avatar alt={ file.name } src={ file.preview } />
         }
         return <Avatar>

@@ -22,7 +22,8 @@ const styles = theme => ({
         justifyItems: "center"
     },
     fileNameText: {
-        maxWidth: 600,
+        width: 350,
+        maxWidth: 350,
         '& span' : {
             color: "#555"
         }

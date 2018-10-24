@@ -14,6 +14,7 @@ import {
 import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
+import {lodash as _} from "lodash";
 
 let styles = (theme) => ({
     root: {
@@ -123,18 +124,18 @@ class CmPickerViewMaterial extends React.Component {
 
     hoverOn = (path) => {
         this.setState({ hover: path });
-    }
+    };
 
     hoverOff = () => {
         this.setState({ hover: false });
-    }
+    };
 
     render() {
 
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
 
-        //Sorts entries if they contain "contents" folder
-        this.sortContentsEntriesAlphabetical(pickerEntries);
+        //Sorts entries that are folder types
+        let sortedEntries = this.sortContentsEntriesAlphabetical(pickerEntries);
 
         return <div className={classes.root}>
             {loading &&
@@ -142,7 +143,7 @@ class CmPickerViewMaterial extends React.Component {
             }
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
                 {
-                    pickerEntries.map((entry) =>
+                    sortedEntries.map((entry) =>
                         <ListItem
                             onMouseEnter={() => this.hoverOn(entry.path)}
                             onClick={() => this.hoverOn(entry.path)}
@@ -203,20 +204,85 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     sortContentsEntriesAlphabetical(entries) {
-        if (entries[0] && entries[0].name === "contents") {
-            entries.sort(function(a, b) {
-                if (a.name === "contents") {
-                    return false;
+        if (entries[0] && (entries[0].node.primaryNodeType.name === 'jnt:folder' || entries[0].node.primaryNodeType.name === 'jnt:contentFolder')) {
+            //Structured container for the entries - used in order to sort all the entries
+            let entriesByDepth = [];
+            for (let i in entries) {
+                let pathParts = entries[i].path.split('/');
+                let depth = pathParts.length - 3; //Depth is calculated after /sites/{site}/
+                //Depth is used as an index.
+                let entry = entries[i];
+                if (i == 0) {
+                    //Set up the root entry
+                    entriesByDepth.push({depth: depth-1, entry: entry, children: []})//entry depth
+                } else {
+                    entry.parent = pathParts[pathParts.length - 2];
+                    //Retrieve the parent of the current entry
+                    let parentElement = findParentElement(entry.parent, entriesByDepth, depth-2);//parent depth
+                    //Add the entry to the list of children
+                    parentElement.children.push({depth: depth-1, entry: entry, children: []});//entry depth
                 }
-                let asort = a.path.split('/');
-                asort[asort.length-1] = a.node.displayName;
-                let bsort = b.path.split('/');
-                bsort[bsort.length-1] = b.node.displayName;
-                return asort.join('/') > bsort.join('/');
-            })
+            }
+            sortEntries(entriesByDepth);
+            let sortedEntries = [];
+            flattenEntries(entriesByDepth, sortedEntries);
+            return sortedEntries;
+
+            /**
+             * Search through nested folders to find parent and return the children array
+             * @param parent parent name
+             * @param array entries to search through
+             * @param depth depth at which parent resides
+             * @returns {*}
+             */
+            function findParentElement(parent, array, depth) {
+                if (array[0].depth === depth) {
+                    return _.find(array, function(n){
+                        return n.entry.name === parent;
+                    })
+                } else {
+                    return findParentElement(parent, array[0].children, depth)
+                }
+            }
+
+            /**
+             * Sort each level of parent folders and their children
+             * @param array - entries that should be sorted
+             */
+            function sortEntries(array) {
+                if (array.length > 1) {
+                    array.sort(function (a, b) {
+                        return a.entry.node.displayName > b.entry.node.displayName;
+                    });
+                }
+                for (let i in array) {
+                    if (array[i].children.length > 1) {
+                        sortEntries(array[i].children);
+                    }
+                }
+
+            }
+
+            /**
+             * Flattens the array of object folders and children in a singular array
+             * @param entriesToFlatten entries that will be flattened
+             * @param array array to contain the flattened entries
+             */
+            function flattenEntries(entriesToFlatten, array) {
+                //Go through the parent folders, sorting them first and subsequently sorting the children folders
+                //while maintaining the order
+                for(let i in entriesToFlatten) {
+                    array.push(entriesToFlatten[i].entry);
+                    if (entriesToFlatten[i].children.length > 0) {
+                        flattenEntries(entriesToFlatten[i].children, array);
+                    }
+                }
+            }
         }
+        //Return unsorted entries
+        return entries;
     }
-};
+}
 
 CmPickerViewMaterial.propTypes = {
     pickerEntries: PropTypes.array.isRequired,

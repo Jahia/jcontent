@@ -23,7 +23,9 @@ const styles = theme => ({
         cursor: "pointer",
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
-            width: 24
+            width: 20,
+            marginLeft: '6px',
+            marginRight: '30px',
         },
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
             display: "block"
@@ -35,7 +37,9 @@ const styles = theme => ({
         cursor: "pointer",
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
-            width: 24
+            width: 20,
+            marginLeft: '6px',
+            marginRight: '30px',
         },
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
             display: "block"
@@ -49,7 +53,9 @@ const styles = theme => ({
         cursor: "pointer",
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
-            width: 24
+            width: 20,
+            marginLeft: '6px',
+            marginRight: '30px',
         },
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
             display: "block"
@@ -63,7 +69,7 @@ const styles = theme => ({
         display: "flex",
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
-            width: 24
+            width: 20
         },
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
             display: "block"

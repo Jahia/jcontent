@@ -83,6 +83,9 @@ const styles = theme => ({
  * Note that publication status must live in a relatively positioned container with flex display and it must have this
  * hove functionality : "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
  *           width: 24
+ *       },
+ *       "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
+ *           display: "block",
  *       }
  */
 class PublicationStatusComponent extends Component {

@@ -165,22 +165,18 @@ const styles = theme => ({
     },
     TypoBody:{
         fontSize: '14px',
-        fontWeight: '800',
         color: theme.palette.background.default,
         paddingBottom: theme.spacing.unit * 2,
     },
     TypoCaption: {
         color: theme.palette.background.default,
-        fontSize: '12px',
-        fontStyle: 'italic!important'
+        fontSize: '12px'
     },
     typoCaptionLarge: {
-        fontSize: '12px',
-        fontStyle: 'italic!important'
+        fontSize: '12px'
     },
     typoBodyLarge: {
         fontSize: '14px',
-        fontWeight: '800',
         paddingBottom: theme.spacing.unit * 2,
     },
     tooltip: {

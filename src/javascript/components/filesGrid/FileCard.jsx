@@ -24,7 +24,7 @@ const styles = theme => ({
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
-        }
+        },
     },
     cardMedium: {
         display: 'flex',
@@ -135,7 +135,7 @@ const styles = theme => ({
         padding: 0,
         minHeight: 200,
         maxHeight: 200,
-        backgroundColor: 'transparent'
+        backgroundColor: 'rgb(245,245,245)'
     },
     cardContent: {
         marginLeft: theme.spacing.unit * 1,
@@ -146,24 +146,24 @@ const styles = theme => ({
         color: theme.palette.background.default,
     },
     TypoBody:{
-        fontSize: '0.800rem',
+        fontSize: '14px',
         fontWeight: '800',
         color: theme.palette.background.default,
-        paddingBottom: theme.spacing.unit * 1,
+        paddingBottom: theme.spacing.unit * 2,
     },
     TypoCaption: {
         color: theme.palette.background.default,
-        fontSize: '0.872rem!important',
+        fontSize: '12px',
         fontStyle: 'italic!important'
     },
     typoCaptionLarge: {
-        fontSize: '1rem!important',
+        fontSize: '12px',
         fontStyle: 'italic!important'
     },
     typoBodyLarge: {
-        fontSize: '0.9rem!important',
+        fontSize: '14px',
         fontWeight: '800',
-        paddingBottom: theme.spacing.unit * 1,
+        paddingBottom: theme.spacing.unit * 2,
     },
     tooltip: {
         opacity: 0,

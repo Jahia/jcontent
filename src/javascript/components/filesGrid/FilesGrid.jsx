@@ -16,6 +16,7 @@ const styles = theme => ({
         maxHeight:  'calc(100vh - 140px)',
         margin: '0!important',
         backgroundColor: '#efefef',
+        padding: theme.spacing.unit*3,
     },
     gridEmpty: {
         overflowY: 'scroll',
@@ -26,11 +27,7 @@ const styles = theme => ({
         backgroundColor: '#efefef',
     },
     centerGrid: {
-        paddingTop: '24px!important',
-        paddingBottom: '24px!important',
-        paddingRight: '24px!important',
-        paddingLeft: '24px!important',
-
+        padding: 16,
     },
     row : {
         backgroundColor: 'red',
@@ -71,14 +68,14 @@ class FilesGrid extends Component {
 
         if (!this.props.rows || this.props.rows.length === 0) {
             return (
-            <Grid container spacing={ 8 } className={classes.gridEmpty}>
+            <Grid container className={classes.gridEmpty}>
                 <h3 className={classes.empty}>
                     { t('label.contentManager.filesGrid.emptyMessage') }
                 </h3>
             </Grid>
             )
         }
-        return <Grid container spacing={ 8 } className={classes.grid}>
+        return <Grid container className={classes.grid}>
             {
                 this.props.rows.map((node) => (
                     <Grid key={ node.uuid } item xs={ size }

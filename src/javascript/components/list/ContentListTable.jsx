@@ -66,6 +66,9 @@ const styles = (theme) => ({
             marginLeft: '6px',
             height: '36px!important',
             maxHeight: '36px!important',
+        },
+        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
+            display: "block",
         }
     },
     publicationStatusContainer: {
@@ -180,20 +183,6 @@ const styles = (theme) => ({
         overflowX: 'scroll',
         height: 'calc(100vh - 140px)',
         maxHeight:  'calc(100vh - 140px)'
-    },
-    contentRow: {
-        height: '28px',
-        maxHeight: '28px',
-        minHeight: '28px',
-        color: "#5E6565!important",
-        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
-            width: 28,
-            height: '36px!important',
-            maxHeight: '36px!important',
-        },
-        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
-            display: "block",
-        }
     },
     row : {
         backgroundColor: '#efefef',

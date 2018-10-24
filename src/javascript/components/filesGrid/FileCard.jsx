@@ -25,6 +25,9 @@ const styles = theme => ({
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
         },
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+            display: "block"
+        }
     },
     cardMedium: {
         display: 'flex',
@@ -33,6 +36,9 @@ const styles = theme => ({
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
+        },
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+            display: "block"
         }
     },
     cardVertical: {
@@ -44,6 +50,9 @@ const styles = theme => ({
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
+        },
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+            display: "block"
         }
     },
     details: {
@@ -55,6 +64,9 @@ const styles = theme => ({
         position: "relative",
         "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
             width: 24
+        },
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+            display: "block"
         }
     },
     content: {

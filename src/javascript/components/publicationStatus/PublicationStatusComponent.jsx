@@ -45,7 +45,7 @@ const styles = theme => ({
         display: "flex",
         alignItems: "center",
         backgroundColor: "inherit",
-        width:0,
+        width: 0.01, //Safari doesn't take 0 for some strange reason
         opacity: 0,
         visibility: "hidden",
         overflow: "hidden",
@@ -55,12 +55,14 @@ const styles = theme => ({
     infoContainer: {
         overflow: "hidden"
     },
+    infoIcon: {
+        display: "none"
+    },
     infoButton: {
         flex: "auto",
         display: "flex",
         alignItems: "center",
-        width: 0,
-        zIndex: 1,
+        width: 8,
         backgroundColor: "inherit",
         transition: "width 0.2s ease-in 0s",
         overflow: "hidden",
@@ -111,11 +113,11 @@ class PublicationStatusComponent extends Component {
                     <div className={ classes.infoContainer }
                          onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
                          onMouseLeave={() => this.setPublicationInfoWidth(0)}>
-                        <InfoOutlined className={classes.publicationSvg}/>
+                        <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON` }/>
                     </div>
                 </div>
                 <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }
-                     style={{width: this.state.publicationInfoWidth, marginLeft: '-30px', fontSize: '12px'}}>
+                     style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-30px', fontSize: '12px'}}>
                     <div className={classes.infoContainer}
                          style={{marginLeft: 7, width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
                          data-cm-role={'publication-info'}

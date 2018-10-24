@@ -133,6 +133,22 @@ const styles = theme => ({
     },
     searchClearIcon: {
         color: '#d4d9dd'
+    },
+    academyLink: {
+        position: "fixed",
+        top: 0,
+        right: 0,
+        width: "50%",
+        background: "linear-gradient(to right, rgba(78, 81, 86, 0) 0%, #4e5156 100%) !important",
+        zIndex: "2000",
+        textAlign: "right"
+    },
+    academyLinkText: {
+        fontSize: 12,
+        fontWeight: 300,
+        padding: "4px 10px",
+        color: "#e3e3e3",
+        fontFamily: "Nunito Sans"
     }
 });
 
@@ -256,6 +272,7 @@ class ContentLayout extends React.Component {
 
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
+                <div className={classes.academyLink}><a target="_parent" href={contextJsParameters.config.academyLink} className={classes.academyLinkText}>{t('label.contentManager.link.academy')}</a></div>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>

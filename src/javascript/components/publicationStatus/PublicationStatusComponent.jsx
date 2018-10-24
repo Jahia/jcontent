@@ -7,11 +7,11 @@ import {translate} from "react-i18next";
 
 const styles = theme => ({
     root: {
-        zIndex:1,
+        zIndex:0,
         display: "flex",
         flexDirection: "row",
         alignItems: "stretch",
-        width: 8
+        width: 6
     },
     statusRoot: {
         zIndex:1,
@@ -60,6 +60,7 @@ const styles = theme => ({
         display: "flex",
         alignItems: "center",
         width: 0,
+        zIndex: 1,
         backgroundColor: "inherit",
         transition: "width 0.2s ease-in 0s",
         overflow: "hidden",
@@ -70,6 +71,9 @@ const styles = theme => ({
             opacity: 1,
             visibility: "visible"
         }
+    },
+    publicationSvg : {
+        fontSize: '13px'
     }
 });
 
@@ -107,12 +111,13 @@ class PublicationStatusComponent extends Component {
                     <div className={ classes.infoContainer }
                          onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
                          onMouseLeave={() => this.setPublicationInfoWidth(0)}>
-                        <InfoOutlined/>
+                        <InfoOutlined className={classes.publicationSvg}/>
                     </div>
                 </div>
-                <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` } style={{width: this.state.publicationInfoWidth}}>
-                    <div className={ classes.infoContainer }
-                         style={{paddingLeft: 20, width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
+                <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }
+                     style={{width: this.state.publicationInfoWidth, marginLeft: '-30px', fontSize: '12px'}}>
+                    <div className={classes.infoContainer}
+                         style={{marginLeft: 7, width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
                          data-cm-role={'publication-info'}
                          data-cm-value={node.publicationStatus}>
                         { publicationStatus.geti18nDetailsMessage(node, t, i18n.language ) }

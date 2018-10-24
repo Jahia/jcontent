@@ -22,23 +22,26 @@ const styles = theme => ({
         color: theme.palette.background.default,
         paddingTop: '6px!important',
     },
+    colorVert2: {
+        color: theme.palette.background.default,
+    },
     buttonFooter: {
         padding: 0,
         margin: '0!important',
-        display: 'flex',
-        height: 36,
-        maxHeight: 36,
     }
 });
 
 class CmIconButton extends React.Component {
 
     render() {
-        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal} = this.props;
+        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, style2} = this.props;
         let childrenCount = React.Children.count(children);
         if (horizontal) {
             return (
-                <Button className={classes.buttonFooter + " " + className + " " + classes.colorVert}
+                <Button className={
+                    style2 ? classes.buttonFooter + " " + className + " " + classes.colorVert2 :
+                        classes.buttonFooter + " " + className + " " + classes.colorVert
+                }
                         disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
                         onClick={(event) => onClick(event)} data-cm-role={cmRole}>
                     {childrenCount > 0

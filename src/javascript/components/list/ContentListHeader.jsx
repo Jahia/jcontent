@@ -22,6 +22,7 @@ class ContentListHeader extends React.Component {
                         if(column.sortable) {
                             return (
                                 <TableCell
+                                    classes={column.id !== 'createdBy' && {root: classes.paddingCell}}
                                     key={column.id}
                                     className={classes[column.id] + ' ' + classes.tableCellHeight}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}

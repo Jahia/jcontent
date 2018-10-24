@@ -18,11 +18,11 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit
     },
     typoTitle: {
-        fontSize: '1.7rem',
+        fontSize: '25px',
         fontFamily: "Nunito sans, sans-serif",
         lineHeight: '32px',
         fontWeight: '100',
-        color: '#f5f5f5',
+        color: theme.palette.background.paper,
         width: '260px',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',

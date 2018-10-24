@@ -27,6 +27,7 @@ const styles = theme => ({
     },
     actionButton: {
         textTransform: 'none',
+        fontSize: '12px',
         marginTop: -7,
         padding: 0,
     },

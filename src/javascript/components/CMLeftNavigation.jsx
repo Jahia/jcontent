@@ -76,6 +76,7 @@ const styles = theme => ({
         color: '#d1d1d2'
     },
     menuBurger: {
+        backgroundColor: 'transparent!important',
         paddingRight: '0px!important',
         paddingTop: '34px!important',
         paddingLeft: '20px!important',
@@ -145,7 +146,7 @@ const styles = theme => ({
         transition: 'all 0.2s ease-in 0s'
     },
     typoTitle: {
-        fontSize: '1.7rem',
+        fontSize: '25px',
         fontFamily: "Nunito sans, sans-serif",
         lineHeight: '32px',
         fontWeight: '100',

@@ -16,7 +16,7 @@ const styles = theme => ({
         fontFamily: "Nunito sans, sans-serif",
         fontSize: '1rem',
         fontWeight: 200,
-        paddingRight: '20px',
+        marginRight: '7px',
         color: '#504e4d',
         backgroundSize: '18px'
     },
@@ -25,7 +25,7 @@ const styles = theme => ({
         fontFamily: "Nunito sans, sans-serif",
         fontSize: '1rem',
         fontWeight: 200,
-        paddingRight: '20px',
+        marginRight: '7px',
         color: '#f5f5f5',
         backgroundSize: '18px'
     },

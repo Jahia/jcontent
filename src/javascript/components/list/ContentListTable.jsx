@@ -39,15 +39,34 @@ const APP_TABLE_CELLS = 2;
 
 const styles = (theme) => ({
     type: {
-        //color: "#5E6565"
+        fontSize: '12px',
+        minWidth: "100px",
+        maxWidth: "100px",
+        color: "#313131"
     },
     lastModified: {
-        minWidth: "140px",
-        maxWidth: "140px"
-    },
-    createdBy: {
+        fontSize: '12px',
+        color: "#313131",
         minWidth: "100px",
         maxWidth: "100px"
+    },
+    createdBy: {
+        fontSize: '12px',
+        color: "#313131",
+        minWidth: "100px",
+        maxWidth: "100px"
+    },
+    contentRow: {
+        height: '28px!important',
+        maxHeight: '28px!important',
+        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
+            width: 20,
+            zIndex: -1,
+            marginRight: '30px',
+            marginLeft: '6px',
+            height: '36px!important',
+            maxHeight: '36px!important',
+        }
     },
     publicationStatusContainer: {
         position: 'relative'
@@ -116,10 +135,14 @@ const styles = (theme) => ({
         height: "20px"
     },
     name: {
-        maxWidth: "250px",
+        color: "#313131",
+        marginLeft: '-2px',
+        fontSize: '13px',
+        maxWidth: "598px",
     },
     nodeTypeIcon: {
-        marginRight: 5,
+        marginRight: '6px',
+        verticalAlign: 'sub',
     },
     publicationCell: {
         position: 'relative',
@@ -132,7 +155,14 @@ const styles = (theme) => ({
         minWidth: "38px"
     },
     hoveredRowAction: {
-        paddingLeft: "3px",
+        color: "#5E6565",
+        '& svg': {
+            width: "18px",
+            marginLeft: '10px',
+            height: "18px"
+        }
+    },
+    hoveredRowAction2: {
         color: "#5E6565",
         '& svg': {
             width: "18px",
@@ -150,17 +180,6 @@ const styles = (theme) => ({
         overflowX: 'scroll',
         height: 'calc(100vh - 140px)',
         maxHeight:  'calc(100vh - 140px)'
-    },
-    contentRow: {
-        height: '28px',
-        maxHeight: '28px',
-        minHeight: '28px',
-        color: "#5E6565!important",
-        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
-            width: 28,
-            height: '36px!important',
-            maxHeight: '36px!important',
-        },
     },
     row : {
         backgroundColor: '#efefef',
@@ -200,6 +219,10 @@ const styles = (theme) => ({
     noResults: {
         color: '#5E6565',
         fontWeight: 600
+    },
+    paddingCell: {
+        paddingLeft: 5,
+        paddingRight: 5,
     }
 });
 
@@ -331,6 +354,7 @@ class ContentListTable extends React.Component {
                                                     </TableCell>;
                                                 } else if (column.id === 'lastModified') {
                                                     return <TableCell key={column.id} padding={'none'}
+                                                                      classes={{root: classes.paddingCell }}
                                                                       data-cm-role={'table-content-list-cell-' + column.id}>
                                                         <Typography className={classes[column.id]} classes={cellContentClasses}>
                                                             <Moment format={"ll"} locale={uiLang}>{n[column.id]}</Moment>
@@ -338,12 +362,15 @@ class ContentListTable extends React.Component {
                                                     </TableCell>;
                                                 } else if (column.id === 'createdBy' && isHoveredRow) {
                                                     return <TableCell className={classes.hoveredRowActionsCell}
+                                                                      classes={{root: classes.paddingCell }}
+
                                                                       key={column.id} padding={'none'}
                                                                       data-cm-role={'table-content-list-cell-' + column.id}>
                                                         <CmIconButton className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}
 
-                                                                    data-cm-role={"table-content-list-button"}
-                                                                    onClick={handleShowPreview}>
+
+                                                                      data-cm-role={"table-content-list-button"}
+                                                                      onClick={handleShowPreview}>
                                                             <Tooltip title={t('label.contentManager.contentPreview.preview')}><Visibility/></Tooltip>
                                                         </CmIconButton>
                                                         <Actions menuId={"tableEditButtonAction"} context={{
@@ -369,13 +396,15 @@ class ContentListTable extends React.Component {
                                                             nodeName: n.nodeName,
                                                             primaryNodeType: n.primaryNodeType
                                                         }}>
-                                                            {(props) => <CmIconButton
-                                                                className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')} {...props}
-                                                                cmRole={'table-content-list-action-menu'}/>}
+                                                            {(props) => <CmIconButton horizontal={true} style2={true}
+                                                                                      className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')} {...props}
+
+                                                                                      cmRole={'table-content-list-action-menu'}/>}
                                                         </Actions>
                                                     </TableCell>;
                                                 } else {
                                                     return <TableCell key={column.id} padding={'none'}
+                                                                      classes={{root: classes.paddingCell }}
                                                                       data-cm-role={'table-content-list-cell-' + column.id}>
                                                         <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
                                                             {n[column.id]}

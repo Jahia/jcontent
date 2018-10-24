@@ -196,7 +196,7 @@ class CmSearchBarSql2 extends React.Component {
 
         let {onNormalClick, path, params, classes, t} = this.props;
 
-        return <SearchBarLayout onSearch={() => this.onSearch(path, params)}
+        return <SearchBarLayout t= {t} onSearch={() => this.onSearch(path, params)}
             leftFooter={<DxContext.Consumer>{(dxContext) => {
                 return <Trans
                     i18nKey={'label.contentManager.search.sql2Prompt'}

@@ -353,6 +353,9 @@ const ActionRequirementsFragments = {
                   name
                 }
               }
+              contributeTypes: property(name: "j:contributeTypes") {
+                values
+            }
         }`
     },
     requiredChildNodeType: {

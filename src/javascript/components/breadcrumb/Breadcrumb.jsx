@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Button, Menu, MenuItem, Divider} from "@material-ui/core";
 import styled from "styled-components/dist/styled-components";
-import { ChevronRight as ChevronRightIcon, MoreHoriz, Folder, ArrowDropDown} from '@material-ui/icons';
+import {ChevronRight as ChevronRightIcon, MoreHoriz, Folder, ArrowDropDown} from '@material-ui/icons';
 import {PageIcon} from '@jahia/icons';
 import {withStyles} from '@material-ui/core';
 import {translate} from "react-i18next";
@@ -61,7 +61,7 @@ const styles = theme => ({
         marginRight: '-5px',
     },
     menuItemSize: {
-        paddingLeft: '10px!important',
+        paddingLeft: '10px !important',
     },
     colorMenu: {
         background: '#f5f5f5',
@@ -174,9 +174,9 @@ class BreadcrumbDisplay extends React.Component {
                     </MenuItemLabel>
                 </MenuItem>
             </MenuItemContainer>
-                {node.siblings.length > 1 &&
-                    <div className={classes.divider}/>
-                }
+            {node.siblings.length > 1 &&
+                <div className={classes.divider}/>
+            }
             {node.siblings.map((siblingNode, i) => {
                 if (siblingNode.name === node.name) {
                     return null;
@@ -203,7 +203,8 @@ class BreadcrumbDisplay extends React.Component {
                 disableRipple={true}
                 aria-owns={"breadcrumbMenu_" + node.uuid}
                 aria-haspopup="true"
-                onMouseOver={this.onMenuButtonActivatorEnter}>
+                onMouseOver={this.onMenuButtonActivatorEnter}
+            >
                 {this.renderIcon(node, classes)}
                 {!trimLabel &&
                     <span className={classes.contentLabel}>
@@ -222,7 +223,8 @@ class BreadcrumbDisplay extends React.Component {
                 onClick={() => {
                     this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
                 }}
-                onMouseOver={this.onMenuButtonActivatorEnter}>
+                onMouseOver={this.onMenuButtonActivatorEnter}
+            >
                 {this.renderIcon(node, classes)}
                 {!trimLabel &&
                     <span className={classes.contentLabel}>
@@ -370,26 +372,32 @@ class Breadcrumb extends React.Component {
     }
 
     static parseEntries(props) {
+
         let {pickerEntries: entries, path: selectedPath, rootLabel, t, rootPath, mode} = props;
+
         //Process these nodes
         let breadcrumbs = [];
         let rootType = this.parseTypeFromPath(rootPath, selectedPath);
         let selectedPathParts = this.splitPath(selectedPath, rootType);
+
         for (let i in entries) {
+
             let entry = entries[i];
             let entryPathParts = this.splitPath(entry.path, rootType);
+
             if (entryPathParts.length > selectedPathParts.length) {
                 //skip, our selections does not go this deep.
                 continue;
             }
+
             //Verify this is the same path along the tree that is currently selected.
             //We are checking parent of current entry
             let parentIndex = entryPathParts.length - 2;
-
             if (entryPathParts[parentIndex] !== undefined && selectedPathParts[parentIndex] !== entryPathParts[parentIndex]) {
                 //This is a different path, we will skip it as it is not part of our current breadcrumb!
                 continue;
             }
+
             let breadcrumb = breadcrumbs[entryPathParts.length - 1];
 
             if (breadcrumb === undefined) {
@@ -402,6 +410,7 @@ class Breadcrumb extends React.Component {
                 breadcrumb.pathType = rootType;
                 breadcrumb.siblings = [];
             }
+
             //Add sibling to list (including first entry)
             let sibling = {
                 uuid: entry.node.uuid,
@@ -448,6 +457,7 @@ class Breadcrumb extends React.Component {
             } else {
                 breadcrumb.siblings.push(sibling);
             }
+
             //If this path is the selected path, then update root breadcrumb with this entries information.
             if (selectedPathParts.slice(0, entryPathParts.length).join("/") === entryPathParts.join("/")) {
                 breadcrumb.name = breadcrumbs.length === 0 ? rootLabel : entry.node.displayName;
@@ -455,6 +465,7 @@ class Breadcrumb extends React.Component {
                 breadcrumb.path = entry.node.path;
                 breadcrumb.type = entry.node.primaryNodeType.name;
             }
+
             breadcrumbs[entryPathParts.length - 1] = breadcrumb;
         }
 

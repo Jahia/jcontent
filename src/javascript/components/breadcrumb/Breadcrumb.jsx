@@ -38,7 +38,7 @@ const styles = theme => ({
         fontSize: "20px",
     },
     contentLabel: {
-        color: theme.palette.text.dark,
+        color: theme.palette.text.primary,
         marginLeft: '1px',
         marginRight: '-3px',
         fontSize: '12px',

@@ -16,7 +16,7 @@ class ContentListHeader extends React.Component {
         let direction = order==="DESC" ? "ASC" : "DESC";
         return (
             <TableHead className={classes.head}>
-                <TableRow className={classes.row}>
+                <TableRow className={classes.contentRow}>
                     <TableCell />
                     {columnData.map(column => {
                         if(column.sortable) {

@@ -9,18 +9,11 @@ import {withNotifications} from "@jahia/react-material/index";
 
 class CreateContentAction extends React.Component {
 
-    static filterByBaseType(node, baseTypeName) {
-        let types = node.allowedChildNodeTypes;
-        let subTypes = node.subTypes;
-        let filteredTypes = _.filter(types, type => {
+    static filterByBaseType(types, baseTypeName) {
+        return _.filter(types, type => {
             let superTypes = _.map(type.supertypes, superType => superType.name);
             return _.includes(superTypes, baseTypeName);
         });
-        let filteredSubTypes = _.filter(subTypes, subType => {
-            let superTypes = _.map(subType.superTypes, superType => superType.name);
-            return _.includes(superTypes, baseTypeName);
-        });
-        return _.union(filteredTypes, filteredSubTypes);
     }
 
     doRender(nodeTypes, context) {
@@ -79,7 +72,8 @@ class CreateContentAction extends React.Component {
         let {node} = context;
         let childNodeTypes = node.allowedChildNodeTypes;
         if (!_.isEmpty(baseContentType)) {
-            childNodeTypes = CreateContentAction.filterByBaseType(node, baseContentType);
+            childNodeTypes = _.union(CreateContentAction.filterByBaseType(childNodeTypes, baseContentType),
+                CreateContentAction.filterByBaseType(node.subTypes, baseContentType));
         }
         let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
         let contributeTypesProperty = node.contributeTypes;

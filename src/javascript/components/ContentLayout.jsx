@@ -64,7 +64,7 @@ const styles = theme => ({
     },
     showTreeButton: {
         color: '#eaeaea',
-        marginRight: theme.spacing.unit-3,
+        marginRight: theme.spacing.unit / 2,
     },
     refreshButton: {
         color: '#eaeaea',

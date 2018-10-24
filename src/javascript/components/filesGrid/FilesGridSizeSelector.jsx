@@ -7,11 +7,12 @@ import {compose} from "react-apollo";
 
 const styles = theme => ({
     root: {
-        width: 110,
-        color: theme.palette.common.white,
-        padding: 0,
-        paddingRight: theme.spacing.unit,
         display: 'inline-grid',
+        width: 105,
+        padding: 5,
+        marginRight: theme.spacing.unit,
+        verticalAlign: 'middle',
+        color: theme.palette.common.white,
     },
     track: {
         backgroundColor: theme.palette.common.white

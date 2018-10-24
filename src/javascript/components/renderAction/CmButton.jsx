@@ -4,26 +4,16 @@ import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 
 const styles = theme => ({
-    root: {
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
-        transition: "left 0.5s ease 0s",
+    buttonText: {
+        maxHeight: '36px',
+        margin: 0,
+        marginRight: theme.spacing.unit,
     },
     button: {
-    },
-    buttonText: {
-        margin: theme.spacing.unit * 0,
-        marginRight: theme.spacing.unit * 1,
+        maxHeight: '36px',
+        margin: 0,
+        marginRight: theme.spacing.unit,
         color: theme.palette.common.white,
-    },
-    buttonSize: {
-        maxHeight: '36px',
-        marginRight: theme.spacing.unit+2,
-        margin: '0px'
-    },
-    buttonSizeText: {
-        maxHeight: '36px',
     },
 });
 
@@ -35,8 +25,7 @@ class CmButton extends React.Component {
         let childrenCount = React.Children.count(children);
 
         return <Button
-            classes={text ? {root: classes.buttonSize} : {root: classes.buttonSizeText}}
-            className={text ? classes.button : classes.buttonText}
+            className={text ? classes.buttonText : classes.button}
             color={text ? 'default' : 'primary'}
             variant={text ? "text" : "contained"}
             size="medium"

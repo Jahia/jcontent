@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu as ListIcon, ViewModule} from '@material-ui/icons';
-import {Button, Tooltip, withStyles} from '@material-ui/core';
+import {Tooltip, withStyles} from '@material-ui/core';
+import CmButton from "../renderAction/CmButton";
 import {translate} from 'react-i18next';
 import {lodash as _} from "lodash";
 
@@ -18,13 +19,15 @@ class FilesGridModeSelector extends React.Component {
     }
 
     render() {
-        const { classes, t} = this.props;
-        return <Tooltip title={t( this.props.showList ? 'label.contentManager.filesGrid.toggleGridDisplay' : 'label.contentManager.filesGrid.toggleListDisplay')} placement="top-start" leaveDelay={200}>
-            <Button onClick={ this.props.onChange }>
-            {
-                this.props.showList ? <ViewModule className={classes.iconSize} /> : <ListIcon className={classes.iconSize}/>
-            }
-            </Button>
+        const {showList, onChange, classes, t} = this.props;
+        return <Tooltip
+            title={t(showList ? 'label.contentManager.filesGrid.toggleGridDisplay' : 'label.contentManager.filesGrid.toggleListDisplay')}
+            placement="top-start"
+            leaveDelay={200}
+        >
+            <CmButton onClick={onChange} text={true}>
+                {showList ? <ViewModule className={classes.iconSize}/> : <ListIcon className={classes.iconSize}/>}
+            </CmButton>
         </Tooltip>;
     }
 }

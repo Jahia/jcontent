@@ -104,7 +104,7 @@ let defaultActions = {
         allLanguages: false,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
-        hideOnNodeTypes: ["jnt:virtualsite"],
+        hideOnNodeTypes: ["jnt:virtualsite", "jnt:contentFolder", "jnt:folder"],
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     publishInContentTreeMenu: {
@@ -119,7 +119,7 @@ let defaultActions = {
         allLanguages: false,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
-        hideOnNodeTypes: ["jnt:virtualsite"],
+        hideOnNodeTypes: ["jnt:virtualsite", "jnt:contentFolder", "nt:folder"],
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     advancedPublish: {
@@ -152,7 +152,7 @@ let defaultActions = {
         allSubTree: false,
         allLanguages: true,
         checkForUnpublication: false,
-        hideOnNodeTypes: ["nt:file", "nt:folder"],
+        hideOnNodeTypes: ["nt:file", "jnt:contentFolder", "nt:folder"],
         checkIfLanguagesMoreThanOne: true,
         labelKey: "label.contentManager.contentPreview.publishInAllLanguages",
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
@@ -161,7 +161,7 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["publishMenu", "advancedPublish"],
+        target: ["advancedPublish"],
         requiredPermission: "",
         allSubTree: true,
         allLanguages: false,
@@ -175,12 +175,12 @@ let defaultActions = {
         component: PublishAction,
         call: publish,
         icon: "Publish",
-        target: ["publishMenu", "advancedPublish"],
+        target: ["advancedPublish"],
         requiredPermission: "",
         allSubTree: true,
         allLanguages: true,
         checkForUnpublication: false,
-        hideOnNodeTypes: ["nt:file", "nt:folder"],
+        hideOnNodeTypes: ["nt:file"],
         checkIfLanguagesMoreThanOne: true,
         labelKey: "label.contentManager.contentPreview.publishAllInAllLanguages",
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
@@ -195,7 +195,7 @@ let defaultActions = {
         hideOnNodeTypes: ["jnt:virtualsite"],
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
-    unPublish: {
+    unpublish: {
         component: PublishAction,
         call: publish,
         icon: "Publish",

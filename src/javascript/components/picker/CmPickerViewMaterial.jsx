@@ -135,7 +135,8 @@ class CmPickerViewMaterial extends React.Component {
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
 
         //Sorts entries that are folder types
-        let sortedEntries = this.sortContentsEntriesAlphabetically(pickerEntries);
+        // let sortedEntries = this.sortContentsEntriesAlphabetically(pickerEntries);
+        let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
         return <div className={classes.root}>
             {loading &&
@@ -203,96 +204,153 @@ class CmPickerViewMaterial extends React.Component {
         </div>;
     }
 
-    sortContentsEntriesAlphabetically(entries) {
+    sortFoldersAlphabetical(pickerEntries) {
+        if (pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === "jnt:contentFolder" || pickerEntries[0].node.primaryNodeType.name === "jnt:folder")) {
+            const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
+            return this.sortAndFlatten(rootNode);
+        }
+        else {
+            return pickerEntries;
+        }
+    }
 
-        if (entries[0] && (entries[0].node.primaryNodeType.name === 'jnt:folder' || entries[0].node.primaryNodeType.name === 'jnt:contentFolder')) {
+    reconstructNodeHierarchy(pickerEntriesSortedByPath) {
+        // console.log("Start");
+        const hierarchyStack = [];
+        //Add root node to stack
+        hierarchyStack.push(pickerEntriesSortedByPath.splice(0, 1)[0]);
 
-            //Structured container for the entries - used in order to sort all the entries
-            let entriesByDepth = [];
-            for (let i in entries) {
-                let pathParts = entries[i].path.split('/');
-                let depth = pathParts.length - 3; //Depth is calculated after /sites/{site}/
-                //Depth is used as an index.
-                let entry = entries[i];
-                if (i == 0) {
-                    //Set up the root entry
-                    entriesByDepth.push({depth: depth-1, entry: entry, children: []})//entry depth
-                } else {
-                    entry.parent = pathParts[pathParts.length - 2];
-                    //Retrieve the parent of the current entry
-                    let parentElement = findParentElement(entry.parent, entriesByDepth, depth - 2);//parent depth
-                    //Add the entry to the list of children
-                    parentElement.children.push({depth: depth-1, entry: entry, children: []});//entry depth
+        while(pickerEntriesSortedByPath.length !== 0 || hierarchyStack.length === 0) {
+            // console.log("Process");
+            const currentPickerEntry = pickerEntriesSortedByPath[0];
+            const top = hierarchyStack[hierarchyStack.length - 1];
+
+            //Add children to top of the stack if current entry is child of top
+            if (currentPickerEntry.path.indexOf(top.path) !== -1 && currentPickerEntry.path.replace(top.path, "")[0] === "/") {
+                if (!top.children) {
+                    top.children = [];
                 }
+                top.children.push(currentPickerEntry);
+                hierarchyStack.push(currentPickerEntry);
+                pickerEntriesSortedByPath.splice(0, 1);
             }
-            sortEntries(entriesByDepth);
-            let sortedEntries = [];
-            flattenEntries(entriesByDepth, sortedEntries);
-            return sortedEntries;
-
-            /**
-             * Search through nested folders to find parent and return the children array
-             * @param parent parent name
-             * @param array entries to search through
-             * @param depth depth at which parent resides
-             * @returns {*}
-             */
-            function findParentElement(parent, array, depth) {
-                if (_.isEmpty(array)) {
-                    return null;
-                }
-                if (array[0].depth === depth) {
-                    return _.find(array, function(n) {
-                        return n.entry.name === parent;
-                    });
-                } else {
-                    for (let i in array) {
-                        let result = findParentElement(parent, array[i].children, depth);
-                        if (result != null) {
-                            return result;
-                        }
-                    }
-                    return null;
-                }
+            else {
+                hierarchyStack.pop();
             }
+        }
+        // console.log("Terminate");
+        return hierarchyStack[0];
+    }
 
-            /**
-             * Sort each level of parent folders and their children
-             * @param array - entries that should be sorted
-             */
-            function sortEntries(array) {
-                if (array.length > 1) {
-                    array.sort(function (a, b) {
-                        return a.entry.node.displayName > b.entry.node.displayName;
-                    });
-                }
-                for (let i in array) {
-                    if (array[i].children.length > 1) {
-                        sortEntries(array[i].children);
-                    }
-                }
-            }
+    sortAndFlatten(rootNode) {
+        const flatMap = [];
 
-            /**
-             * Flattens the array of object folders and children in a singular array
-             * @param entriesToFlatten entries that will be flattened
-             * @param array array to contain the flattened entries
-             */
-            function flattenEntries(entriesToFlatten, array) {
-                //Go through the parent folders, sorting them first and subsequently sorting the children folders
-                //while maintaining the order
-                for(let i in entriesToFlatten) {
-                    array.push(entriesToFlatten[i].entry);
-                    if (entriesToFlatten[i].children.length > 0) {
-                        flattenEntries(entriesToFlatten[i].children, array);
-                    }
+        DFS(rootNode);
+        function DFS(node) {
+            flatMap.push(node);
+            if (node.children) {
+                node.children.sort(function (a, b) {
+                    return a.node.displayName > b.node.displayName;
+                });
+
+                for(let i = 0; i < node.children.length; i++) {
+                    DFS(node.children[i]);
                 }
             }
         }
-
-        //Return unsorted entries
-        return entries;
+        return flatMap;
     }
+
+    // sortContentsEntriesAlphabetically(entries) {
+    //
+    //     if (entries[0] && (entries[0].node.primaryNodeType.name === 'jnt:folder' || entries[0].node.primaryNodeType.name === 'jnt:contentFolder')) {
+    //
+    //         //Structured container for the entries - used in order to sort all the entries
+    //         let entriesByDepth = [];
+    //         for (let i in entries) {
+    //             let pathParts = entries[i].path.split('/');
+    //             let depth = pathParts.length - 3; //Depth is calculated after /sites/{site}/
+    //             //Depth is used as an index.
+    //             let entry = entries[i];
+    //             if (i == 0) {
+    //                 //Set up the root entry
+    //                 entriesByDepth.push({depth: depth-1, entry: entry, children: []})//entry depth
+    //             } else {
+    //                 entry.parent = pathParts[pathParts.length - 2];
+    //                 //Retrieve the parent of the current entry
+    //                 let parentElement = findParentElement(entry.parent, entriesByDepth, depth - 2);//parent depth
+    //                 //Add the entry to the list of children
+    //                 parentElement.children.push({depth: depth-1, entry: entry, children: []});//entry depth
+    //             }
+    //         }
+    //         sortEntries(entriesByDepth);
+    //         let sortedEntries = [];
+    //         flattenEntries(entriesByDepth, sortedEntries);
+    //         return sortedEntries;
+    //
+    //         /**
+    //          * Search through nested folders to find parent and return the children array
+    //          * @param parent parent name
+    //          * @param array entries to search through
+    //          * @param depth depth at which parent resides
+    //          * @returns {*}
+    //          */
+    //         function findParentElement(parent, array, depth) {
+    //             if (_.isEmpty(array)) {
+    //                 return null;
+    //             }
+    //             if (array[0].depth === depth) {
+    //                 return _.find(array, function(n) {
+    //                     return n.entry.name === parent;
+    //                 });
+    //             } else {
+    //                 for (let i in array) {
+    //                     let result = findParentElement(parent, array[i].children, depth);
+    //                     if (result != null) {
+    //                         return result;
+    //                     }
+    //                 }
+    //                 return null;
+    //             }
+    //         }
+    //
+    //         /**
+    //          * Sort each level of parent folders and their children
+    //          * @param array - entries that should be sorted
+    //          */
+    //         function sortEntries(array) {
+    //             if (array.length > 1) {
+    //                 array.sort(function (a, b) {
+    //                     return a.entry.node.displayName > b.entry.node.displayName;
+    //                 });
+    //             }
+    //             for (let i in array) {
+    //                 if (array[i].children.length > 1) {
+    //                     sortEntries(array[i].children);
+    //                 }
+    //             }
+    //         }
+    //
+    //         /**
+    //          * Flattens the array of object folders and children in a singular array
+    //          * @param entriesToFlatten entries that will be flattened
+    //          * @param array array to contain the flattened entries
+    //          */
+    //         function flattenEntries(entriesToFlatten, array) {
+    //             //Go through the parent folders, sorting them first and subsequently sorting the children folders
+    //             //while maintaining the order
+    //             for(let i in entriesToFlatten) {
+    //                 array.push(entriesToFlatten[i].entry);
+    //                 if (entriesToFlatten[i].children.length > 0) {
+    //                     flattenEntries(entriesToFlatten[i].children, array);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     //Return unsorted entries
+    //     return entries;
+    // }
 }
 
 CmPickerViewMaterial.propTypes = {

@@ -135,7 +135,7 @@ class CmPickerViewMaterial extends React.Component {
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
 
         //Sorts entries that are folder types
-        let sortedEntries = this.sortContentsEntriesAlphabetical(pickerEntries);
+        let sortedEntries = this.sortContentsEntriesAlphabetically(pickerEntries);
 
         return <div className={classes.root}>
             {loading &&
@@ -203,7 +203,7 @@ class CmPickerViewMaterial extends React.Component {
         </div>;
     }
 
-    sortContentsEntriesAlphabetical(entries) {
+    sortContentsEntriesAlphabetically(entries) {
 
         if (entries[0] && (entries[0].node.primaryNodeType.name === 'jnt:folder' || entries[0].node.primaryNodeType.name === 'jnt:contentFolder')) {
 

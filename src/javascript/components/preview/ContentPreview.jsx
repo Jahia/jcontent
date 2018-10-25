@@ -59,8 +59,7 @@ const styles = theme => ({
     previewContainerPdf: {
         // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: '100%',
-        height: 'auto',
-        maxHeight: '1000',
+        height: 'calc(100vh - 330px);',
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
@@ -71,7 +70,7 @@ const styles = theme => ({
         color: theme.palette.background.default,
         backgroundColor: theme.palette.common.white,
         overflow: 'scroll',
-        height: 'calc(100vh - 28px)',
+        height: 'calc(100vh - 203px)',
     },
     unpublishButton: {
         margin: '0!important',

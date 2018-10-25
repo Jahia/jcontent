@@ -329,7 +329,7 @@ class ContentLayout extends React.Component {
                 </Grid>
                 <div className={classes.appFrame}>
                     {this.isBrowsing() &&
-                        <Paper style={{background: '#f5f5f5'}}>
+                        <Paper style={{background: '#f7f7f7'}}>
                             <Drawer
                                 variant="persistent"
                                 anchor={anchor}

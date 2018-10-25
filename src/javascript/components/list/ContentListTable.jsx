@@ -185,20 +185,20 @@ const styles = (theme) => ({
         maxHeight:  'calc(100vh - 140px)'
     },
     row : {
-        backgroundColor: '#efefef',
+        backgroundColor: '#f7f7f7',
         '&:hover': {
-            backgroundColor: '#dad9d9!important',
+            backgroundColor: '#ebeaea!important',
         }
 
     },
     rowPair: {
         backgroundColor: '#f5f5f5',
         '&:hover': {
-            backgroundColor: '#dad9d9!important',
+            backgroundColor: '#ebeaea!important',
         }
     },
     selectedRow: {
-        backgroundColor: theme.palette.primary.light + '!important',
+        backgroundColor: '#007cb0!important',
     },
     selectedCell: {
         color: theme.palette.primary.contrastText + '!important',

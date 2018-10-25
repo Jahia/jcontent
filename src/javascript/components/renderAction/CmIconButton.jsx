@@ -18,11 +18,11 @@ const styles = theme => ({
         padding: 0,
         margin: '0!important'
     },
-    colorVert: {
+    VerticalList: {
         color: theme.palette.background.default,
         paddingTop: '6px!important',
     },
-    colorVert2: {
+    VerticalPreview: {
         color: theme.palette.background.default,
     },
     buttonFooter: {
@@ -33,14 +33,15 @@ const styles = theme => ({
 
 class CmIconButton extends React.Component {
 
+    //listTable is an attribute to know if it's a button used into list table (true) or in preview (false)
     render() {
-        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, style2} = this.props;
+        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, listTable} = this.props;
         let childrenCount = React.Children.count(children);
         if (horizontal) {
             return (
                 <Button className={
-                    style2 ? classes.buttonFooter + " " + className + " " + classes.colorVert2 :
-                        classes.buttonFooter + " " + className + " " + classes.colorVert
+                    listTable ? classes.buttonFooter + " " + className + " " + classes.VerticalPreview :
+                        classes.buttonFooter + " " + className + " " + classes.VerticalList
                 }
                         disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
                         onClick={(event) => onClick(event)} data-cm-role={cmRole}>

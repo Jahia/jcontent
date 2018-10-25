@@ -402,7 +402,7 @@ class ContentListTable extends React.Component {
                                                             nodeName: n.nodeName,
                                                             primaryNodeType: n.primaryNodeType
                                                         }}>
-                                                            {(props) => <CmIconButton horizontal={true} style2={true}
+                                                            {(props) => <CmIconButton horizontal={true} listTable={true}
                                                                                       className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')} {...props}
 
                                                                                       cmRole={'table-content-list-action-menu'}/>}

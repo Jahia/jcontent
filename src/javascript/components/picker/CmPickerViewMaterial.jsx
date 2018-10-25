@@ -204,7 +204,9 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     sortContentsEntriesAlphabetical(entries) {
+
         if (entries[0] && (entries[0].node.primaryNodeType.name === 'jnt:folder' || entries[0].node.primaryNodeType.name === 'jnt:contentFolder')) {
+
             //Structured container for the entries - used in order to sort all the entries
             let entriesByDepth = [];
             for (let i in entries) {
@@ -218,7 +220,7 @@ class CmPickerViewMaterial extends React.Component {
                 } else {
                     entry.parent = pathParts[pathParts.length - 2];
                     //Retrieve the parent of the current entry
-                    let parentElement = findParentElement(entry.parent, entriesByDepth, depth-2);//parent depth
+                    let parentElement = findParentElement(entry.parent, entriesByDepth, depth - 2);//parent depth
                     //Add the entry to the list of children
                     parentElement.children.push({depth: depth-1, entry: entry, children: []});//entry depth
                 }
@@ -236,12 +238,21 @@ class CmPickerViewMaterial extends React.Component {
              * @returns {*}
              */
             function findParentElement(parent, array, depth) {
+                if (_.isEmpty(array)) {
+                    return null;
+                }
                 if (array[0].depth === depth) {
-                    return _.find(array, function(n){
+                    return _.find(array, function(n) {
                         return n.entry.name === parent;
-                    })
+                    });
                 } else {
-                    return findParentElement(parent, array[0].children, depth)
+                    for (let i in array) {
+                        let result = findParentElement(parent, array[i].children, depth);
+                        if (result != null) {
+                            return result;
+                        }
+                    }
+                    return null;
                 }
             }
 
@@ -260,7 +271,6 @@ class CmPickerViewMaterial extends React.Component {
                         sortEntries(array[i].children);
                     }
                 }
-
             }
 
             /**
@@ -279,6 +289,7 @@ class CmPickerViewMaterial extends React.Component {
                 }
             }
         }
+
         //Return unsorted entries
         return entries;
     }

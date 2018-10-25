@@ -39,19 +39,19 @@ const APP_TABLE_CELLS = 2;
 
 const styles = (theme) => ({
     type: {
-        fontSize: '12px',
+        fontSize: '13px',
         minWidth: "100px",
         maxWidth: "100px",
         color: "#313131"
     },
     lastModified: {
-        fontSize: '12px',
+        fontSize: '13px',
         color: "#313131",
         minWidth: "100px",
         maxWidth: "100px"
     },
     createdBy: {
-        fontSize: '12px',
+        fontSize: '13px',
         color: "#313131",
         minWidth: "100px",
         maxWidth: "100px"
@@ -139,7 +139,7 @@ const styles = (theme) => ({
     name: {
         color: "#313131",
         marginLeft: '-10px',
-        fontSize: '13px',
+        fontSize: '14px',
         width: "598px",
         maxWidth: "598px",
     },

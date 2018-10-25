@@ -120,7 +120,7 @@ class PublicationStatusComponent extends Component {
                     </div>
                 </div>
                 <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }
-                     style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '12px'}}>
+                     style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '14px'}}>
 
                     <div className={classes.infoContainer}
                          style={{width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}

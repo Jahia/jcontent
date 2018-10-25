@@ -41,13 +41,13 @@ const styles = theme => ({
         color: theme.palette.text.primary,
         marginLeft: '1px',
         marginRight: '-3px',
-        fontSize: '12px',
+        fontSize: '13px',
     },
     contentLabelMenu: {
         color: theme.palette.text.dark,
         marginLeft: '1px',
         marginRight: '-3px',
-        fontSize: '12px',
+        fontSize: '13px',
     },
     betweenIcon: {
         verticalAlign: "middle",

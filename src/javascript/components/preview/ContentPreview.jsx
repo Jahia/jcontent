@@ -204,13 +204,13 @@ class ContentPreview extends React.Component {
         const {selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
-        const isPublished = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED;
+        const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
         return <DxContext.Consumer>
             {dxContext => (
                 <div className={rootClass}>
                     <Paper className={classes.previewPaper} elevation={0}>
-                        <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path, isPublished)}>
+                        <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path, livePreviewAvailable)}>
                             {({loading, error, data}) => {
                                 if (error) {
                                     //Ignore error that occurs if node is not published in live mode.
@@ -219,7 +219,7 @@ class ContentPreview extends React.Component {
                                     if (!_.isEmpty(data)) {
                                         let modes = ['edit'];
                                         //Check if the node is published in live.
-                                        if (data.edit.nodeByPath.isPublished && data.edit.nodeByPath.isPublished.value === "true") {
+                                        if (livePreviewAvailable) {
                                             modes.push('live');
                                         }
                                         let selectedMode = _.find(modes, (mode) => {

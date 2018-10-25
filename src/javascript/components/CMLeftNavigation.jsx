@@ -84,7 +84,7 @@ const styles = theme => ({
     drawerPaper: {
         background: '#f7f7f7',
         position: 'absolute',
-        boxShadow: '1px 0 5px -2px rgba(0, 0, 21, 0.29)',
+        boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
         left: 105,
         width: drawerWidth,
@@ -96,7 +96,7 @@ const styles = theme => ({
     drawerPaperPersistent: {
         background: '#ffffff',
         position: 'relative',
-        boxShadow: '1px 0 5px -2px rgba(0, 0, 21, 0.29)',
+        boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
         left: 105,
         width: drawerWidth,

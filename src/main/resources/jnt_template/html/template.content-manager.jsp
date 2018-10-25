@@ -10,14 +10,14 @@
 
 <c:set var="mainResourceLocale" value="${renderContext.mainResourceLocale}"/>
 
-<html lang="${mainResourceLocale.language}">
+<html lang="${mainResourceLocale.language}" style="-webkit-font-smoothing: subpixel-antialiased!important;">
 
 <head>
     <meta charset="utf-8">
     <title>${fn:escapeXml(renderContext.mainResource.node.displayableName)}</title>
 </head>
 
-<body style="overflow: hidden">
+<body style="overflow: hidden; ">
 <template:addResources type="javascript" resources="polyfills.js"/>
 <template:addResources type="javascript" resources="apps/content-manager.js"/>
 <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>

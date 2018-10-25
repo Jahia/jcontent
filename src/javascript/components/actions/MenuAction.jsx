@@ -44,6 +44,7 @@ class MenuAction extends Component {
             <Menu
                 id={menuId}
                 anchorEl={anchor}
+                BackdropProps={{invisible:true, onContextMenu: (event) => {event.preventDefault(); this.handleMenuClose()}}}
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                 open={open}
                 onClose={() => this.handleMenuClose()}>

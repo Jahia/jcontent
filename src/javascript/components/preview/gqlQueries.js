@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 import {PredefinedFragments} from "@jahia/apollo-dx";
 
-const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templateType: String!, $view: String!, $contextConfiguration: String!, $language: String!) {
-    live:jcr(workspace: LIVE) {
+const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templateType: String!, $view: String!, $contextConfiguration: String!, $language: String!, $isPublished: Boolean!) {
+    live:jcr(workspace: LIVE) @include(if: $isPublished) {
         nodeByPath(path:$path) {
             id : uuid
             isFile:isNodeType(type: {types: ["jnt:file"]})

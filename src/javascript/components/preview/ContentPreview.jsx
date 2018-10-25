@@ -20,6 +20,7 @@ import {connect} from "react-redux";
 import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATES} from "../redux/actions";
 import Loadable from "react-loadable";
 import {ellipsizeText} from "../utils.js";
+import constants from '../constants';
 
 const styles = theme => ({
     root: {
@@ -203,13 +204,13 @@ class ContentPreview extends React.Component {
         const {selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
+        const isPublished = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED;
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
-        console.log(this.state.fullScreen);
         return <DxContext.Consumer>
             {dxContext => (
                 <div className={rootClass}>
                     <Paper className={classes.previewPaper} elevation={0}>
-                        <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path)}>
+                        <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path, isPublished)}>
                             {({loading, error, data}) => {
                                 if (error) {
                                     //Ignore error that occurs if node is not published in live mode.
@@ -450,13 +451,14 @@ class ContentPreview extends React.Component {
         }
     }
 
-    queryVariables(path) {
+    queryVariables(path, isPublished) {
         return {
             path: path,
             templateType: "html",
             view: "cm",
             contextConfiguration: "preview",
-            language: this.props.language
+            language: this.props.language,
+            isPublished: isPublished
         }
     }
 

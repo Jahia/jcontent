@@ -166,7 +166,7 @@ const styles = theme => ({
     typoBody: {
         fontSize: '14px',
         color: theme.palette.background.default,
-        paddingBottom: theme.spacing.unit * 2,
+        marginBottom: theme.spacing.unit * 2,
     },
     typoCaption: {
         color: theme.palette.background.default,
@@ -177,12 +177,7 @@ const styles = theme => ({
     },
     typoBodyLarge: {
         fontSize: '14px',
-        paddingBottom: theme.spacing.unit * 2,
-    },
-    tooltip: {
-        opacity: 0,
-        color: theme.palette.background.default,
-        backgroundColor: theme.palette.background.paper,
+        marginBottom: theme.spacing.unit * 2,
     },
 });
 
@@ -198,17 +193,20 @@ const MAX_LENGTH_FILES_LABELS_VERTICAL = 15;
 class FileCard extends Component {
 
     render() {
-        const { cardType, node  } = this.props;
+
+        const {node} = this.props;
 
         if (isBrowserImage(node.path)) {
-            //Media cards are used for images
-            return this.regularMediaCard(cardType);
+            return this.regularMediaCard();
+        } else {
+            return this.fileCard();
         }
-
-        return this.fileCard(cardType);
     }
 
-    regularMediaCard(cardType) {
+    regularMediaCard() {
+
+        let {cardType} = this.props;
+
         switch(cardType) {
             case 2 : return this.verticalMediaCard();
             case 6 :
@@ -217,10 +215,13 @@ class FileCard extends Component {
         }
     }
 
-    fileCard(cardType) {
+    fileCard() {
+
+        let {cardType} = this.props;
         console.log(cardType);
+
         switch(cardType) {
-            case 2 : return this.verticalFileCard(cardType);
+            case 2 : return this.verticalFileCard();
             case 3 : return this.mediumFileCard();
             case 6 :
             case 12 : return this.largeFileCard();
@@ -251,7 +252,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    <Tooltip title={cardType === 6 && node.name.length > MAX_LENGTH_MEDIA_LABELS_LARGE ? node.name : ''} classes={{tooltip: classes.tooltip}}>
+                    <Tooltip title={cardType === 6 && node.name.length > MAX_LENGTH_MEDIA_LABELS_LARGE ? node.name : ''}>
                         <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>
                             {cardType === 6 ? ellipsizeText(node.name, MAX_LENGTH_MEDIA_LABELS_LARGE) : node.name}
                         </Typography>
@@ -279,7 +280,7 @@ class FileCard extends Component {
 
     mediumMediaCard() {
 
-        const {classes, t, node, dxContext, onContextualMenu, cardType, uiLang} = this.props;
+        const {classes, t, node, dxContext, onContextualMenu, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardMedium)}
@@ -300,7 +301,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_MEDIUM ? node.name : ''} classes={{tooltip: classes.tooltip}}>
+                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_MEDIUM ? node.name : ''}>
                         <Typography classes={{body2: classes.typoBody}} variant="body2" className={classes.textTypo}>
                             {ellipsizeText(node.name, MAX_LENGTH_MEDIA_LABELS_MEDIUM)}
                         </Typography>
@@ -344,7 +345,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_VERTICAL ? node.name : ''} classes={{tooltip: classes.tooltip}}>
+                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_VERTICAL ? node.name : ''}>
                         <Typography classes={{body2: classes.typoBody}} variant="body2" className={classes.textTypo}>
                             {ellipsizeText(node.name, MAX_LENGTH_MEDIA_LABELS_VERTICAL)}
                         </Typography>
@@ -416,7 +417,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_VERTICAL && cardType === 3 ? node.name : ''} classes={{tooltip: classes.tooltip}}>
+                    <Tooltip title={node.name.length > MAX_LENGTH_MEDIA_LABELS_VERTICAL && cardType === 3 ? node.name : ''}>
                         <Typography classes={{body2: classes.typoBody}} variant="body2" className={classes.textTypo}>
                             {cardType === 3 ? ellipsizeText(node.name, MAX_LENGTH_FILES_LABELS_VERTICAL) : node.name}
                         </Typography>
@@ -436,9 +437,9 @@ class FileCard extends Component {
         </Card>;
     }
 
-    verticalFileCard(cardType) {
+    verticalFileCard() {
 
-        const {classes, t, node, onContextualMenu, uiLang} = this.props;
+        const {classes, t, node, onContextualMenu, cardType, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
@@ -455,7 +456,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption">
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    <Tooltip title={node.name.length > MAX_LENGTH_FILES_LABELS_VERTICAL ? node.name : ''} classes={{tooltip: classes.tooltip}}>
+                    <Tooltip title={node.name.length > MAX_LENGTH_FILES_LABELS_VERTICAL ? node.name : ''}>
                         <Typography classes={{body2: classes.typoBody}} variant="body2" color="textSecondary">
                             {ellipsizeText(node.name, MAX_LENGTH_FILES_LABELS_VERTICAL)}
                         </Typography>

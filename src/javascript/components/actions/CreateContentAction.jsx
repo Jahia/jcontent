@@ -50,12 +50,13 @@ class CreateContentAction extends React.Component {
                         }
 
                         return _.map(data.jcr.nodeTypesByNames, nodeType => {
-                            ctx.nodeTypes = [nodeType.name];
+                            let localCtx = _.cloneDeep(ctx);
+                            localCtx.nodeTypes = [nodeType.name];
                             return children({
                                 ...rest,
                                 labelKey: "label.contentManager.create.contentOfType",
                                 labelParams: {typeName: nodeType.displayName},
-                                onClick: () => call(ctx),
+                                onClick: () => call(localCtx),
                                 key: nodeType.name
                             });
                         });

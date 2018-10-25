@@ -422,7 +422,7 @@ class ContentListTable extends React.Component {
                                     );
                                 })}
                                 {emptyRows > 0 &&
-                                <TableRow style={{height: 49 * emptyRows}}>
+                                <TableRow>
                                     <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'} />
                                 </TableRow>
                                 }
@@ -430,8 +430,8 @@ class ContentListTable extends React.Component {
                         )}
                     </DxContext.Consumer>
                 </Table>
-                <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page}
-                            onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>
+                {totalCount > 0 && <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page}
+                            onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>}
             </div>
         );
     }

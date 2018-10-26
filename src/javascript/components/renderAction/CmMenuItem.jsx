@@ -21,9 +21,9 @@ class CmMenuItem extends Component {
     }
 
     render() {
-        const {menuId, labelKey, labelParams, labelHtml, t} = this.props;
+        const {menuId, labelKey, labelParams, labelHtml, t, onClick} = this.props;
         return (
-            <MenuItem onClick={(event) => this.onClick(event)}>
+            <MenuItem onClick={(event) => this.onClick(event)} onMouseEnter={menuId ? ((event) => onClick(event)) : null}>
                 {!labelHtml && t(labelKey, labelParams)}
                 {labelHtml && <span dangerouslySetInnerHTML={{__html: labelHtml}}/>}
                 {menuId &&

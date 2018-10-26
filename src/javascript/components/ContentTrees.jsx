@@ -57,7 +57,6 @@ class ContentTree extends React.Component {
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel,
             filterTypes, recurTypes, user, setRefetch, onContextualMenu} = this.props;
-        console.log("open tree", rootPath, path);
 
         return <Picker
             ref={this.picker}

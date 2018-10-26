@@ -48,7 +48,6 @@ class ListAction extends Component {
                 menuId: menuId,
                 onClick: this.handleListClick
             })}
-            {console.log("ListAction", this.props.actionKey, open)}
             {open &&
                 <CmLeftDrawerContent {...rest} menuId={menuId}/>
             }

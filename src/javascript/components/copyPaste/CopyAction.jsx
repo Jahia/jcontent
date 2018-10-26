@@ -16,11 +16,9 @@ class CopyAction extends React.Component {
                         onClick: () => {
                             const {path, uuid, nodeName, displayName, primaryNodeType} = context;
                             if (actionKey === "cut") {
-                                console.log("Cut", context);
                                 dispatch(copy([new Node(path, uuid, nodeName, displayName, primaryNodeType, Node.PASTE_MODES.MOVE)]));
                             }
                             else {
-                                console.log("Copy", context);
                                 dispatch(copy([new Node(path, uuid, nodeName, displayName, primaryNodeType, Node.PASTE_MODES.COPY)]));
                             }
                         }

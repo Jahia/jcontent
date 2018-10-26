@@ -66,7 +66,6 @@ let getSyncListener = (store, history) => () => {
     if (previousValue) {
         let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search)
         if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
-            console.log("Path or query string changed");
             if (currentValueFromUrl.site !== previousValue.site ||
                 currentValueFromUrl.language !== previousValue.language ||
                 currentValueFromUrl.mode !== previousValue.mode ||
@@ -90,7 +89,6 @@ let getSyncListener = (store, history) => () => {
                 (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
                 (!_.isEqual(currentValueFromUrl.params, currentValue.params))
             ) {
-                console.log("Application Params changed");
                 history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, currentValue.path, currentValue.params));
             }
         }

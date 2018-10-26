@@ -215,13 +215,11 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     reconstructNodeHierarchy(pickerEntriesSortedByPath) {
-        // console.log("Start");
         const hierarchyStack = [];
         //Add root node to stack
         hierarchyStack.push(pickerEntriesSortedByPath.splice(0, 1)[0]);
 
         while(pickerEntriesSortedByPath.length !== 0 || hierarchyStack.length === 0) {
-            // console.log("Process");
             const currentPickerEntry = pickerEntriesSortedByPath[0];
             const top = hierarchyStack[hierarchyStack.length - 1];
 
@@ -238,7 +236,6 @@ class CmPickerViewMaterial extends React.Component {
                 hierarchyStack.pop();
             }
         }
-        // console.log("Terminate");
         return hierarchyStack[0];
     }
 

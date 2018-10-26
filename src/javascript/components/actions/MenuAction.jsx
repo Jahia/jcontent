@@ -32,7 +32,7 @@ class MenuAction extends Component {
         let items = [];
         const {menuId, children, menuClose, ...rest} = this.props;
         const {anchor} = this.state;
-        let handleMenuClose = menuClose || this.handleMenuClose;
+        let handleMenuClose = menuClose ? () => { menuClose(); this.handleMenuClose() } : this.handleMenuClose;
         let open = Boolean(anchor);
         return (<span data-cm-role={'menu-action-' + menuId}>
             {<Actions menuId={menuId} {...rest} menuClose={handleMenuClose}>
@@ -42,6 +42,7 @@ class MenuAction extends Component {
                     }}</Actions>}
             {children({...rest, menuId: menuId, onClick: this.handleMenuClick})}
             <Menu
+                onExit={() => {if (menuClose) { menuClose() }}}
                 id={menuId}
                 anchorEl={anchor}
                 BackdropProps={{invisible:true, onContextMenu: (event) => {event.preventDefault(); this.handleMenuClose()}}}

@@ -50,7 +50,11 @@ const styles = theme => ({
         visibility: "hidden",
         overflow: "hidden",
         color: theme.palette.getContrastText(theme.palette.publish.main),
-        transition: "width 0.3s ease-in 0s"
+        transition: "width 0.3s ease-in 0s",
+        "&:hover": {
+            opacity: 1,
+            visibility: "visible"
+        }
     },
     infoContainer: {
         overflow: "hidden"
@@ -95,7 +99,6 @@ class PublicationStatusComponent extends Component {
         this.state = {
             publicationInfoWidth: 0
         }
-
     }
 
     setPublicationInfoWidth(width) {
@@ -110,12 +113,12 @@ class PublicationStatusComponent extends Component {
         const publicationStatusClass = publicationStatus.getContentClass(classes);
 
         return <React.Fragment>
-            <div className={ `${publicationStatusClass} ${classes.root}` } />
-            <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}>
+            <div className={ `${publicationStatusClass} ${classes.root}` }/>
+            <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}
+                 onMouseLeave={() => this.setPublicationInfoWidth(0)}>
                 <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
                     <div className={ classes.infoContainer }
-                         onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
-                         onMouseLeave={() => this.setPublicationInfoWidth(0)}>
+                         onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}>
                         <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON` }/>
                     </div>
                 </div>

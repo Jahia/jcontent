@@ -246,8 +246,8 @@ class CmPickerViewMaterial extends React.Component {
             flatArray.push(node);
             if (node.children) {
                 node.children.sort(function (a, b) {
-                    const A = a.node.displayName.toLowerCase();
-                    const B = b.node.displayName.toLowerCase();
+                    const A = a.node.displayName.toLocaleLowerCase();
+                    const B = b.node.displayName.toLocaleLowerCase();
                     if (A < B) {
                         return -1;
                     }

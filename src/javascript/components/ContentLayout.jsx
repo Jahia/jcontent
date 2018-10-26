@@ -8,7 +8,7 @@ import {Add, Close} from "@material-ui/icons";
 import classNames from 'classnames'
 import ContentTrees from "./ContentTrees";
 import {withNotifications} from '@jahia/react-material';
-import {translate} from "react-i18next";
+import {translate, Trans} from 'react-i18next';
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import {DxContext} from "./DxContext";
 import Actions from "./Actions";
@@ -141,7 +141,10 @@ const styles = theme => ({
         width: "50%",
         background: "linear-gradient(to right, rgba(78, 81, 86, 0) 0%, #4e5156 100%) !important",
         zIndex: "2000",
-        textAlign: "right"
+        textAlign: "right",
+        color: "#e3e3e3",
+        fontSize: 13,
+        marginRight: 50
     },
     academyLinkText: {
         fontSize: 12,
@@ -150,6 +153,9 @@ const styles = theme => ({
         color: "#e3e3e3",
         fontFamily: "Nunito Sans"
 
+    },
+    link: {
+        color: 'inherit'
     }
 });
 
@@ -273,7 +279,12 @@ class ContentLayout extends React.Component {
 
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
-                <div className={classes.academyLink}><a target="_blank" href={contextJsParameters.config.academyLink} className={classes.academyLinkText}>{t('label.contentManager.link.academy')}</a></div>
+                <div className={classes.academyLink}>
+                    <Trans
+                        i18nKey={'label.contentManager.link.academy'}
+                        components={[<a href={contextJsParameters.config.academyLink} target={'_blank'} className={classes.link}>univers</a>]}
+                    />
+                </div>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>

@@ -28,19 +28,16 @@ const styles = theme => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         marginTop: -10,
-        marginBottom: -10,
-    },
-    block: {
-        marginTop: -24,
-        marginLeft: -21,
-        marginRight: 20,
+        marginBottom: '-6px',
+        marginLeft: '5px',
     },
     siteSwitcher: {
-        marginLeft: '-8px'
-
+        marginBottom: '-11px',
+        marginLeft: '-1px'
     },
     languageSwitcher: {
-        marginLeft: '-8px'
+        marginTop: '-14px',
+        marginLeft: '-1px',
     },
     head: {
         display: "inline-block",
@@ -53,6 +50,11 @@ const styles = theme => ({
     },
     topBarwidth: {
         width: 'min-content',
+    },
+    topBarGrid: {
+        marginTop: '-24px',
+        marginLeft: '-22px',
+        display: 'inline-grid',
     }
 });
 
@@ -64,12 +66,12 @@ class CMTopBar extends React.Component {
         return (
             <div className={classes.root} data-cm-role={'cm-top-bar'}>
                 <Grid container spacing={24}>
-                    <Grid item xs={2} style={{marginTop: '-22px', marginLeft: '-22px', display: 'inline-grid'}}>
-                        <div style={{marginBottom: '-8px', marginLeft: '-6px'}}>
+                    <Grid item xs={2} className={classes.topBarGrid}>
+                        <div className={classes.siteSwitcher}>
                             <SiteSwitcher dark={false}/>
                         </div>
                         <Typography className={classes.typoTitle} data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
-                        <div style={{marginTop: '-8px', marginLeft: '-6px'}}>
+                        <div className={classes.languageSwitcher}>
                             <LanguageSwitcher dark={false}/>
                         </div>
                     </Grid>

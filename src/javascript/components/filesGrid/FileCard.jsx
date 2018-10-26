@@ -477,11 +477,12 @@ class FileCard extends Component {
 
     displayVisibilityButton() {
         let {classes, isHovered, handleShowPreview, t} = this.props;
-        return isHovered ?<IconButton onClick={handleShowPreview}
+        return isHovered ?<Tooltip title={t('label.contentManager.contentPreview.preview')}>
+            <IconButton onClick={handleShowPreview}
                                       disableRipple={true}
                                       className={classes.visibilityButton}>
-            <Tooltip title={t('label.contentManager.contentPreview.preview')}><Visibility/></Tooltip>
-        </IconButton> : null;
+            <Visibility/>
+        </IconButton></Tooltip> : null;
     }
 
     displayPublicationAction(publishButtonClass) {
@@ -504,10 +505,9 @@ class FileCard extends Component {
                     {...props}
                     disableRipple={true}
                     cmRole={"file-grid-thumbnail-button-publish"}
+                    tooltip={t('label.contentManager.filesGrid.publish')}
                 >
-                    <Tooltip title={t('label.contentManager.filesGrid.publish')}>
-                        <Autorenew className={classes.renewIcon}/>
-                    </Tooltip>
+                    <Autorenew className={classes.renewIcon}/>
                 </CmIconButton>;
             }}
         </Actions>;

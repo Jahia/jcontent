@@ -376,8 +376,9 @@ class ContentListTable extends React.Component {
 
 
                                                                       data-cm-role={"table-content-list-button"}
-                                                                      onClick={handleShowPreview}>
-                                                            <Tooltip title={t('label.contentManager.contentPreview.preview')}><Visibility/></Tooltip>
+                                                                      onClick={handleShowPreview}
+                                                                      tooltip={t('label.contentManager.contentPreview.preview')}>
+                                                            <Visibility/>
                                                         </CmIconButton>
                                                         <Actions menuId={"tableEditButtonAction"} context={{
                                                             uuid: n.uuid,
@@ -389,8 +390,8 @@ class ContentListTable extends React.Component {
                                                             {(props) => {
                                                                 return <CmIconButton
                                                                     className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')} {...props}
-                                                                    cmRole={"table-content-list-button-edit"}>
-                                                                    <Tooltip title={t('label.contentManager.contentPreview.edit')}><Create/></Tooltip>
+                                                                    cmRole={"table-content-list-button-edit"} tooltip={t('label.contentManager.contentPreview.edit')}>
+                                                                    <Create/>
                                                                 </CmIconButton>
                                                             }
                                                             }

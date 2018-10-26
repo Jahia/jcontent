@@ -1,5 +1,5 @@
 import React from 'react';
-import {withStyles, Button} from "@material-ui/core";
+import {withStyles, Button, Tooltip, TableCell} from "@material-ui/core";
 import {compose} from "react-apollo/index";
 import {translate} from "react-i18next";
 import {MoreHoriz, MoreVert} from "@material-ui/icons";
@@ -35,35 +35,31 @@ class CmIconButton extends React.Component {
 
     //listTable is an attribute to know if it's a button used into list table (true) or in preview (false)
     render() {
-        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, listTable} = this.props;
+        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, listTable, tooltip} = this.props;
         let childrenCount = React.Children.count(children);
-        if (horizontal) {
-            return (
-                <Button className={
-                    listTable ? classes.buttonFooter + " " + className + " " + classes.VerticalPreview :
-                        classes.buttonFooter + " " + className + " " + classes.VerticalList
+        let button = horizontal ? <Button className={
+                listTable ? classes.buttonFooter + " " + className + " " + classes.VerticalPreview :
+                    classes.buttonFooter + " " + className + " " + classes.VerticalList
+            }
+                                             disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
+                                             onClick={(event) => onClick(event)} data-cm-role={cmRole}>
+                {childrenCount > 0
+                    ? <React.Fragment>{children}</React.Fragment>
+                    : <MoreVert/>
                 }
-                        disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
-                        onClick={(event) => onClick(event)} data-cm-role={cmRole}>
-                    {childrenCount > 0
-                        ? <React.Fragment>{children}</React.Fragment>
-                        : <MoreVert/>
-                    }
-                </Button>
-            )
+            </Button> :
+            <Button className={classes.button + " " + className}
+                    disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
+                    onClick={(event) => onClick(event)} data-cm-role={cmRole}>
+                {childrenCount > 0
+                    ? <React.Fragment>{children}</React.Fragment>
+                    : <MoreHoriz/>
+                }
+            </Button>;
+        if (tooltip) {
+            button = <Tooltip title={tooltip}>{button}</Tooltip>
         }
-        else {
-            return (
-                <Button className={classes.button + " " + className}
-                        disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
-                        onClick={(event) => onClick(event)} data-cm-role={cmRole}>
-                    {childrenCount > 0
-                        ? <React.Fragment>{children}</React.Fragment>
-                        : <MoreHoriz/>
-                    }
-                </Button>
-            )
-        }
+        return button
     }
 }
 

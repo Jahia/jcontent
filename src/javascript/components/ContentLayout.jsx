@@ -329,22 +329,22 @@ class ContentLayout extends React.Component {
                 </Grid>
                 <div className={classes.appFrame}>
                     {this.isBrowsing() &&
-                        <Paper style={{background: '#f7f7f7'}}>
-                            <Drawer
-                                variant="persistent"
-                                anchor={anchor}
-                                open={open}
-                                classes={{
-                                    paper: classes.drawerPaper,
-                                }}
-                            >
-                                <ContentTrees
-                                    contentTreeConfigs={contentTreeConfigs}
-                                    path={path}
-                                    setRefetch={this.setTreeRefetcher}
-                                />
-                            </Drawer>
-                        </Paper>
+                    <Paper style={{background: '#f7f7f7'}}>
+                        <Drawer
+                            variant="persistent"
+                            anchor={anchor}
+                            open={open}
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                        >
+                            <ContentTrees
+                                contentTreeConfigs={contentTreeConfigs}
+                                path={path}
+                                setRefetch={this.setTreeRefetcher}
+                            />
+                        </Drawer>
+                    </Paper>
                     }
                     <main
                         className={classNames(classes.content, classes[`content-left`], {
@@ -399,14 +399,13 @@ class ContentLayout extends React.Component {
                     />
                 </div>
 
+
                 <Upload uploadUpdateCallback={(status) => {
                     if (status && status.uploading === 0) {
                         this.refreshContentsAndTree(contentTreeConfigs)
                     }
                 }}/>
-
                 <ContextualMenu/>
-
             </React.Fragment>
         }}</DxContext.Consumer>;
     }

@@ -47,8 +47,8 @@ const styles = (theme) => ({
     lastModified: {
         fontSize: '13px',
         color: "#313131",
-        minWidth: "100px",
-        maxWidth: "100px"
+        minWidth: "140px",
+        maxWidth: "140px"
     },
     createdBy: {
         fontSize: '13px',
@@ -140,8 +140,6 @@ const styles = (theme) => ({
         color: "#313131",
         marginLeft: '-10px',
         fontSize: '14px',
-        width: "598px",
-        maxWidth: "598px",
     },
     nodeTypeIcon: {
         marginRight: '6px',
@@ -227,6 +225,21 @@ const styles = (theme) => ({
         paddingLeft: 5,
         paddingRight: 5,
     },
+    nameCellWidth: {
+        maxWidth: 400,
+        ['@media (min-width: 576px)']: {
+            maxWidth: 50
+        },
+        ['@media (min-width:780px)']: {
+            maxWidth: 100
+        },
+        ['@media (min-width:992px)']: {
+            maxWidth: 300
+        },
+        ['@media (min-width: 1200px)']: {
+            maxWidth: 500
+        }
+    }
 });
 
 class ContentListTable extends React.Component {
@@ -338,7 +351,6 @@ class ContentListTable extends React.Component {
                                                        data-cm-role="table-content-list-cell-publication">
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
-                                            {/*<PublicationStatus node={n} publicationInfoWidth={400}/>*/}
                                             {columnData.map(column => {
                                                 if (column.id === 'wip') {
                                                     return <TableCell className={classes.actionCell} key={column.id}
@@ -352,10 +364,11 @@ class ContentListTable extends React.Component {
                                                     </TableCell>
                                                 } else if (column.id === 'name') {
                                                     return <TableCell key={column.id}
-                                                                      data-cm-role="table-content-list-cell-name">
+                                                                      data-cm-role="table-content-list-cell-name"
+                                                                      className={classes.nameCellWidth}>
                                                         <Typography className={classes[column.id]} noWrap classes={cellContentClasses}>
                                                             <img src={icon} className={classes.nodeTypeIcon}/>
-                                                            {n[column.id]}
+                                                            { n[column.id] }
                                                         </Typography>
                                                     </TableCell>;
                                                 } else if (column.id === 'lastModified') {

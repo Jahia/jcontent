@@ -186,7 +186,7 @@ let defaultActions = {
         retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     },
     publishDeletion: {
-        priority: 6,
+        priority: 4.2,
         component: PublishDeletionAction,
         icon: "Publish",
         target: ["editPreviewBar", "contentTreeMenuActions", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction"],

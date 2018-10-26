@@ -154,13 +154,13 @@ const styles = theme => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         marginTop: '-3px',
-        marginLeft: '1px'
+        marginLeft: '5px'
     },
     margin: {
         margin: theme.spacing.unit * 2,
     },
     blockMenu: {
-        marginTop: 30,
+        marginTop: 24,
     },
     padding: {
         padding: `0 ${theme.spacing.unit * 2}px`,
@@ -189,6 +189,14 @@ const styles = theme => ({
     },
     drawerTree: {
         marginTop: '18px'
+    },
+    siteSwitcher: {
+        marginBottom: '-10px',
+        marginLeft: 0,
+    },
+    languageSwitcher: {
+        marginTop: '-10px',
+        marginLeft: 0,
     }
 });
 
@@ -301,7 +309,7 @@ class CMLeftNavigation extends React.Component {
                     open={this.state.openDrawer}
                 >
                     <div className={classes.blockMenu}>
-                        <div style={{marginBottom: '-10px', marginLeft: '-6px'}}>
+                        <div className={classes.siteSwitcher}>
                             <SiteSwitcher dark={true}/>
                         </div>
                         <Typography className={classes.typoTitle}>
@@ -309,7 +317,7 @@ class CMLeftNavigation extends React.Component {
                                 t(this.state.drawerContent.title)
                             }
                         </Typography>
-                        <div style={{marginTop: '-10px', marginLeft: '-6px'}}>
+                        <div className={classes.languageSwitcher}>
                             <LanguageSwitcher dark={true}/>
                         </div>
                     </div>

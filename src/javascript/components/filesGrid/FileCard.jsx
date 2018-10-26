@@ -218,7 +218,6 @@ class FileCard extends Component {
     fileCard() {
 
         let {cardType} = this.props;
-        console.log(cardType);
 
         switch(cardType) {
             case 2 : return this.verticalFileCard();

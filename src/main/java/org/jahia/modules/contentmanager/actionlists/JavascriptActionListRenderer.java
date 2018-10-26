@@ -86,7 +86,9 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
                     URL contentsURL = bundle.getResource(url);
                     String contents = null;
                     try {
-                        contents = IOUtils.toString(contentsURL.openStream());
+                        contents = IOUtils.toString(contentsURL.openStream())
+                                .replace("::context", renderContext.getURLGenerator().getContext())
+                                .replace("::moduleVersion", bundle.getVersion().toString().replace(".SNAPSHOT", "-SNAPSHOT"));
                     } catch (IOException e) {
                         logger.error("Error reading action list resource {}", url, e);
                     }

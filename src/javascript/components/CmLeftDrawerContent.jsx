@@ -100,7 +100,10 @@ class CmLeftDrawerContent extends React.Component {
                                 : null
                             }
                         </div>
-                        <FontAwesomeIcon className={classes.iconDrawer} icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                        {menuConfig.externalIconPath ? <img src={menuConfig.externalIconPath}/>:
+                            <FontAwesomeIcon className={classes.iconDrawer}
+                                         icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                        }
                         <div className={classes.textPadding}>
                             {t(menuConfig.labelKey, menuConfig.labelParams)}
                         </div>

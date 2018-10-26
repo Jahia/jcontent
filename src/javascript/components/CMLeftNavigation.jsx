@@ -25,8 +25,8 @@ const styles = theme => ({
         fontFamily: "Nunito sans, sans-serif",
         minWidth: '105px',
         maxWidth: '105px',
-        overflow: 'visible!important',
-        "-webkit-transform-style": 'preserve-3d',
+        overflow: 'visible!important',//Safari compatibility
+        "-webkit-transform-style": 'preserve-3d',//Safari compatibility
         height: '100%',
         display: 'flex',
     },

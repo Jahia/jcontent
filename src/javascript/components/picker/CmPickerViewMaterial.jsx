@@ -218,7 +218,7 @@ class CmPickerViewMaterial extends React.Component {
         //Add root node to stack
         hierarchyStack.push(pickerEntriesSortedByPath.splice(0, 1)[0]);
 
-        while(pickerEntriesSortedByPath.length !== 0 || hierarchyStack.length === 0) {
+        while(pickerEntriesSortedByPath.length !== 0 && hierarchyStack.length !== 0) {
             const currentPickerEntry = pickerEntriesSortedByPath[0];
             const top = hierarchyStack[hierarchyStack.length - 1];
 

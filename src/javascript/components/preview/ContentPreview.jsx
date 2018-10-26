@@ -149,6 +149,12 @@ const styles = theme => ({
         padding: '12px',
         height: '48px!important',
         width: '48px!important',
+    },
+    lockIcon: {
+        color: "#007CB0"
+    },
+    unlockIcon: {
+        color: "#E67D3A"
     }
 });
 
@@ -462,7 +468,7 @@ class ContentPreview extends React.Component {
     }
 
     lock() {
-        const {t, selection, layoutQuery, layoutQueryParams} = this.props;
+        const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
         return <Mutation
             mutation={lockNode}
             refetchQueries={[{
@@ -471,7 +477,7 @@ class ContentPreview extends React.Component {
             }]}>
             {(lockNode) => {
                 return <Tooltip title={t('label.contentManager.contentPreview.lockNode')} placement="top-start">
-                    <IconButton color="secondary" onClick={() => {
+                    <IconButton className={classes.lockIcon} onClick={() => {
                         lockNode({variables: {pathOrId: selection[0].path}});
                         this.setState({
                             selectionLocked: true
@@ -483,7 +489,7 @@ class ContentPreview extends React.Component {
     }
 
     unlock() {
-        const {t, selection, layoutQuery, layoutQueryParams} = this.props;
+        const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
 
         return <Mutation
             mutation={unlockNode}
@@ -495,7 +501,7 @@ class ContentPreview extends React.Component {
                 return <Tooltip
                     title={t('label.contentManager.contentPreview.nodeLockedBy', {username: selection[0].lockOwner})}
                     placement="top-start">
-                    <IconButton onClick={() => {
+                    <IconButton className={classes.unlockIcon} onClick={() => {
                         unlockNode({variables: {pathOrId: selection[0].path}});
                         this.setState({
                             selectionLocked: false

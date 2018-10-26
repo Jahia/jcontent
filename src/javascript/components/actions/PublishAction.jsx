@@ -51,17 +51,15 @@ class PublishAction extends React.Component {
 
         const {call, notificationContext, children, context, allLanguages, allSubTree, checkForUnpublication, checkIfLanguagesMoreThanOne, labelKey, t, ...rest} = this.props;
 
+        if (checkForUnpublication && context.node.aggregatedPublicationInfo.publicationStatus === "NOT_PUBLISHED") {
+            return null;
+        }
+
         if (!checkForUnpublication && hasMixin(context.node, "jmix:markedForDeletion")) {
             return null;
         }
 
-        let ctx = _.cloneDeep(context);
-        ctx.uuid = [context.node.uuid];
-        ctx.allLanguages = allLanguages;
-        ctx.allSubTree = allSubTree;
-        ctx.checkForUnpublication = checkForUnpublication;
-
-        return <Query query={this.query} variables={{path: ctx.path}}>
+        return <Query query={this.query} variables={{path: context.path}}>
             {
                 ({error, loading, data}) => {
 
@@ -74,6 +72,12 @@ class PublishAction extends React.Component {
                     if (loading) {
                         return <ProgressOverlay/>;
                     }
+
+                    let ctx = _.cloneDeep(context);
+                    ctx.uuid = [context.node.uuid];
+                    ctx.allLanguages = allLanguages;
+                    ctx.allSubTree = allSubTree;
+                    ctx.checkForUnpublication = checkForUnpublication;
 
                     let display = !checkIfLanguagesMoreThanOne || (checkIfLanguagesMoreThanOne && data.jcr.result.site.languages.length > 1);
                     return display ? children({

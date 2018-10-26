@@ -273,7 +273,7 @@ class ContentLayout extends React.Component {
 
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
-                <div className={classes.academyLink}><a target="_parent" href={contextJsParameters.config.academyLink} className={classes.academyLinkText}>{t('label.contentManager.link.academy')}</a></div>
+                <div className={classes.academyLink}><a target="_blank" href={contextJsParameters.config.academyLink} className={classes.academyLinkText}>{t('label.contentManager.link.academy')}</a></div>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar dxContext={dxContext} mode={mode}/>

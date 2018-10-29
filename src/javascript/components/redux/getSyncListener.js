@@ -1,7 +1,7 @@
 import {cmGoto} from "./actions";
 
 const PARAMS_KEY = "?params=";
-const DEFAULT_MODE_PATHS = {browse: "/contents", "browse-files": "/files", apps: ''};
+const DEFAULT_MODE_PATHS = {browse: "/contents", "browse-files": "/files"};
 let currentValue;
 
 let select = (state) => {
@@ -62,8 +62,8 @@ let deserializeQueryString = search => {
 };
 
 let pathResolver = (currentValue, currentValueFromUrl) => {
-    if (currentValue.site !== currentValueFromUrl.site) {
-        //switched sites, we have to set default path based on mode: browse -> /contents | browse-files -> /files etc
+    if (currentValue.site !== currentValueFromUrl.site && currentValue.mode !== 'apps') {
+        //switched sites, we have to set default path based on mode: browse -> /contents | browse-files -> /files
         return currentValueFromUrl.path.substr(0, currentValueFromUrl.path.indexOf(currentValueFromUrl.site)) + currentValue.site + DEFAULT_MODE_PATHS[currentValue.mode];
     }
     return currentValue.path;

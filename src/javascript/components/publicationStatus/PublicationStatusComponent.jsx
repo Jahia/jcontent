@@ -116,9 +116,9 @@ class PublicationStatusComponent extends Component {
             <div className={ `${publicationStatusClass} ${classes.root}` }/>
             <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}
                  onMouseLeave={() => this.setPublicationInfoWidth(0)}>
-                <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }>
-                    <div className={ classes.infoContainer }
-                         onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}>
+                <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }
+                     onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}>
+                    <div className={ classes.infoContainer }>
                         <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON` }/>
                     </div>
                 </div>

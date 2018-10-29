@@ -52,6 +52,7 @@ const styles = theme => ({
     betweenIcon: {
         verticalAlign: "middle",
         position: "relative",
+        color: theme.palette.text.primary
     },
     menu: {
         background: 'red'

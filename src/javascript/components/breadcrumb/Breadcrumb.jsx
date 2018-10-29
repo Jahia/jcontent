@@ -340,6 +340,9 @@ class Breadcrumb extends React.Component {
     generateBreadcrumbItem(items, itemIndex, maxLabelLength) {
         let {handleSelect, classes} = this.props;
         let item = items[itemIndex];
+
+        if (!item) return null;
+
         return <span key={item.uuid}>
             <BreadcrumbDisplay
                 id={item.uuid}

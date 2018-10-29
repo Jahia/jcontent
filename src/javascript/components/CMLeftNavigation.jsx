@@ -24,7 +24,6 @@ const styles = theme => ({
         background: '#f7f7f7',
         fontFamily: "Nunito sans, sans-serif",
         minWidth: '105px',
-        maxWidth: '105px',
         overflow: 'visible!important',//Safari compatibility
         "-webkit-transform-style": 'preserve-3d',//Safari compatibility
         height: '100%',

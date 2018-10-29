@@ -47,7 +47,7 @@ const styles = theme => ({
         overflow: 'hidden!important',
     },
     modalTransition: {
-        transition: '.23s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
+        transition: '.55s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
         width: 550,
         top: '140px!important',
         right: '41px!important',

@@ -1,6 +1,7 @@
 import {cmGoto} from "./actions";
 
 const PARAMS_KEY = "?params=";
+const DEFAULT_MODE_PATHS = {browse: "/contents", "browse-files": "/files", apps: ''};
 let currentValue;
 
 let select = (state) => {
@@ -60,6 +61,14 @@ let deserializeQueryString = search => {
     }
 };
 
+let pathResolver = (currentValue, currentValueFromUrl) => {
+    if (currentValue.site !== currentValueFromUrl.site) {
+        //switched sites, we have to set default path based on mode: browse -> /contents | browse-files -> /files etc
+        return currentValueFromUrl.path.substr(0, currentValueFromUrl.path.indexOf(currentValueFromUrl.site)) + currentValue.site + DEFAULT_MODE_PATHS[currentValue.mode];
+    }
+    return currentValue.path;
+};
+
 let getSyncListener = (store, history) => () => {
     let previousValue = currentValue;
     currentValue = select(store.getState());
@@ -89,7 +98,7 @@ let getSyncListener = (store, history) => () => {
                 (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
                 (!_.isEqual(currentValueFromUrl.params, currentValue.params))
             ) {
-                history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, currentValue.path, currentValue.params));
+                history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, pathResolver(currentValue, currentValueFromUrl), currentValue.params));
             }
         }
     }

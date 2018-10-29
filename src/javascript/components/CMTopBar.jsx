@@ -28,16 +28,12 @@ const styles = theme => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         marginTop: -10,
-        marginBottom: '-6px',
-        marginLeft: '5px',
+        marginLeft: '5px'
     },
     siteSwitcher: {
-        marginBottom: '-11px',
-        marginLeft: '-1px'
     },
     languageSwitcher: {
-        marginTop: '-14px',
-        marginLeft: '-1px',
+        marginTop: '-10px'
     },
     head: {
         display: "inline-block",
@@ -53,8 +49,7 @@ const styles = theme => ({
     },
     topBarGrid: {
         marginTop: '-24px',
-        marginLeft: '-22px',
-        display: 'inline-grid',
+        marginLeft: '-22px'
     }
 });
 

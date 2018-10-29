@@ -252,6 +252,7 @@ class CMLeftNavigation extends React.Component {
         });
     };
 
+
     render() {
 
         const {siteKey, lang, t, classes, mode, contextPath} = this.props;
@@ -260,6 +261,18 @@ class CMLeftNavigation extends React.Component {
             path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
             siteKey: siteKey,
             lang: lang
+        };
+
+        let getIcon = (props)=> {
+            let icon = <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>;
+            if (props.customIcon) {
+                icon = <Icon name={props.customIcon.name} viewBox={props.customIcon.viewBox} fill={this.state.openDrawer ? '#504e4d' : '#F5F5F5'}/>
+            } else if (props.externalIconPathSelected && this.state.openDrawer) {
+                icon = <img src={props.externalIconPathSelected}/>
+            } else if (props.externalIconPath) {
+                icon = <img src={props.externalIconPath}/>
+            }
+            return icon;
         };
 
         return (
@@ -281,7 +294,7 @@ class CMLeftNavigation extends React.Component {
                                 <CmLeftMenuItem
                                     {...props}
                                     drawer={this.state.openDrawer}
-                                    icon={props.customIcon ? <Icon name={props.customIcon.name} viewBox={props.customIcon.viewBox} fill={this.state.openDrawer ? '#504e4d' : '#F5F5F5'}/> : <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}
+                                    icon={getIcon(props)}
                                 />
                             }
                         </Actions>
@@ -297,7 +310,7 @@ class CMLeftNavigation extends React.Component {
                                 bottom={true}
                                 badge={props.badge}
                                 drawer={this.state.openDrawer}
-                                icon={props.customIcon ? <Icon name={props.customIcon.name} viewBox={props.customIcon.viewBox} fill={this.state.openDrawer ? '#504e4d' : '#F5F5F5'}/> : <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>}
+                                icon={getIcon(props)}
                             />
                         }
                     </Actions>

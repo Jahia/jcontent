@@ -4,7 +4,7 @@
             var lang = contextJsParameters && contextJsParameters.uilang || 'en';
             switch (lang) {
                 case 'fr': return 'Chargement du gestionnaire de contenu et média...';
-                case 'de': return 'Content- und Medien-Manager wird geladen ...';
+                case 'de': return 'Content- und Medien-Manager wird geladen...';
             }
             return 'Loading Content and Media Manager...';
         }

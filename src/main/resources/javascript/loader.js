@@ -1,5 +1,13 @@
 (function () {
     if (window.location.href.indexOf("/cms/contentmanager") !== -1) {
+        function getLoadingLabel() {
+            var lang = contextJsParameters && contextJsParameters.uilang || 'en';
+            switch (lang) {
+                case 'fr': return 'Chargement du gestionnaire de contenu et média...';
+                case 'de': return 'Content- und Medien-Manager wird geladen ...';
+            }
+            return 'Loading Content and Media Manager...';
+        }
         var loader = document.createElement("div");
         loader.style.position = "fixed";
         loader.style.top = "0";
@@ -24,7 +32,7 @@
             "        </svg>\n" +
             "        </div>\n" +
             "        <div class=\"dx-loading\"><span class=\"dx-loading-progress\"></span></div>\n" +
-            "        <p class=\"dx-text\">"+jahia_gwt_messages.label_loading+"</p>\n" +
+            "        <p class=\"dx-text\">" + getLoadingLabel() + "</p>\n" +
             "    </div>\n" +
             "    <div class=\"dx-ripple\"></div>\n" +
             "</div>";

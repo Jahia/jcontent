@@ -63,6 +63,7 @@ const styles = theme => ({
     },
     details: {
         display: 'flex',
+        '-ms-flex': 1,
         flexDirection: 'row',
     },
     verticalDetails: {
@@ -100,8 +101,8 @@ const styles = theme => ({
     },
     visibilityButton: {
         position: "absolute",
-        top: "11",
-        right: "10",
+        top: "11px",
+        right: "10px",
         color: theme.palette.background.default,
         padding: 0,
         '&:hover': {
@@ -117,8 +118,8 @@ const styles = theme => ({
     },
     publishButton: {
         position: "absolute",
-        top: "12",
-        right: "35",
+        top: "12px",
+        right: "35px",
         color: theme.palette.background.default,
         '&:hover': {
             backgroundColor: "transparent"
@@ -133,8 +134,8 @@ const styles = theme => ({
     },
     publishButtonAlternate: {
         position: "absolute",
-        top: "30",
-        right: "10",
+        top: "30px",
+        right: "10px",
         color: "#fff",
         '&:hover': {
             backgroundColor: "transparent"

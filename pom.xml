@@ -165,6 +165,7 @@
             <plugin>
                 <groupId>org.jahia.server</groupId>
                 <artifactId>jahia-maven-plugin</artifactId>
+                <version>5.5-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>properties2json</id>

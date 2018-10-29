@@ -86,7 +86,7 @@ class FilesGrid extends Component {
             </Grid>
             )
         }
-        return <Grid container className={classes.grid}>
+        return <div className={classes.grid}><Grid container>
             {
                 this.props.rows.map((node) => (
                     <Grid key={ node.uuid } item xs={ size }
@@ -106,7 +106,7 @@ class FilesGrid extends Component {
                 ))
             }
             <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
-        </Grid>
+        </Grid></div>
     }
 }
 

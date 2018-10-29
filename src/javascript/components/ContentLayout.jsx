@@ -143,16 +143,9 @@ const styles = theme => ({
         zIndex: "2000",
         textAlign: "right",
         color: "#e3e3e3",
-        fontSize: 13,
-        marginRight: 50
-    },
-    academyLinkText: {
         fontSize: 12,
-        fontWeight: 300,
-        padding: "4px 10px",
-        color: "#e3e3e3",
+        marginRight: 50,
         fontFamily: "Nunito Sans"
-
     },
     link: {
         color: 'inherit'

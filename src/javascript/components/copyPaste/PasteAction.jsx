@@ -8,12 +8,16 @@ import {Mutation} from 'react-apollo';
 import {refetchContentTreeAndListData} from '../refetches';
 import {connect} from "react-redux";
 import {clear} from "./redux/actions";
+import { cmGoto, cmSetPath } from "../redux/actions";
+import { invokeModificationHook } from './contentModificationHook';
 
 class PasteAction extends React.Component {
 
     render() {
 
-        let {children, baseContentType, context, t, labelKey, items, notificationContext, dispatch, ...rest} = this.props;
+        let {children, baseContentType, context, t, labelKey, items, notificationContext,
+            dispatch, currentlySelectedPath, ...rest} = this.props;
+
         if (items.length === 0) {
             return null;
         }
@@ -35,17 +39,39 @@ class PasteAction extends React.Component {
                             labelKey: labelKey,
                             onClick: () => {
                                 dispatch(clear());
-                                moveNode({variables: {
-                                        pathOrId: node.path,
-                                        destParentPathOrId: context.path,
-                                        destName: node.displayName
-                                    }}).then(() => {
-                                    notificationContext.notify(
-                                        t("label.contentManager.copyPaste.success"),
-                                        ['closeButton']
-                                    );
-                                    refetchContentTreeAndListData();
-                                })
+                                //Change selection to target node incase current selection will not be valid anymore
+                                if (currentlySelectedPath.indexOf(node.path) !== -1) {
+                                    invokeModificationHook([
+                                        node.uuid, node.path, node.name, "delete", null
+                                    ]);
+                                    dispatch(cmSetPath(context.path));
+                                    setTimeout(() => {
+                                        moveNode({variables: {
+                                                pathOrId: node.path,
+                                                destParentPathOrId: context.path,
+                                                destName: node.displayName
+                                            }}).then(() => {
+                                            notificationContext.notify(
+                                                t("label.contentManager.copyPaste.success"),
+                                                ['closeButton']
+                                            );
+                                            refetchContentTreeAndListData();
+                                        })
+                                    }, 150);
+                                }
+                                else {
+                                    moveNode({variables: {
+                                            pathOrId: node.path,
+                                            destParentPathOrId: context.path,
+                                            destName: node.displayName
+                                        }}).then(() => {
+                                        notificationContext.notify(
+                                            t("label.contentManager.copyPaste.success"),
+                                            ['closeButton']
+                                        );
+                                        refetchContentTreeAndListData();
+                                    })
+                                }
                             }
                         });
                     }}
@@ -96,7 +122,7 @@ class PasteAction extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return state.copyPaste;
+    return { ...state.copyPaste, currentlySelectedPath: state.path }
 };
 
 const mapDispatchToProps = (dispatch) => {

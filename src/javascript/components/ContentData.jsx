@@ -14,6 +14,7 @@ import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
 import Constants from "./constants";
 import {extractPaths, isDescendantOrSelf} from "./utils";
+import { setModificationHook } from './copyPaste/contentModificationHook';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -39,6 +40,7 @@ class ContentData extends React.Component {
 
     componentDidMount() {
         registerContentModificationEventHandler(this.onGwtContentModification);
+        setModificationHook((args) => this.onGwtContentModification(...args));
     }
 
     componentWillUnmount() {

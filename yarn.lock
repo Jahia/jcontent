@@ -147,9 +147,9 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20181025142121":
-  version "1.0.0-beta.20181025200622"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181025200622.tgz#ea289889851f3727faf7d32e8e4688a466a2772a"
+"@jahia/react-material@^1.0.0-beta.20181030105722":
+  version "1.0.0-beta.20181030105722"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181030105722.tgz#75fe66ba714a7330ec1cb03b5c86780c963d8c1b"
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20181011112119"
     "@material-ui/core" "^3.2.0"

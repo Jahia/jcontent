@@ -9,7 +9,6 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import Actions from "../Actions";
 import CmIconButton from "../renderAction/CmIconButton";
-
 import {fileIcon, isBrowserImage} from './filesGridUtils';
 import {cmSetSelection} from "../redux/actions";
 import {invokeContextualMenu} from "../contextualMenu/redux/actions";
@@ -22,12 +21,12 @@ const styles = theme => ({
         maxHeight: 300,
         cursor: "pointer",
         position: "relative",
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 20,
             marginLeft: '6px',
             marginRight: '30px',
         },
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
             display: "block"
         }
     },
@@ -36,12 +35,12 @@ const styles = theme => ({
         maxHeight: 150,
         cursor: "pointer",
         position: "relative",
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 20,
             marginLeft: '6px',
             marginRight: '30px',
         },
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
             display: "block"
         }
     },
@@ -52,12 +51,12 @@ const styles = theme => ({
         minHeight: 200,
         cursor: "pointer",
         position: "relative",
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 20,
             marginLeft: '6px',
             marginRight: '30px',
         },
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
             display: "block"
         }
     },
@@ -69,10 +68,10 @@ const styles = theme => ({
     verticalDetails: {
         display: "flex",
         position: "relative",
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 20
         },
-        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON" : {
+        "&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
             display: "block"
         }
     },
@@ -96,7 +95,7 @@ const styles = theme => ({
         height: 150,
     },
     selectedCard: {
-        backgroundColor: "rgb(250, 250, 250)",
+        backgroundColor: "rgb(250,250,250)",
         boxShadow: "1px 0px 15px 4px rgba(247,150,5,1)"
     },
     visibilityButton: {
@@ -472,18 +471,23 @@ class FileCard extends Component {
     }
 
     generateCardClass(node, baseClass) {
-        const { classes } = this.props;
+        const {classes} = this.props;
         return node.isSelected ? `${baseClass} ${classes.selectedCard}` : baseClass;
     }
 
     displayVisibilityButton() {
+
         let {classes, isHovered, handleShowPreview, t} = this.props;
-        return isHovered ?<Tooltip title={t('label.contentManager.contentPreview.preview')}>
-            <IconButton onClick={handleShowPreview}
-                                      disableRipple={true}
-                                      className={classes.visibilityButton}>
-            <Visibility/>
-        </IconButton></Tooltip> : null;
+
+        return isHovered
+
+            ? <Tooltip title={t('label.contentManager.contentPreview.preview')}>
+                <IconButton onClick={handleShowPreview} disableRipple={true} className={classes.visibilityButton}>
+                    <Visibility/>
+                </IconButton>
+            </Tooltip>
+
+            : null;
     }
 
     displayPublicationAction(publishButtonClass) {

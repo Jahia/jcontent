@@ -27,7 +27,7 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
-        marginTop: -10,
+        marginTop: '-10px',
         marginLeft: '5px'
     },
     siteSwitcher: {
@@ -54,10 +54,12 @@ const styles = theme => ({
 });
 
 class CMTopBar extends React.Component {
+
     render() {
 
         const {classes, mode, t} = this.props;
         let modeTitle = t("label.contentManager.title." + (mode || "browse"));
+
         return (
             <div className={classes.root} data-cm-role={'cm-top-bar'}>
                 <Grid container spacing={24}>
@@ -65,7 +67,9 @@ class CMTopBar extends React.Component {
                         <div className={classes.siteSwitcher}>
                             <SiteSwitcher dark={false}/>
                         </div>
-                        <Typography className={classes.typoTitle} data-cm-role={'cm-mode-title'}>{modeTitle}</Typography>
+                        <Typography className={classes.typoTitle} data-cm-role={'cm-mode-title'}>
+                            {modeTitle}
+                        </Typography>
                         <div className={classes.languageSwitcher}>
                             <LanguageSwitcher dark={false}/>
                         </div>
@@ -77,7 +81,7 @@ class CMTopBar extends React.Component {
                     </Grid>
                 </Grid>
             </div>
-        )
+        );
     }
 }
 

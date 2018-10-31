@@ -5,6 +5,8 @@ DX.
 
 ## Getting Started
 
+Note, please, the project is using resources (mainly @jahia/* packages), which have not yet been made available on public repositories. If you encounter any issues with the build, please, contact us at Jahia and we will take care of it.
+
 Compile and deploy the module using:
 
     mvn clean install

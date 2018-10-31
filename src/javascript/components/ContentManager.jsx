@@ -98,7 +98,7 @@ class ContentManager extends React.Component {
 
         let {dxContext} = this.props;
         // Work around to restore table headers color
-        // TODO: MUST REMOVE IT BEFORE RELEASING - BACKLOG-8697 !!!!
+        // TODO: MUST REMOVE IT BACKLOG-8697 !!!!
         const customTheme = theme;
         customTheme.overrides.MuiTableCell.head.background = "#f5f5f5";
         return (

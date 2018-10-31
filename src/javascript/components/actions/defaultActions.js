@@ -220,7 +220,7 @@ let defaultActions = {
         component: CallAction,
         call: () => alert("not implemented yet"),
         icon: "Edit",
-        target: ["additionalPreviewMenu"],
+        target: [],
         requiredPermission: "",
         labelKey: "label.contentManager.contentPreview.duplicate"
     },

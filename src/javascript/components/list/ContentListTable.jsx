@@ -244,6 +244,15 @@ const styles = (theme) => ({
 
 class ContentListTable extends React.Component {
 
+    constructor(props) {
+
+        super(props);
+
+        this.state = {
+            howeredRow: null
+        };
+    }
+
     isWip(node, lang) {
         switch (node.wipStatus) {
             case 'ALL_CONTENT':

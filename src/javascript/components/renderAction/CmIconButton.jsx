@@ -33,7 +33,6 @@ const styles = theme => ({
 
 class CmIconButton extends React.Component {
 
-    //listTable is an attribute to know if it's a button used into list table (true) or in preview (false)
     render() {
 
         const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, style2, tooltip} = this.props;

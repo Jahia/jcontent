@@ -28,7 +28,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with this program. If not, see <http://www.gnu.org/licenses/>.
+        along with this program. If not, see <http://www.gnu.org/licenses />.
 
 
         2/ JSEL - Commercial and Supported Versions of the program
@@ -44,20 +44,17 @@
         please contact the sales department at sales@jahia.com.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>jahia-modules</artifactId>
         <groupId>org.jahia.modules</groupId>
-        <version>7.3.0.0-SNAPSHOT</version>
-        <relativePath/>
+        <version>7.3.0.0</version>
+        <relativePath />
     </parent>
     <artifactId>content-media-manager</artifactId>
     <name>Content and Media Manager</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (Content and Media Manager) for running on a Digital Experience Manager server.</description>
 
@@ -65,7 +62,7 @@
         <connection>scm:git:git@github.com:Jahia/content-media-manager.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/content-media-manager.git</developerConnection>
         <url>https://github.com/Jahia/content-media-manager</url>
-        <tag>HEAD</tag>
+        <tag>1_0_0</tag>
     </scm>
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>
@@ -181,7 +178,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <webpack.arguments></webpack.arguments>
+                <webpack.arguments />
             </properties>
         </profile>
     </profiles>

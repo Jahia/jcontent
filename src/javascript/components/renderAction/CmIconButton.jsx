@@ -16,18 +16,18 @@ const styles = theme => ({
     },
     button: {
         padding: 0,
-        margin: '0!important'
+        margin: '0 !important'
     },
-    VerticalList: {
+    horizontalButton: {
         color: theme.palette.background.default,
-        paddingTop: '6px!important',
+        paddingTop: '6px !important',
     },
-    VerticalPreview: {
+    horizontalButtonStyle2: {
         color: theme.palette.background.default,
     },
     buttonFooter: {
         padding: 0,
-        margin: '0!important',
+        margin: '0 !important',
     }
 });
 
@@ -35,38 +35,52 @@ class CmIconButton extends React.Component {
 
     //listTable is an attribute to know if it's a button used into list table (true) or in preview (false)
     render() {
-        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, listTable, tooltip} = this.props;
+
+        const {classes, onClick, labelKey, t, footer, children, cmRole, className, disableRipple, horizontal, style2, tooltip} = this.props;
         let childrenCount = React.Children.count(children);
-        let button = horizontal ? <Button className={
-                listTable ? classes.buttonFooter + " " + className + " " + classes.VerticalPreview :
-                    classes.buttonFooter + " " + className + " " + classes.VerticalList
-            }
-                                             disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
-                                             onClick={(event) => onClick(event)} data-cm-role={cmRole}>
+
+        let button = horizontal
+
+            ? <Button
+                className={style2
+                    ? classes.buttonFooter + " " + className + " " + classes.horizontalButtonStyle2
+                    : classes.buttonFooter + " " + className + " " + classes.horizontalButton
+                }
+                disableRipple={disableRipple ? disableRipple : false}
+                aria-haspopup="true"
+                onClick={(event) => onClick(event)}
+                data-cm-role={cmRole}
+            >
                 {childrenCount > 0
                     ? <React.Fragment>{children}</React.Fragment>
                     : <MoreVert/>
                 }
-            </Button> :
-            <Button className={classes.button + " " + className}
-                    disableRipple={disableRipple ? disableRipple : false} aria-haspopup="true"
-                    onClick={(event) => onClick(event)} data-cm-role={cmRole}>
+            </Button>
+
+            : <Button
+                className={classes.button + " " + className}
+                disableRipple={disableRipple ? disableRipple : false}
+                aria-haspopup="true"
+                onClick={(event) => onClick(event)}
+                data-cm-role={cmRole}
+            >
                 {childrenCount > 0
                     ? <React.Fragment>{children}</React.Fragment>
                     : <MoreHoriz/>
                 }
             </Button>;
+
         if (tooltip) {
-            button = <Tooltip title={tooltip}>{button}</Tooltip>
+            button = <Tooltip title={tooltip}>{button}</Tooltip>;
         }
-        return button
+
+        return button;
     }
 }
 
 CmIconButton = compose(
     translate(),
-    withStyles(styles, { withTheme: true })
+    withStyles(styles, {withTheme: true})
 )(CmIconButton);
 
 export default CmIconButton;
-

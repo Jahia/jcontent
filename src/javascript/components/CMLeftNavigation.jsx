@@ -15,8 +15,8 @@ import CmLeftDrawerContent from "./CmLeftDrawerContent";
 import Icon from "./icons/Icon";
 
 export const drawerWidth = 289;
-// TODO this styles should be provided by the theme / new structure when available
 
+// TODO this styles should be provided by the theme / new structure when available
 const styles = theme => ({
     root: {
         zIndex: 1,
@@ -24,8 +24,8 @@ const styles = theme => ({
         background: '#f7f7f7',
         fontFamily: "Nunito sans, sans-serif",
         minWidth: '105px',
-        overflow: 'visible!important',//Safari compatibility
-        "-webkit-transform-style": 'preserve-3d',//Safari compatibility
+        overflow: 'visible !important', //Safari compatibility
+        "-webkit-transform-style": 'preserve-3d', //Safari compatibility
         height: '100%',
         display: 'flex',
     },
@@ -74,12 +74,12 @@ const styles = theme => ({
         color: '#d1d1d2'
     },
     menuBurger: {
-        backgroundColor: 'transparent!important',
-        paddingRight: '0px!important',
-        paddingTop: '34px!important',
-        paddingLeft: '20px!important',
-        paddingBottom: '22px!important',
-        boxShadow: 'none!important',
+        backgroundColor: 'transparent !important',
+        paddingRight: '0px !important',
+        paddingTop: '34px !important',
+        paddingLeft: '20px !important',
+        paddingBottom: '22px !important',
+        boxShadow: 'none !important',
     },
     drawerPaper: {
         background: '#f7f7f7',
@@ -166,7 +166,7 @@ const styles = theme => ({
         padding: `0 ${theme.spacing.unit * 2}px`,
     },
     switcher: {
-        marginBottom: '-100px!important'
+        marginBottom: '-100px !important'
     },
     badge: {
         background: '#e40000',
@@ -175,17 +175,17 @@ const styles = theme => ({
         color: '#fafafa',
     },
     list: {
-        paddingTop: '0!important',
+        paddingTop: '0 !important',
         height: '100vh'
     },
     listItem: {
         display: 'block',
-        padding: '0!important',
+        padding: '0 !important',
         textAlign: 'center',
         position: 'absolute',
         bottom: '10px',
-        width: '48px!important',
-        paddingBottom: '10px!important',
+        width: '48px !important',
+        paddingBottom: '10px !important',
     },
     drawerTree: {
         marginTop: '18px'

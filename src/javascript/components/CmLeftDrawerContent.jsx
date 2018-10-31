@@ -23,7 +23,7 @@ const styles = (theme) => ({
         paddingBottom: '4px'
     },
     clearList: {
-        boxShadow: 'none!important',
+        boxShadow: 'none !important',
         textOverflow: 'ellipsis',
         opacity: '0.8',
         fontSize: '0.828rem',
@@ -35,7 +35,7 @@ const styles = (theme) => ({
 
     },
     selectedList: {
-        boxShadow: 'none!important',
+        boxShadow: 'none !important',
         fontSize: '0.872rem',
         textAlign: 'center',
         fontFamily: 'Nunito sans, sans-serif',
@@ -100,9 +100,9 @@ class CmLeftDrawerContent extends React.Component {
                                 : null
                             }
                         </div>
-                        {menuConfig.externalIconPath ? <img src={menuConfig.externalIconPath}/>:
-                            <FontAwesomeIcon className={classes.iconDrawer}
-                                         icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                        {menuConfig.externalIconPath
+                            ? <img src={menuConfig.externalIconPath}/>
+                            : <FontAwesomeIcon className={classes.iconDrawer} icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
                         }
                         <div className={classes.textPadding}>
                             {t(menuConfig.labelKey, menuConfig.labelParams)}

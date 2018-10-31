@@ -57,14 +57,14 @@ const styles = (theme) => ({
         maxWidth: "100px"
     },
     contentRow: {
-        height: '28px!important',
-        maxHeight: '28px!important',
+        height: '28px !important',
+        maxHeight: '28px !important',
         "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
             width: 20,
             zIndex: -1,
             marginLeft: '6px',
-            height: '37px!important',
-            maxHeight: '37px!important',
+            height: '37px !important',
+            maxHeight: '37px !important',
         },
         "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
             display: "block",
@@ -79,8 +79,8 @@ const styles = (theme) => ({
         top: 0,
         width: 30,
         minWidth: 30,
-        height: '30px!important',
-        maxHeight: '30px!important',
+        height: '30px !important',
+        maxHeight: '30px !important',
         overflow: 'hidden',
         justifyContent: 'flex-start',
         textTransform: 'none',
@@ -149,7 +149,7 @@ const styles = (theme) => ({
         position: 'relative',
         display: "flex",
         padding: 0,
-        height: "37px!important",
+        height: "37px !important",
         minHeight: 37 //same as row height
     },
     actionCell: {
@@ -171,7 +171,7 @@ const styles = (theme) => ({
         }
     },
     selectedRowAction: {
-        color: theme.palette.primary.contrastText + '!important',
+        color: theme.palette.primary.contrastText + ' !important',
     },
     hoveredRowActionsCell: {
         minWidth: "100px"
@@ -185,24 +185,24 @@ const styles = (theme) => ({
     row : {
         backgroundColor: '#f7f7f7',
         '&:hover': {
-            backgroundColor: '#ebeaea!important',
+            backgroundColor: '#ebeaea !important',
         }
 
     },
     rowPair: {
         backgroundColor: '#f5f5f5',
         '&:hover': {
-            backgroundColor: '#ebeaea!important',
+            backgroundColor: '#ebeaea !important',
         }
     },
     selectedRow: {
-        backgroundColor: '#007cb0!important',
+        backgroundColor: '#007cb0 !important',
     },
     selectedCell: {
-        color: theme.palette.primary.contrastText + '!important',
+        color: theme.palette.primary.contrastText + ' !important',
     },
     cell: {
-        color: '#5E6565'+ '!important'
+        color: '#5E6565 !important'
     },
     textOverflow1 :{
         whiteSpace: 'nowrap',
@@ -243,12 +243,6 @@ const styles = (theme) => ({
 });
 
 class ContentListTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-
-        };
-    }
 
     isWip(node, lang) {
         switch (node.wipStatus) {
@@ -289,6 +283,7 @@ class ContentListTable extends React.Component {
             }
         }, 100);
     };
+
     renderLock(row) {
         let {classes, t} = this.props;
         return row.isLocked ?
@@ -345,52 +340,61 @@ class ContentListTable extends React.Component {
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={($event) => this.onHoverEnter($event)}
                                             onMouseLeave={($event) => this.onHoverExit($event)}
-                                            onContextMenu={(event) => {onContextualMenu({isOpen:true, event:event, menuId: "contextualMenuContentAction", path:n.path, uuid: n.uuid, primaryNodeType: n.primaryNodeType, displayName: n.name, nodeName:n.nodeName, onClose: this.contextualMenuClosed})}}
+                                            onContextMenu={(event) => {onContextualMenu({
+                                                isOpen: true,
+                                                event: event,
+                                                menuId: "contextualMenuContentAction",
+                                                path: n.path,
+                                                uuid: n.uuid,
+                                                primaryNodeType: n.primaryNodeType,
+                                                displayName: n.name,
+                                                nodeName: n.nodeName,
+                                                onClose: this.contextualMenuClosed
+                                            })}}
                                         >
-                                            <TableCell className={classes.publicationCell}
-                                                       data-cm-role="table-content-list-cell-publication">
+                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
                                             {columnData.map(column => {
                                                 if (column.id === 'wip') {
-                                                    return <TableCell className={classes.actionCell} key={column.id}
-                                                                      padding={'none'}>
+                                                    return <TableCell className={classes.actionCell} key={column.id} padding={'none'}>
                                                         {renderWip}
                                                     </TableCell>;
                                                 } else if (column.id === 'lock') {
-                                                    return <TableCell className={classes.actionCell} key={column.id}
-                                                                      padding={'none'}>
+                                                    return <TableCell className={classes.actionCell} key={column.id} padding={'none'}>
                                                         {renderLock}
                                                     </TableCell>
                                                 } else if (column.id === 'name') {
-                                                    return <TableCell key={column.id}
-                                                                      data-cm-role="table-content-list-cell-name"
-                                                                      className={classes.nameCellWidth}>
+                                                    return <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
                                                         <Typography className={classes[column.id]} noWrap classes={cellContentClasses}>
                                                             <img src={icon} className={classes.nodeTypeIcon}/>
-                                                            { n[column.id] }
+                                                            {n[column.id]}
                                                         </Typography>
                                                     </TableCell>;
                                                 } else if (column.id === 'lastModified') {
-                                                    return <TableCell key={column.id} padding={'none'}
-                                                                      classes={{root: classes.paddingCell }}
-                                                                      data-cm-role={'table-content-list-cell-' + column.id}>
+                                                    return <TableCell
+                                                        key={column.id}
+                                                        padding={'none'}
+                                                        classes={{root: classes.paddingCell}}
+                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                    >
                                                         <Typography className={classes[column.id]} classes={cellContentClasses}>
                                                             <Moment format={"ll"} locale={uiLang}>{n[column.id]}</Moment>
                                                         </Typography>
                                                     </TableCell>;
                                                 } else if (column.id === 'createdBy' && isHoveredRow) {
-                                                    return <TableCell className={classes.hoveredRowActionsCell}
-                                                                      classes={{root: classes.paddingCell }}
-
-                                                                      key={column.id} padding={'none'}
-                                                                      data-cm-role={'table-content-list-cell-' + column.id}>
-                                                        <CmIconButton className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}
-
-
-                                                                      data-cm-role={"table-content-list-button"}
-                                                                      onClick={handleShowPreview}
-                                                                      tooltip={t('label.contentManager.contentPreview.preview')}>
+                                                    return <TableCell
+                                                        className={classes.hoveredRowActionsCell}
+                                                        classes={{root: classes.paddingCell }}
+                                                        key={column.id} padding={'none'}
+                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                    >
+                                                        <CmIconButton
+                                                            className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}
+                                                            data-cm-role={"table-content-list-button"}
+                                                            onClick={handleShowPreview}
+                                                            tooltip={t('label.contentManager.contentPreview.preview')}
+                                                        >
                                                             <Visibility/>
                                                         </CmIconButton>
                                                         <Actions menuId={"tableEditButtonAction"} context={{
@@ -402,12 +406,14 @@ class ContentListTable extends React.Component {
                                                         }}>
                                                             {(props) => {
                                                                 return <CmIconButton
-                                                                    className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')} {...props}
-                                                                    cmRole={"table-content-list-button-edit"} tooltip={t('label.contentManager.contentPreview.edit')}>
+                                                                    className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}
+                                                                    {...props}
+                                                                    cmRole={"table-content-list-button-edit"}
+                                                                    tooltip={t('label.contentManager.contentPreview.edit')}
+                                                                >
                                                                     <Create/>
-                                                                </CmIconButton>
-                                                            }
-                                                            }
+                                                                </CmIconButton>;
+                                                            }}
                                                         </Actions>
                                                         <Actions menuId={"tableActions"} context={{
                                                             uuid: n.uuid,
@@ -416,16 +422,22 @@ class ContentListTable extends React.Component {
                                                             nodeName: n.nodeName,
                                                             primaryNodeType: n.primaryNodeType
                                                         }}>
-                                                            {(props) => <CmIconButton horizontal={true} listTable={true}
-                                                                                      className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')} {...props}
-
-                                                                                      cmRole={'table-content-list-action-menu'}/>}
+                                                            {(props) => <CmIconButton
+                                                                horizontal={true}
+                                                                style2={true}
+                                                                className={classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}
+                                                                {...props}
+                                                                cmRole={'table-content-list-action-menu'}
+                                                            />}
                                                         </Actions>
                                                     </TableCell>;
                                                 } else {
-                                                    return <TableCell key={column.id} padding={'none'}
-                                                                      classes={{root: classes.paddingCell }}
-                                                                      data-cm-role={'table-content-list-cell-' + column.id}>
+                                                    return <TableCell
+                                                        key={column.id}
+                                                        padding={'none'}
+                                                        classes={{root: classes.paddingCell}}
+                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                    >
                                                         <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
                                                             {n[column.id]}
                                                         </Typography>
@@ -436,16 +448,23 @@ class ContentListTable extends React.Component {
                                     );
                                 })}
                                 {emptyRows > 0 &&
-                                <TableRow>
-                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'} />
-                                </TableRow>
+                                    <TableRow>
+                                        <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
+                                    </TableRow>
                                 }
                             </TableBody>
                         )}
                     </DxContext.Consumer>
                 </Table>
-                {totalCount > 0 && <Pagination totalCount={totalCount} pageSize={pageSize} currentPage={page}
-                            onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage}/>}
+                {totalCount > 0 &&
+                    <Pagination
+                        totalCount={totalCount}
+                        pageSize={pageSize}
+                        currentPage={page}
+                        onChangeRowsPerPage={onChangeRowsPerPage}
+                        onChangePage={onChangePage}
+                    />
+                }
             </div>
         );
     }

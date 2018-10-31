@@ -62,9 +62,9 @@
     <description>This is the custom module (Content and Media Manager) for running on a Digital Experience Manager server.</description>
 
     <scm>
-        <connection>scm:git:git@github.com:Jahia/content-manager.git</connection>
-        <developerConnection>scm:git:git@github.com:Jahia/content-manager.git</developerConnection>
-        <url>https://github.com/Jahia/content-manager</url>
+        <connection>scm:git:git@github.com:Jahia/content-media-manager.git</connection>
+        <developerConnection>scm:git:git@github.com:Jahia/content-media-manager.git</developerConnection>
+        <url>https://github.com/Jahia/content-media-manager</url>
         <tag>HEAD</tag>
     </scm>
     <properties>

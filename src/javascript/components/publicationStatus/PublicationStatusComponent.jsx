@@ -23,22 +23,28 @@ const styles = theme => ({
         bottom: 0
     },
     published: {
-        backgroundColor: theme.palette.publicationStatus.published.main
+        backgroundColor: theme.palette.publicationStatus.published.main,
+        fontFamily: 'Nunito Sans, sans-serif'
     },
     modified: {
-        backgroundColor: theme.palette.publicationStatus.modified.main
+        backgroundColor: theme.palette.publicationStatus.modified.main,
+        fontFamily: 'Nunito Sans, sans-serif'
     },
     notPublished: {
-        backgroundColor: theme.palette.publicationStatus.notPublished.main
+        backgroundColor: theme.palette.publicationStatus.notPublished.main,
+        fontFamily: 'Nunito Sans, sans-serif'
     },
     unPublished: {
-        backgroundColor: "#cecece"
+        backgroundColor: "#cecece",
+        fontFamily: 'Nunito Sans, sans-serif'
     },
     markedForDeletion: {
-        backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
+        backgroundColor: theme.palette.publicationStatus.markedForDeletion.main,
+        fontFamily: 'Nunito Sans, sans-serif'
     },
     noStatus: {
-        backgroundColor: "#cecece"
+        backgroundColor: "#cecece",
+        fontFamily: 'Nunito Sans, sans-serif'
     },
     publicationInfo: {
         flex: 20,

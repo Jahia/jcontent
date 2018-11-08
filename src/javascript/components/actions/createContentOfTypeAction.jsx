@@ -52,4 +52,4 @@ CreateContentOfTypeAction = _.flowRight(
     translate()
 )(CreateContentOfTypeAction);
 
-export default CreateContentOfTypeAction;
+export default {};

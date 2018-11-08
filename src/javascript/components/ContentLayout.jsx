@@ -1,18 +1,17 @@
 import React from 'react';
 import {withApollo} from 'react-apollo';
 import * as _ from "lodash";
+import {Add, Close} from "@material-ui/icons";
+import {withNotifications, DisplayAction, DisplayActions, buttonRenderer} from '@jahia/react-material';
+import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
+
 import ContentListTable from "./list/ContentListTable";
 import PreviewDrawer from "./preview/PreviewDrawer";
-import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
-import {Add, Close} from "@material-ui/icons";
 import classNames from 'classnames'
 import ContentTrees from "./ContentTrees";
-import {withNotifications} from '@jahia/react-material';
 import {translate, Trans} from 'react-i18next';
 import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
 import {DxContext} from "./DxContext";
-import Actions from "./Actions";
-import CmButton from "./renderAction/CmButton";
 import Upload from './fileupload/upload';
 import {cmSetPreviewState, CM_PREVIEW_STATES} from "./redux/actions";
 import FilesGrid from './filesGrid/FilesGrid';
@@ -26,8 +25,6 @@ import {cmGoto} from "./redux/actions";
 import {connect} from "react-redux";
 import Constants from "./constants";
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
-import ContextualMenu from './contextualMenu/contextualMenu';
-import PasteActionButton from './copyPaste/PasteActionButton';
 import Icon from "./icons/Icon";
 
 const drawerWidth = 260;
@@ -304,10 +301,8 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
-                                    <PasteActionButton path={ path } buttonClass={ classes.ButtonAction }/>
-                                    <Actions menuId={"createMenu"} context={{path: path}} className={classes.ButtonAction}>
-                                        {(props) => <CmButton text={true} {...props}><Add/></CmButton>}
-                                    </Actions>
+                                    {/*<PasteActionButton path={ path } buttonClass={ classes.ButtonAction }/>*/}
+                                    <DisplayAction actionKey={"createMenu"} context={{path: path}} className={classes.ButtonAction} render={buttonRenderer()}/>
                                 </React.Fragment>
                             }
                             {this.isBrowsing() &&
@@ -409,7 +404,6 @@ class ContentLayout extends React.Component {
                         this.refreshContentsAndTree(contentTreeConfigs)
                     }
                 }}/>
-                <ContextualMenu/>
             </React.Fragment>
         }}</DxContext.Consumer>;
     }

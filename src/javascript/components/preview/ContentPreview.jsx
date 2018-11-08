@@ -1,24 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Query} from 'react-apollo';
+import {Mutation, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
-import {withStyles, Paper, Grid, IconButton, Button} from "@material-ui/core";
-import {Fullscreen, FullscreenExit, Lock, LockOpen, CloudDownload} from "@material-ui/icons";
+import {connect} from "react-redux";
+import Loadable from "react-loadable";
+import {lodash as _} from "lodash";
+import {Button, Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
+import {CloudDownload, Fullscreen, FullscreenExit, Lock, LockOpen} from "@material-ui/icons";
+import {DisplayActions, buttonRenderer, iconButtonRenderer} from '@jahia/react-material';
 import {previewQuery} from "./gqlQueries";
 import PublicationInfo from './PublicationStatus';
-import {Mutation} from 'react-apollo';
 import ShareMenu from './ShareMenu';
-import Actions from "../Actions";
-import CmButton from "../renderAction/CmButton";
-import CmIconButton from "../renderAction/CmIconButton";
 import {lockNode, unlockNode} from "./gqlMutations";
-import {Tooltip} from '@material-ui/core';
-import {isPDF, isBrowserImage, getFileType} from "../filesGrid/filesGridUtils";
-import {DxContext} from "../DxContext";
-import {lodash as _} from "lodash";
-import {connect} from "react-redux";
-import {cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState, CM_PREVIEW_STATES} from "../redux/actions";
-import Loadable from "react-loadable";
+import {getFileType, isBrowserImage, isPDF} from "../filesGrid/filesGridUtils";
+import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from "../redux/actions";
 import {ellipsizeText} from "../utils.js";
 import constants from '../constants';
 
@@ -202,52 +197,45 @@ class ContentPreview extends React.Component {
         if (_.isEmpty(this.props.selection)) {
             return null;
         }
-        return this.mainComponent();
-    }
 
-    mainComponent() {
         const {selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : "";
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
-        return <DxContext.Consumer>
-            {dxContext => (
-                <div className={rootClass}>
-                    <Paper className={classes.previewPaper} elevation={0}>
-                        <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path, livePreviewAvailable)}>
-                            {({loading, error, data}) => {
-                                if (error) {
-                                    //Ignore error that occurs if node is not published in live mode.
+        return <div className={rootClass}>
+            <Paper className={classes.previewPaper} elevation={0}>
+                <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path, livePreviewAvailable)}>
+                    {({loading, error, data}) => {
+                        if (error) {
+                            //Ignore error that occurs if node is not published in live mode.
+                        }
+                        if (!loading) {
+                            if (!_.isEmpty(data)) {
+                                let modes = ['edit'];
+                                //Check if the node is published in live.
+                                if (livePreviewAvailable) {
+                                    modes.push('live');
                                 }
-                                if (!loading) {
-                                    if (!_.isEmpty(data)) {
-                                        let modes = ['edit'];
-                                        //Check if the node is published in live.
-                                        if (livePreviewAvailable) {
-                                            modes.push('live');
-                                        }
-                                        let selectedMode = _.find(modes, (mode) => {
-                                            return previewMode === mode
-                                        }) !== undefined ? previewMode : 'edit';
-                                        if (previewModes.length !== modes.length) {
-                                            setPreviewMode(selectedMode);
-                                            setPreviewModes(modes);
-                                        }
-                                        return this.previewComponent(data[selectedMode]);
-                                    }
+                                let selectedMode = _.find(modes, (mode) => {
+                                    return previewMode === mode
+                                }) !== undefined ? previewMode : 'edit';
+                                if (previewModes.length !== modes.length) {
+                                    setPreviewMode(selectedMode);
+                                    setPreviewModes(modes);
                                 }
-                                return null
-                            }}
-                        </Query>
-                    </Paper>
-                    <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
-                           elevation={0}>
-                        {this.componentFooter()}
-                    </Paper>
-                </div>
-            )}
-        </DxContext.Consumer>;
+                                return this.previewComponent(data[selectedMode]);
+                            }
+                        }
+                        return null
+                    }}
+                </Query>
+            </Paper>
+            <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
+                   elevation={0}>
+                {this.componentFooter()}
+            </Paper>
+        </div>
     }
 
     componentFooter() {
@@ -284,22 +272,11 @@ class ContentPreview extends React.Component {
                         </IconButton>
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <Actions menuId={"livePreviewBar"} context={{
+                        <DisplayActions target={"livePreviewBar"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
                             displayName: selectedItem.name
-                        }}>
-                            {(props) =>
-                                <Button
-                                    variant="contained"
-                                    className={classes.unpublishButton}
-                                    color="primary"
-                                    onClick={(event) => props.onClick(event)}
-                                >
-                                    {t('label.contentManager.unpublish')}
-                                </Button>}
-                        </Actions>
-
+                        }} render={buttonRenderer()}/>
                     </Grid>
 
                 </Grid>;
@@ -330,24 +307,20 @@ class ContentPreview extends React.Component {
                         {selectionLocked ? this.unlock() : this.lock()}
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <Actions menuId={"editPreviewBar"} context={{
+                        <DisplayActions target={"editPreviewBar"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
                             primaryNodeType: selectedItem.primaryNodeType,
                             displayName: selectedItem.name,
                             nodeName: selectedItem.nodeName
-                        }}>
-                            {(props) => <CmButton {...props}/>}
-                        </Actions>
-                        <Actions menuId={"editAdditionalMenu"} context={{
+                        }} render={buttonRenderer({variant:'contained', color:'primary'})}/>
+                        <DisplayActions target={"editAdditionalMenu"} context={{
                             uuid: selectedItem.uuid,
                             path: selectedItem.path,
                             displayName: selectedItem.name,
                             primaryNodeType: selectedItem.primaryNodeType,
                             nodeName: selectedItem.nodeName
-                        }}>
-                            {(props) => <CmIconButton footer={true} {...props} horizontal={true}/>}
-                        </Actions>
+                        }} render={iconButtonRenderer()}/>
                     </Grid>
                 </Grid>;
         }

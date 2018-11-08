@@ -21,4 +21,4 @@ class DeletePermanentlyAction extends React.Component {
     }
 }
 
-export default DeletePermanentlyAction;
+export default {};

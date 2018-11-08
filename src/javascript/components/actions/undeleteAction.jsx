@@ -20,4 +20,4 @@ UndeleteAction = _.flowRight(
     translate()
 )(UndeleteAction);
 
-export default UndeleteAction;
+export default {};

@@ -1,6 +1,6 @@
 import React from "react";
 import {MuiThemeProvider} from "@material-ui/core";
-import {anthraciteDarkTheme as theme, NotificationProvider} from "@jahia/react-material";
+import {anthraciteDarkTheme as theme, ComponentRendererProvider, NotificationProvider, actionsRegistry} from "@jahia/react-material";
 import {client} from "@jahia/apollo-dx";
 import {getI18n} from "@jahia/i18next";
 import {I18n, I18nextProvider} from "react-i18next";
@@ -8,34 +8,18 @@ import {Route} from "react-router";
 import {ApolloProvider} from "react-apollo";
 import {createBrowserHistory} from "history";
 import ManagerLayout from "./ManagerLayout";
-import CMLeftNavigation from "./CMLeftNavigation";
+import CMLeftNavigation from "./leftMenu/CMLeftNavigation";
 import * as _ from "lodash";
 import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
 import {IFrameLayout} from "./IFrameLayout";
-import defaultActions from "./actions/defaultActions";
-import actionsRegistry from "./actionsRegistry"
-import CallAction from "./actions/CallAction"
-import MenuAction from "./actions/MenuAction";
-import RouterAction from "./actions/RouterAction";
-import SideMenuAction from "./actions/SideMenuAction";
-import WorkflowDashboardAction from "./actions/WorkflowDashboardAction";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
 import getStore from './redux/getStore';
-import ListAction from "./actions/ListAction";
 import Constants from "./constants";
 import {PushEventHandler} from "./PushEventHandler";
-
-const actionComponents = {
-    callAction: CallAction,
-    listAction: ListAction,
-    menuAction: MenuAction,
-    routerAction : RouterAction,
-    sideMenuAction : SideMenuAction,
-    workflowDashboardAction : WorkflowDashboardAction
-};
+import initActions from "./actions/initActions";
 
 class ContentManager extends React.Component {
 
@@ -45,23 +29,25 @@ class ContentManager extends React.Component {
         window.forceCMUpdate = this.forceCMUpdate.bind(this);
         // test
         initFontawesomeIcons();
+
+        initActions(actionsRegistry);
         // register actions
         // register actions from the configuration
-        const actions = _.merge(dxContext.config.actions, defaultActions);
-        _.each(Object.keys(actions), actionKey => {
-            actionsRegistry[actionKey] = actions[actionKey];
-            // get Component if not set yet
-            if (typeof actionsRegistry[actionKey].component === "string") {
-                actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component]
-            }
-
-            // register callbacks (add callback to existing one)
-            function customizer(objValue, srcValue) {
-                if (_.isArray(objValue)) {
-                    return objValue.concat(srcValue);
-                }
-            }
-        });
+        // const actions = _.merge(dxContext.config.actions, defaultActions);
+        // _.each(Object.keys(actions), actionKey => {
+        //     actionsRegistry[actionKey] = actions[actionKey];
+        //     // get Component if not set yet
+        //     if (typeof actionsRegistry[actionKey].component === "string") {
+        //         actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component]
+        //     }
+        //
+        //     // register callbacks (add callback to existing one)
+        //     function customizer(objValue, srcValue) {
+        //         if (_.isArray(objValue)) {
+        //             return objValue.concat(srcValue);
+        //         }
+        //     }
+        // });
     }
 
     getStore = (dxContext, t) => {
@@ -116,28 +102,30 @@ class ContentManager extends React.Component {
                                     <Provider store={this.getStore(dxContext, t)}>
                                         <DxContext.Provider value={dxContext}>
                                             <PushEventHandler/>
-                                            <ConnectedRouter history={this.getHistory(dxContext, t)} >
-                                                <Route path="/:siteKey/:lang" render={props => {
-                                                    dxContext["lang"] = props.match.params.lang;
-                                                    return <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
-                                                        <Route path={`${props.match.url}/browse`} render={props =>
-                                                            <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                            <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["files"]]}/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/search`} render={props =>
-                                                            <ContentLayout/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/sql2Search`} render={props =>
-                                                            <ContentLayout/>
-                                                        }/>
-                                                        <Route path={`${props.match.url}/apps`} render={props =>
-                                                            <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
-                                                        }/>
-                                                    </ManagerLayout>;
-                                                }}/>
-                                            </ConnectedRouter>
+                                            <ComponentRendererProvider>
+                                                <ConnectedRouter history={this.getHistory(dxContext, t)} >
+                                                    <Route path="/:siteKey/:lang" render={props => {
+                                                        dxContext["lang"] = props.match.params.lang;
+                                                        return <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
+                                                            <Route path={`${props.match.url}/browse`} render={props =>
+                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/browse-files`} render={props =>
+                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["files"]]}/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/search`} render={props =>
+                                                                <ContentLayout/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/sql2Search`} render={props =>
+                                                                <ContentLayout/>
+                                                            }/>
+                                                            <Route path={`${props.match.url}/apps`} render={props =>
+                                                                <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
+                                                            }/>
+                                                        </ManagerLayout>;
+                                                    }}/>
+                                                </ConnectedRouter>
+                                            </ComponentRendererProvider>
                                         </DxContext.Provider>
                                     </Provider>
                                 );

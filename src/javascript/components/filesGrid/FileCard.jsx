@@ -1,17 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {withStyles, Card, CardContent, CardMedia, Typography,IconButton, Tooltip} from '@material-ui/core';
+import {Card, CardContent, CardMedia, IconButton, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {compose} from "react-apollo/index";
+import {DisplayAction} from "@jahia/react-material"
 import {translate} from "react-i18next";
-import {Visibility, Autorenew} from "@material-ui/icons";
+import {Autorenew, Visibility} from "@material-ui/icons";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import Actions from "../Actions";
-import CmIconButton from "../renderAction/CmIconButton";
 import {fileIcon, isBrowserImage} from './filesGridUtils';
 import {cmSetSelection} from "../redux/actions";
-import {invokeContextualMenu} from "../contextualMenu/redux/actions";
 import {connect} from "react-redux";
 import {ellipsizeText} from "../utils";
 
@@ -191,51 +189,55 @@ const MAX_LENGTH_MEDIA_LABELS_VERTICAL = 25;
 const MAX_LENGTH_FILES_LABELS_VERTICAL = 15;
 
 class FileCard extends Component {
+    constructor(props) {
+        super(props);
+    }
 
     render() {
 
         const {node} = this.props;
+        let context = {
 
-        if (isBrowserImage(node.path)) {
-            return this.regularMediaCard();
-        } else {
-            return this.fileCard();
-        }
+        };
+        return <DisplayAction actionKey={"contextualMenuContent"} context={context} render={
+            ({context}) => isBrowserImage(node.path) ? this.regularMediaCard(context) : this.fileCard(context)
+        }/>
     }
 
-    regularMediaCard() {
+    regularMediaCard(menuContext) {
 
         let {cardType} = this.props;
 
         switch(cardType) {
-            case 2 : return this.verticalMediaCard();
+            case 2 : return this.verticalMediaCard(menuContext);
             case 6 :
-            case 12 : return this.largeMediaCard();
-            default : return this.mediumMediaCard();
+            case 12 : return this.largeMediaCard(menuContext);
+            default : return this.mediumMediaCard(menuContext);
         }
     }
 
-    fileCard() {
+    fileCard(menuContext) {
 
         let {cardType} = this.props;
 
         switch(cardType) {
-            case 2 : return this.verticalFileCard();
-            case 3 : return this.mediumFileCard();
+            case 2 : return this.verticalFileCard(menuContext);
+            case 3 : return this.mediumFileCard(menuContext);
             case 6 :
-            case 12 : return this.largeFileCard();
-            default : return this.mediumFileCard();
+            case 12 : return this.largeFileCard(menuContext);
+            default : return this.mediumFileCard(menuContext);
         }
     }
 
-    largeMediaCard() {
+    largeMediaCard(menuContext) {
 
-        const {classes, t, node, dxContext, onContextualMenu, cardType, uiLang} = this.props;
+        const {classes, t, node, dxContext, cardType, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
+            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
@@ -246,8 +248,6 @@ class FileCard extends Component {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                    {this.displayPublicationAction()}
-                    {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
@@ -273,14 +273,15 @@ class FileCard extends Component {
         </Card>;
     }
 
-    mediumMediaCard() {
+    mediumMediaCard(menuContext) {
 
-        const {classes, t, node, dxContext, onContextualMenu, uiLang} = this.props;
+        const {classes, t, node, dxContext, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardMedium)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
+            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
@@ -291,8 +292,6 @@ class FileCard extends Component {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content} classes={{root: classes.cardContent}} style={{width: '100%'}}>
-                    {this.displayPublicationAction()}
-                    {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
@@ -312,14 +311,15 @@ class FileCard extends Component {
         </Card>;
     }
 
-    verticalMediaCard() {
+    verticalMediaCard(menuContext) {
 
-        const {classes, t, node, dxContext, onContextualMenu} = this.props;
+        const {classes, t, node, dxContext} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
+            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
             <CardMedia
@@ -331,8 +331,6 @@ class FileCard extends Component {
             <div className={classes.verticalDetails} style={{flex: 1.5}}>
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
                 <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                    {this.displayPublicationAction(classes.publishButtonAlternate)}
-                    {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
@@ -342,22 +340,21 @@ class FileCard extends Component {
         </Card>;
     }
 
-    largeFileCard() {
+    largeFileCard(menuContext) {
 
-        const {classes, t, node, onContextualMenu, uiLang} = this.props;
+        const {classes, t, node, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
+            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
             {fileIcon(node.path, '6x', {fontSize: "160px"})}
             <div className={classes.details}>
                 <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                    {this.displayPublicationAction()}
-                    {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
@@ -385,22 +382,21 @@ class FileCard extends Component {
         </Card>;
     }
 
-    mediumFileCard() {
+    mediumFileCard(menuContext) {
 
-        const {classes, t, node, onContextualMenu, cardType, uiLang} = this.props;
+        const {classes, t, node, cardType, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
+            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
             {fileIcon(node.path, '6x', {fontSize: "110px"})}
             <div className={classes.details}>
                 <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                    {this.displayPublicationAction()}
-                    {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
@@ -420,22 +416,21 @@ class FileCard extends Component {
         </Card>;
     }
 
-    verticalFileCard() {
+    verticalFileCard(menuContext) {
 
-        const {classes, t, node, onContextualMenu, cardType, uiLang} = this.props;
+        const {classes, t, node, cardType, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
+            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
             {fileIcon(node.path, '6x', {fontSize: "110px"})}
             <div className={classes.details} style={{height: '100%'}}>
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
                 <CardContent className={classes.content}  classes={{root: classes.cardContent}}>
-                    {this.displayPublicationAction(classes.publishButtonAlternate)}
-                    {this.displayVisibilityButton()}
                     <Typography classes={{caption: classes.typoCaption}} variant="caption">
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
@@ -475,48 +470,47 @@ class FileCard extends Component {
         return node.isSelected ? `${baseClass} ${classes.selectedCard}` : baseClass;
     }
 
-    displayVisibilityButton() {
-
-        let {classes, isHovered, handleShowPreview, t} = this.props;
-
-        return isHovered
-
-            ? <Tooltip title={t('label.contentManager.contentPreview.preview')}>
-                <IconButton onClick={handleShowPreview} disableRipple={true} className={classes.visibilityButton}>
-                    <Visibility/>
-                </IconButton>
-            </Tooltip>
-
-            : null;
-    }
-
-    displayPublicationAction(publishButtonClass) {
-
-        let {classes, node, isHovered, t} = this.props;
-
-        if (!isHovered) {
-            return null;
-        }
-
-        return <Actions menuId={"thumbnailPublishMenu"} context={{
-            uuid: node.uuid,
-            path: node.path,
-            displayName: node.name,
-            nodeName: node.nodeName
-        }}>
-            {(props) => {
-                return <CmIconButton
-                    className={publishButtonClass ? publishButtonClass : classes.publishButton}
-                    {...props}
-                    disableRipple={true}
-                    cmRole={"file-grid-thumbnail-button-publish"}
-                    tooltip={t('label.contentManager.filesGrid.publish')}
-                >
-                    <Autorenew className={classes.renewIcon}/>
-                </CmIconButton>;
-            }}
-        </Actions>;
-    }
+    // displayVisibilityButton() {
+    //
+    //     let {classes, isHovered, handleShowPreview, t} = this.props;
+    //
+    //     return isHovered
+    //
+    //         ? <Tooltip title={t('label.contentManager.contentPreview.preview')}>
+    //             <IconButton onClick={handleShowPreview} disableRipple={true} className={classes.visibilityButton}>
+    //                 <Visibility/>
+    //             </IconButton>
+    //         </Tooltip>
+    //
+    //         : null;
+    // }
+    // displayPublicationAction(publishButtonClass) {
+    //
+    //     let {classes, node, isHovered, t} = this.props;
+    //
+    //     if (!isHovered) {
+    //         return null;
+    //     }
+    //
+    //     return <Actions menuId={"thumbnailPublishMenu"} context={{
+    //         uuid: node.uuid,
+    //         path: node.path,
+    //         displayName: node.name,
+    //         nodeName: node.nodeName
+    //     }}>
+    //         {(props) => {
+    //             return <CmIconButton
+    //                 className={publishButtonClass ? publishButtonClass : classes.publishButton}
+    //                 {...props}
+    //                 disableRipple={true}
+    //                 cmRole={"file-grid-thumbnail-button-publish"}
+    //                 tooltip={t('label.contentManager.filesGrid.publish')}
+    //             >
+    //                 <Autorenew className={classes.renewIcon}/>
+    //             </CmIconButton>;
+    //         }}
+    //     </Actions>;
+    // }
 }
 
 FileCard.propTypes = {
@@ -531,9 +525,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onSelect: (selection) => dispatch(cmSetSelection(selection)),
-    onContextualMenu: (params) => {
-        dispatch(invokeContextualMenu(params));
-    }
 });
 
 const ComposedFileCard = compose(

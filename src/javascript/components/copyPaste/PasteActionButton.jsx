@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import {withNotifications} from "@jahia/react-material/index";
 import {connect} from "react-redux";
 import Actions from "../Actions";
-import CmButton from "../renderAction/CmButton";
+import CmButton from "../leftMenu/CmButton";
 
 
 class PasteAction extends React.Component {

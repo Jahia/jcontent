@@ -1,11 +1,12 @@
 import {List, ListItem, withStyles, withTheme} from "@material-ui/core";
 import {ExpandMore, ChevronRight} from "@material-ui/icons";
-import Actions from "./Actions";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
 import {lodash as _} from "lodash";
 import {translate} from "react-i18next";
 import connect from "react-redux/es/connect/connect";
+import {DisplayActions} from "@jahia/react-material";
+
 
 const styles = (theme) => ({
     root: {
@@ -76,40 +77,41 @@ class CmLeftDrawerContent extends React.Component {
 
     render() {
 
-        let {menuId, context, handleDrawerClose, actionPath, t, classes, theme} = this.props;
+        let {context, actionPath, classes, theme, t} = this.props;
 
         return <List className={classes.root} classes={{root: classes.listRoot}}>
-            <Actions menuId={menuId} context={context} handleDrawerClose={handleDrawerClose}>
-                {(menuConfig) =>
-                    <ListItem
-                        className={classes.clearList}
-                        classes={{root: classes.overList}}
-                        selected={_.includes(actionPath.split("/"), menuConfig.actionKey)}
-                        button
-                        onClick={(event) => menuConfig.onClick(event)}
-                        style={{
-                            paddingLeft: (_.split(context.actionPath, "/").length) * theme.spacing.unit
-                        }}
-                    >
-                        <div className={classes.expand}>
-                            {menuConfig.hasChildren
-                                ? ((menuConfig.open || menuConfig.selected)
+            <DisplayActions target={context.menu} context={{...context.originalContext, parent:context}} render={(actionProps) => {
+                let actionContext = actionProps.context;
+                actionContext.actionPath = context.actionPath + "/" + actionContext.key;
+
+                return <ListItem
+                    className={classes.clearList}
+                    classes={{root: classes.overList}}
+                    selected={_.includes(_.split(context.actionPath, "/"), actionContext.actionKey)}
+                    button
+                    onClick={(event) => actionContext.onClick(actionContext, event)}
+                    style={{
+                        paddingLeft: (_.split(context.actionPath, "/").length) * theme.spacing.unit
+                    }}
+                >
+                    <div className={classes.expand}>
+                        {actionContext.hasChildren
+                            ? ((actionContext.open || actionContext.selected)
                                     ? <ExpandMore classes={{root: classes.iconTree}}/>
                                     : <ChevronRight classes={{root: classes.iconTree}}/>
-                                )
-                                : null
-                            }
-                        </div>
-                        {menuConfig.externalIconPath
-                            ? <img src={menuConfig.externalIconPath}/>
-                            : <FontAwesomeIcon className={classes.iconDrawer} icon={menuConfig.icon != null ? menuConfig.icon : ["far", "file"]}/>
+                            )
+                            : null
                         }
-                        <div className={classes.textPadding}>
-                            {t(menuConfig.labelKey, menuConfig.labelParams)}
-                        </div>
-                    </ListItem>
-                }
-            </Actions>
+                    </div>
+                    {actionContext.externalIconPath
+                        ? <img src={actionContext.externalIconPath}/>
+                        : <FontAwesomeIcon className={classes.iconDrawer} icon={actionContext.icon != null ? actionContext.icon : ["far", "file"]}/>
+                    }
+                    <div className={classes.textPadding}>
+                        {t(actionContext.buttonLabel)}
+                    </div>
+                </ListItem>
+            }}/>
         </List>;
     }
 }

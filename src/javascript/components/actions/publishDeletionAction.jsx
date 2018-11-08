@@ -18,4 +18,4 @@ class PublishDeletionAction extends React.Component {
     }
 }
 
-export default PublishDeletionAction;
+export default {};

@@ -2,11 +2,11 @@ import React from "react";
 import {translate} from "react-i18next";
 import * as _ from "lodash";
 import {withNotifications} from "@jahia/react-material/index";
-import Node from './node';
+import Node from '../copyPaste/node';
 import {connect} from "react-redux";
-import { copy } from './redux/actions'
+import { copy } from '../copyPaste/redux/actions'
 
-class CopyAction extends React.Component {
+class copyAction extends React.Component {
 
     render() {
         let {children, context, actionKey, dispatch, ...rest} = this.props;
@@ -38,10 +38,10 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-CopyAction = _.flowRight(
+copyAction = _.flowRight(
     withNotifications(),
     translate(),
     connect(mapStateToProps, mapDispatchToProps)
-)(CopyAction);
+)(copyAction);
 
-export default CopyAction;
+export default {};

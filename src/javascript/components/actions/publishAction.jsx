@@ -105,4 +105,4 @@ PublishAction = _.flowRight(
 )(PublishAction);
 
 
-export default PublishAction;
+export default {};

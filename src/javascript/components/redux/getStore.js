@@ -1,7 +1,6 @@
 import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {batchDispatchMiddleware} from 'redux-batched-actions';
 import { fileUpload } from '../fileupload/redux/reducer';
-import { contextualMenuReducer } from '../contextualMenu/redux/reducer';
 import { copyPaste } from '../copyPaste/redux/reducer';
 import {
     languageReducer,
@@ -40,7 +39,6 @@ let getStore = (dxContext, history) => {
         previewState: previewStateReducer,
         openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode),
         searchMode: searchModeReducer(currentValueFromUrl.params),
-        contextualMenu: contextualMenuReducer,
         copyPaste: copyPaste
     });
 

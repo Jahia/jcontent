@@ -50,13 +50,15 @@ const styles = theme => ({
 
 class CmLeftMenuItem extends React.Component {
     render() {
-        const {classes, bottom, onClick, t, icon, drawer, labelKey, badge} = this.props;
+        const {classes, t, icon, drawer, bottom, badge, context} = this.props;
+        const {onClick, buttonLabel} = context;
         return (
-            <Button className={bottom ? classes.bottomListItem : classes.listItem} onClick={onClick}>
+            <Button className={bottom ? classes.bottomListItem : classes.listItem} onClick={(e)=>onClick(context,e)}>
                 {icon}
                 {badge}
-                <Typography className={drawer ? classes.typographyIcon : classes.typographyIconLight} data-cm-role={'left-menu-item-text'}>
-                    {t(labelKey)}
+                <Typography className={drawer ? classes.typographyIcon : classes.typographyIconLight}
+                            data-cm-role={'left-menu-item-text'}>
+                    {t(buttonLabel)}
                 </Typography>
             </Button>
         )

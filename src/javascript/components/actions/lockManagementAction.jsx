@@ -78,4 +78,4 @@ class LockManagementAction extends React.Component {
     };
 }
 
-export default LockManagementAction;
+export default {};

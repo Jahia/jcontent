@@ -1,14 +1,12 @@
 import React from "react";
 import {Picker} from "@jahia/react-apollo";
 import {CmPickerViewMaterial} from "./picker/CmPickerViewMaterial";
-import {List, ListItem, Button, Table, TableCell, TableBody, TableRow, TableHead, withStyles} from "@material-ui/core";
+import {List, ListItem, Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
 import {translate} from 'react-i18next';
-import Actions from "./Actions";
-import CmIconButton from "./renderAction/CmIconButton";
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
-import {cmGoto, cmOpenPaths, cmClosePaths } from "./redux/actions";
-import { invokeContextualMenu } from "./contextualMenu/redux/actions";
+import {cmClosePaths, cmGoto, cmOpenPaths} from "./redux/actions";
+import {DisplayAction, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
 
 const styles = theme => ({
     trees: {
@@ -41,6 +39,13 @@ const styles = theme => ({
     },
     disablePad: {
         padding: '0!important'
+    },
+    buttonMenu: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        transition: "left 0.5s ease 0s",
+        padding: 0
     }
 });
 
@@ -51,12 +56,28 @@ class ContentTree extends React.Component {
         this.picker = React.createRef();
     }
 
+    getContext(entry) {
+        return {
+            uuid: entry.node.uuid,
+            path: entry.node.path,
+            displayName: entry.node.displayName,
+            primaryNodeType: entry.node.primaryNodeType.name,
+            lang: this.props.lang,
+            user: this.props.user,
+            nodeName: entry.node.nodeName,
+            key: entry.node.uuid
+        }
+    }
+
     render() {
 
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
-            selectableTypes, rootLabel,
-            filterTypes, recurTypes, user, setRefetch, onContextualMenu} = this.props;
+            selectableTypes, rootLabel, buttonClass,
+            filterTypes, recurTypes, user, setRefetch} = this.props;
+
+
+        // onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menu: this.resolveMenu(entry.node.path), primaryNodeType: entry.node.primaryNodeType.name, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
 
         return <Picker
             ref={this.picker}
@@ -74,42 +95,32 @@ class ContentTree extends React.Component {
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial
                     {...others}
-                    textRenderer={(entry) => {
-                        return <span onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menuId: this.resolveMenuId(entry.node.path), primaryNodeType: entry.node.primaryNodeType.name, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
+                    textRenderer={(entry) => <DisplayAction actionKey={this.resolveMenu(entry.node.path)} context={this.getContext(entry)} render={({context}) =>
+                        <span onContextMenu={(event) => context.onContextMenu(context, event) }>
                             {entry.depth > 0 ? entry.node.displayName : rootLabel}
-                        </span>
-                        }
-                    }
+                        </span>}
+                    />}
                     actionsRenderer={(entry) =>
-
                         entry.depth > 0
-
-                        ? <Actions menuId={"contentTreeActions"} context={{
-                            uuid: entry.node.uuid,
-                            path: entry.node.path,
-                            displayName: entry.node.displayName,
-                            primaryNodeType: entry.node.primaryNodeType.name,
-                            lang: lang,
-                            user: user,
-                            nodeName: entry.node.nodeName
-                        }}>
-                            {(props) => <CmIconButton {...props} cmRole={'picker-item-menu'}/>}
-                        </Actions>
-
-                        : null
+                            ? <DisplayActions target={"contentTreeActions"} context={this.getContext(entry)} render={iconButtonRenderer({
+                                color:"inherit",
+                                className: buttonClass,
+                                'data-cm-role': 'picker-item-menu'
+                            })}/>
+                            : null
                     }
                 />
             }
         </Picker>;
     }
 
-    resolveMenuId(path) {
+    resolveMenu(path) {
         let {mode, siteKey} = this.props;
         switch (mode) {
             case 'browse-files':
-                return "contextualMenuFilesAction";
+                return "contextualMenuFiles";
             case 'browse':
-                return path.indexOf(`/sites/${siteKey}/contents`) !== -1  ? "contextualMenuFoldersAction" : "contextualMenuPagesAction";
+                return path.indexOf(`/sites/${siteKey}/contents`) !== -1  ? "contextualMenuFolders" : "contextualMenuPages";
         }
     }
 }
@@ -169,6 +180,7 @@ class ContentTrees extends React.Component {
                                                     openableTypes={contentTreeConfig.openableTypes}
                                                     rootLabel={t(contentTreeConfig.rootLabel)}
                                                     setRefetch={ setRefetch(contentTreeConfig.key) }
+                                                    buttonClass={classes.buttonMenu}
                                                 />
                                             </ListItem>;
                                         })
@@ -196,7 +208,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     openPath: (path) => dispatch(cmOpenPaths([path])),
     closePath: (path) => dispatch(cmClosePaths([path])),
     onContextualMenu: (params) => {
-        dispatch(invokeContextualMenu(params));
+        // dispatch(invokeContextualMenu(params));
     }
 });
 

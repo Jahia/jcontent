@@ -114,4 +114,4 @@ CreateContentAction = _.flowRight(
     translate()
 )(CreateContentAction);
 
-export default CreateContentAction;
+export default {};

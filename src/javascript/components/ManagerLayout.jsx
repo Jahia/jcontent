@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import {compose} from "react-apollo/index";
 import connect from "react-redux/es/connect/connect";
-import {drawerWidth} from "./CMLeftNavigation";
+import {drawerWidth} from "./leftMenu/CMLeftNavigation";
 
 const styles = theme => ({
     root: {

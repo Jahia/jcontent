@@ -2,14 +2,14 @@ import React from "react";
 import {translate} from "react-i18next";
 import * as _ from "lodash";
 import {withNotifications} from "@jahia/react-material/index";
-import Node from './node';
-import { pasteNode, moveNode } from "./gqlMutations";
+import Node from '../copyPaste/node';
+import { pasteNode, moveNode } from "../copyPaste/gqlMutations";
 import {Mutation} from 'react-apollo';
 import {refetchContentTreeAndListData} from '../refetches';
 import {connect} from "react-redux";
-import {clear} from "./redux/actions";
+import {clear} from "../copyPaste/redux/actions";
 import { cmGoto, cmSetPath } from "../redux/actions";
-import { invokeModificationHook } from './contentModificationHook';
+import { invokeModificationHook } from '../copyPaste/contentModificationHook';
 
 class PasteAction extends React.Component {
 
@@ -137,4 +137,4 @@ PasteAction = _.flowRight(
     connect(mapStateToProps)
 )(PasteAction);
 
-export default PasteAction;
+export default {};

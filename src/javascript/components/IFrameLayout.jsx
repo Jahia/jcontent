@@ -3,7 +3,7 @@ import Iframe from 'react-iframe';
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
 import {cmGoto} from "./redux/actions";
-import actionsRegistry from "./actionsRegistry";
+import {actionsRegistry} from "@jahia/react-material";
 import {Query} from "react-apollo";
 import {ActionRequirementsQueryHandler} from "./gqlQueries";
 import {translate} from "react-i18next";
@@ -23,7 +23,7 @@ class IFrameLayout extends React.Component {
 
         let actionPathParts = actionPath.split("/");
         let actionKey = actionPathParts[actionPathParts.length - 1];
-        const action = actionsRegistry[actionKey];
+        const action = actionsRegistry.get(actionKey);
 
         if (!action || !action.iframeUrl) {
             this.showError('label.contentManager.error.contentUnavailable');

@@ -1,18 +1,17 @@
 import React from "react";
 import {List, ListItem, withStyles, Typography, Drawer} from '@material-ui/core';
-import LanguageSwitcher from "./languageSwitcher/LanguageSwitcher";
-import SiteSwitcher from "./siteSwitcher/SiteSwitcher";
+import LanguageSwitcher from "../languageSwitcher/LanguageSwitcher";
+import SiteSwitcher from "../siteSwitcher/SiteSwitcher";
 import {translate} from 'react-i18next';
 import classNames from "classnames";
-import BurgerMenuButton from "./BurgerMenuButton";
+import BurgerMenuButton from "../BurgerMenuButton";
 import {Description, VerifiedUser} from '@material-ui/icons';
-import Actions from "./Actions";
-import CmLeftMenuItem from "./renderAction/CmLeftMenuItem";
 import {connect} from "react-redux";
 import * as _ from 'lodash';
-import actionsRegistry from "./actionsRegistry";
 import CmLeftDrawerContent from "./CmLeftDrawerContent";
-import Icon from "./icons/Icon";
+import Icon from "../icons/Icon";
+import {DisplayActions, actionsRegistry, iconButtonRenderer} from "@jahia/react-material";
+import CmLeftMenuItem from "./CmLeftMenuItem";
 
 export const drawerWidth = 289;
 
@@ -209,19 +208,21 @@ class CMLeftNavigation extends React.Component {
         if (props.mode === "apps") {
             let actionPath = this.props.path.split("/");
             let menuActionKey = actionPath ? actionPath.shift() : "";
-            const menuId = actionsRegistry[menuActionKey].menuId;
+            const menu = actionsRegistry.get(menuActionKey).menu;
             let actionContext = {
                 path: `/sites/${this.props.siteKey}`,
                 siteKey: this.props.siteKey,
                 lang: this.props.lang,
-                actionPath: "/" + menuActionKey
+                actionPath: "/" + menuActionKey,
+                handleDrawerClose: this.handleDrawerClose,
+                menu: menu
             };
             this.state = {
-                openDrawerMenuId: menuId,
+                openDrawerMenu: menu,
                 openDrawer: true,
                 drawerContent: {
-                    content: <CmLeftDrawerContent context={actionContext} menuId={menuId} handleDrawerClose={this.handleDrawerClose}/>,
-                    title: this.props.t(actionsRegistry[menuActionKey].labelKey)
+                    content: <CmLeftDrawerContent context={actionContext}/>,
+                    title: this.props.t(actionsRegistry.get(menuActionKey).labelKey)
                 }
             }
         } else {
@@ -235,9 +236,9 @@ class CMLeftNavigation extends React.Component {
         }
     }
 
-    handleDrawerOpen = (drawerContent, menuId) => {
+    handleDrawerOpen = (drawerContent, menu) => {
         this.setState({
-            openDrawerMenuId: menuId,
+            openDrawerMenu: menu,
             openDrawer: true,
             drawerContent: drawerContent
         });
@@ -245,7 +246,7 @@ class CMLeftNavigation extends React.Component {
 
     handleDrawerClose = () => {
         this.setState({
-            openDrawerMenuId: null,
+            openDrawerMenu: null,
             openDrawer: false,
             drawerContent: null
         });
@@ -255,12 +256,6 @@ class CMLeftNavigation extends React.Component {
     render() {
 
         const {siteKey, lang, t, classes, mode, contextPath} = this.props;
-
-        let actionContext = {
-            path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
-            siteKey: siteKey,
-            lang: lang
-        };
 
         let getIcon = (props)=> {
             let icon = <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>;
@@ -274,6 +269,16 @@ class CMLeftNavigation extends React.Component {
             return icon;
         };
 
+        let actionContext = {
+            path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
+            siteKey: siteKey,
+            lang: lang,
+            openDrawerMenu: this.state.openDrawerMenu,
+            drawerOpen: this.state.openDrawer,
+            handleDrawerClose: this.handleDrawerClose.bind(this),
+            handleDrawerOpen:  this.handleDrawerOpen.bind(this),
+        };
+
         return (
             <div className={this.state.openDrawer ? classes.root : classes.root1}>
                 <div className={classes.side}>
@@ -281,38 +286,20 @@ class CMLeftNavigation extends React.Component {
                         <ListItem button className={classes.menuBurger}>
                             <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
                         </ListItem>
-                        <Actions
-                            menuId={"leftMenuActions"}
-                            context={actionContext}
-                            openDrawerMenuId={this.state.openDrawerMenuId}
-                            drawerOpen={this.state.openDrawer}
-                            handleDrawerClose={this.handleDrawerClose.bind(this)}
-                            handleDrawer={this.state.openDrawer && mode !== "apps" ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}
-                        >
-                            {(props) =>
-                                <CmLeftMenuItem
-                                    {...props}
-                                    drawer={this.state.openDrawer}
-                                    icon={getIcon(props)}
-                                />
-                            }
-                        </Actions>
+                        <DisplayActions target={"leftMenuActions"} context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
+                                                                                                                                 drawer={this.state.openDrawer}
+                                                                                                                                 icon={getIcon(context)} />} />
+
                     </List>
-                    <Actions
-                        menuId="leftMenuBottomAction"
-                        context={actionContext}
-                        handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}
-                    >
-                        {(props) =>
-                            <CmLeftMenuItem
-                                {...props}
-                                bottom={true}
-                                badge={props.badge}
-                                drawer={this.state.openDrawer}
-                                icon={getIcon(props)}
-                            />
-                        }
-                    </Actions>
+
+                    <DisplayActions target={"leftMenuBottomAction"} context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
+                                                                                                                                  bottom={true}
+                                                                                                                                  badge={context.badge}
+                                                                                                                                  drawer={this.state.openDrawer}
+                                                                                                                                  icon={getIcon(context)} />}
+                    />
+
+                        {/*/!*handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}*!/*/}
                 </div>
                 <Drawer
                     variant="persistent"

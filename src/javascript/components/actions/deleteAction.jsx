@@ -18,4 +18,4 @@ class DeleteAction extends React.Component {
     }
 }
 
-export default DeleteAction;
+export default {};

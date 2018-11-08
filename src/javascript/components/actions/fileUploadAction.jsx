@@ -41,4 +41,4 @@ FileUploadAction = _.flowRight(
     connect(null, mapDispatchToProps)
 )(FileUploadAction);
 
-export default FileUploadAction;
+export default {};

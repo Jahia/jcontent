@@ -147,9 +147,9 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20181030105722":
-  version "1.0.0-beta.20181030105722"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181030105722.tgz#75fe66ba714a7330ec1cb03b5c86780c963d8c1b"
+"@jahia/react-material@^1.0.0-beta.20181109084917":
+  version "1.0.0-beta.20181109084917"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181109084917.tgz#d9dc7b3afebd1eec226a2fd7497be46fa80851d9"
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20181011112119"
     "@material-ui/core" "^3.2.0"
@@ -159,6 +159,7 @@
     react-dom "^16.4.0"
     react-i18next "^7.6.1"
     react-select "^2.0.0"
+    rxjs "^6.3.3"
 
 "@material-ui/core@^3.2.0":
   version "3.3.1"
@@ -3717,6 +3718,10 @@ option@~0.2.1:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/option/-/option-0.2.4.tgz#fd475cdf98dcabb3cb397a3ba5284feb45edbfe4"
 
+optional-require@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/optional-require/-/optional-require-1.0.0.tgz#168d3619843acc0fbcd6d6cc5da4cbe538663af2"
+
 os-browserify@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/os-browserify/-/os-browserify-0.3.0.tgz#854373c7f5c2315914fc9bfc6bd8238fdda1ec27"
@@ -4734,6 +4739,12 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   resolved "https://registry.yarnpkg.com/run-queue/-/run-queue-1.0.3.tgz#e848396f057d223f24386924618e25694161ec47"
   dependencies:
     aproba "^1.1.1"
+
+rxjs@^6.3.3:
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
+  dependencies:
+    tslib "^1.9.0"
 
 safe-buffer@5.1.2, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

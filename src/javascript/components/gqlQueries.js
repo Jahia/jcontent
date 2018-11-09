@@ -423,40 +423,40 @@ const ActionRequirementsFragments = {
 
 class ActionRequirementsQueryHandler {
 
-    constructor(path, action, language) {
+    constructor(context, language) {
 
         this.requirementsFragments = [];
         this.variables = {
-            path: path,
+            path: context.path,
             language: language
         };
 
-        if (!_.isEmpty(action.requiredPermission)) {
+        if (!_.isEmpty(context.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);
-            this.variables.permission = action.requiredPermission;
+            this.variables.permission = context.requiredPermission;
         }
-        if (!_.isEmpty(action.hideOnNodeTypes)) {
+        if (!_.isEmpty(context.hideOnNodeTypes)) {
             this.requirementsFragments.push(ActionRequirementsFragments.isNotNodeType);
-            this.variables.isNotNodeType = {types: action.hideOnNodeTypes};
+            this.variables.isNotNodeType = {types: context.hideOnNodeTypes};
         }
-        if (!_.isEmpty(action.showOnNodeTypes)) {
+        if (!_.isEmpty(context.showOnNodeTypes)) {
             this.requirementsFragments.push(ActionRequirementsFragments.isNodeType);
-            this.variables.isNodeType = {types: action.showOnNodeTypes};
+            this.variables.isNodeType = {types: context.showOnNodeTypes};
         }
-        if (!_.isEmpty(action.retrieveProperties)) {
+        if (!_.isEmpty(context.retrieveProperties)) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveProperties);
-            this.variables = {...action.retrieveProperties, ...this.variables}
+            this.variables = {...context.retrieveProperties, ...this.variables}
         }
-        if (!_.isEmpty(action.requireModuleInstalledOnSite)) {
+        if (!_.isEmpty(context.requireModuleInstalledOnSite)) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteInstalledModules);
         }
-        if (!_.isEmpty(action.contentType)) {
+        if (!_.isEmpty(context.contentType)) {
             this.requirementsFragments.push(ActionRequirementsFragments.requiredChildNodeType);
-            this.variables.childNodeType = action.contentType;
+            this.variables.childNodeType = context.contentType;
         }
-        if (!_.isEmpty(action.baseContentType)) {
+        if (!_.isEmpty(context.baseContentType)) {
             this.requirementsFragments.push(ActionRequirementsFragments.allowedChildNodeTypes);
-            this.variables.baseChildNodeType = action.baseContentType;
+            this.variables.baseChildNodeType = context.baseContentType;
         }
     }
 

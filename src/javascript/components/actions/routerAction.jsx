@@ -1,7 +1,7 @@
 import React from 'react';
 import {CM_PREVIEW_STATES, cmGoto, cmSetPreviewState} from "../redux/actions";
-import {composeActions, reduxAction} from "@jahia/react-material";
-
+import {composeActions} from "@jahia/react-material";
+import {reduxAction} from "./reduxAction";
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params})),

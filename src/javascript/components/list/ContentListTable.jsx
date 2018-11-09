@@ -347,19 +347,20 @@ class ContentListTable extends React.Component {
                                         nodeName: n.nodeName,
                                     };
                                     return (
-                                        <DisplayAction actionKey={"contextualMenuContent"} key={n.uuid} context={context} render={(contextualMenu) =>
-                                            <TableRow
+                                        <TableRow
                                             hover={true}
                                             className={isSelected ? '' : ((key % 2 === 0) ? classes.row : classes.rowPair)}
                                             classes={{root: classes.contentRow, selected: classes.selectedRow}}
                                             data-cm-node-path={n.path}
+                                            key={n.uuid}
                                             onClick={() => onRowSelected([n])}
                                             selected={isSelected}
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={(event) => this.onHoverEnter(event)}
                                             onMouseLeave={(event) => this.onHoverExit(event)}
-                                            onContextMenu={(event) => contextualMenu.context.onContextMenu(contextualMenu.context,event)}
+                                            onContextMenu={(event) => this.contextualMenu.context.onContextMenu(this.contextualMenu.context,event)}
                                             >
+                                                <DisplayAction actionKey={"contextualMenuContent"} key={n.uuid} context={context} render={(contextualMenu) => {this.contextualMenu = contextualMenu; return false;}}/>
                                                 <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
                                                     <PublicationStatus node={n} publicationInfoWidth={400}/>
                                                 </TableCell>
@@ -397,13 +398,7 @@ class ContentListTable extends React.Component {
                                                             key={column.id} padding={'none'}
                                                             data-cm-role={'table-content-list-cell-' + column.id}
                                                         >
-                                                            <DisplayActions target={"tableActions"} context={{
-                                                                uuid: n.uuid,
-                                                                path: n.path,
-                                                                primaryNodeType: n.primaryNodeType,
-                                                                displayName: n.name,
-                                                                nodeName: n.nodeName
-                                                            }} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')})}/>
+                                                            <DisplayActions target={"tableActions"} context={context} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')})}/>
                                                         </TableCell>;
                                                     } else {
                                                         return <TableCell
@@ -419,7 +414,6 @@ class ContentListTable extends React.Component {
                                                     }
                                                 })}
                                             </TableRow>
-                                        }/>
                                     );
                                 })}
                                 {emptyRows > 0 &&

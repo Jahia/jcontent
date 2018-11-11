@@ -302,7 +302,7 @@ class ContentLayout extends React.Component {
                             {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
                                     {/*<PasteActionButton path={ path } buttonClass={ classes.ButtonAction }/>*/}
-                                    <DisplayAction actionKey={"createMenu"} context={{path: path}} className={classes.ButtonAction} render={buttonRenderer()}/>
+                                    <DisplayAction actionKey={"createMenu"} context={{path: path}} className={classes.ButtonAction} render={buttonRenderer({},true)}/>
                                 </React.Fragment>
                             }
                             {this.isBrowsing() &&

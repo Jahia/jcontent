@@ -4,7 +4,7 @@ import {Badge, Typography} from '@material-ui/core';
 import {setActiveWorkflowTaskRefetcher} from './../refetches';
 import {composeActions, withStylesAction} from "@jahia/react-material";
 import {withApolloAction} from "./withApolloAction";
-import {from, Subject} from "rxjs";
+import {from} from "rxjs";
 import {filter, map} from 'rxjs/operators';
 
 const styles = theme => ({

@@ -1,22 +1,12 @@
 import React from "react";
-import {
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-    withStyles,
-    Typography,
-    Tooltip,
-    IconButton
-} from "@material-ui/core";
+import {Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from "@material-ui/core";
 import {VirtualsiteIcon} from '@jahia/icons';
-import {Visibility, Create, Autorenew} from "@material-ui/icons";
+import {Lock} from "@material-ui/icons";
 import ContentListHeader from "./ContentListHeader";
-import {Pagination, DisplayActions, DisplayAction, iconButtonRenderer} from "@jahia/react-material";
+import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from "@jahia/react-material";
 import PropTypes from 'prop-types';
 import * as _ from "lodash";
 import {translate} from "react-i18next";
-import {Lock, Build} from "@material-ui/icons";
 import {DxContext} from "../DxContext";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
@@ -339,13 +329,7 @@ class ContentListTable extends React.Component {
                                     let renderLock = this.renderLock(n);
                                     let icon = this.addIconSuffix(n.icon);
                                     let cellContentClasses = {root: isSelected ? classes.selectedCell : classes.cell};
-                                    let context = {
-                                        path: n.path,
-                                        uuid: n.uuid,
-                                        primaryNodeType: n.primaryNodeType,
-                                        displayName: n.name,
-                                        nodeName: n.nodeName,
-                                    };
+                                    let contextualMenu = React.createRef();
                                     return (
                                         <TableRow
                                             hover={true}
@@ -358,9 +342,10 @@ class ContentListTable extends React.Component {
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={(event) => this.onHoverEnter(event)}
                                             onMouseLeave={(event) => this.onHoverExit(event)}
-                                            onContextMenu={(event) => this.contextualMenu.context.onContextMenu(this.contextualMenu.context,event)}
+                                            onContextMenu={(event) => contextualMenu.current.open(event)}
                                             >
-                                                <DisplayAction actionKey={"contextualMenuContent"} key={n.uuid} context={context} render={(contextualMenu) => {this.contextualMenu = contextualMenu; return false;}}/>
+                                                <ContextualMenu actionKey={"contextualMenuContent"} context={{path: n.path}} ref={contextualMenu}/>
+
                                                 <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
                                                     <PublicationStatus node={n} publicationInfoWidth={400}/>
                                                 </TableCell>
@@ -398,7 +383,7 @@ class ContentListTable extends React.Component {
                                                             key={column.id} padding={'none'}
                                                             data-cm-role={'table-content-list-cell-' + column.id}
                                                         >
-                                                            <DisplayActions target={"tableActions"} context={context} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')})}/>
+                                                            <DisplayActions target={"tableActions"} context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')})}/>
                                                         </TableCell>;
                                                     } else {
                                                         return <TableCell
@@ -413,7 +398,7 @@ class ContentListTable extends React.Component {
                                                         </TableCell>;
                                                     }
                                                 })}
-                                            </TableRow>
+                                        </TableRow>
                                     );
                                 })}
                                 {emptyRows > 0 &&

@@ -2,6 +2,7 @@ import React from 'react';
 import {CM_PREVIEW_STATES, cmGoto, cmSetPreviewState} from "../redux/actions";
 import {composeActions} from "@jahia/react-material";
 import {reduxAction} from "./reduxAction";
+import requirementsAction from "./requirementsAction";
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params})),
@@ -15,9 +16,9 @@ const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site
 });
 
-let routerAction = composeActions(reduxAction(mapStateToProps, mapDispatchToProps), {
+let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProps, mapDispatchToProps), {
     onClick: (context) => {
-        const {mode, siteKey, language, handleDrawerClose, setUrl, setPreviewState} = context;
+        const {mode, siteKey, language, drawer:{handleDrawerClose}, setUrl, setPreviewState} = context;
 
         mode !== "apps" && handleDrawerClose && handleDrawerClose();
         let pathSuffix = '';
@@ -37,4 +38,4 @@ let routerAction = composeActions(reduxAction(mapStateToProps, mapDispatchToProp
     }
 });
 
-export { routerAction};
+export {routerAction};

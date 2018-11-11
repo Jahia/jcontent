@@ -5,6 +5,7 @@ import {from, Subject, concat, of} from "rxjs";
 import {filter, map} from 'rxjs/operators';
 import {ActionRequirementsQueryHandler} from "../gqlQueries";
 import * as _ from 'lodash';
+import {reduxAction} from "./reduxAction";
 
 function evaluateShowForPaths(paths, nodePath) {
     if (!paths) {
@@ -18,21 +19,17 @@ function evaluateShowForPaths(paths, nodePath) {
     return false;
 }
 
-let requirementsAction = composeActions(withApolloAction,  {
+let requirementsAction = composeActions(withApolloAction, reduxAction((state) => ({language: state.language, uiLang: state.uiLang, site: state.site})), {
     init: (context) => {
-        let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, retrieveProperties} = context;
-        if (retrieveProperties != null) {
-            retrieveProperties.retrievePropertiesLang = "en";
-        }
-
-        let requirementQueryHandler = new ActionRequirementsQueryHandler(context, "en");
+        let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths} = context;
+        let requirementQueryHandler = new ActionRequirementsQueryHandler(context);
         if (requirementQueryHandler.requirementsFragments.length > 0) {
             let watchQuery = context.client.watchQuery({
                 query: requirementQueryHandler.getQuery(),
                 variables: requirementQueryHandler.getVariables()
             });
 
-            console.log("watch", context)
+              // console.log("watch", context)
 
             context.node = from(watchQuery)
                 .pipe(

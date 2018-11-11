@@ -1,23 +1,15 @@
 import React from "react";
-import * as _ from "lodash";
-import {hasMixin, ellipsizeText} from "../utils.js";
-import {translate} from 'react-i18next';
+import {hasMixin} from "../utils.js";
+import {combineLatest} from "rxjs";
+import {map} from 'rxjs/operators';
+import {ellipsizeText} from "../utils.js";
+import {composeActions} from "@jahia/react-material";
+import requirementsAction from "./requirementsAction";
 
-class UndeleteAction extends React.Component {
-
-    render() {
-
-        let {children, context, ...rest} = this.props;
-
-        if (hasMixin(context.node, "jmix:markedForDeletionRoot")) {
-            return children({...rest, onClick: () => window.parent.authoringApi.undeleteContent(context.uuid, context.path, (context.displayName ? ellipsizeText(context.displayName, 100) : ""), context.nodeName)});
-        }
-        return null;
-    }
-}
-
-UndeleteAction = _.flowRight(
-    translate()
-)(UndeleteAction);
-
-export default {};
+export default composeActions(requirementsAction, {
+    init: (context) => {
+        context.enabled = combineLatest(context.enabled, context.node.pipe(map(node => hasMixin(node, "jmix:markedForDeletionRoot"))))
+            .pipe(map(arr => arr[0] && arr[1]))
+    },
+    onClick: (context) => window.parent.authoringApi.undeleteContent(context.uuid, context.node.path, (context.node.displayName ? ellipsizeText(context.displayName, 100) : ""), context.node.name)
+});

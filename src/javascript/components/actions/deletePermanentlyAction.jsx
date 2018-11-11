@@ -1,24 +1,15 @@
 import React from "react";
 import {hasMixin} from "../utils.js";
+import {combineLatest} from "rxjs";
+import {map} from "rxjs/operators";
+import {composeActions} from "@jahia/react-material";
+import requirementsAction from "./requirementsAction";
 
-class DeletePermanentlyAction extends React.Component {
+export default composeActions(requirementsAction, {
+    init: (context) => {
+        context.enabled = combineLatest(context.enabled, context.node.pipe(map(node=> hasMixin(node, "jmix:markedForDeletionRoot") && node.aggregatedPublicationInfo.publicationStatus === "NOT_PUBLISHED")))
+            .pipe(map(arr=>arr[0] && arr[1]))
+    },
+    onClick: (context) => window.parent.authoringApi.deleteContent(context.uuid, context.node.path, context.node.displayName, ["jnt:content"], ["nt:base"], false, true)
 
-    render() {
-
-        let {children, context, ...rest} = this.props;
-
-        if (!hasMixin(context.node, "jmix:markedForDeletionRoot")) {
-            return null;
-        }
-        if (context.node.aggregatedPublicationInfo.publicationStatus != "NOT_PUBLISHED") {
-            return null;
-        }
-
-        return children({
-            ...rest,
-            onClick: () => window.parent.authoringApi.deleteContent(context.uuid, context.path, context.displayName, ["jnt:content"], ["nt:base"], false, true)
-        });
-    }
-}
-
-export default {};
+});

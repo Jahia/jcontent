@@ -127,7 +127,7 @@ const browseType = {
     contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType]}
 };
 
-const nodeFields = gql `
+const nodeFields = gql`
     fragment NodeFields on JCRNode {
         aggregatedPublicationInfo(language: $language) {
             publicationStatus
@@ -188,7 +188,7 @@ const nodeFields = gql `
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-const getNodeSubTree = gql `
+const getNodeSubTree = gql`
     query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!,$fieldSorter: InputFieldSorterInput) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -207,7 +207,7 @@ const getNodeSubTree = gql `
     ${nodeFields}
 `;
 
-const GetNodeAndChildrenByPathQuery = gql `
+const GetNodeAndChildrenByPathQuery = gql`
     query GetNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -223,7 +223,7 @@ const GetNodeAndChildrenByPathQuery = gql `
     ${nodeFields}
 `;
 
-const searchContentQuery = gql `
+const searchContentQuery = gql`
     query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
         jcr {
             results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
@@ -239,7 +239,7 @@ const searchContentQuery = gql `
     ${nodeFields}
 `;
 
-const sql2SearchContentQuery = gql `
+const sql2SearchContentQuery = gql`
     query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
         jcr {
             results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
@@ -255,7 +255,7 @@ const sql2SearchContentQuery = gql `
     ${nodeFields}
 `;
 
-const filesQuery = gql `
+const filesQuery = gql`
     query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput) {
         jcr {
             results: nodeByPath(path: $path) {
@@ -281,7 +281,7 @@ const filesQuery = gql `
     ${nodeFields}
 `;
 
-const SiteContentTypesQuery = gql `
+const SiteContentTypesQuery = gql`
     query SiteContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
         jcr {
             nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page", "jnt:file"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType", "jnt:editableFile"]}) {
@@ -295,7 +295,7 @@ const SiteContentTypesQuery = gql `
     }
 `;
 
-const ContentTypesQuery = gql `
+const ContentTypesQuery = gql`
     query ContentTypesQuery($nodeTypes: [String]!) {
         jcr {
             nodeTypesByNames(names: $nodeTypes) {
@@ -308,7 +308,7 @@ const ContentTypesQuery = gql `
     }
 `;
 
-const ContentTypeNamesQuery = gql `
+const ContentTypeNamesQuery = gql`
     query ContentTypeNamesQuery($nodeTypes: [String]!, $displayLanguage: String!) {
         jcr {
             nodeTypesByNames(names: $nodeTypes) {
@@ -319,7 +319,7 @@ const ContentTypeNamesQuery = gql `
     }
 `;
 
-const ActionRequirementsQuery = gql `
+const ActionRequirementsQuery = gql`
     query ActionRequirementsQuery($path:String!, $language:String!) {
         jcr {
             nodeByPath(path:$path) {
@@ -335,12 +335,35 @@ const ActionRequirementsQuery = gql `
 `;
 
 const ActionRequirementsFragments = {
+    displayName: {
+        applyFor: "requirements",
+        gql:gql`
+            fragment DisplayName on JCRNode {
+                displayName(language: $language)
+            }
+        `,
+    },   
+    primaryNodeType: {
+        variables: {
+            displayLanguage: "String!"
+        },
+        applyFor: "requirements",
+        gql:gql`
+            fragment PrimaryNodeType on JCRNode {
+                primaryNodeType {
+                    name
+                    displayName(language: $displayLanguage)
+                    icon
+                }
+            }
+        `,
+    },
     allowedChildNodeTypes: {
         variables: {
             baseChildNodeType: "String!"
         },
         applyFor: "requirements",
-        gql: gql `fragment ProvideTypes on JCRNode {
+        gql: gql`fragment ProvideTypes on JCRNode {
             allowedChildNodeTypes {
                 name
                 supertypes(fieldFilter: {filters: [{fieldName: "name", value: $baseChildNodeType}]}) {
@@ -363,7 +386,7 @@ const ActionRequirementsFragments = {
             childNodeType: "String!"
         },
         applyFor: "requirements",
-        gql: gql `fragment AllowedChildNodeType on JCRNode {
+        gql: gql`fragment AllowedChildNodeType on JCRNode {
             allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", value: $childNodeType}]}) {
                 name
             }
@@ -372,11 +395,10 @@ const ActionRequirementsFragments = {
     retrieveProperties: {
         variables: {
             retrievePropertiesNames: "[String!]!",
-            retrievePropertiesLang: "String!"
         },
         applyFor: "requirements",
-        gql: gql `fragment NodeProperties on JCRNode {
-            properties(names: $retrievePropertiesNames, language: $retrievePropertiesLang) {
+        gql: gql`fragment NodeProperties on JCRNode {
+            properties(names: $retrievePropertiesNames, language: $language) {
                 name
                 value
                 values
@@ -388,7 +410,7 @@ const ActionRequirementsFragments = {
             isNodeType: "InputNodeTypesInput!"
         },
         applyFor: "requirements",
-        gql: gql `fragment NodeIsNodeType on JCRNode {
+        gql: gql`fragment NodeIsNodeType on JCRNode {
             isNodeType(type: $isNodeType)
         }`
     },
@@ -397,7 +419,7 @@ const ActionRequirementsFragments = {
             isNotNodeType: "InputNodeTypesInput!"
         },
         applyFor: "requirements",
-        gql: gql `fragment NodeIsNotNodeType on JCRNode {
+        gql: gql`fragment NodeIsNotNodeType on JCRNode {
             isNotNodeType: isNodeType(type: $isNotNodeType)
         }`
     },
@@ -406,16 +428,30 @@ const ActionRequirementsFragments = {
             permission: "String!"
         },
         applyFor: "requirements",
-        gql: gql `fragment NodeHasPermission on JCRNode {
+        gql: gql`fragment NodeHasPermission on JCRNode {
             hasPermission(permissionName: $permission)
         }`
     },
     siteInstalledModules: {
         applyFor: "requirements",
-        gql: gql `fragment SiteInstalledModules on JCRNode {
+        gql: gql`fragment SiteInstalledModules on JCRNode {
             site {
                 installedModulesWithAllDependencies
                 ...NodeCacheRequiredFields
+            }
+        }`
+    },
+    siteLanguages: {
+        applyFor: "requirements",
+        gql: gql`fragment SiteLanguages on JCRNode {
+            site {
+                defaultLanguage
+                ...NodeCacheRequiredFields
+                languages {
+                    displayName
+                    language
+                    activeInEdit
+                }
             }
         }`
     }
@@ -423,13 +459,18 @@ const ActionRequirementsFragments = {
 
 class ActionRequirementsQueryHandler {
 
-    constructor(context, language) {
+    constructor(context) {
 
         this.requirementsFragments = [];
         this.variables = {
             path: context.path,
-            language: language
+            language: context.language,
+            displayLanguage: context.uiLang
         };
+
+        //todo optimize / execute on demand
+        this.requirementsFragments.push(ActionRequirementsFragments.displayName);
+        this.requirementsFragments.push(ActionRequirementsFragments.primaryNodeType);
 
         if (!_.isEmpty(context.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);
@@ -457,6 +498,9 @@ class ActionRequirementsQueryHandler {
         if (!_.isEmpty(context.baseContentType)) {
             this.requirementsFragments.push(ActionRequirementsFragments.allowedChildNodeTypes);
             this.variables.baseChildNodeType = context.baseContentType;
+        }
+        if (context.retrieveSiteLanguages) {
+            this.requirementsFragments.push(ActionRequirementsFragments.siteLanguages);
         }
     }
 

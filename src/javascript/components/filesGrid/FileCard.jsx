@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, IconButton, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {compose} from "react-apollo/index";
-import {DisplayAction} from "@jahia/react-material"
+import {ContextualMenu} from "@jahia/react-material"
 import {translate} from "react-i18next";
 import {Autorenew, Visibility} from "@material-ui/icons";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
@@ -196,47 +196,46 @@ class FileCard extends Component {
     render() {
 
         const {node} = this.props;
-        let context = {
-
-        };
-        return <DisplayAction actionKey={"contextualMenuContent"} context={context} render={
-            ({context}) => isBrowserImage(node.path) ? this.regularMediaCard(context) : this.fileCard(context)
-        }/>
+        let contextualMenu = React.createRef();
+        return <React.Fragment>
+            <ContextualMenu actionKey={"contextualMenuContent"} context={{path: node.path}} ref={contextualMenu}/>
+            {isBrowserImage(node.path) ? this.regularMediaCard(contextualMenu) : this.fileCard(contextualMenu)}
+        </React.Fragment>
     }
 
-    regularMediaCard(menuContext) {
+    regularMediaCard(contextualMenu) {
 
         let {cardType} = this.props;
 
         switch(cardType) {
-            case 2 : return this.verticalMediaCard(menuContext);
+            case 2 : return this.verticalMediaCard(contextualMenu);
             case 6 :
-            case 12 : return this.largeMediaCard(menuContext);
-            default : return this.mediumMediaCard(menuContext);
+            case 12 : return this.largeMediaCard(contextualMenu);
+            default : return this.mediumMediaCard(contextualMenu);
         }
     }
 
-    fileCard(menuContext) {
+    fileCard(contextualMenu) {
 
         let {cardType} = this.props;
 
         switch(cardType) {
-            case 2 : return this.verticalFileCard(menuContext);
-            case 3 : return this.mediumFileCard(menuContext);
+            case 2 : return this.verticalFileCard(contextualMenu);
+            case 3 : return this.mediumFileCard(contextualMenu);
             case 6 :
-            case 12 : return this.largeFileCard(menuContext);
-            default : return this.mediumFileCard(menuContext);
+            case 12 : return this.largeFileCard(contextualMenu);
+            default : return this.mediumFileCard(contextualMenu);
         }
     }
 
-    largeMediaCard(menuContext) {
+    largeMediaCard(contextualMenu) {
 
-        const {classes, t, node, dxContext, cardType, uiLang} = this.props;
+        const {classes, t, node, dxContext, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -273,14 +272,14 @@ class FileCard extends Component {
         </Card>;
     }
 
-    mediumMediaCard(menuContext) {
+    mediumMediaCard(contextualMenu) {
 
         const {classes, t, node, dxContext, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardMedium)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -311,14 +310,14 @@ class FileCard extends Component {
         </Card>;
     }
 
-    verticalMediaCard(menuContext) {
+    verticalMediaCard(contextualMenu) {
 
         const {classes, t, node, dxContext} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -340,14 +339,14 @@ class FileCard extends Component {
         </Card>;
     }
 
-    largeFileCard(menuContext) {
+    largeFileCard(contextualMenu) {
 
         const {classes, t, node, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -382,14 +381,14 @@ class FileCard extends Component {
         </Card>;
     }
 
-    mediumFileCard(menuContext) {
+    mediumFileCard(contextualMenu) {
 
         const {classes, t, node, cardType, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -416,14 +415,14 @@ class FileCard extends Component {
         </Card>;
     }
 
-    verticalFileCard(menuContext) {
+    verticalFileCard(contextualMenu) {
 
         const {classes, t, node, cardType, uiLang} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => menuContext.onContextMenu(menuContext, event)}
+            onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >

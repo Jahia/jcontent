@@ -6,7 +6,7 @@ import {translate} from 'react-i18next';
 import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
 import {cmClosePaths, cmGoto, cmOpenPaths} from "./redux/actions";
-import {DisplayAction, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
+import {ContextualMenu, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
 
 const styles = theme => ({
     trees: {
@@ -56,28 +56,12 @@ class ContentTree extends React.Component {
         this.picker = React.createRef();
     }
 
-    getContext(entry) {
-        return {
-            uuid: entry.node.uuid,
-            path: entry.node.path,
-            displayName: entry.node.displayName,
-            primaryNodeType: entry.node.primaryNodeType.name,
-            lang: this.props.lang,
-            user: this.props.user,
-            nodeName: entry.node.nodeName,
-            key: entry.node.uuid
-        }
-    }
-
     render() {
 
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel, buttonClass,
-            filterTypes, recurTypes, user, setRefetch} = this.props;
-
-
-        // onContextMenu={(event) => {onContextualMenu({isOpen: true, event:event, menu: this.resolveMenu(entry.node.path), primaryNodeType: entry.node.primaryNodeType.name, path: entry.node.path, uuid: entry.node.uuid, displayName: entry.node.displayName, nodeName: entry.node.nodeName})}}>
+            setRefetch} = this.props;
 
         return <Picker
             ref={this.picker}
@@ -95,14 +79,18 @@ class ContentTree extends React.Component {
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial
                     {...others}
-                    textRenderer={(entry) => <DisplayAction actionKey={this.resolveMenu(entry.node.path)} context={this.getContext(entry)} render={({context}) =>
-                        <span onContextMenu={(event) => context.onContextMenu(context, event) }>
-                            {entry.depth > 0 ? entry.node.displayName : rootLabel}
-                        </span>}
-                    />}
+                    textRenderer={(entry) => {
+                        let contextualMenu = React.createRef();
+                        return <React.Fragment>
+                            <ContextualMenu actionKey={this.resolveMenu(entry.node.path)} context={{path: entry.node.path}} ref={contextualMenu}/>
+                            <span onContextMenu={(event) => contextualMenu.current.open(event) }>
+                                {entry.depth > 0 ? entry.node.displayName : rootLabel}
+                            </span>
+                        </React.Fragment>}
+                    }
                     actionsRenderer={(entry) =>
                         entry.depth > 0
-                            ? <DisplayActions target={"contentTreeActions"} context={this.getContext(entry)} render={iconButtonRenderer({
+                            ? <DisplayActions target={"contentTreeActions"} context={{path: entry.node.path}} render={iconButtonRenderer({
                                 color:"inherit",
                                 className: buttonClass,
                                 'data-cm-role': 'picker-item-menu'
@@ -207,9 +195,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     openPath: (path) => dispatch(cmOpenPaths([path])),
     closePath: (path) => dispatch(cmClosePaths([path])),
-    onContextualMenu: (params) => {
-        // dispatch(invokeContextualMenu(params));
-    }
 });
 
 ContentTrees = _.flowRight(

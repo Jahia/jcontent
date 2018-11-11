@@ -271,12 +271,12 @@ class CMLeftNavigation extends React.Component {
 
         let actionContext = {
             path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
-            siteKey: siteKey,
-            lang: lang,
-            openDrawerMenu: this.state.openDrawerMenu,
-            drawerOpen: this.state.openDrawer,
-            handleDrawerClose: this.handleDrawerClose.bind(this),
-            handleDrawerOpen:  this.handleDrawerOpen.bind(this),
+            drawer: {
+                openDrawerMenu: this.state.openDrawerMenu,
+                drawerOpen: this.state.openDrawer,
+                handleDrawerClose: this.handleDrawerClose.bind(this),
+                handleDrawerOpen: this.handleDrawerOpen.bind(this),
+            }
         };
 
         return (
@@ -292,7 +292,7 @@ class CMLeftNavigation extends React.Component {
 
                     </List>
 
-                    <DisplayActions target={"leftMenuBottomAction"} context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
+                    <DisplayActions target={"leftMenuBottomActions"} context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
                                                                                                                                   bottom={true}
                                                                                                                                   badge={context.badge}
                                                                                                                                   drawer={this.state.openDrawer}

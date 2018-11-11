@@ -272,11 +272,7 @@ class ContentPreview extends React.Component {
                         </IconButton>
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"livePreviewBar"} context={{
-                            uuid: selectedItem.uuid,
-                            path: selectedItem.path,
-                            displayName: selectedItem.name
-                        }} render={buttonRenderer()}/>
+                        <DisplayActions target={"livePreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer()}/>
                     </Grid>
 
                 </Grid>;
@@ -307,20 +303,8 @@ class ContentPreview extends React.Component {
                         {selectionLocked ? this.unlock() : this.lock()}
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"editPreviewBar"} context={{
-                            uuid: selectedItem.uuid,
-                            path: selectedItem.path,
-                            primaryNodeType: selectedItem.primaryNodeType,
-                            displayName: selectedItem.name,
-                            nodeName: selectedItem.nodeName
-                        }} render={buttonRenderer({variant:'contained', color:'primary'})}/>
-                        <DisplayActions target={"editAdditionalMenu"} context={{
-                            uuid: selectedItem.uuid,
-                            path: selectedItem.path,
-                            displayName: selectedItem.name,
-                            primaryNodeType: selectedItem.primaryNodeType,
-                            nodeName: selectedItem.nodeName
-                        }} render={iconButtonRenderer()}/>
+                        <DisplayActions target={"editPreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
+                        <DisplayActions target={"editAdditionalMenu"} context={{path: selectedItem.path}} render={iconButtonRenderer()}/>
                     </Grid>
                 </Grid>;
         }

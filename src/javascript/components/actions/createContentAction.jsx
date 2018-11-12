@@ -130,60 +130,65 @@ export default composeActions(requirementsAction, {
     init: (context) => {
         let {baseContentType} = context;
 
-        context.createParams =
-            context.node.pipe(switchMap((node) => {
-                let childNodeTypes = node.allowedChildNodeTypes;
-                if (!_.isEmpty(baseContentType)) {
-                    childNodeTypes = _.union(filterByBaseType(childNodeTypes, baseContentType),
-                        filterByBaseType(node.subTypes, baseContentType));
-                }
-                let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
-                let contributeTypesProperty = node.contributeTypes;
+        let obs = context.node.pipe(switchMap((node) => {
+            let childNodeTypes = node.allowedChildNodeTypes;
+            if (!_.isEmpty(baseContentType)) {
+                childNodeTypes = _.union(filterByBaseType(childNodeTypes, baseContentType),
+                    filterByBaseType(node.subTypes, baseContentType));
+            }
+            let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
+            let contributeTypesProperty = node.contributeTypes;
 
-                if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
-                    if (_.isEmpty(baseContentType)) {
-                        console.log(context.id, "A");
-                        return of(contributeTypesProperty.values);
-                    } else {
-                        console.log(context.id, "B");
-                        return from(client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
-                            map((res) => {
-                                let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
-                                contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
-                                let nodeTypes = _.map(contributionNodeTypes, nodeType => nodeType.name);
-                                return nodeTypes;
-                            })
-                        );
-                    }
+            if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
+                if (_.isEmpty(baseContentType)) {
+                    console.log(context.id, "A");
+                    return of(contributeTypesProperty.values);
                 } else {
-                    console.log(context.id, "C");
-                    return of(childNodeTypeNames);
+                    console.log(context.id, "B");
+                    return from(client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
+                        map((res) => {
+                            let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
+                            contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
+                            return _.map(contributionNodeTypes, nodeType => nodeType.name);
+                        })
+                    );
                 }
-            }), switchMap(nodeTypes => {
-                console.log("nodeTypes:",nodeTypes);
+            } else {
+                console.log(context.id, "C");
+                return of(childNodeTypeNames);
+            }
+        }), switchMap(nodeTypes => {
+            console.log("nodeTypes:",nodeTypes);
 
-                if (_.size(nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, "jmix:droppableContent")) {
-                    console.log(context.id, "D");
-                    return of({
-                        includeSubTypes: true,
-                        nodeTypes: nodeTypes
-                    })
-                } else {
-                    console.log(context.id, "E");
-                    return of({
-                        includeSubTypes: false,
-                        nodeTypes: []
-                    })
-                }
-            }));
+            if (_.size(nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, "jmix:droppableContent")) {
+                console.log(context.id, "D");
+                return of({
+                    includeSubTypes: true,
+                    nodeTypes: nodeTypes
+                })
+            } else {
+                console.log(context.id, "E");
+                return from(client.watchQuery({query:ContentTypeNamesQuery, variables:{nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
+                    map((res) => ({
+                        actions: res.data.jcr.nodeTypesByNames.map(nodeType => ({
+                            includeSubTypes: false,
+                            nodeTypes: [nodeType.name]
+                        }))
+                        })
+                    )
+                );
+            }
+        }));
+        context.nodeTypes = obs.pipe(map(r => r.nodeTypes));
+        context.includeSubTypes = obs.pipe(map(r => r.includeSubTypes));
+        context.actions = obs.pipe(map(r => r.actions));
 
-
-        context.createParams.subscribe((c) => console.log("ret:",c));
+        obs.subscribe((c) => console.log("ret:",c));
     },
 
 
     onClick: (context) => {
-        window.parent.authoringApi.createContent(context.path, context.createParams.nodeTypes, context.createParams.includeSubTypes);
+        window.parent.authoringApi.createContent(context.path, context.nodeTypes, context.includeSubTypes);
 
     }
 

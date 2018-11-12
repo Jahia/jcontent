@@ -23,184 +23,165 @@ import requirementsAction from './requirementsAction'
 function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
-        target: ["editPreviewBar:2.5", "contentTreeMenuActions:2.5", "tableActions:2", "contextualMenuPagesAction:2.5", "contextualMenuFoldersAction:2.5", "contextualMenuFilesAction:2.5", "contextualMenuContentAction:2.5"],
-        buttonLabel: "label.contentManager.contentPreview.edit"
+        buttonLabel: "label.contentManager.contentPreview.edit",
+        target: ["editPreviewBar:2.5", "contentTreeMenuActions:2.5", "tableActions:2", "contextualMenuPagesAction:2.5", "contextualMenuFoldersAction:2.5", "contextualMenuFilesAction:2.5", "contextualMenuContentAction:2.5"]
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
-        target: ["tableActions:1"],
-        buttonLabel: "label.contentManager.contentPreview.preview"
+        buttonLabel: "label.contentManager.contentPreview.preview",
+        target: ["tableActions:1"]
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
+        buttonLabel: "label.contentManager.create.contentFolder",
         target: ["createMenuActions:3", "contentTreeMenuActions:3", "contextualMenuFoldersAction:3"],
         contentType: "jnt:contentFolder",
-        requiredPermission: "jcr:addChildNodes",
-        buttonLabel: "label.contentManager.create.contentFolder",
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('createContent', createContentAction, {
-        target: ["createMenuActions:3.1", "contentTreeMenuActions:3.1", "contextualMenuFoldersAction:3.1"],
-        requiredPermission: "jcr:addChildNodes",
         buttonLabel: "label.contentManager.create.content",
+        target: ["createMenuActions:3.1", "contentTreeMenuActions:3.1", "contextualMenuFoldersAction:3.1"],
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
         baseContentType: Constants.contentType,
     });
     actionsRegistry.add('createFolder', createContentOfTypeAction, {
+        buttonLabel: "label.contentManager.create.folder",
         target: ["createMenuActions:3", "contentTreeMenuActions:3", "contextualMenuFilesAction:3"],
         contentType: "jnt:folder",
-        requiredPermission: "jcr:addChildNodes",
-        buttonLabel: "label.contentManager.create.folder",
         hideOnNodeTypes: ["jnt:page"],
     });
-    actionsRegistry.add('fileUpload',requirementsAction,  fileUploadAction, {
+    actionsRegistry.add('fileUpload',  fileUploadAction, {
+        buttonLabel: "label.contentManager.fileUpload.uploadButtonLabel",
         target: ["createMenuActions:4", "contentTreeMenuActions:4", "contextualMenuFilesAction:4"],
         requiredPermission: "jcr:addChildNodes",
-        buttonLabel: "label.contentManager.fileUpload.uploadButtonLabel",
         hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"]
     });
-    actionsRegistry.add('translate', requirementsAction, {
-        onClick: () => alert("Translate !!!"),
+    actionsRegistry.add('translate', {
         buttonIcon: <Edit/>,
-        target: [],
-        buttonLabel: "label.contentManager.contentPreview.translate"
+        buttonLabel: "label.contentManager.contentPreview.translate",
+        target: []
     });
-    actionsRegistry.add('tableMenuActions',requirementsAction,  menuAction, {
-        menu: "tableMenuActions",
+    actionsRegistry.add('tableMenuActions',  menuAction, {
         buttonIcon: <Menu/>,
+        buttonLabel: "label.contentManager.contentPreview.edit",
         target: ["tableActions:2.5"],
-        buttonLabel: "label.contentManager.contentPreview.edit"
+        menu: "tableMenuActions"
     });
-    actionsRegistry.add('contentTreeActions', requirementsAction, menuAction, {
-        menu: "contentTreeMenuActions",
+    actionsRegistry.add('contentTreeActions', menuAction, {
         buttonIcon: <Menu/>,
+        buttonLabel: "label.contentManager.contentPreview.edit",
         target: ["contentTreeActions:2.5"],
-        buttonLabel: "label.contentManager.contentPreview.edit"
+        menu: "contentTreeMenuActions"
     });
     actionsRegistry.add('publish', publishAction, {
         buttonIcon: <Publish/>,
-        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuPagesAction:5", "contextualMenuFoldersAction:5", "contextualMenuFilesAction:5", "contextualMenuContentAction:5"],
         buttonLabel: "label.contentManager.contentPreview.publish",
+        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuPagesAction:5", "contextualMenuFoldersAction:5", "contextualMenuFilesAction:5", "contextualMenuContentAction:5"],
         allSubtree: false,
         allLanguages: false,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ["jnt:virtualsite", "jnt:contentFolder", "nt:folder"],
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        retrieveSiteLanguages:true
     });
-    actionsRegistry.add('advancedPublish', requirementsAction, menuAction, {
-        menu: "advancedPublish",
+    actionsRegistry.add('advancedPublish', menuAction, {
         buttonIcon: <Menu/>,
-        target: ["contentTreeMenuActions:6", "contextualMenuPagesAction:6", "contextualMenuFoldersAction:6", "contextualMenuFilesAction:6"],
         buttonLabel: "label.contentManager.contentPreview.advancedPublish",
-        retrieveSiteLanguages:true
+        target: ["contentTreeMenuActions:6", "contextualMenuPagesAction:6", "contextualMenuFoldersAction:6", "contextualMenuFilesAction:6"],
+        menu: "advancedPublish",
     });
-    actionsRegistry.add('publishMenu', requirementsAction,  menuAction, {
-        menu: "publishMenu",
+    actionsRegistry.add('publishMenu',  menuAction, {
         buttonIcon: <Menu/>,
-        target: ["editPreviewBar", "thumbnailPublishMenu", "tableMenuActions"],
         buttonLabel: "label.contentManager.contentPreview.publishMenu",
+        target: ["editPreviewBar", "thumbnailPublishMenu", "tableMenuActions"],
+        menu: "publishMenu",
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
         buttonIcon: <Publish/>,
+        buttonLabel: "label.contentManager.contentPreview.publishInAllLanguages",
         target: ["publishMenu", "advancedPublish", "contextualMenuContentAction"],
+        hideOnNodeTypes: ["nt:file", "jnt:contentFolder", "nt:folder"],
         allSubTree: false,
         allLanguages: true,
         checkForUnpublication: false,
-        hideOnNodeTypes: ["nt:file", "jnt:contentFolder", "nt:folder"],
         checkIfLanguagesMoreThanOne: true,
-        buttonLabel: "label.contentManager.contentPreview.publishInAllLanguages",
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        retrieveSiteLanguages:true
     });
     actionsRegistry.add('publishAll', publishAction, {
         buttonIcon: <Publish/>,
+        buttonLabel: "label.contentManager.contentPreview.publishAll",
         target: ["advancedPublish"],
+        hideOnNodeTypes: ["nt:file"],
         allSubTree: true,
         allLanguages: false,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
-        hideOnNodeTypes: ["nt:file"],
-        buttonLabel: "label.contentManager.contentPreview.publishAll",
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        retrieveSiteLanguages:true
     });
     actionsRegistry.add('publishAllInAllLanguages', publishAction, {
         buttonIcon: <Publish/>,
+        buttonLabel: "label.contentManager.contentPreview.publishAllInAllLanguages",
         target: ["advancedPublish"],
+        hideOnNodeTypes: ["nt:file"],
         allSubTree: true,
         allLanguages: true,
         checkForUnpublication: false,
-        hideOnNodeTypes: ["nt:file"],
         checkIfLanguagesMoreThanOne: true,
-        buttonLabel: "label.contentManager.contentPreview.publishAllInAllLanguages",
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        retrieveSiteLanguages:true
     });
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
-        target: ["editPreviewBar:4.2", "contentTreeMenuActions:4.2", "tableMenuActions:4.2", "contextualMenuFoldersAction:4.2", "contextualMenuFilesAction:4.2", "contextualMenuContentAction:4.2"],
         buttonLabel: "label.contentManager.contentPreview.publishDeletion",
+        target: ["editPreviewBar:4.2", "contentTreeMenuActions:4.2", "tableMenuActions:4.2", "contextualMenuFoldersAction:4.2", "contextualMenuFilesAction:4.2", "contextualMenuContentAction:4.2"],
         hideOnNodeTypes: ["jnt:virtualsite"],
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]}
     });
     actionsRegistry.add('unpublish', publishAction, {
         buttonIcon: <Publish/>,
+        buttonLabel: "label.contentManager.contentPreview.unpublish",
         target: ["livePreviewBar", "publishMenu", "advancedPublish", "contextualMenuContentAction"],
+        hideOnNodeTypes: ["jnt:virtualsite"],
         allSubTree: false,
         allLanguages: false,
         checkForUnpublication: true,
         checkIfLanguagesMoreThanOne: false,
-        hideOnNodeTypes: ["jnt:virtualsite"],
-        buttonLabel: "label.contentManager.contentPreview.unpublish",
-        retrieveSiteLanguages:true
     });
-    actionsRegistry.add('contextualMenuContent', requirementsAction, menuAction, {
-        menu: "contextualMenuContentAction",
+    actionsRegistry.add('contextualMenuContent', menuAction, {
         buttonIcon: <Menu/>,
-        iconButton: true
+        iconButton: true,
+        menu: "contextualMenuContentAction"
     });
-    actionsRegistry.add('contextualMenuFolders',requirementsAction,  menuAction, {
-        menu: "contextualMenuFoldersAction",
+    actionsRegistry.add('contextualMenuFolders',  menuAction, {
         buttonIcon: <Menu/>,
-        iconButton: true
+        iconButton: true,
+        menu: "contextualMenuFoldersAction"
     });
-    actionsRegistry.add('contextualMenuPages', requirementsAction, menuAction, {
-        menu: "contextualMenuPagesAction",
+    actionsRegistry.add('contextualMenuPages', menuAction, {
         buttonIcon: <Menu/>,
-        iconButton: true
+        iconButton: true,
+        menu: "contextualMenuPagesAction"
     });
-    actionsRegistry.add('contextualMenuFiles',requirementsAction,  menuAction, {
-        menu: "contextualMenuFilesAction",
+    actionsRegistry.add('contextualMenuFiles',  menuAction, {
         buttonIcon: <Menu/>,
-        iconButton: true
+        iconButton: true,
+        menu: "contextualMenuFilesAction"
     });
-    actionsRegistry.add('additionalPreview', requirementsAction, menuAction, {
-        menu: "additionalPreviewMenu",
+    actionsRegistry.add('additionalPreview', menuAction, {
         buttonIcon: <Menu/>,
         target: ["editAdditionalMenu"],
-        iconButton: true
+        iconButton: true,
+        menu: "additionalPreviewMenu"
     });
     actionsRegistry.add('duplicate', {
-        onClick: () => alert("not implemented yet"),
         buttonIcon: <Edit/>,
-        target: [],
-        buttonLabel: "label.contentManager.contentPreview.duplicate"
+        buttonLabel: "label.contentManager.contentPreview.duplicate",
+        target: []
     });
     actionsRegistry.add('copy', copyAction, {
-        priority: 3.8,
         buttonIcon: <Error/>,
-        target: ["additionalPreviewMenu", "tableMenuActions", "contextualMenuFoldersAction", "contextualMenuFilesAction", "contextualMenuContentAction", "contentTreeMenuActions"],
-        requiredPermission: "jcr:addChildNodes",
         buttonLabel: "label.contentManager.contentPreview.copy",
+        target: ["additionalPreviewMenu:3.8", "tableMenuActions:3.8", "contextualMenuFoldersAction:3.8", "contextualMenuFilesAction:3.8", "contextualMenuContentAction:3.8", "contentTreeMenuActions:3.8"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
     actionsRegistry.add('pasteFile', pasteAction, {
         buttonIcon: <Error/>,
-        target: ["contextualMenuFilesAction:3.8", "contentTreeMenuActions:3.8", "copyPasteActions:3.8"],
-        requiredPermission: "jcr:addChildNodes",
         buttonLabel: "label.contentManager.contentPreview.paste",
+        target: ["contextualMenuFilesAction:3.8", "contentTreeMenuActions:3.8", "copyPasteActions:3.8"],
         hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
         baseContentType: "jnt:file"
     });
@@ -226,89 +207,73 @@ function initActions(actionsRegistry) {
     // },
     actionsRegistry.add('pasteContentFolderContent', pasteAction, {
         buttonIcon: <Error/>,
-        target: ["contextualMenuFoldersAction:3.9", "contentTreeMenuActions:3.9", "copyPasteActions:3.9"],
-        requiredPermission: "jcr:addChildNodes",
         buttonLabel: "label.contentManager.contentPreview.paste",
+        target: ["contextualMenuFoldersAction:3.9", "contentTreeMenuActions:3.9", "copyPasteActions:3.9"],
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
         baseContentType: "jmix:editorialContent"
     });
     actionsRegistry.add('cut', copyAction, {
         buttonIcon: <Error/>,
-        target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuFoldersAction:3.9", "contextualMenuFilesAction:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9"],
-        requiredPermission: "jcr:removeNode",
         buttonLabel: "label.contentManager.contentPreview.cut",
+        target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuFoldersAction:3.9", "contextualMenuFilesAction:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
-        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuFoldersAction:4", "contextualMenuFilesAction:4", "contextualMenuContentAction:4"],
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        requiredPermission: "jcr:removeNode",
         buttonLabel: "label.contentManager.contentPreview.delete",
+        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuFoldersAction:4", "contextualMenuFilesAction:4", "contextualMenuContentAction:4"],
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
-        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuFoldersAction:4", "contextualMenuFilesAction:4", "contextualMenuContentAction:4"],
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        requiredPermission: "jcr:removeNode",
         buttonLabel: "label.contentManager.contentPreview.deletePermanently",
+        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuFoldersAction:4", "contextualMenuFilesAction:4", "contextualMenuContentAction:4"],
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('undelete', undeleteAction, {
         buttonIcon: <Delete/>,
-        target: ["contentTreeMenuActions:4.1", "tableMenuActions:4.1", "additionalPreviewMenu:4.1", "contextualMenuFoldersAction:4.1", "contextualMenuFilesAction:4.1", "contextualMenuContentAction:4.1"],
-        retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
-        requiredPermission: "jcr:removeNode",
         buttonLabel: "label.contentManager.contentPreview.undelete",
+        target: ["contentTreeMenuActions:4.1", "tableMenuActions:4.1", "additionalPreviewMenu:4.1", "contextualMenuFoldersAction:4.1", "contextualMenuFilesAction:4.1", "contextualMenuContentAction:4.1"],
         hideOnNodeTypes: ["jnt:page"]
     });
-    actionsRegistry.add('createMenu', menuAction, {
-        menu: "createMenuActions",
+    actionsRegistry.add('createMenu', requirementsAction, menuAction, {
         buttonIcon: <Add/>,
-        requiredPermission: "jcr:addChildNodes",
         buttonLabel: "label.contentManager.create.create",
-        hideOnNodeTypes: ["jnt:page"]
+        hideOnNodeTypes: ["jnt:page"],
+        init: (context) => context.initRequirements({requiredPermission: "jcr:addChildNodes"}),
+        menu: "createMenuActions"
     });
     actionsRegistry.add('lock', lockManagementAction, {
-        action: 'lock',
-        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
-        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
-        requiredPermission: "jcr:lockManagement",
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        showOnNodeTypes: ["jnt:contentFolder"]
+        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
+        showOnNodeTypes: ["jnt:contentFolder"],
+        action: 'lock'
     });
     actionsRegistry.add('unlock', lockManagementAction, {
-        action: 'unlock',
-        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
-        requiredPermission: "jcr:lockManagement",
-        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        showOnNodeTypes: ["jnt:contentFolder"]
+        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
+        showOnNodeTypes: ["jnt:contentFolder"],
+        action: 'unlock'
     });
     actionsRegistry.add('clearAllLocks',  lockManagementAction, {
-        action: 'clearAllLocks',
-        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
-        requiredPermission: "jcr:lockManagement",
-        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        showOnNodeTypes: ["jnt:contentFolder"]
+        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
+        showOnNodeTypes: ["jnt:contentFolder"],
+        action: 'clearAllLocks'
     });
 
     actionsRegistry.add('contentLeftMenu', routerAction, {
-        mode: "browse",
-        customIcon: {name: 'content', viewBox: '0 0 512 512'},
-        // buttonIcon: <Error/>,
-        target: ["leftMenuActions:1"],
         buttonLabel: 'label.contentManager.leftMenu.content',
+        target: ["leftMenuActions:1"],
+        customIcon: {name: 'content', viewBox: '0 0 512 512'},
+        mode: "browse",
     });
     actionsRegistry.add('mediaLeftMenu', routerAction, {
-        customIcon: {name: 'media', viewBox: '0 0 512 512'},
-        // buttonIcon: <Error/>,
-        mode: "browse-files",
-        target: ["leftMenuActions:2"],
         buttonLabel: 'label.contentManager.leftMenu.media',
+        target: ["leftMenuActions:2"],
+        customIcon: {name: 'media', viewBox: '0 0 512 512'},
+        mode: "browse-files",
     });
     /*
     savedSearchesLeftMenu: {
@@ -320,11 +285,11 @@ function initActions(actionsRegistry) {
     },
     */
     actionsRegistry.add('manageLeftMenu', sideMenuAction, {
-        customIcon: {name: 'manage'},
-        menu: "leftMenuManageActions",
+        buttonLabel: 'label.contentManager.leftMenu.manage.title',
         // buttonIcon: <Error/>,
         target: ["leftMenuActions:5"],
-        buttonLabel: 'label.contentManager.leftMenu.manage.title',
+        customIcon: {name: 'manage'},
+        menu: "leftMenuManageActions",
         hasChildren: true
     });
     // actionsRegistry.add('bottomLeftMenu', {
@@ -336,50 +301,49 @@ function initActions(actionsRegistry) {
     //     buttonLabel: 'label.contentManager.bottomLeftMenu'
     // });
     actionsRegistry.add('workflowsLeftMenu', workflowDashboardAction, {
-        // buttonIcon: <Error/>,
+        buttonLabel: 'label.contentManager.leftMenu.workflow',
         customIcon: {name: 'workflow', viewBox: '0 0 512 512'},
-        target: ["leftMenuBottomActions:6"],
-        buttonLabel: 'label.contentManager.leftMenu.workflow'
+        target: ["leftMenuBottomActions:6"]
     });
     actionsRegistry.add('groups', routerAction, {
+        buttonLabel: 'label.contentManager.leftMenu.manage.groups.title',
+        target: ["leftMenuManageActions:10"],
+        icon: 'users',
         mode: "apps",
         iframeUrl: ":context/cms/:frame/:workspace/:lang/sites/:site.manageGroups.html",
-        target: ["leftMenuManageActions:10"],
-        requiredPermission: "siteAdminGroups",
-        buttonLabel: 'label.contentManager.leftMenu.manage.groups.title',
-        icon: 'users'
+        requiredPermission: "siteAdminGroups"
     });
     actionsRegistry.add('languages', routerAction, {
+        buttonLabel: 'label.contentManager.leftMenu.manage.languages.title',
+        target: ["leftMenuManageActions:20"],
+        icon: 'globe',
         mode: "apps",
         iframeUrl: ":context/cms/:frame/:workspace/:lang/sites/:site.manageLanguages.html",
-        target: ["leftMenuManageActions:20"],
-        requiredPermission: "siteAdminLanguages",
-        buttonLabel: 'label.contentManager.leftMenu.manage.languages.title',
-        icon: 'globe'
+        requiredPermission: "siteAdminLanguages"
     });
     actionsRegistry.add('roles',  routerAction, {
+        buttonLabel: 'label.contentManager.leftMenu.manage.roles.title',
+        target: ["leftMenuManageActions:30"],
+        icon: 'user-shield',
         mode: "apps",
         iframeUrl: ":context/cms/:frame/:workspace/:lang/sites/:site.manageSiteRoles.html",
-        target: ["leftMenuManageActions:30"],
-        requiredPermission: "siteAdminSiteRoles",
-        buttonLabel: 'label.contentManager.leftMenu.manage.roles.title',
-        icon: 'user-shield'
+        requiredPermission: "siteAdminSiteRoles"
     });
     actionsRegistry.add('users', routerAction, {
+        buttonLabel: 'label.contentManager.leftMenu.manage.users.title',
+        target: ["leftMenuManageActions:40"],
+        icon: 'user',
         mode: "apps",
         iframeUrl: ":context/cms/:frame/:workspace/:lang/sites/:site.manageUsers.html",
-        target: ["leftMenuManageActions:40"],
-        requiredPermission: "siteAdminUsers",
-        buttonLabel: 'label.contentManager.leftMenu.manage.users.title',
-        icon: 'user'
+        requiredPermission: "siteAdminUsers"
     });
     actionsRegistry.add('tags', routerAction, {
+        buttonLabel: 'label.contentManager.leftMenu.manage.tags.title',
+        target: ["leftMenuManageActions:50"],
+        icon: 'tags',
         mode: "apps",
         iframeUrl: ":context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html",
-        target: ["leftMenuManageActions:50"],
-        requiredPermission: "tagManager",
-        buttonLabel: 'label.contentManager.leftMenu.manage.tags.title',
-        icon: 'tags'
+        requiredPermission: "tagManager"
     });
 
 

@@ -7,6 +7,10 @@ import requirementsAction from "./requirementsAction";
 
 export default composeActions(requirementsAction, {
     init: (context) => {
+        context.initRequirements({
+            retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
+            requiredPermission: "jcr:removeNode",
+        });
         context.enabled = combineLatest(context.enabled, context.node.pipe(map(node=> !hasMixin(node, "jmix:markedForDeletion"))))
             .pipe(map(arr=>arr[0] && arr[1]))
     },

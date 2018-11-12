@@ -7,6 +7,12 @@ import requirementsAction from "./requirementsAction";
 
 export default composeActions(requirementsAction, reduxAction(() => ({}), (dispatch) => ({copy: n => dispatch(copy(n))})), {
     onClick: (context) => {
+        context.initRequirements({
+            requiredPermission: "jcr:addChildNodes",
+        });
+
+        // todo cut : + requiredPermission: "jcr:removeNode"
+
         const {copy, path, node:{uuid, nodeName, displayName, primaryNodeType}} = context;
         copy([new Node(path, uuid, nodeName, displayName, primaryNodeType, context.actionKey === "cut" ? Node.PASTE_MODES.MOVE : Node.PASTE_MODES.COPY)]);
     }

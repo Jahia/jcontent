@@ -81,5 +81,11 @@ import requirementsAction from "./requirementsAction";
 // }
 
 export default composeActions(requirementsAction, {
+  init:(context) => {
+    context.initRequirements({
+        retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
+        requiredPermission: "jcr:lockManagement",
+    })
+  },
   onClick:(context) => {}
 });

@@ -147,6 +147,11 @@ export default composeActions(requirementsAction, reduxAction(
         cmSetPath: (path) => dispatch(cmSetPath(path))
     })
 ), {
+    init: (context) => {
+        context.initRequirements({
+            requiredPermission: "jcr:addChildNodes",
+        });
+    },
     onClick: (context) => {
         context.clear();
     }

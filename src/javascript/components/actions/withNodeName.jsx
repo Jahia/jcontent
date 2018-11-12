@@ -19,11 +19,13 @@ function uppercaseFirst(string) {
 
 let withNodeName = composeActions(withDxContextAction, {
     init: (context) => {
-        if (context.node) {
-            context.buttonLabelParams = context.node.pipe(map(node=>({
-                displayName:_.escape(ellipsizeText(node.displayName, 40)),
-                language: node.site ? _.escape(uppercaseFirst(getLanguageLabel(node.site.languages, context.dxContext.lang).displayName)) : null
-            })))
+        context.initLabelParams = () =>{
+            if (context.node) {
+                context.buttonLabelParams = context.node.pipe(map(node => ({
+                    displayName: _.escape(ellipsizeText(node.displayName, 40)),
+                    language: node.site ? _.escape(uppercaseFirst(getLanguageLabel(node.site.languages, context.dxContext.lang).displayName)) : null
+                })))
+            }
         }
     },
 });

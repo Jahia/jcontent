@@ -10,6 +10,7 @@ import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {from, of} from "rxjs";
 import {map, switchMap} from "rxjs/operators";
+import {withDxContextAction} from "./withDxContextAction";
 
 // class CreateContentAction extends React.Component {
 //
@@ -125,9 +126,11 @@ function filterByBaseType(types, baseTypeName) {
     });
 }
 
-export default composeActions(requirementsAction, {
+export default composeActions(requirementsAction, withDxContextAction, {
 
     init: (context) => {
+        context.initRequirements({requiredPermission: "jcr:addChildNodes"});
+
         let {baseContentType} = context;
 
         let obs = context.node.pipe(switchMap((node) => {
@@ -145,7 +148,7 @@ export default composeActions(requirementsAction, {
                     return of(contributeTypesProperty.values);
                 } else {
                     console.log(context.id, "B");
-                    return from(client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
+                    return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
                         map((res) => {
                             let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
                             contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
@@ -168,11 +171,13 @@ export default composeActions(requirementsAction, {
                 })
             } else {
                 console.log(context.id, "E");
-                return from(client.watchQuery({query:ContentTypeNamesQuery, variables:{nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
+                return from(context.client.watchQuery({query:ContentTypeNamesQuery, variables:{nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
                     map((res) => ({
                         actions: res.data.jcr.nodeTypesByNames.map(nodeType => ({
                             includeSubTypes: false,
-                            nodeTypes: [nodeType.name]
+                            nodeTypes: [nodeType.name],
+                            buttonLabel: "label.contentManager.create.contentOfType",
+                            buttonLabelParams: {typeName: nodeType.displayName},
                         }))
                         })
                     )

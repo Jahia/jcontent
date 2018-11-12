@@ -7,6 +7,8 @@ import requirementsAction from "./requirementsAction";
 
 export default composeActions(requirementsAction, {
     init:(context) => {
+        context.initRequirements({requiredPermission: "jcr:addChildNodes"});
+
         if (!context.buttonLabel) {
             context.buttonLabel = "label.contentManager.create.contentOfType";
             let watchQuery = context.client.watchQuery({

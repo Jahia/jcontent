@@ -17,6 +17,9 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProps, mapDispatchToProps), {
+    init: (context) => {
+        context.initRequirements();
+    },
     onClick: (context) => {
         const {mode, siteKey, language, drawer:{handleDrawerClose}, setUrl, setPreviewState} = context;
 

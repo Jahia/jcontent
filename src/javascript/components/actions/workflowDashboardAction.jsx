@@ -37,7 +37,7 @@ let workflowDashboardAction = composeActions(withStylesAction(styles), withApoll
                 map(res => res.data.jcr.result > 0 ? <Badge classes={{root: classes.root, badge: classes.badge}} badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{res.data.jcr.result}</Typography>} color="primary">&nbsp;</Badge>: null)
             );
 
-        setActiveWorkflowTaskRefetcher({refetch: () => { debugger;watchQuery.refetch() } });
+        setActiveWorkflowTaskRefetcher({refetch: () => { watchQuery.refetch() } });
     },
     onClick: () => window.parent.authoringApi.openWorkflowDashboard()
 });

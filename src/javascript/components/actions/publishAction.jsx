@@ -9,6 +9,11 @@ import {map} from "rxjs/operators";
 
 export default composeActions(requirementsAction, withNodeName, {
     init:(context) => {
+        context.initRequirements({
+            retrieveProperties: {retrievePropertiesNames: ["jcr:mixinTypes"]},
+            retrieveSiteLanguages:true
+        });
+        context.initLabelParams(context);
         context.enabled = combineLatest(context.enabled, context.node.pipe(map(node=>
             (context.checkForUnpublication ?
                 node.aggregatedPublicationInfo.publicationStatus !== "NOT_PUBLISHED" :

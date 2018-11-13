@@ -20,6 +20,7 @@ import {routerAction} from "./routerAction";
 import sideMenuAction from "./sideMenuAction";
 import requirementsAction from './requirementsAction'
 import sideMenuListAction from "./sideMenuListAction";
+import openInEditModeAction from "./openInEditModeAction";
 
 function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
@@ -329,8 +330,12 @@ function initActions(actionsRegistry) {
         iframeUrl: ":context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html",
         requiredPermission: "tagManager"
     });
+    actionsRegistry.add('openInEditMode', openInEditModeAction, {
+        buttonLabel: 'label.contentManager.actions.openInEditMode',
+        buttonIcon: <Edit/>,
+        target: [ 'contentTreeMenuActions', 'contextualMenuContentAction' ],
+    });
 
-
-};
+}
 
 export default initActions;

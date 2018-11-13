@@ -474,6 +474,14 @@ const ActionRequirementsFragments = {
                 }
             }
         }`
+    },
+    displayableNodePath: {
+        applyFor: "requirements",
+        gql: gql`fragment DisplayableNodePath on JCRNode {
+            displayableNode {
+                path
+            }
+        }`
     }
 };
 
@@ -521,6 +529,9 @@ class ActionRequirementsQueryHandler {
         }
         if (context.retrieveSiteLanguages) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteLanguages);
+        }
+        if (context.getDisplayableNodePath) {
+            this.requirementsFragments.push(ActionRequirementsFragments.displayableNodePath);
         }
     }
 

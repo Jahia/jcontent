@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "clean": "rimraf *.log src/main/resources/javascript/apps",
+    "clean:all": "yarn clean && rimraf node_modules node"
   },
   "description": "content manager for DX",
   "main": "index.js",
@@ -74,6 +76,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.8",
+    "rimraf": "^2.6.2",
     "style-loader": "^0.19.1",
     "webpack": "^4.7.0",
     "webpack-bundle-analyzer": "^2.11.1",

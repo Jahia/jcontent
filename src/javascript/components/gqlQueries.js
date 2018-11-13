@@ -128,20 +128,20 @@ const browseType = {
 };
 
 const PickerItemsFragment = {
-    publicationStatus: {
+    mixinTypes: {
         applyFor: "node",
         variables: {
             lang: "String!"
         },
         gql: gql`
         fragment PublicationStatus on JCRNode {
-            aggregatedPublicationInfo(language: $lang) {
-                publicationStatus
+             mixinTypes {
+                displayName(language: $lang)
             }
         }`
 
     },
-    displayName: {
+    primaryNodeType: {
         applyFor: "node",
         gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`
     },

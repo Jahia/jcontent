@@ -77,7 +77,7 @@ class ContentTree extends React.Component {
             onOpenItem={(path, open) => handleOpen(path, open)}
             onSelectItem={(path) => handleSelect(path)}
             setRefetch={ setRefetch }
-            fragments={[PickerItemsFragment.publicationStatus, PickerItemsFragment.displayName, PredefinedFragments.displayName]}
+            fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PredefinedFragments.displayName]}
         >
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial

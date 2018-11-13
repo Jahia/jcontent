@@ -6,6 +6,8 @@ import {connect} from "react-redux";
 import {setPanelState, setPath} from '../fileupload/redux/actions';
 import {panelStates} from '../fileupload/constatnts';
 import {batchActions} from 'redux-batched-actions';
+import {composeActions} from "@jahia/react-material";
+import requirementsAction from "./requirementsAction";
 
 // class FileUploadAction extends React.Component {
 //
@@ -41,4 +43,12 @@ import {batchActions} from 'redux-batched-actions';
 //     connect(null, mapDispatchToProps)
 // )(FileUploadAction);
 
-export default {};
+export default composeActions(requirementsAction, {
+    init:(context) => {
+        context.initRequirements({
+            requiredPermission: "jcr:addChildNodes",
+            hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"]
+        });
+    }
+
+});

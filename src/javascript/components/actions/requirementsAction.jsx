@@ -1,7 +1,7 @@
 import React from "react";
 import {composeActions, withStylesAction} from "@jahia/react-material";
 import {withApolloAction} from "./withApolloAction";
-import {from, Subject, concat, of} from "rxjs";
+import {from, Subject, concat, of, combineLatest} from "rxjs";
 import {filter, map} from 'rxjs/operators';
 import {ActionRequirementsQueryHandler} from "../gqlQueries";
 import * as _ from 'lodash';
@@ -23,7 +23,7 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
     init: (context) => {
         context.initRequirements = (options) => {
             let req = {...context, ...options};
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths} = req;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled} = req;
             let requirementQueryHandler = new ActionRequirementsQueryHandler(req);
             if (requirementQueryHandler.requirementsFragments.length > 0) {
                 let watchQuery = context.client.watchQuery({
@@ -45,6 +45,10 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
                     (_.isEmpty(hideOnNodeTypes) || !node.isNotNodeType) &&
                     (_.isEmpty(requireModuleInstalledOnSite) || _.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
                 )));
+                if (enabled) {
+                    context.enabled = combineLatest(context.enabled, concat(of(false), enabled(context)))
+                        .pipe(map(arr => arr[0] && arr[1]))
+                }
             } else {
                 context.enabled = _.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, node.path)
             }

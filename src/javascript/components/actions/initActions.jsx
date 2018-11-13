@@ -24,7 +24,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: "label.contentManager.contentPreview.edit",
-        target: ["editPreviewBar:2.5", "contentTreeMenuActions:2.5", "tableActions:2", "contextualMenuPagesAction:2.5", "contextualMenuFoldersAction:2.5", "contextualMenuFilesAction:2.5", "contextualMenuContentAction:2.5"]
+        target: ["editPreviewBar:2.5", "contentTreeMenuActions:2.5", "tableActions:2", "contextualMenuContentAction:2.5"]
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
@@ -33,27 +33,25 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
         buttonLabel: "label.contentManager.create.contentFolder",
-        target: ["createMenuActions:3", "contentTreeMenuActions:3", "contextualMenuFoldersAction:3"],
+        target: ["createMenuActions:3", "contentTreeMenuActions:3"],
         contentType: "jnt:contentFolder",
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('createContent', createContentAction, {
         buttonLabel: "label.contentManager.create.content",
-        target: ["createMenuActions:3.1", "contentTreeMenuActions:3.1", "contextualMenuFoldersAction:3.1"],
+        target: ["createMenuActions:3.1", "contentTreeMenuActions:3.1"],
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
         baseContentType: Constants.contentType,
     });
     actionsRegistry.add('createFolder', createContentOfTypeAction, {
         buttonLabel: "label.contentManager.create.folder",
-        target: ["createMenuActions:3", "contentTreeMenuActions:3", "contextualMenuFilesAction:3"],
+        target: ["createMenuActions:3", "contentTreeMenuActions:3"],
         contentType: "jnt:folder",
         hideOnNodeTypes: ["jnt:page"],
     });
     actionsRegistry.add('fileUpload',  fileUploadAction, {
         buttonLabel: "label.contentManager.fileUpload.uploadButtonLabel",
-        target: ["createMenuActions:4", "contentTreeMenuActions:4", "contextualMenuFilesAction:4"],
-        requiredPermission: "jcr:addChildNodes",
-        hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"]
+        target: ["createMenuActions:4", "contentTreeMenuActions:4"],
     });
     actionsRegistry.add('translate', {
         buttonIcon: <Edit/>,
@@ -75,7 +73,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publish', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: "label.contentManager.contentPreview.publish",
-        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuPagesAction:5", "contextualMenuFoldersAction:5", "contextualMenuFilesAction:5", "contextualMenuContentAction:5"],
+        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuContentAction:5"],
         allSubtree: false,
         allLanguages: false,
         checkForUnpublication: false,
@@ -85,7 +83,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('advancedPublish', menuAction, {
         buttonIcon: <Menu/>,
         buttonLabel: "label.contentManager.contentPreview.advancedPublish",
-        target: ["contentTreeMenuActions:6", "contextualMenuPagesAction:6", "contextualMenuFoldersAction:6", "contextualMenuFilesAction:6"],
+        target: ["contentTreeMenuActions:6"],
         menu: "advancedPublish",
     });
     actionsRegistry.add('publishMenu',  menuAction, {
@@ -127,7 +125,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
         buttonLabel: "label.contentManager.contentPreview.publishDeletion",
-        target: ["editPreviewBar:4.2", "contentTreeMenuActions:4.2", "tableMenuActions:4.2", "contextualMenuFoldersAction:4.2", "contextualMenuFilesAction:4.2", "contextualMenuContentAction:4.2"],
+        target: ["editPreviewBar:4.2", "contentTreeMenuActions:4.2", "tableMenuActions:4.2","contextualMenuContentAction:4.2"],
         hideOnNodeTypes: ["jnt:virtualsite"],
     });
     actionsRegistry.add('unpublish', publishAction, {
@@ -145,21 +143,6 @@ function initActions(actionsRegistry) {
         iconButton: true,
         menu: "contextualMenuContentAction"
     });
-    actionsRegistry.add('contextualMenuFolders',  menuAction, {
-        buttonIcon: <Menu/>,
-        iconButton: true,
-        menu: "contextualMenuFoldersAction"
-    });
-    actionsRegistry.add('contextualMenuPages', menuAction, {
-        buttonIcon: <Menu/>,
-        iconButton: true,
-        menu: "contextualMenuPagesAction"
-    });
-    actionsRegistry.add('contextualMenuFiles',  menuAction, {
-        buttonIcon: <Menu/>,
-        iconButton: true,
-        menu: "contextualMenuFilesAction"
-    });
     actionsRegistry.add('additionalPreview', menuAction, {
         buttonIcon: <Menu/>,
         target: ["editAdditionalMenu"],
@@ -174,14 +157,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.copy",
-        target: ["additionalPreviewMenu:3.8", "tableMenuActions:3.8", "contextualMenuFoldersAction:3.8", "contextualMenuFilesAction:3.8", "contextualMenuContentAction:3.8", "contentTreeMenuActions:3.8"],
+        target: ["additionalPreviewMenu:3.8", "tableMenuActions:3.8", "contextualMenuContentAction:3.8", "contentTreeMenuActions:3.8"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
     actionsRegistry.add('pasteFile', pasteAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.paste",
-        target: ["contextualMenuFilesAction:3.8", "contentTreeMenuActions:3.8", "copyPasteActions:3.8"],
+        target: ["contentTreeMenuActions:3.8", "copyPasteActions:3.8"],
         hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
         baseContentType: "jnt:file"
     });
@@ -208,33 +191,33 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('pasteContentFolderContent', pasteAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.paste",
-        target: ["contextualMenuFoldersAction:3.9", "contentTreeMenuActions:3.9", "copyPasteActions:3.9"],
+        target: ["contentTreeMenuActions:3.9", "copyPasteActions:3.9"],
         hideOnNodeTypes: ["jnt:page", "jnt:folder"],
         baseContentType: "jmix:editorialContent"
     });
     actionsRegistry.add('cut', copyAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.cut",
-        target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuFoldersAction:3.9", "contextualMenuFilesAction:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9"],
+        target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: "label.contentManager.contentPreview.delete",
-        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuFoldersAction:4", "contextualMenuFilesAction:4", "contextualMenuContentAction:4"],
+        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuContentAction:4"],
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
         buttonLabel: "label.contentManager.contentPreview.deletePermanently",
-        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuFoldersAction:4", "contextualMenuFilesAction:4", "contextualMenuContentAction:4"],
+        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuContentAction:4"],
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('undelete', undeleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: "label.contentManager.contentPreview.undelete",
-        target: ["contentTreeMenuActions:4.1", "tableMenuActions:4.1", "additionalPreviewMenu:4.1", "contextualMenuFoldersAction:4.1", "contextualMenuFilesAction:4.1", "contextualMenuContentAction:4.1"],
+        target: ["contentTreeMenuActions:4.1", "tableMenuActions:4.1", "additionalPreviewMenu:4.1", "contextualMenuContentAction:4.1"],
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('createMenu', requirementsAction, menuAction, {
@@ -246,19 +229,19 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockManagementAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
+        target: ["contentTreeMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder"],
         action: 'lock'
     });
     actionsRegistry.add('unlock', lockManagementAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
+        target: ["contentTreeMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder"],
         action: 'unlock'
     });
     actionsRegistry.add('clearAllLocks',  lockManagementAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        target: ["contentTreeMenuActions:5", "contextualMenuFoldersAction:5"],
+        target: ["contentTreeMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder"],
         action: 'clearAllLocks'
     });

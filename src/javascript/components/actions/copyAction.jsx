@@ -6,10 +6,13 @@ import {reduxAction} from "./reduxAction";
 import requirementsAction from "./requirementsAction";
 
 export default composeActions(requirementsAction, reduxAction(() => ({}), (dispatch) => ({copy: n => dispatch(copy(n))})), {
-    onClick: (context) => {
+    init: (context) => {
         context.initRequirements({
             requiredPermission: "jcr:addChildNodes",
         });
+    },
+
+    onClick: (context) => {
 
         // todo cut : + requiredPermission: "jcr:removeNode"
 

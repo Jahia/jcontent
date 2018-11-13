@@ -8,7 +8,7 @@ export default composeActions(requirementsAction, {
         if (context.drawer.drawerOpen) {
             context.drawer.handleDrawerClose()
         } else {
-            context.drawer.handleDrawerOpen({content: <CmLeftDrawerContent context={context}/>, title: context.buttonLabel}, context.menu)
+            context.drawer.handleDrawerOpen({content: <CmLeftDrawerContent context={context} actionPath={context.actionKey}/>, title: context.buttonLabel}, context.menu)
         }
     },
 

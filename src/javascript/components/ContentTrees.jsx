@@ -82,7 +82,7 @@ class ContentTree extends React.Component {
                     textRenderer={(entry) => {
                         let contextualMenu = React.createRef();
                         return <React.Fragment>
-                            <ContextualMenu actionKey={this.resolveMenu(entry.node.path)} context={{path: entry.node.path}} ref={contextualMenu}/>
+                            <ContextualMenu actionKey={"contentTreeActions"} context={{path: entry.node.path}} ref={contextualMenu}/>
                             <span onContextMenu={(event) => contextualMenu.current.open(event) }>
                                 {entry.depth > 0 ? entry.node.displayName : rootLabel}
                             </span>

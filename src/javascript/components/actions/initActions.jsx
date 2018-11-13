@@ -331,43 +331,6 @@ function initActions(actionsRegistry) {
     });
 
 
-
-    actionsRegistry.add('mfLeft', sideMenuAction, {
-        buttonLabel: 'marketing-factory-core:label.contentManager.leftMenu.marketingFactory.title',
-        menu : "leftMenuMFActions",
-        target: ["leftMenuActions"],
-        hasChildren: true,
-        externalIconPath: "::context/modules/marketing-factory-core/images/MF_White.svg",
-        externalIconPathSelected: "::context/modules/marketing-factory-core/images/MF_Black.svg"
-    });
-    actionsRegistry.add('mfSiteMetrics', sideMenuListAction, {
-        buttonLabel : 'marketing-factory-core:label.contentManager.leftMenu.marketingFactory.siteMetrics.title',
-        target : ["leftMenuMFActions"],
-        menu : "leftMenuMFSiteMetricsActions",
-        hasChildren: true,
-        externalIconPath: "::context/files/default/modules/marketing-factory-core/::moduleVersion/templates/files/site-metrics.png",
-    });
-    actionsRegistry.add('mfSiteMetrics2', sideMenuListAction, {
-        buttonLabel : 'marketing-factory-core:label.contentManager.leftMenu.marketingFactory.siteMetrics.title',
-        target : ["leftMenuMFSiteMetricsActions"],
-        menu : "leftMenuMFSiteMetricsActions2",
-        hasChildren: true,
-        externalIconPath: "::context/files/default/modules/marketing-factory-core/::moduleVersion/templates/files/site-metrics.png",
-    });
-    actionsRegistry.add('mfInternalSearches', routerAction, {
-        buttonLabel : 'marketing-factory-core:label.contentManager.leftMenu.marketingFactory.siteMetrics.internalSearches.title',
-        mode: "apps",
-        target : [ "leftMenuMFSiteMetricsActions"],
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.marketing-20-searches.html",
-        externalIconPath: "::context/files/default/modules/marketing-factory-core/::moduleVersion/templates/files/internal-searches.png"
-    });
-    actionsRegistry.add('mfInternalSearches2', routerAction, {
-        buttonLabel : 'marketing-factory-core:label.contentManager.leftMenu.marketingFactory.siteMetrics.internalSearches.title',
-        mode: "apps",
-        target : [ "leftMenuMFSiteMetricsActions2"],
-        iframeUrl : ":context/cms/editframe/:workspace/:lang/sites/:site.marketing-20-searches.html",
-        externalIconPath: "::context/files/default/modules/marketing-factory-core/::moduleVersion/templates/files/internal-searches.png"
-    });
 };
 
 export default initActions;

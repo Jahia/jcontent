@@ -1,10 +1,9 @@
 import {List, ListItem, withStyles, withTheme} from "@material-ui/core";
-import {ExpandMore, ChevronRight} from "@material-ui/icons";
+import {ChevronRight, ExpandMore} from "@material-ui/icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
 import {lodash as _} from "lodash";
 import {translate} from "react-i18next";
-import connect from "react-redux/es/connect/connect";
 import {DisplayActions} from "@jahia/react-material";
 
 
@@ -73,25 +72,24 @@ const styles = (theme) => ({
     }
 });
 
-class CmLeftDrawerContent extends React.Component {
+class CmLeftDrawerListItems extends React.Component {
 
     render() {
 
         let {context, actionPath, classes, theme, t} = this.props;
 
-        return <List className={classes.root} classes={{root: classes.listRoot}}>
-            <DisplayActions target={context.menu} context={{...context.originalContext, parent:context}} render={(actionProps) => {
-                let actionContext = actionProps.context;
-                actionContext.actionPath = context.actionPath + "/" + actionContext.key;
-
-                return <ListItem
+        return <DisplayActions target={context.menu} context={{...context.originalContext, parent:context}} render={(actionProps) => {
+            let actionContext = actionProps.context;
+            actionContext.actionPath = actionPath + "/" + actionContext.key;
+            return <React.Fragment>
+                <ListItem
                     className={classes.clearList}
                     classes={{root: classes.overList}}
-                    selected={_.includes(_.split(context.actionPath, "/"), actionContext.actionKey)}
+                    selected={_.includes(_.split(actionPath, "/"), actionContext.actionKey)}
                     button
                     onClick={(event) => actionContext.onClick(actionContext, event)}
                     style={{
-                        paddingLeft: (_.split(context.actionPath, "/").length) * theme.spacing.unit
+                        paddingLeft: (_.split(actionPath, "/").length) * theme.spacing.unit
                     }}
                 >
                     <div className={classes.expand}>
@@ -111,8 +109,20 @@ class CmLeftDrawerContent extends React.Component {
                         {t(actionContext.buttonLabel)}
                     </div>
                 </ListItem>
-            }}/>
-        </List>;
+                {actionContext.menu && actionContext.open && <CmLeftDrawerListItems context={actionContext} actionPath={actionPath+"/"+actionContext.key} classes={classes} theme={theme} t={t}/>}
+            </React.Fragment>
+        }}/>;
+    }
+}
+
+class CmLeftDrawerContent extends React.Component {
+
+    render() {
+        let {classes} = this.props;
+
+        return <List className={classes.root} classes={{root: classes.listRoot}}>
+           <CmLeftDrawerListItems {...this.props} />
+        </List>
     }
 }
 
@@ -124,7 +134,6 @@ CmLeftDrawerContent = _.flowRight(
     translate(),
     withTheme(),
     withStyles(styles),
-    connect(mapStateToProps)
 )(CmLeftDrawerContent);
 
 export default CmLeftDrawerContent;

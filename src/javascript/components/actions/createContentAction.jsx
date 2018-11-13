@@ -66,8 +66,6 @@ export default composeActions(requirementsAction, withDxContextAction, {
         context.nodeTypes = obs.pipe(map(r => r.nodeTypes));
         context.includeSubTypes = obs.pipe(map(r => r.includeSubTypes));
         context.actions = obs.pipe(map(r => r.actions));
-
-        obs.subscribe((c) => console.log("ret:",c));
     },
 
 

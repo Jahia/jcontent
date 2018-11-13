@@ -47,7 +47,7 @@ export default composeActions(requirementsAction, {
     init:(context) => {
         context.initRequirements({
             requiredPermission: "jcr:addChildNodes",
-            hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"]
+            showOnNodeTypes: ["jnt:folder"]
         });
     }
 

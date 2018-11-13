@@ -1,16 +1,15 @@
 import React from "react";
-import {List, ListItem, withStyles, Typography, Drawer} from '@material-ui/core';
+import {Drawer, List, ListItem, Typography, withStyles} from '@material-ui/core';
 import LanguageSwitcher from "../languageSwitcher/LanguageSwitcher";
 import SiteSwitcher from "../siteSwitcher/SiteSwitcher";
 import {translate} from 'react-i18next';
 import classNames from "classnames";
 import BurgerMenuButton from "../BurgerMenuButton";
-import {Description, VerifiedUser} from '@material-ui/icons';
+import {Description} from '@material-ui/icons';
 import {connect} from "react-redux";
 import * as _ from 'lodash';
-import CmLeftDrawerContent from "./CmLeftDrawerContent";
 import Icon from "../icons/Icon";
-import {DisplayActions, actionsRegistry, iconButtonRenderer} from "@jahia/react-material";
+import {actionsRegistry, DisplayActions} from "@jahia/react-material";
 import CmLeftMenuItem from "./CmLeftMenuItem";
 
 export const drawerWidth = 289;
@@ -204,36 +203,13 @@ class CMLeftNavigation extends React.Component {
     constructor(props) {
 
         super(props);
-
-        if (props.mode === "apps") {
-            let actionPath = this.props.path.split("/");
-            let menuActionKey = actionPath ? actionPath.shift() : "";
-            const menu = actionsRegistry.get(menuActionKey).menu;
-            let actionContext = {
-                path: `/sites/${this.props.siteKey}`,
-                siteKey: this.props.siteKey,
-                lang: this.props.lang,
-                actionPath: "/" + menuActionKey,
-                handleDrawerClose: this.handleDrawerClose,
-                menu: menu
-            };
-            this.state = {
-                openDrawerMenu: menu,
-                openDrawer: true,
-                drawerContent: {
-                    content: <CmLeftDrawerContent context={actionContext}/>,
-                    title: this.props.t(actionsRegistry.get(menuActionKey).labelKey)
-                }
+        this.state = {
+            openDrawer: false,
+            drawerContent: {
+                content: null,
+                title: null
             }
-        } else {
-            this.state = {
-                openDrawer: false,
-                drawerContent: {
-                    content: null,
-                    title: null
-                }
-            };
-        }
+        };
     }
 
     handleDrawerOpen = (drawerContent, menu) => {
@@ -248,14 +224,13 @@ class CMLeftNavigation extends React.Component {
         this.setState({
             openDrawerMenu: null,
             openDrawer: false,
-            drawerContent: null
         });
     };
 
 
     render() {
 
-        const {siteKey, lang, t, classes, mode, contextPath} = this.props;
+        const {siteKey, t, classes, mode, contextPath} = this.props;
 
         let getIcon = (props)=> {
             let icon = <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>;
@@ -304,7 +279,7 @@ class CMLeftNavigation extends React.Component {
                 <Drawer
                     variant="persistent"
                     classes={{
-                        paper: classNames(this.state.openDrawer && classes.drawerPaper, !this.state.openDrawer && classes.drawerPaperClose),
+                        paper: classNames(classes.drawerPaper, !this.state.openDrawer && classes.drawerPaperClose),
                     }}
                     open={this.state.openDrawer}
                 >
@@ -334,18 +309,13 @@ class CMLeftNavigation extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
     siteKey: state.site,
-    lang: state.language,
     mode: state.mode,
-    path: state.path
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 CMLeftNavigation = _.flowRight(
     translate(),
     withStyles(styles, {withTheme: true}),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps)
 )(CMLeftNavigation);
 
 export default CMLeftNavigation;

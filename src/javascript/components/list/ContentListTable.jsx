@@ -387,7 +387,7 @@ class ContentListTable extends React.Component {
                                                             key={column.id} padding={'none'}
                                                             data-cm-role={'table-content-list-cell-' + column.id}
                                                         >
-                                                            <DisplayActions target={"tableActions"} context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')})}/>
+                                                            <DisplayActions target={"tableActions"} context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
                                                         </TableCell>;
                                                     } else {
                                                         return <TableCell

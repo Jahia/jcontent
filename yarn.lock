@@ -121,10 +121,26 @@
     humps "^2.0.1"
     prop-types "^15.5.10"
 
-"@jahia/apollo-dx@^1.0.0-beta.1", "@jahia/apollo-dx@^1.0.0-beta.20181113132747":
+"@jahia/apollo-dx@^1.0.0-beta.1":
   version "1.0.0-beta.20181113132747"
   resolved "http://npm.int.jahia.com:4873/@jahia%2fapollo-dx/-/apollo-dx-1.0.0-beta.20181113132747.tgz#83be2fe53a7f6a3a40a6f8a354c7d5acd4d4b48b"
   integrity sha1-g74v5Tp/ajpApvijVMfVrNTUtIs=
+  dependencies:
+    apollo-cache-inmemory "^1.2.2"
+    apollo-client "^2.3.2"
+    apollo-link "^1.2.2"
+    apollo-link-batch-http "^1.2.3"
+    apollo-link-http "^1.5.4"
+    apollo-utilities "^1.0.13"
+    graphql "^0.13.2"
+    graphql-tag "^2.9.2"
+    lodash "^4.17.10"
+    zen-observable "^0.8.8"
+
+"@jahia/apollo-dx@^1.0.0-beta.20181113171842":
+  version "1.0.0-beta.20181113171842"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2fapollo-dx/-/apollo-dx-1.0.0-beta.20181113171842.tgz#e7e5949e7ab505f5785e87acf8ba45f9bb5698f6"
+  integrity sha1-5+WUnnq1BfV4Xoes+LpF+btWmPY=
   dependencies:
     apollo-cache-inmemory "^1.2.2"
     apollo-client "^2.3.2"
@@ -166,10 +182,10 @@
     react "^16.4.1"
     recompose "^0.27.1"
 
-"@jahia/react-apollo@^1.0.0-beta.20181113132749":
-  version "1.0.0-beta.20181113132749"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20181113132749.tgz#0b8b5d74cb89584705712aebe5e02579293167e4"
-  integrity sha1-C4tddMuJWEcFcSrr5eAleSkxZ+Q=
+"@jahia/react-apollo@^1.0.0-beta.20181113171845":
+  version "1.0.0-beta.20181113171845"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20181113171845.tgz#69b7fd2348a9c1973db95d54a70f355084856afe"
+  integrity sha1-abf9I0ipwZc9uV1Upw81UISFav4=
   dependencies:
     "@jahia/apollo-dx" "^1.0.0-beta.1"
     apollo-client "^2.3.2"

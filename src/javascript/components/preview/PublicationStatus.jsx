@@ -24,6 +24,7 @@ const styles = theme => ({
     },
     publicationInfoMarkedForDeletion: {
         borderLeft: "5px solid " + theme.palette.publicationStatus.markedForDeletion.main,
+        color: theme.palette.publicationStatus.markedForDeletion.main,
         padding: theme.spacing.unit
     },
     publicationInfoUnpublished: {

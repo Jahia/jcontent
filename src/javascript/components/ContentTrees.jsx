@@ -7,6 +7,8 @@ import {lodash as _} from "lodash";
 import connect from "react-redux/es/connect/connect";
 import {cmClosePaths, cmGoto, cmOpenPaths} from "./redux/actions";
 import {ContextualMenu, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
+import {PickerItemsFragment} from "./gqlQueries";
+import {PredefinedFragments} from "@jahia/apollo-dx";
 
 const styles = theme => ({
     trees: {
@@ -75,6 +77,7 @@ class ContentTree extends React.Component {
             onOpenItem={(path, open) => handleOpen(path, open)}
             onSelectItem={(path) => handleSelect(path)}
             setRefetch={ setRefetch }
+            fragments={[PickerItemsFragment.publicationStatus, PickerItemsFragment.displayName, PredefinedFragments.displayName]}
         >
             {({handleSelect, ...others}) =>
                 <CmPickerViewMaterial

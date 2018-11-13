@@ -127,6 +127,26 @@ const browseType = {
     contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType]}
 };
 
+const PickerItemsFragment = {
+    publicationStatus: {
+        applyFor: "node",
+        variables: {
+            lang: "String!"
+        },
+        gql: gql`
+        fragment PublicationStatus on JCRNode {
+            aggregatedPublicationInfo(language: $lang) {
+                publicationStatus
+            }
+        }`
+
+    },
+    displayName: {
+        applyFor: "node",
+        gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`
+    },
+};
+
 const nodeFields = gql`
     fragment NodeFields on JCRNode {
         aggregatedPublicationInfo(language: $language) {
@@ -505,9 +525,7 @@ class ActionRequirementsQueryHandler {
     }
 
     getQuery() {
-        let requirementsQuery = _.cloneDeep(ActionRequirementsQuery);
-        replaceFragmentsInDocument(requirementsQuery, this.requirementsFragments);
-        return requirementsQuery;
+        return replaceFragmentsInDocument(ActionRequirementsQuery, this.requirementsFragments);
     }
 
     getVariables() {
@@ -525,4 +543,5 @@ export {
     ContentTypeNamesQuery,
     GetNodeAndChildrenByPathQuery,
     ActionRequirementsQueryHandler,
+    PickerItemsFragment,
 };

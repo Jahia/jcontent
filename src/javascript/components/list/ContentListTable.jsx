@@ -183,7 +183,10 @@ const styles = (theme) => ({
         }
     },
     selectedRow: {
-        backgroundColor: '#007cb0 !important',
+        backgroundColor: theme.palette.primary.main +'!important',
+    },
+    selectedRowMarkedForDeletion: {
+        backgroundColor: theme.palette.error.dark +'!important',
     },
     selectedCell: {
         color: theme.palette.primary.contrastText + ' !important',
@@ -330,11 +333,12 @@ class ContentListTable extends React.Component {
                                     let icon = this.addIconSuffix(n.icon);
                                     let cellContentClasses = {root: isSelected ? classes.selectedCell : classes.cell};
                                     let contextualMenu = React.createRef();
+                                    let selectionColor = (n.publicationStatus === "MARKED_FOR_DELETION") ? classes.selectedRowMarkedForDeletion : classes.selectedRow;
                                     return (
                                         <TableRow
                                             hover={true}
                                             className={isSelected ? '' : ((key % 2 === 0) ? classes.row : classes.rowPair)}
-                                            classes={{root: classes.contentRow, selected: classes.selectedRow}}
+                                            classes={{root: classes.contentRow, selected: selectionColor}}
                                             data-cm-node-path={n.path}
                                             key={n.uuid}
                                             onClick={() => onRowSelected([n])}

@@ -26,8 +26,12 @@ let styles = (theme) => ({
         opacity: 0.8
     },
     listItemSelected: {
-        background: '#007cb0',
-        color: '#F5F5F5 !important'
+        background: theme.palette.primary.main,
+        color:  theme.palette.primary.contrastText +'!important'
+    },
+    listItemSelectedDeletion: {
+        background: theme.palette.error.dark,
+        color: theme.palette.primary.contrastText +'!important'
     },
     listItem: {
         fontFamily: '"Nunito sans", sans-serif',
@@ -143,15 +147,17 @@ class CmPickerViewMaterial extends React.Component {
             }
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
                 {
-                    sortedEntries.map((entry) =>
-                        <ListItem
+                    sortedEntries.map((entry) => {
+                        let selectionClass = entry.publicationStatus === "MARKED_FOR_DELETION" ? classes.listItemSelectedDeletion : classes.listItemSelected;
+
+                        return <ListItem
                             onMouseEnter={() => this.hoverOn(entry.path)}
                             onClick={() => this.hoverOn(entry.path)}
                             onMouseLeave={this.hoverOff}
                             onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                             key={entry.path}
                             divider={true}
-                            className={entry.selected ? (classes.listItem + ' ' + classes.listItemSelected) : classes.listItem}
+                            className={entry.selected ? (classes.listItem + ' ' + selectionClass) : classes.listItem}
                             data-jrm-role={'picker-item'}
                         >
                             <div
@@ -174,8 +180,10 @@ class CmPickerViewMaterial extends React.Component {
                                     <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </div>
-                            <span className={classes.treeEntry} onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
-                                <ListItemIcon className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
+                            <span className={classes.treeEntry}
+                                  onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
+                                <ListItemIcon
+                                    className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
                                     {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
                                 </ListItemIcon>
                                 <ListItemText
@@ -192,19 +200,19 @@ class CmPickerViewMaterial extends React.Component {
                                 />
                             </span>
                             {actionsRenderer &&
-                                <ListItemText>
-                                    {this.state.hover === entry.path  && actionsRenderer(entry)}
-                                </ListItemText>
+                            <ListItemText>
+                                {this.state.hover === entry.path && actionsRenderer(entry)}
+                            </ListItemText>
                             }
                         </ListItem>
-                    )
+                    })
                 }
             </List>
         </div>;
     }
 
     sortFoldersAlphabetical(pickerEntries) {
-        if (pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === "jnt:contentFolder" || pickerEntries[0].node.primaryNodeType.name === "jnt:folder")) {
+        if (pickerEntries.length !== 0 && pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === "jnt:contentFolder" || pickerEntries[0].node.primaryNodeType.name === "jnt:folder")) {
             const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
             return this.sortAndFlatten(rootNode);
         }

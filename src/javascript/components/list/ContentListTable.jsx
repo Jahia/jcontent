@@ -10,7 +10,8 @@ import {translate} from "react-i18next";
 import {DxContext} from "../DxContext";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
-import {cmSetSelection} from "../redux/actions";
+import {cmSetSelection, cmGoto } from "../redux/actions";
+import { allowDoubleClickNavigation } from '../utils';
 import {connect} from "react-redux";
 
 const columnData = [
@@ -309,7 +310,7 @@ class ContentListTable extends React.Component {
         const {hoveredRow} = this.state;
         const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
             onChangePage, onRowSelected, selection, totalCount, t, classes,
-            uiLang, handleSort, order, orderBy} = this.props;
+            uiLang, handleSort, order, orderBy, setPath} = this.props;
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -342,6 +343,7 @@ class ContentListTable extends React.Component {
                                             data-cm-node-path={n.path}
                                             key={n.uuid}
                                             onClick={() => onRowSelected([n])}
+                                            onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
                                             selected={isSelected}
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={(event) => this.onHoverEnter(event)}
@@ -448,11 +450,12 @@ let ContentNotFound = (props) => {
 const mapStateToProps = (state, ownProps) => ({
     selection: state.selection,
     uiLang : state.uiLang,
-    lang : state.language
+    lang : state.language,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onRowSelected: (selection) => dispatch(cmSetSelection(selection)),
+    setPath: (path, params) => dispatch(cmGoto({path, params}))
 });
 
 ContentListTable.propTypes = {

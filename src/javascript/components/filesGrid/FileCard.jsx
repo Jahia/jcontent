@@ -9,9 +9,9 @@ import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import {fileIcon, isBrowserImage} from './filesGridUtils';
-import {cmSetSelection} from "../redux/actions";
+import {cmSetSelection, cmGoto } from "../redux/actions";
 import {connect} from "react-redux";
-import {ellipsizeText} from "../utils";
+import {ellipsizeText, allowDoubleClickNavigation} from "../utils";
 
 const styles = theme => ({
     card: {
@@ -230,7 +230,7 @@ class FileCard extends Component {
 
     largeMediaCard(contextualMenu) {
 
-        const {classes, t, node, dxContext, uiLang} = this.props;
+        const {classes, t, node, dxContext, uiLang, setPath} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
@@ -238,6 +238,7 @@ class FileCard extends Component {
             onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
+            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
             <CardMedia
@@ -274,7 +275,7 @@ class FileCard extends Component {
 
     mediumMediaCard(contextualMenu) {
 
-        const {classes, t, node, dxContext, uiLang} = this.props;
+        const {classes, t, node, dxContext, uiLang, setPath} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardMedium)}
@@ -282,6 +283,7 @@ class FileCard extends Component {
             onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
+            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
             <CardMedia
@@ -312,7 +314,7 @@ class FileCard extends Component {
 
     verticalMediaCard(contextualMenu) {
 
-        const {classes, t, node, dxContext} = this.props;
+        const {classes, t, node, dxContext, setPath} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
@@ -320,6 +322,7 @@ class FileCard extends Component {
             onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
+            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
         >
             <CardMedia
                 style={{flex: 2}}
@@ -341,7 +344,7 @@ class FileCard extends Component {
 
     largeFileCard(contextualMenu) {
 
-        const {classes, t, node, uiLang} = this.props;
+        const {classes, t, node, uiLang, setPath} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
@@ -349,6 +352,7 @@ class FileCard extends Component {
             onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
+            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
             {fileIcon(node.path, '6x', {fontSize: "160px"})}
@@ -383,7 +387,7 @@ class FileCard extends Component {
 
     mediumFileCard(contextualMenu) {
 
-        const {classes, t, node, cardType, uiLang} = this.props;
+        const {classes, t, node, cardType, uiLang, setPath} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.card)}
@@ -391,6 +395,7 @@ class FileCard extends Component {
             onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
+            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
         >
             <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
             {fileIcon(node.path, '6x', {fontSize: "110px"})}
@@ -417,7 +422,7 @@ class FileCard extends Component {
 
     verticalFileCard(contextualMenu) {
 
-        const {classes, t, node, cardType, uiLang} = this.props;
+        const {classes, t, node, cardType, uiLang, setPath} = this.props;
 
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
@@ -425,6 +430,7 @@ class FileCard extends Component {
             onContextMenu={(event) => contextualMenu.current.open(event)}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
+            onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
         >
             {fileIcon(node.path, '6x', {fontSize: "110px"})}
             <div className={classes.details} style={{height: '100%'}}>
@@ -524,6 +530,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onSelect: (selection) => dispatch(cmSetSelection(selection)),
+    setPath: (path, params) => dispatch(cmGoto({path, params}))
 });
 
 const ComposedFileCard = compose(

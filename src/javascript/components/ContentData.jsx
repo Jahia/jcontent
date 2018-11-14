@@ -53,7 +53,7 @@ class ContentData extends React.Component {
 
         let stateModificationDone = false;
 
-        if (operation == "create") {
+        if (operation === "create") {
 
             let parentPath = nodePath.substring(0, nodePath.lastIndexOf("/"));
             if (nodeType === "jnt:folder" || nodeType === "jnt:contentFolder") {
@@ -64,13 +64,13 @@ class ContentData extends React.Component {
                 }
             } else {
                 // Make sure the created content is visible in the main panel.
-                if (path != parentPath) {
+                if (path !== parentPath) {
                     setPath(parentPath);
                     stateModificationDone = true;
                 }
             }
 
-        } else if (operation == "delete") {
+        } else if (operation === "delete") {
 
             // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
             if (isDescendantOrSelf(path, nodePath)) {
@@ -86,9 +86,9 @@ class ContentData extends React.Component {
             }
 
             // De-select any removed nodes.
-            if (_.find(selection, node => node.path == nodePath)) {
+            if (_.find(selection, node => node.path === nodePath)) {
                 let newSelection = _.clone(selection);
-                _.remove(newSelection, node => node.path == nodePath);
+                _.remove(newSelection, node => node.path === nodePath);
                 setSelection(newSelection);
                 stateModificationDone = true;
             }

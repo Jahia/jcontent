@@ -2,8 +2,8 @@
   "name": "@jahia/content-manager",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch",
+    "build": "./node_modules/.bin/webpack",
+    "watch": "./node_modules/.bin/webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node"
   },

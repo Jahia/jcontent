@@ -37,6 +37,13 @@ function ellipsizeText(text, maxLength) {
     return ellipsize(text, maxLength || 100, { chars: [' ', '&']});
 }
 
+function allowDoubleClickNavigation(nodeType, fcn) {
+    if (["jnt:page", "jnt:folder", "jnt:contentFolder"].indexOf(nodeType) !== -1) {
+        return fcn;
+    }
+    return function(){};
+}
+
 export {
     hasMixin,
     isDescendant,
@@ -44,4 +51,5 @@ export {
     extractPaths,
     ellipsizeText,
     hasProperty,
+    allowDoubleClickNavigation
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import {actionsRegistry, menuAction} from "@jahia/react-material";
-import {Add, Delete, Edit, Error, Menu, Publish, Visibility} from "@material-ui/icons";
+import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen} from "@material-ui/icons";
 import Constants from "../constants";
 import createContentOfTypeAction from './createContentOfTypeAction'
 import createContentAction from './createContentAction'
@@ -237,13 +237,15 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ["contentTreeMenuActions:5"],
-        showOnNodeTypes: ["jnt:contentFolder"],
+        target: ["contentTreeMenuActions:5", "previewFooterActions"],
+        showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
+        buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ["contentTreeMenuActions:5"],
-        showOnNodeTypes: ["jnt:contentFolder"],
+        target: ["contentTreeMenuActions:5", "previewFooterActions"],
+        showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
+        buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',

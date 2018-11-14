@@ -300,11 +300,11 @@ class ContentPreview extends React.Component {
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
                     <Grid item xs={4} className={classes.lockButton}>
-                        {selectionLocked ? this.unlock() : this.lock()}
+                        <DisplayActions target={"previewFooterActions"} context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
                         <DisplayActions target={"editPreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
-                        <DisplayActions target={"editAdditionalMenu"} context={{path: selectedItem.path}} render={iconButtonRenderer()}/>
+                        <DisplayActions target={"editAdditionalMenu"} context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
                     </Grid>
                 </Grid>;
         }
@@ -424,7 +424,7 @@ class ContentPreview extends React.Component {
         }
     }
 
-    lock() {
+    /*lock() {
         const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
         return <Mutation
             mutation={lockMutations.lock}
@@ -467,7 +467,7 @@ class ContentPreview extends React.Component {
                 </Tooltip>
             }}
         </Mutation>
-    }
+    }*/
 
     ellipsisText(text) {
         return ellipsizeText(text, 50);

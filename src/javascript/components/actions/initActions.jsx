@@ -14,13 +14,15 @@ import publishDeletionAction from './publishDeletionAction'
 import previewAction from './previewAction'
 import pasteAction from './pasteAction'
 import copyAction from './copyAction'
-import lockManagementAction from './lockManagementAction'
+import lockAction from './lockAction'
 import workflowDashboardAction from './workflowDashboardAction';
 import {routerAction} from "./routerAction";
 import sideMenuAction from "./sideMenuAction";
 import requirementsAction from './requirementsAction'
 import sideMenuListAction from "./sideMenuListAction";
 import openInEditModeAction from "./openInEditModeAction";
+import unlockAction from "./unlockAction";
+import clearAllLocksAction from "./clearAllLocksAction";
 
 function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
@@ -229,23 +231,20 @@ function initActions(actionsRegistry) {
         init: (context) => context.initRequirements({requiredPermission: "jcr:addChildNodes"}),
         menu: "createMenuActions"
     });
-    actionsRegistry.add('lock', lockManagementAction, {
+    actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
         target: ["contentTreeMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder"],
-        action: 'lock'
     });
-    actionsRegistry.add('unlock', lockManagementAction, {
+    actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
         target: ["contentTreeMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder"],
-        action: 'unlock'
     });
-    actionsRegistry.add('clearAllLocks',  lockManagementAction, {
+    actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
         target: ["contentTreeMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder"],
-        action: 'clearAllLocks'
     });
 
     actionsRegistry.add('contentLeftMenu', routerAction, {

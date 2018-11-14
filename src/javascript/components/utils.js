@@ -6,6 +6,11 @@ function hasMixin(node, mixin) {
     return (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, mixin));
 }
 
+function hasProperty(node, propertyName){
+    let propertyValue = _.find(node.properties, property => property.name === propertyName);
+    return propertyValue !== undefined;
+}
+
 function isDescendant(path, ancestorPath) {
     return path.startsWith(ancestorPath + "/");
 }
@@ -37,5 +42,6 @@ export {
     isDescendant,
     isDescendantOrSelf,
     extractPaths,
-    ellipsizeText
+    ellipsizeText,
+    hasProperty,
 };

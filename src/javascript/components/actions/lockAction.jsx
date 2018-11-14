@@ -1,8 +1,9 @@
 import React from 'react';
-import {lockNode, unlockNode, clearAllLocks} from "../preview/gqlMutations";
-import { Mutation } from 'react-apollo';
 import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
+import {map} from "rxjs/operators";
+import {hasProperty} from "../utils";
+import {lockMutations} from "../gqlQueries";
 
 // class LockManagementAction extends React.Component {
 //     render() {
@@ -85,7 +86,14 @@ export default composeActions(requirementsAction, {
     context.initRequirements({
         retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
         requiredPermission: "jcr:lockManagement",
-    })
+        enabled: (context) => context.node.pipe(map(node => !hasProperty(node, "j:lockTypes")))
+    });
   },
-  onClick:(context) => {}
+  onClick:(context) => {
+      context.client.mutate({
+            variables: {pathOrId: context.path},
+            mutation: lockMutations.lock,
+            refetchQueries: context.query,
+      });
+  }
 });

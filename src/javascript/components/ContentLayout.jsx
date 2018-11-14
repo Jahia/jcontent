@@ -355,8 +355,11 @@ class ContentLayout extends React.Component {
                             [classes[`contentShift-right`]]: open_view,
                         })}
                     >
-                        <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams}
-                                     setRefetch={this.setContentRefetcher} orderBy={orderBy}>
+                        <ContentData layoutQuery={layoutQuery}
+                                     layoutQueryParams={layoutQueryParams}
+                                     setRefetch={this.setContentRefetcher}
+                                     orderBy={orderBy}
+                                     treeShown={ open }>
                             {({rows, contentNotFound, totalCount}) => {
                                 return <Paper className={classes.paper}>
                                     {mode === Constants.mode.FILES && !this.state.showList

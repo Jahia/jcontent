@@ -51,6 +51,37 @@ function actionsTargetForList(nodeType) {
     return "tableActions";
 }
 
+function groupByTypes(primaryNodeTypes, array, mode = "ELEVATE") {
+    const typeMap = {
+        theRest: []
+    };
+    primaryNodeTypes.forEach(function(type) {
+        typeMap[type] = [];
+    });
+
+    array.forEach(function(node) {
+        if (typeMap[node.primaryNodeType]) {
+            typeMap[node.primaryNodeType].push(node);
+        }
+        else {
+            typeMap["theRest"].push(node);
+        }
+    });
+
+    let alteredNodes = [];
+    let pureNodes = typeMap.theRest;
+    delete typeMap.theRest;
+    const mapTypes = Object.getOwnPropertyNames(typeMap);
+
+    mapTypes.forEach(function(type) {
+        alteredNodes = alteredNodes.concat(typeMap[type]);
+    });
+
+    if (mode === "ELEVATE") return alteredNodes.concat(pureNodes);
+
+    return pureNodes.concat(alteredNodes);
+}
+
 export {
     hasMixin,
     isDescendant,
@@ -59,5 +90,6 @@ export {
     ellipsizeText,
     hasProperty,
     allowDoubleClickNavigation,
-    actionsTargetForList
+    actionsTargetForList,
+    groupByTypes
 };

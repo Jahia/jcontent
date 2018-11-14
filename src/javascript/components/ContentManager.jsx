@@ -40,10 +40,8 @@ class ContentManager extends React.Component {
 
         this.defaultNS = 'content-media-manager';
         this.namespaceResolvers = {
-            'content-media-manager': (lang) => import('../../main/resources/javascript/locales/' + lang + '.json')()
+            'content-media-manager': (lang) => require('../../main/resources/javascript/locales/' + lang + '.json')
         };
-        // fallback locale, which we embed into main package
-        require('../../main/resources/javascript/locales/en.json');
     }
 
     getStore = (dxContext, t) => {

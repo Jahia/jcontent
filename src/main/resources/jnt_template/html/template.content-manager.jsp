@@ -34,7 +34,7 @@
     contextJsParameters['workspace'] = '${renderContext.workspace}';
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
-        actions: {},
+        actions: [],
         academyLink: "<%= SettingsBean.getInstance().getString("contentMediaAcademyLink", "https://academy.jahia.com/documentation/modules/content-and-media-manager/1.0") %>"
     };
     contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces()};
@@ -42,7 +42,7 @@
 
 </script>
 
-<%--${cmFunctions:generateActionLists(renderContext)}--%>
+${cmFunctions:generateActionLists(renderContext)}
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {

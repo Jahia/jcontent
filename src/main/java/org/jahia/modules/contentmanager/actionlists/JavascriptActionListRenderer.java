@@ -45,13 +45,17 @@ package org.jahia.modules.contentmanager.actionlists;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jahia.data.templates.JahiaTemplatesPackage;
 import org.jahia.modules.contentmanager.utils.Utils;
+import org.jahia.osgi.BundleUtils;
 import org.jahia.services.render.RenderContext;
 import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
@@ -126,16 +130,17 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
                         url = priorityParts[0];
                         priority = Double.parseDouble(priorityParts[1]);
                     }
-                    URL contentsURL = bundle.getResource(url);
-                    String contents = null;
-                    try {
-                        contents = IOUtils.toString(contentsURL.openStream())
-                                .replace("::context", renderContext.getURLGenerator().getContext())
-                                .replace("::moduleVersion", bundle.getVersion().toString().replace(".SNAPSHOT", "-SNAPSHOT"));
+                    JahiaTemplatesPackage module = BundleUtils.getModule(bundle);
+                    Resource contentsURL = module.getResource(url);
+                    try (InputStream s = contentsURL.getInputStream()){
+                        String contents = "contextJsParameters['config'].actions.push(function (actionsRegistry, dxContext) {\n";
+                        contents += "var moduleVersion = \"" + module.getVersion().toString() + "\";\n";
+                        contents += IOUtils.toString(s);
+                        contents += "\n});\n";
+                        actionListResourceList.add(new ActionListResource(contentsURL.toString(), true, priority, contents));
                     } catch (IOException e) {
                         logger.error("Error reading action list resource {}", url, e);
                     }
-                    actionListResourceList.add(new ActionListResource(contentsURL.toString(), true, priority, contents));
                 }
             }
         }

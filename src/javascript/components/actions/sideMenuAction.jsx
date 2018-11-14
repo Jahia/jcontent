@@ -6,6 +6,8 @@ import {reduxAction} from "./reduxAction";
 
 export default composeActions(requirementsAction, reduxAction((state) => ({path: state.path, mode: state.mode})), {
     init: (context) => {
+        context.initRequirements();
+
         if (context.mode === 'apps' && !context.drawer.drawerOpen && context.path) {
             if (context.path.split('/')[0] === context.actionKey) {
                 context.drawer.handleDrawerOpen({

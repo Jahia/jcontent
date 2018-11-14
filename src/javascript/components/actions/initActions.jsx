@@ -25,6 +25,10 @@ import unlockAction from "./unlockAction";
 import clearAllLocksAction from "./clearAllLocksAction";
 
 function initActions(actionsRegistry) {
+    actionsRegistry.add('router', routerAction);
+    actionsRegistry.add('sideMenu', sideMenuAction);
+    actionsRegistry.add('sideMenuList', sideMenuListAction);
+
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: "label.contentManager.contentPreview.edit",

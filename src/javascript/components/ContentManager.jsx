@@ -27,27 +27,16 @@ class ContentManager extends React.Component {
         super(props);
         const {dxContext} = props;
         window.forceCMUpdate = this.forceCMUpdate.bind(this);
-        // test
+
         initFontawesomeIcons();
 
         initActions(actionsRegistry);
-        // register actions
-        // register actions from the configuration
-        // const actions = _.merge(dxContext.config.actions, defaultActions);
-        // _.each(Object.keys(actions), actionKey => {
-        //     actionsRegistry[actionKey] = actions[actionKey];
-        //     // get Component if not set yet
-        //     if (typeof actionsRegistry[actionKey].component === "string") {
-        //         actionsRegistry[actionKey].component = actionComponents[actionsRegistry[actionKey].component]
-        //     }
-        //
-        //     // register callbacks (add callback to existing one)
-        //     function customizer(objValue, srcValue) {
-        //         if (_.isArray(objValue)) {
-        //             return objValue.concat(srcValue);
-        //         }
-        //     }
-        // });
+
+        _.each(dxContext.config.actions, (callback) => {
+            if (typeof callback === "function") {
+                callback(actionsRegistry, dxContext);
+            }
+        });
     }
 
     getStore = (dxContext, t) => {

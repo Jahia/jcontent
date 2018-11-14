@@ -3,7 +3,7 @@ import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {map} from "rxjs/operators";
 import {hasProperty} from "../utils";
-import {lockMutations} from "../gqlQueries";
+import {lockMutations} from "../gqlMutations";
 
 export default composeActions(requirementsAction, {
     init:(context) => {
@@ -17,6 +17,11 @@ export default composeActions(requirementsAction, {
         context.client.mutate({
             variables: {pathOrId: context.path},
             mutation: lockMutations.unlock,
+            refetchQueries: [
+                {
+                    query : context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables(),
+                }]
         });
     }
 });

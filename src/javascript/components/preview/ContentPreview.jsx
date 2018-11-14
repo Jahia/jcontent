@@ -5,13 +5,13 @@ import {translate} from 'react-i18next';
 import {connect} from "react-redux";
 import Loadable from "react-loadable";
 import {lodash as _} from "lodash";
-import {Button, Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
+import {Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
 import {CloudDownload, Fullscreen, FullscreenExit, Lock, LockOpen} from "@material-ui/icons";
 import {DisplayActions, buttonRenderer, iconButtonRenderer} from '@jahia/react-material';
-import {previewQuery} from "./gqlQueries";
+import {previewQuery} from "../gqlQueries";
 import PublicationInfo from './PublicationStatus';
 import ShareMenu from './ShareMenu';
-import {lockNode, unlockNode} from "./gqlMutations";
+import {lockMutations} from "../gqlMutations";
 import {getFileType, isBrowserImage, isPDF} from "../filesGrid/filesGridUtils";
 import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from "../redux/actions";
 import {ellipsizeText} from "../utils.js";
@@ -427,7 +427,7 @@ class ContentPreview extends React.Component {
     lock() {
         const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
         return <Mutation
-            mutation={lockNode}
+            mutation={lockMutations.lock}
             refetchQueries={[{
                 query: layoutQuery,
                 variables: layoutQueryParams
@@ -449,7 +449,7 @@ class ContentPreview extends React.Component {
         const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
 
         return <Mutation
-            mutation={unlockNode}
+            mutation={lockMutations.unlock}
             refetchQueries={[{
                 query: layoutQuery,
                 variables: layoutQueryParams

@@ -32,6 +32,7 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
                 });
 
                 // console.log("watch", context)
+                context.requirementQueryHandler = requirementQueryHandler;
 
                 context.node = from(watchQuery)
                     .pipe(

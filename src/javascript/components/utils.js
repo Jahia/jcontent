@@ -44,6 +44,13 @@ function allowDoubleClickNavigation(nodeType, fcn) {
     return function(){};
 }
 
+function actionsTargetForList(nodeType) {
+    if (["jnt:page", "jnt:folder", "jnt:contentFolder"].indexOf(nodeType) !== -1) {
+        return "tableActionsNoPreview";
+    }
+    return "tableActions";
+}
+
 export {
     hasMixin,
     isDescendant,
@@ -51,5 +58,6 @@ export {
     extractPaths,
     ellipsizeText,
     hasProperty,
-    allowDoubleClickNavigation
+    allowDoubleClickNavigation,
+    actionsTargetForList
 };

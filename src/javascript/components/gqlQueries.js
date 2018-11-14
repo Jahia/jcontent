@@ -10,7 +10,7 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy, treeState) {
         const type = urlParams.type || (_.startsWith(path, rootPath + "/contents") ? "contents" : "pages");
         return {
             path: path,
@@ -18,8 +18,8 @@ class BrowsingQueryHandler {
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
-            typeFilter: browseType[type].typeFilter || "jnt:contentFolder",
-            recursionTypesFilter: browseType[type].recursionTypesFilter || Constants.contentType,
+            typeFilter: browseType[treeState][type].typeFilter || "jnt:contentFolder",
+            recursionTypesFilter: browseType[treeState][type].recursionTypesFilter || Constants.contentType,
             fieldSorter: orderBy === '' ? null : {
                 sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
                 fieldName: orderBy === '' ? null : orderBy,
@@ -123,8 +123,14 @@ class Sql2SearchQueryHandler {
 }
 
 const browseType = {
-    pages: {recursionTypesFilter: ["jnt:page"], typeFilter: [Constants.contentType]},
-    contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType]}
+    open: {
+        pages: {recursionTypesFilter: ["jnt:page"], typeFilter: [Constants.contentType]},
+        contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType]}
+    },
+    hidden: {
+        pages: {recursionTypesFilter: ["jnt:page"], typeFilter: [Constants.contentType, "jnt:page"]},
+        contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType, "jnt:contentFolder"]}
+    }
 };
 
 const PickerItemsFragment = {

@@ -265,7 +265,7 @@ class ContentLayout extends React.Component {
             sql2SearchFrom: sql2SearchFrom,
             sql2SearchWhere: sql2SearchWhere
         };
-        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy);
+        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, open ? "open" : "hidden");
 
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>

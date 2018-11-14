@@ -36,7 +36,7 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
                 pathSuffix = '';
         }
         setPreviewState(CM_PREVIEW_STATES.HIDE);
-        setUrl(siteKey, language, mode, (mode === "apps" ? context.actionPath : `/sites/${siteKey}${pathSuffix}`), {});
+        setUrl(siteKey, language, mode, (mode === "apps" ? (context.actionPath ? context.actionPath : context.actionKey) : `/sites/${siteKey}${pathSuffix}`), {});
         return null;
     }
 });

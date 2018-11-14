@@ -37,6 +37,13 @@ class ContentManager extends React.Component {
                 callback(actionsRegistry, dxContext);
             }
         });
+
+        this.defaultNS = 'content-media-manager';
+        this.namespaceResolvers = {
+            'content-media-manager': (lang) => import('../../main/resources/javascript/locales/' + lang + '.json')()
+        };
+        // fallback locale, which we embed into main package
+        require('../../main/resources/javascript/locales/en.json');
     }
 
     getStore = (dxContext, t) => {
@@ -84,7 +91,8 @@ class ContentManager extends React.Component {
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,
                             ns: dxContext.i18nNamespaces,
-                            defaultNS: "content-media-manager",
+                            defaultNS: this.defaultNS,
+                            namespaceResolvers: this.namespaceResolvers
                         })}>
                             <I18n>{(t) => {
                                 return (

@@ -7,10 +7,10 @@
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node"
   },
-  "description": "content manager for DX",
+  "description": "Content and Media Manager for DX",
   "main": "index.js",
   "repository": "git@github.com:Jahia/content-manager.git",
-  "author": "Jahia Core Tean <core@jahia.com>",
+  "author": "Jahia Core Team <core@jahia.com>",
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",

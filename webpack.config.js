@@ -10,7 +10,8 @@ module.exports = (env, argv) => {
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
-            filename: 'content-manager.js'
+            filename: 'content-manager.js',
+            chunkFilename: '[name].content-manager.[hash].js'
         },
         resolve: {
             mainFields: ['module', 'main'],

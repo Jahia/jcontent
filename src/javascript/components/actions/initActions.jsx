@@ -239,17 +239,20 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
         target: ["contentTreeMenuActions:5", "previewFooterActions"],
         showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
+        getLockInfo: true,
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
         target: ["contentTreeMenuActions:5", "previewFooterActions"],
         showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
+        getLockInfo: true,
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
         target: ["contentTreeMenuActions:5"],
+        getLockInfo: true,
         showOnNodeTypes: ["jnt:contentFolder"],
     });
 

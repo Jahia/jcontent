@@ -523,6 +523,20 @@ const ActionRequirementsFragments = {
                 path
             }
         }`
+    },
+    retrieveLockInfo: {
+        variables: {
+            language: "String!",
+        },
+        applyFor: "requirements",
+        gql: gql` fragment LockInfo on JCRNode {
+            lockOwner: property(name: "jcr:lockOwner", language: $language) {
+                value
+            }
+            lockTypes: property(name: "j:lockTypes", language: $language) {
+                value
+            }
+        }`
     }
 };
 
@@ -573,6 +587,9 @@ class ActionRequirementsQueryHandler {
         }
         if (context.getDisplayableNodePath) {
             this.requirementsFragments.push(ActionRequirementsFragments.displayableNodePath);
+        }
+        if(context.getLockInfo){
+            this.requirementsFragments.push(ActionRequirementsFragments.retrieveLockInfo);
         }
     }
 

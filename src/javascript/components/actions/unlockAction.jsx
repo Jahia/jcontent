@@ -8,9 +8,9 @@ import {lockMutations} from "../gqlMutations";
 export default composeActions(requirementsAction, {
     init:(context) => {
         context.initRequirements({
-            retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
+            retrieveLockInfo: context.language,
             requiredPermission: "jcr:lockManagement",
-            enabled: (context) => context.node.pipe(map(node => hasProperty(node, "j:lockTypes")))
+            enabled: (context) => context.node.pipe(map(node => node.lockTypes !== null))
         });
     },
     onClick:(context) => {

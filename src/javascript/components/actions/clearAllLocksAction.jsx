@@ -2,16 +2,15 @@ import React from 'react';
 import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {map} from "rxjs/operators";
-import {hasProperty} from "../utils";
 import {lockMutations} from "../gqlMutations";
 import {withDxContextAction} from "./withDxContextAction";
 
 export default composeActions(requirementsAction, withDxContextAction, {
     init:(context) => {
         context.initRequirements({
-            retrieveProperties: {retrievePropertiesNames: ["j:lockTypes"]},
+            retrieveLockInfo: context.language,
             requiredPermission: "jcr:lockManagement",
-            enabled: (context) => context.node.pipe(map(node => hasProperty(node, "j:lockTypes") && context.dxContext.userName === 'root'))
+            enabled: (context) => context.node.pipe(map(node => node.lockTypes !== null && context.dxContext.userName === 'root'))
         });
     },
     onClick:(context) => {

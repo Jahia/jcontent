@@ -23,6 +23,7 @@ import sideMenuListAction from "./sideMenuListAction";
 import openInEditModeAction from "./openInEditModeAction";
 import unlockAction from "./unlockAction";
 import clearAllLocksAction from "./clearAllLocksAction";
+import menuWithRequirementsAction from './menuWithRequirementsAction';
 
 function initActions(actionsRegistry) {
     actionsRegistry.add('router', routerAction);
@@ -94,11 +95,11 @@ function initActions(actionsRegistry) {
         target: ["contentTreeMenuActions:6", "tableMenuActions:2.5"],
         menu: "advancedPublish",
     });
-    actionsRegistry.add('publishMenu',  menuAction, {
+    actionsRegistry.add('publishMenu',  menuWithRequirementsAction, {
         buttonIcon: <Menu/>,
         buttonLabel: "label.contentManager.contentPreview.publishMenu",
         target: ["editPreviewBar", "thumbnailPublishMenu", "tableMenuActions"],
-        hideOnNodeTypes: ["jnt:page"],
+        hideOnNodeTypes: ["jnt:contentFolder", "jnt:page"],
         menu: "publishMenu",
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {

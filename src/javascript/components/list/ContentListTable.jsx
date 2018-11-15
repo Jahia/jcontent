@@ -14,6 +14,7 @@ import {cmSetSelection, cmGoto } from '../redux/actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
+import UploadWrapperComponent from '../fileupload/UploadWrapperComponent';
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
@@ -327,7 +328,7 @@ class ContentListTable extends React.Component {
                     />
                     <DxContext.Consumer>
                         {dxContext => (
-                            <TableBody className={classes.tableBody}>
+                            <UploadWrapperComponent component={ TableBody }>
                                 {contentNotFound ? <ContentNotFound classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;
@@ -426,7 +427,7 @@ class ContentListTable extends React.Component {
                                     <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding="none"/>
                                 </TableRow>
                                 }
-                            </TableBody>
+                            </UploadWrapperComponent>
                         )}
                     </DxContext.Consumer>
                 </Table>

@@ -14,6 +14,8 @@ import mimetypes from 'mime-types';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
+import _ from 'lodash';
+import { onFilesSelected, getMimeTypes } from './utils';
 
 const styles = theme => ({
     drawerContent: {
@@ -131,7 +133,7 @@ class Upload extends React.Component {
         const {classes, uploads, acceptedFileTypes} = this.props;
         if (uploads.length === 0) {
             return (
-                <UploadDropZone acceptedFileTypes={this.getMimeTypes(acceptedFileTypes)}
+                <UploadDropZone acceptedFileTypes={getMimeTypes(acceptedFileTypes)}
                     onFilesSelected={this.onFilesSelected}/>
             );
         }
@@ -290,15 +292,6 @@ class Upload extends React.Component {
             return DRAWER_ANIMATION_TIME;
         }
         return 0;
-    }
-
-    getMimeTypes(acceptedFileTypes) {
-        if (acceptedFileTypes) {
-            return acceptedFileTypes.map(type => {
-                return mimetypes.lookup(type);
-            });
-        }
-        return undefined;
     }
 
     uploadStatus() {

@@ -99,7 +99,7 @@ class ContentData extends React.Component {
                 // This is an update of either the element currently selected in the tree or one of its ancestors.
 
                 let name = nodePath.substring(nodePath.lastIndexOf("/") + 1, nodePath.length);
-                if (name !== nodeName) {
+                if (name !== nodeName && nodeName !== undefined) {
                     // This is a node name change: update current CM path to reflect the changed path of the node.
 
                     let ancestorPath = nodePath;

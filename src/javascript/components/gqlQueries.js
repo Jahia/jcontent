@@ -534,7 +534,7 @@ const ActionRequirementsFragments = {
                 value
             }
             lockTypes: property(name: "j:lockTypes", language: $language) {
-                value
+                values
             }
         }`
     }

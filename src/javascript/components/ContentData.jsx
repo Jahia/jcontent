@@ -197,7 +197,8 @@ class ContentData extends React.Component {
                             parentDeletionUser: _.map(contentNode.ancestors, ancestor => {return ancestor.deletionUser!==null ? ancestor.deletionUser.value : ''}),
                             icon: contentNode.primaryNodeType.icon,
                             width: (contentNode.width != null ? contentNode.width.value : ''),
-                            height: (contentNode.width != null ? contentNode.height.value : '')
+                            height: (contentNode.width != null ? contentNode.height.value : ''),
+                            parents: contentNode.parents ? contentNode.parents : null
                         }
                     });
 

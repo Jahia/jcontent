@@ -17,17 +17,6 @@ module.exports = (env, argv) => {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', 'json']
         },
-        optimization: {
-            splitChunks: {
-                cacheGroups: {
-                    vendor: {
-                        name: 'vendor',
-                        chunks: 'all',
-                        test: /[\\/]node_modules[\\/]/
-                    }
-                }
-            }
-        },
         module: {
             rules: [
                 {

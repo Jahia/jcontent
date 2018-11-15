@@ -171,7 +171,7 @@ const nodeFields = gql`
             displayName(language: $displayLanguage)
             icon
         }
-        lockOwner: property(name: "jcr:lockOwner", language: $language) {
+        lockOwner: property(name: "jcr:lockOwner") {
             value
         }
         lastPublished: property(name: "j:lastPublished", language: $language) {
@@ -525,15 +525,12 @@ const ActionRequirementsFragments = {
         }`
     },
     retrieveLockInfo: {
-        variables: {
-            language: "String!",
-        },
         applyFor: "requirements",
         gql: gql` fragment LockInfo on JCRNode {
-            lockOwner: property(name: "jcr:lockOwner", language: $language) {
+            lockOwner: property(name: "jcr:lockOwner") {
                 value
             }
-            lockTypes: property(name: "j:lockTypes", language: $language) {
+            lockTypes: property(name: "j:lockTypes") {
                 values
             }
         }`

@@ -9,7 +9,7 @@ import {withDxContextAction} from "./withDxContextAction";
 export default composeActions(requirementsAction, withDxContextAction, {
     init:(context) => {
         context.initRequirements({
-            retrieveLockInfo: context.language,
+            getLockInfo: true,
             requiredPermission: "jcr:lockManagement",
             enabled: (context) => context.node.pipe(map(node => node.lockTypes !== null && !_.includes(node.lockTypes.values, " deletion :deletion")
                 && context.dxContext.userName === 'root'))

@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Mutation, Query} from 'react-apollo';
+import {Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from "react-redux";
 import Loadable from "react-loadable";
 import {lodash as _} from "lodash";
 import {Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
-import {CloudDownload, Fullscreen, FullscreenExit, Lock, LockOpen} from "@material-ui/icons";
-import {DisplayActions, buttonRenderer, iconButtonRenderer} from '@jahia/react-material';
+import {CloudDownload, Fullscreen, FullscreenExit} from "@material-ui/icons";
+import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import {previewQuery} from "../gqlQueries";
 import PublicationInfo from './PublicationStatus';
 import ShareMenu from './ShareMenu';
-import {lockMutations} from "../gqlMutations";
 import {getFileType, isBrowserImage, isPDF} from "../filesGrid/filesGridUtils";
 import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from "../redux/actions";
 import {ellipsizeText} from "../utils.js";
@@ -423,51 +422,6 @@ class ContentPreview extends React.Component {
             isPublished: isPublished
         }
     }
-
-    /*lock() {
-        const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
-        return <Mutation
-            mutation={lockMutations.lock}
-            refetchQueries={[{
-                query: layoutQuery,
-                variables: layoutQueryParams
-            }]}>
-            {(lockNode) => {
-                return <Tooltip title={t('label.contentManager.contentPreview.lockNode')} placement="top-start">
-                    <IconButton className={classes.lockIcon} onClick={() => {
-                        lockNode({variables: {pathOrId: selection[0].path}});
-                        this.setState({
-                            selectionLocked: true
-                        });
-                    }}><LockOpen/></IconButton>
-                </Tooltip>
-            }}
-        </Mutation>
-    }
-
-    unlock() {
-        const {t, selection, layoutQuery, layoutQueryParams, classes} = this.props;
-
-        return <Mutation
-            mutation={lockMutations.unlock}
-            refetchQueries={[{
-                query: layoutQuery,
-                variables: layoutQueryParams
-            }]}>
-            {(unlockNode) => {
-                return <Tooltip
-                    title={t('label.contentManager.contentPreview.nodeLockedBy', {username: selection[0].lockOwner})}
-                    placement="top-start">
-                    <IconButton className={classes.unlockIcon} onClick={() => {
-                        unlockNode({variables: {pathOrId: selection[0].path}});
-                        this.setState({
-                            selectionLocked: false
-                        });
-                    }}><Lock/></IconButton>
-                </Tooltip>
-            }}
-        </Mutation>
-    }*/
 
     ellipsisText(text) {
         return ellipsizeText(text, 50);

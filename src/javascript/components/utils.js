@@ -44,13 +44,6 @@ function allowDoubleClickNavigation(nodeType, fcn) {
     return function(){};
 }
 
-function actionsTargetForList(nodeType) {
-    if (["jnt:page", "jnt:folder", "jnt:contentFolder"].indexOf(nodeType) !== -1) {
-        return "tableActionsNoPreview";
-    }
-    return "tableActions";
-}
-
 function groupByTypes(primaryNodeTypes, array, mode = "ELEVATE") {
     const typeMap = {
         theRest: []
@@ -90,6 +83,5 @@ export {
     ellipsizeText,
     hasProperty,
     allowDoubleClickNavigation,
-    actionsTargetForList,
     groupByTypes
 };

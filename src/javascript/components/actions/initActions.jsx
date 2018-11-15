@@ -32,7 +32,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: "label.contentManager.contentPreview.edit",
-        target: ["editPreviewBar:2.5", "contentTreeMenuActions:2.5", "tableActions:2", "tableActionsNoPreview:2", "contextualMenuContentAction:2.5"]
+        target: ["editPreviewBar:2.5", "contentTreeMenuActions:2.5", "tableActions:2", "contextualMenuContentAction:2.5"]
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
@@ -69,7 +69,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('tableMenuActions',  menuAction, {
         buttonIcon: <Menu/>,
         buttonLabel: "label.contentManager.contentPreview.edit",
-        target: ["tableActions:2.5", "tableActionsNoPreview:2.5"],
+        target: ["tableActions:2.5"],
         menu: "tableMenuActions"
     });
     actionsRegistry.add('contentTreeActions', menuAction, {

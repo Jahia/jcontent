@@ -11,7 +11,7 @@ import {DxContext} from "../DxContext";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {cmSetSelection, cmGoto } from "../redux/actions";
-import { allowDoubleClickNavigation, actionsTargetForList } from '../utils';
+import { allowDoubleClickNavigation } from '../utils';
 import {connect} from "react-redux";
 
 const columnData = [
@@ -389,7 +389,7 @@ class ContentListTable extends React.Component {
                                                             key={column.id} padding={'none'}
                                                             data-cm-role={'table-content-list-cell-' + column.id}
                                                         >
-                                                            <DisplayActions target={ actionsTargetForList(n.primaryNodeType) } context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
+                                                            <DisplayActions target={ "tableActions" } context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
                                                         </TableCell>;
                                                     } else {
                                                         return <TableCell

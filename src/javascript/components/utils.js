@@ -2,6 +2,9 @@ import * as _ from "lodash";
 import ellipsize from "ellipsize";
 
 function hasMixin(node, mixin) {
+    if (node.mixinTypes) {
+        return _.find(node.mixinTypes, t => t.name === mixin) !== undefined;
+    }
     let mixinTypesProperty = _.find(node.properties, property => property.name === 'jcr:mixinTypes');
     return (mixinTypesProperty != null && _.includes(mixinTypesProperty.values, mixin));
 }
@@ -17,6 +20,10 @@ function isDescendant(path, ancestorPath) {
 
 function isDescendantOrSelf(path, ancestorOrSelfPath) {
     return (path === ancestorOrSelfPath || isDescendant(path, ancestorOrSelfPath));
+}
+
+function isMarkedForDeletion(node) {
+    return hasMixin(node, "jmix:markedForDeletion");
 }
 
 function extractPaths(siteKey, path, mode) {
@@ -48,6 +55,7 @@ export {
     hasMixin,
     isDescendant,
     isDescendantOrSelf,
+    isMarkedForDeletion,
     extractPaths,
     ellipsizeText,
     hasProperty,

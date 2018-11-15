@@ -6,6 +6,7 @@ import 'moment-timezone';
 import Constants from '../constants';
 import {lodash as _} from "lodash";
 import {connect} from "react-redux";
+import {isMarkedForDeletion} from "../utils";
 
 //TODO Here as well as in ContentListTable unpublished status is not clear
 
@@ -28,7 +29,7 @@ const styles = theme => ({
         padding: theme.spacing.unit
     },
     publicationInfoUnpublished: {
-        borderLeft: "5px solid " + theme.palette.publicationStatus.markedForDeletion.main,
+        borderLeft: "5px solid " + "#cecece",
         padding: theme.spacing.unit
     }
 });
@@ -38,13 +39,15 @@ const component = ({ selection, t, classes, uiLang }) => {
         return null;
     }
     const selectedItem = selection[0];
+    // special handling for marked for deletion content
+    if (Constants.availablePublicationStatuses.MARKED_FOR_DELETION == selectedItem.publicationStatus || isMarkedForDeletion(selectedItem)) {
+        return <div className={classes.publicationInfoMarkedForDeletion}>
+            {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selectedItem.deletedBy})}
+            &nbsp;
+            <Moment format={"LLL"} locale={uiLang}>{selectedItem.deleted}</Moment>
+        </div>;
+    }
     switch (selectedItem.publicationStatus) {
-        case Constants.availablePublicationStatuses.MARKED_FOR_DELETION :
-            return <div className={classes.publicationInfoMarkedForDeletion}>
-                {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selectedItem.deletedBy})}
-                &nbsp;
-                <Moment format={"LLL"} locale={uiLang}>{selectedItem.deleted}</Moment>
-            </div>;
         case Constants.availablePublicationStatuses.MODIFIED :
             return <div className={classes.publicationInfoModified}>
                 {t('label.contentManager.contentPreview.modifiedBy', {userName: selectedItem.lastModifiedBy})}
@@ -58,8 +61,14 @@ const component = ({ selection, t, classes, uiLang }) => {
                 <Moment format={"LLL"} locale={uiLang}>{selectedItem.lastPublished}</Moment>
             </div>;
         case Constants.availablePublicationStatuses.NOT_PUBLISHED :
-            return <div className={classes.publicationInfoUnpublished}>
+            return <div className={classes.publicationInfoNotPublished}>
                 {t('label.contentManager.contentPreview.notPublished')}
+            </div>;
+        case Constants.availablePublicationStatuses.UNPUBLISHED :
+            return <div className={classes.publicationInfoUnpublished}>
+                {t('label.contentManager.contentPreview.unPublishedBy', {userName: selectedItem.lastModifiedBy})}
+                &nbsp;
+                <Moment format={"LLL"} locale={uiLang}>{selectedItem.lastModified}</Moment>
             </div>;
     }
     return null;

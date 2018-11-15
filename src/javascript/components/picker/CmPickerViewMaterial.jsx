@@ -15,6 +15,7 @@ import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
 import {lodash as _} from "lodash";
+import {isMarkedForDeletion} from "../utils";
 
 let styles = (theme) => ({
     root: {
@@ -29,10 +30,6 @@ let styles = (theme) => ({
         background: theme.palette.primary.main,
         color:  theme.palette.primary.contrastText +'!important'
     },
-    listItemSelectedDeletion: {
-        background: theme.palette.error.dark,
-        color: theme.palette.primary.contrastText +'!important',
-    },
     listItem: {
         fontFamily: '"Nunito sans", sans-serif',
         backgroundPosition: 'left 10px center',
@@ -43,16 +40,9 @@ let styles = (theme) => ({
         whiteSpace: 'nowrap',
         color: '#5E6565'
     },
-    listItemDeletion:{
-        fontFamily: '"Nunito sans", sans-serif',
-        backgroundPosition: 'left 10px center',
-        backgroundRepeat: 'no-repeat',
-        padding: '0 !important',
-        fontWeight: 300,
-        fontSize: '0.928rem',
-        whiteSpace: 'nowrap',
-        color: '#5E6565',
-        textDecoration: 'line-through',
+    listItemDeleted: {
+        color: '#91A3AE',
+        textDecoration: 'line-through'
     },
     listItemLabel: {
         userSelect: 'none',
@@ -159,14 +149,13 @@ class CmPickerViewMaterial extends React.Component {
             <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
                 {
                     sortedEntries.map((entry) => {
-                        let hasDeletionMixin = false;
-                        entry.node.mixinTypes.map((mixin) =>{
-                            if(mixin.displayName === 'markedForDeletion' || mixin.displayName === 'markedForDeletionRoot'){
-                                hasDeletionMixin = true;
-                            }
-                        });
-                        let selectionClass = hasDeletionMixin ? classes.listItemSelectedDeletion : classes.listItemSelected;
-                        let itemClass = hasDeletionMixin ? classes.listItemDeletion : classes.listItem;
+                        let itemClass = classes.listItem;
+                        if (isMarkedForDeletion(entry.node)) {
+                            itemClass = itemClass + ' ' + classes.listItemDeleted;
+                        }
+                        if (entry.selected) {
+                            itemClass = itemClass + ' ' + classes.listItemSelected;
+                        }
                         return <ListItem
                             onMouseEnter={() => this.hoverOn(entry.path)}
                             onClick={() => this.hoverOn(entry.path)}
@@ -174,7 +163,7 @@ class CmPickerViewMaterial extends React.Component {
                             onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                             key={entry.path}
                             divider={true}
-                            className={entry.selected ? (itemClass + ' ' + selectionClass) : itemClass}
+                            className={itemClass}
                             data-jrm-role={'picker-item'}
                         >
                             <div

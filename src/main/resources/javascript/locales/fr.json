@@ -13,7 +13,7 @@
             "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
             "publicationStatus": {
                 "notPublished": "Ce contenu n'a jamais été publié",
-                "unPublished": "dépublié par {{userName}} le {{timestamp}}",
+                "unPublished": "Dépublié par {{userName}} le {{timestamp}}",
                 "modified": "Modifié par {{userName}} le {{timestamp}}",
                 "published": "Publié par {{userName}} le {{timestamp}}",
                 "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}"
@@ -171,7 +171,8 @@
                 "deletePermanently": "Supprimer (définitivement)",
                 "nodeLockedBy": "Contenu verrouillé par {{username}}",
                 "publishAllInAllLanguages": "Publier tout sous <em>{{displayName}}</em> dans toutes les langues",
-                "collapse": "Réduire"
+                "collapse": "Réduire",
+                "unPublishedBy": "Dépublié par {{userName}} le"
             },
             "contentTypes": {
                 "error": {

@@ -177,6 +177,7 @@ class ContentData extends React.Component {
                             name: contentNode.displayName,
                             nodeName: contentNode.name,
                             primaryNodeType: contentNode.primaryNodeType.name,
+                            mixinTypes: contentNode.mixinTypes,
                             type: contentNode.primaryNodeType.displayName,
                             created: contentNode.created.value,
                             createdBy: contentNode.createdBy.value,

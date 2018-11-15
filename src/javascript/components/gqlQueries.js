@@ -140,9 +140,9 @@ const PickerItemsFragment = {
             lang: "String!"
         },
         gql: gql`
-        fragment PublicationStatus on JCRNode {
+        fragment MixinTypes on JCRNode {
              mixinTypes {
-                displayName(language: $lang)
+                name
             }
         }`
 
@@ -170,6 +170,9 @@ const nodeFields = gql`
             name
             displayName(language: $displayLanguage)
             icon
+        }
+        mixinTypes {
+            name
         }
         lockOwner: property(name: "jcr:lockOwner") {
             value

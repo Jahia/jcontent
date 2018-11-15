@@ -115,7 +115,7 @@ class PublicationStatusComponent extends Component {
 
     render() {
         const { classes, node, t, i18n } = this.props;
-        const publicationStatus = publicationStatusByName[node.publicationStatus];
+        const publicationStatus = publicationStatusByName.getStatus(node);
         const publicationStatusClass = publicationStatus.getContentClass(classes);
 
         return <React.Fragment>

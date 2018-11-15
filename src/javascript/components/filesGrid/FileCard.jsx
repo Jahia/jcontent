@@ -11,7 +11,7 @@ import 'moment-timezone';
 import {fileIcon, isBrowserImage} from './filesGridUtils';
 import {cmSetSelection, cmGoto } from "../redux/actions";
 import {connect} from "react-redux";
-import {ellipsizeText, allowDoubleClickNavigation} from "../utils";
+import {ellipsizeText, allowDoubleClickNavigation, isMarkedForDeletion} from "../utils";
 
 const styles = theme => ({
     card: {
@@ -177,6 +177,10 @@ const styles = theme => ({
         fontSize: '14px',
         marginBottom: theme.spacing.unit * 2,
     },
+    isDeleted: {
+        color: '#91A3AE',
+        textDecoration: 'line-through'
+    }
 });
 
 const PUBLICATION_INFO_WIDTH_LARGE = 400;
@@ -251,7 +255,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    {this.fileName(node.name, MAX_LENGTH_MEDIA_LABELS_LARGE, classes.typoBodyLarge, 6)}
+                    {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_LARGE, classes.typoBodyLarge, 6)}
                     <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.createdBy")}
                     </Typography>
@@ -296,7 +300,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    {this.fileName(node.name, MAX_LENGTH_MEDIA_LABELS_MEDIUM, classes.typoBody)}
+                    {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_MEDIUM, classes.typoBody)}
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.createdBy")}
                     </Typography>
@@ -336,7 +340,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    {this.fileName(node.name, MAX_LENGTH_MEDIA_LABELS_VERTICAL, classes.typoBody)}
+                    {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_VERTICAL, classes.typoBody)}
                 </CardContent>
             </div>
         </Card>;
@@ -404,7 +408,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    {this.fileName(node.name, MAX_LENGTH_MEDIA_LABELS_VERTICAL, classes.typoBody, 3)}
+                    {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_VERTICAL, classes.typoBody, 3)}
                     <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
                         {t("label.contentManager.filesGrid.createdBy")}
                     </Typography>
@@ -439,7 +443,7 @@ class FileCard extends Component {
                     <Typography classes={{caption: classes.typoCaption}} variant="caption">
                         {t("label.contentManager.filesGrid.name")}
                     </Typography>
-                    {this.fileName(node.name, MAX_LENGTH_FILES_LABELS_VERTICAL, classes.typoBody)}
+                    {this.fileName(node, MAX_LENGTH_FILES_LABELS_VERTICAL, classes.typoBody)}
                     {cardType !== 2 &&
                         <React.Fragment>
                             <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
@@ -459,12 +463,17 @@ class FileCard extends Component {
         </Card>;
     }
 
-    fileName(name, maxLength, bodyClass, cardType) {
+    fileName(node, maxLength, bodyClass, cardType) {
 
+        let name = node.name;
         let abbreviatableCardType = (cardType == null || this.props.cardType === cardType);
+        let bodyClassToUse = bodyClass; 
 
+        if (isMarkedForDeletion(node)) {
+            bodyClassToUse = bodyClassToUse + ' ' + this.props.classes.isDeleted; 
+        }
         return <Tooltip title={(abbreviatableCardType && name.length > maxLength) ? name : ""}>
-            <Typography classes={{body2: bodyClass}} variant={"body2"} className={this.props.classes.textTypo}>
+            <Typography classes={{body2: bodyClassToUse}} variant={"body2"} className={this.props.classes.textTypo}>
                 {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
             </Typography>
         </Tooltip>;

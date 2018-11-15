@@ -14,9 +14,9 @@
             "publicationStatus": {
                 "notPublished": "Dieser Content wurde nie veröffentlicht",
                 "unPublished": "Veröffentlichung wurde rückgängig gemacht von {{userName}} am {{timestamp}}",
-                "modified": "Geändert von {{userName}} am/um {{timestamp}}",
+                "modified": "Geändert von {{userName}} am {{timestamp}}",
                 "published": "Veröffentlicht von {{userName}} am {{timestamp}}",
-                "markedForDeletion": "Gelöscht von {{userName}} am/um {{timestamp}}"
+                "markedForDeletion": "Zur Löschung markiert von {{userName}} am {{timestamp}}"
             },
             "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
             "link": {
@@ -102,7 +102,7 @@
             "listColumns": {
                 "createdBy": "Erstellt von",
                 "name": "Name",
-                "lastModified": "Geändert am/um",
+                "lastModified": "Geändert am",
                 "type": "Typ"
             },
             "leftMenu": {
@@ -171,7 +171,8 @@
                 "deletePermanently": "Löschen (endgültig)",
                 "nodeLockedBy": "Content gesperrt von {{username}}",
                 "publishAllInAllLanguages": "Veröffentlichen alles unter <em>{{displayName}}</em> in allen Sprachen",
-                "collapse": "Verkleinern"
+                "collapse": "Verkleinern",
+                "unPublishedBy": "Veröffentlichung wurde rückgängig gemacht von {{userName}} am"
             },
             "contentTypes": {
                 "error": {

@@ -171,7 +171,8 @@
                 "deletePermanently": "Delete (permanently)",
                 "nodeLockedBy": "Content locked by {{username}}",
                 "publishAllInAllLanguages": "Publish all under <em>{{displayName}}</em> in all languages",
-                "collapse": "Collapse"
+                "collapse": "Collapse",
+                "unPublishedBy": "Unpublished by {{userName}} on"
             },
             "contentTypes": {
                 "error": {

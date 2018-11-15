@@ -11,7 +11,7 @@ import {DxContext} from "../DxContext";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {cmSetSelection, cmGoto } from "../redux/actions";
-import { allowDoubleClickNavigation } from '../utils';
+import { allowDoubleClickNavigation, isMarkedForDeletion } from '../utils';
 import {connect} from "react-redux";
 
 const columnData = [
@@ -183,17 +183,21 @@ const styles = (theme) => ({
             backgroundColor: '#ebeaea !important',
         }
     },
+    isDeleted: {
+        color: '#91A3AE !important',
+        textDecoration: 'line-through'
+    },
     selectedRow: {
         backgroundColor: theme.palette.primary.main +'!important',
-    },
-    selectedRowMarkedForDeletion: {
-        backgroundColor: theme.palette.error.dark +'!important',
     },
     selectedCell: {
         color: theme.palette.primary.contrastText + ' !important',
     },
     cell: {
         color: '#5E6565 !important'
+    },
+    cellDeleted: {
+        color: '#91A3AE !important'
     },
     textOverflow1 :{
         whiteSpace: 'nowrap',
@@ -333,13 +337,17 @@ class ContentListTable extends React.Component {
                                     let renderLock = this.renderLock(n);
                                     let icon = this.addIconSuffix(n.icon);
                                     let cellContentClasses = {root: isSelected ? classes.selectedCell : classes.cell};
+                                    let nameCellContentClasses = cellContentClasses;
+                                    let isDeleted = isMarkedForDeletion(n);
+                                    if (isDeleted) {
+                                        nameCellContentClasses = {root: (isSelected ? classes.selectedCell : classes.cellDeleted) + ' ' + classes.isDeleted};
+                                    }
                                     let contextualMenu = React.createRef();
-                                    let selectionColor = (n.publicationStatus === "MARKED_FOR_DELETION") ? classes.selectedRowMarkedForDeletion : classes.selectedRow;
                                     return (
                                         <TableRow
                                             hover={true}
                                             className={isSelected ? '' : ((key % 2 === 0) ? classes.row : classes.rowPair)}
-                                            classes={{root: classes.contentRow, selected: selectionColor}}
+                                            classes={{root: classes.contentRow, selected: classes.selectedRow}}
                                             data-cm-node-path={n.path}
                                             key={n.uuid}
                                             onClick={() => onRowSelected([n])}
@@ -366,7 +374,7 @@ class ContentListTable extends React.Component {
                                                         </TableCell>
                                                     } else if (column.id === 'name') {
                                                         return <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
-                                                            <Typography className={classes[column.id]} noWrap classes={cellContentClasses}>
+                                                            <Typography className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]} noWrap classes={nameCellContentClasses}>
                                                                 <img src={icon} className={classes.nodeTypeIcon}/>
                                                                 {n[column.id]}
                                                             </Typography>

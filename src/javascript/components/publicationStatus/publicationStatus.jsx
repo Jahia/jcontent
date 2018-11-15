@@ -1,6 +1,7 @@
 import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
+import { isMarkedForDeletion } from '../utils';
 
 class PublicationStatusUnpublished {
 
@@ -95,5 +96,11 @@ export const publicationStatusByName = {
     "NOT_PUBLISHED": new PublicationStatusNotPublished(),
     "PUBLISHED": new PublicationStatusPublished(),
     "MODIFIED": new PublicationStatusModified(),
-    "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion()
+    "MARKED_FOR_DELETION": new PublicationStatusMarkedForDeletion(),
+    getStatus: function(node) {
+        if (isMarkedForDeletion(node)) {
+            return this['MARKED_FOR_DELETION'];
+        }
+        return this[node.publicationStatus];
+    }
 };

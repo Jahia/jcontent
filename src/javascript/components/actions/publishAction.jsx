@@ -1,7 +1,7 @@
 import React from "react";
 import {PredefinedFragments} from "@jahia/apollo-dx";
 import {composeActions} from "@jahia/react-material";
-import {hasMixin} from "../utils.js";
+import {isMarkedForDeletion} from "../utils";
 import requirementsAction from "./requirementsAction";
 import {withNodeName} from "./withNodeName";
 import {map} from "rxjs/operators";
@@ -14,7 +14,7 @@ export default composeActions(requirementsAction, withNodeName, {
             enabled: (context) => context.node.pipe(map(node=>
                 (context.checkForUnpublication ?
                     node.aggregatedPublicationInfo.publicationStatus !== "NOT_PUBLISHED" :
-                    !hasMixin(node, "jmix:markedForDeletion")) &&
+                    !isMarkedForDeletion(node)) &&
                 (!context.checkIfLanguagesMoreThanOne || node.site.languages.length > 1)))
         });
         context.initLabelParams(context);

@@ -7,7 +7,7 @@
     <rule>
         <name>Content and Media Manager resources (inbound)</name>
         <note>Handles timestamps for the resources of the Content and Media Manager for the proper cache support</note>
-        <from>^/modules/content-media-manager/javascript/(.*).v.*.js$</from>
+        <from>^/modules/content-media-manager/javascript/(.*)\.v[0-9a-f]+\.js$</from>
         <to last="true">/modules/content-media-manager/javascript/$1.js</to>
     </rule>
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {withApollo} from 'react-apollo';
 import * as _ from "lodash";
 import {Add, Close} from "@material-ui/icons";
-import {withNotifications, DisplayAction, DisplayActions, buttonRenderer} from '@jahia/react-material';
+import {withNotifications, DisplayAction, DisplayActions, buttonRenderer, ContextualMenu} from '@jahia/react-material';
 import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
 
 import ContentListTable from "./list/ContentListTable";
@@ -266,6 +266,7 @@ class ContentLayout extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
         const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy);
+        let contextualMenu = React.createRef();
 
         return <DxContext.Consumer>{dxContext => {
             return <React.Fragment>
@@ -345,6 +346,7 @@ class ContentLayout extends React.Component {
                         </Drawer>
                     </Paper>
                     }
+                    <ContextualMenu actionKey={"contentTreeActions"} context={{path: path}} ref={contextualMenu}/>
                     <main
                         className={classNames(classes.content, classes[`content-left`], {
                             [classes.contentShift]: open,
@@ -354,6 +356,7 @@ class ContentLayout extends React.Component {
                             [classes.contentShift]: open_view,
                             [classes[`contentShift-right`]]: open_view,
                         })}
+                        onContextMenu={(event) => contextualMenu.current.open(event)}
                     >
                         <ContentData layoutQuery={layoutQuery} layoutQueryParams={layoutQueryParams}
                                      setRefetch={this.setContentRefetcher} orderBy={orderBy}>

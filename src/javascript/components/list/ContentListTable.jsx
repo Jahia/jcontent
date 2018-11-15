@@ -346,8 +346,10 @@ class ContentListTable extends React.Component {
                                             data-cm-role="table-content-list-row"
                                             onMouseEnter={(event) => this.onHoverEnter(event)}
                                             onMouseLeave={(event) => this.onHoverExit(event)}
-                                            onContextMenu={(event) => contextualMenu.current.open(event)}
-                                            >
+                                            onContextMenu={(event) => {
+                                                event.stopPropagation();
+                                                contextualMenu.current.open(event);
+                                            }}>
                                                 <ContextualMenu actionKey={"contextualMenuContent"} context={{path: n.path}} ref={contextualMenu}/>
 
                                                 <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">

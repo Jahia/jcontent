@@ -6,7 +6,7 @@ module.exports = (env, argv) => {
 
     let config = {
         entry: {
-            main: ['@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx')]
+            main: [ '@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx') ]
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
@@ -48,13 +48,17 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
-            //new BundleAnalyzerPlugin({analyzerMode: "static"}),
             new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/)
         ],
         mode: 'development'
     };
 
-    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
+    config.devtool = (argv.mode === 'production') ? 'source-map' : 'source-map';
+
+    if (argv.analyze) {
+        config.devtool = 'source-map';
+        config.plugins.push(new BundleAnalyzerPlugin());
+    }
 
     return config;
 };

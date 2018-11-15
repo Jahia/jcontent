@@ -17,6 +17,17 @@ module.exports = (env, argv) => {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', 'json']
         },
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    vendor: {
+                        name: 'vendor',
+                        chunks: 'all',
+                        test: /[\\/]node_modules[\\/]/
+                    }
+                }
+            }
+        },
         module: {
             rules: [
                 {
@@ -53,7 +64,7 @@ module.exports = (env, argv) => {
         mode: 'development'
     };
 
-    config.devtool = (argv.mode === 'production') ? 'source-map' : 'source-map';
+    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
 
     if (argv.analyze) {
         config.devtool = 'source-map';

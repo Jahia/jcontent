@@ -260,6 +260,13 @@ const searchContentQuery = gql`
                     totalCount
                 }
                 nodes {
+                    parents:ancestors(fieldFilter: {filters: {fieldName: "type", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
+                        type:property(name: "jcr:primaryType") {
+                            value
+                        }
+                        name
+                        path
+                    }
                     ...NodeFields
                 }
             }

@@ -10,7 +10,8 @@ const initialState = {
 export const uploadSeed = {
     id: '',
     status: uploadStatuses.QUEUED,
-    error: null
+    error: null,
+    path: null //will try to take globally set path if this is null
 };
 
 export const fileUpload = (state = initialState, action) => {
@@ -31,6 +32,10 @@ export const fileUpload = (state = initialState, action) => {
         case 'FILEUPLOAD_SET_UPLOADS': return {
             ...state,
             uploads: action.uploads
+        };
+        case "FILEUPLOAD_ADD_UPLOADS" : return {
+            ...state,
+            uploads: state.uploads.concat(action.uploads)
         };
         case 'FILEUPLOAD_UPDATE_UPLOAD': return {
             ...state,

@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {batchActions} from "redux-batched-actions/lib/index";
-import { fileAccepted, fileMatchSize, getDataTransferItems, isDragDataWithFiles, getMimeTypes } from './utils';
+import {fileAccepted, fileMatchSize, getDataTransferItems, isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
+import {setPanelState} from "./redux/actions";
+import {panelStates} from "./constatnts";
 
 
-class UploadWrapperComponent extends React.Component {
+class UploadTransformComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,12 +36,13 @@ class UploadWrapperComponent extends React.Component {
     generatePropertiesForComponent() {
         const props = { ...this.props };
         delete props.component;
+        delete props.uploadPath;
 
         if (this.state.isDragActive) {
             if (!props.style) {
                 props.style = {};
             }
-            props.style.filter = "blur(5px)";
+            props.style.filter = "blur(3px)";
         }
 
         return props;
@@ -76,15 +79,6 @@ class UploadWrapperComponent extends React.Component {
         evt.preventDefault();
         evt.persist();
 
-        // try {
-        //     // The file dialog on Chrome allows users to drag files from the dialog onto
-        //     // the dropzone, causing the browser the crash when the file dialog is closed.
-        //     // A drop effect of 'none' prevents the file from being dropped
-        //     evt.dataTransfer.dropEffect = this.isFileDialogActive ? 'none' : 'copy' // eslint-disable-line no-param-reassign
-        // } catch (err) {
-        //     // continue regardless of error
-        // }
-
         return false;
     }
 
@@ -92,13 +86,11 @@ class UploadWrapperComponent extends React.Component {
         evt.preventDefault();
         evt.persist();
 
-        // Only deactivate once the dropzone and all children have been left.
         this.dragTargets = this.dragTargets.filter(el => el !== evt.target && this.node.contains(el));
         if (this.dragTargets.length > 0) {
             return
         }
 
-        // Clear dragging files state
         this.setState({
             isDragActive: false,
             draggedFiles: []
@@ -106,20 +98,11 @@ class UploadWrapperComponent extends React.Component {
     }
 
     onDrop(evt) {
-        const {
-            multiple,
-            acceptedFileTypes
-        } = this.props;
-
+        const { acceptedFileTypes, maxSize, minSize, uploadPath } = this.props;
         const accept = getMimeTypes(acceptedFileTypes);
 
-        // Stop default browser behavior
         evt.preventDefault();
-
-        // Persist event for later usage
         evt.persist();
-
-        // Reset the counter along with the drag on a drop.
         this.dragTargets = [];
 
         // Reset drag state
@@ -140,54 +123,36 @@ class UploadWrapperComponent extends React.Component {
                 fileList.forEach(file => {
                     if (
                         fileAccepted(file, accept) &&
-                        fileMatchSize(file, this.props.maxSize, this.props.minSize)
+                        fileMatchSize(file, maxSize, minSize)
                     ) {
                         acceptedFiles.push(file)
                     } else {
                         rejectedFiles.push(file)
                     }
                 });
-
-                if (!multiple && acceptedFiles.length > 1) {
-                    // if not in multi mode add any extra accepted files to rejected.
-                    // This will allow end users to easily ignore a multi file drop in "single" mode.
-                    rejectedFiles.push(...acceptedFiles.splice(0))
-                }
-
-                // Update `acceptedFiles` and `rejectedFiles` state
-                // This will make children render functions receive the appropriate
-                // values
-                // this.setState({ acceptedFiles, rejectedFiles }, () => {
-                //     if (onDrop) {
-                //         onDrop.call(this, acceptedFiles, rejectedFiles, evt)
-                //     }
-                //
-                //     if (rejectedFiles.length > 0 && onDropRejected) {
-                //         onDropRejected.call(this, rejectedFiles, evt)
-                //     }
-                //
-                //     if (acceptedFiles.length > 0 && onDropAccepted) {
-                //         onDropAccepted.call(this, acceptedFiles, evt)
-                //     }
-                // })
-
-                console.log(acceptedFiles, rejectedFiles);
+                onFilesSelected(
+                    acceptedFiles,
+                    rejectedFiles,
+                    this.props.dispatchBatch,
+                    { path: uploadPath },
+                    [setPanelState(panelStates.VISIBLE)]
+                );
             })
         }
     }
 }
 
-UploadWrapperComponent.propTypes = {
+UploadTransformComponent.propTypes = {
     component: PropTypes.element.isRequired,
     acceptedFileTypes: PropTypes.array,
-    multiple: true
+    uploadPath: PropTypes.string.isRequired,
+    maxSize: PropTypes.number,
+    minSize: PropTypes.number
 };
 
-const mapStateToProps = (state, ownProps) => {
-    if (ownProps.statePartName) {
-        return state[ownProps.statePartName];
-    }
-    return state.fileUpload
+UploadTransformComponent.defaultProps = {
+    maxSize: Infinity,
+    minSize: 0
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -197,4 +162,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect()(UploadWrapperComponent);
+export default connect(null, mapDispatchToProps)(UploadTransformComponent);

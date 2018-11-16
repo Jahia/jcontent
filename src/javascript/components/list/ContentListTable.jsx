@@ -14,7 +14,7 @@ import {cmSetSelection, cmGoto } from '../redux/actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
-import UploadWrapperComponent from '../fileupload/UploadWrapperComponent';
+import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
@@ -313,7 +313,8 @@ class ContentListTable extends React.Component {
         const {hoveredRow} = this.state;
         const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
             onChangePage, onRowSelected, selection, totalCount, t, classes,
-            uiLang, handleSort, order, orderBy, setPath} = this.props;
+            uiLang, handleSort, order, orderBy, setPath, path} = this.props;
+        console.log(this.props.path);
         const emptyRows = pageSize - Math.min(pageSize, totalCount - page * pageSize);
 
         return (
@@ -328,7 +329,7 @@ class ContentListTable extends React.Component {
                     />
                     <DxContext.Consumer>
                         {dxContext => (
-                            <UploadWrapperComponent component={ TableBody }>
+                            <UploadWrapperComponent component={ TableBody } uploadPath={ path }>
                                 {contentNotFound ? <ContentNotFound classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;

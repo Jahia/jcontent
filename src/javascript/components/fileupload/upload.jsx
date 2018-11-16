@@ -15,7 +15,7 @@ import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import _ from 'lodash';
-import { onFilesSelected, getMimeTypes } from './utils';
+import { onFilesSelected, getMimeTypes, files } from './utils';
 
 const styles = theme => ({
     drawerContent: {
@@ -97,8 +97,6 @@ const DRAWER_ANIMATION_TIME = 300;
 class Upload extends React.Component {
     constructor(props) {
         super(props);
-        this.acceptedFiles = [];
-        this.rejectedFiles = [];
         this.client = null;
         this.onFilesSelected = this.onFilesSelected.bind(this);
         this.removeFile = this.removeFile.bind(this);
@@ -130,7 +128,7 @@ class Upload extends React.Component {
     }
 
     configureRendering() {
-        const {classes, uploads, acceptedFileTypes} = this.props;
+        const {classes, uploads, acceptedFileTypes, path} = this.props;
         if (uploads.length === 0) {
             return (
                 <UploadDropZone acceptedFileTypes={getMimeTypes(acceptedFileTypes)}
@@ -145,35 +143,22 @@ class Upload extends React.Component {
     }
 
     onFilesSelected(acceptedFiles, rejectedFiles) {
-        this.acceptedFiles = acceptedFiles;
-        this.rejectedFiles = rejectedFiles;
-        const uploads = this.acceptedFiles.map(file => {
-            let seed = {
-                ...uploadSeed
-            };
-            seed.id = file.preview;
-            return seed;
-        });
-        this.props.dispatchBatch([
-            setUploads(uploads),
-            takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
-        ]
-        );
+        onFilesSelected(acceptedFiles, rejectedFiles, this.props.dispatchBatch, { path: this.props.path });
     }
 
     showUploads() {
+        console.log(this.props.uploads);
         return this.props.uploads.map((upload, index) => (
             <UploadItem key={upload.id}
                 index={index}
                 file={this.acceptedFiles[index]}
-                path={this.props.path}
                 removeFile={this.removeFile}
                 updateUploadsStatus={this.updateUploadsStatus}/>
         ));
     }
 
     removeFile(index) {
-        this.acceptedFiles = this.acceptedFiles.filter((file, i) => {
+        files.acceptedFiles = files.acceptedFiles.filter((file, i) => {
             return i !== index;
         });
     }
@@ -242,7 +227,7 @@ class Upload extends React.Component {
         }
         if (status === uploadsStatuses.NOT_STARTED) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])])}>
+                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads() }>
                     <Close/>
                 </IconButton>
                 </div>
@@ -266,7 +251,7 @@ class Upload extends React.Component {
         }
         if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])])}>
+                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.closePanelAndClearUploads()}>
                     <Close/>
                 </IconButton>
                 </div>
@@ -274,12 +259,18 @@ class Upload extends React.Component {
         }
         if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])])}>
+                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
                     <Close/>
                 </IconButton>
                 </div>
             );
         }
+    }
+
+    closePanelAndClearUploads() {
+        files.acceptedFiles = [];
+        files.rejectedFiles = [];
+        this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]);
     }
 
     transitionDuration() {

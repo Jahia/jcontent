@@ -27,7 +27,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
 
         let obs = context.node.pipe(switchMap((node) => {
             let childNodeTypes = _.union(filterByBaseType( node.allowedChildNodeTypes, baseContentType),
-                    filterByBaseType(node.subTypes, baseContentType));
+                    filterByBaseType(node.allowedChildNodeTypes, baseContentType));
             let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
             let contributeTypesProperty = node.contributeTypes;
 

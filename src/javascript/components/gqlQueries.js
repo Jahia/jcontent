@@ -428,16 +428,10 @@ const ActionRequirementsFragments = {
         },
         applyFor: "requirements",
         gql: gql`fragment ProvideTypes on JCRNode {
-            allowedChildNodeTypes {
+            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
                 name
                 supertypes(fieldFilter: {filters: [{fieldName: "name", value: $baseChildNodeType}]}) {
-                  name
-                }
-            }
-            subTypes: allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
-                name
-                supertypes(fieldFilter: {filters: [{fieldName: "name", value: $baseChildNodeType}]}) {
-                  name
+                    name
                 }
             }
             contributeTypes: property(name: "j:contributeTypes") {

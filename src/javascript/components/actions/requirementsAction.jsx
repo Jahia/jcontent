@@ -23,7 +23,7 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
     init: (context) => {
         context.initRequirements = (options) => {
             let req = {...context, ...options};
-            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled} = req;
+            let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled, contentType} = req;
             let requirementQueryHandler = new ActionRequirementsQueryHandler(req);
             if (requirementQueryHandler.requirementsFragments.length > 0) {
                 let watchQuery = context.client.watchQuery({
@@ -45,6 +45,7 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
                         (_.isEmpty(requiredPermission) || node.hasPermission) &&
                         (_.isEmpty(showOnNodeTypes) || node.isNodeType) &&
                         (_.isEmpty(hideOnNodeTypes) || !node.isNotNodeType) &&
+                        (_.isEmpty(contentType) || node.allowedChildNodeTypes.length > 0) &&
                         (_.isEmpty(requireModuleInstalledOnSite) || _.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
                     )));
                 }

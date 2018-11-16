@@ -117,9 +117,6 @@ const styles = theme => ({
         display: 'flex',
         width: '100%'
     },
-    ButtonAction: {
-        margin: '0 !important'
-    },
     searchClear: {
         maxHeight: 25,
         minHeight: 25,
@@ -302,8 +299,7 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
-                                    {/*<PasteActionButton path={ path } buttonClass={ classes.ButtonAction }/>*/}
-                                    <DisplayAction actionKey={"createMenu"} context={{path: path}} className={classes.ButtonAction} render={buttonRenderer({},true)}/>
+                                    <DisplayActions target={"tableHeaderActions"} context={{path: path}} render={buttonRenderer({},true)}/>
                                 </React.Fragment>
                             }
                             {this.isBrowsing() &&

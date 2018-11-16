@@ -1,6 +1,7 @@
 import React from "react";
 import {actionsRegistry, menuAction} from "@jahia/react-material";
 import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen} from "@material-ui/icons";
+import {ContentPaste} from "mdi-material-ui";
 import Constants from "../constants";
 import createContentOfTypeAction from './createContentOfTypeAction'
 import createContentAction from './createContentAction'
@@ -56,11 +57,11 @@ function initActions(actionsRegistry) {
         buttonLabel: "label.contentManager.create.folder",
         target: ["createMenuActions:3", "contentTreeMenuActions:3"],
         contentType: "jnt:folder",
-        showOnNodeTypes: ["jnt:folder"]
     });
     actionsRegistry.add('fileUpload',  fileUploadAction, {
         buttonLabel: "label.contentManager.fileUpload.uploadButtonLabel",
         target: ["createMenuActions:4", "contentTreeMenuActions:4"],
+        contentType: "jnt:folder",
     });
     actionsRegistry.add('translate', {
         buttonIcon: <Edit/>,
@@ -171,9 +172,9 @@ function initActions(actionsRegistry) {
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('paste', pasteAction, {
-        buttonIcon: <Error/>,
+        buttonIcon: <ContentPaste/>,
         buttonLabel: "label.contentManager.contentPreview.paste",
-        target: ["contentTreeMenuActions:3.8", "copyPasteActions:3.8"],
+        target: ["contentTreeMenuActions:3.8", "copyPasteActions:3.8", "tableHeaderActions:1"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
@@ -206,6 +207,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('createMenu', menuWithRequirementsAction, {
         buttonIcon: <Add/>,
         buttonLabel: "label.contentManager.create.create",
+        target:["tableHeaderActions:10"],
         hideOnNodeTypes: ["jnt:page"],
         requiredPermission: "jcr:addChildNodes",
         menu: "createMenuActions"

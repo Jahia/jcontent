@@ -235,7 +235,7 @@ class FileCard extends Component {
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => contextualMenu.current.open(event)}
+            onContextMenu={(event) => { event.stopPropagation(); contextualMenu.current.open(event)}}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -279,7 +279,7 @@ class FileCard extends Component {
         return <Card
             className={this.generateCardClass(node, classes.cardMedium)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => contextualMenu.current.open(event)}
+            onContextMenu={(event) => { event.stopPropagation(); contextualMenu.current.open(event)}}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -317,7 +317,7 @@ class FileCard extends Component {
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => contextualMenu.current.open(event)}
+            onContextMenu={(event) => { event.stopPropagation(); contextualMenu.current.open(event)}}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -346,7 +346,7 @@ class FileCard extends Component {
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => contextualMenu.current.open(event)}
+            onContextMenu={(event) => { event.stopPropagation(); contextualMenu.current.open(event)}}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -388,7 +388,7 @@ class FileCard extends Component {
         return <Card
             className={this.generateCardClass(node, classes.card)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => contextualMenu.current.open(event)}
+            onContextMenu={(event) => { event.stopPropagation(); contextualMenu.current.open(event)}}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >
@@ -422,7 +422,7 @@ class FileCard extends Component {
         return <Card
             className={this.generateCardClass(node, classes.cardVertical)}
             classes={{root: classes.cardStyle}}
-            onContextMenu={(event) => contextualMenu.current.open(event)}
+            onContextMenu={(event) => { event.stopPropagation(); contextualMenu.current.open(event)}}
             // onContextMenu={(event) => {onContextualMenu({isOpen: true, event: event, menuId: "contextualMenuContentAction", ...node})}}
             onClick={() => this.props.onSelect([node])}
         >

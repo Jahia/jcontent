@@ -3,6 +3,8 @@ import requirementsAction from "./requirementsAction";
 import {cmSetMode, cmSetPath, cmOpenPaths, cmSetSelection} from "../redux/actions";
 import {reduxAction} from "./reduxAction";
 import Constants from "../constants";
+import {of} from "rxjs";
+import * as _ from "lodash";
 
 export default composeActions(requirementsAction, reduxAction(null,(dispatch) => ({
     setMode: (state) => dispatch(cmSetMode(state)),
@@ -11,7 +13,9 @@ export default composeActions(requirementsAction, reduxAction(null,(dispatch) =>
     setSelection: (state)=> dispatch(cmSetSelection(state)),
 })), {
     init: (context) => {
-      context.initRequirements();
+      context.initRequirements({
+          enabled: (context) => {return of(!_.isEmpty(context.locate))}
+      });
     },
     onClick: (context) => {
         let {setMode, setPath, setOpenPaths, setSelection} = context;

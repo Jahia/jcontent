@@ -19,7 +19,6 @@ import lockAction from './lockAction'
 import workflowDashboardAction from './workflowDashboardAction';
 import {routerAction} from "./routerAction";
 import sideMenuAction from "./sideMenuAction";
-import requirementsAction from './requirementsAction'
 import sideMenuListAction from "./sideMenuListAction";
 import openInEditModeAction from "./openInEditModeAction";
 import unlockAction from "./unlockAction";
@@ -214,19 +213,19 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
         target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5"],
-        showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
+        showOnNodeTypes: ["jnt:contentFolder", "jnt:content", "jnt:folder"],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
         target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5"],
-        showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
+        showOnNodeTypes: ["jnt:contentFolder", "jnt:content", "jnt:folder"],
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        target: ["contentTreeMenuActions:5", "tableMenuActions:5.5"],
-        showOnNodeTypes: ["jnt:contentFolder"],
+        target: ["contentTreeMenuActions:5", "tableMenuActions:5.5", "jnt:folder"],
+        showOnNodeTypes: ["jnt:contentFolder", "jnt:folder"],
     });
 
     actionsRegistry.add('contentLeftMenu', routerAction, {

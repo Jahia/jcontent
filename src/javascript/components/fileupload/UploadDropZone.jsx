@@ -18,6 +18,7 @@ const styles = theme => ({
     },
     dropZone: {
         width: "100%",
+        fontFamily: 'Nunito sans, sans-serif',
         textAlign: "center",
         color: "whitesmoke",
         border: "2px dashed transparent",

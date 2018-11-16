@@ -180,6 +180,10 @@
                 },
                 "any": "Tout contenu"
             },
+            "copyPaste": {
+                "success": "L'élément a été collé avec succès",
+                "error": "Une erreur s'est produite lors du collage de l'élément"
+            },
             "actions": {
                 "openInEditMode": "Ouvrir en mode édition",
                 "error": {

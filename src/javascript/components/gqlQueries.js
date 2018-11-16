@@ -433,14 +433,14 @@ const ActionRequirementsFragments = {
                 supertypes(fieldFilter: {filters: [{fieldName: "name", value: $baseChildNodeType}]}) {
                   name
                 }
-              }
-              subTypes: allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
+            }
+            subTypes: allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
                 name
                 supertypes(fieldFilter: {filters: [{fieldName: "name", value: $baseChildNodeType}]}) {
                   name
                 }
-              }
-              contributeTypes: property(name: "j:contributeTypes") {
+            }
+            contributeTypes: property(name: "j:contributeTypes") {
                 values
             }
         }`

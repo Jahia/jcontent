@@ -181,7 +181,8 @@
                 "any": "Any content"
             },
             "copyPaste": {
-                "success": "Item successfully pasted"
+                "success": "Item successfully pasted",
+                "error": "An error occurred when pasting the element"
             },
             "actions": {
                 "openInEditMode": "Open in edit mode",

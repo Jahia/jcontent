@@ -180,6 +180,10 @@
                 },
                 "any": "Jeglicher Content"
             },
+            "copyPaste": {
+                "success": "Element erfolgreich kopiert",
+                "error": "Beim Kopieren des Elements ist ein Fehler aufgetreten"
+            },
             "actions": {
                 "openInEditMode": "Im Bearbeitungsmodus öffnen",
                 "error": {

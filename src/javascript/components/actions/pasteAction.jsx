@@ -1,158 +1,121 @@
 import React from "react";
-import {translate} from "react-i18next";
 import * as _ from "lodash";
-import {withNotifications} from "@jahia/react-material/index";
 import Node from '../copyPaste/node';
 import { pasteNode, moveNode } from "../copyPaste/gqlMutations";
-import {Mutation} from 'react-apollo';
 import {refetchContentTreeAndListData} from '../refetches';
-import {connect} from "react-redux";
-import {clear, copy} from "../copyPaste/redux/actions";
-import { cmGoto, cmSetPath } from "../redux/actions";
-import { invokeModificationHook } from '../copyPaste/contentModificationHook';
+import {clear} from "../copyPaste/redux/actions";
 import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {reduxAction} from "./reduxAction";
+import {map} from "rxjs/operators";
+import { withNotificationContextAction } from "./withNotificationContextAction";
+import { withI18nAction } from "./withI18nAction";
 
-// class PasteAction extends React.Component {
-//
-//     render() {
-//
-//         let {children, baseContentType, context, t, labelKey, items, notificationContext,
-//             dispatch, currentlySelectedPath, ...rest} = this.props;
-//
-//         if (items.length === 0) {
-//             return null;
-//         }
-//
-//         const node = items[0];
-//         const allowedChildren = context.node.allowedChildNodeTypes;
-//
-//         if (!this.pasteAllowed(allowedChildren, baseContentType, node.primaryNodeType)) {
-//             return null;
-//         }
-//
-//         if (node.mutationToUse === Node.PASTE_MODES.MOVE) {
-//             return (
-//                 <Mutation
-//                     mutation={moveNode}>
-//                     {(moveNode) => {
-//                         return children({
-//                             ...rest,
-//                             labelKey: labelKey,
-//                             onClick: () => {
-//                                 dispatch(clear());
-//                                 //Change selection to target node incase current selection will not be valid anymore
-//                                 if (currentlySelectedPath.indexOf(node.path) !== -1) {
-//                                     invokeModificationHook([
-//                                         node.uuid, node.path, node.name, "delete", null
-//                                     ]);
-//                                     dispatch(cmSetPath(context.path));
-//                                     setTimeout(() => {
-//                                         moveNode({variables: {
-//                                                 pathOrId: node.path,
-//                                                 destParentPathOrId: context.path,
-//                                                 destName: node.displayName
-//                                             }}).then(() => {
-//                                             notificationContext.notify(
-//                                                 t("label.contentManager.copyPaste.success"),
-//                                                 ['closeButton']
-//                                             );
-//                                             refetchContentTreeAndListData();
-//                                         })
-//                                     }, 150);
-//                                 }
-//                                 else {
-//                                     moveNode({variables: {
-//                                             pathOrId: node.path,
-//                                             destParentPathOrId: context.path,
-//                                             destName: node.displayName
-//                                         }}).then(() => {
-//                                         notificationContext.notify(
-//                                             t("label.contentManager.copyPaste.success"),
-//                                             ['closeButton']
-//                                         );
-//                                         refetchContentTreeAndListData();
-//                                     })
-//                                 }
-//                             }
-//                         });
-//                     }}
-//                 </Mutation>
-//             )
-//         }
-//
-//         return (
-//             <Mutation
-//                 mutation={pasteNode}>
-//                 {(pasteNode) => {
-//                     return children({
-//                         ...rest,
-//                         labelKey: labelKey,
-//                         onClick: () => {
-//                             dispatch(clear());
-//                             pasteNode({variables: {
-//                                     pathOrId: node.path,
-//                                     destParentPathOrId: context.path,
-//                                     destName: node.displayName
-//                                 }}).then(() => {
-//                                     notificationContext.notify(
-//                                         t("label.contentManager.copyPaste.success"),
-//                                         ['closeButton']
-//                                     );
-//                                     refetchContentTreeAndListData();
-//                             })
-//                         }
-//                     });
-//                 }}
-//             </Mutation>
-//         )
-//     }
-//
-//     pasteAllowed(allowedTypes, baseChildType, pastedType) {
-//         if (baseChildType === pastedType) {
-//             return true;
-//         }
-//
-//         return allowedTypes.find((entry) => {
-//             if (entry.supertypes && entry.supertypes.find((e) => { return e.name === pastedType})) {
-//                 return true;
-//             }
-//             return entry.name === pastedType;
-//         });
-//
-//     }
-// }
-//
-// const mapStateToProps = (state, ownProps) => {
-//     return { ...state.copyPaste, currentlySelectedPath: state.path }
-// };
-//
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         dispatch: dispatch
-//     }
-// };
-//
-// PasteAction = _.flowRight(
-//     withNotifications(),
-//     translate(),
-//     connect(mapStateToProps)
-// )(PasteAction);
+function filterByBaseType(types, baseTypeName) {
+    return _.filter(types, type => {
+        let superTypes = _.map(type.supertypes, superType => superType.name);
+        return _.includes(superTypes, baseTypeName);
+    });
+}
 
-export default composeActions(requirementsAction, reduxAction(
+export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     (state) => ({...state.copyPaste, currentlySelectedPath: state.path}),
     (dispatch) => ({
-        clear: () => dispatch(clear()),
-        cmSetPath: (path) => dispatch(cmSetPath(path))
+        clear: () => dispatch(clear())
     })
 ), {
-    init: (context) => {
+    init: (context, props) => {
+        let baseContentType = 'jmix:editorialContent';
+        if (context.items.length > 0) {
+            const nodeToPaste = context.items[0];
+            if (nodeToPaste.primaryNodeType.name === 'jnt:file'
+                || nodeToPaste.primaryNodeType.name === 'jnt:folder'
+                || nodeToPaste.primaryNodeType.name === 'jnt:contentFolder') {
+                baseContentType = nodeToPaste.primaryNodeType.name;
+            }
+        }
         context.initRequirements({
-            requiredPermission: "jcr:addChildNodes",
+            requiredPermission: 'jcr:addChildNodes',
+            baseContentType: baseContentType,
+            enabled: context => {
+                return context.node.pipe(map(targetNode => {
+                    if (context.items.length === 0) {
+                        return false;
+                    }
+
+                    const primaryNodeTypeToPaste = context.items[0].primaryNodeType;
+                    let contributeTypesProperty = targetNode.contributeTypes;
+                    if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
+                        return contributeTypesProperty.values.indexOf(primaryNodeTypeToPaste.name) !== -1;
+                    } else {
+                        let childNodeTypes = _.union(filterByBaseType(targetNode.allowedChildNodeTypes, baseContentType),
+                            filterByBaseType(targetNode.subTypes, baseContentType));
+                        let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
+
+                        return childNodeTypeNames.indexOf(primaryNodeTypeToPaste.name) !== -1;
+                    }
+                }))
+            }
         });
     },
     onClick: (context) => {
-        context.clear();
+        const nodeToPaste = context.items[0];
+        if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {
+            context.client.mutate({
+                variables: {
+                    pathOrId: nodeToPaste.path,
+                    destParentPathOrId: context.path,
+                    destName: nodeToPaste.displayName
+                },
+                mutation: moveNode,
+                refetchQueries: [{
+                    query : context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables(),
+                }]
+            }).then(() => {
+                context.clear();
+                context.notificationContext.notify(
+                    context.t('label.contentManager.copyPaste.success'),
+                    ['closeButton']
+                );
+                refetchContentTreeAndListData();
+            }, error => {
+                console.error(error);
+                context.clear();
+                context.notificationContext.notify(
+                    context.t('label.contentManager.copyPaste.error'),
+                    ['closeButton']
+                );
+                refetchContentTreeAndListData();
+            });
+        } else {
+            context.client.mutate({
+                variables: {
+                    pathOrId: nodeToPaste.path,
+                    destParentPathOrId: context.path,
+                    destName: nodeToPaste.displayName
+                },
+                mutation: pasteNode,
+                refetchQueries: [{
+                    query : context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables(),
+                }]
+            }).then(() => {
+                context.clear();
+                context.notificationContext.notify(
+                    context.t('label.contentManager.copyPaste.success'),
+                    ['closeButton']
+                );
+                refetchContentTreeAndListData();
+            }, error => {
+                console.error(error);
+                context.clear();
+                context.notificationContext.notify(
+                    context.t('label.contentManager.copyPaste.error'),
+                    ['closeButton']
+                );
+                refetchContentTreeAndListData();
+            });
+        }
     }
 });

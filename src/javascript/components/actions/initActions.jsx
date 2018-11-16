@@ -14,6 +14,7 @@ import publishDeletionAction from './publishDeletionAction'
 import previewAction from './previewAction'
 import pasteAction from './pasteAction'
 import copyAction from './copyAction'
+import cutAction from './cutAction'
 import lockAction from './lockAction'
 import workflowDashboardAction from './workflowDashboardAction';
 import {routerAction} from "./routerAction";
@@ -166,44 +167,16 @@ function initActions(actionsRegistry) {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.copy",
         target: ["additionalPreviewMenu:3.8", "tableMenuActions:3.8", "contextualMenuContentAction:3.8", "contentTreeMenuActions:3.8"],
-        hideOnNodeTypes: ["jnt:page"],
-        showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
+        hideOnNodeTypes: ["jnt:page"]
     });
-    actionsRegistry.add('pasteFile', pasteAction, {
+    actionsRegistry.add('paste', pasteAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.paste",
         target: ["contentTreeMenuActions:3.8", "copyPasteActions:3.8"],
-        hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
-        baseContentType: "jnt:file"
+        hideOnNodeTypes: ["jnt:page"],
+        showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
-    // pasteFolder: {
-    //     priority: 3.9,
-    //     component: PasteAction,
-    //     buttonIcon: <Paste/>,
-    //     target: ["contextualMenuFilesAction", "contentTreeMenuActions", "copyPasteActions"],
-    //     requiredPermission: "jcr:addChildNodes",
-    //     labelKey: "label.contentManager.contentPreview.paste",
-    //     hideOnNodeTypes: ["jnt:page", "jnt:contentFolder"],
-    //     baseContentType: "jnt:folder"
-    // },
-    // pasteContentFolder: {
-    //     priority: 3.9,
-    //     component: PasteAction,
-    //     buttonIcon: <Paste/>,
-    //     target: ["contextualMenuFoldersAction", "contentTreeMenuActions", "copyPasteActions"],
-    //     requiredPermission: "jcr:addChildNodes",
-    //     labelKey: "label.contentManager.contentPreview.paste",
-    //     hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-    //     baseContentType: "jnt:contentFolder"
-    // },
-    actionsRegistry.add('pasteContentFolderContent', pasteAction, {
-        buttonIcon: <Error/>,
-        buttonLabel: "label.contentManager.contentPreview.paste",
-        target: ["contentTreeMenuActions:3.9", "copyPasteActions:3.9"],
-        hideOnNodeTypes: ["jnt:page", "jnt:folder"],
-        baseContentType: "jmix:editorialContent"
-    });
-    actionsRegistry.add('cut', copyAction, {
+    actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.cut",
         target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9"],
@@ -214,7 +187,8 @@ function initActions(actionsRegistry) {
         buttonIcon: <Delete/>,
         buttonLabel: "label.contentManager.contentPreview.delete",
         target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuContentAction:4"],
-        hideOnNodeTypes: ["jnt:page"]
+        hideOnNodeTypes: ["jnt:page"],
+        showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,

@@ -9,6 +9,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
         const siteContentPath = '/sites/' + context.dxContext.siteKey + '/contents';
         context.initRequirements({
             getDisplayableNodePath: true,
+            requiredPermission: "editModeAccess",
             enabled: context => {
                 return context.node.pipe(map(node => {
                     return !_.isEmpty(node.displayableNode) && node.displayableNode.path.indexOf(siteContentPath) === -1;

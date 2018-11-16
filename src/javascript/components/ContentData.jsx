@@ -13,7 +13,7 @@ import {translate} from "react-i18next";
 import {connect} from "react-redux";
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from "./redux/actions";
 import Constants from "./constants";
-import {extractPaths, isDescendantOrSelf} from "./utils";
+import {extractPaths, isDescendantOrSelf, groupByTypes} from "./utils";
 import { setModificationHook } from './copyPaste/contentModificationHook';
 
 const contentQueryHandlerByMode = mode => {
@@ -137,7 +137,7 @@ class ContentData extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy} = this.props;
+        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy, treeShown} = this.props;
         return <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={orderBy==='displayName'?'network-only':''}>
             {({loading, error, data, refetch}) => {
                 let queryHandler = contentQueryHandlerByMode(mode);
@@ -200,6 +200,10 @@ class ContentData extends React.Component {
                             height: (contentNode.width != null ? contentNode.height.value : '')
                         }
                     });
+
+                    if (!treeShown) {
+                        rows = groupByTypes(["jnt:page", "jnt:folder", "jnt:contentFolder"], rows);
+                    }
                 }
 
                 return <React.Fragment>

@@ -5,6 +5,9 @@ import {CM_PREVIEW_STATES, cmSetPreviewState} from "../redux/actions";
 import {reduxAction} from "./reduxAction";
 
 export default composeActions(requirementsAction, reduxAction((state) => ({selection: state.selection, previewState: state.previewState}),(dispatch) => ({setPreviewState: (state) => dispatch(cmSetPreviewState(state))})), {
+    init: (context) => {
+        context.initRequirements({hideOnNodeTypes:["jnt:page", "jnt:folder", "jnt:contentFolder"]});
+    },
     onClick: (context) => {
         let {previewState, setPreviewState, selection, force} = context;
         if (force !== undefined) {

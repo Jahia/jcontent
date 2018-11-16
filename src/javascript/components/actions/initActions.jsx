@@ -24,6 +24,7 @@ import sideMenuListAction from "./sideMenuListAction";
 import openInEditModeAction from "./openInEditModeAction";
 import unlockAction from "./unlockAction";
 import clearAllLocksAction from "./clearAllLocksAction";
+import menuWithRequirementsAction from './menuWithRequirementsAction';
 
 function initActions(actionsRegistry) {
     actionsRegistry.add('router', routerAction);
@@ -42,13 +43,13 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
         buttonLabel: "label.contentManager.create.contentFolder",
-        target: ["createMenuActions:3", "contentTreeMenuActions:3"],
+        target: ["createMenuActions:3", "contentTreeMenuActions:3", "tableMenuActions:2"],
         contentType: "jnt:contentFolder",
         showOnNodeTypes: ["jnt:contentFolder"]
     });
     actionsRegistry.add('createContent', createContentAction, {
         buttonLabel: "label.contentManager.create.content",
-        target: ["createMenuActions:3.1", "contentTreeMenuActions:3.1"],
+        target: ["createMenuActions:3.1", "contentTreeMenuActions:3.1", "tableMenuActions:3"],
         showOnNodeTypes: ["jnt:contentFolder"],
         baseContentType: Constants.contentType,
     });
@@ -82,7 +83,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publish', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: "label.contentManager.contentPreview.publish",
-        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuContentAction:5"],
+        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuContentAction:5", "tableMenuActions:1"],
         allSubtree: false,
         allLanguages: false,
         checkForUnpublication: false,
@@ -92,13 +93,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('advancedPublish', menuAction, {
         buttonIcon: <Menu/>,
         buttonLabel: "label.contentManager.contentPreview.advancedPublish",
-        target: ["contentTreeMenuActions:6"],
+        target: ["contentTreeMenuActions:6", "tableMenuActions:2.5"],
         menu: "advancedPublish",
     });
-    actionsRegistry.add('publishMenu',  menuAction, {
+    actionsRegistry.add('publishMenu',  menuWithRequirementsAction, {
         buttonIcon: <Menu/>,
         buttonLabel: "label.contentManager.contentPreview.publishMenu",
         target: ["editPreviewBar", "thumbnailPublishMenu", "tableMenuActions"],
+        hideOnNodeTypes: ["jnt:contentFolder", "jnt:page"],
         menu: "publishMenu",
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
@@ -166,7 +168,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.copy",
-        target: ["additionalPreviewMenu:3.8", "tableMenuActions:3.8", "contextualMenuContentAction:3.8", "contentTreeMenuActions:3.8"],
+        target: ["additionalPreviewMenu:3.8", "tableMenuActions:3.8", "contextualMenuContentAction:3.8", "contentTreeMenuActions:3.8", "tableMenuActions:3"],
         hideOnNodeTypes: ["jnt:page"]
     });
     actionsRegistry.add('paste', pasteAction, {
@@ -179,14 +181,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: "label.contentManager.contentPreview.cut",
-        target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9"],
+        target: ["additionalPreviewMenu:3.9", "tableMenuActions:3.9", "contextualMenuContentAction:3.9", "contentTreeMenuActions:3.9", "tableMenuActions:4"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: "label.contentManager.contentPreview.delete",
-        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuContentAction:4"],
+        target: ["contentTreeMenuActions:4", "tableMenuActions:4", "additionalPreviewMenu:4", "contextualMenuContentAction:4", "tableMenuActions:4.5"],
         hideOnNodeTypes: ["jnt:page"],
         showForPaths: ["\/sites\/.+?\/files\/*", "\/sites\/.+?\/contents\/*"]
     });
@@ -202,28 +204,28 @@ function initActions(actionsRegistry) {
         target: ["contentTreeMenuActions:4.1", "tableMenuActions:4.1", "additionalPreviewMenu:4.1", "contextualMenuContentAction:4.1"],
         hideOnNodeTypes: ["jnt:page"]
     });
-    actionsRegistry.add('createMenu', requirementsAction, menuAction, {
+    actionsRegistry.add('createMenu', menuWithRequirementsAction, {
         buttonIcon: <Add/>,
         buttonLabel: "label.contentManager.create.create",
         hideOnNodeTypes: ["jnt:page"],
-        init: (context) => context.initRequirements({requiredPermission: "jcr:addChildNodes"}),
+        requiredPermission: "jcr:addChildNodes",
         menu: "createMenuActions"
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ["contentTreeMenuActions:5", "previewFooterActions"],
+        target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ["contentTreeMenuActions:5", "previewFooterActions"],
+        target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5"],
         showOnNodeTypes: ["jnt:contentFolder", "jnt:content"],
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        target: ["contentTreeMenuActions:5"],
+        target: ["contentTreeMenuActions:5", "tableMenuActions:5.5"],
         showOnNodeTypes: ["jnt:contentFolder"],
     });
 
@@ -312,7 +314,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('openInEditMode', openInEditModeAction, {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
-        target: [ 'contentTreeMenuActions', 'contextualMenuContentAction' ],
+        target: [ 'contentTreeMenuActions', 'contextualMenuContentAction', "tableMenuActions:3" ],
     });
 
 }

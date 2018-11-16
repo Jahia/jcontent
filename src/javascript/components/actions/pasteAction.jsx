@@ -17,7 +17,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         clear: () => dispatch(clear())
     })
 ), {
-    init: (context, props) => {
+    init: (context) => {
         let contentType;
         if (context.items.length > 0) {
             const nodeToPaste = context.items[0];

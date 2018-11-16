@@ -36,6 +36,7 @@ const styles = theme => ({
         justifyContent: "flex-end"
     },
     headerText: {
+        fontFamily: 'Nunito sans, sans-serif',
         marginBottom: "15px",
         display: "flex",
         flex: 12,

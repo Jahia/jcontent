@@ -1,6 +1,6 @@
 import React from "react";
 import {actionsRegistry, menuAction} from "@jahia/react-material";
-import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen} from "@material-ui/icons";
+import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen, Autorenew} from "@material-ui/icons";
 import {ContentPaste} from "mdi-material-ui";
 import Constants from "../constants";
 import createContentOfTypeAction from './createContentOfTypeAction'
@@ -38,8 +38,8 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
-        buttonLabel: "label.contentManager.contentPreview.preview",
-        target: ["tableActions:1"]
+        buttonLabel: 'label.contentManager.contentPreview.preview',
+        target: ['tableActions:1', 'thumbnailActions:2']
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
         buttonLabel: "label.contentManager.create.contentFolder",
@@ -97,11 +97,11 @@ function initActions(actionsRegistry) {
         menu: "advancedPublish",
     });
     actionsRegistry.add('publishMenu',  menuWithRequirementsAction, {
-        buttonIcon: <Menu/>,
-        buttonLabel: "label.contentManager.contentPreview.publishMenu",
-        target: ["editPreviewBar", "thumbnailPublishMenu", "tableMenuActions"],
-        hideOnNodeTypes: ["jnt:contentFolder", "jnt:page"],
-        menu: "publishMenu",
+        buttonIcon: <Autorenew/>,
+        buttonLabel: 'label.contentManager.contentPreview.publishMenu',
+        target: ['editPreviewBar', 'thumbnailActions:1', 'tableMenuActions'],
+        hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
+        menu: 'publishMenu',
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
         buttonIcon: <Publish/>,

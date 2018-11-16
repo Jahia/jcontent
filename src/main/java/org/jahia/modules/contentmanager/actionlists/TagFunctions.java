@@ -89,7 +89,7 @@ public class TagFunctions {
             }
         }
 
-        return "['" + StringUtils.join(namespaces, "', '") + "']";
+        return namespaces.isEmpty() ? "[]" : "['" + StringUtils.join(namespaces, "', '") + "']";
     }
 
     @SuppressWarnings("unchecked")

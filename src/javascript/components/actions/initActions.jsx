@@ -230,11 +230,11 @@ function initActions(actionsRegistry) {
         target: ["contentTreeMenuActions:4.1", "tableMenuActions:4.1", "additionalPreviewMenu:4.1", "contextualMenuContentAction:4.1"],
         hideOnNodeTypes: ["jnt:page"]
     });
-    actionsRegistry.add('createMenu', requirementsAction, menuAction, {
+    actionsRegistry.add('createMenu', menuWithRequirementsAction, {
         buttonIcon: <Add/>,
         buttonLabel: "label.contentManager.create.create",
         hideOnNodeTypes: ["jnt:page"],
-        init: (context) => context.initRequirements({requiredPermission: "jcr:addChildNodes"}),
+        requiredPermission: "jcr:addChildNodes",
         menu: "createMenuActions"
     });
     actionsRegistry.add('lock', lockAction, {

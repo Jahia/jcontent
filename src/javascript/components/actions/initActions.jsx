@@ -61,7 +61,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('fileUpload',  fileUploadAction, {
         buttonLabel: "label.contentManager.fileUpload.uploadButtonLabel",
         target: ["createMenuActions:4", "contentTreeMenuActions:4"],
-        contentType: "jnt:folder",
+        contentType: "jnt:file",
     });
     actionsRegistry.add('translate', {
         buttonIcon: <Edit/>,

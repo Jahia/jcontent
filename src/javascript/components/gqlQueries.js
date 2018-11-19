@@ -531,6 +531,16 @@ const ActionRequirementsFragments = {
                 values
             }
         }`
+    },
+    retrieveParentContentRestriction: {
+        applyFor: "requirements",
+        gql: gql `fragment ParentContentRestriction on JCRNode {
+            ancestors(fieldFilter: {filters: {evaluation: NOT_EMPTY, fieldName: "contributeTypes"}}) {
+                contributeTypes : property(name: "j:contributeTypes", language: $language) {
+                    values
+                }
+            }
+        }`
     }
 };
 
@@ -584,6 +594,9 @@ class ActionRequirementsQueryHandler {
         }
         if(context.getLockInfo){
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveLockInfo);
+        }
+        if(context.getParentRestrictions){
+            this.requirementsFragments.push(ActionRequirementsFragments.retrieveParentContentRestriction);
         }
     }
 

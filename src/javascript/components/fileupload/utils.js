@@ -1,8 +1,9 @@
 import {uploadSeed} from "./redux/reducer";
-import {setUploads, takeFromQueue, addUploads } from "./redux/actions";
+import {takeFromQueue, addUploads } from "./redux/actions";
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from "./constatnts";
 import accepts from "attr-accept";
 import mimetypes from "mime-types";
+import randomUUID from 'uuid/v4';
 
 export const files = {
     acceptedFiles: [],
@@ -12,20 +13,12 @@ export const files = {
 export const onFilesSelected = (acceptedFiles, rejectedFiles, dispatchBatch, uploadInfo, additionalActions = []) => {
     files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
     files.rejectedFiles = files.rejectedFiles.concat(rejectedFiles);
-    const uploads = files.acceptedFiles.map((file) => {
+    const uploads = acceptedFiles.map((file) => {
         let seed = {
             ...uploadSeed
         };
 
-        //Files dragged from a folder don't have preview in chrome
-        // if (file.preview) {
-        //     seed.id = file.preview;
-        // }
-        // else {
-        //     //There still can be conflict but at least files with different size and same name will work ok
-        //     seed.id = file.name + file.size;
-        // }
-        seed.id = file.name + file.size;
+        seed.id = randomUUID();
 
         //Merge optional uploadInfo if custom property values need to be provided
         if (uploadInfo) {
@@ -36,7 +29,7 @@ export const onFilesSelected = (acceptedFiles, rejectedFiles, dispatchBatch, upl
         }
         return seed;
     });
-    console.log("Ups", uploads);
+
     dispatchBatch(additionalActions.concat([
         addUploads(uploads),
         takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)])

@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {batchActions} from "redux-batched-actions/lib/index";
-import {fileAccepted, fileMatchSize, getDataTransferItems, isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
+import {fileAccepted, fileMatchSize, getDataTransferItems,
+    isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
 import {setPanelState} from "./redux/actions";
 import {panelStates} from "./constatnts";
 

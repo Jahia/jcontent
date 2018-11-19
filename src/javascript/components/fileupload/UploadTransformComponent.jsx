@@ -38,6 +38,10 @@ class UploadTransformComponent extends React.Component {
         const props = { ...this.props };
         delete props.uploadTargetComponent;
         delete props.uploadPath;
+        delete props.uploadAcceptedFileTypes;
+        delete props.uploadMinSize;
+        delete props.uploadMaxSize;
+        delete props.uploadDispatchBatch;
 
         if (this.state.isDragActive) {
             if (!props.style) {
@@ -99,8 +103,8 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDrop(evt) {
-        const { acceptedFileTypes, maxSize, minSize, uploadPath } = this.props;
-        const accept = getMimeTypes(acceptedFileTypes);
+        const { uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath } = this.props;
+        const accept = getMimeTypes(uploadAcceptedFileTypes);
 
         evt.preventDefault();
         evt.persist();
@@ -124,7 +128,7 @@ class UploadTransformComponent extends React.Component {
                 fileList.forEach(file => {
                     if (
                         fileAccepted(file, accept) &&
-                        fileMatchSize(file, maxSize, minSize)
+                        fileMatchSize(file, uploadMaxSize, uploadMinSize)
                     ) {
                         acceptedFiles.push(file)
                     } else {
@@ -134,7 +138,7 @@ class UploadTransformComponent extends React.Component {
                 onFilesSelected(
                     acceptedFiles,
                     rejectedFiles,
-                    this.props.dispatchBatch,
+                    this.props.uploadDispatchBatch,
                     { path: uploadPath },
                     [setPanelState(panelStates.VISIBLE)]
                 );
@@ -144,22 +148,21 @@ class UploadTransformComponent extends React.Component {
 }
 
 UploadTransformComponent.propTypes = {
-    uploadTargetComponent: PropTypes.element.isRequired,
+    uploadTargetComponent: PropTypes.oneOfType([PropTypes.element.isRequired, PropTypes.func.isRequired]),
     uploadPath: PropTypes.string.isRequired,
-    acceptedFileTypes: PropTypes.array,
-    maxSize: PropTypes.number,
-    minSize: PropTypes.number
+    uploadAcceptedFileTypes: PropTypes.array,
+    uploadMaxSize: PropTypes.number,
+    uploadMinSize: PropTypes.number
 };
 
 UploadTransformComponent.defaultProps = {
-    maxSize: Infinity,
-    minSize: 0
+    uploadMaxSize: Infinity,
+    uploadMinSize: 0
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        dispatch: dispatch,
-        dispatchBatch: (actions) => dispatch(batchActions(actions))
+        uploadDispatchBatch: (actions) => dispatch(batchActions(actions))
     }
 };
 

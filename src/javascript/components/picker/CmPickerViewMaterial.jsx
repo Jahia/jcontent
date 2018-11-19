@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../utils';
 import {compose} from 'react-apollo';
+import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
 
 let styles = (theme) => ({
     root: {
@@ -154,7 +155,9 @@ class CmPickerViewMaterial extends React.Component {
                         if (entry.selected) {
                             itemClass = itemClass + ' ' + classes.listItemSelected;
                         }
-                        return <ListItem
+                        return <UploadWrapperComponent
+                            uploadTargetComponent={ListItem}
+                            uploadPath={entry.path}
                             key={entry.path}
                             divider
                             className={itemClass}
@@ -208,7 +211,7 @@ class CmPickerViewMaterial extends React.Component {
                                 {this.state.hover === entry.path && actionsRenderer(entry)}
                             </ListItemText>
                             }
-                        </ListItem>
+                        </UploadWrapperComponent>
                     })
                 }
             </List>

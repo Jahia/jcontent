@@ -214,20 +214,20 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5"],
-        showOnNodeTypes: ["jnt:contentFolder", "jnt:content", "jnt:folder"],
+        target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5", "contextualMenuContentAction"],
+        hideOnNodeTypes: ["jnt:page"],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5"],
-        showOnNodeTypes: ["jnt:contentFolder", "jnt:content", "jnt:folder"],
+        target: ["contentTreeMenuActions:5", "previewFooterActions", "tableMenuActions:5", "contextualMenuContentAction"],
+        hideOnNodeTypes: ["jnt:page"],
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        target: ["contentTreeMenuActions:5", "tableMenuActions:5.5", "jnt:folder"],
-        showOnNodeTypes: ["jnt:contentFolder", "jnt:folder"],
+        target: ["contentTreeMenuActions:5", "tableMenuActions:5.5"],
+        hideOnNodeTypes: ["jnt:page", "jnt:content"],
     });
 
     actionsRegistry.add('contentLeftMenu', routerAction, {

@@ -32,8 +32,8 @@ export default composeActions(requirementsAction, withDxContextAction, {
             let childNodeTypes = _.union(filterByBaseType( node.allowedChildNodeTypes, baseContentType),
                     filterByBaseType(node.allowedChildNodeTypes, baseContentType));
             let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
-            let contributeTypesProperty = node.contributeTypes;
-            let parentContributeRestrictions = node.ancestors !== null ? node.ancestors[0].contributeTypes.values : [];
+            let contributeTypesProperty = node.contributeTypes !== null ? node.contributeTypes : [];
+            let parentContributeRestrictions = node.ancestors !== null && !_.isEmpty(node.ancestors) ? node.ancestors[0].contributeTypes.values : [];
             if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                 return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
                     map((res) => {

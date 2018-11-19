@@ -129,16 +129,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Jahia-ActionList-Resources>/META-INF/actionlists/contentManagerLeftMenu.js::0,/META-INF/actionlists/siteSettings.js::1</Jahia-ActionList-Resources>
-                    </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.6</version>

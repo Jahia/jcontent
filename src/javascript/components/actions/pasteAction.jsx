@@ -26,6 +26,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         context.initRequirements({
             requiredPermission: 'jcr:addChildNodes',
             contentType: contentType,
+            getContributeTypesRestrictions: true,
             enabled: context => {
                 return context.node.pipe(map(targetNode => {
                     if (context.items.length === 0) {
@@ -33,7 +34,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     }
 
                     const primaryNodeTypeToPaste = context.items[0].primaryNodeType;
-                    let contributeTypesProperty = targetNode.contributeTypes;
+                    let contributeTypesProperty = targetNode.contributeTypes ||
+                        targetNode.ancestors && targetNode.ancestors[targetNode.ancestors.length-1].contributeTypes;
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                         return contributeTypesProperty.values.indexOf(primaryNodeTypeToPaste.name) !== -1;
                     }

@@ -26,14 +26,14 @@ export default composeActions(requirementsAction, withDxContextAction, {
         context.initRequirements({
             requiredPermission: "jcr:addChildNodes",
             baseContentType,
-            getParentRestrictions: true,
+            getContributeTypesRestrictions: true,
         });
         let obs = context.node.pipe(switchMap((node) => {
             let childNodeTypes = _.union(filterByBaseType( node.allowedChildNodeTypes, baseContentType),
                     filterByBaseType(node.allowedChildNodeTypes, baseContentType));
             let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
             let contributeTypesProperty = node.contributeTypes !== null ? node.contributeTypes : [];
-            let parentContributeRestrictions = node.ancestors !== null && !_.isEmpty(node.ancestors) ? node.ancestors[0].contributeTypes.values : [];
+            let parentContributeRestrictions = node.ancestors !== null && !_.isEmpty(node.ancestors) ? node.ancestors[node.ancestors.length-1].contributeTypes.values : [];
             if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                 return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
                     map((res) => {
@@ -42,7 +42,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
                         return _.map(contributionNodeTypes, nodeType => nodeType.name);
                     })
                 );
-            } if(parentContributeRestrictions && !_.isEmpty(parentContributeRestrictions)){
+            } else if(parentContributeRestrictions && !_.isEmpty(parentContributeRestrictions)){
                 return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: parentContributeRestrictions}})).pipe(
                     map((res) => {
                         let contributionNodeTypes = res.data.jcr.nodeTypesByNames;

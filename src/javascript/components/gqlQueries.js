@@ -434,9 +434,6 @@ const ActionRequirementsFragments = {
                     name
                 }
             }
-            contributeTypes: property(name: "j:contributeTypes") {
-                values
-            }
         }`
     },
     requiredChildNodeType: {
@@ -532,9 +529,12 @@ const ActionRequirementsFragments = {
             }
         }`
     },
-    retrieveParentContentRestriction: {
+    retrieveContentRestriction: {
         applyFor: "requirements",
-        gql: gql `fragment ParentContentRestriction on JCRNode {
+        gql: gql`fragment ContentRestriction on JCRNode {
+            contributeTypes: property(name: "j:contributeTypes") {
+                values
+            }
             ancestors(fieldFilter: {filters: {evaluation: NOT_EMPTY, fieldName: "contributeTypes"}}) {
                 contributeTypes : property(name: "j:contributeTypes", language: $language) {
                     values
@@ -595,8 +595,8 @@ class ActionRequirementsQueryHandler {
         if(context.getLockInfo){
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveLockInfo);
         }
-        if(context.getParentRestrictions){
-            this.requirementsFragments.push(ActionRequirementsFragments.retrieveParentContentRestriction);
+        if(context.getContributeTypesRestrictions){
+            this.requirementsFragments.push(ActionRequirementsFragments.retrieveContentRestriction);
         }
     }
 

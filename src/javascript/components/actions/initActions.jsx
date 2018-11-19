@@ -142,7 +142,16 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('unpublish', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: "label.contentManager.contentPreview.unpublish",
-        target: ["livePreviewBar", "publishMenu", "advancedPublish", "contextualMenuContentAction"],
+        target: ["publishMenu", "advancedPublish", "contextualMenuContentAction"],
+        hideOnNodeTypes: ["jnt:virtualsite"],
+        allSubTree: false,
+        allLanguages: false,
+        checkForUnpublication: true,
+        checkIfLanguagesMoreThanOne: false,
+    });
+    actionsRegistry.add('unpublishPreview', publishAction, {
+        buttonLabel: "label.contentManager.unpublish",
+        target: ["livePreviewBar"],
         hideOnNodeTypes: ["jnt:virtualsite"],
         allSubTree: false,
         allLanguages: false,

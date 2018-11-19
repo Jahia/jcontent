@@ -271,7 +271,7 @@ class ContentPreview extends React.Component {
                         </IconButton>
                     </Grid>
                     <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"livePreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer()}/>
+                        <DisplayActions target={"livePreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
                     </Grid>
 
                 </Grid>;

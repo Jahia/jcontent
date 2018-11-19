@@ -6,7 +6,9 @@ import {fileAccepted, fileMatchSize, getDataTransferItems,
     isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
 import {setPanelState} from "./redux/actions";
 import {panelStates} from "./constatnts";
-
+import { withApollo } from "react-apollo";
+import { UploadRequirementsQuery } from "./gqlQueries";
+import _ from "lodash";
 
 class UploadTransformComponent extends React.Component {
 
@@ -54,6 +56,8 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDragEnter(evt) {
+        const { client, uploadPath } = this.props;
+
         evt.preventDefault();
 
         // Count the dropzone and any children that are entered.
@@ -74,7 +78,15 @@ class UploadTransformComponent extends React.Component {
                     draggedFiles,
                     // Do not rely on files for the drag state. It doesn't work in Safari.
                     isDragActive: true
-                })
+                });
+
+                client.query({
+                    variables: {
+                        path: uploadPath,
+                        permission: "jcr:addChildNodes"
+                    },
+                    query: UploadRequirementsQuery
+                }).then(data => console.log(data)).catch(error => console.log(error));
             });
         }
     }
@@ -166,4 +178,6 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(null, mapDispatchToProps)(UploadTransformComponent);
+export default _.flowRight(
+    withApollo,
+    connect(null, mapDispatchToProps))(UploadTransformComponent);

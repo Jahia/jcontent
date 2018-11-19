@@ -1,7 +1,7 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {ApolloConsumer} from 'react-apollo';
+import {withApollo} from "react-apollo";
 import {uploadFile, uploadImage, removeFile} from './gqlMutations';
 import {Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField} from '@material-ui/core';
 import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
@@ -80,54 +80,38 @@ class UploadItem extends React.Component {
     render() {
         const {classes, file, t} = this.props;
         const open = Boolean(this.state.anchorEl);
-
-        console.log("P", this.props.path);
-
-        return (
-            <ApolloConsumer>{
-                client => {
-                    if (this.client === null) {
-                        this.client = client;
-                    }
-
-                    return (
-                        <ListItem className={classes.listItem}>
-                            { this.avatar() }
-                            <ListItemText className={classes.fileNameText} primary={this.state.userChosenName ? this.state.userChosenName : file.name}/>
-                            <ListItemText className={classes.fileNameText} primary={this.statusText()}/>
-                            <ListItemSecondaryAction>
-                                { this.secondaryActionsList() }
-                            </ListItemSecondaryAction>
-                            <Popover
-                                open={open}
-                                anchorEl={this.state.anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center'
-                                }}
-                                transformOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'center'
-                                }}
-                                onClose={this.hideChangeNamePopover}
-                            >
-                                <TextField
-                                    label={t('label.contentManager.fileUpload.newName')}
-                                    className={`${classes.textField} ${classes.renameField}`}
-                                    type="text"
-                                    name="newName"
-                                    margin="normal"
-                                    variant="outlined"
-                                    defaultValue={file.name}
-                                    onKeyUp={this.rename}
-                                />
-                            </Popover>
-                        </ListItem>
-                    );
-                }
-            }
-            </ApolloConsumer>
-        );
+        return <ListItem className={classes.listItem}>
+            { this.avatar() }
+            <ListItemText className={classes.fileNameText} primary={this.state.userChosenName ? this.state.userChosenName : file.name}/>
+            <ListItemText className={classes.fileNameText} primary={this.statusText()}/>
+            <ListItemSecondaryAction>
+                { this.secondaryActionsList() }
+            </ListItemSecondaryAction>
+            <Popover
+                open={open}
+                anchorEl={this.state.anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center'
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                }}
+                onClose={this.hideChangeNamePopover}
+            >
+                <TextField
+                    label={t('label.contentManager.fileUpload.newName')}
+                    className={`${classes.textField} ${classes.renameField}`}
+                    type="text"
+                    name="newName"
+                    margin="normal"
+                    variant="outlined"
+                    defaultValue={file.name}
+                    onKeyUp={this.rename}
+                />
+            </Popover>
+        </ListItem>
     }
 
     rename(e) {
@@ -189,7 +173,7 @@ class UploadItem extends React.Component {
     }
 
     uploadFile() {
-        const {file, path} = this.props;
+        const {file, path, client} = this.props;
         const variables = {
             fileHandle: file,
             nameInJCR: this.state.userChosenName ? this.state.userChosenName : file.name,
@@ -197,7 +181,7 @@ class UploadItem extends React.Component {
         };
 
         if (isImageFile(file.name)) {
-            return this.client.mutate({
+            return client.mutate({
                 mutation: uploadImage,
                 variables: {
                     ...variables,
@@ -206,7 +190,7 @@ class UploadItem extends React.Component {
             });
         }
 
-        return this.client.mutate({
+        return client.mutate({
             mutation: uploadFile,
             variables: {
                 ...variables,
@@ -361,14 +345,14 @@ class UploadItem extends React.Component {
 
     async replaceFile() {
         try {
-            const {file, path} = this.props;
-            await this.client.mutate({
+            const {file, path, client} = this.props;
+            await client.mutate({
                 mutation: removeFile,
                 variables: {
                     pathOrId: path + '/' + file.name
                 }
             });
-            console.log("DDD", this.props);
+            this.changeStatusToUploading()
         }
         catch (e) {
             console.error(e);
@@ -426,4 +410,5 @@ const mapDispatchToProps = dispatch => {
 export default _.flowRight(
     withStyles(styles),
     translate(),
+    withApollo,
     connect(mapStateToProps, mapDispatchToProps))(UploadItem);

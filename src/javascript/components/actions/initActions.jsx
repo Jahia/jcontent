@@ -83,7 +83,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publish', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: "label.contentManager.contentPreview.publish",
-        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuContentAction:5", "tableMenuActions:1"],
+        target: ["publishMenu:1", "contentTreeMenuActions:5", "contextualMenuContentAction:5"],
         allSubtree: false,
         allLanguages: false,
         checkForUnpublication: false,
@@ -93,7 +93,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('advancedPublish', menuAction, {
         buttonIcon: <Menu/>,
         buttonLabel: "label.contentManager.contentPreview.advancedPublish",
-        target: ["contentTreeMenuActions:6", "tableMenuActions:2.5"],
+        target: ["contentTreeMenuActions:6"],
         menu: "advancedPublish",
     });
     actionsRegistry.add('publishMenu',  menuWithRequirementsAction, {

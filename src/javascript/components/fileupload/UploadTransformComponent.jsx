@@ -22,7 +22,7 @@ class UploadTransformComponent extends React.Component {
     }
 
     render() {
-        const { component: Component } = this.props;
+        const { uploadTargetComponent: Component } = this.props;
         return (
             <Component
                 onDragOver={ this.onDragOver }
@@ -36,7 +36,7 @@ class UploadTransformComponent extends React.Component {
 
     generatePropertiesForComponent() {
         const props = { ...this.props };
-        delete props.component;
+        delete props.uploadTargetComponent;
         delete props.uploadPath;
 
         if (this.state.isDragActive) {
@@ -144,9 +144,9 @@ class UploadTransformComponent extends React.Component {
 }
 
 UploadTransformComponent.propTypes = {
-    component: PropTypes.element.isRequired,
-    acceptedFileTypes: PropTypes.array,
+    uploadTargetComponent: PropTypes.element.isRequired,
     uploadPath: PropTypes.string.isRequired,
+    acceptedFileTypes: PropTypes.array,
     maxSize: PropTypes.number,
     minSize: PropTypes.number
 };

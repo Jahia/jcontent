@@ -147,7 +147,6 @@ class Upload extends React.Component {
     }
 
     showUploads() {
-        console.log(this.props.uploads);
         return this.props.uploads.map((upload, index) => (
             <UploadItem key={upload.id}
                 index={index}

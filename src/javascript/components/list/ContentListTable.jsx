@@ -329,7 +329,7 @@ class ContentListTable extends React.Component {
                     />
                     <DxContext.Consumer>
                         {dxContext => (
-                            <UploadWrapperComponent component={ TableBody } uploadPath={ path }>
+                            <UploadWrapperComponent uploadTargetComponent={ TableBody } uploadPath={ path }>
                                 {contentNotFound ? <ContentNotFound classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;

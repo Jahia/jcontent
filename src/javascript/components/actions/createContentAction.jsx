@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {from, of} from "rxjs";
-import {map, switchMap} from "rxjs/operators";
+import {filter, first, map, switchMap} from "rxjs/operators";
 import {withDxContextAction} from "./withDxContextAction";
 
 function filterByBaseType(types, baseTypeName) {
@@ -36,6 +36,8 @@ export default composeActions(requirementsAction, withDxContextAction, {
             let parentContributeRestrictions = node.ancestors !== null && !_.isEmpty(node.ancestors) ? node.ancestors[node.ancestors.length-1].contributeTypes.values : [];
             if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                 return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
+                    filter(res => (res.data && res.data.jcr)),
+                    first(),
                     map((res) => {
                         let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
                         contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
@@ -44,6 +46,8 @@ export default composeActions(requirementsAction, withDxContextAction, {
                 );
             } else if(parentContributeRestrictions && !_.isEmpty(parentContributeRestrictions)){
                 return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: parentContributeRestrictions}})).pipe(
+                    filter(res => (res.data && res.data.jcr)),
+                    first(),
                     map((res) => {
                         let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
                         contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
@@ -61,6 +65,8 @@ export default composeActions(requirementsAction, withDxContextAction, {
                 })
             } else {
                 return from(context.client.watchQuery({query:ContentTypeNamesQuery, variables:{nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
+                    filter(res => (res.data && res.data.jcr)),
+                    first(),
                     map((res) => ({
                         actions: res.data.jcr.nodeTypesByNames.map(nodeType => ({
                             key:nodeType.name,

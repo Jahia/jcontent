@@ -5,7 +5,7 @@ import {setActiveWorkflowTaskRefetcher} from './../refetches';
 import {composeActions, withStylesAction} from "@jahia/react-material";
 import {withApolloAction} from "./withApolloAction";
 import {from} from "rxjs";
-import {filter, map} from 'rxjs/operators';
+import {filter, first, map} from 'rxjs/operators';
 
 const styles = theme => ({
     badge: {
@@ -34,6 +34,7 @@ let workflowDashboardAction = composeActions(withStylesAction(styles), withApoll
         context.badge = from(watchQuery)
             .pipe(
                 filter(res => (res.data && res.data.jcr)),
+                first(),
                 map(res => res.data.jcr.result > 0 ? <Badge classes={{root: classes.root, badge: classes.badge}} badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{res.data.jcr.result}</Typography>} color="primary">&nbsp;</Badge>: null)
             );
 

@@ -236,7 +236,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('clearAllLocks',  clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
         target: ["contentTreeMenuActions:5", "tableMenuActions:5.5"],
-        hideOnNodeTypes: ["jnt:page", "jnt:content"],
+        hideOnNodeTypes: ["jnt:page"],
     });
 
     actionsRegistry.add('contentLeftMenu', routerAction, {

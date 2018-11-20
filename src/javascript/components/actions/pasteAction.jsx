@@ -50,7 +50,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                                     }
                                     allowedNodeTypes.push(entry.name);
                                 });
-                                return allowedNodeTypes.indexOf(primaryNodeTypeToPaste) !== -1;
+                                return allowedNodeTypes.indexOf(primaryNodeTypeToPaste.name) !== -1;
                             })
                         );
                     } else {

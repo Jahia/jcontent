@@ -32,14 +32,20 @@ class UploadTransformComponent extends React.Component {
 
     render() {
         const { uploadTargetComponent: Component } = this.props;
+
+        if (this.state.allowDrop) {
+            return (
+                <Component
+                    onDragOver={ this.onDragOver }
+                    onDragEnter={ this.onDragEnter }
+                    onDragLeave={ this.onDragLeave }
+                    onDrop={ this.onDrop }
+                    { ...this.generatePropertiesForComponent() }
+                />
+            );
+        }
         return (
-            <Component
-                onDragOver={ this.onDragOver }
-                onDragEnter={ this.onDragEnter }
-                onDragLeave={ this.onDragLeave }
-                onDrop={ this.onDrop }
-                { ...this.generatePropertiesForComponent() }
-            />
+            <Component { ...this.generatePropertiesForComponent() } />
         );
     }
 
@@ -64,12 +70,6 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDragEnter(evt) {
-        if (!this.state.allowDrop) {
-            return;
-        }
-
-        const { client } = this.props;
-
         evt.preventDefault();
 
         // Count the dropzone and any children that are entered.
@@ -125,10 +125,6 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDrop(evt) {
-        if (!this.state.allowDrop) {
-            return;
-        }
-
         const { uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath } = this.props;
         const accept = getMimeTypes(uploadAcceptedFileTypes);
 

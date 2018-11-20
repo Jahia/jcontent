@@ -34,7 +34,6 @@ let workflowDashboardAction = composeActions(withStylesAction(styles), withApoll
         context.badge = from(watchQuery)
             .pipe(
                 filter(res => (res.data && res.data.jcr)),
-                first(),
                 map(res => res.data.jcr.result > 0 ? <Badge classes={{root: classes.root, badge: classes.badge}} badgeContent={<Typography data-cm-role={'workflow-active-task-count'}>{res.data.jcr.result}</Typography>} color="primary">&nbsp;</Badge>: null)
             );
 

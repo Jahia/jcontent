@@ -170,17 +170,20 @@ class UploadTransformComponent extends React.Component {
 
     async checkPermission() {
         try {
+            //No-cache policy because otherwise there seems to be a conflict and this query breaks other queries.
+            //The guess is that it is in the dataIdFromObject which generates too generic key genericJCRNode:id which
+            //is previously cached. But generating a custom, unique to query and node key didn't change the situation.
             const result = await this.props.client.query({
                 variables: {
                     path: this.props.uploadPath,
                     permittedNodeTypes: ACCEPTING_NODE_TYPES,
-                    permission: "jcr:addChildNodes"
+                    permission: "jcr:addChildNodes",
                 },
                 query: UploadRequirementsQuery,
-                fetchPolicy: "network-only"
+                fetchPolicy: "no-cache"
             });
-            // console.log(result.data.jcr.nodeByPath);
-            if (result.data.jcr.nodeByPath.hasPermission && result.data.jcr.nodeByPath.acceptsFiles) {
+
+            if (result.data.jcr.results.hasPermission && result.data.jcr.results.acceptsFiles) {
                 this.setState({
                     allowDrop: true
                 })

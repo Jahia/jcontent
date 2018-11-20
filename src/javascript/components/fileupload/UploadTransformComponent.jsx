@@ -10,17 +10,25 @@ import { withApollo } from "react-apollo";
 import { UploadRequirementsQuery } from "./gqlQueries";
 import _ from "lodash";
 
+const ACCEPTING_NODE_TYPES = ["jnt:folder"];
+
 class UploadTransformComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            allowDrop: false
+        };
         this.dragTargets = [];
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDrop = this.onDrop.bind(this);
 
+    }
+
+    componentDidMount() {
+        this.checkPermission();
     }
 
     render() {
@@ -56,7 +64,11 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDragEnter(evt) {
-        const { client, uploadPath } = this.props;
+        if (!this.state.allowDrop) {
+            return;
+        }
+
+        const { client } = this.props;
 
         evt.preventDefault();
 
@@ -79,14 +91,6 @@ class UploadTransformComponent extends React.Component {
                     // Do not rely on files for the drag state. It doesn't work in Safari.
                     isDragActive: true
                 });
-
-                client.query({
-                    variables: {
-                        path: uploadPath,
-                        permission: "jcr:addChildNodes"
-                    },
-                    query: UploadRequirementsQuery
-                }).then(data => console.log(data)).catch(error => console.log(error));
             });
         }
     }
@@ -155,6 +159,30 @@ class UploadTransformComponent extends React.Component {
                     [setPanelState(panelStates.VISIBLE)]
                 );
             })
+        }
+    }
+
+    async checkPermission() {
+        try {
+            const result = await this.props.client.query({
+                variables: {
+                    path: this.props.uploadPath,
+                    permittedNodeTypes: ACCEPTING_NODE_TYPES,
+                    permission: "jcr:addChildNodes"
+                },
+                query: UploadRequirementsQuery,
+                fetchPolicy: "network-only"
+            });
+            // console.log(result.data.jcr.nodeByPath);
+            if (result.data.jcr.nodeByPath.hasPermission && result.data.jcr.nodeByPath.acceptsFiles) {
+                this.setState({
+                    allowDrop: true
+                })
+            }
+        }
+        catch (e) {
+            // console.log(this.props.uploadPath);
+            console.error(e);
         }
     }
 }

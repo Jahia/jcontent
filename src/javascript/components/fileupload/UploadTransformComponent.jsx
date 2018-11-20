@@ -125,6 +125,10 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDrop(evt) {
+        if (!this.state.allowDrop) {
+            return;
+        }
+
         const { uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath } = this.props;
         const accept = getMimeTypes(uploadAcceptedFileTypes);
 

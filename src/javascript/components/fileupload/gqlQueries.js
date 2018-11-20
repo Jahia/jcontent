@@ -4,7 +4,8 @@ const UploadRequirementsQuery = gql`
     query UploadRequirementsQuery($path:String!, $permission:String!, $permittedNodeTypes:[String!]!) {
         jcr {
             results: nodeByPath(path:$path) {
-                id: uuid
+                uuid
+                workspace
                 hasPermission(permissionName: $permission)
                 acceptsFiles: isNodeType(type:{multi:ANY, types:$permittedNodeTypes})
             }

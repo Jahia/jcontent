@@ -535,9 +535,9 @@ const ActionRequirementsFragments = {
             contributeTypes: property(name: "j:contributeTypes") {
                 values
             }
-            ancestors(fieldFilter: {filters: {evaluation: NOT_EMPTY, fieldName: "contributeTypes.values"}}) {
+            ancestors(fieldFilter: {filters: {evaluation: NOT_EMPTY, fieldName: "contributeTypes"}}) {
                 contributeTypes : property(name: "j:contributeTypes", language: $language) {
-                    values: values
+                    values
                 }
             }
         }`

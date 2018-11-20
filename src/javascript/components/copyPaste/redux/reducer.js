@@ -3,14 +3,13 @@ const initialState = {
 };
 
 export const copyPaste = (state = initialState, action) => {
-    switch(action.type) {
-        case "COPYPASTE_COPY" : return {
+    switch (action.type) {
+        case 'COPYPASTE_COPY': return {
             items: action.items
         };
-        case "COPYPASTE_CLEAR" : return {
+        case 'COPYPASTE_CLEAR': return {
             items: []
         };
-        default : return state;
+        default: return state;
     }
 };
-

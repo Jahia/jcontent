@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 const uploadFile = gql`mutation uploadImage($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!) {
     jcr {
@@ -37,4 +37,4 @@ const removeFile = gql`mutation removeFile($pathOrId: String!) {
     }
 }`;
 
-export { uploadFile, uploadImage, removeFile }
+export {uploadFile, uploadImage, removeFile};

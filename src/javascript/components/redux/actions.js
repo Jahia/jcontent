@@ -5,34 +5,34 @@ const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
 
-const CM_PREVIEW_STATES = {"HIDE": 0, "SHOW": 1};
+const CM_PREVIEW_STATES = {HIDE: 0, SHOW: 1};
 
 function setUiLang(uiLang) {
     return {
         type: CM_SET_UILANGUAGE,
         uiLang
-    }
+    };
 }
 
 function cmSetSelection(selection) {
     return {
         type: CM_SET_SELECTION,
         selection
-    }
+    };
 }
 
 function cmOpenPaths(paths) {
     return {
         type: CM_SET_OPEN_PATHS,
         open: paths
-    }
+    };
 }
 
 function cmClosePaths(paths) {
     return {
         type: CM_SET_OPEN_PATHS,
         close: paths
-    }
+    };
 }
 
 function cmGoto(data) {
@@ -63,28 +63,28 @@ function cmSetPreviewMode(mode) {
     return {
         type: CM_SET_PREVIEW,
         previewMode: mode
-    }
+    };
 }
 
 function cmSetPreviewModes(modes) {
     return {
         type: CM_SET_PREVIEW,
         previewModes: modes
-    }
+    };
 }
 
 function cmSetPreviewState(state) {
     return {
         type: CM_SET_PREVIEW,
         previewState: state
-    }
+    };
 }
 
 function cmSetSearchMode(searchMode) {
     return {
         type: CM_SET_SEARCH_MODE,
         searchMode: searchMode
-    }
+    };
 }
 
 export {
@@ -108,5 +108,5 @@ export {
     cmOpenPaths,
     cmClosePaths,
     cmSetPreviewState,
-    cmSetSearchMode,
+    cmSetSearchMode
 };

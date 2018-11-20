@@ -23,6 +23,6 @@ export default class Node {
 Node.PASTE_MODES = {};
 
 Node.PASTE_MODES = {
-    "COPY" : "COPY",
-    "MOVE" : "MOVE"
+    COPY: 'COPY',
+    MOVE: 'MOVE'
 };

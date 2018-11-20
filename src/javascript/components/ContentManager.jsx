@@ -12,7 +12,7 @@ import CMLeftNavigation from "./leftMenu/CMLeftNavigation";
 import * as _ from "lodash";
 import {DxContext} from "./DxContext";
 import {ContentLayout} from "./ContentLayout";
-import {IFrameLayout} from "./IFrameLayout";
+import IFrameLayout from "./IFrameLayout";
 import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
 import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
@@ -44,20 +44,20 @@ class ContentManager extends React.Component {
         };
     }
 
-    getStore = (dxContext, t) => {
+    getStore(dxContext, t) {
         if (!this.store) {
             this.store = getStore(dxContext, this.getHistory(dxContext, t));
         }
         return this.store;
     };
 
-    getHistory = (dxContext, t) => {
+    getHistory(dxContext, t) {
         if (!this.history) {
             this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
             if (window.top !== window) {
-                this.history.listen((location, action) => {
+                this.history.listen((location) => {
                     const title = t("label.contentManager.appTitle", {path: location.pathname});
-                    // const title = 'title';
+                    // Const title = 'title';
                     window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
                     window.parent.document.title = title;
                 });
@@ -67,7 +67,7 @@ class ContentManager extends React.Component {
     };
 
     // !!this method should never be called but is necessary until BACKLOG-8369 fixed!!
-    forceCMUpdate = () => {
+    forceCMUpdate() {
         console.warn("update application, this should not happen ..");
         this.forceUpdate();
     };
@@ -100,21 +100,21 @@ class ContentManager extends React.Component {
                                             <ComponentRendererProvider>
                                                 <ConnectedRouter history={this.getHistory(dxContext, t)} >
                                                     <Route path="/:siteKey/:lang" render={props => {
-                                                        dxContext["lang"] = props.match.params.lang;
+                                                        dxContext.lang = props.match.params.lang;
                                                         return <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
-                                                            <Route path={`${props.match.url}/browse`} render={props =>
-                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["contents"], contentTreeConfigs["pages"]]}/>
+                                                            <Route path={`${props.match.url}/browse`} render={() =>
+                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs.contents, contentTreeConfigs.pages]}/>
                                                             }/>
-                                                            <Route path={`${props.match.url}/browse-files`} render={props =>
-                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs["files"]]}/>
+                                                            <Route path={`${props.match.url}/browse-files`} render={() =>
+                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs.files]}/>
                                                             }/>
-                                                            <Route path={`${props.match.url}/search`} render={props =>
+                                                            <Route path={`${props.match.url}/search`} render={() =>
                                                                 <ContentLayout/>
                                                             }/>
-                                                            <Route path={`${props.match.url}/sql2Search`} render={props =>
+                                                            <Route path={`${props.match.url}/sql2Search`} render={() =>
                                                                 <ContentLayout/>
                                                             }/>
-                                                            <Route path={`${props.match.url}/apps`} render={props =>
+                                                            <Route path={`${props.match.url}/apps`} render={() =>
                                                                 <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
                                                             }/>
                                                         </ManagerLayout>;

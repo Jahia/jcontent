@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import {
     withStyles,
     Grid
 } from '@material-ui/core';
-import {compose} from "react-apollo/index";
-import connect from "react-redux/es/connect/connect";
-import {drawerWidth} from "./leftMenu/CMLeftNavigation";
+import {compose} from 'react-apollo';
+import {connect} from 'react-redux';
+import {drawerWidth} from './leftMenu/CMLeftNavigation';
 
 const styles = theme => ({
     root: {
@@ -27,48 +27,43 @@ const styles = theme => ({
 });
 
 class Main extends React.Component {
-
     render() {
-
         const {children, leftSide, classes, mode} = this.props;
 
-        return <div className={classes.root}>
-            {leftSide}
-            <div className={classes.content + " " + (mode === "apps" ? classes.openDrawer : "")}>
-                {children}
+        return (
+            <div className={classes.root}>
+                {leftSide}
+                <div className={classes.content + ' ' + (mode === 'apps' ? classes.openDrawer : '')}>
+                    {children}
+                </div>
             </div>
-        </div>;
+        );
     }
 }
 
 class ManagerLayout extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-
         let {leftSide, children, mode} = this.props;
 
-        return <Grid container spacing={0}>
-            <Grid item xs={12}>
-                <Main leftSide={leftSide} mode={mode}>
-                    {children}
-                </Main>
+        return (
+            <Grid container spacing={0}>
+                <Grid item xs={12}>
+                    <Main leftSide={leftSide} mode={mode}>
+                        {children}
+                    </Main>
+                </Grid>
             </Grid>
-        </Grid>;
+        );
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     mode: state.mode
 });
 
-Main = compose(
+compose(
     connect(mapStateToProps, null),
     withStyles(styles)
 )(Main);
-
 
 export default ManagerLayout;

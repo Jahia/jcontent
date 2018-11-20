@@ -1,26 +1,25 @@
-import React from "react";
-import * as _ from "lodash";
+import * as _ from 'lodash';
 import Node from '../copyPaste/node';
-import { pasteMutations } from "../gqlMutations";
+import {pasteMutations} from '../gqlMutations';
 import {refetchContentTreeAndListData} from '../refetches';
-import {clear} from "../copyPaste/redux/actions";
-import {composeActions} from "@jahia/react-material";
-import requirementsAction from "./requirementsAction";
-import {reduxAction} from "./reduxAction";
-import {filter, map, switchMap} from "rxjs/operators";
-import { withNotificationContextAction } from "./withNotificationContextAction";
-import { withI18nAction } from "./withI18nAction";
-import {ContentTypesQuery} from "../gqlQueries";
+import {clear} from '../copyPaste/redux/actions';
+import {composeActions} from '@jahia/react-material';
+import requirementsAction from './requirementsAction';
+import {reduxAction} from './reduxAction';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {withNotificationContextAction} from './withNotificationContextAction';
+import {withI18nAction} from './withI18nAction';
+import {ContentTypesQuery} from '../gqlQueries';
 import {from, of} from 'rxjs';
 import {first} from 'rxjs/operators';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
-    (state) => ({...state.copyPaste, currentlySelectedPath: state.path}),
-    (dispatch) => ({
+    state => ({...state.copyPaste, currentlySelectedPath: state.path}),
+    dispatch => ({
         clear: () => dispatch(clear())
     })
 ), {
-    init: (context) => {
+    init: context => {
         let contentType;
         if (context.items.length > 0) {
             const nodeToPaste = context.items[0];
@@ -40,7 +39,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     let contributeTypesProperty = targetNode.contributeTypes ||
                                                     targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes;
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
-                        // contribute type is not empty so we need to execute a query to know the types that are allowed here
+                        // Contribute type is not empty so we need to execute a query to know the types that are allowed here
                         return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
                             filter(res => (res.data)),
                             first(),
@@ -49,21 +48,22 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                                 let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
                                 _.each(contributionNodeTypes, entry => {
                                     if (entry.supertypes && !_.isEmpty(entry.supertypes)) {
-                                        allowedNodeTypes = _.union(allowedNodeTypes, _.map(entry.supertypes, subEntry => { return subEntry.name }));
+                                        allowedNodeTypes = _.union(allowedNodeTypes, _.map(entry.supertypes, subEntry => {
+                                            return subEntry.name;
+                                        }));
                                     }
                                     allowedNodeTypes.push(entry.name);
                                 });
                                 return allowedNodeTypes.indexOf(primaryNodeTypeToPaste.name) !== -1;
                             })
                         );
-                    } else {
-                        return of(true);
                     }
-                }))
+                    return of(true);
+                }));
             }
         });
     },
-    onClick: (context) => {
+    onClick: context => {
         const nodeToPaste = context.items[0];
         if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {
             context.client.mutate({
@@ -74,8 +74,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 },
                 mutation: pasteMutations.moveNode,
                 refetchQueries: [{
-                    query : context.requirementQueryHandler.getQuery(),
-                    variables: context.requirementQueryHandler.getVariables(),
+                    query: context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables()
                 }]
             }).then(() => {
                 context.clear();
@@ -102,8 +102,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 },
                 mutation: pasteMutations.pasteNode,
                 refetchQueries: [{
-                    query : context.requirementQueryHandler.getQuery(),
-                    variables: context.requirementQueryHandler.getVariables(),
+                    query: context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables()
                 }]
             }).then(() => {
                 context.clear();

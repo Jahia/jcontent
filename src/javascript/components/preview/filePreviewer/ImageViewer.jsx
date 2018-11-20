@@ -6,9 +6,10 @@ import {translate} from "react-i18next";
 import {IconButton, Paper, CardMedia} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
+import {compose} from 'react-apollo';
 
-const styles = theme => ({
+const styles = () => ({
     root: {},
     controls: {
         background: 'transparent'
@@ -39,8 +40,7 @@ const styles = theme => ({
 });
 const ImageControls = styled.div`
 `;
-const ImagePreviewContainer = styled.div`
-`;
+
 class ImageViewer extends React.Component {
     constructor(props) {
         super(props);
@@ -55,8 +55,8 @@ class ImageViewer extends React.Component {
         };
     }
 
-    handleActiveControl = (control, value) => {
-        //@TODO implement crop and resizing features
+    handleActiveControl(control, value) {
+        // @TODO implement crop and resizing features
         this.setState((prevState)=> {
             let {controls} = prevState;
             for (let i in controls) {
@@ -66,7 +66,7 @@ class ImageViewer extends React.Component {
         });
     };
 
-    rotateImage = (direction) => {
+    rotateImage(direction) {
         this.setState((prevState)=> {
             let {angle} = prevState;
             switch (direction) {
@@ -76,6 +76,8 @@ class ImageViewer extends React.Component {
                 case 'right':
                     angle += 90;
                     break;
+                default:
+                    break;
             }
             return {
                 angle: angle
@@ -83,26 +85,26 @@ class ImageViewer extends React.Component {
         });
     };
 
-    renderImageControls = () => {
+    renderImageControls() {
         let {elementId, classes} = this.props;
         const element = document.getElementById(elementId);
         if (element) {
             const controls = <ImageControls>
                 <Paper className={classes.controls} elevation={0}>
                     <IconButton className={classes.icon} onClick={()=> {this.handleActiveControl('resizeActive', !this.state.controls.resizeActive)}}>
-                        <FontAwesomeIcon icon={"expand"} size={"xs"}/>
+                        <FontAwesomeIcon icon="expand" size="xs"/>
                     </IconButton>
                     <div className={classes.iconLabel}>Resize</div>
                     <IconButton className={classes.icon} onClick={()=> {this.rotateImage('left')}}>
-                        <FontAwesomeIcon icon={"undo-alt"} size={"xs"}/>
+                        <FontAwesomeIcon icon="undo-alt" size="xs"/>
                     </IconButton>
                     <div className={classes.iconLabel}>Rotate left</div>
                     <IconButton className={classes.icon} onClick={()=> {this.rotateImage('right')}}>
-                        <FontAwesomeIcon icon={"redo-alt"} size={"xs"}/>
+                        <FontAwesomeIcon icon="redo-alt" size="xs"/>
                     </IconButton>
                     <div className={classes.iconLabel}>Rotate right</div>
                     <IconButton className={classes.icon} onClick={()=> {this.handleActiveControl('cropActive', !this.state.controls.cropActive)}}>
-                        <FontAwesomeIcon icon={"crop-alt"} size={"xs"}/>
+                        <FontAwesomeIcon icon="crop-alt" size="xs"/>
                     </IconButton>
                     <div className={classes.iconLabel}>Crop</div>
                 </Paper>
@@ -112,34 +114,33 @@ class ImageViewer extends React.Component {
     };
 
     render() {
-        let {cropEnabled, file, angle} = this.state;
+        let {file} = this.state;
         let {fullScreen, classes} = this.props;
-        //Remove Canvas Tag but react-darkroom still in dependency
+        // Remove Canvas Tag but react-darkroom still in dependency
         return (
-                <CardMedia
-                    classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}
-                    className={fullScreen ? classes.bigImage : classes.littleImage}
-                    image={file}>
-                </CardMedia>
+            <CardMedia
+                classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}
+                className={fullScreen ? classes.bigImage : classes.littleImage}
+                image={file} />
         )
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.previewMode === 'edit' && prevProps.previewMode !== 'edit') {
-            //Disabled for now until controls functionality is implemented
+            // Disabled for now until controls functionality is implemented
             // this.renderImageControls();
         }
     }
 
     componentWillUnmount() {
         let el = document.getElementById(this.props.elementId);
-        if (el != null) {
+        if (el !== null) {
             ReactDOM.unmountComponentAtNode(el);
         }
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
         previewMode: state.previewMode
     }
@@ -150,10 +151,8 @@ ImageViewer.propTypes = {
     file: PropTypes.string.isRequired
 };
 
-ImageViewer = _.flowRight(
+export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, null)
 )(ImageViewer);
-
-export default ImageViewer;

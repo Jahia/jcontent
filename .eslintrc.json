@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": ["xo", "xo-react", "prettier", "prettier/react"],
+  "rules":{
+    "indent": ["error", 4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-negated-condition": "warn",
+    "no-useless-escape": "warn",
+    "camelcase": "warn",
+    "react/jsx-indent": ["error", 4],
+    "react/prop-types": "warn"
+  },
+  "settings": {
+    "react": {
+      "version": "16.2"
+    }
+  },
+  "globals": {
+    "contextJsParameters": false
+  }
+}

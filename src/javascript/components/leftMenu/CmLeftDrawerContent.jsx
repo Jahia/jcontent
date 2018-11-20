@@ -1,16 +1,16 @@
-import {List, ListItem, withStyles, withTheme} from "@material-ui/core";
-import {ChevronRight, ExpandMore} from "@material-ui/icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React from "react";
-import {lodash as _} from "lodash";
-import {translate} from "react-i18next";
-import {DisplayActions} from "@jahia/react-material";
+import {List, ListItem, withStyles, withTheme} from '@material-ui/core';
+import {ChevronRight, ExpandMore} from '@material-ui/icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React from 'react';
+import {lodash as _} from 'lodash';
+import {translate} from 'react-i18next';
+import {DisplayActions} from '@jahia/react-material';
+import {compose} from 'react-apollo';
 
-
-const styles = (theme) => ({
+const styles = theme => ({
     root: {
         marginTop: '0px',
-        marginLeft: '6px',
+        marginLeft: '6px'
     },
     listRoot: {
         paddingTop: '0'
@@ -73,67 +73,63 @@ const styles = (theme) => ({
 });
 
 class CmLeftDrawerListItems extends React.Component {
-
     render() {
-
         let {context, actionPath, classes, theme, t} = this.props;
 
-        return <DisplayActions target={context.menu} context={{...context.originalContext, parent:context}} render={(actionProps) => {
-            let actionContext = actionProps.context;
-            actionContext.actionPath = actionPath + "/" + actionContext.key;
-            return <React.Fragment>
-                <ListItem
-                    className={classes.clearList}
-                    classes={{root: classes.overList}}
-                    selected={_.includes(_.split(actionPath, "/"), actionContext.actionKey)}
-                    button
-                    onClick={(event) => actionContext.onClick(actionContext, event)}
-                    style={{
-                        paddingLeft: (_.split(actionPath, "/").length) * theme.spacing.unit
-                    }}
-                >
-                    <div className={classes.expand}>
-                        {actionContext.hasChildren
-                            ? ((actionContext.open || actionContext.selected)
-                                    ? <ExpandMore classes={{root: classes.iconTree}}/>
-                                    : <ChevronRight classes={{root: classes.iconTree}}/>
-                            )
-                            : null
-                        }
-                    </div>
-                    {actionContext.externalIconPath
-                        ? <img src={actionContext.externalIconPath}/>
-                        : <FontAwesomeIcon className={classes.iconDrawer} icon={actionContext.icon != null ? actionContext.icon : ["far", "file"]}/>
-                    }
-                    <div className={classes.textPadding}>
-                        {t(actionContext.buttonLabel)}
-                    </div>
-                </ListItem>
-                {actionContext.menu && actionContext.open && <CmLeftDrawerListItems context={actionContext} actionPath={actionPath+"/"+actionContext.key} classes={classes} theme={theme} t={t}/>}
-            </React.Fragment>
-        }}/>;
+        return (
+            <DisplayActions target={context.menu} context={{...context.originalContext, parent: context}} render={actionProps => {
+                let actionContext = actionProps.context;
+                actionContext.actionPath = actionPath + '/' + actionContext.key;
+                return (
+                    <React.Fragment>
+                        <ListItem button
+                            className={classes.clearList}
+                            classes={{root: classes.overList}}
+                            selected={_.includes(_.split(actionPath, '/'), actionContext.actionKey)}
+                            style={{
+                                paddingLeft: (_.split(actionPath, '/').length) * theme.spacing.unit
+                            }}
+                            onClick={event => actionContext.onClick(actionContext, event)}
+                        >
+                            <div className={classes.expand}>
+                                {actionContext.hasChildren ?
+                                    ((actionContext.open || actionContext.selected) ?
+                                        <ExpandMore classes={{root: classes.iconTree}}/> :
+                                        <ChevronRight classes={{root: classes.iconTree}}/>
+                                    ) :
+                                    null
+                                }
+                            </div>
+                            {actionContext.externalIconPath ?
+                                <img src={actionContext.externalIconPath}/> :
+                                <FontAwesomeIcon className={classes.iconDrawer} icon={actionContext.icon !== null ? actionContext.icon : ['far', 'file']}/>
+                            }
+                            <div className={classes.textPadding}>
+                                {t(actionContext.buttonLabel)}
+                            </div>
+                        </ListItem>
+                        {actionContext.menu && actionContext.open && <CmLeftDrawerListItems context={actionContext} actionPath={actionPath + '/' + actionContext.key} classes={classes} theme={theme} t={t}/>}
+                    </React.Fragment>
+                );
+            }}/>
+        );
     }
 }
 
 class CmLeftDrawerContent extends React.Component {
-
     render() {
         let {classes} = this.props;
 
-        return <List className={classes.root} classes={{root: classes.listRoot}}>
-           <CmLeftDrawerListItems {...this.props} />
-        </List>
+        return (
+            <List className={classes.root} classes={{root: classes.listRoot}}>
+                <CmLeftDrawerListItems {...this.props}/>
+            </List>
+        );
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    actionPath: state.path
-});
-
-CmLeftDrawerContent = _.flowRight(
+export default compose(
     translate(),
     withTheme(),
     withStyles(styles),
 )(CmLeftDrawerContent);
-
-export default CmLeftDrawerContent;

@@ -1,10 +1,9 @@
 import React from 'react';
-import {withApollo} from 'react-apollo';
+import {compose, withApollo} from 'react-apollo';
 import * as _ from "lodash";
-import {Add, Close} from "@material-ui/icons";
-import {withNotifications, DisplayAction, DisplayActions, buttonRenderer, ContextualMenu} from '@jahia/react-material';
+import {Close} from "@material-ui/icons";
+import {withNotifications, DisplayActions, buttonRenderer, ContextualMenu} from '@jahia/react-material';
 import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
-
 import ContentListTable from "./list/ContentListTable";
 import PreviewDrawer from "./preview/PreviewDrawer";
 import classNames from 'classnames'
@@ -22,7 +21,7 @@ import {ContentData, contentQueryHandlerByMode} from "./ContentData";
 import CMTopBar from "./CMTopBar";
 import CmSearchControlBar from "./CmSearchControlBar";
 import {cmGoto} from "./redux/actions";
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import Constants from "./constants";
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
 import Icon from "./icons/Icon";
@@ -171,7 +170,7 @@ class ContentLayout extends React.Component {
         this.handleSort = this.handleSort.bind(this);
     }
 
-    handleDrawerOpen = () => {
+    handleDrawerOpen() {
         if (this.state.open) {
             this.setState({open: false});
         } else {
@@ -179,8 +178,8 @@ class ContentLayout extends React.Component {
         }
     };
 
-    //Force can be `show` or `hide`
-    handleShowPreview = (selection, force) => {
+    // Force can be `show` or `hide`
+    handleShowPreview(selection, force) {
         let {previewState, setPreviewState} = this.props;
         if (force !== undefined) {
             setPreviewState(force);
@@ -189,7 +188,7 @@ class ContentLayout extends React.Component {
                 case CM_PREVIEW_STATES.SHOW:
                     setPreviewState(CM_PREVIEW_STATES.HIDE);
                     break;
-                case CM_PREVIEW_STATES.HIDE: {
+                default: case CM_PREVIEW_STATES.HIDE: {
                     setPreviewState(CM_PREVIEW_STATES.SHOW);
                     break;
                 }
@@ -197,12 +196,12 @@ class ContentLayout extends React.Component {
         }
     };
 
-    handleChangePage = newPage => {
+    handleChangePage(newPage) {
         this.setState({page: newPage});
     };
 
-    handleChangeRowsPerPage = value => {
-        if (value != this.state.rowsPerPage) {
+    handleChangeRowsPerPage(value) {
+        if (value !== this.state.rowsPerPage) {
             this.setState({
                 page: 0,
                 rowsPerPage: value
@@ -210,11 +209,11 @@ class ContentLayout extends React.Component {
         }
     };
 
-    setContentRefetcher = refetchingData => {
+    setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
     };
 
-    setTreeRefetcher = type => {
+    setTreeRefetcher(type) {
         return (refetchingData) => setRefetcher(type, refetchingData);
     };
 
@@ -269,8 +268,9 @@ class ContentLayout extends React.Component {
             return <React.Fragment>
                 <div className={classes.academyLink}>
                     <Trans
-                        i18nKey={'label.contentManager.link.academy'}
-                        components={[<a href={contextJsParameters.config.academyLink} target={'_blank'} className={classes.link}>univers</a>]}
+                        i18nKey="label.contentManager.link.academy"
+                        components={[<a key={this.id} href={contextJsParameters.config.academyLink}
+                            target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
                     />
                 </div>
                 <Grid container spacing={0}>
@@ -299,23 +299,23 @@ class ContentLayout extends React.Component {
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
-                                    <DisplayActions target={"tableHeaderActions"} context={{path: path}} render={buttonRenderer({},true)}/>
+                                    <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({},true)}/>
                                 </React.Fragment>
                             }
                             {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                    <Icon name={'folder'} fill={'#d4d9dd'}/>
+                                    <Icon name="folder" fill="#d4d9dd"/>
                                     {t("label.contentManager.tree." + (open ? "hide" : "show"))}
                                 </Button>
                             }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                <Icon name={'refresh'} fill={'#d4d9dd'} size={20}/>
+                                <Icon name="refresh" fill="#d4d9dd" size={20}/>
                                 {t(this.isSearching() ? "label.contentManager.search.refresh" : "label.contentManager.refresh")}
                             </Button>
                             {this.isSearching() &&
-                                <Button data-cm-role="search-clear" variant={"text"}
-                                        className={classes.searchClearButton}
-                                        classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
+                                <Button data-cm-role="search-clear" variant="text"
+                                    className={classes.searchClearButton}
+                                    classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
                                     <Close className={classes.searchClearIcon}/>
                                     {t("label.contentManager.search.clear")}
                                 </Button>
@@ -342,7 +342,7 @@ class ContentLayout extends React.Component {
                         </Drawer>
                     </Paper>
                     }
-                    <ContextualMenu actionKey={"contentTreeActions"} context={{path: path}} ref={contextualMenu}/>
+                    <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
                     <main
                         className={classNames(classes.content, classes[`content-left`], {
                             [classes.contentShift]: open,
@@ -355,10 +355,10 @@ class ContentLayout extends React.Component {
                         onContextMenu={(event) => contextualMenu.current.open(event)}
                     >
                         <ContentData layoutQuery={layoutQuery}
-                                     layoutQueryParams={layoutQueryParams}
-                                     setRefetch={this.setContentRefetcher}
-                                     orderBy={orderBy}
-                                     treeShown={ open }>
+                            layoutQueryParams={layoutQueryParams}
+                            setRefetch={this.setContentRefetcher}
+                            orderBy={orderBy}
+                            treeShown={ open }>
                             {({rows, contentNotFound, totalCount}) => {
                                 return <Paper className={classes.paper}>
                                     {mode === Constants.mode.FILES && !this.state.showList
@@ -368,23 +368,23 @@ class ContentLayout extends React.Component {
                                             rows={rows}
                                             contentNotFound={contentNotFound}
                                             pageSize={this.state.rowsPerPage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            onChangePage={this.handleChangePage}
                                             page={this.state.page}
                                             handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
+                                            onChangePage={this.handleChangePage}
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                         />
                                         : <ContentListTable
                                             totalCount={totalCount}
                                             rows={rows}
                                             contentNotFound={contentNotFound}
                                             pageSize={this.state.rowsPerPage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            onChangePage={this.handleChangePage}
                                             page={this.state.page}
-                                            handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
-                                            handleSort={this.handleSort}
                                             order={order}
                                             orderBy={orderBy}
+                                            handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
+                                            handleSort={this.handleSort}
+                                            onChangePage={this.handleChangePage}
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                         />
                                     }
                                 </Paper>;
@@ -393,10 +393,10 @@ class ContentLayout extends React.Component {
                     </main>
                     <PreviewDrawer
                         open={previewState === CM_PREVIEW_STATES.SHOW}
-                        onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
                         layoutQuery={layoutQuery}
                         layoutQueryParams={layoutQueryParams}
                         dxContext={dxContext}
+                        onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
                     />
                 </div>
 
@@ -428,7 +428,7 @@ const mapStateToProps = (state) => {
     }
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     setPath: (path, params) => dispatch(cmGoto(path, params)),
     setPreviewState: (state) => dispatch(cmSetPreviewState(state)),
     clearSearch: (params) => {
@@ -441,7 +441,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
 });
 
-ContentLayout = _.flowRight(
+compose(
     withNotifications(),
     translate(),
     withStyles(styles),

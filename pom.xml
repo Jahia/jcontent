@@ -67,7 +67,7 @@
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>
         <jahia-module-type>system</jahia-module-type>
-        <webpack.arguments>-p</webpack.arguments>
+        <yarn.arguments>build:production</yarn.arguments>
     </properties>
 
     <repositories>
@@ -152,13 +152,13 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>webpack</id>
-                        <phase>prepare-package</phase>
+                        <id>yarn post-install</id>
+                        <phase>generate-resources</phase>
                         <goals>
-                            <goal>webpack</goal>
+                            <goal>yarn</goal>
                         </goals>
                         <configuration>
-                            <arguments>${webpack.arguments}</arguments>
+                            <arguments>${yarn.arguments}</arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -169,7 +169,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <webpack.arguments />
+                <yarn.arguments>build</yarn.arguments>
             </properties>
         </profile>
     </profiles>

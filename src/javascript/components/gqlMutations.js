@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 const lockMutations = {
     lock: gql`mutation lockNode($pathOrId: String!) {
@@ -21,7 +21,7 @@ const lockMutations = {
                 clearAllLocks
             }
         }
-    }`,
+    }`
 };
 
 const pasteMutations = {
@@ -52,6 +52,6 @@ const pasteMutations = {
             }
         }
     }`
-}
+};
 
-export {lockMutations, pasteMutations}
+export {lockMutations, pasteMutations};

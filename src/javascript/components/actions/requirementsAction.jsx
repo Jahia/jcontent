@@ -1,11 +1,10 @@
-import React from "react";
-import {composeActions, withStylesAction} from "@jahia/react-material";
-import {withApolloAction} from "./withApolloAction";
-import {from, Subject, concat, of, combineLatest} from "rxjs";
+import {composeActions} from '@jahia/react-material';
+import {withApolloAction} from './withApolloAction';
+import {from, concat, of, combineLatest} from 'rxjs';
 import {filter, map, first} from 'rxjs/operators';
-import {ActionRequirementsQueryHandler} from "../gqlQueries";
+import {ActionRequirementsQueryHandler} from '../gqlQueries';
 import * as _ from 'lodash';
-import {reduxAction} from "./reduxAction";
+import {reduxAction} from './reduxAction';
 
 function evaluateShowForPaths(paths, nodePath) {
     if (!paths) {
@@ -19,9 +18,9 @@ function evaluateShowForPaths(paths, nodePath) {
     return false;
 }
 
-let requirementsAction = composeActions(withApolloAction, reduxAction((state) => ({language: state.language, uiLang: state.uiLang, site: state.site})), {
-    init: (context) => {
-        context.initRequirements = (options) => {
+let requirementsAction = composeActions(withApolloAction, reduxAction(state => ({language: state.language, uiLang: state.uiLang, site: state.site})), {
+    init: context => {
+        context.initRequirements = options => {
             let req = {...context, ...options};
             let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled, contentType} = req;
             let requirementQueryHandler = new ActionRequirementsQueryHandler(req);
@@ -31,7 +30,7 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
                     variables: requirementQueryHandler.getVariables()
                 });
 
-                // console.log("watch", context)
+                // Console.log("watch", context)
                 context.requirementQueryHandler = requirementQueryHandler;
 
                 context.node = from(watchQuery)
@@ -53,15 +52,15 @@ let requirementsAction = composeActions(withApolloAction, reduxAction((state) =>
                 if (enabled) {
                     if (context.enabled) {
                         context.enabled = combineLatest(context.enabled, concat(of(false), enabled(context)))
-                            .pipe(map(arr => arr[0] && arr[1]))
+                            .pipe(map(arr => arr[0] && arr[1]));
                     } else {
                         context.enabled = concat(of(false), enabled(context));
                     }
                 }
             } else {
-                context.enabled = _.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, node.path)
+                context.enabled = _.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, context.node.path);
             }
-        }
+        };
     }
 });
 

@@ -1,27 +1,27 @@
-import React from 'react';
-import {composeActions} from "@jahia/react-material";
-import requirementsAction from "./requirementsAction";
-import {map} from "rxjs/operators";
+import {composeActions} from '@jahia/react-material';
+import requirementsAction from './requirementsAction';
+import {map} from 'rxjs/operators';
 import * as _ from 'lodash';
-import {lockMutations} from "../gqlMutations";
+import {lockMutations} from '../gqlMutations';
 
 export default composeActions(requirementsAction, {
-    init:(context) => {
+    init: context => {
         context.initRequirements({
             getLockInfo: true,
-            requiredPermission: "jcr:lockManagement",
-            enabled: (context) => context.node.pipe(map(node => node.lockTypes !== null && !_.includes(node.lockTypes.values, " deletion :deletion")))
+            requiredPermission: 'jcr:lockManagement',
+            enabled: context => context.node.pipe(map(node => node.lockTypes !== null && !_.includes(node.lockTypes.values, ' deletion :deletion')))
         });
     },
-    onClick:(context) => {
+    onClick: context => {
         context.client.mutate({
             variables: {pathOrId: context.path},
             mutation: lockMutations.unlock,
             refetchQueries: [
                 {
-                    query : context.requirementQueryHandler.getQuery(),
-                    variables: context.requirementQueryHandler.getVariables(),
-                }]
+                    query: context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables()
+                }
+            ]
         });
     }
 });

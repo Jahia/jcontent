@@ -1,16 +1,15 @@
-import React from "react";
-import {ContentTypeNamesQuery} from "../gqlQueries";
-import {from} from "rxjs";
+import {ContentTypeNamesQuery} from '../gqlQueries';
+import {from} from 'rxjs';
 import {filter, first, map} from 'rxjs/operators';
-import {composeActions} from "@jahia/react-material";
-import requirementsAction from "./requirementsAction";
+import {composeActions} from '@jahia/react-material';
+import requirementsAction from './requirementsAction';
 
 export default composeActions(requirementsAction, {
-    init:(context) => {
-        context.initRequirements({requiredPermission: "jcr:addChildNodes"});
+    init: context => {
+        context.initRequirements({requiredPermission: 'jcr:addChildNodes'});
 
         if (!context.buttonLabel) {
-            context.buttonLabel = "label.contentManager.create.contentOfType";
+            context.buttonLabel = 'label.contentManager.create.contentOfType';
             let watchQuery = context.client.watchQuery({
                 query: ContentTypeNamesQuery,
                 variables: {nodeTypes: [context.contentType], displayLanguage: context.dxContext.uilang}
@@ -23,5 +22,5 @@ export default composeActions(requirementsAction, {
             );
         }
     },
-    onClick:(context) => window.parent.authoringApi.createContent(context.path, [context.contentType], false)
+    onClick: context => window.parent.authoringApi.createContent(context.path, [context.contentType], false)
 });

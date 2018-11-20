@@ -3,10 +3,9 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, argv) => {
-
     let config = {
         entry: {
-            main: [ '@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx') ]
+            main: ['@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx')]
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
@@ -22,16 +21,16 @@ module.exports = (env, argv) => {
                 {
                     test: /\.mjs$/,
                     include: /node_modules/,
-                    type: "javascript/auto"
+                    type: 'javascript/auto'
                 },
                 {
                     test: /\.jsx?$/,
-                    include: [path.join(__dirname, "src")],
+                    include: [path.join(__dirname, 'src')],
                     loader: 'babel-loader',
                     query: {
                         presets: [['env', {modules: false}], 'react', 'stage-2'],
                         plugins: [
-                            "lodash"
+                            'lodash'
                         ]
                     }
                 },
@@ -54,6 +53,17 @@ module.exports = (env, argv) => {
     };
 
     config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
+
+    console.log(argv);
+
+    if (argv.watch) {
+        config.module.rules.push({
+            loader: 'eslint-loader',
+            options: {
+                fix: true
+            }
+        });
+    }
 
     if (argv.analyze) {
         config.devtool = 'source-map';

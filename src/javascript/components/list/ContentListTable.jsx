@@ -11,8 +11,9 @@ import {DxContext} from "../DxContext";
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {cmSetSelection, cmGoto } from "../redux/actions";
-import { allowDoubleClickNavigation, isMarkedForDeletion } from '../utils';
-import {connect} from "react-redux";
+import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
+import {connect} from 'react-redux';
+import {compose} from 'react-apollo';
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
@@ -138,7 +139,7 @@ const styles = (theme) => ({
         display: "flex",
         padding: 0,
         height: "37px !important",
-        minHeight: 37 //same as row height
+        minHeight: 37 // Same as row height
     },
     actionCell: {
         minWidth: "38px"
@@ -222,16 +223,16 @@ const styles = (theme) => ({
     },
     nameCellWidth: {
         maxWidth: 400,
-        ['@media (min-width: 576px)']: {
+        '@media (min-width: 576px)': {
             maxWidth: 50
         },
-        ['@media (min-width:780px)']: {
+        '@media (min-width:780px)': {
             maxWidth: 100
         },
-        ['@media (min-width:992px)']: {
+        '@media (min-width:992px)': {
             maxWidth: 300
         },
-        ['@media (min-width: 1200px)']: {
+        '@media (min-width: 1200px)': {
             maxWidth: 500
         }
     },
@@ -249,7 +250,7 @@ class ContentListTable extends React.Component {
         super(props);
 
         this.state = {
-            howeredRow: null
+            hoveredRow: null
         };
     }
 
@@ -270,22 +271,20 @@ class ContentListTable extends React.Component {
 
     onHoverEnter($event) {
         this.setState({
-            hoveredRow: $event.currentTarget != null ? $event.currentTarget.getAttribute("data-cm-node-path") : null
+            hoveredRow: $event.currentTarget !== null ? $event.currentTarget.getAttribute("data-cm-node-path") : null
         })
     }
 
-    onHoverExit($event) {
-        // if (!this.props.contextualMenu.isOpen) {
-            this.setState({
-                hoveredRow: null
-            });
-        // }
+    onHoverExit() {
+        this.setState({
+            hoveredRow: null
+        });
     }
 
-    contextualMenuClosed = () => {
+    contextualMenuClosed() {
         setTimeout(()=>{
             let hoveredEl = document.querySelector('tr[data-cm-role="table-content-list-row"]:hover');
-            if (hoveredEl != null) {
+            if (hoveredEl !== null) {
                 this.setState({
                     hoveredRow: hoveredEl.getAttribute("data-cm-node-path")
                 });
@@ -304,7 +303,7 @@ class ContentListTable extends React.Component {
         if (this.isWip(row, lang)) {
             return <Tooltip
                 title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}><VirtualsiteIcon
-                className={classes.activeStatus}/></Tooltip>;
+                    className={classes.activeStatus}/></Tooltip>;
         }
         return null;
     }
@@ -323,9 +322,9 @@ class ContentListTable extends React.Component {
                     <ContentListHeader
                         order={order}
                         orderBy={orderBy}
-                        onRequestSort={handleSort}
                         columnData={columnData}
                         classes={classes}
+                        onRequestSort={handleSort}
                     />
                     <DxContext.Consumer>
                         {dxContext => (
@@ -345,81 +344,87 @@ class ContentListTable extends React.Component {
                                     let contextualMenu = React.createRef();
                                     return (
                                         <TableRow
-                                            hover={true}
-                                            className={isSelected ? '' : ((key % 2 === 0) ? classes.row : classes.rowPair)}
-                                            classes={{root: classes.contentRow, selected: classes.selectedRow}}
-                                            data-cm-node-path={n.path}
                                             key={n.uuid}
-                                            onClick={() => onRowSelected([n])}
-                                            onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
-                                            selected={isSelected}
+                                            hover
+                                            classes={{root: classes.contentRow, selected: classes.selectedRow}}
+                                            className={isSelected ? '' : ((key % 2 === 0) ? classes.row : classes.rowPair)}
+                                            data-cm-node-path={n.path}
                                             data-cm-role="table-content-list-row"
-                                            onMouseEnter={(event) => this.onHoverEnter(event)}
-                                            onMouseLeave={(event) => this.onHoverExit(event)}
+                                            selected={isSelected}
+                                            onClick={() => onRowSelected([n])}
                                             onContextMenu={(event) => {
                                                 event.stopPropagation();
                                                 contextualMenu.current.open(event);
-                                            }}>
-                                                <ContextualMenu actionKey={"contextualMenuContent"} context={{path: n.path}} ref={contextualMenu}/>
+                                            }}
+                                            onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
+                                            onMouseEnter={(event) => this.onHoverEnter(event)}
+                                            onMouseLeave={(event) => this.onHoverExit(event)}>
+                                            <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
 
-                                                <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
-                                                    <PublicationStatus node={n} publicationInfoWidth={400}/>
-                                                </TableCell>
-                                                {columnData.map(column => {
-                                                    if (column.id === 'wip') {
-                                                        return <TableCell className={classes.actionCell} key={column.id} padding={'none'}>
-                                                            {renderWip}
-                                                        </TableCell>;
-                                                    } else if (column.id === 'lock') {
-                                                        return <TableCell className={classes.actionCell} key={column.id} padding={'none'}>
-                                                            {renderLock}
-                                                        </TableCell>
-                                                    } else if (column.id === 'name') {
-                                                        return <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
-                                                            <Typography className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]} noWrap classes={nameCellContentClasses}>
-                                                                <img src={icon} className={classes.nodeTypeIcon}/>
-                                                                {n[column.id]}
-                                                            </Typography>
-                                                        </TableCell>;
-                                                    } else if (column.id === 'lastModified') {
-                                                        return <TableCell
-                                                            key={column.id}
-                                                            padding={'none'}
-                                                            classes={{root: classes.paddingCell}}
-                                                            data-cm-role={'table-content-list-cell-' + column.id}
-                                                        >
-                                                            <Typography className={classes[column.id]} classes={cellContentClasses}>
-                                                                <Moment format={"ll"} locale={uiLang}>{n[column.id]}</Moment>
-                                                            </Typography>
-                                                        </TableCell>;
-                                                    } else if (column.id === 'createdBy' && isHoveredRow) {
-                                                        return <TableCell
-                                                            className={classes.hoveredRowActionsCell}
-                                                            classes={{root: classes.paddingCell }}
-                                                            key={column.id} padding={'none'}
-                                                            data-cm-role={'table-content-list-cell-' + column.id}
-                                                        >
-                                                            <DisplayActions target={ "tableActions" } context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
-                                                        </TableCell>;
-                                                    } else {
-                                                        return <TableCell
-                                                            key={column.id}
-                                                            padding={'none'}
-                                                            classes={{root: classes.paddingCell}}
-                                                            data-cm-role={'table-content-list-cell-' + column.id}
-                                                        >
-                                                            <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
-                                                                {n[column.id]}
-                                                            </Typography>
-                                                        </TableCell>;
-                                                    }
-                                                })}
+                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
+                                                <PublicationStatus node={n} publicationInfoWidth={400}/>
+                                            </TableCell>
+                                            {columnData.map(column => {
+                                                if (column.id === 'wip') {
+                                                    return <TableCell key={column.id} className={classes.actionCell} padding="none">
+                                                        {renderWip}
+                                                    </TableCell>;
+                                                }
+                                                if (column.id === 'lock') {
+                                                    return <TableCell key={column.id} className={classes.actionCell} padding="none">
+                                                        {renderLock}
+                                                    </TableCell>
+                                                }
+                                                if (column.id === 'name') {
+                                                    return <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
+                                                        <Typography noWrap
+                                                            className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
+                                                            classes={nameCellContentClasses}>
+                                                            <img src={icon} className={classes.nodeTypeIcon}/>
+                                                            {n[column.id]}
+                                                        </Typography>
+                                                    </TableCell>;
+                                                }
+                                                if (column.id === 'lastModified') {
+                                                    return <TableCell
+                                                        key={column.id}
+                                                        padding="none"
+                                                        classes={{root: classes.paddingCell}}
+                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                    >
+                                                        <Typography className={classes[column.id]} classes={cellContentClasses}>
+                                                            <Moment format="ll" locale={uiLang}>{n[column.id]}</Moment>
+                                                        </Typography>
+                                                    </TableCell>;
+                                                }
+                                                if (column.id === 'createdBy' && isHoveredRow) {
+                                                    return <TableCell
+                                                        key={column.id}
+                                                        classes={{root: classes.paddingCell }}
+                                                        className={classes.hoveredRowActionsCell} data-cm-role={'table-content-list-cell-' + column.id}
+                                                        padding="none"
+                                                    >
+                                                        <DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
+                                                    </TableCell>;
+                                                } 
+                                                return <TableCell
+                                                    key={column.id}
+                                                    padding="none"
+                                                    classes={{root: classes.paddingCell}}
+                                                    data-cm-role={'table-content-list-cell-' + column.id}
+                                                >
+                                                    <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
+                                                        {n[column.id]}
+                                                    </Typography>
+                                                </TableCell>;
+                                                    
+                                            })}
                                         </TableRow>
                                     );
                                 })}
                                 {emptyRows > 0 &&
                                 <TableRow>
-                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding={'none'}/>
+                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding="none"/>
                                 </TableRow>
                                 }
                             </TableBody>
@@ -457,13 +462,13 @@ let ContentNotFound = (props) => {
 };
 
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     selection: state.selection,
     uiLang : state.uiLang,
     lang : state.language,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     onRowSelected: (selection) => dispatch(cmSetSelection(selection)),
     setPath: (path, params) => dispatch(cmGoto({path, params}))
 });
@@ -476,10 +481,8 @@ ContentListTable.propTypes = {
     onChangePage: PropTypes.func.isRequired
 };
 
-ContentListTable = _.flowRight(
+export default compose(
     withStyles(styles),
     translate(),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentListTable);
-
-export default ContentListTable;

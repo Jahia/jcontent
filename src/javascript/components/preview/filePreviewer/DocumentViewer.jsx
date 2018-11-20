@@ -23,7 +23,7 @@ const DocumentPreviewContainer = styled.div`
         margin: 0 auto;
     }
 `;
-    const styles = theme => ({
+const styles = theme => ({
     documentPaper: {
         flex:1,
         width: '100%'
@@ -42,9 +42,9 @@ const DocumentPreviewContainer = styled.div`
         alignItems: 'center',
         justifyContent: 'center',
     },
-        paperChange: {
-            background: theme.palette.common.white,
-        },
+    paperChange: {
+        background: theme.palette.common.white,
+    },
 });
 class DocumentViewer extends React.Component {
     constructor(props) {
@@ -52,21 +52,21 @@ class DocumentViewer extends React.Component {
         this.state = {};
     }
 
-    renderViewer = () => {
+    renderViewer() {
         let {file, type, classes} = this.props;
         switch(type) {
             case "docx":
             case "doc":
                 return <Paper className={classes.documentPaper} classes={{root: classes.paperChange}} elevation={0}>
                     <FileViewer fileType={type}
-                                filePath={file}/>
+                        filePath={file}/>
                 </Paper>;
             case "avi":
             case "mp4":
             case "video":
                 return <Paper className={classes.videoPaper} classes={{root: classes.paperChange}}  elevation={0}>
                     <FileViewer fileType={type}
-                                filePath={file}/>
+                        filePath={file}/>
                 </Paper>;
             default:
                 return <Paper className={classes.defaultPaper} classes={{root: classes.paperChange}}    elevation={0}>

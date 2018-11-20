@@ -1,12 +1,12 @@
 import React from "react";
-import {Query} from 'react-apollo';
+import {compose, Query} from 'react-apollo';
 import {PredefinedFragments} from "@jahia/apollo-dx";
 import gql from "graphql-tag";
 import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {translate} from "react-i18next";
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from "@jahia/react-material";
 import {cmSetLanguage} from "../redux/actions";
 
@@ -51,9 +51,7 @@ const styles = theme => ({
 class LanguageSwitcher extends React.Component {
 
     constructor(props) {
-
         super(props);
-
         this.query = gql`
             query siteLanguages($path: String!) {
                 jcr(workspace: LIVE) {
@@ -89,14 +87,14 @@ class LanguageSwitcher extends React.Component {
         `;
     }
 
-    onSelectLanguage = (lang) => {
+    onSelectLanguage(lang) {
         console.log("Switching language to: " + lang);
         this.props.onSelectLanguage(lang);
-        // switch edit mode linker language
+        // Switch edit mode linker language
         window.parent.authoringApi.switchLanguage(lang);
     };
 
-    validateLanguageExists = (languages, data, lang) => {
+    validateLanguageExists(languages, data, lang) {
         if (!_.isEmpty(languages)) {
             // If we can't find the selected language in the list of available languages,
             // we will implicitly switch to the default language of the site.
@@ -158,10 +156,10 @@ class LanguageSwitcher extends React.Component {
                             languages={displayableLanguages}
                             onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
                         />
-                    } else {
-                        this.onSelectLanguage(existingLanguage);
-                        return null;
-                    }
+                    } 
+                    this.onSelectLanguage(existingLanguage);
+                    return null;
+                    
                 }
             }
         </Query>;
@@ -177,17 +175,17 @@ class LanguageSwitcherDisplay extends React.Component {
         }
     }
 
-    handleClick = event => {
+    handleClick(event) {
         this.setState({anchorEl: event.currentTarget});
-    };
+    }
 
-    handleClose = () => {
+    handleClose() {
         this.setState({anchorEl: null});
-    };
+    }
 
-    uppercaseFirst = (string) => {
+    uppercaseFirst(string) {
         return string.charAt(0).toUpperCase() + string.substr(1);
-    };
+    }
 
     render() {
 
@@ -195,7 +193,7 @@ class LanguageSwitcherDisplay extends React.Component {
         let {anchorEl} = this.state;
 
         return <React.Fragment>
-            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" onClick={this.handleClick} data-cm-role={'language-switcher'}>
+            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" data-cm-role="language-switcher" onClick={this.handleClick}>
                 <Typography className={dark ? classes.typography : classes.typographyLight}>
                     {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
                     &nbsp;
@@ -219,25 +217,21 @@ class LanguageSwitcherDisplay extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     siteKey: state.site,
     lang: state.language
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     onSelectLanguage: (lang) => {
         dispatch(cmSetLanguage(lang));
     }
 });
 
-LanguageSwitcherDisplay = _.flowRight(
-    withStyles(styles, {withTheme: true})
-)(LanguageSwitcherDisplay);
+compose(withStyles(styles, {withTheme: true}))(LanguageSwitcherDisplay);
 
-LanguageSwitcher = _.flowRight(
+export default compose(
     translate(),
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(LanguageSwitcher);
-
-export default LanguageSwitcher;

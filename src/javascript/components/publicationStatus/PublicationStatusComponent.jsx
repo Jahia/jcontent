@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core';
-import { InfoOutlined } from "@material-ui/icons";
-import { publicationStatusByName } from "./publicationStatus";
-import {translate} from "react-i18next";
+import {withStyles} from '@material-ui/core';
+import {InfoOutlined} from '@material-ui/icons';
+import {publicationStatusByName} from './publicationStatus';
+import {translate} from 'react-i18next';
 
 const styles = theme => ({
     root: {
-        zIndex:0,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "stretch",
+        zIndex: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
         width: 6
     },
     statusRoot: {
-        zIndex:1,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "stretch",
-        position: "absolute",
+        zIndex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        position: 'absolute',
         top: 0,
         bottom: 0
     },
@@ -35,7 +35,7 @@ const styles = theme => ({
         fontFamily: 'Nunito Sans, sans-serif'
     },
     unPublished: {
-        backgroundColor: "#cecece",
+        backgroundColor: '#cecece',
         fontFamily: 'Nunito Sans, sans-serif'
     },
     markedForDeletion: {
@@ -43,48 +43,48 @@ const styles = theme => ({
         fontFamily: 'Nunito Sans, sans-serif'
     },
     noStatus: {
-        backgroundColor: "#cecece",
+        backgroundColor: '#cecece',
         fontFamily: 'Nunito Sans, sans-serif'
     },
     publicationInfo: {
         flex: 20,
-        display: "flex",
-        alignItems: "center",
-        backgroundColor: "inherit",
-        width: 0.01, //Safari doesn't take 0 for some strange reason
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: 'inherit',
+        width: 0.01, // Safari doesn't take 0 for some strange reason
         opacity: 0,
-        visibility: "hidden",
-        overflow: "hidden",
+        visibility: 'hidden',
+        overflow: 'hidden',
         color: theme.palette.getContrastText(theme.palette.publish.main),
-        transition: "width 0.3s ease-in 0s",
-        "&:hover": {
+        transition: 'width 0.3s ease-in 0s',
+        '&:hover': {
             opacity: 1,
-            visibility: "visible"
+            visibility: 'visible'
         }
     },
     infoContainer: {
-        overflow: "hidden"
+        overflow: 'hidden'
     },
     infoIcon: {
-        display: "none"
+        display: 'none'
     },
     infoButton: {
-        flex: "auto",
-        display: "flex",
-        alignItems: "center",
+        flex: 'auto',
+        display: 'flex',
+        alignItems: 'center',
         width: 6,
-        backgroundColor: "inherit",
-        transition: "width 0.2s ease-in 0s",
-        overflow: "hidden",
-        cursor: "pointer",
+        backgroundColor: 'inherit',
+        transition: 'width 0.2s ease-in 0s',
+        overflow: 'hidden',
+        cursor: 'pointer',
         color: theme.palette.getContrastText(theme.palette.publish.main),
-        "&:hover ~ div.CM_PUBLICATION_INFO": {
+        '&:hover ~ div.CM_PUBLICATION_INFO': {
             width: 0,
             opacity: 1,
-            visibility: "visible"
+            visibility: 'visible'
         }
     },
-    publicationSvg : {
+    publicationSvg: {
         fontSize: '13px'
     }
 });
@@ -99,12 +99,11 @@ const styles = theme => ({
  *       }
  */
 class PublicationStatusComponent extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             publicationInfoWidth: 0
-        }
+        };
     }
 
     setPublicationInfoWidth(width) {
@@ -114,32 +113,38 @@ class PublicationStatusComponent extends Component {
     }
 
     render() {
-        const { classes, node, t, i18n } = this.props;
+        const {classes, node, t, i18n} = this.props;
         const publicationStatus = publicationStatusByName.getStatus(node);
         const publicationStatusClass = publicationStatus.getContentClass(classes);
 
-        return <React.Fragment>
-            <div className={ `${publicationStatusClass} ${classes.root}` }/>
-            <div className={ `${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}
-                 onMouseLeave={() => this.setPublicationInfoWidth(0)}>
-                <div className={ `${classes.infoButton} CM_PUBLICATION_INFO_BUTTON` }
-                     onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}>
-                    <div className={ classes.infoContainer }>
-                        <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON` }/>
+        return (
+            <React.Fragment>
+                <div className={`${publicationStatusClass} ${classes.root}`}/>
+                <div className={`${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}
+                    onMouseLeave={() => this.setPublicationInfoWidth(0)}
+                >
+                    <div className={`${classes.infoButton} CM_PUBLICATION_INFO_BUTTON`}
+                        onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
+                    >
+                        <div className={classes.infoContainer}>
+                            <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON`}/>
+                        </div>
                     </div>
-                </div>
-                <div className={ `${classes.publicationInfo} CM_PUBLICATION_INFO` }
-                     style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '14px'}}>
+                    <div className={`${classes.publicationInfo} CM_PUBLICATION_INFO`}
+                        style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '14px'}}
+                    >
 
-                    <div className={classes.infoContainer}
-                         style={{width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
-                         data-cm-role={'publication-info'}
-                         data-cm-value={node.publicationStatus}>
-                        { publicationStatus.geti18nDetailsMessage(node, t, i18n.language ) }
+                        <div className={classes.infoContainer}
+                            style={{width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
+                            data-cm-role="publication-info"
+                            data-cm-value={node.publicationStatus}
+                        >
+                            { publicationStatus.geti18nDetailsMessage(node, t, i18n.language) }
+                        </div>
                     </div>
                 </div>
-            </div>
-        </React.Fragment>
+            </React.Fragment>
+        );
     }
 }
 
@@ -147,6 +152,5 @@ PublicationStatusComponent.propTypes = {
     node: PropTypes.object.isRequired,
     publicationInfoWidth: PropTypes.number.isRequired
 };
-
 
 export default translate()(withStyles(styles)(PublicationStatusComponent));

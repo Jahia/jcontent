@@ -1,4 +1,4 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
+import {library} from '@fortawesome/fontawesome-svg-core';
 import {
     faFilePowerpoint,
     faFileWord,
@@ -15,7 +15,7 @@ import {
     faFileAlt
 } from '@fortawesome/free-regular-svg-icons';
 
-import { faChevronDown,
+import {faChevronDown,
     faChevronLeft,
     faChevronRight,
     faChevronUp,
@@ -34,10 +34,10 @@ import { faChevronDown,
     faTags,
     faUser,
     faUsers,
-    faUserShield,
+    faUserShield
 } from '@fortawesome/free-solid-svg-icons';
 
-export const initFontawesomeIcons = function() {
+export const initFontawesomeIcons = function () {
     library.add(faFilePowerpoint);
     library.add(faFileWord);
     library.add(faFileExcel);
@@ -63,7 +63,7 @@ export const initFontawesomeIcons = function() {
     library.add(faExpand);
     library.add(faRedoAlt);
     library.add(faUndoAlt);
-    
+
     library.add(faChartBar);
     library.add(faChartLine);
     library.add(faGlobe);

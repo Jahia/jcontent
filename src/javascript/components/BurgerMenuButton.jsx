@@ -1,8 +1,9 @@
 import React from "react";
 import {translate} from "react-i18next";
 import {withStyles} from '@material-ui/core';
+import {compose} from 'react-apollo';
 
-const styles = theme => ({
+const styles = () => ({
     menuButton: {
         background: "url(" + contextJsParameters.contextPath + "/engines/jahia-anthracite/images/logos/dx_logo_solid-white.png) center center no-repeat",
         marginLeft: -12,
@@ -23,26 +24,24 @@ const styles = theme => ({
 
 class BurgerMenuButton extends React.Component {
 
-    openMenu = () => {
+    openMenu() {
         const clickEvent = window.top.document.createEvent("MouseEvents");
         clickEvent.initEvent("click", true, true);
         window.top.document.getElementsByClassName("editmode-managers-menu")[0].dispatchEvent(clickEvent);
     };
 
     render() {
-        let {classes, contextPath, isDrawerOpen} = this.props;
+        let {classes, isDrawerOpen} = this.props;
         return (
             <div>
-             { isDrawerOpen ?
-                <div className={classes.menuButtonBlue}  onClick={() => this.openMenu()} data-cm-role="cm-burger-menu"/>
-                 :
-                 <div className={classes.menuButton}  onClick={() => this.openMenu()} data-cm-role="cm-burger-menu"/>
-             }
+                { isDrawerOpen ?
+                    <div className={classes.menuButtonBlue} data-cm-role="cm-burger-menu" onClick={() => BurgerMenuButton.openMenu()}/>
+                    :
+                    <div className={classes.menuButton} data-cm-role="cm-burger-menu" onClick={() => BurgerMenuButton.openMenu()}/>
+                }
             </div>
         );
     }
 }
 
-BurgerMenuButton = withStyles(styles, {name:"DxBurgerMenuButton"})(BurgerMenuButton);
-
-export default translate()(BurgerMenuButton);
+export default compose(translate(), withStyles(styles, {name:"DxBurgerMenuButton"}))(BurgerMenuButton);

@@ -1,29 +1,27 @@
-import gql from "graphql-tag";
-import {PredefinedFragments} from "@jahia/apollo-dx";
+import gql from 'graphql-tag';
+import {PredefinedFragments, replaceFragmentsInDocument} from '@jahia/apollo-dx';
 import * as _ from 'lodash';
-import {replaceFragmentsInDocument} from "@jahia/apollo-dx/index";
-import Constants from "./constants";
+import Constants from './constants';
 
 class BrowsingQueryHandler {
-
     getQuery() {
         return getNodeSubTree;
     }
 
     getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy, treeState) {
-        const type = urlParams.type || (_.startsWith(path, rootPath + "/contents") ? "contents" : "pages");
+        const type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
         return {
             path: path,
             language: lang,
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
-            typeFilter: browseType[treeState][type].typeFilter || "jnt:contentFolder",
+            typeFilter: browseType[treeState][type].typeFilter || 'jnt:contentFolder',
             recursionTypesFilter: browseType[treeState][type].recursionTypesFilter || Constants.contentType,
             fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: orderBy === '' ? null : orderBy,
-                ignoreCase: true,
+                ignoreCase: true
             }
         };
     }
@@ -34,7 +32,6 @@ class BrowsingQueryHandler {
 }
 
 class FilesQueryHandler {
-
     getQuery() {
         return filesQuery;
     }
@@ -46,12 +43,12 @@ class FilesQueryHandler {
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
-            typeFilter: "jnt:file",
-            recursionTypesFilter: "jnt:folder",
+            typeFilter: 'jnt:file',
+            recursionTypesFilter: 'jnt:folder',
             fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: orderBy === '' ? null : orderBy,
-                ignoreCase: true,
+                ignoreCase: true
             }
         };
     }
@@ -62,7 +59,6 @@ class FilesQueryHandler {
 }
 
 class SearchQueryHandler {
-
     getQuery() {
         return searchContentQuery;
     }
@@ -70,16 +66,16 @@ class SearchQueryHandler {
     getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
         return {
             path: path,
-            nodeType: (urlParams.searchContentType == null ? "jmix:searchable" : urlParams.searchContentType),
+            nodeType: (urlParams.searchContentType === null ? 'jmix:searchable' : urlParams.searchContentType),
             searchTerms: urlParams.searchTerms,
             language: lang,
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: orderBy === '' ? null : orderBy,
-                ignoreCase: true,
+                ignoreCase: true
             }
         };
     }
@@ -90,17 +86,15 @@ class SearchQueryHandler {
 }
 
 class Sql2SearchQueryHandler {
-
     getQuery() {
         return sql2SearchContentQuery;
     }
 
     getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
-
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
-        if (sql2SearchWhere && sql2SearchWhere !== "") {
-            query = query + ` AND (${sql2SearchWhere})`;
+        if (sql2SearchWhere && sql2SearchWhere !== '') {
+            query += ` AND (${sql2SearchWhere})`;
         }
 
         return {
@@ -110,9 +104,9 @@ class Sql2SearchQueryHandler {
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
             fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order==="DESC" ? "ASC" : "DESC"),
+                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: orderBy === '' ? null : orderBy,
-                ignoreCase: true,
+                ignoreCase: true
             }
         };
     }
@@ -124,20 +118,20 @@ class Sql2SearchQueryHandler {
 
 const browseType = {
     open: {
-        pages: {recursionTypesFilter: ["jnt:page"], typeFilter: [Constants.contentType]},
-        contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType]}
+        pages: {recursionTypesFilter: ['jnt:page'], typeFilter: [Constants.contentType]},
+        contents: {recursionTypesFilter: ['jnt:contentFolder'], typeFilter: [Constants.contentType]}
     },
     hidden: {
-        pages: {recursionTypesFilter: ["jnt:page"], typeFilter: [Constants.contentType, "jnt:page"]},
-        contents: {recursionTypesFilter: ["jnt:contentFolder"], typeFilter: [Constants.contentType, "jnt:contentFolder"]}
+        pages: {recursionTypesFilter: ['jnt:page'], typeFilter: [Constants.contentType, 'jnt:page']},
+        contents: {recursionTypesFilter: ['jnt:contentFolder'], typeFilter: [Constants.contentType, 'jnt:contentFolder']}
     }
 };
 
 const PickerItemsFragment = {
     mixinTypes: {
-        applyFor: "node",
+        applyFor: 'node',
         variables: {
-            lang: "String!"
+            lang: 'String!'
         },
         gql: gql`
         fragment MixinTypes on JCRNode {
@@ -148,9 +142,9 @@ const PickerItemsFragment = {
 
     },
     primaryNodeType: {
-        applyFor: "node",
+        applyFor: 'node',
         gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`
-    },
+    }
 };
 
 const nodeFields = gql`
@@ -400,19 +394,19 @@ const ActionRequirementsQuery = gql`
 
 const ActionRequirementsFragments = {
     displayName: {
-        applyFor: "requirements",
-        gql:gql`
+        applyFor: 'requirements',
+        gql: gql`
             fragment DisplayName on JCRNode {
                 displayName(language: $language)
             }
-        `,
-    },   
+        `
+    },
     primaryNodeType: {
         variables: {
-            displayLanguage: "String!"
+            displayLanguage: 'String!'
         },
-        applyFor: "requirements",
-        gql:gql`
+        applyFor: 'requirements',
+        gql: gql`
             fragment PrimaryNodeType on JCRNode {
                 primaryNodeType {
                     name
@@ -420,13 +414,13 @@ const ActionRequirementsFragments = {
                     icon
                 }
             }
-        `,
+        `
     },
     allowedChildNodeTypes: {
         variables: {
-            baseChildNodeType: "String!"
+            baseChildNodeType: 'String!'
         },
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment ProvideTypes on JCRNode {
             allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
                 name
@@ -438,9 +432,9 @@ const ActionRequirementsFragments = {
     },
     requiredChildNodeType: {
         variables: {
-            childNodeType: "String!"
+            childNodeType: 'String!'
         },
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment AllowedChildNodeType on JCRNode {
             allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", value: $childNodeType}]}) {
                 name
@@ -449,9 +443,9 @@ const ActionRequirementsFragments = {
     },
     retrieveProperties: {
         variables: {
-            retrievePropertiesNames: "[String!]!",
+            retrievePropertiesNames: '[String!]!'
         },
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment NodeProperties on JCRNode {
             properties(names: $retrievePropertiesNames, language: $language) {
                 name
@@ -462,33 +456,33 @@ const ActionRequirementsFragments = {
     },
     isNodeType: {
         variables: {
-            isNodeType: "InputNodeTypesInput!"
+            isNodeType: 'InputNodeTypesInput!'
         },
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment NodeIsNodeType on JCRNode {
             isNodeType(type: $isNodeType)
         }`
     },
     isNotNodeType: {
         variables: {
-            isNotNodeType: "InputNodeTypesInput!"
+            isNotNodeType: 'InputNodeTypesInput!'
         },
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment NodeIsNotNodeType on JCRNode {
             isNotNodeType: isNodeType(type: $isNotNodeType)
         }`
     },
     permission: {
         variables: {
-            permission: "String!"
+            permission: 'String!'
         },
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment NodeHasPermission on JCRNode {
             hasPermission(permissionName: $permission)
         }`
     },
     siteInstalledModules: {
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment SiteInstalledModules on JCRNode {
             site {
                 installedModulesWithAllDependencies
@@ -497,7 +491,7 @@ const ActionRequirementsFragments = {
         }`
     },
     siteLanguages: {
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment SiteLanguages on JCRNode {
             site {
                 defaultLanguage
@@ -511,7 +505,7 @@ const ActionRequirementsFragments = {
         }`
     },
     displayableNodePath: {
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment DisplayableNodePath on JCRNode {
             displayableNode {
                 path
@@ -519,7 +513,7 @@ const ActionRequirementsFragments = {
         }`
     },
     retrieveLockInfo: {
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql` fragment LockInfo on JCRNode {
             lockOwner: property(name: "jcr:lockOwner") {
                 value
@@ -530,7 +524,7 @@ const ActionRequirementsFragments = {
         }`
     },
     retrieveContentRestriction: {
-        applyFor: "requirements",
+        applyFor: 'requirements',
         gql: gql`fragment ContentRestriction on JCRNode {
             contributeTypes: property(name: "j:contributeTypes") {
                 values
@@ -545,9 +539,7 @@ const ActionRequirementsFragments = {
 };
 
 class ActionRequirementsQueryHandler {
-
     constructor(context) {
-
         this.requirementsFragments = [];
         this.variables = {
             path: context.path,
@@ -555,7 +547,7 @@ class ActionRequirementsQueryHandler {
             displayLanguage: context.uiLang
         };
 
-        //todo optimize / execute on demand
+        // Todo optimize / execute on demand
         this.requirementsFragments.push(ActionRequirementsFragments.displayName);
         this.requirementsFragments.push(ActionRequirementsFragments.primaryNodeType);
 
@@ -573,7 +565,7 @@ class ActionRequirementsQueryHandler {
         }
         if (!_.isEmpty(context.retrieveProperties)) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveProperties);
-            this.variables = {...context.retrieveProperties, ...this.variables}
+            this.variables = {...context.retrieveProperties, ...this.variables};
         }
         if (!_.isEmpty(context.requireModuleInstalledOnSite)) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteInstalledModules);
@@ -592,10 +584,10 @@ class ActionRequirementsQueryHandler {
         if (context.getDisplayableNodePath) {
             this.requirementsFragments.push(ActionRequirementsFragments.displayableNodePath);
         }
-        if(context.getLockInfo){
+        if (context.getLockInfo) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveLockInfo);
         }
-        if(context.getContributeTypesRestrictions){
+        if (context.getContributeTypesRestrictions) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveContentRestriction);
         }
     }
@@ -620,5 +612,5 @@ export {
     GetNodeAndChildrenByPathQuery,
     ActionRequirementsQueryHandler,
     PickerItemsFragment,
-    previewQuery,
+    previewQuery
 };

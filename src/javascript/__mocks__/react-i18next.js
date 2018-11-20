@@ -37,7 +37,7 @@ const renderNodes = reactNodes => {
 module.exports = {
   // this mock makes sure any components using the translate HoC receive the t function as a prop
   withNamespaces: () => Component => props => <Component t={k => k} {...props} />,
-  translate: () => Component => props => <Component {...props} />,
+  translate: () => Component => props => <Component t={k => k} {...props} />,
   Trans: ({ children }) => renderNodes(children),
   NamespacesConsumer: ({ children }) => children(k => k, { i18n: {} }),
 

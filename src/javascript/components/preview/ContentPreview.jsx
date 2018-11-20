@@ -236,7 +236,7 @@ class ContentPreviewView extends React.Component {
                   selection={selection}
                   imageControlElementId={this.state.imageControlElementId}
                   t={t}
-                  handleFullScreen={handleFullScreen}
+                  handleFullScreen={this.props.handleFullScreen}
                   screenModeButtons={this.screenModeButtons}
                   downloadButton={this.downloadButton}
                 />

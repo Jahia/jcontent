@@ -75,7 +75,7 @@ const ContentPreviewFooter = ({
               </Grid>
               <Grid container item xs={12}>
                   <div className={classes.contentSubTitle}>
-                  <PublicationInfo/>
+                      <PublicationInfo/>
                   </div>
               </Grid>
               <Grid item xs={12}>
@@ -91,6 +91,8 @@ const ContentPreviewFooter = ({
               </Grid>
           </Grid>
         );
+      default:
+        return null;
   }
 }
 

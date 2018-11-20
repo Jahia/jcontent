@@ -101,6 +101,20 @@ class Upload extends React.Component {
         this.onFilesSelected = this.onFilesSelected.bind(this);
         this.removeFile = this.removeFile.bind(this);
         this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
+        this.overlayStyle = {
+            active: {
+                display: "block",
+                position: "absolute",
+                backgroundColor: "#E67D3A",
+                opacity: "0.4",
+                zIndex:1000,
+                pointerEvents: "none"
+            },
+            inactive: {
+                display: "none",
+                pointerEvents: "none"
+            }
+        }
     }
 
     componentDidUpdate() {
@@ -112,7 +126,7 @@ class Upload extends React.Component {
 
     render() {
         const {classes} = this.props;
-        return (
+        return <React.Fragment>
             <UploadDrawer open={this.isDrawerOpen()} transitionDuration={this.transitionDuration()}>
                 <div className={this.contentClasses()}>
                     <div className={classes.contentHeader}>
@@ -124,7 +138,8 @@ class Upload extends React.Component {
                     </div>
                 </div>
             </UploadDrawer>
-        );
+            <div style={this.generateOverlayStyle()}/>
+        </React.Fragment>
     }
 
     configureRendering() {
@@ -380,6 +395,19 @@ class Upload extends React.Component {
                 </div>
             );
         }
+    }
+
+    generateOverlayStyle() {
+        let {overlayTarget} = this.props;
+        if (overlayTarget !== null && overlayTarget.path === this.props.uploadPath) {
+            return Object.assign({}, this.overlayStyle.active, {
+                top: overlayTarget.y,
+                left: overlayTarget.x,
+                width: overlayTarget.width,
+                height: overlayTarget.height
+            })
+        }
+        return this.overlayStyle.inactive;
     }
 }
 

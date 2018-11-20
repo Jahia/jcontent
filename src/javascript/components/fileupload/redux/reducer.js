@@ -4,7 +4,8 @@ const initialState = {
     path: null, // Folder that will get files
     panelState: panelStates.INVISIBLE,
     status: uploadsStatuses.NOT_STARTED,
-    uploads: []
+    uploads: [],
+    overlayTarget: null
 };
 
 export const uploadSeed = {
@@ -66,7 +67,11 @@ export const fileUpload = (state = initialState, action) => {
                     return upload;
                 })
             };
-
+        case "FILEUPLOAD_SET_OVERLAY_TARGET" :
+            return {
+                ...state,
+                overlayTarget: action.overlayTarget
+            };
         default: return state;
     }
 };

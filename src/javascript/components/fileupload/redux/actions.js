@@ -53,3 +53,10 @@ export const takeFromQueue = number => {
         number: number
     };
 };
+
+export const setOverlayTarget = overlayTarget => {
+    return {
+        type: "FILEUPLOAD_SET_OVERLAY_TARGET",
+        overlayTarget: overlayTarget
+    }
+};

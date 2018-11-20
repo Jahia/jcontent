@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {batchActions} from "redux-batched-actions/lib/index";
 import {fileAccepted, fileMatchSize, getDataTransferItems,
     isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
-import {setPanelState} from "./redux/actions";
+import {setPanelState, setOverlayTarget} from "./redux/actions";
 import {panelStates} from "./constatnts";
 import { withApollo } from "react-apollo";
 import { UploadRequirementsQuery } from "./gqlQueries";
@@ -24,7 +24,6 @@ class UploadTransformComponent extends React.Component {
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDrop = this.onDrop.bind(this);
-
     }
 
     componentDidMount() {
@@ -52,13 +51,14 @@ class UploadTransformComponent extends React.Component {
         delete props.uploadMinSize;
         delete props.uploadMaxSize;
         delete props.uploadDispatchBatch;
-
-        if (this.state.isDragActive) {
-            if (!props.style) {
-                props.style = {};
-            }
-            props.style.filter = "blur(3px)";
-        }
+        delete props.uploadSetOverlayTarget;
+        //Blurring functionality
+        // if (this.state.isDragActive) {
+        //     if (!props.style) {
+        //         props.style = {};
+        //     }
+        //     props.style.filter = "blur(3px)";
+        // }
 
         return props;
     }
@@ -77,9 +77,15 @@ class UploadTransformComponent extends React.Component {
             this.dragTargets.push(evt.target);
             this.node = evt.target;
         }
-
         evt.persist();
-
+        let boundingClientRect = evt.currentTarget.getBoundingClientRect();
+        let position = this.getOverlayPosition(evt.currentTarget);
+        this.props.uploadSetOverlayTarget({
+            x: position.left,
+            y: position.top,
+            width: boundingClientRect.width,
+            height: boundingClientRect.height
+        });
         if (isDragDataWithFiles(evt)) {
             Promise.resolve(getDataTransferItems(evt)).then(draggedFiles => {
                 if (evt.isPropagationStopped()) {
@@ -99,7 +105,6 @@ class UploadTransformComponent extends React.Component {
         // eslint-disable-line class-methods-use-this
         evt.preventDefault();
         evt.persist();
-
         return false;
     }
 
@@ -116,6 +121,7 @@ class UploadTransformComponent extends React.Component {
             isDragActive: false,
             draggedFiles: []
         });
+        this.props.uploadSetOverlayTarget(null);
     }
 
     onDrop(evt) {
@@ -131,7 +137,7 @@ class UploadTransformComponent extends React.Component {
             isDragActive: false,
             draggedFiles: []
         });
-
+        this.props.uploadSetOverlayTarget(null);
         if (isDragDataWithFiles(evt)) {
             Promise.resolve(getDataTransferItems(evt)).then(fileList => {
                 const acceptedFiles = [];
@@ -185,6 +191,24 @@ class UploadTransformComponent extends React.Component {
             console.error(e);
         }
     }
+
+    // Calculates elements position when scrolled.
+    // https://stackoverflow.com/questions/1236171/how-do-i-calculate-an-elements-position-in-a-scrolled-div
+    getOverlayPosition(el) {
+        let currentLeft = 0;
+        let currentTop = 0;
+        let currentXScroll = 0;
+        let currentYScroll = 0;
+        while(el && el.offsetParent)
+        {
+            currentYScroll = el.offsetParent.scrollTop || 0;
+            currentXScroll = el.offsetParent.scrollLeft || 0;
+            currentLeft += el.offsetLeft - currentXScroll;
+            currentTop += el.offsetTop - currentYScroll;
+            el = el.offsetParent;
+        }
+        return {top:currentTop, left: currentLeft};
+    }
 }
 
 UploadTransformComponent.propTypes = {
@@ -202,7 +226,8 @@ UploadTransformComponent.defaultProps = {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        uploadDispatchBatch: (actions) => dispatch(batchActions(actions))
+        uploadDispatchBatch: (actions) => dispatch(batchActions(actions)),
+        uploadSetOverlayTarget: (state) => dispatch(setOverlayTarget(state))
     }
 };
 

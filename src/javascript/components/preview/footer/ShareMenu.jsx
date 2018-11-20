@@ -3,7 +3,7 @@ import { translate } from "react-i18next";
 import { withStyles, IconButton, Button, MenuItem, Menu, Tooltip } from "@material-ui/core";
 import { Share } from "@material-ui/icons";
 import copy from 'copy-to-clipboard';
-import {lodash as _} from "lodash";
+import _ from "lodash";
 import {connect} from "react-redux";
 
 const styles = theme => ({

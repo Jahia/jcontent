@@ -3,10 +3,10 @@ import { translate } from 'react-i18next';
 import { withStyles } from "@material-ui/core";
 import Moment from 'react-moment';
 import 'moment-timezone';
-import Constants from '../constants';
-import {lodash as _} from "lodash";
+import Constants from '../../constants';
+import _ from "lodash";
 import {connect} from "react-redux";
-import {isMarkedForDeletion} from "../utils";
+import {isMarkedForDeletion} from "../../utils";
 
 //TODO Here as well as in ContentListTable unpublished status is not clear
 

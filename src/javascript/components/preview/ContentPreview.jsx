@@ -4,17 +4,14 @@ import {Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from "react-redux";
 import Loadable from "react-loadable";
-import {lodash as _} from "lodash";
+import _ from "lodash";
 import {Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
 import {CloudDownload, Fullscreen, FullscreenExit} from "@material-ui/icons";
-import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import {previewQuery} from "../gqlQueries";
-import PublicationInfo from './PublicationStatus';
-import ShareMenu from './ShareMenu';
 import {getFileType, isBrowserImage, isPDF} from "../filesGrid/filesGridUtils";
 import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from "../redux/actions";
-import {ellipsizeText} from "../utils.js";
 import constants from '../constants';
+import ContentPreviewFooter from './footer/ContentPreviewFooter';
 
 const styles = theme => ({
     root: {
@@ -86,10 +83,6 @@ const styles = theme => ({
         width: '100%',
         textAlign: 'center',
     },
-    titleBar: {
-        color: theme.palette.background.default,
-        paddingBottom: '0px',
-    },
     contentTitle: {
         textAlign: 'left',
         fontSize: '27px',
@@ -118,13 +111,6 @@ const styles = theme => ({
         overflow: 'hidden!important',
         right: '24px!important',
     },
-    footerGrid: {
-        backgroundColor: '#e8ebed',
-        padding: '0px!important'
-    },
-    footerButton : {
-        textAlign: 'right'
-    },
     colorIcon: {
         marginTop: 6,
         color: '#303030'
@@ -149,7 +135,20 @@ const styles = theme => ({
     },
     unlockIcon: {
         color: "#E67D3A"
-    }
+    },
+
+    // TODO put all style relative to footer in ContentPreviewFooter component
+    footerGrid: {
+        backgroundColor: '#e8ebed',
+        padding: '0px!important'
+    },
+    footerButton : {
+        textAlign: 'right'
+    },
+    titleBar: {
+        color: theme.palette.background.default,
+        paddingBottom: '0px',
+    },
 });
 
 const DocumentViewer = Loadable({
@@ -167,8 +166,7 @@ const ImageViewer = Loadable({
     loading: () => <div/>,
 });
 
-class ContentPreview extends React.Component {
-
+class ContentPreviewView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -232,82 +230,19 @@ class ContentPreview extends React.Component {
             </Paper>
             <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
                    elevation={0}>
-                {this.componentFooter()}
+                <ContentPreviewFooter
+                  classes={classes}
+                  previewMode={previewMode}
+                  selection={selection}
+                  imageControlElementId={this.state.imageControlElementId}
+                  t={t}
+                  handleFullScreen={handleFullScreen}
+                  screenModeButtons={this.screenModeButtons}
+                  downloadButton={this.downloadButton}
+                />
             </Paper>
         </div>
     }
-
-    componentFooter() {
-        let {classes, previewMode, selection, t, handleFullScreen} = this.props;
-        let {selectionLocked} = this.state;
-        let selectedItem = selection[0];
-        switch (previewMode) {
-            case 'live':
-                return <Grid container spacing={0} className={classes.footerGrid}>
-                    <Grid container spacing={0}>
-                        <Grid container item xs={8} className={classes.titleBar}>
-                            <div className={classes.contentTitle}>
-                                {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
-                            </div>
-                        </Grid>
-                        <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
-                            {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'live')}
-                            <ShareMenu/>
-                            {this.screenModeButtons(handleFullScreen, classes)}
-                        </Grid>
-                    </Grid>
-                    <Grid container item xs={12}>
-                        <div className={classes.contentSubTitle}>
-                            <PublicationInfo/>
-                        </div>
-                    </Grid>
-                    <Grid container item xs={12}>
-                        {/*Element that will contain image controls if an image is the document being previewed*/}
-                        <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
-                    </Grid>
-
-                    <Grid item xs={4} className={classes.lockButton}>
-                        <IconButton className={classes.lockButtonLive}>
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"livePreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
-                    </Grid>
-
-                </Grid>;
-            case 'edit':
-                return <Grid container spacing={0} className={classes.footerGrid}>
-                    <Grid container spacing={0}>
-                        <Grid container item xs={8} className={classes.titleBar}>
-                            <div className={classes.contentTitle}>
-                                {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
-                            </div>
-                        </Grid>
-                        <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
-                            {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'default')}
-                            <ShareMenu/>
-                            {this.screenModeButtons(handleFullScreen, classes)}
-                        </Grid>
-                    </Grid>
-                    <Grid container item xs={12}>
-                        <div className={classes.contentSubTitle}>
-                        <PublicationInfo/>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12}>
-                        {/*Element that will contain image controls if an image is the document being previewed*/}
-                        <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
-                    </Grid>
-                    <Grid item xs={4} className={classes.lockButton}>
-                        <DisplayActions target={"previewFooterActions"} context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
-                    </Grid>
-                    <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"editPreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
-                        <DisplayActions target={"editAdditionalMenu"} context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
-                    </Grid>
-                </Grid>;
-        }
-    };
 
     previewComponent(data) {
         const {classes, t, dxContext} = this.props;
@@ -422,10 +357,19 @@ class ContentPreview extends React.Component {
             isPublished: isPublished
         }
     }
+}
 
-    ellipsisText(text) {
-        return ellipsizeText(text, 50);
-    }
+ContentPreviewView.propTypes = {
+  selection: PropTypes.arrayOf(PropTypes.shape({
+    isLocked: PropTypes.bool.isRequired
+  })).isRequired,
+  previewMode: PropTypes.string.isRequired,
+  previewModes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  language: PropTypes.string.isRequired,
+
+  setPreviewState: PropTypes.func.isRequired,
+  setPreviewMode: PropTypes.func.isRequired,
+  setPreviewModes: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -449,15 +393,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
 });
 
-ContentPreview = _.flowRight(
+const ContentPreview = _.flowRight(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
-)(ContentPreview);
-
-export default ContentPreview;
+)(ContentPreviewView)
 
 ContentPreview.propTypes = {
     layoutQuery: PropTypes.object.isRequired,
     layoutQueryParams: PropTypes.object.isRequired
 };
+
+export default ContentPreview;

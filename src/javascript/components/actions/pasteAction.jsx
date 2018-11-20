@@ -7,9 +7,11 @@ import {clear} from "../copyPaste/redux/actions";
 import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {reduxAction} from "./reduxAction";
-import {map} from "rxjs/operators";
+import {map, switchMap} from "rxjs/operators";
 import { withNotificationContextAction } from "./withNotificationContextAction";
 import { withI18nAction } from "./withI18nAction";
+import {ContentTypesQuery} from "../gqlQueries";
+import {from, of} from 'rxjs';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     (state) => ({...state.copyPaste, currentlySelectedPath: state.path}),
@@ -28,16 +30,31 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             contentType: contentType,
             getContributeTypesRestrictions: true,
             enabled: context => {
-                return context.node.pipe(map(targetNode => {
+                return context.node.pipe(switchMap(targetNode => {
                     if (context.items.length === 0) {
-                        return false;
+                        return of(false);
                     }
 
                     const primaryNodeTypeToPaste = context.items[0].primaryNodeType;
                     let contributeTypesProperty = targetNode.contributeTypes ||
-                        targetNode.ancestors && targetNode.ancestors[targetNode.ancestors.length-1].contributeTypes;
+                                                    targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes;
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
-                        return contributeTypesProperty.values.indexOf(primaryNodeTypeToPaste.name) !== -1;
+                        // contribute type is not empty so we need to execute a query to know the types that are allowed here
+                        return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
+                            map(res => {
+                                let allowedNodeTypes = [];
+                                let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
+                                _.each(contributionNodeTypes, entry => {
+                                    if (entry.supertypes && !_.isEmpty(entry.supertypes)) {
+                                        allowedNodeTypes = _.union(allowedNodeTypes, _.map(entry.supertypes, subEntry => { return subEntry.name }));
+                                    }
+                                    allowedNodeTypes.push(entry.name);
+                                });
+                                return allowedNodeTypes.indexOf(primaryNodeTypeToPaste) !== -1;
+                            })
+                        );
+                    } else {
+                        return of(true);
                     }
                 }))
             }

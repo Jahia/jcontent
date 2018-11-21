@@ -10,14 +10,14 @@ export default composeActions(requirementsAction, reduxAction(state => ({statePa
 
         if (context.drawer && context.drawer.drawerOpen && context.drawer.openDrawerMenu === context.menu 
                 && context.drawer.site !== undefined && context.drawer.site !== context.site) {
-            // drawer is open on the current menu and the site has changed: reopen the drawer to "refresh" the action list 
+            // Drawer is open on the current menu and the site has changed: reopen the drawer to "refresh" the action list
             context.drawer.handleDrawerClose();
             context.drawer.handleDrawerOpen({
-                    content: <CmLeftDrawerContent context={context} actionPath={context.actionKey}/>,
-                    title: context.buttonLabel,
-                    site: context.site
-                },
-                context.menu);
+                content: <CmLeftDrawerContent context={context} actionPath={context.actionKey}/>,
+                title: context.buttonLabel,
+                site: context.site
+            },
+            context.menu);
         }
 
         if (context.mode === 'apps' && !context.drawer.drawerOpen && context.statePath) {

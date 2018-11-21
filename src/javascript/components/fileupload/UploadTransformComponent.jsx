@@ -78,14 +78,8 @@ class UploadTransformComponent extends React.Component {
             this.node = evt.target;
         }
         evt.persist();
-        let boundingClientRect = evt.currentTarget.getBoundingClientRect();
         let position = this.getOverlayPosition(evt.currentTarget);
-        this.props.uploadSetOverlayTarget({
-            x: position.left,
-            y: position.top,
-            width: boundingClientRect.width,
-            height: boundingClientRect.height
-        });
+        this.props.uploadSetOverlayTarget(position);
         if (isDragDataWithFiles(evt)) {
             Promise.resolve(getDataTransferItems(evt)).then(draggedFiles => {
                 if (evt.isPropagationStopped()) {
@@ -190,23 +184,28 @@ class UploadTransformComponent extends React.Component {
             console.error(e);
         }
     }
-
-    // Calculates elements position when scrolled.
-    // https://stackoverflow.com/questions/1236171/how-do-i-calculate-an-elements-position-in-a-scrolled-div
+    // Calculates elements position if/when scrolled.
+    // Adaptation of https://stackoverflow.com/questions/1236171/how-do-i-calculate-an-elements-position-in-a-scrolled-div
     getOverlayPosition(el) {
-        let currentLeft = 0;
-        let currentTop = 0;
-        let currentXScroll = 0;
-        let currentYScroll = 0;
+        let boundingClientRect = el.getBoundingClientRect();
+        let position = {
+            x: boundingClientRect.left,
+            y: boundingClientRect.top,
+            width: boundingClientRect.width,
+            height: boundingClientRect.height
+        };
+        if (el.offsetParent && el.offsetParent.offsetTop === 0) {
+            return position
+        }
+        position.x = 0;
+        position.y = 0;
         while(el && el.offsetParent)
         {
-            currentYScroll = el.offsetParent.scrollTop || 0;
-            currentXScroll = el.offsetParent.scrollLeft || 0;
-            currentLeft += el.offsetLeft - currentXScroll;
-            currentTop += el.offsetTop - currentYScroll;
+            position.x += el.offsetLeft - el.offsetParent.scrollLeft || 0;
+            position.y += el.offsetTop - el.offsetParent.scrollTop || 0;
             el = el.offsetParent;
         }
-        return {top:currentTop, left: currentLeft};
+        return position;
     }
 }
 

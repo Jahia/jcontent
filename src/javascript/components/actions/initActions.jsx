@@ -324,7 +324,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('openInEditMode', openInEditModeAction, {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
-        target: [ 'contentTreeMenuActions', 'contextualMenuContentAction', "tableMenuActions:3" ],
+        target: [ 'contentTreeMenuActions', 'contextualMenuContentAction', "tableMenuActions" ],
     });
 
 }

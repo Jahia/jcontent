@@ -12,12 +12,12 @@ export default composeActions(requirementsAction, withDxContextAction, {
             requiredPermission: "editModeAccess",
             enabled: context => {
                 return context.node.pipe(map(node => {
-                    return !_.isEmpty(node.displayableNode) && node.displayableNode.path.indexOf(siteContentPath) === -1;
+                    return !_.isEmpty(node.displayableNode) && node.displayableNode.path.indexOf(siteContentPath) === -1 && node.displayableNode.path.indexOf('/sites/systemsite/') === -1;
                 }))
             }
         });
     },
-    showOnNodeTypes: [ 'jnt:page', 'jmix:editorialContent' ],
+    showOnNodeTypes: [ 'jnt:page', 'jmix:editorialContent', 'jnt:content' ],
     onClick: (context) => {
         window.open(context.dxContext.contextPath + '/cms/edit/default/' + context.dxContext.lang + context.node.displayableNode.path + '.html', '_blank')
     }

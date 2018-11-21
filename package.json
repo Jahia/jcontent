@@ -4,7 +4,7 @@
   "scripts": {
     "build": "yarn test && yarn clean && ./node_modules/.bin/webpack",
     "build:analyze": "yarn build --analyze",
-    "build:production": "yarn clean && yarn build -p",
+    "build:production": "yarn build -p",
     "build:production-analyze": "yarn build -p --analyze",
     "watch": "yarn build --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",

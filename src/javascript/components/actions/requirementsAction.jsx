@@ -1,7 +1,7 @@
 import {composeActions} from '@jahia/react-material';
 import {withApolloAction} from './withApolloAction';
 import {from, concat, of, combineLatest} from 'rxjs';
-import {filter, map, first} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {ActionRequirementsQueryHandler} from '../gqlQueries';
 import * as _ from 'lodash';
 import {reduxAction} from './reduxAction';
@@ -36,7 +36,6 @@ let requirementsAction = composeActions(withApolloAction, reduxAction(state => (
                 context.node = from(watchQuery)
                     .pipe(
                         filter(res => (res.data && res.data.jcr && res.data.jcr.nodeByPath)),
-                        first(),
                         map(res => res.data.jcr.nodeByPath)
                     );
                 if (showForPaths || requiredPermission || showOnNodeTypes || hideOnNodeTypes || requireModuleInstalledOnSite) {

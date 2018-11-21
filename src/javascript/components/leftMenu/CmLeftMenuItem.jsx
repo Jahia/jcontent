@@ -54,8 +54,8 @@ class CmLeftMenuItem extends React.Component {
         const {onClick, buttonLabel} = context;
         return (
             <Button className={bottom ? classes.bottomListItem : classes.listItem} onClick={e => onClick(context, e)}>
-                {icon}
-                {badge}
+                {Boolean(icon) && icon}
+                {Boolean(badge) && badge}
                 <Typography className={drawer ? classes.typographyIcon : classes.typographyIconLight}
 	                        data-cm-role="left-menu-item-text"
                 >

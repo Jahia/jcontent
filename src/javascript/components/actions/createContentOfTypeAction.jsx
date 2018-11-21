@@ -1,6 +1,6 @@
 import {ContentTypeNamesQuery} from '../gqlQueries';
 import {from} from 'rxjs';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
 
@@ -17,7 +17,6 @@ export default composeActions(requirementsAction, {
 
             context.buttonLabelParams = from(watchQuery).pipe(
                 filter(res => (res.data && res.data.jcr && res.data.jcr.nodeByPath)),
-                first(),
                 map(res => ({typeName: res.data.jcr.nodeTypesByNames[0].displayName}))
             );
         }

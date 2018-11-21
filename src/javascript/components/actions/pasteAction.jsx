@@ -11,7 +11,6 @@ import {withNotificationContextAction} from './withNotificationContextAction';
 import {withI18nAction} from './withI18nAction';
 import {ContentTypesQuery} from '../gqlQueries';
 import {from, of} from 'rxjs';
-import {first} from 'rxjs/operators';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({...state.copyPaste, currentlySelectedPath: state.path}),
@@ -42,7 +41,6 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                         // Contribute type is not empty so we need to execute a query to know the types that are allowed here
                         return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
                             filter(res => (res.data)),
-                            first(),
                             map(res => {
                                 let allowedNodeTypes = [];
                                 let contributionNodeTypes = res.data.jcr.nodeTypesByNames;

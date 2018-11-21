@@ -188,10 +188,10 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20181120150948":
-  version "1.0.0-beta.20181120150948"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181120150948.tgz#a6f5aa80da6defcf744fb17a128d061ba6ab15ec"
-  integrity sha1-pvWqgNpt7890T7F6Eo0GG6arFew=
+"@jahia/react-material@^1.0.0-beta.20181121163215":
+  version "1.0.0-beta.20181121163215"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181121163215.tgz#a46cd8bbc73c48268fac9ce400a9dc723f12a1e1"
+  integrity sha1-pGzYu8c8SCaPrJzkAKnccj8SoeE=
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20181011112119"
     "@material-ui/core" "^3.2.0"

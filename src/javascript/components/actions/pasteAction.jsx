@@ -7,11 +7,12 @@ import {clear} from "../copyPaste/redux/actions";
 import {composeActions} from "@jahia/react-material";
 import requirementsAction from "./requirementsAction";
 import {reduxAction} from "./reduxAction";
-import {map, switchMap} from "rxjs/operators";
+import {filter, map, switchMap} from "rxjs/operators";
 import { withNotificationContextAction } from "./withNotificationContextAction";
 import { withI18nAction } from "./withI18nAction";
 import {ContentTypesQuery} from "../gqlQueries";
 import {from, of} from 'rxjs';
+import {first} from 'rxjs/operators';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     (state) => ({...state.copyPaste, currentlySelectedPath: state.path}),
@@ -41,6 +42,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                         // contribute type is not empty so we need to execute a query to know the types that are allowed here
                         return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
+                            filter(res => (res.data)),
+                            first(),
                             map(res => {
                                 let allowedNodeTypes = [];
                                 let contributionNodeTypes = res.data.jcr.nodeTypesByNames;

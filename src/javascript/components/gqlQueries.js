@@ -260,13 +260,6 @@ const searchContentQuery = gql`
                     totalCount
                 }
                 nodes {
-                    parents:ancestors(fieldFilter: {filters: {fieldName: "type", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
-                        type:property(name: "jcr:primaryType") {
-                            value
-                        }
-                        name
-                        path
-                    }
                     ...NodeFields
                 }
             }
@@ -283,13 +276,6 @@ const sql2SearchContentQuery = gql`
                     totalCount
                 }
                 nodes {
-                    parents:ancestors(fieldFilter: {filters: {fieldName: "type", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
-                        type:property(name: "jcr:primaryType") {
-                            value
-                        }
-                        name
-                        path
-                    }
                     ...NodeFields
                 }
             }
@@ -358,6 +344,27 @@ const filesQuery = gql`
     }
     ${nodeFields}
 `;
+
+
+const FindParentQuery = gql`
+    query findParentQuery($path:String!) {
+        jcr {
+            nodeByPath(path:$path) {
+                parents:ancestors(fieldFilter: {filters: {fieldName: "type.value", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
+                    type:property(name: "jcr:primaryType") {
+                        value
+                    }
+                    name
+                    path
+                    ...NodeCacheRequiredFields
+                }
+                ...NodeCacheRequiredFields
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
+
 
 const SiteContentTypesQuery = gql`
     query SiteContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
@@ -635,4 +642,5 @@ export {
     ActionRequirementsQueryHandler,
     PickerItemsFragment,
     previewQuery,
+    FindParentQuery
 };

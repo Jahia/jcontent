@@ -339,6 +339,27 @@ const filesQuery = gql`
     ${nodeFields}
 `;
 
+
+const FindParentQuery = gql`
+    query findParentQuery($path:String!) {
+        jcr {
+            nodeByPath(path:$path) {
+                parents:ancestors(fieldFilter: {filters: {fieldName: "type.value", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
+                    type:property(name: "jcr:primaryType") {
+                        value
+                    }
+                    name
+                    path
+                    ...NodeCacheRequiredFields
+                }
+                ...NodeCacheRequiredFields
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
+
+
 const SiteContentTypesQuery = gql`
     query SiteContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
         jcr {
@@ -612,5 +633,6 @@ export {
     GetNodeAndChildrenByPathQuery,
     ActionRequirementsQueryHandler,
     PickerItemsFragment,
-    previewQuery
+    previewQuery,
+    FindParentQuery
 };

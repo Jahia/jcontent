@@ -188,7 +188,8 @@
                 "openInEditMode": "Open in edit mode",
                 "error": {
                     "loading": "Error retrieving action data: {{details}}"
-                }
+                },
+                "locate": "Locate"
             },
             "browseFolders": "Browse Folders"
         }

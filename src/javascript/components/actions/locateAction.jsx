@@ -15,7 +15,7 @@ export default composeActions(requirementsAction, reduxAction((state)=> ({mode:s
 })), {
     init: (context) => {
       context.initRequirements({
-          enabled: (context) => of(context.mode === 'search')
+          enabled: (context) => of(context.mode === 'search' || context.mode === 'sql2Search')
       });
     },
     onClick: (context) => {

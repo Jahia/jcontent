@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 import {Drawer, List, ListItem, Typography, withStyles} from '@material-ui/core';
-import LanguageSwitcher from "../languageSwitcher/LanguageSwitcher";
-import SiteSwitcher from "../siteSwitcher/SiteSwitcher";
+import LanguageSwitcher from '../languageSwitcher/LanguageSwitcher';
+import SiteSwitcher from '../siteSwitcher/SiteSwitcher';
 import {translate} from 'react-i18next';
-import classNames from "classnames";
-import BurgerMenuButton from "../BurgerMenuButton";
+import classNames from 'classnames';
+import BurgerMenuButton from '../BurgerMenuButton';
 import {Description} from '@material-ui/icons';
-import {connect} from "react-redux";
-import * as _ from 'lodash';
-import Icon from "../icons/Icon";
-import {actionsRegistry, DisplayActions} from "@jahia/react-material";
-import CmLeftMenuItem from "./CmLeftMenuItem";
+import {connect} from 'react-redux';
+import Icon from '../icons/Icon';
+import {DisplayActions} from '@jahia/react-material';
+import CmLeftMenuItem from './CmLeftMenuItem';
+import {compose} from 'react-apollo';
 
 export const drawerWidth = 289;
 
@@ -20,10 +20,10 @@ const styles = theme => ({
         zIndex: 1,
         paddingLeft: '38px',
         background: '#f7f7f7',
-        fontFamily: "Nunito sans, sans-serif",
+        fontFamily: 'Nunito sans, sans-serif',
         minWidth: '105px',
-        overflow: 'visible !important', //Safari compatibility
-        "-webkit-transform-style": 'preserve-3d', //Safari compatibility
+        overflow: 'visible !important', // Safari compatibility
+        '-webkit-transform-style': 'preserve-3d', // Safari compatibility
         height: '100%',
         display: 'flex',
     },
@@ -36,11 +36,11 @@ const styles = theme => ({
         height: '100%',
         display: 'flex',
     },
-    side: {zIndex: 1, position: "relative"},
+    side: {zIndex: 1, position: 'relative'},
     childItem: {
         background: '#007cb0',
         color: '#ffffff',
-        fontFamily: "Nunito sans, sans-serif",
+        fontFamily: 'Nunito sans, sans-serif',
         padding: '1px 10px 4px 5px',
         fontWeight: 500,
         whiteSpace: 'nowrap',
@@ -53,7 +53,7 @@ const styles = theme => ({
     childOff: {
         background: 'transparent',
         color: '#504e4d',
-        fontFamily: "Nunito sans, sans-serif",
+        fontFamily: 'Nunito sans, sans-serif',
         fontWeight: 500,
         padding: '1px 10px 4px 5px',
         whiteSpace: 'nowrap',
@@ -124,7 +124,7 @@ const styles = theme => ({
         color: '#504e4d',
         fontSize: '9px',
         textAlign: 'center',
-        fontFamily: "Nunito Sans, sans-serif",
+        fontFamily: 'Nunito Sans, sans-serif',
         textTransform: 'uppercase',
         fontWeight: 400,
         width: '100%',
@@ -135,7 +135,7 @@ const styles = theme => ({
         color: '#F5F5F5',
         fontSize: '9px',
         textAlign: 'center',
-        fontFamily: "Nunito Sans, sans-serif",
+        fontFamily: 'Nunito Sans, sans-serif',
         textTransform: 'uppercase',
         fontWeight: 400,
         width: '100%',
@@ -143,7 +143,7 @@ const styles = theme => ({
     },
     typoTitle: {
         fontSize: '25px',
-        fontFamily: "Nunito sans, sans-serif",
+        fontFamily: 'Nunito sans, sans-serif',
         lineHeight: '32px',
         fontWeight: '100',
         color: '#504e4d',
@@ -201,7 +201,6 @@ const styles = theme => ({
 class CMLeftNavigation extends React.Component {
 
     constructor(props) {
-
         super(props);
         this.state = {
             openDrawer: false,
@@ -210,9 +209,11 @@ class CMLeftNavigation extends React.Component {
                 title: null
             }
         };
+        this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+        this.handleDrawerClose = this.handleDrawerClose.bind(this);
     }
 
-    handleDrawerOpen = (drawerContent, menu) => {
+    handleDrawerOpen(drawerContent, menu) {
         this.setState({
             openDrawerMenu: menu,
             openDrawer: true,
@@ -220,7 +221,7 @@ class CMLeftNavigation extends React.Component {
         });
     };
 
-    handleDrawerClose = () => {
+    handleDrawerClose() {
         this.setState({
             openDrawerMenu: null,
             openDrawer: false,
@@ -262,20 +263,20 @@ class CMLeftNavigation extends React.Component {
                         <ListItem button className={classes.menuBurger}>
                             <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
                         </ListItem>
-                        <DisplayActions target={"leftMenuActions"} context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
-                                                                                                                                 drawer={this.state.openDrawer}
-                                                                                                                                 icon={getIcon(context)} />} />
+                        <DisplayActions target="leftMenuActions" context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
+                            drawer={this.state.openDrawer}
+                            icon={getIcon(context)} />} />
 
                     </List>
 
-                    <DisplayActions target={"leftMenuBottomActions"} context={actionContext} render={({context})=> <CmLeftMenuItem context={context}
-                                                                                                                                  bottom={true}
-                                                                                                                                  badge={context.badge}
-                                                                                                                                  drawer={this.state.openDrawer}
-                                                                                                                                  icon={getIcon(context)} />}
+                    <DisplayActions target="leftMenuBottomActions" context={actionContext} render={({context})=> <CmLeftMenuItem bottom
+                        context={context}
+                        badge={context.badge}
+                        drawer={this.state.openDrawer}
+                        icon={getIcon(context)} />}
                     />
 
-                        {/*/!*handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}*!/*/}
+                    {/* /!*handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}*!/ */}
                 </div>
                 <Drawer
                     variant="persistent"
@@ -286,7 +287,7 @@ class CMLeftNavigation extends React.Component {
                 >
                     <div className={classes.blockMenu}>
                         <div className={classes.siteSwitcher}>
-                            <SiteSwitcher dark={true}/>
+                            <SiteSwitcher dark/>
                         </div>
                         <Typography className={classes.typoTitle}>
                             {this.state.drawerContent &&
@@ -294,7 +295,7 @@ class CMLeftNavigation extends React.Component {
                             }
                         </Typography>
                         <div className={classes.languageSwitcher}>
-                            <LanguageSwitcher dark={true}/>
+                            <LanguageSwitcher dark/>
                         </div>
                     </div>
                     <div className={classes.drawerTree}>
@@ -308,15 +309,13 @@ class CMLeftNavigation extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     siteKey: state.site,
     mode: state.mode,
 });
 
-CMLeftNavigation = _.flowRight(
+export default compose(
     translate(),
     withStyles(styles, {withTheme: true}),
     connect(mapStateToProps)
 )(CMLeftNavigation);
-
-export default CMLeftNavigation;

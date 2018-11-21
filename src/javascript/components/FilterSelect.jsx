@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
-import {ArrowDropDown as ArrowDropDownIcon} from "@material-ui/icons";
-import {Close as CloseIcon} from "@material-ui/icons";
+import {ArrowDropDown as ArrowDropDownIcon} from '@material-ui/icons';
+import {Close as CloseIcon} from '@material-ui/icons';
 import {ListItemIcon, ListItemText, Input, withStyles, MenuItem} from '@material-ui/core';
 import * as _ from 'lodash';
-import {compose} from "react-apollo/index";
-import {translate} from "react-i18next";
+import {compose} from 'react-apollo';
+import {translate} from 'react-i18next';
 
-const styles = theme => ({
+const styles = () => ({
     root: {
         width: 'auto',
         minWidth: '100px',
@@ -19,7 +19,7 @@ const styles = theme => ({
         boxShadow: 'none!important',
     },
     inputPadding: {
-      padding: '0!important'
+        padding: '0!important'
     },
     selectDetails: {
         borderBottom: 'none!important',
@@ -41,17 +41,17 @@ const customStyles = {
         color: '#fff',
     }),
     control: () => ({
-        display: "flex",
+        display: 'flex',
         color: '#fff',
-        alignItems: "center",
+        alignItems: 'center',
         height: 34,
         width: '155px',
-        background: "#007bc0",
-        "&:hover": {
-            boxShadow: "none"
+        background: '#007bc0',
+        '&:hover': {
+            boxShadow: 'none'
         },
-        "&>div": {
-            overflow: "visible!important"
+        '&>div': {
+            overflow: 'visible!important'
         }
     }),
     group: () => ({
@@ -65,13 +65,13 @@ const customStyles = {
         maxWidth: '155px',
     }),
     menu: () => ({
-        backgroundColor: "#ecebeb",
+        backgroundColor: '#ecebeb',
         color: '#3a3c3f!important',
-        // boxShadow: "1px 2px 6px #888888", // should be changed as material-ui
-        position: "absolute",
+        // BoxShadow: "1px 2px 6px #888888", // should be changed as material-ui
+        position: 'absolute',
         left: 0,
-        top: `calc(100% + 1px)`,
-        width: "100%",
+        top: 'calc(100% + 1px)',
+        width: '100%',
         zIndex: 2,
         maxHeight: ITEM_HEIGHT * 4.5
     }),
@@ -94,7 +94,7 @@ const customStyles = {
         boxShadow: '1px 3px 4px 0px rgba(38, 38, 38, 0.4)',
         display: 'inline-block',
         background: '#ecebeb',
-        overflowY: "auto"
+        overflowY: 'auto'
     }),
     input: () => ({
         color: '#fff!important',
@@ -117,7 +117,13 @@ const customStyles = {
 
 class Option extends React.Component {
 
-    handleClick = event => {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+
+    handleClick(event) {
         this.props.selectOption(this.props.data, event);
     };
 
@@ -127,15 +133,13 @@ class Option extends React.Component {
 
         return (
             <MenuItem
-                onFocus={onFocus}
                 selected={isFocused}
-                onClick={this.handleClick}
                 component="div"
                 style={isFocused ?
                     {
-                    fontWeight: isSelected ? 500 : 400,
-                    color: '#ffffff',
-                    minWidth: '155px'
+                        fontWeight: isSelected ? 500 : 400,
+                        color: '#ffffff',
+                        minWidth: '155px'
                     } :
                     {
                         fontWeight: isSelected ? 500 : 400,
@@ -144,8 +148,10 @@ class Option extends React.Component {
                     }
                 }
                 title={data.title}
+                onClick={this.handleClick}
+                onFocus={onFocus}
             >
-                {data.icon != null &&
+                {data.icon !== null &&
                     <ListItemIcon>
                         <img src={data.icon + '.png'}/>
                     </ListItemIcon>
@@ -161,7 +167,6 @@ class Option extends React.Component {
 class DropdownIndicator extends React.Component {
 
     render() {
-        let {open} = this.props;
         if (!this.props.selectProps.open) {
             return (
                 <components.DropdownIndicator {...this.props}>
@@ -169,32 +174,31 @@ class DropdownIndicator extends React.Component {
                 </components.DropdownIndicator>
             );
         }
-        else {
-            return <div />
-        }
+        
+        return <div />
+        
     }
-};
+}
 
 class ClearIndicator extends React.Component {
     render() {
-        let {open} = this.props;
         if (this.props.selectProps.open) {
             return (
                 <components.ClearIndicator {...this.props}>
-                    <CloseIcon style={{fontSize: '18px', }}/>
+                    <CloseIcon style={{fontSize: '18px'}}/>
                 </components.ClearIndicator>
             );
         }
-        else {
-            return <div />
-        }
+        
+        return <div />
+        
     }
-};
+}
 
 class SelectWrapped extends React.Component {
     render() {
 
-        const {classes, value, open, options, t, ...other} = this.props;
+        const {value, open, options, ...other} = this.props;
         let optionValue = _.find(options, (data) => data.value === value);
 
         return (
@@ -219,21 +223,21 @@ class SelectWrapped extends React.Component {
 class FilterSelect extends React.Component {
 
     render() {
-        let {classes, t, options, selectedOption, open, handleIndicator, children, handleChange} = this.props;
+        let {classes, options, selectedOption, open, handleIndicator, handleChange} = this.props;
         return (
-            <div className={classes.root} data-cm-role={'filter-select'}>
+            <div className={classes.root} data-cm-role="filter-select">
                 <Input
+                    disableUnderline
                     fullWidth
                     classes={{ root: classes.inputDetails, input: classes.inputPadding}}
                     inputComponent={SelectWrapped}
-                    onChange={handleChange}
                     open={open}
-                    onKeyPress={handleIndicator}
-                    disableUnderline={true}
                     value={selectedOption}
                     inputProps={{
                         options, open
                     }}
+                    onChange={handleChange}
+                    onKeyPress={handleIndicator}
                 />
             </div>
         );
@@ -247,9 +251,12 @@ FilterSelect.propTypes = {
     handleChange : PropTypes.func
 };
 
-FilterSelect = compose(
+FilterSelect.defaultProps = {
+    selectedOption: null,
+    handleChange : () => {}
+};
+
+export default compose(
     withStyles(styles),
     translate()
 )(FilterSelect);
-
-export default FilterSelect;

@@ -1,25 +1,21 @@
 import React from 'react';
 import {
-    IconButton,
     List,
     ListItem,
     Button,
     ListItemIcon,
-    ListItemSecondaryAction,
     ListItemText,
-    SvgIcon,
     withStyles,
     withTheme
 } from '@material-ui/core';
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
-import {lodash as _} from "lodash";
-import {isMarkedForDeletion} from "../utils";
+import {isMarkedForDeletion} from '../utils';
+import {compose} from 'react-apollo';
 
 let styles = (theme) => ({
     root: {
-        position: "relative",
+        position: 'relative',
         padding: '0 !important',
         width: '100%'
     },
@@ -68,9 +64,9 @@ let styles = (theme) => ({
         color: 'whitesmoke !important'
     },
     loadingContainer: {
-        position: "absolute",
-        width: "100%",
-        height: "100%",
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
         zIndex: 999
     },
     toggleUnSelected: {
@@ -124,14 +120,16 @@ class CmPickerViewMaterial extends React.Component {
         super(props);
         this.state = {
             hover: false
-        }
+        };
+        this.hoverOn = this.hoverOn.bind(this);
+        this.hoverOff = this.hoverOff.bind(this);
     }
 
-    hoverOn = (path) => {
+    hoverOn(path) {
         this.setState({ hover: path });
     };
 
-    hoverOff = () => {
+    hoverOff() {
         this.setState({ hover: false });
     };
 
@@ -139,7 +137,7 @@ class CmPickerViewMaterial extends React.Component {
 
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
 
-        //Sorts entries that are folder types
+        // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
         return <div className={classes.root}>
@@ -157,14 +155,14 @@ class CmPickerViewMaterial extends React.Component {
                             itemClass = itemClass + ' ' + classes.listItemSelected;
                         }
                         return <ListItem
-                            onMouseEnter={() => this.hoverOn(entry.path)}
-                            onClick={() => this.hoverOn(entry.path)}
-                            onMouseLeave={this.hoverOff}
-                            onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                             key={entry.path}
-                            divider={true}
+                            divider
                             className={itemClass}
-                            data-jrm-role={'picker-item'}
+                            data-jrm-role="picker-item"
+                            onClick={() => this.hoverOn(entry.path)}
+                            onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
+                            onMouseEnter={() => this.hoverOn(entry.path)}
+                            onMouseLeave={this.hoverOff}
                         >
                             <div
                                 className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
@@ -175,24 +173,25 @@ class CmPickerViewMaterial extends React.Component {
                             >
                                 <Button
                                     className={classes.buttonContainer}
+                                    disabled={!(entry.openable && entry.hasChildren)}
+                                    data-jrm-role="picker-item-toggle"
+                                    data-jrm-state={entry.open ? 'open' : 'closed'}
                                     onClick={(event) => {
                                         onOpenItem(entry.path, !entry.open);
                                         event.stopPropagation()
                                     }}
-                                    disabled={!(entry.openable && entry.hasChildren)}
-                                    data-jrm-role={'picker-item-toggle'}
-                                    data-jrm-state={entry.open ? 'open' : 'closed'}
                                 >
                                     <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
                                 </Button>
                             </div>
                             <span className={classes.treeEntry}
-                                  onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
+                                onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
                                 <ListItemIcon
                                     className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
                                     {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
                                 </ListItemIcon>
                                 <ListItemText
+                                    disableTypography
                                     inset
                                     classes={entry.selected ? {
                                         root: classes.listItemLabel,
@@ -200,9 +199,8 @@ class CmPickerViewMaterial extends React.Component {
                                     } : {
                                         root: classes.listItemLabel
                                     }}
-                                    disableTypography={true}
                                     primary={textRenderer ? textRenderer(entry) : entry.name}
-                                    data-jrm-role={'picker-item-text'}
+                                    data-jrm-role="picker-item-text"
                                 />
                             </span>
                             {actionsRenderer &&
@@ -218,26 +216,26 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     sortFoldersAlphabetical(pickerEntries) {
-        if (pickerEntries.length !== 0 && pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === "jnt:contentFolder" || pickerEntries[0].node.primaryNodeType.name === "jnt:folder")) {
+        if (pickerEntries.length !== 0 && pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === 'jnt:contentFolder' || pickerEntries[0].node.primaryNodeType.name === 'jnt:folder')) {
             const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
             return this.sortAndFlatten(rootNode);
         }
-        else {
-            return pickerEntries;
-        }
+        
+        return pickerEntries;
+        
     }
 
     reconstructNodeHierarchy(pickerEntriesSortedByPath) {
         const hierarchyStack = [];
-        //Add root node to stack
+        // Add root node to stack
         hierarchyStack.push(pickerEntriesSortedByPath.splice(0, 1)[0]);
 
         while(pickerEntriesSortedByPath.length !== 0 && hierarchyStack.length !== 0) {
             const currentPickerEntry = pickerEntriesSortedByPath[0];
             const top = hierarchyStack[hierarchyStack.length - 1];
 
-            //Add children to top of the stack if current entry is child of top
-            if (currentPickerEntry.path.indexOf(top.path) !== -1 && currentPickerEntry.path.replace(top.path, "")[0] === "/") {
+            // Add children to top of the stack if current entry is child of top
+            if (currentPickerEntry.path.indexOf(top.path) !== -1 && currentPickerEntry.path.replace(top.path, '')[0] === '/') {
                 if (!top.children) {
                     top.children = [];
                 }
@@ -255,8 +253,8 @@ class CmPickerViewMaterial extends React.Component {
     sortAndFlatten(rootNode) {
         const flatArray = [];
 
-        DFS(rootNode);
-        function DFS(node) {
+        dfs(rootNode);
+        function dfs(node) {
             flatArray.push(node);
             if (node.children) {
                 node.children.sort(function (a, b) {
@@ -272,7 +270,7 @@ class CmPickerViewMaterial extends React.Component {
                 });
 
                 for(let i = 0; i < node.children.length; i++) {
-                    DFS(node.children[i]);
+                    dfs(node.children[i]);
                 }
             }
         }
@@ -287,6 +285,10 @@ CmPickerViewMaterial.propTypes = {
     textRenderer: PropTypes.func
 };
 
-CmPickerViewMaterial = withTheme()(withStyles(styles, {name: "DxPickerViewMaterial"})(CmPickerViewMaterial));
+CmPickerViewMaterial.defaultProps = {
+    onSelectItem: () => {},
+    onOpenItem: () => {},
+    textRenderer: () => {}
+};
 
-export {CmPickerViewMaterial};
+export default compose(withTheme(), withStyles(styles, {name: 'DxPickerViewMaterial'}))(CmPickerViewMaterial);

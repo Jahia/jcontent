@@ -1,5 +1,5 @@
 import React from 'react';
-import {registerPushEventHandler, unregisterPushEventHandler} from "./eventHandlerRegistry";
+import {registerPushEventHandler, unregisterPushEventHandler} from './eventHandlerRegistry';
 import {refetchContentTreeAndListData, refetchActiveWorkflowTasks} from './refetches';
 
 /**
@@ -7,7 +7,6 @@ import {refetchContentTreeAndListData, refetchActiveWorkflowTasks} from './refet
  * or background / workflow task completion. This component then triggers the refetch of the data to "update" the data set.
  */
 class PushEventHandler extends React.Component {
-
     constructor(props) {
         super(props);
         this.onPushEvent = this.onPushEvent.bind(this);
@@ -24,16 +23,16 @@ class PushEventHandler extends React.Component {
     onPushEvent(eventData) {
         if (eventData) {
             let evtType = eventData.type;
-            if (evtType === "workflowTask") {
+            if (evtType === 'workflowTask') {
                 refetchActiveWorkflowTasks();
-                if (eventData.endedWorkflow != null) {
+                if (eventData.endedWorkflow !== null) {
                     this.refetchData();
                 }
-            } else if (evtType === "job") {
+            } else if (evtType === 'job') {
                 if (this.hasProcessJob(eventData.startedJobs) || this.hasProcessJob(eventData.endedJobs)) {
                     this.refetchData();
                 }
-            } else if (evtType === "contentUnpublished") {
+            } else if (evtType === 'contentUnpublished') {
                 this.refetchData();
             }
         }
@@ -42,8 +41,8 @@ class PushEventHandler extends React.Component {
     hasProcessJob(jobs) {
         let found = false;
         if (jobs) {
-            found = jobs.some(function(job) {
-                return (job.group === "StartProcessJob" || job.group === "PublicationJob");
+            found = jobs.some(function (job) {
+                return (job.group === 'StartProcessJob' || job.group === 'PublicationJob');
             });
         }
         return found;

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import { translate } from "react-i18next";
-import { withStyles, IconButton, Button, MenuItem, Menu, Tooltip } from "@material-ui/core";
-import { Share } from "@material-ui/icons";
+import React, {Component} from 'react';
+import {translate} from 'react-i18next';
+import {withStyles, Button, MenuItem, Menu, Tooltip} from '@material-ui/core';
+import {Share} from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
-import {lodash as _} from "lodash";
-import {connect} from "react-redux";
+import {lodash as _} from 'lodash';
+import {connect} from 'react-redux';
+import {compose} from 'react-apollo';
 
 const styles = theme => ({
     button: {
@@ -16,21 +17,19 @@ const styles = theme => ({
 });
 
 class ShareMenu extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            shareMenuAnchor: null,
+            shareMenuAnchor: null
         };
     }
 
     copy(value) {
-        this.handleMenuClose("shareMenuAnchor");
+        this.handleMenuClose('shareMenuAnchor');
         copy(value);
     }
 
     render() {
-
         const {t, selection, classes} = this.props;
         const {shareMenuAnchor} = this.state;
 
@@ -40,46 +39,47 @@ class ShareMenu extends Component {
 
         const selectedItem = selection[0];
 
-        return <span>
-            <Tooltip title={t('label.contentManager.contentPreview.share')}>
-                <Button
-                    aria-owns={shareMenuAnchor ? 'share-menu' : null}
-                    aria-haspopup="true"
-                    className={classes.colorIcon}
-                    onClick={(event) => this.handleMenuClick(event, "shareMenuAnchor")}
+        return (
+            <span>
+                <Tooltip title={t('label.contentManager.contentPreview.share')}>
+                    <Button aria-owns={shareMenuAnchor ? 'share-menu' : null}
+                        aria-haspopup="true"
+                        className={classes.colorIcon}
+                        onClick={event => this.handleMenuClick(event, 'shareMenuAnchor')}
+                    >
+                        <Share/>
+                    </Button>
+                </Tooltip>
+                <Menu id="share-menu"
+                    anchorEl={shareMenuAnchor}
+                    open={Boolean(shareMenuAnchor)}
+                    onClose={() => this.handleMenuClose('shareMenuAnchor')}
                 >
-                    <Share/>
-                </Button>
-            </Tooltip>
-            <Menu
-                id="share-menu"
-                anchorEl={shareMenuAnchor}
-                open={Boolean(shareMenuAnchor)}
-                onClose={() => this.handleMenuClose("shareMenuAnchor")}>
-                <MenuItem onClick={() => this.copy(selectedItem.path)}>
-                    {t('label.contentManager.contentPreview.copyPathToClipboard')}
-                </MenuItem>
-                <MenuItem onClick={() => this.copy(selectedItem.uuid)}>
-                    {t('label.contentManager.contentPreview.copyUUIDToClipboard')}
-                </MenuItem>
-            </Menu>
-        </span>;
+                    <MenuItem onClick={() => this.copy(selectedItem.path)}>
+                        {t('label.contentManager.contentPreview.copyPathToClipboard')}
+                    </MenuItem>
+                    <MenuItem onClick={() => this.copy(selectedItem.uuid)}>
+                        {t('label.contentManager.contentPreview.copyUUIDToClipboard')}
+                    </MenuItem>
+                </Menu>
+            </span>
+        );
     }
 
     handleMenuClick(event, anchorType) {
         this.setState({[anchorType]: event.currentTarget});
-    };
+    }
 
     handleMenuClose(anchorType) {
         this.setState({[anchorType]: null});
-    };
+    }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     selection: state.selection
 });
 
-export default _.flowRight(
+export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps)

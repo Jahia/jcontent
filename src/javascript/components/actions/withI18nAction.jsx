@@ -1,7 +1,7 @@
 import React from 'react';
-import {translate} from "react-i18next";
+import {translate} from 'react-i18next';
 
-let TranslateConsumer = translate()((props) => props.children(props.t));
+let TranslateConsumer = translate()(props => props.children(props.t));
 
 let withI18nAction = {
     init: (context, props) => {
@@ -9,9 +9,8 @@ let withI18nAction = {
     },
 
     wrappers: [
-        (component) => <TranslateConsumer>{t => React.cloneElement(component, {t})}</TranslateConsumer>
+        component => <TranslateConsumer>{t => React.cloneElement(component, {t})}</TranslateConsumer>
     ]
 };
 
-
-export { withI18nAction };
+export {withI18nAction};

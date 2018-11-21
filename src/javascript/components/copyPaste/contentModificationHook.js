@@ -1,13 +1,13 @@
 let modificationFunction = null;
 
-const setModificationHook = (modificationFcn) => {
+const setModificationHook = modificationFcn => {
     modificationFunction = modificationFcn;
 };
 
-const invokeModificationHook = (args) => {
+const invokeModificationHook = args => {
     if (modificationFunction !== null) {
         modificationFunction(args);
     }
 };
 
-export { invokeModificationHook, setModificationHook };
+export {invokeModificationHook, setModificationHook};

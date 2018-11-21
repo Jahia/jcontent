@@ -1,7 +1,7 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
-import PDF from 'react-pdf-js';
-import {translate} from "react-i18next";
+import Pdf from 'react-pdf-js';
+import {translate} from 'react-i18next';
 import {IconButton, Paper, withStyles} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
@@ -91,7 +91,7 @@ const styles = theme => ({
         background: 'transparent'
     },
     colorPagination:{
-      color: theme.palette.background.default,
+        color: theme.palette.background.default,
     },
     controlRight: {
         flex: 1,
@@ -109,11 +109,11 @@ const styles = theme => ({
     },
     hideScale: {
         opacity:0,
-        transition: "opacity 0.3s ease-out 0s"
+        transition: 'opacity 0.3s ease-out 0s'
     },
     showScale: {
         opacity: 1,
-        transition: "opacity 0.3s ease-in 0s"
+        transition: 'opacity 0.3s ease-in 0s'
     },
     PaperPdf : {
         backgroundColor: theme.palette.common.white,
@@ -132,14 +132,19 @@ class PDFViewer extends React.Component {
             scaleSize: 7
         };
         this.scaleTimeout = null;
+        this.onDocumentComplete = this.onDocumentComplete.bind(this);
+        this.handleNavigation = this.handleNavigation.bind(this);
+        this.handleZoom = this.handleZoom.bind(this);
+        this.renderPagination = this.renderPagination.bind(this);
+        this.displayScaleSize = this.displayScaleSize.bind(this);
     }
 
-    onDocumentComplete = (pages) => {
+    onDocumentComplete(pages) {
         this.setState({ page: 1, pages });
     };
 
-    handleNavigation = (event, value) => {
-        this.setState((prevState, props) => {
+    handleNavigation(event, value) {
+        this.setState((prevState) => {
             let {page, pages} = prevState;
             let newPage = page;
             switch(value) {
@@ -155,13 +160,15 @@ class PDFViewer extends React.Component {
                 case 'previous' :
                     newPage = --page;
                     break;
+                default:
+                    break;
             }
             return {page: newPage}
         });
     };
 
-    handleZoom = (event, value) => {
-        this.setState((prevState, props) => {
+    handleZoom(event, value) {
+        this.setState((prevState) => {
             let {scaleSize} = prevState;
             let newScaleSize = scaleSize;
             switch(value) {
@@ -171,6 +178,8 @@ class PDFViewer extends React.Component {
                 case 'out':
                     newScaleSize = --scaleSize;
                     break;
+                default:
+                    break;
             }
             clearTimeout(this.scaleTimeout);
             this.scaleTimeout = setTimeout(() => {
@@ -178,40 +187,41 @@ class PDFViewer extends React.Component {
             }, 1000);
             return {scaleSize: newScaleSize, showScale: true}
         });
-    };
-    renderPagination = (fullScreen) => {
+    }
+    ;
+    renderPagination(fullScreen) {
         let {classes} = this.props;
         let {page, pages, scaleSize} = this.state;
         let firstPageButton = <IconButton className={classes.colorPagination}
-                                          disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'first')}}>
-            <FontAwesomeIcon size="xs" icon={"step-backward"}/>
+            disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'first')}}>
+            <FontAwesomeIcon size="xs" icon="step-backward"/>
         </IconButton>;
         let lastPageButton = <IconButton className={classes.colorPagination}
-                                         disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'last')}}>
-            <FontAwesomeIcon size="xs" icon={"step-forward"}/>
+            disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'last')}}>
+            <FontAwesomeIcon size="xs" icon="step-forward"/>
         </IconButton>;
         let previousButton = <IconButton className={classes.colorPagination}
-                                         disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'previous')}}>
-            <FontAwesomeIcon size="xs" icon={"chevron-left"}/>
+            disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'previous')}}>
+            <FontAwesomeIcon size="xs" icon="chevron-left"/>
         </IconButton>;
         let nextButton = <IconButton
             className={classes.colorPagination}
             disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'next')}}>
-            <FontAwesomeIcon size="xs" icon={"chevron-right"}/>
+            <FontAwesomeIcon size="xs" icon="chevron-right"/>
         </IconButton>;
 
         let zoomInButton = <IconButton
             className={classes.colorPagination}
             disabled={scaleSize === scaleSizes.length-1} onClick={(event) => {this.handleZoom(event, 'in')}}>
-            <FontAwesomeIcon size="xs" icon={"search-plus"}/>
+            <FontAwesomeIcon size="xs" icon="search-plus"/>
         </IconButton>;
         let zoomOutButton = <IconButton className={classes.colorPagination}
-                                        disabled={scaleSize === 0} onClick={(event) => {this.handleZoom(event, 'out')}}>
-            <FontAwesomeIcon size="xs" icon={"search-minus"}/>
+            disabled={scaleSize === 0} onClick={(event) => {this.handleZoom(event, 'out')}}>
+            <FontAwesomeIcon size="xs" icon="search-minus"/>
         </IconButton>;
         return (
             <div>
-            {!fullScreen ?
+                {!fullScreen ?
                     <Controls>
                         <Paper className={classes.controlLeft} elevation={0}/>
                         <Paper className={classes.controlCenter} elevation={0}>
@@ -241,14 +251,14 @@ class PDFViewer extends React.Component {
                             {zoomInButton}
                         </Paper>
                     </ControlsFullScreen>
-            }
+                }
             </div>
 
         )
     };
 
-    displayScaleSize = () => {
-      return Math.floor(scaleSizes[this.state.scaleSize] * 100) + " %"
+    displayScaleSize() {
+        return Math.floor(scaleSizes[this.state.scaleSize] * 100) + ' %'
     };
 
     render() {
@@ -261,24 +271,24 @@ class PDFViewer extends React.Component {
             {fullscreen ?
                 <PDFContainerFull>
                     <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
-                        <PDF
+                        <Pdf
                             file={file}
                             scale={scaleSizes[scaleSize]}
+                            page={page}
                             onDocumentComplete={this.onDocumentComplete}
                             onPageComplete={this.onPageComplete}
-                            page={page}
                         />
                     </Paper>
                 </PDFContainerFull>
                 :
                 <PDFContainer>
                     <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
-                        <PDF
+                        <Pdf
                             file={file}
                             scale={scaleSizes[scaleSize]}
+                            page={page}
                             onDocumentComplete={this.onDocumentComplete}
                             onPageComplete={this.onPageComplete}
-                            page={page}
                         />
                     </Paper>
                 </PDFContainer>
@@ -293,4 +303,3 @@ PDFViewer.propTypes = {
 };
 
 export default translate()(withStyles(styles)(PDFViewer));
-

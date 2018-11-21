@@ -1,29 +1,27 @@
-import React from "react";
-import { TableHead, TableRow, TableCell, TableSortLabel, withStyles } from "@material-ui/core";
-import {translate} from "react-i18next";
+import React from 'react';
+import {TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
+import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
-import {compose} from "react-apollo/index";
+import {compose} from 'react-apollo';
 
 class ContentListHeader extends React.Component {
-
-    handleSort(order, orderBy){
+    handleSort(order, orderBy) {
         this.props.onRequestSort(order, orderBy);
-    };
+    }
 
     render() {
-
-        const { order, orderBy, columnData, t, classes} = this.props;
-        let direction = order==="DESC" ? "ASC" : "DESC";
+        const {order, orderBy, columnData, t, classes} = this.props;
+        let direction = order === 'DESC' ? 'ASC' : 'DESC';
         return (
             <TableHead className={classes.head}>
                 <TableRow className={classes.contentRow}>
-                    <TableCell />
+                    <TableCell/>
                     {columnData.map(column => {
-                        if(column.sortable) {
+                        if (column.sortable) {
                             return (
                                 <TableCell
-                                    classes={column.id !== 'createdBy' ? {root: classes.paddingCell} : {}}
                                     key={column.id}
+                                    classes={column.id !== 'createdBy' ? {root: classes.paddingCell} : {}}
                                     className={classes[column.id] + ' ' + classes.tableCellHeight}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                 >
@@ -37,16 +35,16 @@ class ContentListHeader extends React.Component {
                                     </TableSortLabel>
                                 </TableCell>
                             );
-                        }else{
-                            return(
-                                <TableCell
+                        }
+                        return (
+                            <TableCell
                                 key={column.id}
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
-                                sortDirection={orderBy === column.property ? order.toLowerCase() : false}>
-                                    {t(column.label)}
+                                sortDirection={orderBy === column.property ? order.toLowerCase() : false}
+                            >
+                                {t(column.label)}
                             </TableCell>
-                            );
-                        }
+                        );
                     }, this)}
                 </TableRow>
             </TableHead>
@@ -56,12 +54,9 @@ class ContentListHeader extends React.Component {
 
 ContentListHeader.propTypes = {
     order: PropTypes.string.isRequired,
-    orderBy: PropTypes.string.isRequired,
+    orderBy: PropTypes.string.isRequired
 };
 
-ContentListHeader = compose(
+export default compose(
     translate(),
 )(ContentListHeader);
-
-
-export default ContentListHeader;

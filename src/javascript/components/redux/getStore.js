@@ -1,7 +1,7 @@
-import {applyMiddleware, combineReducers, compose, createStore} from "redux";
+import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
-import { fileUpload } from '../fileupload/redux/reducer';
-import { copyPaste } from '../copyPaste/redux/reducer';
+import {fileUpload} from '../fileupload/redux/reducer';
+import {copyPaste} from '../copyPaste/redux/reducer';
 import {
     languageReducer,
     siteReducer,
@@ -16,13 +16,11 @@ import {
     openPathsReducer,
     searchModeReducer,
     siteDisplayableNameReducer
-} from "./reducers";
-import {connectRouter, routerMiddleware} from "connected-react-router";
+} from './reducers';
+import {connectRouter, routerMiddleware} from 'connected-react-router';
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
-import logger from 'redux-logger'
 
 let getStore = (dxContext, history) => {
-
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
     const rootReducer = combineReducers({
         uiLang: uiLanguageReducer(dxContext),
@@ -50,7 +48,7 @@ let getStore = (dxContext, history) => {
             applyMiddleware(
                 routerMiddleware(history),
                 batchDispatchMiddleware,
-                //logger
+                // Logger
             ),
         ),
     );

@@ -1,24 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Drawer } from '@material-ui/core';
-
-const styles = theme => ({});
+import {Drawer} from '@material-ui/core';
 
 class UploadDrawer extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-    }
-
     render() {
-        const { PaperProps, transitionDuration } = this.props;
+        const {PaperProps, transitionDuration} = this.props;
         return (
             <Drawer anchor="bottom"
-                    style={{position: "initial"}}
-                    PaperProps={ PaperProps }
-                    open={ this.props.open }
-                    transitionDuration={ transitionDuration }>
+                style={{position: 'initial'}}
+                PaperProps={PaperProps}
+                open={this.props.open}
+                transitionDuration={transitionDuration}
+            >
                 { this.props.children }
             </Drawer>
         );
@@ -26,10 +19,13 @@ class UploadDrawer extends React.Component {
 }
 
 UploadDrawer.propTypes = {
-    classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     PaperProps: PropTypes.object,
     transitionDuration: PropTypes.number.isRequired
 };
 
-export default withStyles(styles)(UploadDrawer);
+UploadDrawer.defaultProps = {
+    PaperProps: null
+};
+
+export default UploadDrawer;

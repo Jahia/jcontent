@@ -1,4 +1,5 @@
-import Constants from "./constants";
+import Constants from './constants';
+import _ from 'lodash';
 /**
  * Apollo's Query component allows one to use refetch function to rerun a query bound to the component.
  * The purpose of this code is to be able to create hooks to refetch functions and call them outside of Query components.
@@ -10,19 +11,19 @@ import Constants from "./constants";
 const refetches = {};
 
 const refetchTypes = {
-    "CONTENT_DATA": "CONTENT_DATA",
-    "ACTIVE_WORKFLOW_TASKS": "ACTIVE_WORKFLOW_TASKS"
+    CONTENT_DATA: 'CONTENT_DATA',
+    ACTIVE_WORKFLOW_TASKS: 'ACTIVE_WORKFLOW_TASKS'
 };
 
 let setRefetcher = (name, refetcherData) => {
     refetches[name] = refetcherData;
 };
 
-let setActiveWorkflowTaskRefetcher = (refetcherData) => {
+let setActiveWorkflowTaskRefetcher = refetcherData => {
     setRefetcher(refetchTypes.ACTIVE_WORKFLOW_TASKS, refetcherData);
 };
 
-let setContentListDataRefetcher = (refetcherData) => {
+let setContentListDataRefetcher = refetcherData => {
     setRefetcher(refetchTypes.CONTENT_DATA, refetcherData);
 };
 
@@ -46,13 +47,13 @@ let refetchContentListData = () => {
     triggerRefetch(refetchTypes.CONTENT_DATA);
 };
 
-let refetchContentTreeData = (contentTreeConfigs) => {
-    _.forOwn(contentTreeConfigs || Constants.contentTreeConfigs, function(cfg) {
+let refetchContentTreeData = contentTreeConfigs => {
+    _.forOwn(contentTreeConfigs || Constants.contentTreeConfigs, function (cfg) {
         triggerRefetch(cfg.key);
     });
 };
 
-let refetchContentTreeAndListData = (contentTreeConfigs) => {
+let refetchContentTreeAndListData = contentTreeConfigs => {
     refetchContentTreeData(contentTreeConfigs);
     refetchContentListData();
 };
@@ -69,4 +70,4 @@ export {
     refetchContentListData,
     refetchContentTreeData,
     refetchContentTreeAndListData
-}
+};

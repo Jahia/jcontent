@@ -1,29 +1,47 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {Query} from 'react-apollo';
+import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
-import {connect} from "react-redux";
-import Loadable from "react-loadable";
-import {lodash as _} from "lodash";
+import {connect} from 'react-redux';
+import {lodash as _} from 'lodash';
 import {Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
-import {CloudDownload, Fullscreen, FullscreenExit} from "@material-ui/icons";
+import {CloudDownload, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
-import {previewQuery} from "../gqlQueries";
+import {previewQuery} from '../gqlQueries';
 import PublicationInfo from './PublicationStatus';
 import ShareMenu from './ShareMenu';
-import {getFileType, isBrowserImage, isPDF} from "../filesGrid/filesGridUtils";
-import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from "../redux/actions";
-import {ellipsizeText} from "../utils.js";
+import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
+import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from '../redux/actions';
+import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
+import DocumentViewer from './filePreviewer/DocumentViewer';
+import PDFViewer from './filePreviewer/PDFViewer';
+import ImageViewer from './filePreviewer/ImageViewer';
+
+// TODO we should reactivate this code once we figure out how to make it works with ESLint
+// import loadable from 'react-loadable';
+// const DocumentViewer = loadable({
+//     loader: () => import('./filePreviewer/DocumentViewer'),
+//     loading: () => <div/>,
+// });
+//
+// const PDFViewer = loadable({
+//     loader: () => import('./filePreviewer/PDFViewer'),
+//     loading: () => <div/>,
+// });
+//
+// const ImageViewer = loadable({
+//     loader: () => import('./filePreviewer/ImageViewer'),
+//     loading: () => <div/>,
+// });
 
 const styles = theme => ({
     root: {
-        transition: "width 0.3s ease-in 0s",
+        transition: 'width 0.3s ease-in 0s',
         width: 550,
     },
     rootFullWidth: {
         width: '100vw',
-        transition: "width 0.3s ease-in 0s",
+        transition: 'width 0.3s ease-in 0s',
     },
     button: {
         margin: theme.spacing.unit
@@ -31,16 +49,16 @@ const styles = theme => ({
     previewPaper: {
         flex: 9,
         width: '550',
-        position: "relative"
+        position: 'relative'
     },
     previewContainer: {
-        // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
+        // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: 550,
         backgroundColor: theme.palette.common.white,
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 155px)',
-        border: "none"
+        border: 'none'
     },
     previewContainerFullScreen: {
         width: '100vw',
@@ -48,10 +66,10 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 28px)',
-        border: "none"
-        },
+        border: 'none'
+    },
     previewContainerPdf: {
-        // maxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
+        // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
         width: '100%',
         maxHeight: 'calc(100vh - 330px);',
         color: theme.palette.background.default,
@@ -130,11 +148,11 @@ const styles = theme => ({
         color: '#303030'
     },
     gridUnpublish: {
-        marginTop: theme.spacing.unit * 1,
-        marginBottom: theme.spacing.unit * 1,
+        marginTop: Number(theme.spacing.unit),
+        marginBottom: Number(theme.spacing.unit),
     },
     paddingButton: {
-        // padding: '12px'
+        // Padding: '12px'
     },
     lockButton: {
         textAlign: 'left'
@@ -145,26 +163,11 @@ const styles = theme => ({
         width: '48px!important',
     },
     lockIcon: {
-        color: "#007CB0"
+        color: '#007CB0'
     },
     unlockIcon: {
-        color: "#E67D3A"
+        color: '#E67D3A'
     }
-});
-
-const DocumentViewer = Loadable({
-    loader: () => import('./filePreviewer/DocumentViewer'),
-    loading: () => <div/>,
-});
-
-const PDFViewer = Loadable({
-    loader: () => import('./filePreviewer/PDFViewer'),
-    loading: () => <div/>,
-});
-
-const ImageViewer = Loadable({
-    loader: () => import('./filePreviewer/ImageViewer'),
-    loading: () => <div/>,
 });
 
 class ContentPreview extends React.Component {
@@ -172,21 +175,19 @@ class ContentPreview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            additionalActionsMenuAnchor: null,
             fullScreen: false,
-            imageControlElementId: "previewImageControls",
-            selectedItem: null,
-            selectionLocked: props.selection[0] ? props.selection[0].isLocked : false
+            imageControlElementId: 'previewImageControls',
         };
+        this.handleDialogState = this.handleDialogState.bind(this);
     }
 
-    handleDialogState = () => {
-        this.setState({
-            fullScreen: !this.state.fullScreen
-        });
+    handleDialogState() {
+        this.setState(state => ({
+            fullScreen: !state.fullScreen
+        }));
     };
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate() {
         if (this.props.selection[0] === undefined) {
             this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
         }
@@ -197,22 +198,22 @@ class ContentPreview extends React.Component {
             return null;
         }
 
-        const {selection, classes, t, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
+        const {selection, classes, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
-        const path = selectedItem ? selectedItem.path : "";
+        const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
         return <div className={rootClass}>
             <Paper className={classes.previewPaper} elevation={0}>
-                <Query query={previewQuery} errorPolicy={"all"} variables={this.queryVariables(path, livePreviewAvailable)}>
+                <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
                     {({loading, error, data}) => {
                         if (error) {
-                            //Ignore error that occurs if node is not published in live mode.
+                            // Ignore error that occurs if node is not published in live mode.
                         }
                         if (!loading) {
                             if (!_.isEmpty(data)) {
                                 let modes = ['edit'];
-                                //Check if the node is published in live.
+                                // Check if the node is published in live.
                                 if (livePreviewAvailable) {
                                     modes.push('live');
                                 }
@@ -231,15 +232,14 @@ class ContentPreview extends React.Component {
                 </Query>
             </Paper>
             <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
-                   elevation={0}>
+                elevation={0}>
                 {this.componentFooter()}
             </Paper>
         </div>
     }
 
     componentFooter() {
-        let {classes, previewMode, selection, t, handleFullScreen} = this.props;
-        let {selectionLocked} = this.state;
+        let {classes, previewMode, selection, handleFullScreen} = this.props;
         let selectedItem = selection[0];
         switch (previewMode) {
             case 'live':
@@ -250,7 +250,7 @@ class ContentPreview extends React.Component {
                                 {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
                             </div>
                         </Grid>
-                        <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
+                        <Grid container item xs={4} justify="flex-end" className={classes.footerButton}>
                             {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'live')}
                             <ShareMenu/>
                             {this.screenModeButtons(handleFullScreen, classes)}
@@ -262,20 +262,19 @@ class ContentPreview extends React.Component {
                         </div>
                     </Grid>
                     <Grid container item xs={12}>
-                        {/*Element that will contain image controls if an image is the document being previewed*/}
+                        {/* Element that will contain image controls if an image is the document being previewed */}
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
 
                     <Grid item xs={4} className={classes.lockButton}>
-                        <IconButton className={classes.lockButtonLive}>
-                        </IconButton>
+                        <IconButton className={classes.lockButtonLive} />
                     </Grid>
-                    <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"livePreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
+                    <Grid item container xs={8} justify="flex-end">
+                        <DisplayActions target="livePreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
                     </Grid>
 
                 </Grid>;
-            case 'edit':
+            default: case 'edit':
                 return <Grid container spacing={0} className={classes.footerGrid}>
                     <Grid container spacing={0}>
                         <Grid container item xs={8} className={classes.titleBar}>
@@ -283,7 +282,7 @@ class ContentPreview extends React.Component {
                                 {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
                             </div>
                         </Grid>
-                        <Grid container item xs={4} justify={'flex-end'} className={classes.footerButton}>
+                        <Grid container item xs={4} justify="flex-end" className={classes.footerButton}>
                             {selectedItem.type === 'File' && this.downloadButton(selectedItem, 'default')}
                             <ShareMenu/>
                             {this.screenModeButtons(handleFullScreen, classes)}
@@ -291,19 +290,19 @@ class ContentPreview extends React.Component {
                     </Grid>
                     <Grid container item xs={12}>
                         <div className={classes.contentSubTitle}>
-                        <PublicationInfo/>
+                            <PublicationInfo/>
                         </div>
                     </Grid>
                     <Grid item xs={12}>
-                        {/*Element that will contain image controls if an image is the document being previewed*/}
+                        {/* Element that will contain image controls if an image is the document being previewed */}
                         <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
                     </Grid>
                     <Grid item xs={4} className={classes.lockButton}>
-                        <DisplayActions target={"previewFooterActions"} context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
+                        <DisplayActions target="previewFooterActions" context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
                     </Grid>
-                    <Grid item xs={8} container={true} justify={"flex-end"}>
-                        <DisplayActions target={"editPreviewBar"} context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
-                        <DisplayActions target={"editAdditionalMenu"} context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
+                    <Grid item container xs={8} justify="flex-end">
+                        <DisplayActions target="editPreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant:'contained', color:'primary'})}/>
+                        <DisplayActions target="editAdditionalMenu" context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
                     </Grid>
                 </Grid>;
         }
@@ -313,40 +312,41 @@ class ContentPreview extends React.Component {
         const {classes, t, dxContext} = this.props;
         let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
         const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
-        if (displayValue === "") {
+        if (displayValue === '') {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
-        //If node type is "jnt:file" use pdf viewer
+        // If node type is "jnt:file" use pdf viewer
         if (data && data.nodeByPath.isFile) {
             let file = dxContext.contextPath + '/files/default' + data.nodeByPath.path;
             if (isPDF(data.nodeByPath.path)) {
                 return <div className={this.state.fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
-                <PDFViewer fullscreen={this.state.fullScreen} key={data.nodeByPath.uuid} file={file}/>
+                    <PDFViewer key={data.nodeByPath.uuid} file={file} fullscreen={this.state.fullScreen}/>
                 </div>;
-            } else if (isBrowserImage(data.nodeByPath.path)) {
-                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
-                <ImageViewer key={data.nodeByPath.uuid}
-                                    elementId={this.state.imageControlElementId}
-                                    fullScreen={this.state.fullScreen}
-                                    file={file}/>
-                </div>;
-            } else {
-                let type = getFileType(file);
-                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
-                <DocumentViewer file={file} type={type}/>
-                </div>
             }
-        } else {
-            return <React.Fragment>
-                <iframe id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
-                {this.iframeLoadContent(assets, displayValue)}
-            </React.Fragment>
-        }
+            if (isBrowserImage(data.nodeByPath.path)) {
+                return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                    <ImageViewer key={data.nodeByPath.uuid}
+                        elementId={this.state.imageControlElementId}
+                        fullScreen={this.state.fullScreen}
+                        file={file}/>
+                </div>;
+            } 
+            let type = getFileType(file);
+            return <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                <DocumentViewer file={file} type={type}/>
+            </div>
+            
+        } 
+        return <React.Fragment>
+            <iframe id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
+            {this.iframeLoadContent(assets, displayValue)}
+        </React.Fragment>
+        
     }
 
     iframeLoadContent(assets, displayValue) {
         setTimeout(()=>{
-            let iframe = document.getElementById("previewContent");
+            let iframe = document.getElementById('previewContent');
             let frameDoc = iframe.document;
             if (iframe.contentWindow) {
                 frameDoc = iframe.contentWindow.document;
@@ -354,18 +354,18 @@ class ContentPreview extends React.Component {
             frameDoc.open();
             frameDoc.writeln(displayValue);
             frameDoc.close();
-            if (assets != null) {
-                let iframeHeadEl = frameDoc.getElementsByTagName("head")[0];
-                for(let i in assets) {
-                    let linkEl = document.createElement("link");
-                    linkEl.setAttribute("rel", "stylesheet");
-                    linkEl.setAttribute("type", "text/css");
-                    linkEl.setAttribute("href", assets[i].key);
+            if (assets !== null) {
+                let iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
+                assets.forEach(asset => {
+                    let linkEl = document.createElement('link');
+                    linkEl.setAttribute('rel', 'stylesheet');
+                    linkEl.setAttribute('type', 'text/css');
+                    linkEl.setAttribute('href', asset.key);
                     iframeHeadEl.appendChild(linkEl);
-                }
+                });
             }
 
-        },200);
+        }, 200);
         return null;
     }
 
@@ -376,24 +376,23 @@ class ContentPreview extends React.Component {
         if (isBrowserImage(selectedItem.path) || isPDF(selectedItem.path)) {
             return <a
                 className={classes.colorIcon}
-                target="_blank"
+                target="_blank" rel="noopener noreferrer"
                 href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
             >
                 <Tooltip title={t('label.contentManager.contentPreview.download')}>
                     <CloudDownload/>
                 </Tooltip>
             </a>;
-        } else {
-            return <a
-                className={classes.colorIcon}
-                href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
-                download
-            >
-                <Tooltip title={t('label.contentManager.contentPreview.download')}>
-                    <CloudDownload/>
-                </Tooltip>
-            </a>;
-        }
+        } 
+        return <a download
+            className={classes.colorIcon}
+            href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
+        >
+            <Tooltip title={t('label.contentManager.contentPreview.download')}>
+                <CloudDownload/>
+            </Tooltip>
+        </a>;
+        
     }
 
     screenModeButtons(handleFullScreen, classes) {
@@ -405,19 +404,19 @@ class ContentPreview extends React.Component {
             return <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
                 <FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/>
             </Tooltip>;
-        } else {
-            return <Tooltip title={t('label.contentManager.contentPreview.expand')}>
-                <Fullscreen onClick={this.handleDialogState} className={classes.colorIcon}/>
-            </Tooltip>;
-        }
+        } 
+        return <Tooltip title={t('label.contentManager.contentPreview.expand')}>
+            <Fullscreen className={classes.colorIcon} onClick={this.handleDialogState}/>
+        </Tooltip>;
+        
     }
 
     queryVariables(path, isPublished) {
         return {
             path: path,
-            templateType: "html",
-            view: "cm",
-            contextConfiguration: "preview",
+            templateType: 'html',
+            view: 'cm',
+            contextConfiguration: 'preview',
             language: this.props.language,
             isPublished: isPublished
         }
@@ -428,7 +427,7 @@ class ContentPreview extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
         selection: state.selection,
         previewMode: state.previewMode,
@@ -437,7 +436,7 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
     setPreviewMode: (mode) => {
         dispatch(cmSetPreviewMode(mode));
     },
@@ -449,15 +448,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
 });
 
-ContentPreview = _.flowRight(
+export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentPreview);
-
-export default ContentPreview;
-
-ContentPreview.propTypes = {
-    layoutQuery: PropTypes.object.isRequired,
-    layoutQueryParams: PropTypes.object.isRequired
-};

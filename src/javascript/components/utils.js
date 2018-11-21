@@ -9,6 +9,7 @@ function hasMixin(node, mixin) {
     if (mixinTypesProperty) {
         return _.includes(mixinTypesProperty.values, mixin);
     }
+    return false;
 }
 
 function hasProperty(node, propertyName) {

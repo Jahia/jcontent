@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {Button} from '@material-ui/core';
 import Dropzone from 'react-dropzone';
 import {translate} from 'react-i18next';
-import _ from 'lodash';
+import {compose} from 'react-apollo';
 
 const styles = () => ({
     root: {
@@ -72,6 +72,10 @@ UploadDropZone.propTypes = {
     acceptedFileTypes: PropTypes.array
 };
 
-export default _.flowRight(
+UploadDropZone.defaultProps = {
+    acceptedFileTypes: null
+};
+
+export default compose(
     withStyles(styles),
     translate())(UploadDropZone);

@@ -1,16 +1,16 @@
-import React from "react";
-import {Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from "@material-ui/core";
+import React from 'react';
+import {Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
-import {Lock} from "@material-ui/icons";
-import ContentListHeader from "./ContentListHeader";
-import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from "@jahia/react-material";
+import {Lock} from '@material-ui/icons';
+import ContentListHeader from './ContentListHeader';
+import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
-import * as _ from "lodash";
-import {translate} from "react-i18next";
-import {DxContext} from "../DxContext";
+import * as _ from 'lodash';
+import {translate} from 'react-i18next';
+import {DxContext} from '../DxContext';
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
-import {cmSetSelection, cmGoto } from "../redux/actions";
+import {cmSetSelection, cmGoto } from '../redux/actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
@@ -29,34 +29,34 @@ const APP_TABLE_CELLS = 2;
 const styles = (theme) => ({
     type: {
         fontSize: '13px',
-        minWidth: "100px",
-        maxWidth: "100px",
-        color: "#313131"
+        minWidth: '100px',
+        maxWidth: '100px',
+        color: '#313131'
     },
     lastModified: {
         fontSize: '13px',
-        color: "#313131",
-        minWidth: "140px",
-        maxWidth: "140px"
+        color: '#313131',
+        minWidth: '140px',
+        maxWidth: '140px'
     },
     createdBy: {
         fontSize: '13px',
-        color: "#313131",
-        minWidth: "100px",
-        maxWidth: "100px"
+        color: '#313131',
+        minWidth: '100px',
+        maxWidth: '100px'
     },
     contentRow: {
         height: '28px !important',
         maxHeight: '28px !important',
-        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON": {
+        '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
             width: 20,
             zIndex: -1,
             marginLeft: '6px',
             height: '37px !important',
             maxHeight: '37px !important',
         },
-        "&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON": {
-            display: "block",
+        '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
+            display: 'block',
         }
     },
     publicationStatusContainer: {
@@ -74,11 +74,11 @@ const styles = (theme) => ({
         justifyContent: 'flex-start',
         textTransform: 'none',
         opacity: 0,
-        transition: ["opacity", "0.25s"],
+        transition: ['opacity', '0.25s'],
         '&:hover': {
             height: 350,
             opacity: 1,
-            transition: ["opacity", "0.25s"],
+            transition: ['opacity', '0.25s'],
             width: 'auto'
         },
         color: theme.palette.getContrastText(theme.palette.publish.main)
@@ -121,12 +121,12 @@ const styles = (theme) => ({
         '&:hover': {
             opacity: '1.5'
         },
-        padding: "1px",
-        width: "20px",
-        height: "20px"
+        padding: '1px',
+        width: '20px',
+        height: '20px'
     },
     name: {
-        color: "#313131",
+        color: '#313131',
         marginLeft: '-10px',
         fontSize: '14px',
     },
@@ -136,34 +136,34 @@ const styles = (theme) => ({
     },
     publicationCell: {
         position: 'relative',
-        display: "flex",
+        display: 'flex',
         padding: 0,
-        height: "37px !important",
+        height: '37px !important',
         minHeight: 37 // Same as row height
     },
     actionCell: {
-        minWidth: "38px"
+        minWidth: '38px'
     },
     hoveredRowAction: {
-        color: "#5E6565",
+        color: '#5E6565',
         '& svg': {
-            width: "18px",
+            width: '18px',
             marginLeft: '10px',
-            height: "18px"
+            height: '18px'
         }
     },
     hoveredRowAction2: {
-        color: "#5E6565",
+        color: '#5E6565',
         '& svg': {
-            width: "18px",
-            height: "18px"
+            width: '18px',
+            height: '18px'
         }
     },
     selectedRowAction: {
         color: theme.palette.primary.contrastText + ' !important',
     },
     hoveredRowActionsCell: {
-        minWidth: "100px"
+        minWidth: '100px'
     },
     contentList: {
         overflowY: 'scroll',
@@ -246,12 +246,11 @@ const styles = (theme) => ({
 class ContentListTable extends React.Component {
 
     constructor(props) {
-
         super(props);
-
         this.state = {
             hoveredRow: null
         };
+        this.contextualMenuClosed = this.contextualMenuClosed.bind(this);
     }
 
     isWip(node, lang) {
@@ -271,7 +270,7 @@ class ContentListTable extends React.Component {
 
     onHoverEnter($event) {
         this.setState({
-            hoveredRow: $event.currentTarget !== null ? $event.currentTarget.getAttribute("data-cm-node-path") : null
+            hoveredRow: $event.currentTarget !== null ? $event.currentTarget.getAttribute('data-cm-node-path') : null
         })
     }
 
@@ -286,7 +285,7 @@ class ContentListTable extends React.Component {
             let hoveredEl = document.querySelector('tr[data-cm-role="table-content-list-row"]:hover');
             if (hoveredEl !== null) {
                 this.setState({
-                    hoveredRow: hoveredEl.getAttribute("data-cm-node-path")
+                    hoveredRow: hoveredEl.getAttribute('data-cm-node-path')
                 });
             }
         }, 100);
@@ -448,7 +447,7 @@ class ContentListTable extends React.Component {
 let EmptyRow = (props) => {
     return <TableRow>
         <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
-            {props.translate("label.contentManager.noResults")}
+            {props.translate('label.contentManager.noResults')}
         </TableCell>
     </TableRow>;
 };
@@ -456,7 +455,7 @@ let EmptyRow = (props) => {
 let ContentNotFound = (props) => {
     return <TableRow>
         <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
-            {props.translate("label.contentManager.contentNotFound")}
+            {props.translate('label.contentManager.contentNotFound')}
         </TableCell>
     </TableRow>;
 };

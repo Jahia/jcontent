@@ -1,49 +1,47 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import Loadable from "react-loadable";
-import {lodash as _} from "lodash";
+import {lodash as _} from 'lodash';
 import {Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
-import {CloudDownload, Fullscreen, FullscreenExit} from "@material-ui/icons";
+import {CloudDownload, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
-import {previewQuery} from "../gqlQueries";
+import {previewQuery} from '../gqlQueries';
 import PublicationInfo from './PublicationStatus';
 import ShareMenu from './ShareMenu';
-import {getFileType, isBrowserImage, isPDF} from "../filesGrid/filesGridUtils";
-import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from "../redux/actions";
-import {ellipsizeText} from "../utils.js";
+import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
+import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from '../redux/actions';
+import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
+import DocumentViewer from './filePreviewer/DocumentViewer';
+import PDFViewer from './filePreviewer/PDFViewer';
+import ImageViewer from './filePreviewer/ImageViewer';
 
-import PDFViewer from "./filePreviewer/PDFViewer";
-import ImageViewer from "./filePreviewer/ImageViewer";
-import DocumentViewer from "./filePreviewer/DocumentViewer";
-
-/* TODO ESlint doesn't like this I don't know why yet */
-// Const DocumentViewer = Loadable({
+// TODO we should reactivate this code once we figure out how to make it works with ESLint
+// import loadable from 'react-loadable';
+// const DocumentViewer = loadable({
 //     loader: () => import('./filePreviewer/DocumentViewer'),
 //     loading: () => <div/>,
 // });
 //
-// const PDFViewer = Loadable({
+// const PDFViewer = loadable({
 //     loader: () => import('./filePreviewer/PDFViewer'),
 //     loading: () => <div/>,
 // });
 //
-// const ImageViewer = Loadable({
+// const ImageViewer = loadable({
 //     loader: () => import('./filePreviewer/ImageViewer'),
 //     loading: () => <div/>,
 // });
 
 const styles = theme => ({
     root: {
-        transition: "width 0.3s ease-in 0s",
+        transition: 'width 0.3s ease-in 0s',
         width: 550,
     },
     rootFullWidth: {
         width: '100vw',
-        transition: "width 0.3s ease-in 0s",
+        transition: 'width 0.3s ease-in 0s',
     },
     button: {
         margin: theme.spacing.unit
@@ -51,7 +49,7 @@ const styles = theme => ({
     previewPaper: {
         flex: 9,
         width: '550',
-        position: "relative"
+        position: 'relative'
     },
     previewContainer: {
         // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
@@ -60,7 +58,7 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 155px)',
-        border: "none"
+        border: 'none'
     },
     previewContainerFullScreen: {
         width: '100vw',
@@ -68,7 +66,7 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
         height: 'calc(100vh - 28px)',
-        border: "none"
+        border: 'none'
     },
     previewContainerPdf: {
         // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
@@ -165,10 +163,10 @@ const styles = theme => ({
         width: '48px!important',
     },
     lockIcon: {
-        color: "#007CB0"
+        color: '#007CB0'
     },
     unlockIcon: {
-        color: "#E67D3A"
+        color: '#E67D3A'
     }
 });
 
@@ -177,18 +175,16 @@ class ContentPreview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            additionalActionsMenuAnchor: null,
             fullScreen: false,
-            imageControlElementId: "previewImageControls",
-            selectedItem: null,
-            selectionLocked: props.selection[0] ? props.selection[0].isLocked : false
+            imageControlElementId: 'previewImageControls',
         };
+        this.handleDialogState = this.handleDialogState.bind(this);
     }
 
     handleDialogState() {
-        this.setState({
-            fullScreen: !this.state.fullScreen
-        });
+        this.setState(state => ({
+            fullScreen: !state.fullScreen
+        }));
     };
 
     componentDidUpdate() {
@@ -204,7 +200,7 @@ class ContentPreview extends React.Component {
 
         const {selection, classes, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
-        const path = selectedItem ? selectedItem.path : "";
+        const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
         return <div className={rootClass}>
@@ -316,7 +312,7 @@ class ContentPreview extends React.Component {
         const {classes, t, dxContext} = this.props;
         let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
         const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
-        if (displayValue === "") {
+        if (displayValue === '') {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
         // If node type is "jnt:file" use pdf viewer
@@ -350,7 +346,7 @@ class ContentPreview extends React.Component {
 
     iframeLoadContent(assets, displayValue) {
         setTimeout(()=>{
-            let iframe = document.getElementById("previewContent");
+            let iframe = document.getElementById('previewContent');
             let frameDoc = iframe.document;
             if (iframe.contentWindow) {
                 frameDoc = iframe.contentWindow.document;
@@ -359,14 +355,14 @@ class ContentPreview extends React.Component {
             frameDoc.writeln(displayValue);
             frameDoc.close();
             if (assets !== null) {
-                let iframeHeadEl = frameDoc.getElementsByTagName("head")[0];
-                for(let i in assets) {
-                    let linkEl = document.createElement("link");
-                    linkEl.setAttribute("rel", "stylesheet");
-                    linkEl.setAttribute("type", "text/css");
-                    linkEl.setAttribute("href", assets[i].key);
+                let iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
+                assets.forEach(asset => {
+                    let linkEl = document.createElement('link');
+                    linkEl.setAttribute('rel', 'stylesheet');
+                    linkEl.setAttribute('type', 'text/css');
+                    linkEl.setAttribute('href', asset.key);
                     iframeHeadEl.appendChild(linkEl);
-                }
+                });
             }
 
         }, 200);
@@ -418,9 +414,9 @@ class ContentPreview extends React.Component {
     queryVariables(path, isPublished) {
         return {
             path: path,
-            templateType: "html",
-            view: "cm",
-            contextConfiguration: "preview",
+            templateType: 'html',
+            view: 'cm',
+            contextConfiguration: 'preview',
             language: this.props.language,
             isPublished: isPublished
         }
@@ -452,14 +448,8 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-ContentPreview.propTypes = {
-    layoutQuery: PropTypes.object.isRequired,
-    layoutQueryParams: PropTypes.object.isRequired
-};
-
 export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentPreview);
-

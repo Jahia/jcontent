@@ -1,7 +1,7 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
-import PDF from 'react-pdf-js';
-import {translate} from "react-i18next";
+import Pdf from 'react-pdf-js';
+import {translate} from 'react-i18next';
 import {IconButton, Paper, withStyles} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
@@ -109,11 +109,11 @@ const styles = theme => ({
     },
     hideScale: {
         opacity:0,
-        transition: "opacity 0.3s ease-out 0s"
+        transition: 'opacity 0.3s ease-out 0s'
     },
     showScale: {
         opacity: 1,
-        transition: "opacity 0.3s ease-in 0s"
+        transition: 'opacity 0.3s ease-in 0s'
     },
     PaperPdf : {
         backgroundColor: theme.palette.common.white,
@@ -132,6 +132,11 @@ class PDFViewer extends React.Component {
             scaleSize: 7
         };
         this.scaleTimeout = null;
+        this.onDocumentComplete = this.onDocumentComplete.bind(this);
+        this.handleNavigation = this.handleNavigation.bind(this);
+        this.handleZoom = this.handleZoom.bind(this);
+        this.renderPagination = this.renderPagination.bind(this);
+        this.displayScaleSize = this.displayScaleSize.bind(this);
     }
 
     onDocumentComplete(pages) {
@@ -253,7 +258,7 @@ class PDFViewer extends React.Component {
     };
 
     displayScaleSize() {
-        return Math.floor(scaleSizes[this.state.scaleSize] * 100) + " %"
+        return Math.floor(scaleSizes[this.state.scaleSize] * 100) + ' %'
     };
 
     render() {
@@ -266,7 +271,7 @@ class PDFViewer extends React.Component {
             {fullscreen ?
                 <PDFContainerFull>
                     <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
-                        <PDF
+                        <Pdf
                             file={file}
                             scale={scaleSizes[scaleSize]}
                             page={page}
@@ -278,7 +283,7 @@ class PDFViewer extends React.Component {
                 :
                 <PDFContainer>
                     <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
-                        <PDF
+                        <Pdf
                             file={file}
                             scale={scaleSizes[scaleSize]}
                             page={page}

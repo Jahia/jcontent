@@ -1,30 +1,30 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
-import * as _ from "lodash";
-import {Close} from "@material-ui/icons";
+import * as _ from 'lodash';
+import {Close} from '@material-ui/icons';
 import {withNotifications, DisplayActions, buttonRenderer, ContextualMenu} from '@jahia/react-material';
-import {Grid, Button, Paper, withStyles, Drawer} from "@material-ui/core";
-import ContentListTable from "./list/ContentListTable";
-import PreviewDrawer from "./preview/PreviewDrawer";
+import {Grid, Button, Paper, withStyles, Drawer} from '@material-ui/core';
+import ContentListTable from './list/ContentListTable';
+import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames'
-import ContentTrees from "./ContentTrees";
+import ContentTrees from './ContentTrees';
 import {translate, Trans} from 'react-i18next';
-import ContentBreadcrumbs from "./breadcrumb/ContentBreadcrumbs";
-import {DxContext} from "./DxContext";
+import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
+import {DxContext} from './DxContext';
 import Upload from './fileupload/upload';
-import {cmSetPreviewState, CM_PREVIEW_STATES} from "./redux/actions";
+import {cmSetPreviewState, CM_PREVIEW_STATES} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
 import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
 import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
-import {ContentData, contentQueryHandlerByMode} from "./ContentData";
-import CMTopBar from "./CMTopBar";
-import CmSearchControlBar from "./CmSearchControlBar";
-import {cmGoto} from "./redux/actions";
+import {ContentData, contentQueryHandlerByMode} from './ContentData';
+import CMTopBar from './CMTopBar';
+import CmSearchControlBar from './searchBar/CmSearchControlBar';
+import {cmGoto} from './redux/actions';
 import {connect} from 'react-redux';
-import Constants from "./constants";
+import Constants from './constants';
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
-import Icon from "./icons/Icon";
+import Icon from './icons/Icon';
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -50,7 +50,7 @@ const styles = theme => ({
     blockCoreSearch: {
         marginLeft: -17,
         marginTop: -28,
-        backgroundColor: "#44464a",
+        backgroundColor: '#44464a',
         maxHeight: 31
     },
     breadCrumbs: {
@@ -128,17 +128,17 @@ const styles = theme => ({
         color: '#d4d9dd'
     },
     academyLink: {
-        position: "fixed",
+        position: 'fixed',
         top: 0,
         right: 0,
-        width: "50%",
-        background: "linear-gradient(to right, rgba(78, 81, 86, 0) 0%, #4e5156 100%) !important",
-        zIndex: "2000",
-        textAlign: "right",
-        color: "#e3e3e3",
+        width: '50%',
+        background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, #4e5156 100%) !important',
+        zIndex: '2000',
+        textAlign: 'right',
+        color: '#e3e3e3',
         fontSize: 12,
         marginRight: 50,
-        fontFamily: "Nunito Sans"
+        fontFamily: 'Nunito Sans'
     },
     link: {
         color: 'inherit'
@@ -158,7 +158,6 @@ class ContentLayout extends React.Component {
             open: true,
             open_view: false,
             anchor: 'left',
-            showTree: true,
             filesGridSizeValue: 4,
             showList: false,
             page: 0,
@@ -168,6 +167,10 @@ class ContentLayout extends React.Component {
         };
 
         this.handleSort = this.handleSort.bind(this);
+        this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+        this.handleShowPreview = this.handleShowPreview.bind(this);
+        this.handleChangePage = this.handleChangePage.bind(this);
+        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
     }
 
     handleDrawerOpen() {
@@ -185,13 +188,11 @@ class ContentLayout extends React.Component {
             setPreviewState(force);
         } else if (!_.isEmpty(selection)) {
             switch (previewState) {
-                case CM_PREVIEW_STATES.SHOW:
-                    setPreviewState(CM_PREVIEW_STATES.HIDE);
-                    break;
-                default: case CM_PREVIEW_STATES.HIDE: {
+                case CM_PREVIEW_STATES.HIDE:
                     setPreviewState(CM_PREVIEW_STATES.SHOW);
                     break;
-                }
+                default:
+                    setPreviewState(CM_PREVIEW_STATES.HIDE);
             }
         }
     };
@@ -240,7 +241,7 @@ class ContentLayout extends React.Component {
 
     isRootNode() {
         let {path, siteKey} = this.props;
-        return (path === ("/sites/" + siteKey));
+        return (path === ('/sites/' + siteKey));
     };
 
     render() {
@@ -261,7 +262,7 @@ class ContentLayout extends React.Component {
             sql2SearchFrom: sql2SearchFrom,
             sql2SearchWhere: sql2SearchWhere
         };
-        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, open ? "open" : "hidden");
+        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, open ? 'open' : 'hidden');
         let contextualMenu = React.createRef();
 
         return <DxContext.Consumer>{dxContext => {
@@ -269,8 +270,7 @@ class ContentLayout extends React.Component {
                 <div className={classes.academyLink}>
                     <Trans
                         i18nKey="label.contentManager.link.academy"
-                        components={[<a key={this.id} href={contextJsParameters.config.academyLink}
-                            target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
+                        components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
                     />
                 </div>
                 <Grid container spacing={0}>
@@ -295,7 +295,7 @@ class ContentLayout extends React.Component {
                                 <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
                             }
                             {mode === Constants.mode.FILES &&
-                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState({showList: !this.state.showList})}/>
+                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
@@ -305,19 +305,19 @@ class ContentLayout extends React.Component {
                             {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
                                     <Icon name="folder" fill="#d4d9dd"/>
-                                    {t("label.contentManager.tree." + (open ? "hide" : "show"))}
+                                    {t('label.contentManager.tree.' + (open ? 'hide' : 'show'))}
                                 </Button>
                             }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 <Icon name="refresh" fill="#d4d9dd" size={20}/>
-                                {t(this.isSearching() ? "label.contentManager.search.refresh" : "label.contentManager.refresh")}
+                                {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
                             </Button>
                             {this.isSearching() &&
                                 <Button data-cm-role="search-clear" variant="text"
                                     className={classes.searchClearButton}
                                     classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
                                     <Close className={classes.searchClearIcon}/>
-                                    {t("label.contentManager.search.clear")}
+                                    {t('label.contentManager.search.clear')}
                                 </Button>
                             }
                         </Grid>
@@ -344,13 +344,13 @@ class ContentLayout extends React.Component {
                     }
                     <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
                     <main
-                        className={classNames(classes.content, classes[`content-left`], {
+                        className={classNames(classes.content, classes['content-left'], {
                             [classes.contentShift]: open,
-                            [classes[`contentShift-left`]]: open,
+                            [classes['contentShift-left']]: open,
                         }) ||
-                        classNames(classes.content, classes[`content-right`], {
+                        classNames(classes.content, classes['content-right'], {
                             [classes.contentShift]: open_view,
-                            [classes[`contentShift-right`]]: open_view,
+                            [classes['contentShift-right']]: open_view,
                         })}
                         onContextMenu={(event) => contextualMenu.current.open(event)}
                     >
@@ -433,20 +433,18 @@ const mapDispatchToProps = (dispatch) => ({
     setPreviewState: (state) => dispatch(cmSetPreviewState(state)),
     clearSearch: (params) => {
         params = _.clone(params);
-        _.unset(params, "searchContentType");
-        _.unset(params, "searchTerms");
-        _.unset(params, "sql2SearchFrom");
-        _.unset(params, "sql2SearchWhere");
-        dispatch(cmGoto({mode: "browse", params: params}))
+        _.unset(params, 'searchContentType');
+        _.unset(params, 'searchTerms');
+        _.unset(params, 'sql2SearchFrom');
+        _.unset(params, 'sql2SearchWhere');
+        dispatch(cmGoto({mode: 'browse', params: params}))
     }
 });
 
-compose(
+export default compose(
     withNotifications(),
     translate(),
     withStyles(styles),
     withApollo,
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentLayout);
-
-export {ContentLayout};

@@ -33,7 +33,7 @@ class IFrameLayout extends React.Component {
 
         return (
             <Query key={actionKey} query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()}>
-                {({loading, error, data}) => {
+                {({error, data}) => {
                     if (error) {
                         this.showError('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
                         return null;

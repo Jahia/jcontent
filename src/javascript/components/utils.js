@@ -6,7 +6,9 @@ function hasMixin(node, mixin) {
         return _.find(node.mixinTypes, t => t.name === mixin) !== undefined;
     }
     let mixinTypesProperty = _.find(node.properties, property => property.name === 'jcr:mixinTypes');
-    return (mixinTypesProperty !== null && _.includes(mixinTypesProperty.values, mixin));
+    if (mixinTypesProperty) {
+        return _.includes(mixinTypesProperty.values, mixin);
+    }
 }
 
 function hasProperty(node, propertyName) {

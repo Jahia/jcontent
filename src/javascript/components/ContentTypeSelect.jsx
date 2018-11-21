@@ -1,21 +1,22 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
-import {compose} from "react-apollo";
+import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
-import {SiteContentTypesQuery} from "./gqlQueries";
+import {SiteContentTypesQuery} from './gqlQueries';
 import FilterSelect from './FilterSelect';
 
 class ContentTypeSelect extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
         this.state = {
             open: false
         };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleIndicator = this.handleIndicator.bind(this);
     }
 
     handleIndicator() {
@@ -25,17 +26,15 @@ class ContentTypeSelect extends React.Component {
     handleChange(newValue) {
         if (this.props.onSelectionChange !== undefined) {
             this.setState({open: false});
-            this.props.onSelectionChange(newValue ? newValue.value : "");
+            this.props.onSelectionChange(newValue ? newValue.value : '');
         }
     };
 
     render() {
-
         let { contentType, siteKey, displayLanguage, notificationContext, t } = this.props;
-        contentType = contentType || "";
         return (
             <Query query={SiteContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
-                {({ loading, error, data }) => {
+                {({ error, data }) => {
                     let contentTypes = [];
                     if (error) {
                         let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
@@ -51,7 +50,7 @@ class ContentTypeSelect extends React.Component {
                             }
                         });
                         contentTypes.unshift({
-                            value: "",
+                            value: '',
                             title: t('label.contentManager.contentTypes.any'),
                             label: t('label.contentManager.contentTypes.any'),
                             icon: null
@@ -71,13 +70,16 @@ class ContentTypeSelect extends React.Component {
 }
 
 ContentTypeSelect.propTypes = {
-    contentType : PropTypes.string,
-    onSelectionChange : PropTypes.func
+    contentType: PropTypes.string,
+    onSelectionChange: PropTypes.func
 };
 
-compose(
+ContentTypeSelect.defaultProps = {
+    contentType: '',
+    onSelectionChange: () => {}
+};
+
+export default compose(
     withNotifications(),
     translate(),
 )(ContentTypeSelect);
-
-export default ContentTypeSelect;

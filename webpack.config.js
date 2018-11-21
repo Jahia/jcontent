@@ -52,9 +52,7 @@ module.exports = (env, argv) => {
         mode: 'development'
     };
 
-    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
-
-    console.log(argv);
+    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval';
 
     if (argv.watch) {
         config.module.rules.push({

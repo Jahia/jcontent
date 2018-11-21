@@ -500,7 +500,7 @@ class FileCard extends Component {
 
     fileName(node, maxLength, bodyClass, cardType) {
         let name = node.name;
-        let abbreviatableCardType = (cardType === null || this.props.cardType === cardType);
+        let abbreviatableCardType = (!cardType || this.props.cardType === cardType);
         let bodyClassToUse = bodyClass;
 
         if (isMarkedForDeletion(node)) {

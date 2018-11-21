@@ -1,7 +1,7 @@
 import React from 'react';
 import {translate, Trans} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmSetPath} from './redux/actions';
+import {cmSetPath} from '../redux/actions';
 import {Button, withStyles} from '@material-ui/core';
 import {Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
@@ -55,7 +55,7 @@ class CmSearchControlBar extends React.Component {
                     <div className={classes.infoSearchPath}>
                         <Trans i18nKey="label.contentManager.search.searchPath"
                             values={{path: path}}
-                            components={[<span key={this.id} className={classes.infoSearchPathValue}>univers</span>]}
+                            components={[<span key="searchPath" className={classes.infoSearchPathValue}>univers</span>]}
                         />
                     </div>
                 </div>

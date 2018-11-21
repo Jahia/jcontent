@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {translate} from "react-i18next";
+import {translate} from 'react-i18next';
 import {withStyles, IconButton} from '@material-ui/core';
 import classNames from 'classnames'
-import ContentPreview from "../preview/ContentPreview";
+import ContentPreview from '../preview/ContentPreview';
 import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
 import {Drawer, Button, Table, TableCell, TableHead, TableBody, TableRow, Typography, Toolbar} from '@material-ui/core';
 import {connect} from 'react-redux';
-import {cmSetPreviewMode} from "../redux/actions";
+import {cmSetPreviewMode} from '../redux/actions';
 import {compose} from 'react-apollo';
 import _ from 'lodash';
 
@@ -21,26 +21,26 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
     },
     previewModePaper: {
-        background: "transparent"
+        background: 'transparent'
     },
     liveButton: {
         '&:disabled': {
-            opacity: ".4",
-            color: "#F5F5F5",
-            backgroundColor: "#686c6f"
+            opacity: '.4',
+            color: '#F5F5F5',
+            backgroundColor: '#686c6f'
         },
-        margin: "0 0",
-        boxShadow: "none"
+        margin: '0 0',
+        boxShadow: 'none'
     },
     editButton: {
-        margin: "0 0",
-        boxShadow: "none"
+        margin: '0 0',
+        boxShadow: 'none'
     },
     inactiveButton: {
-        backgroundColor: "#686c6f",
-        color: "#F5F5F5",
+        backgroundColor: '#686c6f',
+        color: '#F5F5F5',
         '&:hover': {
-            backgroundColor: "#686c6f"
+            backgroundColor: '#686c6f'
         }
     },
     modalWidth: {
@@ -114,6 +114,7 @@ class PreviewDrawer extends React.Component {
         this.state = {
             fullScreen: false,
         };
+        this.handleFullScreen = this.handleFullScreen.bind(this);
     }
 
     handleFullScreen(value) {

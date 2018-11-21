@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
-import {ArrowDropDown as ArrowDropDownIcon} from "@material-ui/icons";
-import {Close as CloseIcon} from "@material-ui/icons";
+import {ArrowDropDown as ArrowDropDownIcon} from '@material-ui/icons';
+import {Close as CloseIcon} from '@material-ui/icons';
 import {ListItemIcon, ListItemText, Input, withStyles, MenuItem} from '@material-ui/core';
 import * as _ from 'lodash';
-import {compose} from "react-apollo";
-import {translate} from "react-i18next";
+import {compose} from 'react-apollo';
+import {translate} from 'react-i18next';
 
 const styles = () => ({
     root: {
@@ -41,17 +41,17 @@ const customStyles = {
         color: '#fff',
     }),
     control: () => ({
-        display: "flex",
+        display: 'flex',
         color: '#fff',
-        alignItems: "center",
+        alignItems: 'center',
         height: 34,
         width: '155px',
-        background: "#007bc0",
-        "&:hover": {
-            boxShadow: "none"
+        background: '#007bc0',
+        '&:hover': {
+            boxShadow: 'none'
         },
-        "&>div": {
-            overflow: "visible!important"
+        '&>div': {
+            overflow: 'visible!important'
         }
     }),
     group: () => ({
@@ -65,13 +65,13 @@ const customStyles = {
         maxWidth: '155px',
     }),
     menu: () => ({
-        backgroundColor: "#ecebeb",
+        backgroundColor: '#ecebeb',
         color: '#3a3c3f!important',
         // BoxShadow: "1px 2px 6px #888888", // should be changed as material-ui
-        position: "absolute",
+        position: 'absolute',
         left: 0,
-        top: `calc(100% + 1px)`,
-        width: "100%",
+        top: 'calc(100% + 1px)',
+        width: '100%',
         zIndex: 2,
         maxHeight: ITEM_HEIGHT * 4.5
     }),
@@ -94,7 +94,7 @@ const customStyles = {
         boxShadow: '1px 3px 4px 0px rgba(38, 38, 38, 0.4)',
         display: 'inline-block',
         background: '#ecebeb',
-        overflowY: "auto"
+        overflowY: 'auto'
     }),
     input: () => ({
         color: '#fff!important',
@@ -116,6 +116,12 @@ const customStyles = {
 };
 
 class Option extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
 
     handleClick(event) {
         this.props.selectOption(this.props.data, event);
@@ -243,6 +249,11 @@ FilterSelect.propTypes = {
     options: PropTypes.array.isRequired,
     selectedOption: PropTypes.string,
     handleChange : PropTypes.func
+};
+
+FilterSelect.defaultProps = {
+    selectedOption: null,
+    handleChange : () => {}
 };
 
 export default compose(

@@ -19,18 +19,18 @@ import {compose} from 'react-apollo';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
-        default: case Constants.mode.BROWSE:
-            return new BrowsingQueryHandler();
         case Constants.mode.FILES:
             return new FilesQueryHandler();
         case Constants.mode.SEARCH:
             return new SearchQueryHandler();
         case Constants.mode.SQL2SEARCH:
             return new Sql2SearchQueryHandler();
+        default:
+            return new BrowsingQueryHandler();
     }
 };
 
-class ContentData extends React.Component {
+class ContentDataView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -174,24 +174,24 @@ class ContentData extends React.Component {
                                 path: contentNode.path,
                                 publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
                                 isLocked: contentNode.lockOwner !== null,
-                                lockOwner: contentNode.lockOwner !== null ? contentNode.lockOwner.value : '',
-                                lastPublishedBy: (contentNode.lastPublishedBy !== null ? contentNode.lastPublishedBy.value : ''),
-                                lastPublished: (contentNode.lastPublished !== null ? contentNode.lastPublished.value : ''),
-                                lastModifiedBy: (contentNode.lastModifiedBy !== null ? contentNode.lastModifiedBy.value : ''),
-                                lastModified: (contentNode.lastModified !== null ? contentNode.lastModified.value : ''),
-                                deletedBy: (contentNode.deletedBy !== null ? contentNode.deletedBy.value : ''),
-                                deleted: (contentNode.deleted !== null ? contentNode.deleted.value : ''),
-                                wipStatus: (contentNode.wipStatus !== null ? contentNode.wipStatus.value : ''),
-                                wipLangs: (contentNode.wipLangs !== null ? contentNode.wipLangs.values : []),
+                                lockOwner: contentNode.lockOwner ? contentNode.lockOwner.value : '',
+                                lastPublishedBy: (contentNode.lastPublishedBy ? contentNode.lastPublishedBy.value : ''),
+                                lastPublished: (contentNode.lastPublished ? contentNode.lastPublished.value : ''),
+                                lastModifiedBy: (contentNode.lastModifiedBy ? contentNode.lastModifiedBy.value : ''),
+                                lastModified: (contentNode.lastModified ? contentNode.lastModified.value : ''),
+                                deletedBy: (contentNode.deletedBy ? contentNode.deletedBy.value : ''),
+                                deleted: (contentNode.deleted ? contentNode.deleted.value : ''),
+                                wipStatus: (contentNode.wipStatus ? contentNode.wipStatus.value : ''),
+                                wipLangs: (contentNode.wipLangs ? contentNode.wipLangs.values : []),
                                 parentDeletionDate: _.map(contentNode.ancestors, ancestor => {
-                                    return ancestor.deletionDate !== null ? ancestor.deletionDate.value : '';
+                                    return ancestor.deletionDate ? ancestor.deletionDate.value : '';
                                 }),
                                 parentDeletionUser: _.map(contentNode.ancestors, ancestor => {
-                                    return ancestor.deletionUser !== null ? ancestor.deletionUser.value : '';
+                                    return ancestor.deletionUser ? ancestor.deletionUser.value : '';
                                 }),
                                 icon: contentNode.primaryNodeType.icon,
-                                width: (contentNode.width !== null ? contentNode.width.value : ''),
-                                height: (contentNode.width !== null ? contentNode.height.value : '')
+                                width: (contentNode.width ? contentNode.width.value : ''),
+                                height: (contentNode.width ? contentNode.height.value : '')
                             };
                         });
 
@@ -232,11 +232,11 @@ const mapDispatchToProps = (dispatch) => ({
     closePaths: paths => dispatch(cmClosePaths(paths))
 });
 
-compose(
+let ContentData = compose(
     withNotifications(),
     translate(),
     withApollo,
     connect(mapStateToProps, mapDispatchToProps)
-)(ContentData);
+)(ContentDataView);
 
 export {ContentData, contentQueryHandlerByMode};

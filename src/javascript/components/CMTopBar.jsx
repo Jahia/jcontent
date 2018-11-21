@@ -4,7 +4,7 @@ import {translate} from 'react-i18next';
 import LanguageSwitcher from './languageSwitcher/LanguageSwitcher';
 import SiteSwitcher from './siteSwitcher/SiteSwitcher';
 import {compose} from 'react-apollo';
-import {CmSearchBar} from './CmSearchBar';
+import CmSearchBar from './searchBar/CmSearchBar';
 
 const styles = theme => ({
     root: {

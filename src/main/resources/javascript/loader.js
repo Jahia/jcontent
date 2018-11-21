@@ -5,7 +5,7 @@
             switch (lang) {
                 case 'fr': return 'Chargement du gestionnaire de contenu et média...';
                 case 'de': return 'Content- und Medien-Manager wird geladen...';
-                default: case 'en': return 'Loading Content and Media Manager...';
+                default: return 'Loading Content and Media Manager...';
             }
         };
         var loader = document.createElement('div');

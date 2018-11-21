@@ -19,10 +19,13 @@ class UploadDrawer extends React.Component {
 }
 
 UploadDrawer.propTypes = {
-    classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     PaperProps: PropTypes.object,
     transitionDuration: PropTypes.number.isRequired
+};
+
+UploadDrawer.defaultProps = {
+    PaperProps: null
 };
 
 export default UploadDrawer;

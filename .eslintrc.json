@@ -4,12 +4,13 @@
     "es6": true
   },
   "extends": ["xo", "xo-react", "prettier", "prettier/react"],
-  "rules":{
+  "rules": {
     "indent": ["error", 4,
       {
         "SwitchCase": 1
       }
     ],
+    "quotes": ["error", "single"],
     "no-negated-condition": "warn",
     "no-useless-escape": "warn",
     "camelcase": "warn",

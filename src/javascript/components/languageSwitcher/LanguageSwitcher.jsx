@@ -1,52 +1,13 @@
-import React from "react";
+import React from 'react';
 import {compose, Query} from 'react-apollo';
-import {PredefinedFragments} from "@jahia/apollo-dx";
-import gql from "graphql-tag";
+import {PredefinedFragments} from '@jahia/apollo-dx';
+import gql from 'graphql-tag';
 import {lodash as _} from 'lodash';
-import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {translate} from "react-i18next";
+import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {ProgressOverlay, withNotifications} from "@jahia/react-material";
-import {cmSetLanguage} from "../redux/actions";
-
-const styles = theme => ({
-    typography: {
-        opacity: '0.9',
-        fontFamily: "Nunito sans, sans-serif",
-        fontSize: '1rem',
-        fontWeight: 200,
-        marginRight: '7px',
-        color: '#504e4d',
-        backgroundSize: '18px'
-    },
-    typographyLight: {
-        opacity: '0.9',
-        fontFamily: "Nunito sans, sans-serif",
-        fontSize: '1rem',
-        fontWeight: 200,
-        marginRight: '7px',
-        color: '#f5f5f5',
-        backgroundSize: '18px'
-    },
-    formControl: {
-        minWidth: 120,
-    },
-    iconLight: {
-        color: theme.palette.background.paper,
-        fontSize: '10px'
-    },
-    iconDark: {
-        color: '#504e4d',
-        fontSize: '10px',
-    },
-    input1: {
-        backgroundColor: "transparent",
-        color: "#ffffff",
-        boxShadow: "none",
-        fontSize: "0.875rem",
-    }
-});
+import {ProgressOverlay, withNotifications} from '@jahia/react-material';
+import {cmSetLanguage} from '../redux/actions';
+import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
 class LanguageSwitcher extends React.Component {
 
@@ -85,10 +46,12 @@ class LanguageSwitcher extends React.Component {
             }
             ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
+        this.onSelectLanguage = this.onSelectLanguage.bind(this);
+        this.validateLanguageExists = this.validateLanguageExists.bind(this);
     }
 
     onSelectLanguage(lang) {
-        console.log("Switching language to: " + lang);
+        console.log('Switching language to: ' + lang);
         this.props.onSelectLanguage(lang);
         // Switch edit mode linker language
         window.parent.authoringApi.switchLanguage(lang);
@@ -137,7 +100,7 @@ class LanguageSwitcher extends React.Component {
             {
                 ({error, loading, data}) => {
                     if (error) {
-                        console.log("Error when fetching data: " + error);
+                        console.log('Error when fetching data: ' + error);
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         return null;
@@ -166,57 +129,6 @@ class LanguageSwitcher extends React.Component {
     }
 }
 
-class LanguageSwitcherDisplay extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            anchorEl: null
-        }
-    }
-
-    handleClick(event) {
-        this.setState({anchorEl: event.currentTarget});
-    }
-
-    handleClose() {
-        this.setState({anchorEl: null});
-    }
-
-    uppercaseFirst(string) {
-        return string.charAt(0).toUpperCase() + string.substr(1);
-    }
-
-    render() {
-
-        let {lang, languages, onSelectLanguage, classes, dark} = this.props;
-        let {anchorEl} = this.state;
-
-        return <React.Fragment>
-            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" data-cm-role="language-switcher" onClick={this.handleClick}>
-                <Typography className={dark ? classes.typography : classes.typographyLight}>
-                    {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
-                    &nbsp;
-                </Typography>
-                <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
-            </Button>
-            <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                {languages.map((lang) => {
-                    return <MenuItem
-                        key={lang.language}
-                        onClick={() => {
-                            onSelectLanguage(lang.language);
-                            this.handleClose();
-                        }}
-                    >
-                        {this.uppercaseFirst(lang.displayName)}
-                    </MenuItem>;
-                })}
-            </Menu>
-        </React.Fragment>
-    }
-}
-
 const mapStateToProps = (state) => ({
     siteKey: state.site,
     lang: state.language
@@ -227,8 +139,6 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(cmSetLanguage(lang));
     }
 });
-
-compose(withStyles(styles, {withTheme: true}))(LanguageSwitcherDisplay);
 
 export default compose(
     translate(),

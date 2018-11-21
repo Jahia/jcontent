@@ -10,12 +10,12 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
-import {isMarkedForDeletion} from "../utils";
+import {isMarkedForDeletion} from '../utils';
 import {compose} from 'react-apollo';
 
 let styles = (theme) => ({
     root: {
-        position: "relative",
+        position: 'relative',
         padding: '0 !important',
         width: '100%'
     },
@@ -64,9 +64,9 @@ let styles = (theme) => ({
         color: 'whitesmoke !important'
     },
     loadingContainer: {
-        position: "absolute",
-        width: "100%",
-        height: "100%",
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
         zIndex: 999
     },
     toggleUnSelected: {
@@ -120,7 +120,9 @@ class CmPickerViewMaterial extends React.Component {
         super(props);
         this.state = {
             hover: false
-        }
+        };
+        this.hoverOn = this.hoverOn.bind(this);
+        this.hoverOff = this.hoverOff.bind(this);
     }
 
     hoverOn(path) {
@@ -214,7 +216,7 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     sortFoldersAlphabetical(pickerEntries) {
-        if (pickerEntries.length !== 0 && pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === "jnt:contentFolder" || pickerEntries[0].node.primaryNodeType.name === "jnt:folder")) {
+        if (pickerEntries.length !== 0 && pickerEntries[0] && (pickerEntries[0].node.primaryNodeType.name === 'jnt:contentFolder' || pickerEntries[0].node.primaryNodeType.name === 'jnt:folder')) {
             const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
             return this.sortAndFlatten(rootNode);
         }
@@ -233,7 +235,7 @@ class CmPickerViewMaterial extends React.Component {
             const top = hierarchyStack[hierarchyStack.length - 1];
 
             // Add children to top of the stack if current entry is child of top
-            if (currentPickerEntry.path.indexOf(top.path) !== -1 && currentPickerEntry.path.replace(top.path, "")[0] === "/") {
+            if (currentPickerEntry.path.indexOf(top.path) !== -1 && currentPickerEntry.path.replace(top.path, '')[0] === '/') {
                 if (!top.children) {
                     top.children = [];
                 }
@@ -283,4 +285,10 @@ CmPickerViewMaterial.propTypes = {
     textRenderer: PropTypes.func
 };
 
-export default compose(withTheme(), withStyles(styles, {name: "DxPickerViewMaterial"}))(CmPickerViewMaterial);
+CmPickerViewMaterial.defaultProps = {
+    onSelectItem: () => {},
+    onOpenItem: () => {},
+    textRenderer: () => {}
+};
+
+export default compose(withTheme(), withStyles(styles, {name: 'DxPickerViewMaterial'}))(CmPickerViewMaterial);

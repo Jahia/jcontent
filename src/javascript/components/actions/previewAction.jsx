@@ -14,13 +14,12 @@ export default composeActions(requirementsAction, reduxAction(state => ({selecti
             setPreviewState(force);
         } else if (!_.isEmpty(selection)) {
             switch (previewState) {
-                case CM_PREVIEW_STATES.SHOW:
-                    setPreviewState(CM_PREVIEW_STATES.HIDE);
-                    break;
-                default: case CM_PREVIEW_STATES.HIDE: {
+                case CM_PREVIEW_STATES.HIDE:
                     setPreviewState(CM_PREVIEW_STATES.SHOW);
                     break;
-                }
+                default:
+                    setPreviewState(CM_PREVIEW_STATES.HIDE);
+                    break;
             }
         }
     },

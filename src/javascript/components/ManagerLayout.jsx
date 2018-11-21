@@ -26,7 +26,7 @@ const styles = theme => ({
     }
 });
 
-class Main extends React.Component {
+class MainView extends React.Component {
     render() {
         const {children, leftSide, classes, mode} = this.props;
 
@@ -40,6 +40,15 @@ class Main extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    mode: state.mode
+});
+
+let Main = compose(
+    connect(mapStateToProps, null),
+    withStyles(styles)
+)(MainView);
 
 class ManagerLayout extends React.Component {
     render() {
@@ -56,14 +65,5 @@ class ManagerLayout extends React.Component {
         );
     }
 }
-
-const mapStateToProps = (state) => ({
-    mode: state.mode
-});
-
-compose(
-    connect(mapStateToProps, null),
-    withStyles(styles)
-)(Main);
 
 export default ManagerLayout;

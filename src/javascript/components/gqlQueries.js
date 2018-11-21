@@ -66,7 +66,7 @@ class SearchQueryHandler {
     getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
         return {
             path: path,
-            nodeType: (urlParams.searchContentType === null ? 'jmix:searchable' : urlParams.searchContentType),
+            nodeType: (urlParams.searchContentType || 'jmix:searchable'),
             searchTerms: urlParams.searchTerms,
             language: lang,
             displayLanguage: uiLang,

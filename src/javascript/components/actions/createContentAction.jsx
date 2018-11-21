@@ -75,7 +75,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
                         key:nodeType.name,
                         includeSubTypes: false,
                         nodeTypes: [nodeType.name],
-                        buttonLabel: "label.contentManager.create.contentOfType",
+                        buttonLabel: 'label.contentManager.create.contentOfType',
                         buttonLabelParams: {typeName: nodeType.displayName},
                     }))
                 })

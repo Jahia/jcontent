@@ -1,25 +1,25 @@
-import React from "react";
-import {MuiThemeProvider} from "@material-ui/core";
-import {anthraciteDarkTheme as theme, ComponentRendererProvider, NotificationProvider, actionsRegistry} from "@jahia/react-material";
-import {client} from "@jahia/apollo-dx";
-import {getI18n} from "@jahia/i18next";
-import {I18n, I18nextProvider} from "react-i18next";
-import {Route} from "react-router";
-import {ApolloProvider} from "react-apollo";
-import {createBrowserHistory} from "history";
-import ManagerLayout from "./ManagerLayout";
-import CMLeftNavigation from "./leftMenu/CMLeftNavigation";
-import * as _ from "lodash";
-import {DxContext} from "./DxContext";
-import {ContentLayout} from "./ContentLayout";
-import IFrameLayout from "./IFrameLayout";
-import {initFontawesomeIcons} from "./icons/initFontawesomeIcons";
+import React from 'react';
+import {MuiThemeProvider} from '@material-ui/core';
+import {anthraciteDarkTheme as theme, ComponentRendererProvider, NotificationProvider, actionsRegistry} from '@jahia/react-material';
+import {client} from '@jahia/apollo-dx';
+import {getI18n} from '@jahia/i18next';
+import {I18n, I18nextProvider} from 'react-i18next';
+import {Route} from 'react-router';
+import {ApolloProvider} from 'react-apollo';
+import {createBrowserHistory} from 'history';
+import ManagerLayout from './ManagerLayout';
+import CMLeftNavigation from './leftMenu/CMLeftNavigation';
+import * as _ from 'lodash';
+import {DxContext} from './DxContext';
+import ContentLayout from './ContentLayout';
+import IFrameLayout from './IFrameLayout';
+import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
 import {ConnectedRouter} from 'connected-react-router'
 import {Provider} from 'react-redux'
 import getStore from './redux/getStore';
-import Constants from "./constants";
-import {PushEventHandler} from "./PushEventHandler";
-import initActions from "./actions/initActions";
+import Constants from './constants';
+import {PushEventHandler} from './PushEventHandler';
+import initActions from './actions/initActions';
 
 class ContentManager extends React.Component {
 
@@ -27,13 +27,16 @@ class ContentManager extends React.Component {
         super(props);
         const {dxContext} = props;
         window.forceCMUpdate = this.forceCMUpdate.bind(this);
+        this.getStore = this.getStore.bind(this);
+        this.getHistory = this.getHistory.bind(this);
+        this.forceCMUpdate = this.forceCMUpdate.bind(this);
 
         initFontawesomeIcons();
 
         initActions(actionsRegistry);
 
         _.each(dxContext.config.actions, (callback) => {
-            if (typeof callback === "function") {
+            if (typeof callback === 'function') {
                 callback(actionsRegistry, dxContext);
             }
         });
@@ -56,7 +59,7 @@ class ContentManager extends React.Component {
             this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
             if (window.top !== window) {
                 this.history.listen((location) => {
-                    const title = t("label.contentManager.appTitle", {path: location.pathname});
+                    const title = t('label.contentManager.appTitle', {path: location.pathname});
                     // Const title = 'title';
                     window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
                     window.parent.document.title = title;
@@ -68,7 +71,7 @@ class ContentManager extends React.Component {
 
     // !!this method should never be called but is necessary until BACKLOG-8369 fixed!!
     forceCMUpdate() {
-        console.warn("update application, this should not happen ..");
+        console.warn('update application, this should not happen ..');
         this.forceUpdate();
     };
 
@@ -80,7 +83,7 @@ class ContentManager extends React.Component {
         // Work around to restore table headers color
         // TODO: MUST REMOVE IT BACKLOG-8697 !!!!
         const customTheme = theme;
-        customTheme.overrides.MuiTableCell.head.background = "#f5f5f5";
+        customTheme.overrides.MuiTableCell.head.background = '#f5f5f5';
         return (
             <MuiThemeProvider theme={customTheme} >
                 <NotificationProvider notificationContext={{}}>

@@ -13,7 +13,7 @@ import UploadItem from './UploadItem';
 import mimetypes from 'mime-types';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
-import _ from 'lodash';
+import {compose} from 'react-apollo';
 
 const styles = theme => ({
     drawerContent: {
@@ -161,7 +161,7 @@ class Upload extends React.Component {
 
     showUploads() {
         return this.props.uploads.map((upload, index) => (
-            <UploadItem key={`upload_${index}`}
+            <UploadItem key={upload.id}
                 index={index}
                 file={this.acceptedFiles[index]}
                 path={this.props.path}
@@ -181,7 +181,7 @@ class Upload extends React.Component {
 
         const status = this.uploadStatus();
 
-        if (status === null) {
+        if (!status) {
             us = uploadsStatuses.NOT_STARTED;
         } else if (status.uploading !== 0) {
             us = uploadsStatuses.UPLOADING;
@@ -310,17 +310,18 @@ class Upload extends React.Component {
         };
 
         if (this.props.uploads.length > 0) {
-            for (let index in this.props.uploads) {
-                const upload = this.props.uploads[index];
+            this.props.uploads.forEach( upload => {
                 switch (upload.status) {
-                    case uploadStatuses.QUEUED:
-                    case uploadStatuses.UPLOADING: status.uploading += 1;
+                    case uploadStatuses.UPLOADED:
+                        status.uploaded += 1;
                         break;
-                    case uploadStatuses.UPLOADED: status.uploaded += 1;
+                    case uploadStatuses.HAS_ERROR:
+                        status.error += 1;
                         break;
-                    case uploadStatuses.HAS_ERROR: status.error += 1;
+                    default:
+                        status.uploading += 1;
                 }
-            }
+            });
         } else {
             return null;
         }
@@ -332,7 +333,7 @@ class Upload extends React.Component {
         const status = this.uploadStatus();
 
         if (panelState === panelStates.PARTIALLY_VISIBLE) {
-            if (status === null) {
+            if (!status) {
                 return null;
             }
             if (status.uploading !== 0) {
@@ -361,7 +362,7 @@ class Upload extends React.Component {
             );
         }
         if (panelState === panelStates.VISIBLE) {
-            if (status === null) {
+            if (!status) {
                 return null;
             }
             if (status.uploading !== 0) {
@@ -406,6 +407,11 @@ Upload.propTypes = {
     uploadUpdateCallback: PropTypes.func
 };
 
+Upload.defaultProps = {
+    acceptedFileTypes: null,
+    uploadUpdateCallback: () => {}
+};
+
 const mapStateToProps = (state, ownProps) => {
     if (ownProps.statePartName) {
         return state[ownProps.statePartName];
@@ -420,7 +426,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default _.flowRight(
+export default compose(
     withStyles(styles),
     translate(),
     connect(mapStateToProps, mapDispatchToProps))(Upload);

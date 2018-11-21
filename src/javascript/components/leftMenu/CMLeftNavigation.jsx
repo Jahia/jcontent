@@ -251,6 +251,7 @@ class CMLeftNavigation extends React.Component {
                 drawerOpen: this.state.openDrawer,
                 handleDrawerClose: this.handleDrawerClose.bind(this),
                 handleDrawerOpen: this.handleDrawerOpen.bind(this),
+                site: this.state.drawerContent && this.state.drawerContent.site ? this.state.drawerContent.site : undefined 
             }
         };
 

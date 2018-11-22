@@ -1,19 +1,17 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core';
+import {CircularProgress, IconButton, List, withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {IconButton, List, CircularProgress} from '@material-ui/core';
-import {Close, Fullscreen, FullscreenExit, CheckCircle, Info} from '@material-ui/icons';
+import {CheckCircle, Close, Fullscreen, FullscreenExit, Info} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import UploadDrawer from './UploadDrawer';
-import {panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS} from './constants';
-import {uploadSeed} from './redux/reducer';
-import {setPanelState, setUploads, takeFromQueue, setStatus} from './redux/actions';
+import {panelStates, uploadsStatuses, uploadStatuses} from './constants';
+import {setPanelState, setStatus, setUploads} from './redux/actions';
 import UploadDropZone from './UploadDropZone';
 import UploadItem from './UploadItem';
-import mimetypes from 'mime-types';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
+import {files, getMimeTypes, onFilesSelected} from './utils';
 
 const styles = theme => ({
     drawerContent: {
@@ -95,12 +93,24 @@ const DRAWER_ANIMATION_TIME = 300;
 class Upload extends React.Component {
     constructor(props) {
         super(props);
-        this.acceptedFiles = [];
-        this.rejectedFiles = [];
         this.client = null;
         this.onFilesSelected = this.onFilesSelected.bind(this);
         this.removeFile = this.removeFile.bind(this);
         this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
+        this.overlayStyle = {
+            active: {
+                display: 'block',
+                position: 'absolute',
+                backgroundColor: '#E67D3A',
+                opacity: '0.4',
+                zIndex:1000,
+                pointerEvents: 'none'
+            },
+            inactive: {
+                display: 'none',
+                pointerEvents: 'none'
+            }
+        }
     }
 
     componentDidUpdate() {
@@ -112,7 +122,7 @@ class Upload extends React.Component {
 
     render() {
         const {classes} = this.props;
-        return (
+        return <React.Fragment>
             <UploadDrawer open={this.isDrawerOpen()} transitionDuration={this.transitionDuration()}>
                 <div className={this.contentClasses()}>
                     <div className={classes.contentHeader}>
@@ -124,14 +134,15 @@ class Upload extends React.Component {
                     </div>
                 </div>
             </UploadDrawer>
-        );
+            <div style={this.generateOverlayStyle()}/>
+        </React.Fragment>
     }
 
     configureRendering() {
         const {classes, uploads, acceptedFileTypes} = this.props;
         if (uploads.length === 0) {
             return (
-                <UploadDropZone acceptedFileTypes={this.getMimeTypes(acceptedFileTypes)}
+                <UploadDropZone acceptedFileTypes={getMimeTypes(acceptedFileTypes)}
                     onFilesSelected={this.onFilesSelected}/>
             );
         }
@@ -143,35 +154,21 @@ class Upload extends React.Component {
     }
 
     onFilesSelected(acceptedFiles, rejectedFiles) {
-        this.acceptedFiles = acceptedFiles;
-        this.rejectedFiles = rejectedFiles;
-        const uploads = this.acceptedFiles.map(file => {
-            let seed = {
-                ...uploadSeed
-            };
-            seed.id = file.preview;
-            return seed;
-        });
-        this.props.dispatchBatch([
-            setUploads(uploads),
-            takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
-        ]
-        );
+        onFilesSelected(acceptedFiles, rejectedFiles, this.props.dispatchBatch, { path: this.props.path });
     }
 
     showUploads() {
         return this.props.uploads.map((upload, index) => (
             <UploadItem key={upload.id}
                 index={index}
-                file={this.acceptedFiles[index]}
-                path={this.props.path}
+                file={files.acceptedFiles[index]}
                 removeFile={this.removeFile}
                 updateUploadsStatus={this.updateUploadsStatus}/>
         ));
     }
 
     removeFile(index) {
-        this.acceptedFiles = this.acceptedFiles.filter((file, i) => {
+        files.acceptedFiles = files.acceptedFiles.filter((file, i) => {
             return i !== index;
         });
     }
@@ -240,7 +237,7 @@ class Upload extends React.Component {
         }
         if (status === uploadsStatuses.NOT_STARTED) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])])}>
+                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads() }>
                     <Close/>
                 </IconButton>
                 </div>
@@ -264,7 +261,7 @@ class Upload extends React.Component {
         }
         if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])])}>
+                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.closePanelAndClearUploads()}>
                     <Close/>
                 </IconButton>
                 </div>
@@ -272,12 +269,18 @@ class Upload extends React.Component {
         }
         if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])])}>
+                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
                     <Close/>
                 </IconButton>
                 </div>
             );
         }
+    }
+
+    closePanelAndClearUploads() {
+        files.acceptedFiles = [];
+        files.rejectedFiles = [];
+        this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]);
     }
 
     transitionDuration() {
@@ -290,15 +293,6 @@ class Upload extends React.Component {
             return DRAWER_ANIMATION_TIME;
         }
         return 0;
-    }
-
-    getMimeTypes(acceptedFileTypes) {
-        if (acceptedFileTypes) {
-            return acceptedFileTypes.map(type => {
-                return mimetypes.lookup(type);
-            });
-        }
-        return undefined;
     }
 
     uploadStatus() {
@@ -397,6 +391,19 @@ class Upload extends React.Component {
                 </div>
             );
         }
+    }
+
+    generateOverlayStyle() {
+        let {overlayTarget} = this.props;
+        if (overlayTarget !== null && overlayTarget.path === this.props.uploadPath) {
+            return Object.assign({}, this.overlayStyle.active, {
+                top: overlayTarget.y,
+                left: overlayTarget.x,
+                width: overlayTarget.width,
+                height: overlayTarget.height
+            })
+        }
+        return this.overlayStyle.inactive;
     }
 }
 

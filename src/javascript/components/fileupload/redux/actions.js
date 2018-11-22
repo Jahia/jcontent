@@ -26,6 +26,13 @@ export const setUploads = uploads => {
     };
 };
 
+export const addUploads = uploads => {
+    return {
+        type: 'FILEUPLOAD_ADD_UPLOADS',
+        uploads: uploads
+    }
+};
+
 export const updateUpload = upload => {
     return {
         type: 'FILEUPLOAD_UPDATE_UPLOAD',
@@ -45,4 +52,11 @@ export const takeFromQueue = number => {
         type: 'FILEUPLOAD_TAKE_FROM_QUEUE',
         number: number
     };
+};
+
+export const setOverlayTarget = overlayTarget => {
+    return {
+        type: 'FILEUPLOAD_SET_OVERLAY_TARGET',
+        overlayTarget: overlayTarget
+    }
 };

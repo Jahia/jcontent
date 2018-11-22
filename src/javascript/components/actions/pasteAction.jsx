@@ -36,7 +36,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
 
                     const primaryNodeTypeToPaste = context.items[0].primaryNodeType;
                     let contributeTypesProperty = targetNode.contributeTypes ||
-                                                    targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes;
+                        (targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                         // Contribute type is not empty so we need to execute a query to know the types that are allowed here
                         return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(

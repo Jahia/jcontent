@@ -31,8 +31,8 @@ export default composeActions(requirementsAction, withDxContextAction, {
             let childNodeTypes = _.union(filterByBaseType(node.allowedChildNodeTypes, baseContentType),
                 filterByBaseType(node.allowedChildNodeTypes, baseContentType));
             let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
-            let contributeTypesProperty = node.contributeTypes !== null ? node.contributeTypes : null;
-            let parentContributeRestrictions = node.ancestors !== null && !_.isEmpty(node.ancestors) ? node.ancestors[node.ancestors.length - 1].contributeTypes.values : [];
+            let contributeTypesProperty = node.contributeTypes ||
+                (node.ancestors && !_.isEmpty(node.ancestors) && node.ancestors[node.ancestors.length - 1].contributeTypes);
             if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                 return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
                     filter(res => (res.data && res.data.jcr)),
@@ -43,20 +43,6 @@ export default composeActions(requirementsAction, withDxContextAction, {
                     })
                 );
             }
-            if (parentContributeRestrictions && !_.isEmpty(parentContributeRestrictions)) {
-                if (contributeTypesProperty && _.isEmpty(contributeTypesProperty.values)) {
-                    return of(childNodeTypeNames);
-                }
-                return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: parentContributeRestrictions}})).pipe(
-                    filter(res => (res.data && res.data.jcr)),
-                    map((res) => {
-                        let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
-                        contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
-                        return _.map(contributionNodeTypes, nodeType => nodeType.name);
-                    })
-                );
-            }
-
             return of(childNodeTypeNames);
         }), switchMap(nodeTypes => {
             if (_.size(nodeTypes) > Constants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, 'jmix:droppableContent')) {

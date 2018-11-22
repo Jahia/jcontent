@@ -353,17 +353,16 @@ class ContentLayout extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <div className={classes.appFrame}>
-                        {this.isBrowsing() &&
-                        <Drawer
-                            variant="permanent"
-                            anchor={anchor}
-                            open={open}
-                            paperProps={{elevation: '1'}}
-                            className={classNames(classes.drawer, {
-                                [classes.drawerOpen]: this.state.open,
-                                [classes.drawerClose]: !this.state.open,
-                            })}
+                <div className={classes.appFrame}>
+                    {this.isBrowsing() &&
+                    <Drawer
+			            variant="permanent"
+			            anchor={anchor}
+			            open={open}
+			            className={classNames(classes.drawer, {
+				            [classes.drawerOpen]: this.state.open,
+				            [classes.drawerClose]: !this.state.open,
+			            })}
 
                             classes={{
                                 paper: classNames({

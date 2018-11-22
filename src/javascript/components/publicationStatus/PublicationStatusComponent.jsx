@@ -8,7 +8,7 @@ import {translate} from 'react-i18next';
 const styles = theme => ({
     root: {
         zIndex: 0,
-        display: 'flex',
+	    display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
         width: 6
@@ -16,6 +16,8 @@ const styles = theme => ({
     statusRoot: {
         zIndex: 1,
         display: 'flex',
+	    minHeight: theme.spacing.unit * 6,
+	    height: theme.spacing.unit * 6,
         flexDirection: 'row',
         alignItems: 'stretch',
         position: 'absolute',
@@ -50,6 +52,7 @@ const styles = theme => ({
         flex: 20,
         display: 'flex',
         alignItems: 'center',
+        height: theme.spacing.unit * 6,
         backgroundColor: 'inherit',
         width: 0.01, // Safari doesn't take 0 for some strange reason
         opacity: 0,

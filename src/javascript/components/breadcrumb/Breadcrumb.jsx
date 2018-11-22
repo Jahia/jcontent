@@ -55,7 +55,7 @@ const styles = theme => ({
         background: 'red'
     },
     divider: {
-        background: '#bdbdbd',
+        background: theme.palette.background.default,
         lineHeight: '1px',
         height: '1px'
     },
@@ -68,7 +68,7 @@ const styles = theme => ({
         paddingLeft: '10px !important'
     },
     colorMenu: {
-        background: '#f5f5f5'
+	    background: theme.palette.background.paper,
     }
 });
 

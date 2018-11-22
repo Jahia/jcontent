@@ -1,6 +1,6 @@
 import React from 'react';
 import {TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
-import { CheckBox } from '@material-ui/icons';
+import { CheckBoxOutlineBlank } from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
@@ -17,10 +17,11 @@ class ContentListHeader extends React.Component {
             <TableHead className={classes.head}>
                 <TableRow className={classes.contentRow}>
                     <TableCell padding="none" className={classes.tableCellHeight} />
-                    <TableCell className={classes.tableCellHeight}>
-                        <CheckBox color="secondary"  />
+                    <TableCell className={classes.tableCellHeight} padding='none'>
+                        <CheckBoxOutlineBlank color="secondary"  />
                     </TableCell>
                     {columnData.map(column => {
+                        console.log(column)
                         if (column.sortable) {
                             return (
                                 <TableCell
@@ -43,6 +44,7 @@ class ContentListHeader extends React.Component {
                         return (
                             <TableCell
                                 key={column.id}
+                                padding='none'
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                 >
@@ -50,7 +52,13 @@ class ContentListHeader extends React.Component {
                             </TableCell>
                         );
                     }, this)}
-                    <TableCell component="th" scope="row">
+                    <TableCell component="th" scope="row" className={classes.tableCellHeight}>
+                        hamza
+                    </TableCell>
+                    <TableCell component="th" scope="row" className={classes.tableCellHeight}>
+		                hamza
+                    </TableCell>
+                    <TableCell component="th" scope="row" className={classes.tableCellHeight}>
 		                Actions
                     </TableCell>
                 </TableRow>

@@ -33,7 +33,7 @@ const styles = theme => ({
     },
     side: {zIndex: 1, position: 'relative'},
     childItem: {
-        background: theme.palette.main.primary,
+        background: theme.palette.primary.main,
         color: theme.palette.text.contrastText,
         fontFamily: 'Nunito sans, sans-serif',
         padding: '1px 10px 4px 5px',

@@ -22,7 +22,8 @@ class BrowsingQueryHandler {
                 sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: orderBy === '' ? null : orderBy,
                 ignoreCase: true
-            }
+            },
+            ...getGroupingConfiguration(treeState)
         };
     }
 
@@ -36,20 +37,21 @@ class FilesQueryHandler {
         return filesQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
+    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy, treeState) {
         return {
             path: path,
             language: lang,
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
-            typeFilter: 'jnt:file',
+            typeFilter: treeState === "open" ? "jnt:file" : ["jnt:file", "jnt:folder"],
             recursionTypesFilter: 'jnt:folder',
             fieldSorter: orderBy === '' ? null : {
                 sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: orderBy === '' ? null : orderBy,
                 ignoreCase: true
-            }
+            },
+            ...getGroupingConfiguration(treeState)
         };
     }
 
@@ -212,10 +214,10 @@ const nodeFields = gql`
 `;
 
 const getNodeSubTree = gql`
-    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!,$fieldSorter: InputFieldSorterInput) {
+    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!,$fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
         jcr {
             results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                     pageInfo {
                         totalCount
                     }
@@ -314,11 +316,12 @@ const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templat
   }${PredefinedFragments.nodeCacheRequiredFields.gql}`;
 
 const filesQuery = gql`
-    query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput) {
+    query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
         jcr {
             results: nodeByPath(path: $path) {
-                id : uuid
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter) {
+                uuid
+                workspace
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                     pageInfo {
                         totalCount
                     }
@@ -618,6 +621,10 @@ class ActionRequirementsQueryHandler {
     getVariables() {
         return this.variables;
     }
+}
+
+function getGroupingConfiguration(treeState) {
+    return treeState !== "open" ? { fieldGrouping: {fieldName:"primaryNodeType.name", groups:['jnt:page', 'jnt:folder', 'jnt:contentFolder'], groupingType: "START"}} : {}
 }
 
 export {

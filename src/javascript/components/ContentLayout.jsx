@@ -259,7 +259,9 @@ class ContentLayout extends React.Component {
             sql2SearchFrom: sql2SearchFrom,
             sql2SearchWhere: sql2SearchWhere
         };
-        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, open ? 'open' : 'hidden');
+
+        const openHidden = open ? 'open' : 'hidden';
+        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, openHidden);
         let contextualMenu = React.createRef();
 
         return (
@@ -358,7 +360,6 @@ class ContentLayout extends React.Component {
                                 layoutQueryParams={layoutQueryParams}
                                 setRefetch={this.setContentRefetcher}
                                 orderBy={orderBy}
-                                treeShown={open}
                                 >
                                 {({rows, contentNotFound, totalCount}) => {
                                 return (

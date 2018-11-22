@@ -13,7 +13,7 @@ import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from './redux/actions';
 import Constants from './constants';
-import {extractPaths, isDescendantOrSelf, groupByTypes} from './utils';
+import {extractPaths, isDescendantOrSelf } from './utils';
 import {setModificationHook} from './copyPaste/contentModificationHook';
 import {compose} from 'react-apollo';
 
@@ -127,7 +127,7 @@ class ContentDataView extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy, treeShown} = this.props;
+        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy} = this.props;
         return (
             <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={orderBy === 'displayName' ? 'network-only' : ''}>
                 {({loading, error, data, refetch}) => {
@@ -194,10 +194,6 @@ class ContentDataView extends React.Component {
                                 height: (contentNode.width ? contentNode.height.value : '')
                             };
                         });
-
-                        if (!treeShown) {
-                            rows = groupByTypes(['jnt:page', 'jnt:folder', 'jnt:contentFolder'], rows);
-                        }
                     }
 
                     return (

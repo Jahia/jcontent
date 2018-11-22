@@ -35,9 +35,9 @@ class BurgerMenuButton extends React.Component {
         return (
             <div>
                 { isDrawerOpen ?
-                    <div className={classes.menuButtonBlue} data-cm-role="cm-burger-menu" onClick={() => BurgerMenuButton.openMenu()}/>
+                    <div className={classes.menuButtonBlue} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/>
                     :
-                    <div className={classes.menuButton} data-cm-role="cm-burger-menu" onClick={() => BurgerMenuButton.openMenu()}/>
+                    <div className={classes.menuButton} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/>
                 }
             </div>
         );

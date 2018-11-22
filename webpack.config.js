@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
                     include: [path.join(__dirname, 'src')],
                     loader: 'babel-loader',
                     query: {
-                        presets: [['env', {modules: false}], 'react', 'stage-2'],
+                        presets: [['env', {modules: false, targets: {safari: '7', ie: '10'}}], 'react', 'stage-2'],
                         plugins: [
                             'lodash'
                         ]
@@ -56,10 +56,15 @@ module.exports = (env, argv) => {
 
     if (argv.watch) {
         config.module.rules.push({
-            loader: 'eslint-loader',
-            options: {
-                fix: true
-            }
+            exclude: /node_modules/,
+            use: [
+                {
+                    loader: 'eslint-loader',
+                    options: {
+                        fix: true
+                    }
+                }
+            ]
         });
     }
 

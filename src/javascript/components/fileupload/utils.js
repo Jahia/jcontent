@@ -1,8 +1,8 @@
-import {uploadSeed} from "./redux/reducer";
-import {takeFromQueue, addUploads } from "./redux/actions";
-import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from "./constatnts";
-import accepts from "attr-accept";
-import mimetypes from "mime-types";
+import {uploadSeed} from './redux/reducer';
+import {takeFromQueue, addUploads } from './redux/actions';
+import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './constants';
+import accepts from 'attr-accept';
+import mimetypes from 'mime-types';
 import randomUUID from 'uuid/v4';
 
 export const files = {
@@ -13,14 +13,14 @@ export const files = {
 export const onFilesSelected = (acceptedFiles, rejectedFiles, dispatchBatch, uploadInfo, additionalActions = []) => {
     files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
     files.rejectedFiles = files.rejectedFiles.concat(rejectedFiles);
-    const uploads = acceptedFiles.map((file) => {
+    const uploads = acceptedFiles.map(() => {
         let seed = {
             ...uploadSeed
         };
 
         seed.id = randomUUID();
 
-        //Merge optional uploadInfo if custom property values need to be provided
+        // Merge optional uploadInfo if custom property values need to be provided
         if (uploadInfo) {
             seed = {
                 ...seed,

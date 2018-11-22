@@ -1,21 +1,17 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core';
+import {CircularProgress, IconButton, List, withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {IconButton, List, CircularProgress} from '@material-ui/core';
-import {Close, Fullscreen, FullscreenExit, CheckCircle, Info} from '@material-ui/icons';
+import {CheckCircle, Close, Fullscreen, FullscreenExit, Info} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import UploadDrawer from './UploadDrawer';
-import {panelStates, uploadsStatuses, uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS} from './constants';
-import {uploadSeed} from './redux/reducer';
-import {setPanelState, setUploads, takeFromQueue, setStatus} from './redux/actions';
+import {panelStates, uploadsStatuses, uploadStatuses} from './constants';
+import {setPanelState, setStatus, setUploads} from './redux/actions';
 import UploadDropZone from './UploadDropZone';
 import UploadItem from './UploadItem';
-import mimetypes from 'mime-types';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import _ from 'lodash';
-import { onFilesSelected, getMimeTypes, files } from './utils';
+import {files, getMimeTypes, onFilesSelected} from './utils';
 
 const styles = theme => ({
     drawerContent: {
@@ -103,16 +99,16 @@ class Upload extends React.Component {
         this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
         this.overlayStyle = {
             active: {
-                display: "block",
-                position: "absolute",
-                backgroundColor: "#E67D3A",
-                opacity: "0.4",
+                display: 'block',
+                position: 'absolute',
+                backgroundColor: '#E67D3A',
+                opacity: '0.4',
                 zIndex:1000,
-                pointerEvents: "none"
+                pointerEvents: 'none'
             },
             inactive: {
-                display: "none",
-                pointerEvents: "none"
+                display: 'none',
+                pointerEvents: 'none'
             }
         }
     }
@@ -143,7 +139,7 @@ class Upload extends React.Component {
     }
 
     configureRendering() {
-        const {classes, uploads, acceptedFileTypes, path} = this.props;
+        const {classes, uploads, acceptedFileTypes} = this.props;
         if (uploads.length === 0) {
             return (
                 <UploadDropZone acceptedFileTypes={getMimeTypes(acceptedFileTypes)}
@@ -165,7 +161,7 @@ class Upload extends React.Component {
         return this.props.uploads.map((upload, index) => (
             <UploadItem key={upload.id}
                 index={index}
-                file={this.acceptedFiles[index]}
+                file={files.acceptedFiles[index]}
                 removeFile={this.removeFile}
                 updateUploadsStatus={this.updateUploadsStatus}/>
         ));

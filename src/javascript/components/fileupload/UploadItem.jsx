@@ -1,7 +1,7 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {withApollo} from "react-apollo";
+import {withApollo} from 'react-apollo';
 import {uploadFile, uploadImage, removeFile} from './gqlMutations';
 import {Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField} from '@material-ui/core';
 import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
@@ -23,7 +23,7 @@ const styles = () => ({
     },
     fileNameText: {
         width: 350,
-        // maxWidth: 350,
+        // MaxWidth: 350,
         '& span': {
             color: '#555'
         }

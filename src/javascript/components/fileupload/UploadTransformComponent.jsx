@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from "react-redux";
-import {batchActions} from "redux-batched-actions/lib/index";
+import {connect} from 'react-redux';
+import {batchActions} from 'redux-batched-actions/lib/index';
 import {fileAccepted, fileMatchSize, getDataTransferItems,
     isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
-import {setPanelState, setOverlayTarget} from "./redux/actions";
-import {panelStates} from "./constatnts";
-import { withApollo } from "react-apollo";
-import { UploadRequirementsQuery } from "./gqlQueries";
-import _ from "lodash";
+import {setPanelState, setOverlayTarget} from './redux/actions';
+import {panelStates} from './constants';
+import { withApollo } from 'react-apollo';
+import { UploadRequirementsQuery } from './gqlQueries';
+import _ from 'lodash';
 
-const ACCEPTING_NODE_TYPES = ["jnt:folder"];
+const ACCEPTING_NODE_TYPES = ['jnt:folder'];
 
 class UploadTransformComponent extends React.Component {
 
@@ -58,7 +58,7 @@ class UploadTransformComponent extends React.Component {
         delete props.uploadMaxSize;
         delete props.uploadDispatchBatch;
         delete props.uploadSetOverlayTarget;
-        //Blurring functionality
+        // Blurring functionality
         // if (this.state.isDragActive) {
         //     if (!props.style) {
         //         props.style = {};
@@ -80,19 +80,19 @@ class UploadTransformComponent extends React.Component {
         evt.persist();
         let position = this.getOverlayPosition(evt.currentTarget);
         this.props.uploadSetOverlayTarget(position);
-        if (isDragDataWithFiles(evt)) {
-            Promise.resolve(getDataTransferItems(evt)).then(draggedFiles => {
-                if (evt.isPropagationStopped()) {
-                    return
-                }
-
-                this.setState({
-                    draggedFiles,
-                    // Do not rely on files for the drag state. It doesn't work in Safari.
-                    isDragActive: true
-                });
-            });
-        }
+        // If (isDragDataWithFiles(evt)) {
+        //     Promise.resolve(getDataTransferItems(evt)).then(draggedFiles => {
+        //         if (evt.isPropagationStopped()) {
+        //             return
+        //         }
+        //
+        //         this.setState({
+        //             draggedFiles,
+        //             // Do not rely on files for the drag state. It doesn't work in Safari.
+        //             isDragActive: true
+        //         });
+        //     });
+        // }
     }
 
     onDragOver(evt) {
@@ -110,11 +110,11 @@ class UploadTransformComponent extends React.Component {
         if (this.dragTargets.length > 0) {
             return
         }
-
-        this.setState({
-            isDragActive: false,
-            draggedFiles: []
-        });
+        //
+        // this.setState({
+        //     isDragActive: false,
+        //     draggedFiles: []
+        // });
         this.props.uploadSetOverlayTarget(null);
     }
 
@@ -127,10 +127,10 @@ class UploadTransformComponent extends React.Component {
         this.dragTargets = [];
 
         // Reset drag state
-        this.setState({
-            isDragActive: false,
-            draggedFiles: []
-        });
+        // this.setState({
+        //     isDragActive: false,
+        //     draggedFiles: []
+        // });
         this.props.uploadSetOverlayTarget(null);
         if (isDragDataWithFiles(evt)) {
             Promise.resolve(getDataTransferItems(evt)).then(fileList => {
@@ -168,7 +168,7 @@ class UploadTransformComponent extends React.Component {
                 variables: {
                     path: this.props.uploadPath,
                     permittedNodeTypes: ACCEPTING_NODE_TYPES,
-                    permission: "jcr:addChildNodes",
+                    permission: 'jcr:addChildNodes',
                 },
                 query: UploadRequirementsQuery
             });
@@ -180,10 +180,11 @@ class UploadTransformComponent extends React.Component {
             }
         }
         catch (e) {
-            // console.log(this.props.uploadPath);
+            // Console.log(this.props.uploadPath);
             console.error(e);
         }
     }
+
     // Calculates elements position if/when scrolled.
     // Adaptation of https://stackoverflow.com/questions/1236171/how-do-i-calculate-an-elements-position-in-a-scrolled-div
     getOverlayPosition(el) {
@@ -210,7 +211,7 @@ class UploadTransformComponent extends React.Component {
 }
 
 UploadTransformComponent.propTypes = {
-    uploadTargetComponent: PropTypes.oneOfType([PropTypes.element.isRequired, PropTypes.func.isRequired]),
+    uploadTargetComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
     uploadPath: PropTypes.string.isRequired,
     uploadAcceptedFileTypes: PropTypes.array,
     uploadMaxSize: PropTypes.number,
@@ -218,6 +219,7 @@ UploadTransformComponent.propTypes = {
 };
 
 UploadTransformComponent.defaultProps = {
+    uploadAcceptedFileTypes: null,
     uploadMaxSize: Infinity,
     uploadMinSize: 0
 };

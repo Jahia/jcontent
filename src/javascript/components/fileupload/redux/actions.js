@@ -28,7 +28,7 @@ export const setUploads = uploads => {
 
 export const addUploads = uploads => {
     return {
-        type: "FILEUPLOAD_ADD_UPLOADS",
+        type: 'FILEUPLOAD_ADD_UPLOADS',
         uploads: uploads
     }
 };
@@ -56,7 +56,7 @@ export const takeFromQueue = number => {
 
 export const setOverlayTarget = overlayTarget => {
     return {
-        type: "FILEUPLOAD_SET_OVERLAY_TARGET",
+        type: 'FILEUPLOAD_SET_OVERLAY_TARGET',
         overlayTarget: overlayTarget
     }
 };

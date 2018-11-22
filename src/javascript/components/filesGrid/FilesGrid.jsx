@@ -7,7 +7,7 @@ import {Grid} from '@material-ui/core';
 import {Pagination} from '@jahia/react-material';
 import {DxContext} from '../DxContext';
 import {withStyles} from '@material-ui/core';
-import UploadTransformComponent from "../fileupload/UploadTransformComponent";
+import UploadTransformComponent from '../fileupload/UploadTransformComponent';
 
 const styles = theme => ({
     grid: {
@@ -87,22 +87,22 @@ class FilesGrid extends Component {
             );
         }
         return <div className={classes.grid}>
-            <UploadTransformComponent uploadTargetComponent={ Grid } uploadPath={ path } container>
+            <UploadTransformComponent container uploadTargetComponent={ Grid } uploadPath={ path }>
                 {
                     this.props.rows.map(node => (
                         <Grid key={node.uuid}
-                              item
-                              xs={size}
-                              className={classes.centerGrid}
-                              onMouseEnter={$event => this.onHoverEnter($event, node.path)}
-                              onMouseLeave={$event => this.onHoverExit($event)}>
+                            item
+                            xs={size}
+                            className={classes.centerGrid}
+                            onMouseEnter={$event => this.onHoverEnter($event, node.path)}
+                            onMouseLeave={$event => this.onHoverExit($event)}>
                             <DxContext.Consumer>
                                 {
                                     dxContext => <FileCard cardType={size}
-                                                           isHovered={node.path === hoveredCard}
-                                                           node={{...node, displayName: node.name}}
-                                                           dxContext={dxContext}
-                                                           handleShowPreview={handleShowPreview}/>
+                                        isHovered={node.path === hoveredCard}
+                                        node={{...node, displayName: node.name}}
+                                        dxContext={dxContext}
+                                        handleShowPreview={handleShowPreview}/>
                                 }
                             </DxContext.Consumer>
                         </Grid>

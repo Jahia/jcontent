@@ -156,12 +156,12 @@ class CmPickerViewMaterial extends React.Component {
                             itemClass = itemClass + ' ' + classes.listItemSelected;
                         }
                         return <UploadWrapperComponent
-                            uploadTargetComponent={ListItem}
-                            uploadPath={entry.path}
                             key={entry.path}
                             divider
-                            className={itemClass}
                             data-jrm-role="picker-item"
+                            className={itemClass}
+                            uploadPath={entry.path}
+                            uploadTargetComponent={ListItem}
                             onClick={() => this.hoverOn(entry.path)}
                             onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                             onMouseEnter={() => this.hoverOn(entry.path)}

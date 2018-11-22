@@ -106,10 +106,10 @@ class ContentManager extends React.Component {
                                                         dxContext.lang = props.match.params.lang;
                                                         return <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
                                                             <Route path={`${props.match.url}/browse`} render={() =>
-                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs.contents, contentTreeConfigs.pages]}/>
+                                                                <ContentLayout contentTreeConfigs={[contentTreeConfigs.contents, contentTreeConfigs.pages]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/browse-files`} render={() =>
-                                                                <ContentLayout store={this.store} contentTreeConfigs={[contentTreeConfigs.files]}/>
+                                                                <ContentLayout contentTreeConfigs={[contentTreeConfigs.files]}/>
                                                             }/>
                                                             <Route path={`${props.match.url}/search`} render={() =>
                                                                 <ContentLayout/>

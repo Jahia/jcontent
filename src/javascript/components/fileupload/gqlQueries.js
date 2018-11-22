@@ -12,4 +12,4 @@ const UploadRequirementsQuery = gql`
         }
     }`;
 
-export { UploadRequirementsQuery }
+export {UploadRequirementsQuery};

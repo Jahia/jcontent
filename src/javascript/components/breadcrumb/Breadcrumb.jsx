@@ -78,7 +78,6 @@ const MAX_TOTAL_ITEMS_ON_CUT_DISPLAY = 6;
 const MAX_FIRST_LABEL_LENGTH = 20;
 const MAX_LABEL_LENGTH = 10;
 
-
 class Breadcrumb extends React.Component {
     constructor(props) {
         super(props);

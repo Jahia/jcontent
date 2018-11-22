@@ -9,7 +9,6 @@ import {cmSetSite} from '../redux/actions';
 import SiteSwitcherDisplay from './SiteSwitcherDisplay';
 
 class SiteSwitcher extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -79,10 +78,10 @@ class SiteSwitcher extends React.Component {
 
     render() {
         const {siteKey, currentLang, notificationContext, dark, t} = this.props;
-        return <Query query={this.query} variables={this.variables}>
-            {
+        return (
+            <Query query={this.query} variables={this.variables}>
+                {
                 ({error, loading, data}) => {
-
                     if (error) {
                         console.log('Error when fetching data: ' + error);
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
@@ -95,25 +94,28 @@ class SiteSwitcher extends React.Component {
                     }
 
                     let sites = this.getSites(data);
-                    return <SiteSwitcherDisplay
-                        siteKey={siteKey}
-                        currentLang={currentLang}
-                        dark={dark}
-                        siteNodes={sites}
-                        onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)}
-                    />;
+                    return (
+                        <SiteSwitcherDisplay
+                            siteKey={siteKey}
+                            currentLang={currentLang}
+                            dark={dark}
+                            siteNodes={sites}
+                            onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)}
+                    />
+);
                 }
             }
-        </Query>;
+            </Query>
+        );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     siteKey: state.site,
     currentLang: state.language
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     selectSite: (siteNode, language) => {
         dispatch(cmSetSite(siteNode.name, language, siteNode.displayName));
     }

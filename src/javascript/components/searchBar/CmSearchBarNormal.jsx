@@ -102,7 +102,7 @@ class CmSearchBarNormal extends React.Component {
                     </React.Fragment>
                 }
                 onSearch={() => this.onSearch(path, params, this.state.contentType)}
-            >
+                >
                 <DxContext.Consumer className={classes.searchSize}>{dxContext => {
                     return (
                         <ContentTypeSelect
@@ -129,14 +129,14 @@ class CmSearchBarNormal extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
     path: state.path,
     params: state.params
 });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
         search: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
     };

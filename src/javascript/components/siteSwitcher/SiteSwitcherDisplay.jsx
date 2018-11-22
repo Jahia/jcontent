@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose} from 'react-apollo';
 import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {lodash as _} from 'lodash';
 import {translate} from 'react-i18next';
 
@@ -33,18 +33,17 @@ const styles = theme => ({
     },
     iconDark: {
         color: '#504e4d',
-        fontSize: '10px',
+        fontSize: '10px'
     },
     input1: {
         backgroundColor: 'transparent',
-        'color': '#ffffff',
-        'boxShadow': 'none',
-        'fontSize': '0.875rem'
-    },
+        color: '#ffffff',
+        boxShadow: 'none',
+        fontSize: '0.875rem'
+    }
 });
 
 class SiteSwitcherDisplay extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -63,34 +62,37 @@ class SiteSwitcherDisplay extends React.Component {
     }
 
     render() {
-
         let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang, dark} = this.props;
         let {anchorEl} = this.state;
 
         if (loading) {
             return <span>Loading...</span>;
         }
-        const siteNode = _.find(siteNodes, (siteNode) => siteNode.name === siteKey);
-        return <React.Fragment>
-            <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" data-cm-role="site-switcher" onClick={this.handleClick}>
-                <Typography className={dark ? classes.typography : classes.typographyLight}>
-                    {siteNode.displayName}
-                </Typography>
+        const siteNode = _.find(siteNodes, siteNode => siteNode.name === siteKey);
+        return (
+            <React.Fragment>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" data-cm-role="site-switcher" onClick={this.handleClick}>
+                    <Typography className={dark ? classes.typography : classes.typographyLight}>
+                        {siteNode.displayName}
+                    </Typography>
                 &nbsp;
-                <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
-            </Button>
-            <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                {siteNodes.map((siteNode) => {
-                    return <MenuItem key={siteNode.uuid} onClick={() => {
+                    <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
+                </Button>
+                <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
+                    {siteNodes.map(siteNode => {
+                    return (
+                        <MenuItem key={siteNode.uuid} onClick={() => {
                         onSelectSite(siteNode, currentLang);
                         this.handleClose();
-                    }}>
-                        {siteNode.displayName}
-                    </MenuItem>
+                    }}
+                                                      >
+                            {siteNode.displayName}
+                        </MenuItem>
+);
                 })}
-            </Menu>
-        </React.Fragment>;
-
+                </Menu>
+            </React.Fragment>
+        );
     }
 }
 

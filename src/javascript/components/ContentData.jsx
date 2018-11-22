@@ -217,7 +217,7 @@ class ContentDataView extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     siteKey: state.site,
     path: state.path,
     mode: state.mode,
@@ -225,7 +225,7 @@ const mapStateToProps = (state) => ({
     openedPaths: state.openPaths
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     setSelection: selection => dispatch(cmSetSelection(selection)),
     openPaths: paths => dispatch(cmOpenPaths(paths)),

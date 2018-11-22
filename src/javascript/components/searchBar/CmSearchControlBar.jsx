@@ -64,7 +64,7 @@ class CmSearchControlBar extends React.Component {
                     <Button variant="contained"
                         classes={{sizeSmall: classes.searchClear}}
                         size="small" onClick={() => setPath(siteRootPath)}
-                    >
+                                     >
                         {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
                     </Button>
                     }
@@ -74,7 +74,7 @@ class CmSearchControlBar extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         siteDisplayableName: state.siteDisplayableName,
         siteKey: state.site,
@@ -82,7 +82,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     setPath: path => dispatch(cmSetPath(path))
 });
 

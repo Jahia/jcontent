@@ -46,7 +46,7 @@ class ShareMenu extends Component {
                         aria-haspopup="true"
                         className={classes.colorIcon}
                         onClick={event => this.handleMenuClick(event, 'shareMenuAnchor')}
-                    >
+                        >
                         <Share/>
                     </Button>
                 </Tooltip>
@@ -54,7 +54,7 @@ class ShareMenu extends Component {
                     anchorEl={shareMenuAnchor}
                     open={Boolean(shareMenuAnchor)}
                     onClose={() => this.handleMenuClose('shareMenuAnchor')}
-                >
+                    >
                     <MenuItem onClick={() => this.copy(selectedItem.path)}>
                         {t('label.contentManager.contentPreview.copyPathToClipboard')}
                     </MenuItem>
@@ -75,7 +75,7 @@ class ShareMenu extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     selection: state.selection
 });
 

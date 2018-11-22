@@ -1,9 +1,9 @@
-import React  from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Pdf from 'react-pdf-js';
 import {translate} from 'react-i18next';
 import {IconButton, Paper, withStyles} from '@material-ui/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
 
 const PDFContainer = styled.div`
@@ -90,8 +90,8 @@ const styles = theme => ({
         margin: 'auto',
         background: 'transparent'
     },
-    colorPagination:{
-        color: theme.palette.background.default,
+    colorPagination: {
+        color: theme.palette.background.default
     },
     controlRight: {
         flex: 1,
@@ -105,22 +105,22 @@ const styles = theme => ({
     },
     pdfPaperFull: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     hideScale: {
-        opacity:0,
+        opacity: 0,
         transition: 'opacity 0.3s ease-out 0s'
     },
     showScale: {
         opacity: 1,
         transition: 'opacity 0.3s ease-in 0s'
     },
-    PaperPdf : {
-        backgroundColor: theme.palette.common.white,
+    PaperPdf: {
+        backgroundColor: theme.palette.common.white
     }
 });
 
-const scaleSizes = [.25, .33, .5, .67, .75, .8, .9, 1, 1.1, 1.25, 1.5, 1.75, 2];
+const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 
 class PDFViewer extends React.Component {
     constructor(props) {
@@ -140,14 +140,14 @@ class PDFViewer extends React.Component {
     }
 
     onDocumentComplete(pages) {
-        this.setState({ page: 1, pages });
-    };
+        this.setState({page: 1, pages});
+    }
 
     handleNavigation(event, value) {
-        this.setState((prevState) => {
+        this.setState(prevState => {
             let {page, pages} = prevState;
             let newPage = page;
-            switch(value) {
+            switch (value) {
                 case 'first':
                     newPage = 1;
                     break;
@@ -157,21 +157,21 @@ class PDFViewer extends React.Component {
                 case 'next':
                     newPage = ++page;
                     break;
-                case 'previous' :
+                case 'previous':
                     newPage = --page;
                     break;
                 default:
                     break;
             }
-            return {page: newPage}
+            return {page: newPage};
         });
-    };
+    }
 
     handleZoom(event, value) {
-        this.setState((prevState) => {
+        this.setState(prevState => {
             let {scaleSize} = prevState;
             let newScaleSize = scaleSize;
-            switch(value) {
+            switch (value) {
                 case 'in':
                     newScaleSize = ++scaleSize;
                     break;
@@ -185,40 +185,75 @@ class PDFViewer extends React.Component {
             this.scaleTimeout = setTimeout(() => {
                 this.setState({showScale: false});
             }, 1000);
-            return {scaleSize: newScaleSize, showScale: true}
+            return {scaleSize: newScaleSize, showScale: true};
         });
     }
-    ;
+
     renderPagination(fullScreen) {
         let {classes} = this.props;
         let {page, pages, scaleSize} = this.state;
-        let firstPageButton = <IconButton className={classes.colorPagination}
-            disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'first')}}>
-            <FontAwesomeIcon size="xs" icon="step-backward"/>
-        </IconButton>;
-        let lastPageButton = <IconButton className={classes.colorPagination}
-            disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'last')}}>
-            <FontAwesomeIcon size="xs" icon="step-forward"/>
-        </IconButton>;
-        let previousButton = <IconButton className={classes.colorPagination}
-            disabled={page === 1} onClick={(event) => {this.handleNavigation(event, 'previous')}}>
-            <FontAwesomeIcon size="xs" icon="chevron-left"/>
-        </IconButton>;
-        let nextButton = <IconButton
-            className={classes.colorPagination}
-            disabled={page === pages} onClick={(event) => {this.handleNavigation(event, 'next')}}>
-            <FontAwesomeIcon size="xs" icon="chevron-right"/>
-        </IconButton>;
+        let firstPageButton = (
+            <IconButton className={classes.colorPagination}
+                disabled={page === 1}
+                onClick={event => {
+                            this.handleNavigation(event, 'first');
+                        }}
+                >
+                <FontAwesomeIcon size="xs" icon="step-backward"/>
+            </IconButton>
+        );
+        let lastPageButton = (
+            <IconButton className={classes.colorPagination}
+                disabled={page === pages}
+                onClick={event => {
+                            this.handleNavigation(event, 'last');
+                        }}
+                >
+                <FontAwesomeIcon size="xs" icon="step-forward"/>
+            </IconButton>
+        );
+        let previousButton = (
+            <IconButton className={classes.colorPagination}
+                disabled={page === 1}
+                onClick={event => {
+                            this.handleNavigation(event, 'previous');
+                        }}
+                >
+                <FontAwesomeIcon size="xs" icon="chevron-left"/>
+            </IconButton>
+        );
+        let nextButton = (
+            <IconButton className={classes.colorPagination}
+                disabled={page === pages}
+                onClick={event => {
+                            this.handleNavigation(event, 'next');
+                        }}
+                >
+                <FontAwesomeIcon size="xs" icon="chevron-right"/>
+            </IconButton>
+        );
 
-        let zoomInButton = <IconButton
-            className={classes.colorPagination}
-            disabled={scaleSize === scaleSizes.length-1} onClick={(event) => {this.handleZoom(event, 'in')}}>
-            <FontAwesomeIcon size="xs" icon="search-plus"/>
-        </IconButton>;
-        let zoomOutButton = <IconButton className={classes.colorPagination}
-            disabled={scaleSize === 0} onClick={(event) => {this.handleZoom(event, 'out')}}>
-            <FontAwesomeIcon size="xs" icon="search-minus"/>
-        </IconButton>;
+        let zoomInButton = (
+            <IconButton
+                className={classes.colorPagination}
+                disabled={scaleSize === scaleSizes.length - 1}
+                onClick={event => {
+                    this.handleZoom(event, 'in');
+                }}
+                >
+                <FontAwesomeIcon size="xs" icon="search-plus"/>
+            </IconButton>
+        );
+        let zoomOutButton = (
+            <IconButton className={classes.colorPagination}
+                disabled={scaleSize === 0}
+                onClick={event => {
+                            this.handleZoom(event, 'out');
+                        }}
+                >
+                <FontAwesomeIcon size="xs" icon="search-minus"/>
+            </IconButton>
+        );
         return (
             <div>
                 {!fullScreen ?
@@ -235,8 +270,7 @@ class PDFViewer extends React.Component {
                             {zoomOutButton}
                             {zoomInButton}
                         </Paper>
-                    </Controls>
-                    :
+                    </Controls> :
                     <ControlsFullScreen>
                         <Paper className={classes.controlLeft} elevation={0}/>
                         <Paper className={classes.controlCenter} elevation={0}>
@@ -254,47 +288,48 @@ class PDFViewer extends React.Component {
                 }
             </div>
 
-        )
-    };
+        );
+    }
 
     displayScaleSize() {
-        return Math.floor(scaleSizes[this.state.scaleSize] * 100) + ' %'
-    };
+        return Math.floor(scaleSizes[this.state.scaleSize] * 100) + ' %';
+    }
 
     render() {
         let {page, file, scaleSize, showScale} = this.state;
         let {classes, fullscreen} = this.props;
         let pagination = this.renderPagination(fullscreen);
-        return <div>
-            {pagination}
-            <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
-            {fullscreen ?
-                <PDFContainerFull>
-                    <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
-                        <Pdf
-                            file={file}
-                            scale={scaleSizes[scaleSize]}
-                            page={page}
-                            onDocumentComplete={this.onDocumentComplete}
-                            onPageComplete={this.onPageComplete}
+        return (
+            <div>
+                {pagination}
+                <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
+                {fullscreen ?
+                    <PDFContainerFull>
+                        <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
+                            <Pdf
+                                file={file}
+                                scale={scaleSizes[scaleSize]}
+                                page={page}
+                                onDocumentComplete={this.onDocumentComplete}
+                                onPageComplete={this.onPageComplete}
                         />
-                    </Paper>
-                </PDFContainerFull>
-                :
-                <PDFContainer>
-                    <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
-                        <Pdf
-                            file={file}
-                            scale={scaleSizes[scaleSize]}
-                            page={page}
-                            onDocumentComplete={this.onDocumentComplete}
-                            onPageComplete={this.onPageComplete}
+                        </Paper>
+                    </PDFContainerFull> :
+                    <PDFContainer>
+                        <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
+                            <Pdf
+                                file={file}
+                                scale={scaleSizes[scaleSize]}
+                                page={page}
+                                onDocumentComplete={this.onDocumentComplete}
+                                onPageComplete={this.onPageComplete}
                         />
-                    </Paper>
-                </PDFContainer>
+                        </Paper>
+                    </PDFContainer>
             }
 
-        </div>
+            </div>
+        );
     }
 }
 

@@ -10,7 +10,6 @@ import {cmSetLanguage} from '../redux/actions';
 import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
 class LanguageSwitcher extends React.Component {
-
     constructor(props) {
         super(props);
         this.query = gql`
@@ -55,7 +54,7 @@ class LanguageSwitcher extends React.Component {
         this.props.onSelectLanguage(lang);
         // Switch edit mode linker language
         window.parent.authoringApi.switchLanguage(lang);
-    };
+    }
 
     validateLanguageExists(languages, data, lang) {
         if (!_.isEmpty(languages)) {
@@ -74,12 +73,12 @@ class LanguageSwitcher extends React.Component {
             return true;
         }
         return true;
-    };
+    }
 
     parseSiteLanguages(data) {
         let parsedSiteLanguages = [];
         if (data && (data.jcr || data.wsDefault)) {
-            let siteLanguages = data.jcr ? data.jcr.result.site.languages :  data.wsDefault.result.site.languages;
+            let siteLanguages = data.jcr ? data.jcr.result.site.languages : data.wsDefault.result.site.languages;
             for (let i in siteLanguages) {
                 if (siteLanguages[i].activeInEdit) {
                     parsedSiteLanguages.push(siteLanguages[i]);
@@ -90,14 +89,14 @@ class LanguageSwitcher extends React.Component {
     }
 
     render() {
-
         const {t, notificationContext, siteKey, lang, dark} = this.props;
         const variables = {
-            path: '/sites/' + siteKey,
+            path: '/sites/' + siteKey
         };
 
-        return <Query query={this.query} variables={variables}>
-            {
+        return (
+            <Query query={this.query} variables={variables}>
+                {
                 ({error, loading, data}) => {
                     if (error) {
                         console.log('Error when fetching data: ' + error);
@@ -113,29 +112,31 @@ class LanguageSwitcher extends React.Component {
                     let displayableLanguages = this.parseSiteLanguages(data);
                     let existingLanguage = this.validateLanguageExists(displayableLanguages, data, lang);
                     if (existingLanguage === true) {
-                        return <LanguageSwitcherDisplay
-                            lang={lang}
-                            dark={dark}
-                            languages={displayableLanguages}
-                            onSelectLanguage={(lang) => this.onSelectLanguage(lang)}
+                        return (
+                            <LanguageSwitcherDisplay
+                                lang={lang}
+                                dark={dark}
+                                languages={displayableLanguages}
+                                onSelectLanguage={lang => this.onSelectLanguage(lang)}
                         />
-                    } 
+);
+                    }
                     this.onSelectLanguage(existingLanguage);
                     return null;
-                    
                 }
             }
-        </Query>;
+            </Query>
+        );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    onSelectLanguage: (lang) => {
+const mapDispatchToProps = dispatch => ({
+    onSelectLanguage: lang => {
         dispatch(cmSetLanguage(lang));
     }
 });

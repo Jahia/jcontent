@@ -12,22 +12,22 @@ const styles = () => ({
     root: {
         width: 'auto',
         minWidth: '100px',
-        height: 34,
+        height: 34
     },
     inputDetails: {
         borderBottom: 'none!important',
-        boxShadow: 'none!important',
+        boxShadow: 'none!important'
     },
     inputPadding: {
         padding: '0!important'
     },
     selectDetails: {
         borderBottom: 'none!important',
-        boxShadow: 'none!important',
+        boxShadow: 'none!important'
     },
-    inputSize:  {
+    inputSize: {
         height: 34,
-        padding: '0!important',
+        padding: '0!important'
     },
     colorText: {
     }
@@ -38,7 +38,7 @@ const ITEM_HEIGHT = 48;
 const customStyles = {
     container: () => ({
         padding: 0,
-        color: '#fff',
+        color: '#fff'
     }),
     control: () => ({
         display: 'flex',
@@ -55,14 +55,14 @@ const customStyles = {
         }
     }),
     group: () => ({
-        color: '#fff',
+        color: '#fff'
     }),
     noOptionsMessage: () => ({
         width: '155px',
         color: '#8f9498',
         padding: '8px 16px',
         minWidth: '155px',
-        maxWidth: '155px',
+        maxWidth: '155px'
     }),
     menu: () => ({
         backgroundColor: '#ecebeb',
@@ -78,12 +78,12 @@ const customStyles = {
     dropdownIndicator: base => ({
         ...base,
         color: '#fff',
-        cursor: '-webkit-grabbing',
+        cursor: '-webkit-grabbing'
     }),
     clearIndicator: base => ({
         ...base,
         color: 'white',
-        cursor: '-webkit-grabbing',
+        cursor: '-webkit-grabbing'
     }),
     indicatorSeparator: base => ({
         ...base,
@@ -97,11 +97,11 @@ const customStyles = {
         overflowY: 'auto'
     }),
     input: () => ({
-        color: '#fff!important',
+        color: '#fff!important'
     }),
     placeholder: () => ({
         textAlign: 'center',
-        color : '#fff!important'
+        color: '#fff!important'
     }),
     singleValue: () => ({
         marginLeft: '2px',
@@ -111,24 +111,21 @@ const customStyles = {
         textOverflow: 'ellipsis',
         width: '100px',
         whiteSpace: 'nowrap',
-        top: '50%',
-    }),
+        top: '50%'
+    })
 };
 
 class Option extends React.Component {
-
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
     }
 
-
     handleClick(event) {
         this.props.selectOption(this.props.data, event);
-    };
+    }
 
     render() {
-
         const {data, children, isFocused, isSelected, onFocus} = this.props;
 
         return (
@@ -150,7 +147,7 @@ class Option extends React.Component {
                 title={data.title}
                 onClick={this.handleClick}
                 onFocus={onFocus}
-            >
+                >
                 {data.icon !== null &&
                     <ListItemIcon>
                         <img src={data.icon + '.png'}/>
@@ -165,7 +162,6 @@ class Option extends React.Component {
 }
 
 class DropdownIndicator extends React.Component {
-
     render() {
         if (!this.props.selectProps.open) {
             return (
@@ -174,9 +170,8 @@ class DropdownIndicator extends React.Component {
                 </components.DropdownIndicator>
             );
         }
-        
-        return <div />
-        
+
+        return <div/>;
     }
 }
 
@@ -189,17 +184,15 @@ class ClearIndicator extends React.Component {
                 </components.ClearIndicator>
             );
         }
-        
-        return <div />
-        
+
+        return <div/>;
     }
 }
 
 class SelectWrapped extends React.Component {
     render() {
-
         const {value, open, options, ...other} = this.props;
-        let optionValue = _.find(options, (data) => data.value === value);
+        let optionValue = _.find(options, data => data.value === value);
 
         return (
             <Select
@@ -221,7 +214,6 @@ class SelectWrapped extends React.Component {
 }
 
 class FilterSelect extends React.Component {
-
     render() {
         let {classes, options, selectedOption, open, handleIndicator, handleChange} = this.props;
         return (
@@ -229,7 +221,7 @@ class FilterSelect extends React.Component {
                 <Input
                     disableUnderline
                     fullWidth
-                    classes={{ root: classes.inputDetails, input: classes.inputPadding}}
+                    classes={{root: classes.inputDetails, input: classes.inputPadding}}
                     inputComponent={SelectWrapped}
                     open={open}
                     value={selectedOption}
@@ -248,12 +240,12 @@ FilterSelect.propTypes = {
     classes: PropTypes.object.isRequired,
     options: PropTypes.array.isRequired,
     selectedOption: PropTypes.string,
-    handleChange : PropTypes.func
+    handleChange: PropTypes.func
 };
 
 FilterSelect.defaultProps = {
     selectedOption: null,
-    handleChange : () => {}
+    handleChange: () => {}
 };
 
 export default compose(

@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {batchActions} from 'redux-batched-actions/lib/index';
 import {fileAccepted, fileMatchSize, getDataTransferItems,
-    isDragDataWithFiles, getMimeTypes, onFilesSelected } from './utils';
+    isDragDataWithFiles, getMimeTypes, onFilesSelected} from './utils';
 import {setPanelState, setOverlayTarget} from './redux/actions';
 import {panelStates} from './constants';
-import { withApollo } from 'react-apollo';
-import { UploadRequirementsQuery } from './gqlQueries';
+import {withApollo} from 'react-apollo';
+import {UploadRequirementsQuery} from './gqlQueries';
 import _ from 'lodash';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder'];
 
 class UploadTransformComponent extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -31,26 +30,26 @@ class UploadTransformComponent extends React.Component {
     }
 
     render() {
-        const { uploadTargetComponent: Component } = this.props;
+        const {uploadTargetComponent: Component} = this.props;
 
         if (this.state.allowDrop) {
             return (
                 <Component
-                    onDragOver={ this.onDragOver }
-                    onDragEnter={ this.onDragEnter }
-                    onDragLeave={ this.onDragLeave }
-                    onDrop={ this.onDrop }
-                    { ...this.generatePropertiesForComponent() }
+                    onDragOver={this.onDragOver}
+                    onDragEnter={this.onDragEnter}
+                    onDragLeave={this.onDragLeave}
+                    onDrop={this.onDrop}
+                    {...this.generatePropertiesForComponent()}
                 />
             );
         }
         return (
-            <Component { ...this.generatePropertiesForComponent() } />
+            <Component {...this.generatePropertiesForComponent()}/>
         );
     }
 
     generatePropertiesForComponent() {
-        const props = { ...this.props };
+        const props = {...this.props};
         delete props.uploadTargetComponent;
         delete props.uploadPath;
         delete props.uploadAcceptedFileTypes;
@@ -108,7 +107,7 @@ class UploadTransformComponent extends React.Component {
 
         this.dragTargets = this.dragTargets.filter(el => el !== evt.target && this.node.contains(el));
         if (this.dragTargets.length > 0) {
-            return
+            return;
         }
         //
         // this.setState({
@@ -119,7 +118,7 @@ class UploadTransformComponent extends React.Component {
     }
 
     onDrop(evt) {
-        const { uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath } = this.props;
+        const {uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath} = this.props;
         const accept = getMimeTypes(uploadAcceptedFileTypes);
 
         evt.preventDefault();
@@ -138,7 +137,7 @@ class UploadTransformComponent extends React.Component {
                 const rejectedFiles = [];
 
                 if (evt.isPropagationStopped()) {
-                    return
+                    return;
                 }
 
                 fileList.forEach(file => {
@@ -146,19 +145,19 @@ class UploadTransformComponent extends React.Component {
                         fileAccepted(file, accept) &&
                         fileMatchSize(file, uploadMaxSize, uploadMinSize)
                     ) {
-                        acceptedFiles.push(file)
+                        acceptedFiles.push(file);
                     } else {
-                        rejectedFiles.push(file)
+                        rejectedFiles.push(file);
                     }
                 });
                 onFilesSelected(
                     acceptedFiles,
                     rejectedFiles,
                     this.props.uploadDispatchBatch,
-                    { path: uploadPath },
+                    {path: uploadPath},
                     [setPanelState(panelStates.VISIBLE)]
                 );
-            })
+            });
         }
     }
 
@@ -168,7 +167,7 @@ class UploadTransformComponent extends React.Component {
                 variables: {
                     path: this.props.uploadPath,
                     permittedNodeTypes: ACCEPTING_NODE_TYPES,
-                    permission: 'jcr:addChildNodes',
+                    permission: 'jcr:addChildNodes'
                 },
                 query: UploadRequirementsQuery
             });
@@ -176,10 +175,9 @@ class UploadTransformComponent extends React.Component {
             if (result.data.jcr.results.hasPermission && result.data.jcr.results.acceptsFiles) {
                 this.setState({
                     allowDrop: true
-                })
+                });
             }
-        }
-        catch (e) {
+        } catch (e) {
             // Console.log(this.props.uploadPath);
             console.error(e);
         }
@@ -196,12 +194,11 @@ class UploadTransformComponent extends React.Component {
             height: boundingClientRect.height
         };
         if (el.offsetParent && el.offsetParent.offsetTop === 0) {
-            return position
+            return position;
         }
         position.x = 0;
         position.y = 0;
-        while(el && el.offsetParent)
-        {
+        while (el && el.offsetParent) {
             position.x += el.offsetLeft - el.offsetParent.scrollLeft || 0;
             position.y += el.offsetTop - el.offsetParent.scrollTop || 0;
             el = el.offsetParent;
@@ -224,11 +221,11 @@ UploadTransformComponent.defaultProps = {
     uploadMinSize: 0
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
-        uploadDispatchBatch: (actions) => dispatch(batchActions(actions)),
-        uploadSetOverlayTarget: (state) => dispatch(setOverlayTarget(state))
-    }
+        uploadDispatchBatch: actions => dispatch(batchActions(actions)),
+        uploadSetOverlayTarget: state => dispatch(setOverlayTarget(state))
+    };
 };
 
 export default _.flowRight(

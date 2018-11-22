@@ -9,7 +9,6 @@ import {SiteContentTypesQuery} from './gqlQueries';
 import FilterSelect from './FilterSelect';
 
 class ContentTypeSelect extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -20,34 +19,34 @@ class ContentTypeSelect extends React.Component {
     }
 
     handleIndicator() {
-        this.setState({open: true})
-    };
+        this.setState({open: true});
+    }
 
     handleChange(newValue) {
         if (this.props.onSelectionChange !== undefined) {
             this.setState({open: false});
             this.props.onSelectionChange(newValue ? newValue.value : '');
         }
-    };
+    }
 
     render() {
-        let { contentType, siteKey, displayLanguage, notificationContext, t } = this.props;
+        let {contentType, siteKey, displayLanguage, notificationContext, t} = this.props;
         return (
             <Query query={SiteContentTypesQuery} variables={{siteKey: siteKey, displayLanguage: displayLanguage}}>
-                {({ error, data }) => {
+                {({error, data}) => {
                     let contentTypes = [];
                     if (error) {
                         let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                     } else if (data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
                         contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
-                        contentTypes = contentTypes.map((nodeType) => {
+                        contentTypes = contentTypes.map(nodeType => {
                             return {
                                 value: nodeType.name,
                                 title: nodeType.displayName + ' (' + nodeType.name + ')',
                                 label: nodeType.displayName,
                                 icon: nodeType.icon
-                            }
+                            };
                         });
                         contentTypes.unshift({
                             value: '',
@@ -56,13 +55,15 @@ class ContentTypeSelect extends React.Component {
                             icon: null
                         });
                     }
-                    return (<FilterSelect
-                        selectedOption={contentType}
-                        options={contentTypes}
-                        open={this.state.open}
-                        handleIndicator={this.handleIndicator}
-                        handleChange={this.handleChange}
-                    />);
+                    return (
+                        <FilterSelect
+                            selectedOption={contentType}
+                            options={contentTypes}
+                            open={this.state.open}
+                            handleIndicator={this.handleIndicator}
+                            handleChange={this.handleChange}
+                    />
+);
                 }}
             </Query>
         );

@@ -49,13 +49,13 @@ class UploadDropZone extends React.Component {
                     className={classes.dropZone}
                     activeClassName={classes.dropZoneActive}
                     onDrop={this.onDrop}
-                >
+                    >
                     <h2 className={classes.dropZoneHeader}>{t('label.contentManager.fileUpload.dropMessage')}</h2>
                     <h3>{t('label.contentManager.fileUpload.or')}</h3>
                 </Dropzone>
                 <Button className={classes.button}
                     onClick={() => this.dropZone.current.open()}
-                >{t('label.contentManager.fileUpload.selectMessage')}
+                    >{t('label.contentManager.fileUpload.selectMessage')}
                 </Button>
             </div>
         );

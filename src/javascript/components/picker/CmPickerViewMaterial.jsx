@@ -14,7 +14,7 @@ import {isMarkedForDeletion} from '../utils';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
 
-let styles = (theme) => ({
+let styles = theme => ({
     root: {
         position: 'relative',
         padding: '0 !important',
@@ -25,7 +25,7 @@ let styles = (theme) => ({
     },
     listItemSelected: {
         background: theme.palette.primary.main,
-        color:  theme.palette.primary.contrastText +'!important'
+        color: theme.palette.primary.contrastText + '!important'
     },
     listItem: {
         fontFamily: '"Nunito sans", sans-serif',
@@ -116,7 +116,6 @@ let styles = (theme) => ({
 });
 
 class CmPickerViewMaterial extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -127,27 +126,27 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     hoverOn(path) {
-        this.setState({ hover: path });
-    };
+        this.setState({hover: path});
+    }
 
     hoverOff() {
-        this.setState({ hover: false });
-    };
+        this.setState({hover: false});
+    }
 
     render() {
-
         let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
 
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
-        return <div className={classes.root}>
-            {loading &&
+        return (
+            <div className={classes.root}>
+                {loading &&
                 <div className={classes.loadingContainer}/>
             }
-            <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
-                {
-                    sortedEntries.map((entry) => {
+                <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
+                    {
+                    sortedEntries.map(entry => {
                         let itemClass = classes.listItem;
                         if (isMarkedForDeletion(entry.node)) {
                             itemClass = itemClass + ' ' + classes.listItemDeleted;
@@ -155,67 +154,72 @@ class CmPickerViewMaterial extends React.Component {
                         if (entry.selected) {
                             itemClass = itemClass + ' ' + classes.listItemSelected;
                         }
-                        return <UploadWrapperComponent
-                            key={entry.path}
-                            divider
-                            data-jrm-role="picker-item"
-                            className={itemClass}
-                            uploadPath={entry.path}
-                            uploadTargetComponent={ListItem}
-                            onClick={() => this.hoverOn(entry.path)}
-                            onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
-                            onMouseEnter={() => this.hoverOn(entry.path)}
-                            onMouseLeave={this.hoverOff}
-                        >
-                            <div
-                                className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
-                                style={{
+                        return (
+                            <UploadWrapperComponent
+                                key={entry.path}
+                                divider
+                                data-jrm-role="picker-item"
+                                className={itemClass}
+                                uploadPath={entry.path}
+                                uploadTargetComponent={ListItem}
+                                onClick={() => this.hoverOn(entry.path)}
+                                onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
+                                onMouseEnter={() => this.hoverOn(entry.path)}
+                                onMouseLeave={this.hoverOff}
+                                >
+                                <div
+                                    className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
+                                    style={{
                                     paddingLeft: (entry.depth + 0) * 20,
                                     opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                 }}
-                            >
-                                <Button
-                                    className={classes.buttonContainer}
-                                    disabled={!(entry.openable && entry.hasChildren)}
-                                    data-jrm-role="picker-item-toggle"
-                                    data-jrm-state={entry.open ? 'open' : 'closed'}
-                                    onClick={(event) => {
+                                    >
+                                    <Button
+                                        className={classes.buttonContainer}
+                                        disabled={!(entry.openable && entry.hasChildren)}
+                                        data-jrm-role="picker-item-toggle"
+                                        data-jrm-state={entry.open ? 'open' : 'closed'}
+                                        onClick={event => {
                                         onOpenItem(entry.path, !entry.open);
-                                        event.stopPropagation()
+                                        event.stopPropagation();
                                     }}
-                                >
-                                    <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
-                                </Button>
-                            </div>
-                            <span className={classes.treeEntry}
-                                onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}>
-                                <ListItemIcon
-                                    className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}>
-                                    {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
-                                </ListItemIcon>
-                                <ListItemText
-                                    disableTypography
-                                    inset
-                                    classes={entry.selected ? {
+                                        >
+                                        <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
+                                    </Button>
+                                </div>
+                                <span className={classes.treeEntry}
+                                    onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
+                                    >
+                                    <ListItemIcon
+                                        className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}
+                                        >
+                                        {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        disableTypography
+                                        inset
+                                        classes={entry.selected ? {
                                         root: classes.listItemLabel,
                                         primary: classes.selectedText
                                     } : {
                                         root: classes.listItemLabel
                                     }}
-                                    primary={textRenderer ? textRenderer(entry) : entry.name}
-                                    data-jrm-role="picker-item-text"
+                                        primary={textRenderer ? textRenderer(entry) : entry.name}
+                                        data-jrm-role="picker-item-text"
                                 />
-                            </span>
-                            {actionsRenderer &&
-                            <ListItemText>
-                                {this.state.hover === entry.path && actionsRenderer(entry)}
-                            </ListItemText>
+                                </span>
+                                {actionsRenderer &&
+                                <ListItemText>
+                                    {this.state.hover === entry.path && actionsRenderer(entry)}
+                                </ListItemText>
                             }
-                        </UploadWrapperComponent>
+                            </UploadWrapperComponent>
+);
                     })
                 }
-            </List>
-        </div>;
+                </List>
+            </div>
+        );
     }
 
     sortFoldersAlphabetical(pickerEntries) {
@@ -223,9 +227,8 @@ class CmPickerViewMaterial extends React.Component {
             const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
             return this.sortAndFlatten(rootNode);
         }
-        
+
         return pickerEntries;
-        
     }
 
     reconstructNodeHierarchy(pickerEntriesSortedByPath) {
@@ -233,7 +236,7 @@ class CmPickerViewMaterial extends React.Component {
         // Add root node to stack
         hierarchyStack.push(pickerEntriesSortedByPath.splice(0, 1)[0]);
 
-        while(pickerEntriesSortedByPath.length !== 0 && hierarchyStack.length !== 0) {
+        while (pickerEntriesSortedByPath.length !== 0 && hierarchyStack.length !== 0) {
             const currentPickerEntry = pickerEntriesSortedByPath[0];
             const top = hierarchyStack[hierarchyStack.length - 1];
 
@@ -245,8 +248,7 @@ class CmPickerViewMaterial extends React.Component {
                 top.children.push(currentPickerEntry);
                 hierarchyStack.push(currentPickerEntry);
                 pickerEntriesSortedByPath.splice(0, 1);
-            }
-            else {
+            } else {
                 hierarchyStack.pop();
             }
         }
@@ -272,7 +274,7 @@ class CmPickerViewMaterial extends React.Component {
                     return 0;
                 });
 
-                for(let i = 0; i < node.children.length; i++) {
+                for (let i = 0; i < node.children.length; i++) {
                     dfs(node.children[i]);
                 }
             }

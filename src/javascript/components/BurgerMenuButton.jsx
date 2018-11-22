@@ -19,24 +19,22 @@ const styles = () => ({
         width: '3.5em',
         height: '3.5em',
         backgroundSize: '100%'
-    },
+    }
 });
 
 class BurgerMenuButton extends React.Component {
-
     openMenu() {
         const clickEvent = window.top.document.createEvent('MouseEvents');
         clickEvent.initEvent('click', true, true);
         window.top.document.getElementsByClassName('editmode-managers-menu')[0].dispatchEvent(clickEvent);
-    };
+    }
 
     render() {
         let {classes, isDrawerOpen} = this.props;
         return (
             <div>
                 { isDrawerOpen ?
-                    <div className={classes.menuButtonBlue} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/>
-                    :
+                    <div className={classes.menuButtonBlue} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/> :
                     <div className={classes.menuButton} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/>
                 }
             </div>
@@ -44,4 +42,4 @@ class BurgerMenuButton extends React.Component {
     }
 }
 
-export default compose(translate(), withStyles(styles, {name:'DxBurgerMenuButton'}))(BurgerMenuButton);
+export default compose(translate(), withStyles(styles, {name: 'DxBurgerMenuButton'}))(BurgerMenuButton);

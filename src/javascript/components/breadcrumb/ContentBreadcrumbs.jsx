@@ -71,7 +71,7 @@ class ContentBreadcrumbs extends React.Component {
                 selectableTypes={pickerConfiguration.selectableTypes}
                 selectedPaths={paths}
                 onSelectItem={(mode, path) => setUrl(mode, path)}
-            >
+                >
                 {({error, ...others}) => {
                     if (error) {
                         return null;
@@ -92,14 +92,14 @@ class ContentBreadcrumbs extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
     path: state.path,
     params: state.params
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     setUrl: (mode, path) => dispatch(cmGoto({mode, path}))
 });
 

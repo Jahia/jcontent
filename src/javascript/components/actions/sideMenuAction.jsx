@@ -8,8 +8,8 @@ export default composeActions(requirementsAction, reduxAction(state => ({statePa
     init: context => {
         context.initRequirements();
 
-        if (context.drawer && context.drawer.drawerOpen && context.drawer.openDrawerMenu === context.menu 
-                && context.drawer.site !== undefined && context.drawer.site !== context.site) {
+        if (context.drawer && context.drawer.drawerOpen && context.drawer.openDrawerMenu === context.menu &&
+                context.drawer.site !== undefined && context.drawer.site !== context.site) {
             // Drawer is open on the current menu and the site has changed: reopen the drawer to "refresh" the action list
             context.drawer.handleDrawerClose();
             context.drawer.handleDrawerOpen({

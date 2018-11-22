@@ -90,7 +90,7 @@ class CmLeftDrawerListItems extends React.Component {
                                 paddingLeft: (_.split(actionPath, '/').length) * theme.spacing.unit
                             }}
                             onClick={event => actionContext.onClick(actionContext, event)}
-                        >
+                            >
                             <div className={classes.expand}>
                                 {actionContext.hasChildren ?
                                     ((actionContext.open || actionContext.selected) ?

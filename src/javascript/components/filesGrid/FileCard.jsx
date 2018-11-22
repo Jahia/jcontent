@@ -229,7 +229,8 @@ class FileCard extends Component {
                 }}
                 onClick={() => this.props.onSelect([node])}
                 onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))} onMouseEnter={event => this.onHoverEnter(event)}
-                onMouseLeave={event => this.onHoverExit(event)}>
+                onMouseLeave={event => this.onHoverExit(event)}
+                >
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
                 <CardMedia
                     className={classes.coverLarge}
@@ -283,7 +284,7 @@ class FileCard extends Component {
                 onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                 onMouseEnter={event => this.onHoverEnter(event)}
                 onMouseLeave={event => this.onHoverExit(event)}
-            >
+                >
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
                 <CardMedia
                     className={classes.coverMedium}
@@ -331,7 +332,7 @@ class FileCard extends Component {
                 onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                 onMouseEnter={event => this.onHoverEnter(event)}
                 onMouseLeave={event => this.onHoverExit(event)}
-            >
+                >
                 <CardMedia
                     style={{flex: 2}}
                     className={classes.coverVertical}
@@ -370,7 +371,7 @@ class FileCard extends Component {
                 onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                 onMouseEnter={event => this.onHoverEnter(event)}
                 onMouseLeave={event => this.onHoverExit(event)}
-            >
+                >
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
                 {fileIcon(node.path, '6x', {fontSize: '160px'})}
                 <div className={classes.details}>
@@ -422,7 +423,7 @@ class FileCard extends Component {
                 onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                 onMouseEnter={event => this.onHoverEnter(event)}
                 onMouseLeave={event => this.onHoverExit(event)}
-            >
+                >
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
                 {fileIcon(node.path, '6x', {fontSize: '110px'})}
                 <div className={classes.details}>
@@ -466,7 +467,7 @@ class FileCard extends Component {
                 onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                 onMouseEnter={event => this.onHoverEnter(event)}
                 onMouseLeave={event => this.onHoverExit(event)}
-            >
+                >
                 {fileIcon(node.path, '6x', {fontSize: '110px'})}
                 <div className={classes.details} style={{height: '100%'}}>
                     <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
@@ -527,11 +528,11 @@ FileCard.propTypes = {
     onSelect: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     uiLang: state.uiLang
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     onSelect: selection => dispatch(cmSetSelection(selection)),
     setPath: (path, params) => dispatch(cmGoto({path, params}))
 });

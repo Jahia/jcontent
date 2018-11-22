@@ -7,31 +7,31 @@ import {of} from 'rxjs';
 import * as _ from 'lodash';
 import {FindParentQuery} from '../gqlQueries';
 
-export default composeActions(requirementsAction, reduxAction((state)=> ({mode:state.mode}),(dispatch) => ({
-    setMode: (state) => dispatch(cmSetMode(state)),
-    setPath: (state)=> dispatch(cmSetPath(state)),
-    setOpenPaths: (state)=> dispatch(cmOpenPaths(state)),
-    setSelection: (state)=> dispatch(cmSetSelection(state)),
+export default composeActions(requirementsAction, reduxAction(state => ({mode: state.mode}), dispatch => ({
+    setMode: state => dispatch(cmSetMode(state)),
+    setPath: state => dispatch(cmSetPath(state)),
+    setOpenPaths: state => dispatch(cmOpenPaths(state)),
+    setSelection: state => dispatch(cmSetSelection(state))
 })), {
-    init: (context) => {
+    init: context => {
         context.initRequirements({
-            enabled: (context) => of(context.mode === 'search' || context.mode === 'sql2Search')
+            enabled: context => of(context.mode === 'search' || context.mode === 'sql2Search')
         });
     },
-    onClick: (context) => {
-        context.client.watchQuery({query:FindParentQuery, variables:{path:context.path}}).subscribe(res=> {
+    onClick: context => {
+        context.client.watchQuery({query: FindParentQuery, variables: {path: context.path}}).subscribe(res => {
             let n = res.data.jcr.nodeByPath;
             if (!_.isEmpty(n.parents)) {
-                let parent = n.parents[n.parents.length-1];
+                let parent = n.parents[n.parents.length - 1];
                 let paths = [];
-                _.each(n.parents, (parent)=>{
+                _.each(n.parents, parent => {
                     paths.push(parent.path);
                 });
                 let locate = {
                     node: n,
                     paths: paths,
-                    navigateToPath:parent.path,
-                    type:parent.type.value
+                    navigateToPath: parent.path,
+                    type: parent.type.value
                 };
                 let {setMode, setPath, setOpenPaths, setSelection} = context;
                 switch (locate.type) {

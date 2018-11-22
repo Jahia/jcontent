@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {withStyles, IconButton} from '@material-ui/core';
-import classNames from 'classnames'
+import classNames from 'classnames';
 import ContentPreview from '../preview/ContentPreview';
 import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
 import {Drawer, Button, Table, TableCell, TableHead, TableBody, TableRow, Typography, Toolbar} from '@material-ui/core';
@@ -18,7 +18,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.common.white,
         justifyContent: 'space-between',
         padding: '0 8px',
-        ...theme.mixins.toolbar,
+        ...theme.mixins.toolbar
     },
     previewModePaper: {
         background: 'transparent'
@@ -46,13 +46,13 @@ const styles = theme => ({
     modalWidth: {
         width: 0,
         position: 'unset',
-        overflow: 'hidden!important',
+        overflow: 'hidden!important'
     },
     modalTransition: {
         transition: '.55s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
         width: 550,
         top: '140px!important',
-        right: '41px!important',
+        right: '41px!important'
     },
     drawerTableHead: {
         maxHeight: '28px',
@@ -62,9 +62,9 @@ const styles = theme => ({
     },
     drawerTableCell: {
         maxWidth: '50px',
-        padding: 0,
+        padding: 0
     },
-    insideCell : {
+    insideCell: {
         display: 'inline',
         fontWeight: 700,
         fontSize: '0.75rem',
@@ -78,7 +78,7 @@ const styles = theme => ({
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
         height: 'calc(100vh - 140px)',
-        maxHeight: 'calc(100vh - 140px)',
+        maxHeight: 'calc(100vh - 140px)'
     },
     drawerFullScreen: {
         top: '0px!important',
@@ -100,19 +100,18 @@ const styles = theme => ({
         fontSize: '0.875rem',
         height: '22px!important',
         minHeight: '22px!important',
-        maxHeight: '22px!important',
+        maxHeight: '22px!important'
     },
-    chevron : {
-        color: '#5E6565', // Color is not in the theme
+    chevron: {
+        color: '#5E6565' // Color is not in the theme
     }
 });
 
 class PreviewDrawer extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            fullScreen: false,
+            fullScreen: false
         };
         this.handleFullScreen = this.handleFullScreen.bind(this);
     }
@@ -134,7 +133,8 @@ class PreviewDrawer extends React.Component {
                     modal: classes.modalWidth
                 }}
                 className={classes.drawerRoot}
-                open={this.props.open}>
+                open={this.props.open}
+                >
                 <Table>
                     <TableHead>
                         <TableRow className={classes.drawerTableHead}>
@@ -158,7 +158,8 @@ class PreviewDrawer extends React.Component {
                                             }}
                                             color={previewMode === 'edit' ? 'primary' : 'default'}
                                             onClick={() => setPreviewMode('edit')}
-                                        >{t('label.contentManager.contentPreview.staging')}</Button>
+                                            >{t('label.contentManager.contentPreview.staging')}
+                                        </Button>
                                         <Button
                                             className={classNames(classes.liveButton, {
                                                 [classes.inactiveButton]: previewMode !== 'live'
@@ -168,11 +169,12 @@ class PreviewDrawer extends React.Component {
                                             }}
                                             variant="contained"
                                             color={previewMode === 'live' ? 'primary' : 'default'}
-                                            disabled={_.find(previewModes, (mode) => {
-                                                return mode === 'live'
+                                            disabled={_.find(previewModes, mode => {
+                                                return mode === 'live';
                                             }) === undefined}
                                             onClick={() => setPreviewMode('live')}
-                                        >{t('label.contentManager.contentPreview.live')}</Button>
+                                            >{t('label.contentManager.contentPreview.live')}
+                                        </Button>
                                     </div>
                                 </Toolbar>
                             </TableCell>
@@ -180,7 +182,7 @@ class PreviewDrawer extends React.Component {
                     </TableHead>
                     <TableBody>
                         <TableRow>
-                            <TableCell padding='none'>
+                            <TableCell padding="none">
                                 <ContentPreview
                                     layoutQuery={layoutQuery}
                                     layoutQueryParams={layoutQueryParams}
@@ -196,16 +198,16 @@ class PreviewDrawer extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         selection: state.selection,
         previewMode: state.previewMode,
         previewModes: state.previewModes
-    }
+    };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    setPreviewMode: (mode) => {
+const mapDispatchToProps = dispatch => ({
+    setPreviewMode: mode => {
         dispatch(cmSetPreviewMode(mode));
     }
 });

@@ -24,13 +24,13 @@ class ContentListHeader extends React.Component {
                                     classes={column.id !== 'createdBy' ? {root: classes.paddingCell} : {}}
                                     className={classes[column.id] + ' ' + classes.tableCellHeight}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}
-                                >
+                                    >
                                     <TableSortLabel
                                         classes={{active: classes.sortLabel}}
                                         active={orderBy === column.property}
                                         direction={direction.toLowerCase()}
                                         onClick={() => this.handleSort(direction, column.property)}
-                                    >
+                                        >
                                         {t(column.label)}
                                     </TableSortLabel>
                                 </TableCell>
@@ -41,7 +41,7 @@ class ContentListHeader extends React.Component {
                                 key={column.id}
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
-                            >
+                                >
                                 {t(column.label)}
                             </TableCell>
                         );

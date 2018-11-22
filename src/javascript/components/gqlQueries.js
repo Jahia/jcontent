@@ -339,7 +339,6 @@ const filesQuery = gql`
     ${nodeFields}
 `;
 
-
 const FindParentQuery = gql`
     query findParentQuery($path:String!) {
         jcr {
@@ -358,7 +357,6 @@ const FindParentQuery = gql`
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
-
 
 const SiteContentTypesQuery = gql`
     query SiteContentTypesQuery($siteKey: String!, $displayLanguage:String!) {

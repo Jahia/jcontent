@@ -34,9 +34,9 @@ export default composeActions(requirementsAction, withDxContextAction, {
             let contributeTypesProperty = node.contributeTypes ||
                 (node.ancestors && !_.isEmpty(node.ancestors) && node.ancestors[node.ancestors.length - 1].contributeTypes);
             if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
-                return from(context.client.watchQuery({query:ContentTypesQuery, variables:{nodeTypes: contributeTypesProperty.values}})).pipe(
+                return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
                     filter(res => (res.data && res.data.jcr)),
-                    map((res) => {
+                    map(res => {
                         let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
                         contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
                         return _.map(contributionNodeTypes, nodeType => nodeType.name);
@@ -49,22 +49,21 @@ export default composeActions(requirementsAction, withDxContextAction, {
                 return of({
                     includeSubTypes: true,
                     nodeTypes: nodeTypes
-                })
+                });
             }
-            return from(context.client.watchQuery({query:ContentTypeNamesQuery, variables:{nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
+            return from(context.client.watchQuery({query: ContentTypeNamesQuery, variables: {nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
                 filter(res => (res.data && res.data.jcr)),
-                map((res) => ({
+                map(res => ({
                     actions: res.data.jcr.nodeTypesByNames.map(nodeType => ({
-                        key:nodeType.name,
+                        key: nodeType.name,
                         includeSubTypes: false,
                         nodeTypes: [nodeType.name],
                         buttonLabel: 'label.contentManager.create.contentOfType',
-                        buttonLabelParams: {typeName: nodeType.displayName},
+                        buttonLabelParams: {typeName: nodeType.displayName}
                     }))
                 })
                 )
             );
-            
         }));
         context.nodeTypes = obs.pipe(map(r => r.nodeTypes));
         context.includeSubTypes = obs.pipe(map(r => r.includeSubTypes));

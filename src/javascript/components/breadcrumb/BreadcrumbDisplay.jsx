@@ -167,7 +167,8 @@ class BreadcrumbDisplay extends React.Component {
                 <MenuItemContainer key={'dropdown_' + node.uuid}>
                     <MenuItem disableRipple classes={{root: classes.menuItemSize}}
                         className={classes.menuItemHeader}
-                        onClick={event => this.onMenuItemSelected(event, node)}>
+                        onClick={event => this.onMenuItemSelected(event, node)}
+                        >
                         {this.renderIcon(node, classes)}
                         <MenuItemLabel className={classes.contentLabelMenu}>
                             {node.name}
@@ -177,7 +178,7 @@ class BreadcrumbDisplay extends React.Component {
                 {node.siblings.length > 1 &&
                 <div className={classes.divider}/>
                 }
-                {node.siblings.map((siblingNode) => {
+                {node.siblings.map(siblingNode => {
                     if (siblingNode.name === node.name) {
                         return null;
                     }
@@ -206,7 +207,8 @@ class BreadcrumbDisplay extends React.Component {
                     aria-owns={'breadcrumbMenu_' + node.uuid}
                     className={classes.menuButton}
                     id={'menuToggleButton_' + node.uuid}
-                    onMouseOver={this.onMenuButtonActivatorEnter}>
+                    onMouseOver={this.onMenuButtonActivatorEnter}
+                    >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
                     <span className={classes.contentLabel}>
@@ -226,7 +228,8 @@ class BreadcrumbDisplay extends React.Component {
                 onClick={() => {
                     this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
                 }}
-                onMouseOver={this.onMenuButtonActivatorEnter}>
+                onMouseOver={this.onMenuButtonActivatorEnter}
+                >
                 {this.renderIcon(node, classes)}
                 {!trimLabel &&
                 <span className={classes.contentLabel}>
@@ -263,7 +266,8 @@ class BreadcrumbDisplay extends React.Component {
                     container={this.menu.current}
                     id={'breadcrumbMenu_' + node.uuid}
                     open={menuActive}
-                    onEnter={this.addMenuExitListener}>
+                    onEnter={this.addMenuExitListener}
+                    >
                     {this.generateMenu(node)}
                 </Menu>
             </span>

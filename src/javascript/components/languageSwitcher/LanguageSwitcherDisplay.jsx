@@ -2,7 +2,7 @@ import React from 'react';
 import {compose} from 'react-apollo';
 import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const styles = theme => ({
     typography: {
@@ -24,7 +24,7 @@ const styles = theme => ({
         backgroundSize: '18px'
     },
     formControl: {
-        minWidth: 120,
+        minWidth: 120
     },
     iconLight: {
         color: theme.palette.background.paper,
@@ -32,18 +32,17 @@ const styles = theme => ({
     },
     iconDark: {
         color: '#504e4d',
-        fontSize: '10px',
+        fontSize: '10px'
     },
     input1: {
         backgroundColor: 'transparent',
         color: '#ffffff',
         boxShadow: 'none',
-        fontSize: '0.875rem',
+        fontSize: '0.875rem'
     }
 });
 
 class LanguageSwitcherDisplay extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -67,32 +66,35 @@ class LanguageSwitcherDisplay extends React.Component {
     }
 
     render() {
-
         let {lang, languages, onSelectLanguage, classes, dark} = this.props;
         let {anchorEl} = this.state;
 
-        return <React.Fragment>
-            <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" data-cm-role="language-switcher" onClick={this.handleClick}>
-                <Typography className={dark ? classes.typography : classes.typographyLight}>
-                    {this.uppercaseFirst(_.find(languages, (language) => language.language === lang).displayName)}
+        return (
+            <React.Fragment>
+                <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" data-cm-role="language-switcher" onClick={this.handleClick}>
+                    <Typography className={dark ? classes.typography : classes.typographyLight}>
+                        {this.uppercaseFirst(_.find(languages, language => language.language === lang).displayName)}
                     &nbsp;
-                </Typography>
-                <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
-            </Button>
-            <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-                {languages.map((lang) => {
-                    return <MenuItem
-                        key={lang.language}
-                        onClick={() => {
+                    </Typography>
+                    <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
+                </Button>
+                <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
+                    {languages.map(lang => {
+                    return (
+                        <MenuItem
+                            key={lang.language}
+                            onClick={() => {
                             onSelectLanguage(lang.language);
                             this.handleClose();
                         }}
-                    >
-                        {this.uppercaseFirst(lang.displayName)}
-                    </MenuItem>;
+                            >
+                            {this.uppercaseFirst(lang.displayName)}
+                        </MenuItem>
+);
                 })}
-            </Menu>
-        </React.Fragment>
+                </Menu>
+            </React.Fragment>
+        );
     }
 }
 

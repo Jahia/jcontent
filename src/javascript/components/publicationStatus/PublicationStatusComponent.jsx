@@ -122,23 +122,23 @@ class PublicationStatusComponent extends Component {
                 <div className={`${publicationStatusClass} ${classes.root}`}/>
                 <div className={`${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}
                     onMouseLeave={() => this.setPublicationInfoWidth(0)}
-                >
+                    >
                     <div className={`${classes.infoButton} CM_PUBLICATION_INFO_BUTTON`}
                         onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
-                    >
+                        >
                         <div className={classes.infoContainer}>
                             <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON`}/>
                         </div>
                     </div>
                     <div className={`${classes.publicationInfo} CM_PUBLICATION_INFO`}
                         style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '14px'}}
-                    >
+                        >
 
                         <div className={classes.infoContainer}
                             style={{width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
                             data-cm-role="publication-info"
                             data-cm-value={node.publicationStatus}
-                        >
+                            >
                             { publicationStatus.geti18nDetailsMessage(node, t, i18n.language) }
                         </div>
                     </div>

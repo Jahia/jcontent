@@ -30,11 +30,11 @@ class CmSearchBar extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     searchMode: state.searchMode
 });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
         setSearchMode: searchMode => dispatch(cmSetSearchMode(searchMode))
     };

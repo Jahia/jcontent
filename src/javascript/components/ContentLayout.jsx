@@ -6,7 +6,7 @@ import {withNotifications, DisplayActions, buttonRenderer, ContextualMenu} from 
 import {Grid, Button, Paper, withStyles, Drawer} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
-import classNames from 'classnames'
+import classNames from 'classnames';
 import ContentTrees from './ContentTrees';
 import {translate, Trans} from 'react-i18next';
 import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
@@ -45,7 +45,7 @@ const styles = theme => ({
     blockCore: {
         marginTop: -28,
         marginBottom: -2,
-        marginLeft: -24,
+        marginLeft: -24
     },
     blockCoreSearch: {
         marginLeft: -17,
@@ -60,11 +60,11 @@ const styles = theme => ({
     },
     showTreeButton: {
         color: '#eaeaea',
-        marginRight: theme.spacing.unit / 2,
+        marginRight: theme.spacing.unit / 2
     },
     refreshButton: {
         color: '#eaeaea',
-        padding: 0,
+        padding: 0
     },
     showTree: {
         textAlign: 'right !important'
@@ -85,7 +85,7 @@ const styles = theme => ({
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
-        }),
+        })
     },
     'content-left': {
         marginLeft: -drawerWidth
@@ -97,7 +97,7 @@ const styles = theme => ({
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen
-        }),
+        })
     },
     'contentShift-left': {
         marginLeft: 0
@@ -119,7 +119,7 @@ const styles = theme => ({
     searchClear: {
         maxHeight: 25,
         minHeight: 25,
-        padding: '3px 7px',
+        padding: '3px 7px'
     },
     searchClearButton: {
         color: '#eaeaea'
@@ -149,9 +149,7 @@ const GRID_SIZE = 12;
 const GRID_PANEL_BUTTONS_SIZE = 5;
 
 class ContentLayout extends React.Component {
-
     constructor(props) {
-
         super(props);
 
         this.state = {
@@ -163,7 +161,7 @@ class ContentLayout extends React.Component {
             page: 0,
             rowsPerPage: 25,
             order: 'ASC',
-            orderBy: 'lastModified.value',
+            orderBy: 'lastModified.value'
         };
 
         this.handleSort = this.handleSort.bind(this);
@@ -179,7 +177,7 @@ class ContentLayout extends React.Component {
         } else {
             this.setState({open: true});
         }
-    };
+    }
 
     // Force can be `show` or `hide`
     handleShowPreview(selection, force) {
@@ -195,11 +193,11 @@ class ContentLayout extends React.Component {
                     setPreviewState(CM_PREVIEW_STATES.HIDE);
             }
         }
-    };
+    }
 
     handleChangePage(newPage) {
         this.setState({page: newPage});
-    };
+    }
 
     handleChangeRowsPerPage(value) {
         if (value !== this.state.rowsPerPage) {
@@ -208,44 +206,43 @@ class ContentLayout extends React.Component {
                 rowsPerPage: value
             });
         }
-    };
+    }
 
     setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
-    };
+    }
 
     setTreeRefetcher(type) {
-        return (refetchingData) => setRefetcher(type, refetchingData);
-    };
+        return refetchingData => setRefetcher(type, refetchingData);
+    }
 
     refreshContentsAndTree(contentTreeConfigs) {
         refetchContentTreeAndListData(contentTreeConfigs);
     }
 
-    handleSort(order, orderBy){
+    handleSort(order, orderBy) {
         this.setState({
             order: order,
-            orderBy: orderBy,
+            orderBy: orderBy
         });
     }
 
     isBrowsing() {
         let {mode} = this.props;
         return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES);
-    };
+    }
 
     isSearching() {
         let {mode} = this.props;
         return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH);
-    };
+    }
 
     isRootNode() {
         let {path, siteKey} = this.props;
         return (path === ('/sites/' + siteKey));
-    };
+    }
 
     render() {
-
         const {anchor, open_view, open, order, orderBy} = this.state;
         const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
             searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
@@ -265,155 +262,163 @@ class ContentLayout extends React.Component {
         const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, open ? 'open' : 'hidden');
         let contextualMenu = React.createRef();
 
-        return <DxContext.Consumer>{dxContext => {
-            return <React.Fragment>
-                <div className={classes.academyLink}>
-                    <Trans
-                        i18nKey="label.contentManager.link.academy"
-                        components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
+        return (
+            <DxContext.Consumer>{dxContext => {
+            return (
+                <React.Fragment>
+                    <div className={classes.academyLink}>
+                        <Trans
+                            i18nKey="label.contentManager.link.academy"
+                            components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
                     />
-                </div>
-                <Grid container spacing={0}>
-                    <Grid item xs={GRID_SIZE} className={classes.topBar}>
-                        <CMTopBar dxContext={dxContext} mode={mode}/>
-                    </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
-                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                            {this.isBrowsing() &&
+                    </div>
+                    <Grid container spacing={0}>
+                        <Grid item xs={GRID_SIZE} className={classes.topBar}>
+                            <CMTopBar dxContext={dxContext} mode={mode}/>
+                        </Grid>
+                        <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                            <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                                {this.isBrowsing() &&
                                 <div className={classes.breadCrumbs}>
                                     <ContentBreadcrumbs mode={this.props.mode}/>
                                 </div>
                             }
-                            {this.isSearching() &&
+                                {this.isSearching() &&
                                 <div className={classes.searchControl}>
                                     <CmSearchControlBar/>
                                 </div>
                             }
-                        </Grid>
-                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                            {mode === Constants.mode.FILES &&
-                                <FilesGridSizeSelector initValue={4} onChange={(value) => this.setState({filesGridSizeValue: value})}/>
+                            </Grid>
+                            <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
+                                {mode === Constants.mode.FILES &&
+                                <FilesGridSizeSelector initValue={4} onChange={value => this.setState({filesGridSizeValue: value})}/>
                             }
-                            {mode === Constants.mode.FILES &&
+                                {mode === Constants.mode.FILES &&
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
                             }
-                            {this.isBrowsing() && !this.isRootNode() &&
+                                {this.isBrowsing() && !this.isRootNode() &&
                                 <React.Fragment>
-                                    <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({},true)}/>
+                                    <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({}, true)}/>
                                 </React.Fragment>
                             }
-                            {this.isBrowsing() &&
+                                {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
                                     <Icon name="folder" fill="#d4d9dd"/>
                                     {t('label.contentManager.tree.' + (open ? 'hide' : 'show'))}
                                 </Button>
                             }
-                            <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                <Icon name="refresh" fill="#d4d9dd" size={20}/>
-                                {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
-                            </Button>
-                            {this.isSearching() &&
+                                <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                                    <Icon name="refresh" fill="#d4d9dd" size={20}/>
+                                    {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
+                                </Button>
+                                {this.isSearching() &&
                                 <Button data-cm-role="search-clear" variant="text"
                                     className={classes.searchClearButton}
-                                    classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
+                                    classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}
+                                                                               >
                                     <Close className={classes.searchClearIcon}/>
                                     {t('label.contentManager.search.clear')}
                                 </Button>
                             }
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-                <div className={classes.appFrame}>
-                    {this.isBrowsing() &&
-                    <Paper style={{background: '#f7f7f7'}}>
-                        <Drawer
-                            variant="persistent"
-                            anchor={anchor}
-                            open={open}
-                            classes={{
-                                paper: classes.drawerPaper,
+                    <div className={classes.appFrame}>
+                        {this.isBrowsing() &&
+                        <Paper style={{background: '#f7f7f7'}}>
+                            <Drawer
+                                variant="persistent"
+                                anchor={anchor}
+                                open={open}
+                                classes={{
+                                paper: classes.drawerPaper
                             }}
-                        >
-                            <ContentTrees
-                                contentTreeConfigs={contentTreeConfigs}
-                                path={path}
-                                setRefetch={this.setTreeRefetcher}
+                                >
+                                <ContentTrees
+                                    contentTreeConfigs={contentTreeConfigs}
+                                    path={path}
+                                    setRefetch={this.setTreeRefetcher}
                             />
-                        </Drawer>
-                    </Paper>
+                            </Drawer>
+                        </Paper>
                     }
-                    <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                    <main
-                        className={classNames(classes.content, classes['content-left'], {
+                        <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
+                        <main
+                            className={classNames(classes.content, classes['content-left'], {
                             [classes.contentShift]: open,
-                            [classes['contentShift-left']]: open,
+                            [classes['contentShift-left']]: open
                         }) ||
                         classNames(classes.content, classes['content-right'], {
                             [classes.contentShift]: open_view,
-                            [classes['contentShift-right']]: open_view,
+                            [classes['contentShift-right']]: open_view
                         })}
-                        onContextMenu={(event) => contextualMenu.current.open(event)}
-                    >
-                        <ContentData layoutQuery={layoutQuery}
-                            layoutQueryParams={layoutQueryParams}
-                            setRefetch={this.setContentRefetcher}
-                            orderBy={orderBy}
-                            treeShown={ open }>
-                            {({rows, contentNotFound, totalCount}) => {
-                                return <Paper className={classes.paper}>
-                                    {mode === Constants.mode.FILES && !this.state.showList
-                                        ? <FilesGrid
-                                            size={valueToSizeTransformation(this.state.filesGridSizeValue)}
-                                            totalCount={totalCount}
-                                            path={ path }
-                                            rows={rows}
-                                            contentNotFound={contentNotFound}
-                                            pageSize={this.state.rowsPerPage}
-                                            page={this.state.page}
-                                            handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                        />
-                                        : <ContentListTable
-                                            totalCount={totalCount}
-                                            path={ path }
-                                            rows={rows}
-                                            contentNotFound={contentNotFound}
-                                            pageSize={this.state.rowsPerPage}
-                                            page={this.state.page}
-                                            order={order}
-                                            orderBy={orderBy}
-                                            handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
-                                            handleSort={this.handleSort}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                            onContextMenu={event => contextualMenu.current.open(event)}
+                            >
+                            <ContentData layoutQuery={layoutQuery}
+                                layoutQueryParams={layoutQueryParams}
+                                setRefetch={this.setContentRefetcher}
+                                orderBy={orderBy}
+                                treeShown={open}
+                                >
+                                {({rows, contentNotFound, totalCount}) => {
+                                return (
+                                    <Paper className={classes.paper}>
+                                        {mode === Constants.mode.FILES && !this.state.showList ?
+                                            <FilesGrid
+                                                size={valueToSizeTransformation(this.state.filesGridSizeValue)}
+                                                totalCount={totalCount}
+                                                path={path}
+                                                rows={rows}
+                                                contentNotFound={contentNotFound}
+                                                pageSize={this.state.rowsPerPage}
+                                                page={this.state.page}
+                                                handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
+                                                onChangePage={this.handleChangePage}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                        /> :
+                                            <ContentListTable
+                                                totalCount={totalCount}
+                                                path={path}
+                                                rows={rows}
+                                                contentNotFound={contentNotFound}
+                                                pageSize={this.state.rowsPerPage}
+                                                page={this.state.page}
+                                                order={order}
+                                                orderBy={orderBy}
+                                                handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
+                                                handleSort={this.handleSort}
+                                                onChangePage={this.handleChangePage}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                         />
                                     }
-                                </Paper>;
+                                    </Paper>
+);
                             }}
-                        </ContentData>
-                    </main>
-                    <PreviewDrawer
-                        open={previewState === CM_PREVIEW_STATES.SHOW}
-                        layoutQuery={layoutQuery}
-                        layoutQueryParams={layoutQueryParams}
-                        dxContext={dxContext}
-                        onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
+                            </ContentData>
+                        </main>
+                        <PreviewDrawer
+                            open={previewState === CM_PREVIEW_STATES.SHOW}
+                            layoutQuery={layoutQuery}
+                            layoutQueryParams={layoutQueryParams}
+                            dxContext={dxContext}
+                            onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
                     />
-                </div>
+                    </div>
 
-
-                <Upload uploadUpdateCallback={(status) => {
+                    <Upload uploadUpdateCallback={status => {
                     if (status && status.uploading === 0) {
-                        this.refreshContentsAndTree(contentTreeConfigs)
+                        this.refreshContentsAndTree(contentTreeConfigs);
                     }
                 }}/>
-            </React.Fragment>
-        }}</DxContext.Consumer>;
+                </React.Fragment>
+);
+        }}
+            </DxContext.Consumer>
+        );
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         mode: state.mode,
         siteKey: state.site,
@@ -427,19 +432,19 @@ const mapStateToProps = (state) => {
         searchContentType: state.params.searchContentType,
         sql2SearchFrom: state.params.sql2SearchFrom,
         sql2SearchWhere: state.params.sql2SearchWhere
-    }
+    };
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto(path, params)),
-    setPreviewState: (state) => dispatch(cmSetPreviewState(state)),
-    clearSearch: (params) => {
+    setPreviewState: state => dispatch(cmSetPreviewState(state)),
+    clearSearch: params => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');
         _.unset(params, 'searchTerms');
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: 'browse', params: params}))
+        dispatch(cmGoto({mode: 'browse', params: params}));
     }
 });
 

@@ -11,7 +11,7 @@ class UploadDrawer extends React.Component {
                 PaperProps={PaperProps}
                 open={this.props.open}
                 transitionDuration={transitionDuration}
-            >
+                >
                 { this.props.children }
             </Drawer>
         );

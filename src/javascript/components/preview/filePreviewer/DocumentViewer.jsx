@@ -1,8 +1,8 @@
-import React  from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import FileViewer from 'react-file-viewer';
 import {Paper} from '@material-ui/core';
-import { withStyles } from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
 import styled from 'styled-components/dist/styled-components.js';
 import {fileIcon} from '../../filesGrid/filesGridUtils';
 
@@ -26,7 +26,7 @@ const DocumentPreviewContainer = styled.div`
 
 const styles = theme => ({
     documentPaper: {
-        flex:1,
+        flex: 1,
         width: '100%'
     },
     defaultPaper: {
@@ -34,18 +34,18 @@ const styles = theme => ({
         display: 'flex',
         height: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     videoPaper: {
         width: '550',
         display: 'flex',
         height: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     paperChange: {
-        background: theme.palette.common.white,
-    },
+        background: theme.palette.common.white
+    }
 });
 
 class DocumentViewer extends React.Component {
@@ -57,31 +57,39 @@ class DocumentViewer extends React.Component {
 
     renderViewer() {
         let {file, type, classes} = this.props;
-        switch(type) {
+        switch (type) {
             case 'docx':
             case 'doc':
-                return <Paper className={classes.documentPaper} classes={{root: classes.paperChange}} elevation={0}>
-                    <FileViewer fileType={type}
-                        filePath={file}/>
-                </Paper>;
+                return (
+                    <Paper className={classes.documentPaper} classes={{root: classes.paperChange}} elevation={0}>
+                        <FileViewer fileType={type}
+                            filePath={file}/>
+                    </Paper>
+                );
             case 'avi':
             case 'mp4':
             case 'video':
-                return <Paper className={classes.videoPaper} classes={{root: classes.paperChange}}  elevation={0}>
-                    <FileViewer fileType={type}
-                        filePath={file}/>
-                </Paper>;
+                return (
+                    <Paper className={classes.videoPaper} classes={{root: classes.paperChange}} elevation={0}>
+                        <FileViewer fileType={type}
+                            filePath={file}/>
+                    </Paper>
+                );
             default:
-                return <Paper className={classes.defaultPaper} classes={{root: classes.paperChange}}    elevation={0}>
-                    {fileIcon(file, null, {'fontSize': '24em'})}
-                </Paper>;
+                return (
+                    <Paper className={classes.defaultPaper} classes={{root: classes.paperChange}} elevation={0}>
+                        {fileIcon(file, null, {fontSize: '24em'})}
+                    </Paper>
+                );
         }
-    };
+    }
 
     render() {
-        return <DocumentPreviewContainer>
-            {this.renderViewer()}
-        </DocumentPreviewContainer>
+        return (
+            <DocumentPreviewContainer>
+                {this.renderViewer()}
+            </DocumentPreviewContainer>
+        );
     }
 }
 

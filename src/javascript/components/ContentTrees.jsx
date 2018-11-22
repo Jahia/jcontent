@@ -18,7 +18,7 @@ const styles = () => ({
         maxWidth: '260px',
         width: '260px',
         height: 'calc(100vh - 140px)',
-        maxHeight:  'calc(100vh - 140px)'
+        maxHeight: 'calc(100vh - 140px)'
     },
     list: {
         maxWidth: '260px',
@@ -38,7 +38,7 @@ const styles = () => ({
             maxHeight: '28px',
             minHeight: '28px',
             color: '#d1d1d1'
-        },
+        }
     },
     disablePad: {
         padding: '0!important'
@@ -53,57 +53,60 @@ const styles = () => ({
 });
 
 class ContentTree extends React.Component {
-
     constructor(props) {
         super(props);
         this.picker = React.createRef();
     }
 
     render() {
-
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel, buttonClass,
             setRefetch} = this.props;
 
-        return <Picker
-            ref={this.picker}
-            rootPaths={[rootPath]}
-            openPaths={openPaths}
-            openableTypes={openableTypes}
-            selectableTypes={selectableTypes}
-            queryVariables={{lang: lang}}
-            selectedPaths={[path]}
-            openSelection={false}
-            setRefetch={ setRefetch }
-            fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PredefinedFragments.displayName]}
-            onOpenItem={(path, open) => handleOpen(path, open)}
-            onSelectItem={(path) => handleSelect(path)}
-        >
-            {({handleSelect, ...others}) =>
-                <CmPickerViewMaterial
-                    {...others}
-                    textRenderer={(entry) => {
+        return (
+            <Picker
+                ref={this.picker}
+                rootPaths={[rootPath]}
+                openPaths={openPaths}
+                openableTypes={openableTypes}
+                selectableTypes={selectableTypes}
+                queryVariables={{lang: lang}}
+                selectedPaths={[path]}
+                openSelection={false}
+                setRefetch={setRefetch}
+                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PredefinedFragments.displayName]}
+                onOpenItem={(path, open) => handleOpen(path, open)}
+                onSelectItem={path => handleSelect(path)}
+                >
+                {({handleSelect, ...others}) => (
+                    <CmPickerViewMaterial
+                        {...others}
+                        textRenderer={entry => {
                         let contextualMenu = React.createRef();
-                        return <React.Fragment>
-                            <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: entry.node.path}}/>
-                            <span onContextMenu={(event) => contextualMenu.current.open(event) }>
-                                {entry.depth > 0 ? entry.node.displayName : rootLabel}
-                            </span>
-                        </React.Fragment>}
+                        return (
+                            <React.Fragment>
+                                <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: entry.node.path}}/>
+                                <span onContextMenu={event => contextualMenu.current.open(event)}>
+                                    {entry.depth > 0 ? entry.node.displayName : rootLabel}
+                                </span>
+                            </React.Fragment>
+);
+}
                     }
-                    actionsRenderer={(entry) =>
-                        entry.depth > 0
-                            ? <DisplayActions target="contentTreeActions" context={{path: entry.node.path}} render={iconButtonRenderer({
-                                color:'inherit',
+                        actionsRenderer={entry =>
+                        entry.depth > 0 ?
+                            <DisplayActions target="contentTreeActions" context={{path: entry.node.path}} render={iconButtonRenderer({
+                                color: 'inherit',
                                 className: buttonClass,
                                 'data-cm-role': 'picker-item-menu'
-                            })}/>
-                            : null
+                            })}/> :
+                            null
                     }
                 />
-            }
-        </Picker>;
+)}
+            </Picker>
+        );
     }
 
     resolveMenu(path) {
@@ -112,20 +115,18 @@ class ContentTree extends React.Component {
             case 'browse-files':
                 return 'contextualMenuFiles';
             default:
-                return path.indexOf(`/sites/${siteKey}/contents`) !== -1  ? 'contextualMenuFolders' : 'contextualMenuPages';
+                return path.indexOf(`/sites/${siteKey}/contents`) !== -1 ? 'contextualMenuFolders' : 'contextualMenuPages';
         }
     }
 }
 
 class ContentTrees extends React.Component {
-
     constructor(props) {
         super(props);
         this.componentsRefs = [];
     }
 
     render() {
-
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
             closePath, classes, setRefetch, onContextualMenu, mode} = this.props;
         const rootPath = '/sites/' + siteKey;
@@ -146,32 +147,34 @@ class ContentTrees extends React.Component {
                             <TableCell>
                                 <List disablePadding>
                                     {
-                                        _.map(contentTreeConfigs, (contentTreeConfig) => {
-
+                                        _.map(contentTreeConfigs, contentTreeConfig => {
                                             let componentRef = React.createRef();
                                             this.componentsRefs.push(componentRef);
-                                            return <ListItem key={contentTreeConfig.key}
-                                                disableGutters
-                                                className={classes.disablePad}
-                                                data-cm-role={contentTreeConfig.key}>
-                                                <ContentTree ref={componentRef}
-                                                    mode={mode}
-                                                    siteKey={siteKey}
-                                                    path={usedPath}
-                                                    rootPath={rootPath + contentTreeConfig.rootPath}
-                                                    openPaths={openPaths}
-                                                    selectableTypes={contentTreeConfig.selectableTypes}
-                                                    lang={lang}
-                                                    user={user}
-                                                    handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                    handleSelect={path => setPath(path)}
-                                                    openableTypes={contentTreeConfig.openableTypes}
-                                                    rootLabel={t(contentTreeConfig.rootLabel)}
-                                                    setRefetch={ setRefetch(contentTreeConfig.key) }
-                                                    buttonClass={classes.buttonMenu}
-                                                    onContextualMenu={onContextualMenu}
+                                            return (
+                                                <ListItem key={contentTreeConfig.key}
+                                                    disableGutters
+                                                    className={classes.disablePad}
+                                                    data-cm-role={contentTreeConfig.key}
+                                                    >
+                                                    <ContentTree ref={componentRef}
+                                                        mode={mode}
+                                                        siteKey={siteKey}
+                                                        path={usedPath}
+                                                        rootPath={rootPath + contentTreeConfig.rootPath}
+                                                        openPaths={openPaths}
+                                                        selectableTypes={contentTreeConfig.selectableTypes}
+                                                        lang={lang}
+                                                        user={user}
+                                                        handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                        handleSelect={path => setPath(path)}
+                                                        openableTypes={contentTreeConfig.openableTypes}
+                                                        rootLabel={t(contentTreeConfig.rootLabel)}
+                                                        setRefetch={setRefetch(contentTreeConfig.key)}
+                                                        buttonClass={classes.buttonMenu}
+                                                        onContextualMenu={onContextualMenu}
                                                 />
-                                            </ListItem>;
+                                                </ListItem>
+);
                                         })
                                     }
                                 </List>
@@ -180,11 +183,11 @@ class ContentTrees extends React.Component {
                     </TableBody>
                 </Table>
             </div>
-        )
+        );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
     path: state.path,
@@ -192,10 +195,10 @@ const mapStateToProps = (state) => ({
     openPaths: state.openPaths
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
-    openPath: (path) => dispatch(cmOpenPaths([path])),
-    closePath: (path) => dispatch(cmClosePaths([path])),
+    openPath: path => dispatch(cmOpenPaths([path])),
+    closePath: path => dispatch(cmClosePaths([path]))
 });
 
 export default compose(

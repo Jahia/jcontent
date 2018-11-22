@@ -3,14 +3,14 @@ import {composeActions} from '@jahia/react-material';
 import {reduxAction} from './reduxAction';
 import requirementsAction from './requirementsAction';
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params})),
     setPreviewState: state => {
         dispatch(cmSetPreviewState(state));
     }
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     language: state.language,
     siteKey: state.site
 });

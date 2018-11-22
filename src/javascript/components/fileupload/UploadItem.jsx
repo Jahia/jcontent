@@ -80,38 +80,40 @@ class UploadItem extends React.Component {
     render() {
         const {classes, file, t} = this.props;
         const open = Boolean(this.state.anchorEl);
-        return <ListItem className={classes.listItem}>
-            { this.avatar() }
-            <ListItemText className={classes.fileNameText} primary={this.state.userChosenName ? this.state.userChosenName : file.name}/>
-            <ListItemText className={classes.fileNameText} primary={this.statusText()}/>
-            <ListItemSecondaryAction>
-                { this.secondaryActionsList() }
-            </ListItemSecondaryAction>
-            <Popover
-                open={open}
-                anchorEl={this.state.anchorEl}
-                anchorOrigin={{
+        return (
+            <ListItem className={classes.listItem}>
+                { this.avatar() }
+                <ListItemText className={classes.fileNameText} primary={this.state.userChosenName ? this.state.userChosenName : file.name}/>
+                <ListItemText className={classes.fileNameText} primary={this.statusText()}/>
+                <ListItemSecondaryAction>
+                    { this.secondaryActionsList() }
+                </ListItemSecondaryAction>
+                <Popover
+                    open={open}
+                    anchorEl={this.state.anchorEl}
+                    anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'center'
                 }}
-                transformOrigin={{
+                    transformOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center'
                 }}
-                onClose={this.hideChangeNamePopover}
-            >
-                <TextField
-                    label={t('label.contentManager.fileUpload.newName')}
-                    className={`${classes.textField} ${classes.renameField}`}
-                    type="text"
-                    name="newName"
-                    margin="normal"
-                    variant="outlined"
-                    defaultValue={file.name}
-                    onKeyUp={this.rename}
+                    onClose={this.hideChangeNamePopover}
+                    >
+                    <TextField
+                        label={t('label.contentManager.fileUpload.newName')}
+                        className={`${classes.textField} ${classes.renameField}`}
+                        type="text"
+                        name="newName"
+                        margin="normal"
+                        variant="outlined"
+                        defaultValue={file.name}
+                        onKeyUp={this.rename}
                 />
-            </Popover>
-        </ListItem>
+                </Popover>
+            </ListItem>
+        );
     }
 
     rename(e) {
@@ -256,7 +258,7 @@ class UploadItem extends React.Component {
                         dispatch(removeUpload(index));
                         this.props.updateUploadsStatus();
                     }}
-                >
+                    >
                     {t('label.contentManager.fileUpload.dontUpload')}
                 </Button>
             );
@@ -264,32 +266,36 @@ class UploadItem extends React.Component {
         if (status === uploadStatuses.HAS_ERROR) {
             if (error === 'FILE_EXISTS') {
                 if (RENAME_MODE === 'AUTOMATIC') {
-                    actions.push(<Button key="rename"
-                        className={classes.actionButton}
-                        component="a"
-                        onClick={e => {
-                            this.rename(e);
-                        }}
-                    >
-                        {t('label.contentManager.fileUpload.rename')}
-                    </Button>);
+                    actions.push(
+                        <Button key="rename"
+                            className={classes.actionButton}
+                            component="a"
+                            onClick={e => {
+                                this.rename(e);
+                            }}
+                            >
+                            {t('label.contentManager.fileUpload.rename')}
+                        </Button>
+                    );
                 } else if (RENAME_MODE === 'MANUAL') {
-                    actions.push(<Button key="rename"
-                        className={classes.actionButton}
-                        component="a"
-                        onClick={e => {
-                            this.showChangeNamePopover(e);
-                        }}
-                    >
-                        {t('label.contentManager.fileUpload.rename')}
-                    </Button>);
+                    actions.push(
+                        <Button key="rename"
+                            className={classes.actionButton}
+                            component="a"
+                            onClick={e => {
+                                this.showChangeNamePopover(e);
+                            }}
+                            >
+                            {t('label.contentManager.fileUpload.rename')}
+                        </Button>
+                    );
                 }
                 actions.push(
                     <Button key="overwrite"
                         className={classes.actionButton}
                         component="a"
                         onClick={this.replaceFile}
-                    >
+                        >
                         {t('label.contentManager.fileUpload.replace')}
                     </Button>,
                     <Button key="dontupload"
@@ -299,7 +305,7 @@ class UploadItem extends React.Component {
                             removeFile(index);
                             dispatch(removeUpload(index));
                         }}
-                    >
+                        >
                         {t('label.contentManager.fileUpload.dontUpload')}
                     </Button>
                 );
@@ -312,7 +318,7 @@ class UploadItem extends React.Component {
                             removeFile(index);
                             dispatch(removeUpload(index));
                         }}
-                    >
+                        >
                         {t('label.contentManager.fileUpload.dontUpload')}
                     </Button>,
                     <Button key="retry"
@@ -321,7 +327,7 @@ class UploadItem extends React.Component {
                         onClick={() => {
                             this.doUploadAndStatusUpdate();
                         }}
-                    >
+                        >
                         {t('label.contentManager.fileUpload.retry')}
                     </Button>
                 );
@@ -352,9 +358,8 @@ class UploadItem extends React.Component {
                     pathOrId: path + '/' + file.name
                 }
             });
-            this.changeStatusToUploading()
-        }
-        catch (e) {
+            this.changeStatusToUploading();
+        } catch (e) {
             console.error(e);
         }
     }
@@ -399,7 +404,7 @@ const mapDispatchToProps = dispatch => {
     return {
         dispatch: dispatch,
         dispatchBatch: actions => {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 dispatch(batchActions(actions));
                 resolve();
             });

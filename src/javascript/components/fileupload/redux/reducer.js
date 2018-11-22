@@ -34,7 +34,7 @@ export const fileUpload = (state = initialState, action) => {
             ...state,
             uploads: action.uploads
         };
-        case 'FILEUPLOAD_ADD_UPLOADS' : return {
+        case 'FILEUPLOAD_ADD_UPLOADS': return {
             ...state,
             uploads: state.uploads.concat(action.uploads)
         };
@@ -67,7 +67,7 @@ export const fileUpload = (state = initialState, action) => {
                     return upload;
                 })
             };
-        case 'FILEUPLOAD_SET_OVERLAY_TARGET' :
+        case 'FILEUPLOAD_SET_OVERLAY_TARGET':
             return {
                 ...state,
                 overlayTarget: action.overlayTarget

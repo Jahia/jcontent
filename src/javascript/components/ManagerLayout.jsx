@@ -41,7 +41,7 @@ class MainView extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     mode: state.mode
 });
 

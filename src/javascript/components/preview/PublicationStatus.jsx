@@ -86,7 +86,7 @@ const component = ({selection, t, classes, uiLang}) => {
     }
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     selection: state.selection,
     uiLang: state.uiLang
 });

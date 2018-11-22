@@ -103,14 +103,14 @@ class Upload extends React.Component {
                 position: 'absolute',
                 backgroundColor: '#E67D3A',
                 opacity: '0.4',
-                zIndex:1000,
+                zIndex: 1000,
                 pointerEvents: 'none'
             },
             inactive: {
                 display: 'none',
                 pointerEvents: 'none'
             }
-        }
+        };
     }
 
     componentDidUpdate() {
@@ -122,20 +122,22 @@ class Upload extends React.Component {
 
     render() {
         const {classes} = this.props;
-        return <React.Fragment>
-            <UploadDrawer open={this.isDrawerOpen()} transitionDuration={this.transitionDuration()}>
-                <div className={this.contentClasses()}>
-                    <div className={classes.contentHeader}>
-                        { this.headerText() }
-                        { this.headerButton() }
+        return (
+            <React.Fragment>
+                <UploadDrawer open={this.isDrawerOpen()} transitionDuration={this.transitionDuration()}>
+                    <div className={this.contentClasses()}>
+                        <div className={classes.contentHeader}>
+                            { this.headerText() }
+                            { this.headerButton() }
+                        </div>
+                        <div className={classes.contentBody}>
+                            { this.configureRendering() }
+                        </div>
                     </div>
-                    <div className={classes.contentBody}>
-                        { this.configureRendering() }
-                    </div>
-                </div>
-            </UploadDrawer>
-            <div style={this.generateOverlayStyle()}/>
-        </React.Fragment>
+                </UploadDrawer>
+                <div style={this.generateOverlayStyle()}/>
+            </React.Fragment>
+        );
     }
 
     configureRendering() {
@@ -154,7 +156,7 @@ class Upload extends React.Component {
     }
 
     onFilesSelected(acceptedFiles, rejectedFiles) {
-        onFilesSelected(acceptedFiles, rejectedFiles, this.props.dispatchBatch, { path: this.props.path });
+        onFilesSelected(acceptedFiles, rejectedFiles, this.props.dispatchBatch, {path: this.props.path});
     }
 
     showUploads() {
@@ -221,57 +223,64 @@ class Upload extends React.Component {
 
         if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
-                    <FullscreenExit/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
+                        <FullscreenExit/>
+                    </IconButton>
                 </div>
             );
         }
         if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.PARTIALLY_VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
-                    <Fullscreen/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
+                        <Fullscreen/>
+                    </IconButton>
                 </div>
             );
         }
         if (status === uploadsStatuses.NOT_STARTED) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads() }>
-                    <Close/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
+                        <Close/>
+                    </IconButton>
                 </div>
             );
         }
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
-                    <FullscreenExit/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
+                        <FullscreenExit/>
+                    </IconButton>
                 </div>
             );
         }
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.PARTIALLY_VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
-                    <Fullscreen/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
+                        <Fullscreen/>
+                    </IconButton>
                 </div>
             );
         }
         if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: '#E67D3A'}} onClick={() => this.closePanelAndClearUploads()}>
-                    <Close/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.closePanelAndClearUploads()}>
+                        <Close/>
+                    </IconButton>
                 </div>
             );
         }
         if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
             return (
-                <div className={classes.buttonHolder}><IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
-                    <Close/>
-                </IconButton>
+                <div className={classes.buttonHolder}>
+                    <IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
+                        <Close/>
+                    </IconButton>
                 </div>
             );
         }
@@ -304,7 +313,7 @@ class Upload extends React.Component {
         };
 
         if (this.props.uploads.length > 0) {
-            this.props.uploads.forEach( upload => {
+            this.props.uploads.forEach(upload => {
                 switch (upload.status) {
                     case uploadStatuses.UPLOADED:
                         status.uploaded += 1;
@@ -401,7 +410,7 @@ class Upload extends React.Component {
                 left: overlayTarget.x,
                 width: overlayTarget.width,
                 height: overlayTarget.height
-            })
+            });
         }
         return this.overlayStyle.inactive;
     }

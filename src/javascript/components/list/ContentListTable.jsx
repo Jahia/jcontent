@@ -316,7 +316,6 @@ class ContentListTable extends React.Component {
         const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
             onChangePage, onRowSelected, selection, totalCount, t, classes,
             uiLang, handleSort, order, orderBy, setPath, path} = this.props;
-        console.log(this.props.path);
         const emptyRows = pageSize - Math.min(pageSize, totalCount - (page * pageSize));
 
         return (

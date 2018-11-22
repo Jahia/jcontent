@@ -72,6 +72,8 @@ const styles = theme => ({
         flex: 'auto',
         display: 'flex',
         alignItems: 'center',
+        minHeight: theme.spacing.unit * 6,
+        maxHeight: theme.spacing.unit * 6,
         width: 6,
         backgroundColor: 'inherit',
         transition: 'width 0.2s ease-in 0s',

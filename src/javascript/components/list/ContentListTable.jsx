@@ -1,10 +1,12 @@
 import React from 'react';
-import {Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableRow, Toolbar, Grid, Tooltip, Typography, withStyles, Button, Icon} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
-import {Lock} from '@material-ui/icons';
+import {Lock, Close, CheckBox} from '@material-ui/icons';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
+import FilesGridModeSelector from '../filesGrid/FilesGridModeSelector';
+import ContentBreadcrumbs from '../breadcrumb/ContentBreadcrumbs';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
 import {DxContext} from '../DxContext';
@@ -15,6 +17,9 @@ import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
+import Constants from '../constants';
+import {buttonRenderer} from '@jahia/react-material/index';
+import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from '../refetches';
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
@@ -32,23 +37,21 @@ const styles = theme => ({
         fontSize: '13px',
         minWidth: '100px',
         maxWidth: '100px',
-        color: '#313131'
+        color: theme.palette.text.secondary,
     },
     lastModified: {
         fontSize: '13px',
-        color: '#313131',
+	    color: theme.palette.text.secondary,
         minWidth: '140px',
         maxWidth: '140px'
     },
     createdBy: {
         fontSize: '13px',
-        color: '#313131',
+	    color: theme.palette.text.secondary,
         minWidth: '100px',
         maxWidth: '100px'
     },
     contentRow: {
-        height: '28px !important',
-        maxHeight: '28px !important',
         '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
             width: 20,
             zIndex: -1,
@@ -116,7 +119,8 @@ const styles = theme => ({
         whiteSpace: 'nowrap'
     },
     activeStatus: {
-        color: '#E67D3A',
+        backgroundColor: '#E67D3A',
+        color: theme.palette.common.white,
         opacity: '0.9',
         '&:hover': {
             opacity: '1.5'
@@ -132,7 +136,7 @@ const styles = theme => ({
         padding: '1px'
     },
     name: {
-        color: '#313131',
+	    color: theme.palette.text.secondary,
         marginLeft: '-10px',
         fontSize: '14px'
     },
@@ -151,7 +155,7 @@ const styles = theme => ({
         minWidth: '22px'
     },
     hoveredRowAction: {
-        color: '#5E6565',
+        color: theme.palette.primary.main,
         '& svg': {
             width: '18px',
             marginLeft: '10px',
@@ -169,33 +173,34 @@ const styles = theme => ({
         color: theme.palette.primary.contrastText + ' !important'
     },
     hoveredRowActionsCell: {
-        minWidth: '100px'
+        color: theme.palette.text.disabled,
+        minWidth: '100px',
     },
     contentList: {
+        background: theme.palette.background.default,
         overflowY: 'scroll',
         overflowX: 'scroll',
         height: 'calc(100vh - 140px)',
         maxHeight: 'calc(100vh - 140px)'
     },
-    row: {
-        backgroundColor: '#f7f7f7',
+    row : {
+        backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: '#ebeaea !important'
+            backgroundColor: theme.palette.background.default + '!important',
         }
 
     },
     rowPair: {
-        backgroundColor: '#f5f5f5',
+        backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: '#ebeaea !important'
+	        backgroundColor: theme.palette.background.default + '!important',
         }
-    },
-    isDeleted: {
-        color: '#91A3AE !important',
-        textDecoration: 'line-through'
     },
     selectedRow: {
         backgroundColor: theme.palette.primary.main + '!important'
+    },
+    selectedRowMarkedForDeletion: {
+        backgroundColor: theme.palette.error.dark +'!important',
     },
     selectedCell: {
         color: theme.palette.primary.contrastText + ' !important'
@@ -203,10 +208,7 @@ const styles = theme => ({
     cell: {
         color: '#5E6565 !important'
     },
-    cellDeleted: {
-        color: '#91A3AE !important'
-    },
-    textOverflow1: {
+    textOverflow1 :{
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width: '100px',
@@ -214,13 +216,14 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     tableCellHeight: {
-        padding: 0
+        position: 'sticky',
+        top: 0,
     },
-    sortLabel: {
-        color: '#1E1E1F'
+    sortLabel:{
+	    color: theme.palette.text.secondary,
     },
     noResults: {
-        color: '#5E6565',
+	    color: theme.palette.text.disabled,
         fontWeight: 600
     },
     paddingCell: {
@@ -228,31 +231,41 @@ const styles = theme => ({
         paddingRight: 5
     },
     nameCellWidth: {
-        maxWidth: 400,
+        maxWidth: 50,
         '@media (min-width: 576px)': {
             maxWidth: 50
         },
         '@media (min-width:780px)': {
-            maxWidth: 100
+            maxWidth: 50
         },
         '@media (min-width:992px)': {
-            maxWidth: 300
+            maxWidth: 50
         },
         '@media (min-width: 1200px)': {
-            maxWidth: 500
+            maxWidth: 50
         }
     },
 
     tableButton: {
         padding: 0,
         margin: '0 !important'
+    },
+    colorToolbar: {
+        background: theme.palette.background.paper,
+    },
+    tableOverride: {
+        borderCollapse: 'unset',
     }
 });
 
+
+const GRID_SIZE = 12;
+const GRID_PANEL_BUTTONS_SIZE = 5;
 class ContentListTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+	        showList: false,
             hoveredRow: null
         };
         this.contextualMenuClosed = this.contextualMenuClosed.bind(this);
@@ -319,15 +332,89 @@ class ContentListTable extends React.Component {
         return null;
     }
 
+    setContentRefetcher(refetchingData) {
+        setContentListDataRefetcher(refetchingData);
+    };
+
+    setTreeRefetcher(type) {
+        return (refetchingData) => setRefetcher(type, refetchingData);
+    };
+
+    refreshContentsAndTree(contentTreeConfigs) {
+        refetchContentTreeAndListData(contentTreeConfigs);
+    }
+
+    isBrowsing() {
+        let {mode} = this.props;
+        return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES);
+    };
+
+    isSearching() {
+        let {mode} = this.props;
+        return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH);
+    };
+
+    isRootNode() {
+        let {path, siteKey} = this.props;
+        return (path === ('/sites/' + siteKey));
+    }
+    ;
     render() {
         const {hoveredRow} = this.state;
-        const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
+        const {contentTreeConfigs, rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
             onChangePage, onRowSelected, selection, totalCount, t, classes,
-            uiLang, handleSort, order, orderBy, setPath, path} = this.props;
+	        searchContentType, sql2SearchFrom, sql2SearchWhere,searchTerms,
+            uiLang, handleSort, order, orderBy, setPath, mode, path, clearSearch} = this.props;
+
+	    const params = {
+		    searchContentType: searchContentType,
+		    searchTerms: searchTerms,
+		    sql2SearchFrom: sql2SearchFrom,
+		    sql2SearchWhere: sql2SearchWhere
+	    };
+
         const emptyRows = pageSize - Math.min(pageSize, totalCount - (page * pageSize));
 
         return (
             <div className={classes.contentList}>
+                <Toolbar className={classes.colorToolbar}>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                            <div className={classes.breadCrumbs}>
+                                <ContentBreadcrumbs mode={this.props.mode}/>
+                            </div>
+                        </Grid>
+                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
+                            {mode === Constants.mode.FILES &&
+                            <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
+		                    }
+                            {this.isBrowsing() && !this.isRootNode() &&
+                            <React.Fragment>
+                                <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({},true)}/>
+                            </React.Fragment>
+		                    }
+                            {this.isBrowsing() &&
+                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
+                                <Icon name="folder" fill="#d4d9dd"/>
+                                {t('label.contentManager.tree.' + (open ? 'hide' : 'show'))}
+                            </Button>
+		                    }
+                            <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                                <Icon name="refresh" fill="#d4d9dd" size={20}/>
+                                {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
+                            </Button>
+                            {this.isSearching() &&
+                            <Button data-cm-role="search-clear" variant="text"
+		                            className={classes.searchClearButton}
+		                            classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
+                                <Close className={classes.searchClearIcon}/>
+                                {t('label.contentManager.search.clear')}
+                            </Button>
+		                    }
+                        </Grid>
+                    </Grid>
+
+                </Toolbar>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
                     <ContentListHeader
                         order={order}
@@ -375,24 +462,27 @@ class ContentListTable extends React.Component {
                                             <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
+                                            <TableCell paddingNone>
+                                                <CheckBox color="secondary" />
+                                            </TableCell>
                                             {columnData.map(column => {
-                                                if (column.id === 'wip') {
-                                                    return (
-                                                        <TableCell key={column.id} className={classes.actionCell} padding="none">
+			                                    if (column.id === 'wip') {
+				                                    return (
+				                                        <TableCell key={column.id} className={classes.actionCell} padding="none">
                                                             {renderWip}
                                                         </TableCell>
-);
-                                                }
-                                                if (column.id === 'lock') {
-                                                    return (
-                                                        <TableCell key={column.id} className={classes.actionCell} padding="none">
+                                                    );
+			                                    }
+			                                    if (column.id === 'lock') {
+				                                    return (
+				                                        <TableCell key={column.id} className={classes.actionCell} padding="none">
                                                             {renderLock}
-                                                        </TableCell>
-);
-                                                }
-                                                if (column.id === 'name') {
-                                                    return (
-                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
+				                                        </TableCell>
+                                                    );
+			                                    }
+			                                    if (column.id === 'name') {
+				                                    return (
+				                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
                                                             <Typography noWrap
                                                                 className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
                                                                 classes={nameCellContentClasses}
@@ -400,54 +490,79 @@ class ContentListTable extends React.Component {
                                                                 <img src={icon} className={classes.nodeTypeIcon}/>
                                                                 {n[column.id]}
                                                             </Typography>
-                                                        </TableCell>
-);
-                                                }
-                                                if (column.id === 'lastModified') {
-                                                    return (
-                                                        <TableCell
-                                                            key={column.id}
-                                                            padding="none"
-                                                            classes={{root: classes.paddingCell}}
-                                                            data-cm-role={'table-content-list-cell-' + column.id}
-                                                            >
+				                                        </TableCell>
+                                                    );
+			                                    }
+	                                            if (column.id === 'type') {
+		                                            return (
+		                                                <TableCell key={column.id} data-cm-role="table-content-list-cell-name">
+                                                            <Typography noWrap
+                                                                        className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
+                                                                        classes={nameCellContentClasses}
+                                                                        >
+                                                                <img src={icon} className={classes.nodeTypeIcon}/>
+                                                                {n[column.id]}
+                                                            </Typography>
+		                                                </TableCell>
+                                                    );
+	                                            }
+			                                    if (column.id === 'lastModified') {
+				                                    return (
+				                                        <TableCell
+					                                        key={column.id}
+					                                        padding="none"
+					                                        classes={{root: classes.paddingCell}}
+					                                        data-cm-role={'table-content-list-cell-' + column.id}
+				                                            >
                                                             <Typography className={classes[column.id]} classes={cellContentClasses}>
                                                                 <Moment format="ll" locale={uiLang}>{n[column.id]}</Moment>
                                                             </Typography>
-                                                        </TableCell>
-);
-                                                }
-                                                if (column.id === 'createdBy' && isHoveredRow) {
-                                                    return (
-                                                        <TableCell
-                                                            key={column.id}
-                                                            classes={{root: classes.paddingCell}}
-                                                            className={classes.hoveredRowActionsCell} data-cm-role={'table-content-list-cell-' + column.id}
-                                                            padding="none"
-                                                            >
-                                                            <DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple: true, className: classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}, true)}/>
-                                                        </TableCell>
-);
-                                                }
-                                                return (
+				                                        </TableCell>
+                                                    );
+			                                    }
+			                                    if (column.id === 'createdBy' && isHoveredRow) {
+				                                    return (
+				                                        <TableCell
+					                                        key={column.id}
+					                                        classes={{root: classes.paddingCell }}
+					                                        className={classes.hoveredRowActionsCell}
+                                                            data-cm-role={'table-content-list-cell-' + column.id}
+					                                        padding="none"
+				                                            >
+                                                            <DisplayActions target="tableActions"
+                                                                context={{path: n.path}}
+                                                                render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
+				                                        </TableCell>
+                                                    );
+			                                    }
+			                                    return (
                                                     <TableCell
-                                                        key={column.id}
-                                                        padding="none"
-                                                        classes={{root: classes.paddingCell}}
-                                                        data-cm-role={'table-content-list-cell-' + column.id}
-                                                        >
+				                                        key={column.id}
+				                                        padding="none"
+				                                        classes={{root: classes.paddingCell}}
+				                                        data-cm-role={'table-content-list-cell-' + column.id}
+			                                            >
                                                         <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
                                                             {n[column.id]}
                                                         </Typography>
-                                                    </TableCell>
-);
-                                            })}
+			                                        </TableCell>
+                                                );
+
+		                                    })}
+                                            <TableCell
+		                                        className={classes.hoveredRowActionsCell}
+		                                        classes={{root: classes.paddingCell }}
+		                                        padding='none'
+		                                        data-cm-role='table-content-list-cell-'
+	                                            >
+                                                <DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}
                                 {emptyRows > 0 &&
                                 <TableRow>
-                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS} padding="none"/>
+                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS + 1} padding="none"/>
                                 </TableRow>
                                 }
                             </UploadWrapperComponent>
@@ -455,13 +570,13 @@ class ContentListTable extends React.Component {
                     </DxContext.Consumer>
                 </Table>
                 {totalCount > 0 &&
-                    <Pagination
-                        totalCount={totalCount}
-                        pageSize={pageSize}
-                        currentPage={page}
-                        onChangeRowsPerPage={onChangeRowsPerPage}
-                        onChangePage={onChangePage}
-                    />
+                <Pagination
+				    totalCount={totalCount}
+				    pageSize={pageSize}
+				    currentPage={page}
+				    onChangeRowsPerPage={onChangeRowsPerPage}
+				    onChangePage={onChangePage}
+                />
                 }
             </div>
         );
@@ -490,13 +605,26 @@ let ContentNotFound = props => {
 
 const mapStateToProps = state => ({
     selection: state.selection,
-    uiLang: state.uiLang,
-    lang: state.language
+    uiLang : state.uiLang,
+    lang : state.language,
+    params: state.params,
+    searchTerms: state.params.searchTerms,
+    searchContentType: state.params.searchContentType,
+    sql2SearchFrom: state.params.sql2SearchFrom,
+    sql2SearchWhere: state.params.sql2SearchWhere
 });
 
 const mapDispatchToProps = dispatch => ({
     onRowSelected: selection => dispatch(cmSetSelection(selection)),
-    setPath: (path, params) => dispatch(cmGoto({path, params}))
+    setPath: (path, params) => dispatch(cmGoto({path, params})),
+    clearSearch: (params) => {
+        params = _.clone(params);
+        _.unset(params, 'searchContentType');
+        _.unset(params, 'searchTerms');
+        _.unset(params, 'sql2SearchFrom');
+        _.unset(params, 'sql2SearchWhere');
+        dispatch(cmGoto({mode: 'browse', params: params}))
+    }
 });
 
 ContentListTable.propTypes = {

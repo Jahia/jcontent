@@ -1,8 +1,10 @@
 import React from 'react';
 import {Picker} from '@jahia/react-apollo';
 import CmPickerViewMaterial from './picker/CmPickerViewMaterial';
-import {List, ListItem, Table, TableBody, TableCell, TableHead, TableRow, withStyles} from '@material-ui/core';
+import {List, ListItem, Table, TableBody, Typography, TableCell, Toolbar, TableHead, TableRow, withStyles, IconButton} from '@material-ui/core';
 import {translate} from 'react-i18next';
+import { ChevronLeft} from '@material-ui/icons';
+import { ChevronRight} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from './redux/actions';
@@ -11,8 +13,9 @@ import {PickerItemsFragment} from './gqlQueries';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import {compose} from 'react-apollo';
 
-const styles = () => ({
+const styles = (theme) => ({
     trees: {
+        background: theme.palette.background.paper,
         overflowY: 'scroll',
         overflowX: 'scroll',
         maxWidth: '260px',
@@ -24,21 +27,15 @@ const styles = () => ({
         maxWidth: '260px',
         width: '260px'
     },
-    tableHeight: {
-        height: '28px',
-        maxHeight: '28px',
-        minHeight: '28px'
-    },
     tableCellHeight: {
+        // Top: 0,
+        // position: 'sticky',
         padding: '0px 0px 0px 10px',
-        color: '#5E6565',
+        color: theme.palette.text.secondary,
+        transitionDuration: '.3s',
         '&:hover': {
-            height: '28px',
-            padding: '0px 0px 0px 10px',
-            maxHeight: '28px',
-            minHeight: '28px',
-            color: '#d1d1d1'
-        }
+            color: theme.palette.text.primary,
+        },
     },
     disablePad: {
         padding: '0!important'
@@ -49,6 +46,17 @@ const styles = () => ({
         flex: 1,
         transition: 'left 0.5s ease 0s',
         padding: 0
+    },
+    toolbarGrow: {
+        color: theme.palette.text.secondary,
+        flexGrow: 1,
+    },
+    overrideToolbar: {
+        paddingLeft: theme.spacing.unit * 3 + ['!important'],
+        paddingRight: theme.spacing.unit * 3 + ['!important'],
+    },
+    iconColor: {
+        color: theme.palette.text.secondary,
     }
 });
 
@@ -128,7 +136,7 @@ class ContentTrees extends React.Component {
 
     render() {
         const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
-            closePath, classes, setRefetch, onContextualMenu, mode} = this.props;
+            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, openDrawer} = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
@@ -136,48 +144,66 @@ class ContentTrees extends React.Component {
             <div className={classes.trees}>
                 <Table>
                     <TableHead>
-                        <TableRow className={classes.tableHeight}>
+                        <TableRow>
                             <TableCell className={classes.tableCellHeight}>
-                                {t('label.contentManager.tree.title')}
+                                {isOpen ?
+                                    <Toolbar classes={{gutters: classes.overrideToolbar}}>
+                                        <Typography variant='subtitle2' className={classes.toolbarGrow}>
+                                            {t('label.contentManager.tree.title')}
+                                        </Typography>
+                                        <IconButton className={classes.iconColor}>
+                                            <ChevronLeft onClick={openDrawer}/>
+                                        </IconButton>
+                                    </Toolbar>
+						            :
+                                    <div>
+                                        <IconButton className={classes.iconColor}>
+                                            <ChevronRight onClick={openDrawer}/>
+                                        </IconButton>
+                                    </div>
+					            }
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         <TableRow>
                             <TableCell>
-                                <List disablePadding>
-                                    {
-                                        _.map(contentTreeConfigs, contentTreeConfig => {
-                                            let componentRef = React.createRef();
-                                            this.componentsRefs.push(componentRef);
-                                            return (
-                                                <ListItem key={contentTreeConfig.key}
-                                                    disableGutters
-                                                    className={classes.disablePad}
-                                                    data-cm-role={contentTreeConfig.key}
-                                                    >
+                                {isOpen ?
+
+                                    <List disablePadding>
+                                        {
+				                            _.map(contentTreeConfigs, (contentTreeConfig) => {
+
+					                            let componentRef = React.createRef();
+					                            this.componentsRefs.push(componentRef);
+					                            return <ListItem key={contentTreeConfig.key}
+					                                             disableGutters
+					                                             className={classes.disablePad}
+					                                             data-cm-role={contentTreeConfig.key}>
                                                     <ContentTree ref={componentRef}
-                                                        mode={mode}
-                                                        siteKey={siteKey}
-                                                        path={usedPath}
-                                                        rootPath={rootPath + contentTreeConfig.rootPath}
-                                                        openPaths={openPaths}
-                                                        selectableTypes={contentTreeConfig.selectableTypes}
-                                                        lang={lang}
-                                                        user={user}
-                                                        handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                        handleSelect={path => setPath(path)}
-                                                        openableTypes={contentTreeConfig.openableTypes}
-                                                        rootLabel={t(contentTreeConfig.rootLabel)}
-                                                        setRefetch={setRefetch(contentTreeConfig.key)}
-                                                        buttonClass={classes.buttonMenu}
-                                                        onContextualMenu={onContextualMenu}
-                                                />
-                                                </ListItem>
-);
-                                        })
-                                    }
-                                </List>
+						                                         mode={mode}
+						                                         siteKey={siteKey}
+						                                         path={usedPath}
+						                                         rootPath={rootPath + contentTreeConfig.rootPath}
+						                                         openPaths={openPaths}
+						                                         selectableTypes={contentTreeConfig.selectableTypes}
+						                                         lang={lang}
+						                                         user={user}
+						                                         handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+						                                         handleSelect={path => setPath(path)}
+						                                         openableTypes={contentTreeConfig.openableTypes}
+						                                         rootLabel={t(contentTreeConfig.rootLabel)}
+						                                         setRefetch={setRefetch(contentTreeConfig.key)}
+						                                         buttonClass={classes.buttonMenu}
+						                                         onContextualMenu={onContextualMenu}
+						                            />
+					                            </ListItem>;
+				                            })
+			                            }
+                                    </List>
+		                            :
+                                    <List />
+	                            }
                             </TableCell>
                         </TableRow>
                     </TableBody>

@@ -11,14 +11,11 @@ import CmLeftMenuItem from './CmLeftMenuItem';
 import {compose} from 'react-apollo';
 
 export const drawerWidth = 289;
-
-// TODO this styles should be provided by the theme / new structure when available
 const styles = theme => ({
     root: {
         zIndex: 1,
         paddingLeft: '38px',
-        background: '#f7f7f7',
-        fontFamily: 'Nunito sans, sans-serif',
+        background: theme.palette.background.paper,
         minWidth: '105px',
         overflow: 'visible !important', // Safari compatibility
         '-webkit-transform-style': 'preserve-3d', // Safari compatibility
@@ -29,15 +26,15 @@ const styles = theme => ({
         zIndex: 0,
         minWidth: '105px',
         paddingLeft: '38px',
-        background: theme.palette.background.default,
+        background: theme.palette.layout.dark,
         overflow: 'hidden',
         height: '100%',
         display: 'flex'
     },
     side: {zIndex: 1, position: 'relative'},
     childItem: {
-        background: '#007cb0',
-        color: '#ffffff',
+        background: theme.palette.main.primary,
+        color: theme.palette.text.contrastText,
         fontFamily: 'Nunito sans, sans-serif',
         padding: '1px 10px 4px 5px',
         fontWeight: 500,
@@ -49,8 +46,7 @@ const styles = theme => ({
         fontSize: '0.828rem'
     },
     childOff: {
-        background: 'transparent',
-        color: '#504e4d',
+        color: theme.palette.text.secondary,
         fontFamily: 'Nunito sans, sans-serif',
         fontWeight: 500,
         padding: '1px 10px 4px 5px',
@@ -63,14 +59,13 @@ const styles = theme => ({
     },
     childIcon: {
         fontSize: '18px',
-        color: '#504e4d'
+        color: theme.palette.text.secondary,
     },
     childIconLight: {
         fontSize: '18px',
-        color: '#d1d1d2'
+        color: theme.palette.background.default,
     },
     menuBurger: {
-        backgroundColor: 'transparent !important',
         paddingRight: '0px !important',
         paddingTop: '34px !important',
         paddingLeft: '20px !important',
@@ -78,7 +73,7 @@ const styles = theme => ({
         boxShadow: 'none !important'
     },
     drawerPaper: {
-        background: '#f7f7f7',
+        background: theme.palette.background.paper,
         position: 'absolute',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
@@ -90,7 +85,7 @@ const styles = theme => ({
         })
     },
     drawerPaperPersistent: {
-        background: '#ffffff',
+        background: theme.palette.background.paper,
         position: 'relative',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
@@ -110,16 +105,16 @@ const styles = theme => ({
         })
     },
     iconDark: {
-        color: '#504e4d',
+        color: theme.palette.text.secondary,
         fontSize: '1.7em'
     },
     iconLight: {
-        color: '#F5F5F5',
+        color: theme.palette.text.contrastText,
         fontSize: '1.7em'
     },
     typographyIcon: {
         display: 'block',
-        color: '#504e4d',
+        color: theme.palette.text.secondary,
         fontSize: '9px',
         textAlign: 'center',
         fontFamily: 'Nunito Sans, sans-serif',
@@ -130,7 +125,7 @@ const styles = theme => ({
     },
     typographyIconLight: {
         display: 'block',
-        color: '#F5F5F5',
+        color: theme.palette.text.contrastText,
         fontSize: '9px',
         textAlign: 'center',
         fontFamily: 'Nunito Sans, sans-serif',
@@ -144,13 +139,15 @@ const styles = theme => ({
         fontFamily: 'Nunito sans, sans-serif',
         lineHeight: '32px',
         fontWeight: '100',
-        color: '#504e4d',
+        color: theme.palette.text.secondary,
         width: '260px',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         marginTop: '-3px',
         marginLeft: '5px'
+    },
+    backgroundBurger: {
     },
     margin: {
         margin: theme.spacing.unit * 2
@@ -165,10 +162,10 @@ const styles = theme => ({
         marginBottom: '-100px !important'
     },
     badge: {
-        background: '#e40000',
+        background: theme.palette.error.light,
         fontWeight: 600,
         fontSize: '11px',
-        color: '#fafafa'
+        color: theme.palette.text.contrastText
     },
     list: {
         paddingTop: '0 !important',

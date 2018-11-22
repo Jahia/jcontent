@@ -17,7 +17,7 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.layout.dark,
         padding: theme.spacing.unit * 3
     },
     openDrawer: {

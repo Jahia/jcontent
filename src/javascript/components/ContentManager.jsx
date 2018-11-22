@@ -1,6 +1,7 @@
 import React from 'react';
 import {MuiThemeProvider} from '@material-ui/core';
-import {anthraciteDarkTheme as theme, ComponentRendererProvider, NotificationProvider, actionsRegistry} from '@jahia/react-material';
+import {ComponentRendererProvider, NotificationProvider, actionsRegistry} from '@jahia/react-material';
+import { dsDarkTheme as theme} from '@jahia/ds-mui-theme';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
 import {I18n, I18nextProvider} from 'react-i18next';
@@ -80,10 +81,8 @@ class ContentManager extends React.Component {
         let {dxContext} = this.props;
         // Work around to restore table headers color
         // TODO: MUST REMOVE IT BACKLOG-8697 !!!!
-        const customTheme = theme;
-        customTheme.overrides.MuiTableCell.head.background = '#f5f5f5';
         return (
-            <MuiThemeProvider theme={customTheme}>
+            <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({contextPath: dxContext.contextPath, useBatch: true, httpOptions: {batchMax: 50}})}>
                         <I18nextProvider i18n={getI18n({

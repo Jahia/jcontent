@@ -1,5 +1,6 @@
 import React from 'react';
 import {TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
+import { CheckBox } from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
@@ -15,7 +16,10 @@ class ContentListHeader extends React.Component {
         return (
             <TableHead className={classes.head}>
                 <TableRow className={classes.contentRow}>
-                    <TableCell/>
+                    <TableCell padding="none" className={classes.tableCellHeight} />
+                    <TableCell className={classes.tableCellHeight}>
+                        <CheckBox color="secondary"  />
+                    </TableCell>
                     {columnData.map(column => {
                         if (column.sortable) {
                             return (
@@ -46,6 +50,9 @@ class ContentListHeader extends React.Component {
                             </TableCell>
                         );
                     }, this)}
+                    <TableCell component="th" scope="row">
+		                Actions
+                    </TableCell>
                 </TableRow>
             </TableHead>
         );

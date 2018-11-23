@@ -6,35 +6,23 @@ import mimetypes from 'mime-types';
 import randomUUID from 'uuid/v4';
 
 export const files = {
-    acceptedFiles: [],
-    rejectedFiles: []
+    acceptedFiles: []
 };
 
-export const onFilesSelected = (acceptedFiles, rejectedFiles, dispatchBatch, uploadInfo, additionalActions = []) => {
-    files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
-    files.rejectedFiles = files.rejectedFiles.concat(rejectedFiles);
-    const uploads = acceptedFiles.map(() => {
-        let seed = {
-            ...uploadSeed
-        };
+export const onFilesSelected = (acceptedFiles, dispatchBatch, uploadInfo, additionalActions = []) => {
+    if (acceptedFiles.length > 0) {
+        files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
+        const uploads = acceptedFiles.map(() => ({
+            ...uploadSeed,
+            ...uploadInfo,
+            id: randomUUID()
+        }));
 
-        seed.id = randomUUID();
-
-        // Merge optional uploadInfo if custom property values need to be provided
-        if (uploadInfo) {
-            seed = {
-                ...seed,
-                ...uploadInfo
-            };
-        }
-        return seed;
-    });
-
-    dispatchBatch(additionalActions.concat([
-        addUploads(uploads),
-        takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
-    ])
-    );
+        dispatchBatch(additionalActions.concat([
+            addUploads(uploads),
+            takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
+        ]));
+    }
 };
 
 export const isDragDataWithFiles = evt => {

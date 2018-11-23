@@ -155,8 +155,8 @@ class Upload extends React.Component {
         );
     }
 
-    onFilesSelected(acceptedFiles, rejectedFiles) {
-        onFilesSelected(acceptedFiles, rejectedFiles, this.props.dispatchBatch, {path: this.props.path});
+    onFilesSelected(acceptedFiles) {
+        onFilesSelected(acceptedFiles, this.props.dispatchBatch, {path: this.props.path});
     }
 
     showUploads() {
@@ -288,7 +288,6 @@ class Upload extends React.Component {
 
     closePanelAndClearUploads() {
         files.acceptedFiles = [];
-        files.rejectedFiles = [];
         this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]);
     }
 

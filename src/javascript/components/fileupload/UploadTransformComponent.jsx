@@ -57,14 +57,6 @@ class UploadTransformComponent extends React.Component {
         delete props.uploadMaxSize;
         delete props.uploadDispatchBatch;
         delete props.uploadSetOverlayTarget;
-        // Blurring functionality
-        // if (this.state.isDragActive) {
-        //     if (!props.style) {
-        //         props.style = {};
-        //     }
-        //     props.style.filter = "blur(3px)";
-        // }
-
         return props;
     }
 
@@ -79,23 +71,9 @@ class UploadTransformComponent extends React.Component {
         evt.persist();
         let position = this.getOverlayPosition(evt.currentTarget);
         this.props.uploadSetOverlayTarget(position);
-        // If (isDragDataWithFiles(evt)) {
-        //     Promise.resolve(getDataTransferItems(evt)).then(draggedFiles => {
-        //         if (evt.isPropagationStopped()) {
-        //             return
-        //         }
-        //
-        //         this.setState({
-        //             draggedFiles,
-        //             // Do not rely on files for the drag state. It doesn't work in Safari.
-        //             isDragActive: true
-        //         });
-        //     });
-        // }
     }
 
     onDragOver(evt) {
-        // eslint-disable-line class-methods-use-this
         evt.preventDefault();
         evt.persist();
         return false;
@@ -109,11 +87,6 @@ class UploadTransformComponent extends React.Component {
         if (this.dragTargets.length > 0) {
             return;
         }
-        //
-        // this.setState({
-        //     isDragActive: false,
-        //     draggedFiles: []
-        // });
         this.props.uploadSetOverlayTarget(null);
     }
 
@@ -125,16 +98,10 @@ class UploadTransformComponent extends React.Component {
         evt.persist();
         this.dragTargets = [];
 
-        // Reset drag state
-        // this.setState({
-        //     isDragActive: false,
-        //     draggedFiles: []
-        // });
         this.props.uploadSetOverlayTarget(null);
         if (isDragDataWithFiles(evt)) {
             Promise.resolve(getDataTransferItems(evt)).then(fileList => {
                 const acceptedFiles = [];
-                const rejectedFiles = [];
 
                 if (evt.isPropagationStopped()) {
                     return;
@@ -146,13 +113,10 @@ class UploadTransformComponent extends React.Component {
                         fileMatchSize(file, uploadMaxSize, uploadMinSize)
                     ) {
                         acceptedFiles.push(file);
-                    } else {
-                        rejectedFiles.push(file);
                     }
                 });
                 onFilesSelected(
                     acceptedFiles,
-                    rejectedFiles,
                     this.props.uploadDispatchBatch,
                     {path: uploadPath},
                     [setPanelState(panelStates.VISIBLE)]

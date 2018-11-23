@@ -61,8 +61,8 @@ class UploadDropZone extends React.Component {
         );
     }
 
-    onDrop(acceptedFiles, rejectedFiles) {
-        this.props.onFilesSelected(acceptedFiles, rejectedFiles);
+    onDrop(acceptedFiles) {
+        this.props.onFilesSelected(acceptedFiles);
     }
 }
 

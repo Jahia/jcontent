@@ -28,7 +28,10 @@ module.exports = (env, argv) => {
                     include: [path.join(__dirname, 'src')],
                     loader: 'babel-loader',
                     query: {
-                        presets: [['env', {modules: false, targets: {safari: '7', ie: '10'}}], 'react', 'stage-2'],
+                        presets: [
+                            ['@babel/preset-env', {modules: false, targets: {safari: '7', ie: '10'}}],
+                            '@babel/preset-react'
+                        ],
                         plugins: [
                             'lodash'
                         ]

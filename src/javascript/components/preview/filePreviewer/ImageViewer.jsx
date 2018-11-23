@@ -48,7 +48,6 @@ class ImageViewer extends React.Component {
     render() {
         let {file} = this.state;
         let {fullScreen, classes} = this.props;
-        // Remove Canvas Tag but react-darkroom still in dependency
         return (
             <CardMedia
                 classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}

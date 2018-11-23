@@ -96,12 +96,12 @@ class ContentDataView extends React.Component {
                     let ancestorPath = nodePath;
                     let ancestorParentPath = ancestorPath.substring(0, ancestorPath.lastIndexOf('/'));
                     let newAncestorPath = ancestorParentPath + '/' + nodeName;
-                    setPath(ContentData.getNewNodePath(path, ancestorPath, newAncestorPath));
+                    setPath(ContentDataView.getNewNodePath(path, ancestorPath, newAncestorPath));
 
                     let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, ancestorPath));
                     if (!_.isEmpty(pathsToReopen)) {
                         closePaths(pathsToReopen);
-                        pathsToReopen = _.map(pathsToReopen, pathToReopen => ContentData.getNewNodePath(pathToReopen, ancestorPath, newAncestorPath));
+                        pathsToReopen = _.map(pathsToReopen, pathToReopen => ContentDataView.getNewNodePath(pathToReopen, ancestorPath, newAncestorPath));
                         openPaths(pathsToReopen);
                     }
 

@@ -11,7 +11,7 @@ import ContentTrees from './ContentTrees';
 import {translate, Trans} from 'react-i18next';
 import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
 import {DxContext} from './DxContext';
-import Upload from './fileupload/upload';
+import Upload from './fileupload/Upload';
 import {cmSetPreviewState, CM_PREVIEW_STATES} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
 import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';

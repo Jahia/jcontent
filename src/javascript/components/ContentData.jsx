@@ -13,7 +13,7 @@ import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from './redux/actions';
 import Constants from './constants';
-import {extractPaths, isDescendantOrSelf } from './utils';
+import {extractPaths, isDescendantOrSelf} from './utils';
 import {setModificationHook} from './copyPaste/contentModificationHook';
 import {compose} from 'react-apollo';
 

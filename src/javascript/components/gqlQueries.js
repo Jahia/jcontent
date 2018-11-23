@@ -44,7 +44,7 @@ class FilesQueryHandler {
             displayLanguage: uiLang,
             offset: paginationState.page * paginationState.rowsPerPage,
             limit: paginationState.rowsPerPage,
-            typeFilter: treeState === "open" ? "jnt:file" : ["jnt:file", "jnt:folder"],
+            typeFilter: treeState === 'open' ? 'jnt:file' : ['jnt:file', 'jnt:folder'],
             recursionTypesFilter: 'jnt:folder',
             fieldSorter: orderBy === '' ? null : {
                 sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
@@ -624,7 +624,7 @@ class ActionRequirementsQueryHandler {
 }
 
 function getGroupingConfiguration(treeState) {
-    return treeState !== "open" ? { fieldGrouping: {fieldName:"primaryNodeType.name", groups:['jnt:page', 'jnt:folder', 'jnt:contentFolder'], groupingType: "START"}} : {}
+    return treeState !== 'open' ? {fieldGrouping: {fieldName: 'primaryNodeType.name', groups: ['jnt:page', 'jnt:folder', 'jnt:contentFolder'], groupingType: 'START'}} : {};
 }
 
 export {

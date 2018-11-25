@@ -16,8 +16,8 @@ class ContentListHeader extends React.Component {
         return (
             <TableHead className={classes.head}>
                 <TableRow className={classes.contentRow}>
-                    <TableCell padding="none" className={classes.tableCellHeight} />
-                    <TableCell className={classes.tableCellHeight} padding='none'>
+                    <TableCell padding="none" className={classes.tableCellHeight} classes={{root: classes.paddingCell }} />
+                    <TableCell className={classes.tableCellHeight + ' ' + classes.paddingCheckbox} padding='none' classes={{root: classes.paddingCell }}>
                         <CheckBoxOutlineBlank color="secondary"  />
                     </TableCell>
                     {columnData.map(column => {
@@ -26,8 +26,8 @@ class ContentListHeader extends React.Component {
                             return (
                                 <TableCell
                                     key={column.id}
-                                    classes={column.id !== 'createdBy' ? {root: classes.paddingCell} : {}}
                                     className={classes[column.id] + ' ' + classes.tableCellHeight}
+                                    classes={{root: classes.paddingCell }}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                     >
                                     <TableSortLabel
@@ -45,6 +45,7 @@ class ContentListHeader extends React.Component {
                             <TableCell
                                 key={column.id}
                                 padding='none'
+                                classes={{root: classes.paddingCell }}
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                 >
@@ -52,13 +53,8 @@ class ContentListHeader extends React.Component {
                             </TableCell>
                         );
                     }, this)}
-                    <TableCell component="th" scope="row" className={classes.tableCellHeight}>
-                        hamza
-                    </TableCell>
-                    <TableCell component="th" scope="row" className={classes.tableCellHeight}>
-		                hamza
-                    </TableCell>
-                    <TableCell component="th" scope="row" className={classes.tableCellHeight}>
+                    <TableCell component="th" scope="row" className={classes.tableCellWidthHead} classes={{root: classes.paddingCell }}/>
+                    <TableCell component="th" scope="row" className={classes.tableCellHeight} classes={{root: classes.paddingCell + ' ' + classes.alignAction }}>
 		                Actions
                     </TableCell>
                 </TableRow>

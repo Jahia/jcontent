@@ -1,6 +1,8 @@
 import React from 'react';
 import {Table, TableBody, TableCell, TableRow, Toolbar, Grid, Tooltip, Typography, withStyles, Button, Icon} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
+import {Refresh} from '@material-ui/icons';
+
 import {Lock, Close, CheckBoxOutlineBlank} from '@material-ui/icons';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
@@ -220,6 +222,20 @@ const styles = theme => ({
         zIndex: 1800,
         top: 56,
     },
+    gridDirection: {
+        textAlign: 'right!important'
+    },
+    tableCellWidthHead: {
+        minWidth: '200px',
+	    position: 'sticky',
+	    zIndex: 1800,
+	    top: 56,
+    },
+    tableCellWidth: {
+        position: 'sticky',
+        zIndex: 1800,
+        top: 56,
+    },
     sortLabel:{
 	    color: theme.palette.text.secondary,
     },
@@ -228,8 +244,7 @@ const styles = theme => ({
         fontWeight: 600
     },
     paddingCell: {
-        paddingLeft: 5,
-        paddingRight: 5
+        padding: 0
     },
     nameCellWidth: {
         maxWidth: 250,
@@ -246,7 +261,6 @@ const styles = theme => ({
             maxWidth: 250
         }
     },
-
     tableButton: {
         padding: 0,
         margin: '0 !important'
@@ -262,6 +276,20 @@ const styles = theme => ({
     },
     tableSticky: {
         overflow: 'scroll!important',
+    },
+    paddingCheckbox: {
+        paddingLeft: theme.spacing.unit * 3,
+	    paddingRight: theme.spacing.unit * 3,
+    },
+    paddingAction: {
+        paddingRight: theme.spacing.unit * 2 + '!important',
+    },
+    alignAction: {
+        textAlign: 'center'
+    },
+    guttersToolbar: {
+        paddingLeft: theme.spacing.unit * 3 + '!important',
+        paddingRight: theme.spacing.unit * 3 + '!important',
     }
 });
 
@@ -355,18 +383,16 @@ class ContentListTable extends React.Component {
 		    sql2SearchWhere: sql2SearchWhere
 	    };
 
-        const emptyRows = pageSize - Math.min(pageSize, totalCount - (page * pageSize));
-
         return (
             <div className={classes.contentList}>
-                <Toolbar className={classes.colorToolbar}>
+                <Toolbar className={classes.colorToolbar} classes={{gutters: classes.guttersToolbar}}>
                     <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             <div className={classes.breadCrumbs}>
                                 <ContentBreadcrumbs mode={this.props.mode}/>
                             </div>
                         </Grid>
-                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
+                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
                             {mode === Constants.mode.FILES &&
                             <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
 		                    }
@@ -382,8 +408,7 @@ class ContentListTable extends React.Component {
                             </Button>
 		                    }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                <Icon name="refresh" fill="#d4d9dd" size={20}/>
-                                {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
+                                <Refresh color="primary" />
                             </Button>
                             {this.isSearching() &&
                             <Button data-cm-role="search-clear" variant="text"
@@ -440,45 +465,44 @@ class ContentListTable extends React.Component {
                                             >
                                             <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
 
-                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication">
+                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication" classes={{root: classes.paddingCell}}>
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
-                                            <TableCell padding='none'>
+                                            <TableCell padding='none' className={classes.paddingCheckbox} classes={{root: classes.paddingCell}}>
                                                 <CheckBoxOutlineBlank color="secondary" />
                                             </TableCell>
                                             {columnData.map(column => {
 			                                    if (column.id === 'name') {
 				                                    return (
-				                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth}>
+				                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth} classes={{root: classes.paddingCell}}>
                                                             <Typography noWrap
-                                                                className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
-                                                                classes={nameCellContentClasses}
-                                                                >
-                                                                <img src={icon} className={classes.nodeTypeIcon}/>
-                                                                {n[column.id]}
+					                                                className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
+					                                                classes={nameCellContentClasses}
+                                                                    >
+                                                                    <img src={icon} className={classes.nodeTypeIcon}/>
+                                                                    {n[column.id]}
                                                             </Typography>
 				                                        </TableCell>
                                                     );
 			                                    }
 	                                            if (column.id === 'wip') {
-		                                            return <TableCell key={column.id} className={classes.actionCell} padding="none">{renderWip}
+		                                            return <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderWip}
 		                                            </TableCell>;
 	                                            }
 	                                            if (column.id === 'lock') {
-		                                            return <TableCell key={column.id} className={classes.actionCell} padding="none">{renderLock}
+		                                            return <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderLock}
 		                                            </TableCell>
 	                                            }
 	                                            if (column.id === 'type') {
 		                                            return (
-		                                                <TableCell key={column.id} data-cm-role="table-content-list-cell-name">
+                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" classes={{root: classes.paddingCell}}>
                                                             <Typography noWrap
                                                                         className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
-                                                                        classes={nameCellContentClasses}
-                                                                        >
+                                                                        classes={nameCellContentClasses}>
                                                                 <img src={icon} className={classes.nodeTypeIcon}/>
                                                                 {n[column.id]}
                                                             </Typography>
-		                                                </TableCell>
+                                                        </TableCell>
                                                     );
 	                                            }
 			                                    if (column.id === 'lastModified') {
@@ -508,30 +532,17 @@ class ContentListTable extends React.Component {
 			                                        </TableCell>
                                                 );
 		                                    })}
-
-                                            <TableCell className={classes.tableCellHeight}>
-
-                                            </TableCell>
-                                            <TableCell className={classes.tableCellHeight}>
-
-	                                        </TableCell>
-
-	                                        <TableCell
+                                            <TableCell className={classes.tableCellWidtH} classes={{root: classes.paddingCell}}/>
+                                            <TableCell
 		                                        padding='none'
-                                                className={classes.hoveredRowActionsCell}
+                                                className={classes.hoveredRowActionsCell + ' ' + classes.paddingAction}
                                                 data-cm-role='table-content-list-cell-'
-		                                        classes={{root: classes.paddingCell }}
-                                                >
-                                                <DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
+		                                        classes={{root: classes.paddingCell}}
+                                            ><DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
                                             </TableCell>
                                         </TableRow>
                                     );
                                 })}
-                                {emptyRows > 0 &&
-                                <TableRow>
-                                    <TableCell colSpan={columnData.length + APP_TABLE_CELLS + 3} padding="none"/>
-                                </TableRow>
-                                }
                             </UploadWrapperComponent>
                         )}
                     </DxContext.Consumer>

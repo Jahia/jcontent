@@ -14,13 +14,13 @@ const styles = theme => ({
     menuItemHeader: {
         width: '100%',
         display: 'inline-block',
-        backgroundColor: '#e3e1e1'
+        backgroundColor: theme.palette.background.default,
     },
     menuItem: {
         width: '100%',
         display: 'inline-block',
         '&:hover': {
-            backgroundColor: '#e3e1e1 !important'
+            backgroundColor: theme.palette.background.default,
         }
     },
     menuButton: {
@@ -60,9 +60,9 @@ const styles = theme => ({
         height: '1px'
     },
     chevronSvg: {
-        fontSize: '18px',
+	    marginRight: theme.spacing.unit * 2,
+	    fontSize: '18px',
         color: theme.palette.text.primary,
-        marginRight: '-5px'
     },
     menuItemSize: {
         paddingLeft: '10px !important'

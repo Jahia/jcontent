@@ -9,7 +9,6 @@ import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
 import ContentTrees from './ContentTrees';
 import {translate, Trans} from 'react-i18next';
-import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
 import {DxContext} from './DxContext';
 import Upload from './fileupload/Upload';
 import {cmSetPreviewState, CM_PREVIEW_STATES} from './redux/actions';
@@ -50,7 +49,7 @@ const styles = theme => ({
     blockCoreSearch: {
         marginLeft: -17,
         marginTop: -28,
-        backgroundColor: '#44464a',
+        backgroundColor: theme.palette.layout.dark,
         maxHeight: 31
     },
     breadCrumbs: {
@@ -59,11 +58,11 @@ const styles = theme => ({
         textAlign: 'right'
     },
     showTreeButton: {
-        color: '#eaeaea',
+        color: theme.palette.text.contrastText,
         marginRight: theme.spacing.unit / 2
     },
     refreshButton: {
-        color: '#eaeaea',
+	    color: theme.palette.text.contrastText,
         padding: 0
     },
     showTree: {
@@ -301,19 +300,14 @@ class ContentLayout extends React.Component {
                             i18nKey="label.contentManager.link.academy"
                             components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
                     />
-                    </div>
-                    <Grid container spacing={0}>
-                        <Grid item xs={GRID_SIZE} className={classes.topBar}>
-                            <CMTopBar dxContext={dxContext} mode={mode}/>
-                        </Grid>
-                        <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
-                            <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                                {this.isBrowsing() &&
-                                <div className={classes.breadCrumbs}>
-                                    <ContentBreadcrumbs mode={this.props.mode}/>
-                                </div>
-                            }
-                                {this.isSearching() &&
+                </div>
+                <Grid container spacing={0}>
+                    <Grid item xs={GRID_SIZE} className={classes.topBar}>
+                        <CMTopBar dxContext={dxContext} mode={mode}/>
+                    </Grid>
+                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                            {this.isSearching() &&
                                 <div className={classes.searchControl}>
                                     <CmSearchControlBar/>
                                 </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Picker} from '@jahia/react-apollo';
 import CmPickerViewMaterial from './picker/CmPickerViewMaterial';
-import {List, ListItem, Table, TableBody, Typography, TableCell, Toolbar, TableHead, TableRow, withStyles, IconButton} from '@material-ui/core';
+import {List, ListItem, Table, TableBody, Typography, TableCell, Toolbar, Paper, TableRow, withStyles, IconButton} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import { ChevronLeft} from '@material-ui/icons';
 import { ChevronRight} from '@material-ui/icons';
@@ -54,6 +54,18 @@ const styles = (theme) => ({
     overrideToolbar: {
         paddingLeft: theme.spacing.unit * 3 + ['!important'],
         paddingRight: theme.spacing.unit * 3 + ['!important'],
+    },
+    overrideToolbarClose: {
+        paddingLeft: Number(theme.spacing.unit) + ['!important'],
+        paddingRight: theme.spacing.unit * 3 + ['!important'],
+    },
+    toolbarHeight: {
+        height: theme.spacing.unit * 7,
+	    boxShadow: '2px 1px 1px 0px rgba(20, 20, 21, 0.49)',
+    },
+    hideTree : {
+	    paddingLeft: theme.spacing.unit * 0,
+	    paddingRight: theme.spacing.unit * 0,
     },
     iconColor: {
         color: theme.palette.text.secondary,
@@ -142,29 +154,25 @@ class ContentTrees extends React.Component {
 
         return (
             <div className={classes.trees}>
+                <Paper elevation={1}>
+                    {isOpen ?
+                        <Toolbar classes={{gutters: classes.overrideToolbar}} className={classes.toolbarHeight}>
+                            <Typography variant='subtitle2' className={classes.toolbarGrow}>
+                                {t('label.contentManager.tree.title')}
+                            </Typography>
+                            <IconButton className={classes.iconColor}>
+                                <ChevronLeft onClick={openDrawer}/>
+                            </IconButton>
+                        </Toolbar>
+		            :
+                        <Toolbar classes={{gutters: classes.overrideToolbarClose}} className={classes.toolbarHeight}>
+                            <IconButton className={classes.iconColor}>
+                                <ChevronRight onClick={openDrawer}/>
+                            </IconButton>
+                        </Toolbar>
+	            }
+                </Paper>
                 <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell className={classes.tableCellHeight}>
-                                {isOpen ?
-                                    <Toolbar classes={{gutters: classes.overrideToolbar}}>
-                                        <Typography variant='subtitle2' className={classes.toolbarGrow}>
-                                            {t('label.contentManager.tree.title')}
-                                        </Typography>
-                                        <IconButton className={classes.iconColor}>
-                                            <ChevronLeft onClick={openDrawer}/>
-                                        </IconButton>
-                                    </Toolbar>
-						            :
-                                    <div>
-                                        <IconButton className={classes.iconColor}>
-                                            <ChevronRight onClick={openDrawer}/>
-                                        </IconButton>
-                                    </div>
-					            }
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
                     <TableBody>
                         <TableRow>
                             <TableCell>

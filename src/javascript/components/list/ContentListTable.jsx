@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, TableBody, TableCell, TableRow, Toolbar, Grid, Tooltip, Typography, withStyles, Button, Icon} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableRow, Toolbar, Grid, Tooltip, Typography, withStyles, Button} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
 import {Refresh} from '@material-ui/icons';
 
@@ -401,12 +401,6 @@ class ContentListTable extends React.Component {
                                 <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({},true)}/>
                             </React.Fragment>
 		                    }
-                            {this.isBrowsing() &&
-                            <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                <Icon name="folder" fill="#d4d9dd"/>
-                                {t('label.contentManager.tree.' + (open ? 'hide' : 'show'))}
-                            </Button>
-		                    }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 <Refresh color="primary" />
                             </Button>
@@ -582,8 +576,11 @@ let ContentNotFound = props => {
 };
 
 const mapStateToProps = state => ({
+    mode: state.mode,
     selection: state.selection,
     uiLang : state.uiLang,
+    siteKey: state.site,
+    path: state.path,
     lang : state.language,
     params: state.params,
     searchTerms: state.params.searchTerms,

@@ -2,7 +2,7 @@ import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import * as _ from 'lodash';
 import {Close} from '@material-ui/icons';
-import {withNotifications, DisplayActions, buttonRenderer, ContextualMenu} from '@jahia/react-material';
+import {withNotifications, ContextualMenu} from '@jahia/react-material';
 import {Grid, Button, Paper, withStyles, Drawer} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
@@ -320,29 +320,13 @@ class ContentLayout extends React.Component {
                                 {mode === Constants.mode.FILES &&
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
                             }
-                                {this.isBrowsing() && !this.isRootNode() &&
-                                <React.Fragment>
-                                    <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({}, true)}/>
-                                </React.Fragment>
-                            }
-                                {this.isBrowsing() &&
-                                <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                    <Folder/>
-                                    {t('label.contentManager.tree.' + (open ? 'hide' : 'show'))}
-                                </Button>
-                            }
-                                <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                    <Refresh size={20}/>
-                                    {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
-                                </Button>
-                                {this.isSearching() &&
-                                <Button data-cm-role="search-clear" variant="text"
-                                    className={classes.searchClearButton}
-                                    classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}
-                                                                               >
-                                    <Close className={classes.searchClearIcon}/>
-                                    {t('label.contentManager.search.clear')}
-                                </Button>
+                            {this.isSearching() &&
+                            <Button data-cm-role="search-clear" variant="text"
+                                className={classes.searchClearButton}
+                                classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
+                                <Close className={classes.searchClearIcon}/>
+                                {t('label.contentManager.search.clear')}
+                            </Button>
                             }
                             </Grid>
                         </Grid>

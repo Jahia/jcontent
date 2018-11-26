@@ -13,26 +13,22 @@ import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
 import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from '../redux/actions';
 import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
-import DocumentViewer from './filePreviewer/DocumentViewer';
-import PDFViewer from './filePreviewer/PDFViewer';
-import ImageViewer from './filePreviewer/ImageViewer';
+import loadable from 'react-loadable';
 
-// TODO we should reactivate this code once we figure out how to make it works with ESLint
-// import loadable from 'react-loadable';
-// const DocumentViewer = loadable({
-//     loader: () => import('./filePreviewer/DocumentViewer'),
-//     loading: () => <div/>,
-// });
-//
-// const PDFViewer = loadable({
-//     loader: () => import('./filePreviewer/PDFViewer'),
-//     loading: () => <div/>,
-// });
-//
-// const ImageViewer = loadable({
-//     loader: () => import('./filePreviewer/ImageViewer'),
-//     loading: () => <div/>,
-// });
+const DocumentViewer = loadable({
+    loader: () => import('./filePreviewer/DocumentViewer'),
+    loading: () => <div/>
+});
+
+const PDFViewer = loadable({
+    loader: () => import('./filePreviewer/PDFViewer'),
+    loading: () => <div/>
+});
+
+const ImageViewer = loadable({
+    loader: () => import('./filePreviewer/ImageViewer'),
+    loading: () => <div/>
+});
 
 const styles = theme => ({
     root: {

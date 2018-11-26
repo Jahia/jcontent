@@ -1,16 +1,22 @@
 const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
     let config = {
         entry: {
-            main: ['@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.jsx')]
+            main: ['@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/contentManager-loader')]
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
-            filename: 'content-manager.js',
-            chunkFilename: '[name].content-manager.[hash].js'
+            filename: 'cmm.bundle.js',
+            chunkFilename: '[name].cmm.[chunkhash:6].js'
+        },
+        optimization: {
+            splitChunks: {
+                maxSize: 4000000
+            }
         },
         resolve: {
             mainFields: ['module', 'main'],
@@ -33,7 +39,8 @@ module.exports = (env, argv) => {
                             '@babel/preset-react'
                         ],
                         plugins: [
-                            'lodash'
+                            'lodash',
+                            '@babel/plugin-syntax-dynamic-import'
                         ]
                     }
                 },
@@ -50,12 +57,13 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
-            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/)
+            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/),
+            new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'))
         ],
         mode: 'development'
     };
 
-    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval';
+    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
 
     if (argv.watch) {
         config.module.rules.push({

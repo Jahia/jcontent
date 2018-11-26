@@ -4,3 +4,4 @@ target
 src/main/resources/javascript/apps
 src/main/resources/javascript/locales
 src/main/resources/javascript/polyfills.js
+src/javascript/publicPath.js

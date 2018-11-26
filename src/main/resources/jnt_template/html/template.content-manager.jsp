@@ -1,5 +1,6 @@
 <%--@elvariable id="renderContext" type="org.jahia.services.render.RenderContext"--%>
 <%--@elvariable id="url" type="org.jahia.services.render.URLGenerator"--%>
+<%--@elvariable id="script" type="org.jahia.services.render.scripting.Script"--%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -19,9 +20,9 @@
 
 <body style="overflow: hidden; ">
 <template:addResources type="javascript" resources="polyfills.js"/>
-<template:addResources type="javascript" resources="apps/content-manager.js"/>
-<c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
+<template:addResources type="javascript" resources="apps/cmm.bundle.js"/>
 
+<c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 <div id="${targetId}">loading..</div>
 <script type="text/javascript">
     window.top.DX && window.top.DX.switch("contentmanager", {chrome: false});
@@ -39,15 +40,12 @@
     };
     contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces()};
 
-
+    window.cmmContext = {
+        targetId: '${targetId}',
+        nodeIdentifier: '${currentNode.identifier}'
+    }
 </script>
 
 ${cmFunctions:generateActionLists(renderContext)}
-
-<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function(event) {
-        reactRender('${targetId}', "${currentNode.identifier}", contextJsParameters);
-    });
-</script>
 
 </body>

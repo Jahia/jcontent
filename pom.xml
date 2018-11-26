@@ -163,6 +163,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>org.jahia.modules.graphql.provider.dxm;version="1.0.6",${jahia.plugin.projectPackageImport},*</Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>

@@ -36,7 +36,8 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
-        target: ['editPreviewBar:2.5', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5']
+        target: ['editPreviewBar:2.5', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
+        hideForPaths: ['^\/sites\/.+?\/files\/?$', '^\/sites\/.+?\/contents\/?$']
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
@@ -194,14 +195,14 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.contentPreview.cut',
         target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9', 'tableMenuActions:4'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['\/sites\/.+?\/files\/*', '\/sites\/.+?\/contents\/*']
+        showForPaths: ['\/sites\/.+?\/files\/[^]+', '\/sites\/.+?\/contents\/[^]+']
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
         target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4', 'tableMenuActions:4.5'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['\/sites\/.+?\/files\/*', '\/sites\/.+?\/contents\/*']
+        showForPaths: ['\/sites\/.+?\/files\/[^]+', '\/sites\/.+?\/contents\/[^]+']
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
@@ -326,7 +327,8 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('openInEditMode', openInEditModeAction, {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
-        target: ['contentTreeMenuActions', 'contextualMenuContentAction', 'tableMenuActions']
+        target: ['contentTreeMenuActions', 'contextualMenuContentAction', 'tableMenuActions'],
+        hideForPaths: ['^\/sites\/.+?\/files\/*', '^\/sites\/.+?\/contents\/*', '^\/sites\/systemsite\/*']
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',

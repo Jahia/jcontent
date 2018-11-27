@@ -1,10 +1,9 @@
 import {List, ListItem, withStyles, withTheme} from '@material-ui/core';
 import {ChevronRight, ExpandMore} from '@material-ui/icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React from 'react';
 import {lodash as _} from 'lodash';
 import {translate} from 'react-i18next';
-import {DisplayActions} from '@jahia/react-material';
+import {DisplayActions, toIconComponent} from '@jahia/react-material';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
@@ -69,6 +68,9 @@ const styles = theme => ({
     },
     expand: {
         width: '15px'
+    },
+    fontSizeSmall: {
+        fontSize: '18px'
     }
 });
 
@@ -79,7 +81,10 @@ class CmLeftDrawerListItems extends React.Component {
         return (
             <DisplayActions target={context.menu} context={{...context.originalContext, parent: context}} render={actionProps => {
                 let actionContext = actionProps.context;
+                let icon = actionContext.buttonIcon;
                 actionContext.actionPath = actionPath + '/' + actionContext.key;
+                icon = toIconComponent(icon, {fontSize: 'small', classes: {fontSizeSmall: classes.fontSizeSmall}});
+
                 return (
                     <React.Fragment>
                         <ListItem button
@@ -100,10 +105,7 @@ class CmLeftDrawerListItems extends React.Component {
                                     null
                                 }
                             </div>
-                            {actionContext.externalIconPath ?
-                                <img src={actionContext.externalIconPath}/> :
-                                <FontAwesomeIcon className={classes.iconDrawer} icon={actionContext.icon !== null ? actionContext.icon : ['far', 'file']}/>
-                            }
+                            {icon}
                             <div className={classes.textPadding}>
                                 {t(actionContext.buttonLabel)}
                             </div>

@@ -3,6 +3,7 @@ import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {Button, Typography} from '@material-ui/core';
+import {toIconComponent} from '@jahia/react-material';
 
 const styles = theme => ({
     nested: {
@@ -45,13 +46,27 @@ const styles = theme => ({
         width: '48px!important',
         marginLeft: 10,
         paddingBottom: '10px!important'
+    },
+    colorClosed: {
+        '& [fill="backgroundColor"]': {
+            fill: '#3A3C3F'
+        }
+    },
+    colorOpen: {
+        fill: '#504e4d',
+        '& [fill="backgroundColor"]': {
+            fill: '#f7f7f7'
+        }
     }
 });
 
 class CmLeftMenuItem extends React.Component {
     render() {
-        const {classes, t, icon, drawer, bottom, badge, context} = this.props;
-        const {onClick, buttonLabel} = context;
+        const {classes, t, drawer, bottom, context} = this.props;
+        const {onClick, buttonLabel, buttonIcon, badge} = context;
+
+        let icon = toIconComponent(buttonIcon, drawer ? {classes: {root: classes.colorOpen}} : {classes: {root: classes.colorClosed}});
+
         return (
             <Button className={bottom ? classes.bottomListItem : classes.listItem} onClick={e => onClick(context, e)}>
                 {Boolean(icon) && icon}

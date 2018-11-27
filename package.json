@@ -28,7 +28,7 @@
     "@jahia/i18next": "^1.0.0-beta.20180628145923",
     "@jahia/icons": "^1.0.0-beta.20181010153040",
     "@jahia/react-apollo": "^1.0.0-beta.20181113171845",
-    "@jahia/react-material": "^1.0.0-beta.20181123145531",
+    "@jahia/react-material": "^1.0.0-beta.20181127133658",
     "@material-ui/core": "^3.2.0",
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.16 ",

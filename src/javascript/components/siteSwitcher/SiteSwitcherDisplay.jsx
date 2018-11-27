@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose} from 'react-apollo';
 import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {ChevronDown} from 'mdi-material-ui';
 import {lodash as _} from 'lodash';
 import {translate} from 'react-i18next';
 
@@ -29,11 +29,11 @@ const styles = theme => ({
     },
     iconLight: {
         color: theme.palette.background.paper,
-        fontSize: '10px'
+        fontSize: '18px'
     },
     iconDark: {
         color: '#504e4d',
-        fontSize: '10px'
+        fontSize: '18px'
     },
     input1: {
         backgroundColor: 'transparent',
@@ -76,7 +76,7 @@ class SiteSwitcherDisplay extends React.Component {
                         {siteNode.displayName}
                     </Typography>
                 &nbsp;
-                    <FontAwesomeIcon icon="chevron-down" className={dark ? classes.iconDark : classes.iconLight}/>
+                    <ChevronDown className={dark ? classes.iconDark : classes.iconLight}/>
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map(siteNode => {

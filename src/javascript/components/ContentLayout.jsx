@@ -24,7 +24,7 @@ import {cmGoto} from './redux/actions';
 import {connect} from 'react-redux';
 import Constants from './constants';
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
-import Icon from './icons/Icon';
+import {Folder, Refresh} from 'mdi-material-ui';
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -305,12 +305,12 @@ class ContentLayout extends React.Component {
                             }
                                 {this.isBrowsing() &&
                                 <Button variant="text" className={classes.showTreeButton} onClick={this.handleDrawerOpen}>
-                                    <Icon name="folder" fill="#d4d9dd"/>
+                                    <Folder/>
                                     {t('label.contentManager.tree.' + (open ? 'hide' : 'show'))}
                                 </Button>
                             }
                                 <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                    <Icon name="refresh" fill="#d4d9dd" size={20}/>
+                                    <Refresh size={20}/>
                                     {t(this.isSearching() ? 'label.contentManager.search.refresh' : 'label.contentManager.refresh')}
                                 </Button>
                                 {this.isSearching() &&

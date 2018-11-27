@@ -3,8 +3,15 @@ import PropTypes from 'prop-types';
 import Pdf from 'react-pdf-js';
 import {translate} from 'react-i18next';
 import {IconButton, Paper, withStyles} from '@material-ui/core';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/dist/styled-components.js';
+import {
+    ChevronLeft,
+    ChevronRight,
+    MagnifyMinusOutline,
+    MagnifyPlusOutline,
+    StepBackward,
+    StepForward
+} from 'mdi-material-ui';
 
 const PDFContainer = styled.div`
     height:100%;
@@ -199,7 +206,7 @@ class PDFViewer extends React.Component {
                             this.handleNavigation(event, 'first');
                         }}
                 >
-                <FontAwesomeIcon size="xs" icon="step-backward"/>
+                <StepBackward/>
             </IconButton>
         );
         let lastPageButton = (
@@ -209,7 +216,7 @@ class PDFViewer extends React.Component {
                             this.handleNavigation(event, 'last');
                         }}
                 >
-                <FontAwesomeIcon size="xs" icon="step-forward"/>
+                <StepForward/>
             </IconButton>
         );
         let previousButton = (
@@ -219,7 +226,7 @@ class PDFViewer extends React.Component {
                             this.handleNavigation(event, 'previous');
                         }}
                 >
-                <FontAwesomeIcon size="xs" icon="chevron-left"/>
+                <ChevronLeft/>
             </IconButton>
         );
         let nextButton = (
@@ -229,7 +236,7 @@ class PDFViewer extends React.Component {
                             this.handleNavigation(event, 'next');
                         }}
                 >
-                <FontAwesomeIcon size="xs" icon="chevron-right"/>
+                <ChevronRight/>
             </IconButton>
         );
 
@@ -241,7 +248,7 @@ class PDFViewer extends React.Component {
                     this.handleZoom(event, 'in');
                 }}
                 >
-                <FontAwesomeIcon size="xs" icon="search-plus"/>
+                <MagnifyPlusOutline/>
             </IconButton>
         );
         let zoomOutButton = (
@@ -251,7 +258,7 @@ class PDFViewer extends React.Component {
                             this.handleZoom(event, 'out');
                         }}
                 >
-                <FontAwesomeIcon size="xs" icon="search-minus"/>
+                <MagnifyMinusOutline/>
             </IconButton>
         );
         return (

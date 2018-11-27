@@ -1,7 +1,8 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
+import {WorkflowIcon, ManageIcon, ContentIcon} from '../icons';
 import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen, Autorenew} from '@material-ui/icons';
-import {ContentPaste} from 'mdi-material-ui';
+import {ContentPaste, FolderMultipleImage, Account, AccountGroup, Web, ShieldKey, TagMultiple} from 'mdi-material-ui';
 import Constants from '../constants';
 import createContentOfTypeAction from './createContentOfTypeAction';
 import createContentAction from './createContentAction';
@@ -243,13 +244,13 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('contentLeftMenu', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.content',
         target: ['leftMenuActions:1'],
-        customIcon: {name: 'content', viewBox: '0 0 512 512'},
+        buttonIcon: <ContentIcon/>,
         mode: 'browse'
     });
     actionsRegistry.add('mediaLeftMenu', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.media',
         target: ['leftMenuActions:2'],
-        customIcon: {name: 'media', viewBox: '0 0 512 512'},
+        buttonIcon: <FolderMultipleImage/>,
         mode: 'browse-files'
     });
     /*
@@ -265,7 +266,7 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.leftMenu.manage.title',
         // ButtonIcon: <Error/>,
         target: ['leftMenuActions:5'],
-        customIcon: {name: 'manage'},
+        buttonIcon: <ManageIcon/>,
         menu: 'leftMenuManageActions',
         hasChildren: true
     });
@@ -279,13 +280,13 @@ function initActions(actionsRegistry) {
     // });
     actionsRegistry.add('workflowsLeftMenu', workflowDashboardAction, {
         buttonLabel: 'label.contentManager.leftMenu.workflow',
-        customIcon: {name: 'workflow', viewBox: '0 0 512 512'},
+        buttonIcon: <WorkflowIcon/>,
         target: ['leftMenuBottomActions:6']
     });
     actionsRegistry.add('groups', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.groups.title',
         target: ['leftMenuManageActions:10'],
-        icon: 'users',
+        buttonIcon: <AccountGroup/>,
         mode: 'apps',
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageGroups.html',
         requiredPermission: 'siteAdminGroups'
@@ -293,7 +294,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('languages', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.languages.title',
         target: ['leftMenuManageActions:20'],
-        icon: 'globe',
+        buttonIcon: <Web/>,
         mode: 'apps',
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageLanguages.html',
         requiredPermission: 'siteAdminLanguages'
@@ -301,7 +302,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('roles', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.roles.title',
         target: ['leftMenuManageActions:30'],
-        icon: 'user-shield',
+        buttonIcon: <ShieldKey/>,
         mode: 'apps',
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageSiteRoles.html',
         requiredPermission: 'siteAdminSiteRoles'
@@ -309,7 +310,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('users', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.users.title',
         target: ['leftMenuManageActions:40'],
-        icon: 'user',
+        buttonIcon: <Account/>,
         mode: 'apps',
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageUsers.html',
         requiredPermission: 'siteAdminUsers'
@@ -317,7 +318,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('tags', routerAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.tags.title',
         target: ['leftMenuManageActions:50'],
-        icon: 'tags',
+        buttonIcon: <TagMultiple/>,
         mode: 'apps',
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html',
         requiredPermission: 'tagManager'

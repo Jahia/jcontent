@@ -5,9 +5,7 @@ import SiteSwitcher from '../siteSwitcher/SiteSwitcher';
 import {translate} from 'react-i18next';
 import classNames from 'classnames';
 import BurgerMenuButton from '../BurgerMenuButton';
-import {Description} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import Icon from '../icons/Icon';
 import {DisplayActions} from '@jahia/react-material';
 import CmLeftMenuItem from './CmLeftMenuItem';
 import {compose} from 'react-apollo';
@@ -230,18 +228,6 @@ class CMLeftNavigation extends React.Component {
     render() {
         const {siteKey, t, classes, mode, contextPath} = this.props;
 
-        let getIcon = props => {
-            let icon = <Description className={this.state.openDrawer ? classes.iconDark : classes.iconLight}/>;
-            if (props.customIcon) {
-                icon = <Icon name={props.customIcon.name} viewBox={props.customIcon.viewBox} fill={this.state.openDrawer ? '#504e4d' : '#F5F5F5'}/>;
-            } else if (props.externalIconPathSelected && this.state.openDrawer) {
-                icon = <img src={props.externalIconPathSelected}/>;
-            } else if (props.externalIconPath) {
-                icon = <img src={props.externalIconPath}/>;
-            }
-            return icon;
-        };
-
         let actionContext = {
             path: `/sites/${siteKey}${mode === 'browse-files' ? '/files' : ''}`,
             drawer: {
@@ -260,24 +246,20 @@ class CMLeftNavigation extends React.Component {
                         <ListItem button className={classes.menuBurger}>
                             <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
                         </ListItem>
-                        <DisplayActions target="leftMenuActions" context={actionContext} render={({context}) => (
-                            <CmLeftMenuItem context={context}
-                                drawer={this.state.openDrawer}
-                                icon={getIcon(context)}/>
-)}/>
+                        <DisplayActions target="leftMenuActions"
+                            context={actionContext}
+                            render={({context}) => (
+                                <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
+                                        )}/>
 
                     </List>
 
-                    <DisplayActions target="leftMenuBottomActions" context={actionContext} render={({context}) => (
-                        <CmLeftMenuItem bottom
-                            context={context}
-                            badge={context.badge}
-                            drawer={this.state.openDrawer}
-                            icon={getIcon(context)}/>
-)}
+                    <DisplayActions target="leftMenuBottomActions"
+                        context={actionContext}
+                        render={({context}) => (
+                            <CmLeftMenuItem bottom context={context} drawer={this.state.openDrawer}/>
+                                    )}
                     />
-
-                    {/* /!*handleDrawer={this.state.openDrawer ? this.handleDrawerClose.bind(this) : this.handleDrawerOpen.bind(this)}*!/ */}
                 </div>
                 <Drawer
                     variant="persistent"
@@ -292,7 +274,7 @@ class CMLeftNavigation extends React.Component {
                         </div>
                         <Typography className={classes.typoTitle}>
                             {this.state.drawerContent &&
-                                t(this.state.drawerContent.title)
+                            t(this.state.drawerContent.title)
                             }
                         </Typography>
                         <div className={classes.languageSwitcher}>
@@ -301,7 +283,7 @@ class CMLeftNavigation extends React.Component {
                     </div>
                     <div className={classes.drawerTree}>
                         {this.state.drawerContent &&
-                            this.state.drawerContent.content
+                        this.state.drawerContent.content
                         }
                     </div>
                 </Drawer>

@@ -43,13 +43,13 @@ const styles = theme => ({
     },
     lastModified: {
         fontSize: '13px',
-	    color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary,
         minWidth: '140px',
         maxWidth: '140px'
     },
     createdBy: {
         fontSize: '13px',
-	    color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary,
         minWidth: '100px',
         maxWidth: '100px'
     },
@@ -139,7 +139,7 @@ const styles = theme => ({
         padding: '1px'
     },
     name: {
-	    color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary,
         marginLeft: '-10px',
         fontSize: '14px'
     },
@@ -195,7 +195,7 @@ const styles = theme => ({
     rowPair: {
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
-	        backgroundColor: theme.palette.background.default + '!important',
+            backgroundColor: theme.palette.background.default + '!important',
         }
     },
     selectedRow: {
@@ -227,9 +227,9 @@ const styles = theme => ({
     },
     tableCellWidthHead: {
         minWidth: '200px',
-	    position: 'sticky',
-	    zIndex: 1800,
-	    top: 56,
+        position: 'sticky',
+        zIndex: 1800,
+        top: 56,
     },
     tableCellWidth: {
         position: 'sticky',
@@ -237,10 +237,10 @@ const styles = theme => ({
         top: 56,
     },
     sortLabel:{
-	    color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary,
     },
     noResults: {
-	    color: theme.palette.text.disabled,
+        color: theme.palette.text.disabled,
         fontWeight: 600
     },
     paddingCell: {
@@ -267,7 +267,7 @@ const styles = theme => ({
     },
     colorToolbar: {
         background: theme.palette.background.paper,
-	    zIndex: '1800',
+        zIndex: '1800',
         position: 'sticky',
         top: 0,
     },
@@ -279,7 +279,7 @@ const styles = theme => ({
     },
     paddingCheckbox: {
         paddingLeft: theme.spacing.unit * 3,
-	    paddingRight: theme.spacing.unit * 3,
+        paddingRight: theme.spacing.unit * 3,
     },
     paddingAction: {
         paddingRight: theme.spacing.unit * 2 + '!important',
@@ -300,7 +300,7 @@ class ContentListTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-	        showList: false,
+            showList: false,
         };
     }
 
@@ -373,15 +373,15 @@ class ContentListTable extends React.Component {
 
         const {contentTreeConfigs, rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
             onChangePage, onRowSelected, selection, totalCount, t, classes,
-	        searchContentType, sql2SearchFrom, sql2SearchWhere,searchTerms,
+            searchContentType, sql2SearchFrom, sql2SearchWhere,searchTerms,
             uiLang, handleSort, order, orderBy, setPath, mode, path, clearSearch} = this.props;
 
-	    const params = {
-		    searchContentType: searchContentType,
-		    searchTerms: searchTerms,
-		    sql2SearchFrom: sql2SearchFrom,
-		    sql2SearchWhere: sql2SearchWhere
-	    };
+        const params = {
+            searchContentType: searchContentType,
+            searchTerms: searchTerms,
+            sql2SearchFrom: sql2SearchFrom,
+            sql2SearchWhere: sql2SearchWhere
+        };
 
         return (
             <div className={classes.contentList}>
@@ -395,23 +395,23 @@ class ContentListTable extends React.Component {
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
                             {mode === Constants.mode.FILES &&
                             <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
-		                    }
+                            }
                             {this.isBrowsing() && !this.isRootNode() &&
                             <React.Fragment>
                                 <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({},true)}/>
                             </React.Fragment>
-		                    }
+                            }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 <Refresh color="primary" />
                             </Button>
                             {this.isSearching() &&
                             <Button data-cm-role="search-clear" variant="text"
-		                            className={classes.searchClearButton}
-		                            classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
+							        className={classes.searchClearButton}
+							        classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
                                 <Close className={classes.searchClearIcon}/>
                                 {t('label.contentManager.search.clear')}
                             </Button>
-		                    }
+                            }
                         </Grid>
                     </Grid>
 
@@ -513,25 +513,25 @@ class ContentListTable extends React.Component {
 				                                        </TableCell>
                                                     );
 			                                    }
-			                                    return (
-			                                        <TableCell
+                                                return (
+                                                    <TableCell
                                                         key={column.id}
                                                         padding="none"
                                                         classes={{root: classes.paddingCell}}
                                                         data-cm-role={'table-content-list-cell-' + column.id}
-			                                            >
+                                                        >
                                                         <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
                                                             {n[column.id]}
                                                         </Typography>
-			                                        </TableCell>
+                                                    </TableCell>
                                                 );
-		                                    })}
+                                            })}
                                             <TableCell className={classes.tableCellWidtH} classes={{root: classes.paddingCell}}/>
                                             <TableCell
-		                                        padding='none'
+                                                padding='none'
                                                 className={classes.hoveredRowActionsCell + ' ' + classes.paddingAction}
                                                 data-cm-role='table-content-list-cell-'
-		                                        classes={{root: classes.paddingCell}}
+                                                classes={{root: classes.paddingCell}}
                                             ><DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
                                             </TableCell>
                                         </TableRow>

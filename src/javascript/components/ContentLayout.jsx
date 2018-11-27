@@ -23,7 +23,10 @@ import {cmGoto} from './redux/actions';
 import {connect} from 'react-redux';
 import Constants from './constants';
 import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
+<<<<<<< HEAD
 import {Folder, Refresh} from 'mdi-material-ui';
+=======
+>>>>>>> [BACKLOG-8987] - Change showTreeButton
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;

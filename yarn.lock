@@ -829,10 +829,10 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20181127133658":
-  version "1.0.0-beta.20181127133658"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181127133658.tgz#a3baba10c4b9ca9441072126a63c9b50dd4ce193"
-  integrity sha1-o7q6EMS5ypRBByEmpjybUN1M4ZM=
+"@jahia/react-material@^1.0.0-beta.20181127161612":
+  version "1.0.0-beta.20181127161612"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181127161612.tgz#827e63f2220730318c5c9fe5534abd4e5bdce5a1"
+  integrity sha1-gn5j8iIHMDGMXJ/lU0q9Tlvc5aE=
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20181011112119"
     "@material-ui/core" "^3.2.0"

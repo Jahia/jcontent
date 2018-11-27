@@ -103,7 +103,7 @@ class CmToolbar extends React.Component {
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
                             {mode === Constants.mode.FILES &&
-                            <FilesGridSizeSelector initValue={4} onChange={value => this.setState({filesGridSizeValue: value})}/>
+                            <FilesGridSizeSelector initValue={4}/>
                             }
                             {mode === Constants.mode.FILES &&
                             <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>

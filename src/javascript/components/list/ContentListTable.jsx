@@ -375,8 +375,6 @@ class ContentListTable extends React.Component {
                                                 contextualMenu.current.open(event);
                                             }}
                                             onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
-                                            onMouseEnter={event => this.onHoverEnter(event)}
-                                            onMouseLeave={event => this.onHoverExit(event)}
                                             >
                                             <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
 

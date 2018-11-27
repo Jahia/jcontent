@@ -107,7 +107,7 @@ const styles = theme => ({
         '&[data-sel-role="tableMenuActions"]': {
             right: '10px'
         },
-        color: theme.palette.background.default,
+        color: theme.palette.text.secondary,
         padding: 0,
         '&:hover': {
             backgroundColor: 'transparent'
@@ -134,15 +134,15 @@ const styles = theme => ({
         padding: '5 !important'
     },
     textTypo: {
-        color: theme.palette.background.default
+        color: theme.palette.text.secondary
     },
     typoBody: {
         fontSize: '14px',
-        color: theme.palette.background.default,
+        color: theme.palette.text.secondary,
         marginBottom: theme.spacing.unit * 2
     },
     typoCaption: {
-        color: theme.palette.background.default,
+        color: theme.palette.text.secondary,
         fontSize: '12px'
     },
     typoCaptionLarge: {

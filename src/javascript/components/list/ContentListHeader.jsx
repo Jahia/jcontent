@@ -21,7 +21,6 @@ class ContentListHeader extends React.Component {
                         <CheckBoxOutlineBlank color="secondary"/>
                     </TableCell>
                     {columnData.map(column => {
-                        console.log(column);
                         if (column.sortable) {
                             return (
                                 <TableCell

@@ -386,6 +386,7 @@ class ContentLayout extends React.Component {
                                             <FilesGrid
                                                 size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                                 totalCount={totalCount}
+                                                path={path}
                                                 rows={rows}
                                                 contentNotFound={contentNotFound}
                                                 pageSize={this.state.rowsPerPage}

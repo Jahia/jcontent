@@ -68,7 +68,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 variables: {
                     pathOrId: nodeToPaste.path,
                     destParentPathOrId: context.path,
-                    destName: nodeToPaste.displayName
+                    destName: nodeToPaste.name
                 },
                 mutation: pasteMutations.moveNode,
                 refetchQueries: [{
@@ -96,7 +96,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 variables: {
                     pathOrId: nodeToPaste.path,
                     destParentPathOrId: context.path,
-                    destName: nodeToPaste.displayName
+                    destName: nodeToPaste.name
                 },
                 mutation: pasteMutations.pasteNode,
                 refetchQueries: [{

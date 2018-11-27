@@ -12,7 +12,7 @@ export default composeActions(requirementsAction, reduxAction(() => ({}), dispat
     },
 
     onClick: context => {
-        const {copy, path, node: {uuid, nodeName, displayName, primaryNodeType}} = context;
-        copy([new Node(path, uuid, nodeName, displayName, primaryNodeType, Node.PASTE_MODES.MOVE)]);
+        const {copy, path, node: {uuid, name, displayName, primaryNodeType}} = context;
+        copy([new Node(path, uuid, name, displayName, primaryNodeType, Node.PASTE_MODES.MOVE)]);
     }
 });

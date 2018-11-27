@@ -7,7 +7,7 @@ import requirementsAction from './requirementsAction';
 export default composeActions(requirementsAction, reduxAction(() => ({}), dispatch => ({copy: n => dispatch(copy(n))})), {
     init: context => context.initRequirements(),
     onClick: context => {
-        const {copy, path, node: {uuid, nodeName, displayName, primaryNodeType}} = context;
-        copy([new Node(path, uuid, nodeName, displayName, primaryNodeType, Node.PASTE_MODES.COPY)]);
+        const {copy, path, node: {uuid, name, displayName, primaryNodeType}} = context;
+        copy([new Node(path, uuid, name, displayName, primaryNodeType, Node.PASTE_MODES.COPY)]);
     }
 });

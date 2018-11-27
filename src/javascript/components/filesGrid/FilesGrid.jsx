@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import CmToolbar from '../CmToolbar';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import FileCard from './FileCard';
@@ -69,51 +70,59 @@ class FilesGrid extends Component {
 
         if (contentNotFound) {
             return (
-                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                    <h3 className={classes.empty}>
-                        { t('label.contentManager.contentNotFound') }
-                    </h3>
-                </Grid>
+                <div>
+                    <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
+                        <h3 className={classes.empty}>
+                            { t('label.contentManager.contentNotFound') }
+                        </h3>
+                    </Grid>
+                </div>
             );
         }
 
         if (!this.props.rows || this.props.rows.length === 0) {
             return (
-                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                    <h3 className={classes.empty}>
-                        { t('label.contentManager.filesGrid.emptyMessage') }
-                    </h3>
-                </Grid>
+                <div>
+                    <CmToolbar/>
+                    <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
+                        <h3 className={classes.empty}>
+                            { t('label.contentManager.filesGrid.emptyMessage') }
+                        </h3>
+                    </Grid>
+                </div>
             );
         }
         return (
-            <div className={classes.grid} data-cm-role="grid-content-list">
-                <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
-                    {
-                    this.props.rows.map(node => (
-                        <Grid key={node.uuid}
-                            item
-                            xs={size}
-                            className={classes.centerGrid}
-                            onMouseEnter={$event => this.onHoverEnter($event, node.path)}
-                            onMouseLeave={$event => this.onHoverExit($event)}
-                            >
-                            <DxContext.Consumer>
-                                {
-                                    dxContext => (
-                                        <FileCard cardType={size}
-                                            isHovered={node.path === hoveredCard}
-                                            node={{...node, displayName: node.name}}
-                                            dxContext={dxContext}
-                                            handleShowPreview={handleShowPreview}/>
-)
-                                }
-                            </DxContext.Consumer>
-                        </Grid>
-                    ))
-                }
-                    <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
-                </UploadTransformComponent>
+            <div>
+                <CmToolbar/>
+                <div className={classes.grid} data-cm-role="grid-content-list">
+                    <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
+                        {
+                        this.props.rows.map(node => (
+                            <Grid key={node.uuid}
+                                item
+                                xs={size}
+                                className={classes.centerGrid}
+                                onMouseEnter={$event => this.onHoverEnter($event, node.path)}
+                                onMouseLeave={$event => this.onHoverExit($event)}
+                                >
+                                <DxContext.Consumer>
+                                    {
+                                        dxContext => (
+                                            <FileCard cardType={size}
+                                                isHovered={node.path === hoveredCard}
+                                                node={{...node, displayName: node.name}}
+                                                dxContext={dxContext}
+                                                handleShowPreview={handleShowPreview}/>
+    )
+                                    }
+                                </DxContext.Consumer>
+                            </Grid>
+                        ))
+                    }
+                        <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
+                    </UploadTransformComponent>
+                </div>
             </div>
         );
     }

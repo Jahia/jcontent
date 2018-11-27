@@ -8,7 +8,7 @@ import {translate} from 'react-i18next';
 const styles = theme => ({
     root: {
         zIndex: 0,
-	    display: 'flex',
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
         width: 6
@@ -16,8 +16,8 @@ const styles = theme => ({
     statusRoot: {
         zIndex: 1,
         display: 'flex',
-	    minHeight: theme.spacing.unit * 6,
-	    height: theme.spacing.unit * 6,
+        minHeight: theme.spacing.unit * 6,
+        height: theme.spacing.unit * 6,
         flexDirection: 'row',
         alignItems: 'stretch',
         position: 'absolute',

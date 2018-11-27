@@ -1,6 +1,6 @@
 import React from 'react';
 import {TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
-import { CheckBoxOutlineBlank } from '@material-ui/icons';
+import {CheckBoxOutlineBlank} from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
@@ -16,18 +16,18 @@ class ContentListHeader extends React.Component {
         return (
             <TableHead className={classes.head}>
                 <TableRow className={classes.contentRow}>
-                    <TableCell padding="none" className={classes.tableCellHeight} classes={{root: classes.paddingCell }} />
-                    <TableCell className={classes.tableCellHeight + ' ' + classes.paddingCheckbox} padding='none' classes={{root: classes.paddingCell }}>
-                        <CheckBoxOutlineBlank color="secondary"  />
+                    <TableCell padding="none" className={classes.tableCellHeight} classes={{root: classes.paddingCell}}/>
+                    <TableCell className={classes.tableCellHeight + ' ' + classes.paddingCheckbox} padding="none" classes={{root: classes.paddingCell}}>
+                        <CheckBoxOutlineBlank color="secondary"/>
                     </TableCell>
                     {columnData.map(column => {
-                        console.log(column)
+                        console.log(column);
                         if (column.sortable) {
                             return (
                                 <TableCell
                                     key={column.id}
                                     className={classes[column.id] + ' ' + classes.tableCellHeight}
-                                    classes={{root: classes.paddingCell }}
+                                    classes={{root: classes.paddingCell}}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                     >
                                     <TableSortLabel
@@ -44,8 +44,8 @@ class ContentListHeader extends React.Component {
                         return (
                             <TableCell
                                 key={column.id}
-                                padding='none'
-                                classes={{root: classes.paddingCell }}
+                                padding="none"
+                                classes={{root: classes.paddingCell}}
                                 className={classes[column.id] + ' ' + classes.tableCellHeight}
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                 >
@@ -53,9 +53,9 @@ class ContentListHeader extends React.Component {
                             </TableCell>
                         );
                     }, this)}
-                    <TableCell component="th" scope="row" className={classes.tableCellWidthHead} classes={{root: classes.paddingCell }}/>
-                    <TableCell component="th" scope="row" className={classes.tableCellHeight} classes={{root: classes.paddingCell + ' ' + classes.alignAction }}>
-		                Actions
+                    <TableCell component="th" scope="row" className={classes.tableCellWidthHead} classes={{root: classes.paddingCell}}/>
+                    <TableCell component="th" scope="row" className={classes.tableCellHeight} classes={{root: classes.paddingCell + ' ' + classes.alignAction}}>
+                        Actions
                     </TableCell>
                 </TableRow>
             </TableHead>

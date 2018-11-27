@@ -3,8 +3,8 @@ import {Picker} from '@jahia/react-apollo';
 import CmPickerViewMaterial from './picker/CmPickerViewMaterial';
 import {List, ListItem, Table, TableBody, Typography, TableCell, Toolbar, Paper, TableRow, withStyles, IconButton} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import { ChevronLeft} from '@material-ui/icons';
-import { ChevronRight} from '@material-ui/icons';
+import {ChevronLeft} from '@material-ui/icons';
+import {ChevronRight} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from './redux/actions';
@@ -13,7 +13,7 @@ import {PickerItemsFragment} from './gqlQueries';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import {compose} from 'react-apollo';
 
-const styles = (theme) => ({
+const styles = theme => ({
     trees: {
         background: theme.palette.background.paper,
         overflowY: 'scroll',
@@ -34,8 +34,8 @@ const styles = (theme) => ({
         color: theme.palette.text.secondary,
         transitionDuration: '.3s',
         '&:hover': {
-            color: theme.palette.text.primary,
-        },
+            color: theme.palette.text.primary
+        }
     },
     disablePad: {
         padding: '0!important'
@@ -49,26 +49,26 @@ const styles = (theme) => ({
     },
     toolbarGrow: {
         color: theme.palette.text.secondary,
-        flexGrow: 1,
+        flexGrow: 1
     },
     overrideToolbar: {
-        paddingLeft: theme.spacing.unit * 3 + ['!important'],
-        paddingRight: theme.spacing.unit * 3 + ['!important'],
+        paddingLeft: (theme.spacing.unit * 3) + ['!important'],
+        paddingRight: (theme.spacing.unit * 3) + ['!important']
     },
     overrideToolbarClose: {
         paddingLeft: Number(theme.spacing.unit) + ['!important'],
-        paddingRight: theme.spacing.unit * 3 + ['!important'],
+        paddingRight: (theme.spacing.unit * 3) + ['!important']
     },
     toolbarHeight: {
         height: theme.spacing.unit * 7,
-	    boxShadow: '2px 1px 1px 0px rgba(20, 20, 21, 0.49)',
+        boxShadow: '2px 1px 1px 0px rgba(20, 20, 21, 0.49)'
     },
-    hideTree : {
-	    paddingLeft: theme.spacing.unit * 0,
-	    paddingRight: theme.spacing.unit * 0,
+    hideTree: {
+        paddingLeft: theme.spacing.unit * 0,
+        paddingRight: theme.spacing.unit * 0
     },
     iconColor: {
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary
     }
 });
 
@@ -157,20 +157,19 @@ class ContentTrees extends React.Component {
                 <Paper elevation={1}>
                     {isOpen ?
                         <Toolbar classes={{gutters: classes.overrideToolbar}} className={classes.toolbarHeight}>
-                            <Typography variant='subtitle2' className={classes.toolbarGrow}>
+                            <Typography variant="subtitle2" className={classes.toolbarGrow}>
                                 {t('label.contentManager.tree.title')}
                             </Typography>
                             <IconButton className={classes.iconColor}>
                                 <ChevronLeft onClick={openDrawer}/>
                             </IconButton>
-                        </Toolbar>
-		            :
+                        </Toolbar> :
                         <Toolbar classes={{gutters: classes.overrideToolbarClose}} className={classes.toolbarHeight}>
                             <IconButton className={classes.iconColor}>
                                 <ChevronRight onClick={openDrawer}/>
                             </IconButton>
                         </Toolbar>
-	            }
+                    }
                 </Paper>
                 <Table>
                     <TableBody>
@@ -180,38 +179,39 @@ class ContentTrees extends React.Component {
 
                                     <List disablePadding>
                                         {
-				                            _.map(contentTreeConfigs, (contentTreeConfig) => {
-
-					                            let componentRef = React.createRef();
-					                            this.componentsRefs.push(componentRef);
-					                            return <ListItem key={contentTreeConfig.key}
-					                                             disableGutters
-					                                             className={classes.disablePad}
-					                                             data-cm-role={contentTreeConfig.key}>
-                                                    <ContentTree ref={componentRef}
-						                                         mode={mode}
-						                                         siteKey={siteKey}
-						                                         path={usedPath}
-						                                         rootPath={rootPath + contentTreeConfig.rootPath}
-						                                         openPaths={openPaths}
-						                                         selectableTypes={contentTreeConfig.selectableTypes}
-						                                         lang={lang}
-						                                         user={user}
-						                                         handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-						                                         handleSelect={path => setPath(path)}
-						                                         openableTypes={contentTreeConfig.openableTypes}
-						                                         rootLabel={t(contentTreeConfig.rootLabel)}
-						                                         setRefetch={setRefetch(contentTreeConfig.key)}
-						                                         buttonClass={classes.buttonMenu}
-						                                         onContextualMenu={onContextualMenu}
-						                            />
-					                            </ListItem>;
-				                            })
-			                            }
-                                    </List>
-		                            :
-                                    <List />
-	                            }
+                                            _.map(contentTreeConfigs, contentTreeConfig => {
+                                                let componentRef = React.createRef();
+                                                this.componentsRefs.push(componentRef);
+                                                return (
+                                                    <ListItem key={contentTreeConfig.key}
+                                                        disableGutters
+                                                        className={classes.disablePad}
+                                                        data-cm-role={contentTreeConfig.key}
+                                                        >
+                                                        <ContentTree ref={componentRef}
+                                                            mode={mode}
+                                                            siteKey={siteKey}
+                                                            path={usedPath}
+                                                            rootPath={rootPath + contentTreeConfig.rootPath}
+                                                            openPaths={openPaths}
+                                                            selectableTypes={contentTreeConfig.selectableTypes}
+                                                            lang={lang}
+                                                            user={user}
+                                                            handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                            handleSelect={path => setPath(path)}
+                                                            openableTypes={contentTreeConfig.openableTypes}
+                                                            rootLabel={t(contentTreeConfig.rootLabel)}
+                                                            setRefetch={setRefetch(contentTreeConfig.key)}
+                                                            buttonClass={classes.buttonMenu}
+                                                            onContextualMenu={onContextualMenu}
+        />
+                                                    </ListItem>
+);
+                                            })
+                                        }
+                                    </List> :
+                                    <List/>
+                                }
                             </TableCell>
                         </TableRow>
                     </TableBody>

@@ -1,14 +1,11 @@
 import React from 'react';
-import {Table, TableBody, TableCell, TableRow, Toolbar, Grid, Tooltip, Typography, withStyles, Button} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
-import {Refresh} from '@material-ui/icons';
 
-import {Lock, Close, CheckBoxOutlineBlank} from '@material-ui/icons';
+import {Lock, CheckBoxOutlineBlank} from '@material-ui/icons';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
-import FilesGridModeSelector from '../filesGrid/FilesGridModeSelector';
-import ContentBreadcrumbs from '../breadcrumb/ContentBreadcrumbs';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
 import {DxContext} from '../DxContext';
@@ -16,12 +13,10 @@ import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {cmSetSelection, cmGoto} from '../redux/actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
+import CmToolbar from '../CmToolbar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
-import Constants from '../constants';
-import {buttonRenderer} from '@jahia/react-material/index';
-import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from '../refetches';
 
 const columnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
@@ -39,7 +34,7 @@ const styles = theme => ({
         fontSize: '13px',
         minWidth: '100px',
         maxWidth: '100px',
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary
     },
     lastModified: {
         fontSize: '13px',
@@ -59,8 +54,8 @@ const styles = theme => ({
             width: 20,
             zIndex: -1,
             marginLeft: '6px',
-            height: theme.spacing.unit * 6 + '!important',
-            maxHeight:  theme.spacing.unit * 6 + '!important'
+            height: (theme.spacing.unit * 6) + '!important',
+            maxHeight: (theme.spacing.unit * 6) + '!important'
         },
         '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
             display: 'block'
@@ -152,7 +147,7 @@ const styles = theme => ({
         display: 'flex',
         padding: 0,
         height: theme.spacing.unit * 6,
-        minHeight: theme.spacing.unit * 6,
+        minHeight: theme.spacing.unit * 6
     },
     actionCell: {
         minWidth: '22px'
@@ -177,6 +172,7 @@ const styles = theme => ({
     },
     hoveredRowActionsCell: {
         color: theme.palette.text.disabled,
+        textAlign: 'center'
     },
     contentList: {
         background: theme.palette.background.default,
@@ -185,24 +181,24 @@ const styles = theme => ({
         height: 'calc(100vh - 140px)',
         maxHeight: 'calc(100vh - 140px)'
     },
-    row : {
+    row: {
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: theme.palette.background.default + '!important',
+            backgroundColor: theme.palette.background.default + '!important'
         }
 
     },
     rowPair: {
         backgroundColor: theme.palette.background.paper,
         '&:hover': {
-            backgroundColor: theme.palette.background.default + '!important',
+            backgroundColor: theme.palette.background.default + '!important'
         }
     },
     selectedRow: {
         backgroundColor: theme.palette.primary.main + '!important'
     },
     selectedRowMarkedForDeletion: {
-        backgroundColor: theme.palette.error.dark +'!important',
+        backgroundColor: theme.palette.error.dark + '!important'
     },
     selectedCell: {
         color: theme.palette.primary.contrastText + ' !important'
@@ -210,7 +206,7 @@ const styles = theme => ({
     cell: {
         color: theme.palette.text.secondary + '!important'
     },
-    textOverflow1 :{
+    textOverflow1: {
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         width: '100px',
@@ -220,7 +216,7 @@ const styles = theme => ({
     tableCellHeight: {
         position: 'sticky',
         zIndex: 1800,
-        top: 56,
+        top: 56
     },
     gridDirection: {
         textAlign: 'right!important'
@@ -229,15 +225,15 @@ const styles = theme => ({
         minWidth: '200px',
         position: 'sticky',
         zIndex: 1800,
-        top: 56,
+        top: 56
     },
     tableCellWidth: {
         position: 'sticky',
         zIndex: 1800,
-        top: 56,
+        top: 56
     },
-    sortLabel:{
-        color: theme.palette.text.secondary,
+    sortLabel: {
+        color: theme.palette.text.secondary
     },
     noResults: {
         color: theme.palette.text.disabled,
@@ -269,41 +265,32 @@ const styles = theme => ({
         background: theme.palette.background.paper,
         zIndex: '1800',
         position: 'sticky',
-        top: 0,
+        top: 0
     },
     tableOverride: {
-        borderCollapse: 'unset',
+        borderCollapse: 'unset'
     },
     tableSticky: {
         overflow: 'scroll!important',
+        borderCollapse: 'inherit'
     },
     paddingCheckbox: {
         paddingLeft: theme.spacing.unit * 3,
-        paddingRight: theme.spacing.unit * 3,
+        paddingRight: theme.spacing.unit * 3
     },
     paddingAction: {
-        paddingRight: theme.spacing.unit * 2 + '!important',
+        paddingRight: (theme.spacing.unit * 2) + '!important'
     },
     alignAction: {
         textAlign: 'center'
     },
     guttersToolbar: {
-        paddingLeft: theme.spacing.unit * 3 + '!important',
-        paddingRight: theme.spacing.unit * 3 + '!important',
+        paddingLeft: (theme.spacing.unit * 3) + '!important',
+        paddingRight: (theme.spacing.unit * 3) + '!important'
     }
 });
 
-
-const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 5;
 class ContentListTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showList: false,
-        };
-    }
-
     isWip(node, lang) {
         switch (node.wipStatus) {
             case 'ALL_CONTENT':
@@ -342,81 +329,15 @@ class ContentListTable extends React.Component {
         return null;
     }
 
-    setContentRefetcher(refetchingData) {
-        setContentListDataRefetcher(refetchingData);
-    };
-
-    setTreeRefetcher(type) {
-        return (refetchingData) => setRefetcher(type, refetchingData);
-    };
-
-    refreshContentsAndTree(contentTreeConfigs) {
-        refetchContentTreeAndListData(contentTreeConfigs);
-    }
-
-    isBrowsing() {
-        let {mode} = this.props;
-        return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES);
-    };
-
-    isSearching() {
-        let {mode} = this.props;
-        return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH);
-    };
-
-    isRootNode() {
-        let {path, siteKey} = this.props;
-        return (path === ('/sites/' + siteKey));
-    }
-    ;
     render() {
-
-        const {contentTreeConfigs, rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
+        const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
             onChangePage, onRowSelected, selection, totalCount, t, classes,
-            searchContentType, sql2SearchFrom, sql2SearchWhere,searchTerms,
-            uiLang, handleSort, order, orderBy, setPath, mode, path, clearSearch} = this.props;
-
-        const params = {
-            searchContentType: searchContentType,
-            searchTerms: searchTerms,
-            sql2SearchFrom: sql2SearchFrom,
-            sql2SearchWhere: sql2SearchWhere
-        };
+            uiLang, handleSort, order, orderBy, setPath, path} = this.props;
 
         return (
             <div className={classes.contentList}>
-                <Toolbar className={classes.colorToolbar} classes={{gutters: classes.guttersToolbar}}>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
-                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                            <div className={classes.breadCrumbs}>
-                                <ContentBreadcrumbs mode={this.props.mode}/>
-                            </div>
-                        </Grid>
-                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
-                            {mode === Constants.mode.FILES &&
-                            <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
-                            }
-                            {this.isBrowsing() && !this.isRootNode() &&
-                            <React.Fragment>
-                                <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({},true)}/>
-                            </React.Fragment>
-                            }
-                            <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                                <Refresh color="primary" />
-                            </Button>
-                            {this.isSearching() &&
-                            <Button data-cm-role="search-clear" variant="text"
-							        className={classes.searchClearButton}
-							        classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
-                                <Close className={classes.searchClearIcon}/>
-                                {t('label.contentManager.search.clear')}
-                            </Button>
-                            }
-                        </Grid>
-                    </Grid>
-
-                </Toolbar>
-                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" classes={{root: classes.tableSticky }}>
+                <CmToolbar/>
+                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" classes={{root: classes.tableSticky}}>
                     <ContentListHeader
                         order={order}
                         orderBy={orderBy}
@@ -462,57 +383,62 @@ class ContentListTable extends React.Component {
                                             <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication" classes={{root: classes.paddingCell}}>
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
-                                            <TableCell padding='none' className={classes.paddingCheckbox} classes={{root: classes.paddingCell}}>
-                                                <CheckBoxOutlineBlank color="secondary" />
+                                            <TableCell padding="none" className={classes.paddingCheckbox} classes={{root: classes.paddingCell}}>
+                                                <CheckBoxOutlineBlank color="secondary"/>
                                             </TableCell>
                                             {columnData.map(column => {
-			                                    if (column.id === 'name') {
-				                                    return (
-				                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth} classes={{root: classes.paddingCell}}>
+                                                if (column.id === 'name') {
+                                                    return (
+                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth} classes={{root: classes.paddingCell}}>
                                                             <Typography noWrap
-					                                                className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
-					                                                classes={nameCellContentClasses}
-                                                                    >
-                                                                    <img src={icon} className={classes.nodeTypeIcon}/>
-                                                                    {n[column.id]}
-                                                            </Typography>
-				                                        </TableCell>
-                                                    );
-			                                    }
-	                                            if (column.id === 'wip') {
-		                                            return <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderWip}
-		                                            </TableCell>;
-	                                            }
-	                                            if (column.id === 'lock') {
-		                                            return <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderLock}
-		                                            </TableCell>
-	                                            }
-	                                            if (column.id === 'type') {
-		                                            return (
-                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" classes={{root: classes.paddingCell}}>
-                                                            <Typography noWrap
-                                                                        className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
-                                                                        classes={nameCellContentClasses}>
+                                                                className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
+                                                                classes={nameCellContentClasses}
+                                                                >
                                                                 <img src={icon} className={classes.nodeTypeIcon}/>
                                                                 {n[column.id]}
                                                             </Typography>
                                                         </TableCell>
                                                     );
-	                                            }
-			                                    if (column.id === 'lastModified') {
-				                                    return (
-				                                        <TableCell
-					                                        key={column.id}
-					                                        padding="none"
-					                                        classes={{root: classes.paddingCell}}
-					                                        data-cm-role={'table-content-list-cell-' + column.id}
-				                                            >
+                                                }
+                                                if (column.id === 'wip') {
+                                                    return (
+                                                        <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderWip}
+                                                        </TableCell>
+);
+                                                }
+                                                if (column.id === 'lock') {
+                                                    return (
+                                                        <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderLock}
+                                                        </TableCell>
+);
+                                                }
+                                                if (column.id === 'type') {
+                                                    return (
+                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" classes={{root: classes.paddingCell}}>
+                                                            <Typography noWrap
+                                                                className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
+                                                                classes={nameCellContentClasses}
+                                                                >
+                                                                <img src={icon} className={classes.nodeTypeIcon}/>
+                                                                {n[column.id]}
+                                                            </Typography>
+                                                        </TableCell>
+                                                    );
+                                                }
+                                                if (column.id === 'lastModified') {
+                                                    return (
+                                                        <TableCell
+                                                            key={column.id}
+                                                            padding="none"
+                                                            classes={{root: classes.paddingCell}}
+                                                            data-cm-role={'table-content-list-cell-' + column.id}
+                                                            >
                                                             <Typography className={classes[column.id]} classes={cellContentClasses}>
                                                                 <Moment format="ll" locale={uiLang}>{n[column.id]}</Moment>
                                                             </Typography>
-				                                        </TableCell>
+                                                        </TableCell>
                                                     );
-			                                    }
+                                                }
                                                 return (
                                                     <TableCell
                                                         key={column.id}
@@ -528,11 +454,11 @@ class ContentListTable extends React.Component {
                                             })}
                                             <TableCell className={classes.tableCellWidtH} classes={{root: classes.paddingCell}}/>
                                             <TableCell
-                                                padding='none'
+                                                padding="none"
                                                 className={classes.hoveredRowActionsCell + ' ' + classes.paddingAction}
-                                                data-cm-role='table-content-list-cell-'
+                                                data-cm-role="table-content-list-cell-"
                                                 classes={{root: classes.paddingCell}}
-                                            ><DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple:true, className:classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')},true)}/>
+                                                ><DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple: true, className: classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}, true)}/>
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -543,11 +469,11 @@ class ContentListTable extends React.Component {
                 </Table>
                 {totalCount > 0 &&
                 <Pagination
-				    totalCount={totalCount}
-				    pageSize={pageSize}
-				    currentPage={page}
-				    onChangeRowsPerPage={onChangeRowsPerPage}
-				    onChangePage={onChangePage}
+                    totalCount={totalCount}
+                    pageSize={pageSize}
+                    currentPage={page}
+                    onChangeRowsPerPage={onChangeRowsPerPage}
+                    onChangePage={onChangePage}
                 />
                 }
             </div>
@@ -558,7 +484,7 @@ class ContentListTable extends React.Component {
 let EmptyRow = props => {
     return (
         <TableRow>
-            <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
+            <TableCell colSpan={columnData.length + APP_TABLE_CELLS + 2} className={props.classes.noResults}>
                 {props.translate('label.contentManager.noResults')}
             </TableCell>
         </TableRow>
@@ -578,10 +504,10 @@ let ContentNotFound = props => {
 const mapStateToProps = state => ({
     mode: state.mode,
     selection: state.selection,
-    uiLang : state.uiLang,
+    uiLang: state.uiLang,
     siteKey: state.site,
     path: state.path,
-    lang : state.language,
+    lang: state.language,
     params: state.params,
     searchTerms: state.params.searchTerms,
     searchContentType: state.params.searchContentType,
@@ -592,13 +518,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onRowSelected: selection => dispatch(cmSetSelection(selection)),
     setPath: (path, params) => dispatch(cmGoto({path, params})),
-    clearSearch: (params) => {
+    clearSearch: params => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');
         _.unset(params, 'searchTerms');
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: 'browse', params: params}))
+        dispatch(cmGoto({mode: 'browse', params: params}));
     }
 });
 

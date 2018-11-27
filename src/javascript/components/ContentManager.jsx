@@ -1,7 +1,7 @@
 import React from 'react';
 import {MuiThemeProvider} from '@material-ui/core';
 import {ComponentRendererProvider, NotificationProvider, actionsRegistry} from '@jahia/react-material';
-import { dsDarkTheme as theme} from '@jahia/ds-mui-theme';
+import {dsDarkTheme as theme} from '@jahia/ds-mui-theme';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
 import {I18n, I18nextProvider} from 'react-i18next';

@@ -16,13 +16,13 @@ const styles = theme => ({
     menuItemHeader: {
         width: '100%',
         display: 'inline-block',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.default
     },
     menuItem: {
         width: '100%',
         display: 'inline-block',
         '&:hover': {
-	        backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.background.default
         }
     },
     menuButton: {
@@ -32,15 +32,15 @@ const styles = theme => ({
     },
     contentIcon: {
         color: theme.palette.layout.dark,
-        fontSize: '18px',
+        fontSize: '18px'
     },
     contentIcon2: {
         fontSize: '20px'
     },
     contentLabel: {
-	    paddingLeft: theme.spacing.unit * 2,
-	    paddingRight: theme.spacing.unit * 2,
-	    color: theme.palette.layout.dark,
+        paddingLeft: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 2,
+        color: theme.palette.layout.dark,
         marginLeft: '1px',
         marginRight: '-3px',
         fontSize: '13px'
@@ -60,20 +60,20 @@ const styles = theme => ({
         background: 'red'
     },
     divider: {
-	    background: theme.palette.background.default,
+        background: theme.palette.background.default,
         lineHeight: '1px',
         height: '1px'
     },
     chevronSvg: {
-	    marginRight: theme.spacing.unit * 2,
-	    fontSize: '18px',
-        color: theme.palette.text.primary,
+        marginRight: theme.spacing.unit * 2,
+        fontSize: '18px',
+        color: theme.palette.text.primary
     },
     menuItemSize: {
         paddingLeft: '10px !important'
     },
     colorMenu: {
-	    background: theme.palette.background.paper,
+        background: theme.palette.background.paper
     }
 });
 

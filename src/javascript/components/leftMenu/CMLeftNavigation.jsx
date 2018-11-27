@@ -59,11 +59,11 @@ const styles = theme => ({
     },
     childIcon: {
         fontSize: '18px',
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.secondary
     },
     childIconLight: {
         fontSize: '18px',
-        color: theme.palette.background.default,
+        color: theme.palette.background.default
     },
     menuBurger: {
         paddingRight: '0px !important',

@@ -55,8 +55,6 @@ const styles = theme => ({
         backgroundColor: theme.palette.layout.dark,
         maxHeight: 31
     },
-    breadCrumbs: {
-    },
     buttons: {
         textAlign: 'right'
     },
@@ -65,7 +63,7 @@ const styles = theme => ({
         marginRight: theme.spacing.unit / 2
     },
     refreshButton: {
-	    color: theme.palette.text.contrastText,
+        color: theme.palette.text.contrastText,
         padding: 0
     },
     showTree: {
@@ -79,28 +77,28 @@ const styles = theme => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
+        whiteSpace: 'nowrap'
     },
     drawerOpen: {
         position: 'relative',
         width: drawerWidth,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
+            duration: theme.transitions.duration.enteringScreen
+        })
     },
     drawerClose: {
         position: 'relative',
 
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
+            duration: theme.transitions.duration.leavingScreen
         }),
         overflowX: 'hidden',
-        width: theme.spacing.unit * 7 + 1,
+        width: (theme.spacing.unit * 7) + 1,
         [theme.breakpoints.up('sm')]: {
-            width: theme.spacing.unit * 9 + 1,
-        },
+            width: (theme.spacing.unit * 9) + 1
+        }
     },
     drawerPaperPreview: {
         backgroundColor: 'transparent',
@@ -117,7 +115,7 @@ const styles = theme => ({
     },
     'content-left': {
         zIndex: '1500',
-        marginLeft: 0,
+        marginLeft: 0
     },
     'content-right': {
         marginRight: -drawerPreviewWidth
@@ -152,10 +150,10 @@ const styles = theme => ({
         padding: '3px 7px'
     },
     searchClearButton: {
-        color: theme.palette.text.contrastText,
+        color: theme.palette.text.contrastText
     },
     searchClearIcon: {
-        color: theme.palette.text.contrastText,
+        color: theme.palette.text.contrastText
     },
     academyLink: {
         position: 'fixed',
@@ -303,14 +301,14 @@ class ContentLayout extends React.Component {
                             i18nKey="label.contentManager.link.academy"
                             components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
                     />
-                </div>
-                <Grid container spacing={0}>
-                    <Grid item xs={GRID_SIZE} className={classes.topBar}>
-                        <CMTopBar dxContext={dxContext} mode={mode}/>
-                    </Grid>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
-                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                            {this.isSearching() &&
+                    </div>
+                    <Grid container spacing={0}>
+                        <Grid item xs={GRID_SIZE} className={classes.topBar}>
+                            <CMTopBar dxContext={dxContext} mode={mode}/>
+                        </Grid>
+                        <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
+                            <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                                {this.isSearching() &&
                                 <div className={classes.searchControl}>
                                     <CmSearchControlBar/>
                                 </div>
@@ -323,34 +321,36 @@ class ContentLayout extends React.Component {
                                 {mode === Constants.mode.FILES &&
                                 <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
                             }
-                            {this.isSearching() &&
-                            <Button data-cm-role="search-clear" variant="text"
-                                className={classes.searchClearButton}
-                                classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}>
-                                <Close className={classes.searchClearIcon}/>
-                                {t('label.contentManager.search.clear')}
-                            </Button>
+                                {this.isSearching() &&
+                                <Button data-cm-role="search-clear" variant="text"
+                                    className={classes.searchClearButton}
+                                    classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}
+                                                                               >
+                                    <Close className={classes.searchClearIcon}/>
+                                    {t('label.contentManager.search.clear')}
+                                </Button>
                             }
                             </Grid>
                         </Grid>
                     </Grid>
-                <div className={classes.appFrame}>
-                    {this.isBrowsing() &&
-                    <Drawer
-			            variant="permanent"
-			            anchor={anchor}
-			            open={open}
-			            className={classNames(classes.drawer, {
-				            [classes.drawerOpen]: this.state.open,
-				            [classes.drawerClose]: !this.state.open,
-			            })}
+                    <div className={classes.appFrame}>
+                        {this.isBrowsing() &&
+                        <Drawer
+                            variant="permanent"
+                            anchor={anchor}
+                            open={open}
+                            className={classNames(classes.drawer, {
+                                [classes.drawerOpen]: this.state.open,
+                                [classes.drawerClose]: !this.state.open
+                            })}
 
                             classes={{
                                 paper: classNames({
                                     [classes.drawerOpen]: this.state.open,
-                                    [classes.drawerClose]: !this.state.open,
-                                }),
-                            }}>
+                                    [classes.drawerClose]: !this.state.open
+                                })
+                            }}
+                            >
                             <Paper elevation={2} style={{background: 'red!important'}}>
                                 <ContentTrees
                                     contentTreeConfigs={contentTreeConfigs}
@@ -366,22 +366,24 @@ class ContentLayout extends React.Component {
                         <main
                             className={classNames(classes.content, classes['content-left'], {
                                 [classes.contentShift]: open,
-                                [classes['contentShift-left']]: open,
+                                [classes['contentShift-left']]: open
                             }) ||
                             classNames(classes.content, classes['content-right'], {
                                 [classes.contentShift]: open_view,
-                                [classes['contentShift-right']]: open_view,
+                                [classes['contentShift-right']]: open_view
                             })}
-                            onContextMenu={(event) => contextualMenu.current.open(event)}
-                        >
+                            onContextMenu={event => contextualMenu.current.open(event)}
+                            >
                             <ContentData layoutQuery={layoutQuery}
-                                         layoutQueryParams={layoutQueryParams}
-                                         setRefetch={this.setContentRefetcher}
-                                         orderBy={orderBy}
-                                         treeShown={ open }>
+                                layoutQueryParams={layoutQueryParams}
+                                setRefetch={this.setContentRefetcher}
+                                orderBy={orderBy}
+                                treeShown={open}
+                                >
                                 {({rows, contentNotFound, totalCount}) => {
-                                    return <Paper className={classes.paper}>{mode === Constants.mode.FILES && !this.state.showList
-                                            ? <FilesGrid
+                                    return (
+                                        <Paper className={classes.paper}>{mode === Constants.mode.FILES && !this.state.showList ?
+                                            <FilesGrid
                                                 size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                                 totalCount={totalCount}
                                                 rows={rows}
@@ -391,8 +393,8 @@ class ContentLayout extends React.Component {
                                                 handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
                                                 onChangePage={this.handleChangePage}
                                                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            />
-                                            : <ContentListTable
+                                            /> :
+                                            <ContentListTable
                                                 totalCount={totalCount}
                                                 rows={rows}
                                                 contentNotFound={contentNotFound}
@@ -406,7 +408,8 @@ class ContentLayout extends React.Component {
                                                 onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                             />
                                         }
-                                    </Paper>;
+                                        </Paper>
+);
                                 }}
                             </ContentData>
                         </main>

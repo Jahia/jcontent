@@ -14,6 +14,7 @@ import {compose} from 'react-apollo';
 import Constants from './constants';
 import {buttonRenderer} from '@jahia/react-material/index';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
+import CmSearchControlBar from './searchBar/CmSearchControlBar';
 
 const styles = theme => ({
     gridDirection: {
@@ -47,13 +48,6 @@ const styles = theme => ({
 const GRID_SIZE = 12;
 const GRID_PANEL_BUTTONS_SIZE = 5;
 class CmToolbar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showList: false
-        };
-    }
-
     setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
     }
@@ -98,20 +92,21 @@ class CmToolbar extends React.Component {
                     <Grid container item xs={GRID_SIZE} direction="row" alignItems="center">
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             <div>
-                                <ContentBreadcrumbs mode={this.props.mode}/>
+                                {this.isSearching() ?
+                                    <CmSearchControlBar/> :
+                                    <ContentBreadcrumbs mode={this.props.mode}/>
+                                }
                             </div>
                         </Grid>
                         <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
                             {mode === Constants.mode.FILES &&
-                            <FilesGridSizeSelector initValue={4}/>
-                            }
-                            {mode === Constants.mode.FILES &&
-                            <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
+                            <React.Fragment>
+                                <FilesGridSizeSelector/>
+                                <FilesGridModeSelector/>
+                            </React.Fragment>
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
-                            <React.Fragment>
                                 <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', classes: {root: classes.buttonCreate}}, true)}/>
-                            </React.Fragment>
                             }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 <Refresh color="primary"/>

@@ -9,6 +9,8 @@ import {Pagination} from '@jahia/react-material';
 import {DxContext} from '../DxContext';
 import {withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../fileupload/UploadTransformComponent';
+import {valueToSizeTransformation} from './filesGridUtils';
+import {connect} from 'react-redux';
 
 const styles = theme => ({
     grid: {
@@ -134,6 +136,7 @@ FilesGrid.propTypes = {
 };
 
 const ComposedFilesGrid = compose(
+    connect(state => ({size: valueToSizeTransformation(state.filesGrid.size)})),
     translate(),
     withStyles(styles, {withTheme: true}),
 )(FilesGrid);

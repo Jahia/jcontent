@@ -1,32 +1,22 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import * as _ from 'lodash';
-import {Close} from '@material-ui/icons';
-import {withNotifications, ContextualMenu} from '@jahia/react-material';
-import {Grid, Button, Paper, withStyles, Drawer} from '@material-ui/core';
+import {ContextualMenu, withNotifications} from '@jahia/react-material';
+import {Drawer, Grid, Paper, withStyles} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
 import ContentTrees from './ContentTrees';
-import {translate, Trans} from 'react-i18next';
+import {Trans, translate} from 'react-i18next';
 import {DxContext} from './DxContext';
 import Upload from './fileupload/Upload';
-import {cmSetPreviewState, CM_PREVIEW_STATES} from './redux/actions';
+import {CM_PREVIEW_STATES, cmGoto, cmSetPreviewState} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
-import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
-import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
-import {valueToSizeTransformation} from './filesGrid/filesGridUtils';
 import {ContentData, contentQueryHandlerByMode} from './ContentData';
 import CMTopBar from './CMTopBar';
-import CmSearchControlBar from './searchBar/CmSearchControlBar';
-import {cmGoto} from './redux/actions';
 import {connect} from 'react-redux';
 import Constants from './constants';
-import {setRefetcher, setContentListDataRefetcher, refetchContentTreeAndListData} from './refetches';
-<<<<<<< HEAD
-import {Folder, Refresh} from 'mdi-material-ui';
-=======
->>>>>>> [BACKLOG-8987] - Change showTreeButton
+import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
 
 const drawerWidth = 260;
 const drawerPreviewWidth = 600;
@@ -174,7 +164,6 @@ const styles = theme => ({
 });
 
 const GRID_SIZE = 12;
-const GRID_PANEL_BUTTONS_SIZE = 5;
 
 class ContentLayout extends React.Component {
     constructor(props) {
@@ -184,8 +173,6 @@ class ContentLayout extends React.Component {
             open: true,
             open_view: false,
             anchor: 'left',
-            filesGridSizeValue: 4,
-            showList: false,
             page: 0,
             rowsPerPage: 25,
             order: 'ASC',
@@ -273,7 +260,7 @@ class ContentLayout extends React.Component {
     render() {
         const {anchor, open_view, open, order, orderBy} = this.state;
         const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
-            searchContentType, sql2SearchFrom, sql2SearchWhere, clearSearch, classes, t} = this.props;
+            searchContentType, sql2SearchFrom, sql2SearchWhere, classes, filesMode} = this.props;
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
         const paginationState = {
@@ -305,32 +292,6 @@ class ContentLayout extends React.Component {
                     <Grid container spacing={0}>
                         <Grid item xs={GRID_SIZE} className={classes.topBar}>
                             <CMTopBar dxContext={dxContext} mode={mode}/>
-                        </Grid>
-                        <Grid container item xs={GRID_SIZE} direction="row" alignItems="center" className={this.isSearching() ? classes.blockCoreSearch : classes.blockCore}>
-                            <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                                {this.isSearching() &&
-                                <div className={classes.searchControl}>
-                                    <CmSearchControlBar/>
-                                </div>
-                            }
-                            </Grid>
-                            <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.showTree}>
-                                {mode === Constants.mode.FILES &&
-                                <FilesGridSizeSelector initValue={4} onChange={value => this.setState({filesGridSizeValue: value})}/>
-                            }
-                                {mode === Constants.mode.FILES &&
-                                <FilesGridModeSelector showList={this.state.showList} onChange={() => this.setState(state => ({showList: !state.showList}))}/>
-                            }
-                                {this.isSearching() &&
-                                <Button data-cm-role="search-clear" variant="text"
-                                    className={classes.searchClearButton}
-                                    classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}
-                                                                               >
-                                    <Close className={classes.searchClearIcon}/>
-                                    {t('label.contentManager.search.clear')}
-                                </Button>
-                            }
-                            </Grid>
                         </Grid>
                     </Grid>
                     <div className={classes.appFrame}>
@@ -382,9 +343,8 @@ class ContentLayout extends React.Component {
                                 >
                                 {({rows, contentNotFound, totalCount}) => {
                                     return (
-                                        <Paper className={classes.paper}>{mode === Constants.mode.FILES && !this.state.showList ?
+                                        <Paper className={classes.paper}>{mode === Constants.mode.FILES && filesMode === 'grid' ?
                                             <FilesGrid
-                                                size={valueToSizeTransformation(this.state.filesGridSizeValue)}
                                                 totalCount={totalCount}
                                                 path={path}
                                                 rows={rows}
@@ -449,7 +409,8 @@ const mapStateToProps = state => {
         searchTerms: state.params.searchTerms,
         searchContentType: state.params.searchContentType,
         sql2SearchFrom: state.params.sql2SearchFrom,
-        sql2SearchWhere: state.params.sql2SearchWhere
+        sql2SearchWhere: state.params.sql2SearchWhere,
+        filesMode: state.filesGrid.mode
     };
 };
 

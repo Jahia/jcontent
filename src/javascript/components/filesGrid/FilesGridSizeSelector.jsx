@@ -1,9 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {withStyles, Tooltip} from '@material-ui/core';
+import {Tooltip, withStyles} from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
+import connect from 'react-redux/es/connect/connect';
+import {setSize} from './redux/actions';
 
 const styles = theme => ({
     root: {
@@ -26,47 +27,28 @@ const totalsValues = 5;
 const step = 1;
 
 class FilesGridSizeSelector extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: props.initValue
-        };
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(event, value) {
-        this.setState({
-            value
-        });
-        this.props.onChange(value);
-    }
-
     render() {
-        const {classes, t} = this.props;
-        const {value} = this.state;
+        const {classes, t, setSize, size, visible} = this.props;
 
-        return (
+        return visible && (
             <Tooltip title={t('label.contentManager.filesGrid.fileSizeSelector')}>
                 <Slider
-                    value={value}
+                    value={size}
                     classes={{root: classes.root, track: classes.track, thumb: classes.thumb}}
                     min={1}
                     max={totalsValues}
                     step={step}
-                    onChange={this.handleChange}
+                    onChange={(event, value) => {
+                        setSize(value);
+                    }}
                 />
             </Tooltip>
         );
     }
 }
 
-FilesGridSizeSelector.propTypes = {
-    classes: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    initValue: PropTypes.number.isRequired
-};
-
 export default compose(
+    connect(state => ({size: state.filesGrid.size, visible: state.filesGrid.mode === 'grid'}), dispatch => ({setSize: size => dispatch(setSize(size))})),
     translate(),
     withStyles(styles)
 )(FilesGridSizeSelector);

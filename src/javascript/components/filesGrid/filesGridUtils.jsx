@@ -122,6 +122,7 @@ export const isBrowserImage = function (filename) {
         case 'gif':
         case 'img':
         case 'svg':
+        case 'bmp':
             return true;
         default:
             return false;

@@ -127,6 +127,7 @@ class PreviewDrawer extends React.Component {
             layoutQuery, layoutQueryParams, dxContext} = this.props;
         return (
             <Drawer anchor="right"
+                data-cm-role="preview-drawer"
                 classes={{
                     paper: this.state.fullScreen ? classes.drawerFullScreen : classes.drawerWidth,
                     paperAnchorRight: classes.modalTransition,
@@ -135,7 +136,7 @@ class PreviewDrawer extends React.Component {
                 className={classes.drawerRoot}
                 open={this.props.open}
                 >
-                <Table>
+                <Table data-cm-role="preview-table">
                     <TableHead>
                         <TableRow className={classes.drawerTableHead}>
                             <TableCell className={classes.drawerTableCell}>

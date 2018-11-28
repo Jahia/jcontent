@@ -257,7 +257,7 @@ class ContentPreview extends React.Component {
             <Grid container spacing={0} className={classes.footerGrid}>
                 <Grid container spacing={0}>
                     <Grid container item xs={8} className={classes.titleBar}>
-                        <div className={classes.contentTitle}>
+                        <div className={classes.contentTitle} data-cm-role="preview-name">
                             {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
                         </div>
                     </Grid>

@@ -43,6 +43,7 @@ class ImageViewer extends React.Component {
             <CardMedia
                 classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}
                 className={fullScreen ? classes.bigImage : classes.littleImage}
+                data-cm-role="preview-image"
                 image={file}/>
         );
     }

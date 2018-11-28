@@ -35,12 +35,23 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                         return of(false);
                     }
 
-                    const primaryNodeTypeToPaste = context.items[0].primaryNodeType;
+                    let nodeToCopy = context.items[0];
+                    if (nodeToCopy.mutationToUse === "MOVE" && nodeToCopy.path === targetNode.path + '/' + nodeToCopy.name) {
+                        return of(false);
+                    }
+                    if (targetNode.path.startsWith(nodeToCopy.path + '/')) {
+                        return of(false);
+                    }
+
+                    const primaryNodeTypeToPaste = nodeToCopy.primaryNodeType;
                     let contributeTypesProperty = targetNode.contributeTypes ||
                         (targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
                         // Contribute type is not empty so we need to execute a query to know the types that are allowed here
-                        return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
+                        return from(context.client.watchQuery({
+                            query: ContentTypesQuery,
+                            variables: {nodeTypes: contributeTypesProperty.values}
+                        })).pipe(
                             filter(res => (res.data)),
                             map(res => {
                                 let allowedNodeTypes = [];
@@ -65,62 +76,32 @@ export default composeActions(requirementsAction, withNotificationContextAction,
 
     onClick: context => {
         const nodeToPaste = context.items[0];
-        if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {
-            context.client.mutate({
-                variables: {
-                    pathOrId: nodeToPaste.path,
-                    destParentPathOrId: context.path,
-                    destName: nodeToPaste.name
-                },
-                mutation: pasteMutations.moveNode,
-                refetchQueries: [{
-                    query: context.requirementQueryHandler.getQuery(),
-                    variables: context.requirementQueryHandler.getVariables()
-                }]
-            }).then(() => {
-                context.clear();
-                context.notificationContext.notify(
-                    context.t('label.contentManager.copyPaste.success'),
-                    ['closeButton']
-                );
-                refetchContentTreeAndListData();
-            }, error => {
-                console.error(error);
-                context.clear();
-                context.notificationContext.notify(
-                    context.t('label.contentManager.copyPaste.error'),
-                    ['closeButton']
-                );
-                refetchContentTreeAndListData();
-            });
-        } else {
-            context.client.mutate({
-                variables: {
-                    pathOrId: nodeToPaste.path,
-                    destParentPathOrId: context.path,
-                    destName: nodeToPaste.name
-                },
-                mutation: pasteMutations.pasteNode,
-                refetchQueries: [{
-                    query: context.requirementQueryHandler.getQuery(),
-                    variables: context.requirementQueryHandler.getVariables()
-                }]
-            }).then(() => {
-                context.clear();
-                context.notificationContext.notify(
-                    context.t('label.contentManager.copyPaste.success'),
-                    ['closeButton']
-                );
-                refetchContentTreeAndListData();
-            }, error => {
-                console.error(error);
-                context.clear();
-                context.notificationContext.notify(
-                    context.t('label.contentManager.copyPaste.error'),
-                    ['closeButton']
-                );
-                refetchContentTreeAndListData();
-            });
-        }
+        context.client.mutate({
+            variables: {
+                pathOrId: nodeToPaste.path,
+                destParentPathOrId: context.path,
+                destName: nodeToPaste.name
+            },
+            mutation: nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode,
+            refetchQueries: [{
+                query: context.requirementQueryHandler.getQuery(),
+                variables: context.requirementQueryHandler.getVariables()
+            }]
+        }).then(() => {
+            context.clear();
+            context.notificationContext.notify(
+                context.t('label.contentManager.copyPaste.success'),
+                ['closeButton']
+            );
+            refetchContentTreeAndListData();
+        }, error => {
+            console.error(error);
+            context.clear();
+            context.notificationContext.notify(
+                context.t('label.contentManager.copyPaste.error'),
+                ['closeButton']
+            );
+            refetchContentTreeAndListData();
+        });
     }
 });

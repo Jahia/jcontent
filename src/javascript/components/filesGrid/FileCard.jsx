@@ -223,6 +223,7 @@ class FileCard extends Component {
             <Card
                 className={this.generateCardClass(node, classes.card)}
                 classes={{root: classes.cardStyle}}
+                data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
@@ -276,6 +277,7 @@ class FileCard extends Component {
         return (
             <Card className={this.generateCardClass(node, classes.cardMedium)}
                 classes={{root: classes.cardStyle}}
+                data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
@@ -324,6 +326,7 @@ class FileCard extends Component {
         return (
             <Card className={this.generateCardClass(node, classes.cardVertical)}
                 classes={{root: classes.cardStyle}}
+                data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
@@ -363,6 +366,7 @@ class FileCard extends Component {
         return (
             <Card className={this.generateCardClass(node, classes.card)}
                 classes={{root: classes.cardStyle}}
+                data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
@@ -382,7 +386,7 @@ class FileCard extends Component {
                         <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                             {t('label.contentManager.filesGrid.name')}
                         </Typography>
-                        <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo}>
+                        <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo} data-cm-role="grid-content-list-card-name">
                             {node.name}
                         </Typography>
                         <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
@@ -415,6 +419,7 @@ class FileCard extends Component {
         return (
             <Card className={this.generateCardClass(node, classes.card)}
                 classes={{root: classes.cardStyle}}
+                data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
@@ -459,6 +464,7 @@ class FileCard extends Component {
         return (
             <Card className={this.generateCardClass(node, classes.cardVertical)}
                 classes={{root: classes.cardStyle}}
+                data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
@@ -509,7 +515,7 @@ class FileCard extends Component {
         }
         return (
             <Tooltip title={(abbreviatableCardType && name.length > maxLength) ? name : ''}>
-                <Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo}>
+                <Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo} data-cm-role="grid-content-list-card-name">
                     {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
                 </Typography>
             </Tooltip>

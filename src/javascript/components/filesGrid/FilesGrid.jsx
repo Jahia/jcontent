@@ -69,7 +69,7 @@ class FilesGrid extends Component {
 
         if (contentNotFound) {
             return (
-                <Grid container className={classes.gridEmpty}>
+                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                     <h3 className={classes.empty}>
                         { t('label.contentManager.contentNotFound') }
                     </h3>
@@ -79,7 +79,7 @@ class FilesGrid extends Component {
 
         if (!this.props.rows || this.props.rows.length === 0) {
             return (
-                <Grid container className={classes.gridEmpty}>
+                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                     <h3 className={classes.empty}>
                         { t('label.contentManager.filesGrid.emptyMessage') }
                     </h3>
@@ -87,7 +87,7 @@ class FilesGrid extends Component {
             );
         }
         return (
-            <div className={classes.grid}>
+            <div className={classes.grid} data-cm-role="grid-content-list">
                 <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
                     {
                     this.props.rows.map(node => (

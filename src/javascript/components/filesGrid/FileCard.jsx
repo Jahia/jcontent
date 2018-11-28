@@ -386,9 +386,7 @@ class FileCard extends Component {
                         <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                             {t('label.contentManager.filesGrid.name')}
                         </Typography>
-                        <Typography classes={{body2: classes.typoBodyLarge}} variant="body2" className={classes.textTypo} data-cm-role="grid-content-list-card-name">
-                            {node.name}
-                        </Typography>
+                        {this.fileName(node)}
                         <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
                             {t('label.contentManager.filesGrid.createdBy')}
                         </Typography>
@@ -508,18 +506,25 @@ class FileCard extends Component {
     fileName(node, maxLength, bodyClass, cardType) {
         let name = node.name;
         let abbreviatableCardType = (!cardType || this.props.cardType === cardType);
+        let showTooltip = abbreviatableCardType && name.length > maxLength;
         let bodyClassToUse = bodyClass;
 
         if (isMarkedForDeletion(node)) {
             bodyClassToUse = bodyClassToUse + ' ' + this.props.classes.isDeleted;
         }
-        return (
-            <Tooltip title={(abbreviatableCardType && name.length > maxLength) ? name : ''}>
-                <Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo} data-cm-role="grid-content-list-card-name">
-                    {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
-                </Typography>
-            </Tooltip>
-        );
+        let typography = (<Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo} data-cm-role="grid-content-list-card-name">
+                              {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
+                          </Typography>);
+
+        if (showTooltip) {
+            return (
+                <Tooltip title={name}>
+                    {typography}
+                </Tooltip>
+                );
+        } else {
+            return typography;
+        }
     }
 
     generateCardClass(node, baseClass) {

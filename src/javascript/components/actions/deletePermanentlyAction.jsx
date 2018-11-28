@@ -8,9 +8,10 @@ export default composeActions(requirementsAction, {
         context.initRequirements({
             retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
             requiredPermission: 'jcr:removeNode',
+            retrieveDisplayName: true,
             enabled: context => context.node.pipe(map(node => hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED'))
         });
     },
-    onClick: context => window.parent.authoringApi.deleteContent(context.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, true)
+    onClick: context => window.parent.authoringApi.deleteContent(context.node.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, true)
 
 });

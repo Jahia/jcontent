@@ -8,6 +8,7 @@ export default composeActions(requirementsAction, withNodeName, {
     init: context => {
         context.initRequirements({
             retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
+            retrieveDisplayName: true,
             retrieveSiteLanguages: true,
             enabled: context => context.node.pipe(map(node =>
                 (context.checkForUnpublication ?

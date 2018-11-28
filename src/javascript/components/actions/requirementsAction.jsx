@@ -69,8 +69,8 @@ let requirementsAction = composeActions(withApolloAction, reduxAction(state => (
                     }
                 }
             } else {
-                context.enabled = ((_.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, context.node.path)) &&
-                    (_.isEmpty(hideForPaths) || evaluateHideForPaths(hideForPaths, context.node.path)));
+                context.enabled = ((_.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, context.path)) &&
+                    (_.isEmpty(hideForPaths) || evaluateHideForPaths(hideForPaths, context.path)));
             }
         };
     }

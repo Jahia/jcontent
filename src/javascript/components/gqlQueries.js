@@ -570,10 +570,12 @@ class ActionRequirementsQueryHandler {
             displayLanguage: context.uiLang
         };
 
-        // Todo optimize / execute on demand
-        this.requirementsFragments.push(ActionRequirementsFragments.displayName);
-        this.requirementsFragments.push(ActionRequirementsFragments.primaryNodeType);
-
+        if (context.retrieveDisplayName) {
+            this.requirementsFragments.push(ActionRequirementsFragments.displayName);
+        }
+        if (context.retrievePrimaryNodeType) {
+            this.requirementsFragments.push(ActionRequirementsFragments.primaryNodeType);
+        }
         if (!_.isEmpty(context.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);
             this.variables.permission = context.requiredPermission;

@@ -8,6 +8,8 @@ export default composeActions(requirementsAction, reduxAction(() => ({}), dispat
 
     init: context => {
         context.initRequirements({
+            retrievePrimaryNodeType: true,
+            retrieveDisplayName: true,
             requiredPermission: 'jcr:removeNode'
         });
     },

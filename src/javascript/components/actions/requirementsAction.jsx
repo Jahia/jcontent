@@ -6,28 +6,13 @@ import {ActionRequirementsQueryHandler} from '../gqlQueries';
 import * as _ from 'lodash';
 import {reduxAction} from './reduxAction';
 
-function evaluateShowForPaths(paths, nodePath) {
-    if (!paths) {
-        return false;
-    }
-    for (let i = 0; i < paths.length; i++) {
-        if (new RegExp(paths[i]).test(nodePath)) {
-            return true;
+function evaluateVisibilityPaths(visible, visibilityPaths, nodePath) {
+    for (let i = 0; i < visibilityPaths.length; i++) {
+        if (new RegExp(visibilityPaths[i]).test(nodePath)) {
+            return visible;
         }
     }
-    return false;
-}
-
-function evaluateHideForPaths(paths, nodePath) {
-    if (!paths) {
-        return true;
-    }
-    for (let i = 0; i < paths.length; i++) {
-        if (new RegExp(paths[i]).test(nodePath)) {
-            return false;
-        }
-    }
-    return true;
+    return !visible;
 }
 
 let requirementsAction = composeActions(withApolloAction, reduxAction(state => ({language: state.language, uiLang: state.uiLang, site: state.site})), {
@@ -51,13 +36,13 @@ let requirementsAction = composeActions(withApolloAction, reduxAction(state => (
                     );
                 if (showForPaths || requiredPermission || showOnNodeTypes || hideOnNodeTypes || requireModuleInstalledOnSite || hideForPaths) {
                     context.enabled = concat(of(false), context.node.pipe(map(node =>
-                        (_.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, node.path)) &&
+                        (_.isEmpty(showForPaths) || evaluateVisibilityPaths(true, showForPaths, node.path)) &&
                         (_.isEmpty(requiredPermission) || node.hasPermission) &&
                         (_.isEmpty(showOnNodeTypes) || node.isNodeType) &&
                         (_.isEmpty(hideOnNodeTypes) || !node.isNotNodeType) &&
                         (_.isEmpty(contentType) || node.allowedChildNodeTypes.length > 0) &&
                         (_.isEmpty(requireModuleInstalledOnSite) || _.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite)) &&
-                        (_.isEmpty(hideForPaths) || evaluateHideForPaths(hideForPaths, node.path))
+                        (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, node.path))
                     )));
                 }
                 if (enabled) {
@@ -69,8 +54,8 @@ let requirementsAction = composeActions(withApolloAction, reduxAction(state => (
                     }
                 }
             } else {
-                context.enabled = ((_.isEmpty(showForPaths) || evaluateShowForPaths(showForPaths, context.path)) &&
-                    (_.isEmpty(hideForPaths) || evaluateHideForPaths(hideForPaths, context.path)));
+                context.enabled = ((_.isEmpty(showForPaths) || evaluateVisibilityPaths(true, showForPaths, context.path)) &&
+                    (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, context.path)));
             }
         };
     }

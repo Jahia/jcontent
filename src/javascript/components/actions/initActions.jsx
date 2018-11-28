@@ -188,21 +188,21 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.contentPreview.paste',
         target: ['contentTreeMenuActions:3.8', 'copyPasteActions:3.8', 'tableHeaderActions:1'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['\/sites\/.+?\/files\/*', '\/sites\/.+?\/contents\/*']
+        showForPaths: ['^\/sites\/.+?\/files\/?', '^\/sites\/.+?\/contents\/?']
     });
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
         target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9', 'tableMenuActions:4'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['\/sites\/.+?\/files\/[^]+', '\/sites\/.+?\/contents\/[^]+']
+        showForPaths: ['^\/sites\/.+?\/files\/.+', '^\/sites\/.+?\/contents\/.+']
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
         target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4', 'tableMenuActions:4.5'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['\/sites\/.+?\/files\/[^]+', '\/sites\/.+?\/contents\/[^]+']
+        showForPaths: ['^\/sites\/.+?\/files\/.+', '^\/sites\/.+?\/contents\/.+']
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
@@ -328,7 +328,7 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
         target: ['contentTreeMenuActions', 'contextualMenuContentAction', 'tableMenuActions'],
-        hideForPaths: ['^\/sites\/.+?\/files\/*', '^\/sites\/.+?\/contents\/*', '^\/sites\/systemsite\/*']
+        hideForPaths: ['^\/sites\/.+?\/files\/?', '^\/sites\/.+?\/contents\/?', '^\/sites\/systemsite\/?']
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',

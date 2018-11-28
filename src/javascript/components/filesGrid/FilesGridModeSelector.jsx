@@ -19,7 +19,7 @@ class FilesGridModeSelector extends React.Component {
                 title={t(showList ? 'label.contentManager.filesGrid.toggleGridDisplay' : 'label.contentManager.filesGrid.toggleListDisplay')}
                 leaveDelay={200}
                 >
-                <Button data-cm-role="view-mode" onClick={onChange}>
+                <Button data-cm-role={showList ? 'view-mode-grid' : 'view-mode-list'} onClick={onChange}>
                     {showList ? <ViewModule className={classes.iconSize}/> : <ListIcon className={classes.iconSize}/>}
                 </Button>
             </Tooltip>

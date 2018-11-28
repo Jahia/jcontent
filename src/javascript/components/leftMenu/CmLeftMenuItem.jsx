@@ -48,14 +48,15 @@ const styles = theme => ({
         paddingBottom: '10px!important'
     },
     colorClosed: {
+        fill: '#F5F5F5',
         '& [fill="backgroundColor"]': {
-            fill: '#3A3C3F'
+            fill: theme.palette.layout.dark
         }
     },
     colorOpen: {
         fill: '#504e4d',
         '& [fill="backgroundColor"]': {
-            fill: '#f7f7f7'
+            fill: theme.palette.background.paper
         }
     }
 });

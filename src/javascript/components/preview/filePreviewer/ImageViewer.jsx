@@ -1,10 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {CardMedia} from '@material-ui/core';
-import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 
 const styles = () => ({
@@ -38,16 +36,9 @@ const styles = () => ({
 });
 
 class ImageViewer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            file: props.file
-        };
-    }
-
     render() {
-        let {file} = this.state;
-        let {fullScreen, classes} = this.props;
+        let {fullScreen, classes, file} = this.props;
+
         return (
             <CardMedia
                 classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}
@@ -55,35 +46,19 @@ class ImageViewer extends React.Component {
                 image={file}/>
         );
     }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.previewMode === 'edit' && prevProps.previewMode !== 'edit') {
-            // Disabled for now until controls functionality is implemented
-            // this.renderImageControls();
-        }
-    }
-
-    componentWillUnmount() {
-        let el = document.getElementById(this.props.elementId);
-        if (el !== null) {
-            ReactDOM.unmountComponentAtNode(el);
-        }
-    }
 }
 
-const mapStateToProps = state => {
-    return {
-        previewMode: state.previewMode
-    };
+ImageViewer.propTypes = {
+    classes: PropTypes.object,
+    file: PropTypes.string.isRequired,
+    fullScreen: PropTypes.bool.isRequired
 };
 
-ImageViewer.propTypes = {
-    elementId: PropTypes.string.isRequired,
-    file: PropTypes.string.isRequired
+ImageViewer.defaultProps = {
+    classes: null
 };
 
 export default compose(
     translate(),
-    withStyles(styles),
-    connect(mapStateToProps, null)
+    withStyles(styles)
 )(ImageViewer);

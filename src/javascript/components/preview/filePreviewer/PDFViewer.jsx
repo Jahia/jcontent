@@ -135,7 +135,6 @@ class PDFViewer extends React.Component {
         this.state = {
             page: null,
             pages: null,
-            file: props.file,
             scaleSize: 7
         };
         this.scaleTimeout = null;
@@ -303,14 +302,14 @@ class PDFViewer extends React.Component {
     }
 
     render() {
-        let {page, file, scaleSize, showScale} = this.state;
-        let {classes, fullscreen} = this.props;
-        let pagination = this.renderPagination(fullscreen);
+        let {page, scaleSize, showScale} = this.state;
+        let {classes, file, fullScreen} = this.props;
+        let pagination = this.renderPagination(fullScreen);
         return (
             <div>
                 {pagination}
                 <ZoomScaleDisplay className={showScale ? classes.showScale : classes.hideScale}>{this.displayScaleSize()}</ZoomScaleDisplay>
-                {fullscreen ?
+                {fullScreen ?
                     <PDFContainerFull>
                         <Paper elevation={0} className={classes.pdfPaper} classes={{root: classes.PaperPdf}}>
                             <Pdf
@@ -341,7 +340,13 @@ class PDFViewer extends React.Component {
 }
 
 PDFViewer.propTypes = {
-    file: PropTypes.string.isRequired
+    classes: PropTypes.object,
+    file: PropTypes.string.isRequired,
+    fullScreen: PropTypes.bool.isRequired
+};
+
+PDFViewer.defaultProps = {
+    classes: null
 };
 
 export default translate()(withStyles(styles)(PDFViewer));

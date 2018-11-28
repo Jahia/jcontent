@@ -51,7 +51,6 @@ const styles = theme => ({
 class DocumentViewer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
         this.renderViewer = this.renderViewer.bind(this);
     }
 
@@ -94,8 +93,13 @@ class DocumentViewer extends React.Component {
 }
 
 DocumentViewer.propTypes = {
+    classes: PropTypes.object,
     file: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
+};
+
+DocumentViewer.defaultProps = {
+    classes: null
 };
 
 export default withStyles(styles)(DocumentViewer);

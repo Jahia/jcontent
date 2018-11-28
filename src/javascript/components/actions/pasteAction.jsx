@@ -36,7 +36,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     }
 
                     let nodeToCopy = context.items[0];
-                    if (nodeToCopy.mutationToUse === "MOVE" && nodeToCopy.path === targetNode.path + '/' + nodeToCopy.name) {
+                    if (nodeToCopy.mutationToUse === 'MOVE' && nodeToCopy.path === targetNode.path + '/' + nodeToCopy.name) {
                         return of(false);
                     }
                     if (targetNode.path.startsWith(nodeToCopy.path + '/')) {

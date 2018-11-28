@@ -512,19 +512,17 @@ class FileCard extends Component {
         if (isMarkedForDeletion(node)) {
             bodyClassToUse = bodyClassToUse + ' ' + this.props.classes.isDeleted;
         }
-        let typography = (<Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo} data-cm-role="grid-content-list-card-name">
-                              {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
-                          </Typography>);
+        let typography = (
+            <Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo} data-cm-role="grid-content-list-card-name">
+                {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
+            </Typography>
+        );
 
-        if (showTooltip) {
-            return (
-                <Tooltip title={name}>
-                    {typography}
-                </Tooltip>
-                );
-        } else {
-            return typography;
-        }
+        return showTooltip ? (
+            <Tooltip title={name}>
+                {typography}
+            </Tooltip>
+        ) : typography;
     }
 
     generateCardClass(node, baseClass) {

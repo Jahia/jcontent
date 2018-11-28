@@ -211,7 +211,7 @@ class BreadcrumbDisplay extends React.Component {
                     >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
-                    <span className={classes.contentLabel}>
+                    <span className={classes.contentLabel} data-cm-role="breadcrumb-name">
                         {ellipsizeText(node.name, maxLabelLength)}
                     </span>
                     }
@@ -232,7 +232,7 @@ class BreadcrumbDisplay extends React.Component {
                 >
                 {this.renderIcon(node, classes)}
                 {!trimLabel &&
-                <span className={classes.contentLabel}>
+                <span className={classes.contentLabel} data-cm-role="breadcrumb-name">
                     {ellipsizeText(node.name, maxLabelLength)}
                 </span>
                 }

@@ -149,7 +149,7 @@ class Breadcrumb extends React.Component {
         }
 
         return (
-            <span key={item.uuid}>
+            <span key={item.uuid} data-cm-role="breadcrumb">
                 <BreadcrumbDisplay
                     id={item.uuid}
                     handleSelect={handleSelect}

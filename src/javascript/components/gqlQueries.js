@@ -286,6 +286,9 @@ const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templat
             id : uuid
             isFile:isNodeType(type: {types: ["jnt:file"]})
             path
+            lastModified: property(name: "jcr:lastModified", language: $language) {
+                value
+            }
             renderedContent(templateType:$templateType, view: $view, contextConfiguration: $contextConfiguration, language: $language) {
                 output
                 staticAssets(type:"css") {
@@ -302,6 +305,9 @@ const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templat
             path
             isPublished:property(name:"j:published") {
                 name
+                value
+            }
+            lastModified: property(name: "jcr:lastModified", language: $language) {
                 value
             }
             renderedContent(templateType:$templateType, view: $view, contextConfiguration: $contextConfiguration, language: $language) {

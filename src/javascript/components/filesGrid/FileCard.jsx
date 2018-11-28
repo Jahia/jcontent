@@ -235,7 +235,7 @@ class FileCard extends Component {
                 <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
                 <CardMedia
                     className={classes.coverLarge}
-                    image={`${dxContext.contextPath}/files/default/${node.path}`}
+                    image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}`}
                     title={node.name}
                 />
                 <div className={classes.details}>

@@ -299,7 +299,7 @@ class ContentPreview extends React.Component {
 
         // If node type is "jnt:file" use pdf viewer
         if (data && data.nodeByPath.isFile) {
-            let file = dxContext.contextPath + '/files/' + (previewMode === 'edit' ? 'default' : 'live') + data.nodeByPath.path;
+            let file = dxContext.contextPath + '/files/' + (previewMode === 'edit' ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
 
             if (isPDF(data.nodeByPath.path)) {
                 return (

@@ -18,6 +18,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         clear: () => dispatch(clear())
     })
 ), {
+
     init: context => {
         let contentType;
         if (context.items.length > 0) {
@@ -61,6 +62,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             }
         });
     },
+
     onClick: context => {
         const nodeToPaste = context.items[0];
         if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {

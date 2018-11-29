@@ -89,18 +89,12 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             }]
         }).then(() => {
             context.clear();
-            context.notificationContext.notify(
-                context.t('label.contentManager.copyPaste.success'),
-                ['closeButton']
-            );
+            context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
             refetchContentTreeAndListData();
         }, error => {
             console.error(error);
             context.clear();
-            context.notificationContext.notify(
-                context.t('label.contentManager.copyPaste.error'),
-                ['closeButton']
-            );
+            context.notificationContext.notify(context.t('label.contentManager.copyPaste.error'), ['closeButton']);
             refetchContentTreeAndListData();
         });
     }

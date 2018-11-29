@@ -1,5 +1,5 @@
 import React from 'react';
-import {withStyles, Input} from '@material-ui/core';
+import {withStyles, Input, Button} from '@material-ui/core';
 import {DxContext} from '../DxContext';
 import ContentTypeSelect from '../ContentTypeSelect';
 import {cmGoto} from '../redux/actions';

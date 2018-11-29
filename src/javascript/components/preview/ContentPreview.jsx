@@ -81,8 +81,8 @@ const styles = theme => ({
         height: 'calc(100vh - 203px)'
     },
     unpublishButton: {
-        margin: '0!important',
-        marginRight: '8px!important',
+        margin: '0 !important',
+        marginRight: '8px !important',
         display: 'flex',
         height: 36,
         maxHeight: 36
@@ -124,17 +124,17 @@ const styles = theme => ({
         boxShadow: 'none',
         backgroundColor: theme.palette.common.white,
         height: 'calc(100vh - 140px)',
-        overflow: 'hidden!important',
+        overflow: 'hidden !important',
         maxHeight: 'calc(100vh - 140px)'
     },
     drawerRoot: {
-        top: '140px!important',
-        overflow: 'hidden!important',
-        right: '24px!important'
+        top: '140px !important',
+        overflow: 'hidden !important',
+        right: '24px !important'
     },
     footerGrid: {
         backgroundColor: '#e8ebed',
-        padding: '0px!important'
+        padding: '0px !important'
     },
     footerButton: {
         textAlign: 'right'
@@ -155,8 +155,8 @@ const styles = theme => ({
     },
     lockButtonLive: {
         padding: '12px',
-        height: '48px!important',
-        width: '48px!important'
+        height: '48px !important',
+        width: '48px !important'
     },
     lockIcon: {
         color: '#007CB0'
@@ -203,33 +203,31 @@ class ContentPreview extends React.Component {
                 <Paper className={classes.previewPaper} elevation={0}>
                     <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
                         {({loading, error, data}) => {
-                        if (error) {
-                            // Ignore error that occurs if node is not published in live mode.
-                        }
-                        if (!loading) {
-                            if (!_.isEmpty(data)) {
-                                let modes = ['edit'];
-                                // Check if the node is published in live.
-                                if (livePreviewAvailable) {
-                                    modes.push('live');
-                                }
-                                let selectedMode = _.find(modes, mode => {
-                                    return previewMode === mode;
-                                }) !== undefined ? previewMode : 'edit';
-                                if (previewModes.length !== modes.length) {
-                                    setPreviewMode(selectedMode);
-                                    setPreviewModes(modes);
-                                }
-                                return this.previewComponent(data[selectedMode]);
+                            if (error) {
+                                // Ignore error that occurs if node is not published in live mode.
                             }
-                        }
-                        return null;
-                    }}
+                            if (!loading) {
+                                if (!_.isEmpty(data)) {
+                                    let modes = ['edit'];
+                                    // Check if the node is published in live.
+                                    if (livePreviewAvailable) {
+                                        modes.push('live');
+                                    }
+                                    let selectedMode = _.find(modes, mode => {
+                                        return previewMode === mode;
+                                    }) === undefined ? 'edit' : previewMode;
+                                    if (previewModes.length !== modes.length) {
+                                        setPreviewMode(selectedMode);
+                                        setPreviewModes(modes);
+                                    }
+                                    return this.previewComponent(data[selectedMode]);
+                                }
+                            }
+                            return null;
+                        }}
                     </Query>
                 </Paper>
-                <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
-                    elevation={0}
-                    >
+                <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit} elevation={0}>
                     {this.componentFooter()}
                 </Paper>
             </div>
@@ -246,7 +244,9 @@ class ContentPreview extends React.Component {
             <React.Fragment>
                 <DisplayActions target="editPreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
                 <DisplayActions target="editAdditionalMenu" context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
-            </React.Fragment>);
+            </React.Fragment>
+        );
+
         if (previewMode === 'live') {
             workspace = previewMode;
             leftButtons = <IconButton className={classes.lockButtonLive}/>;
@@ -304,7 +304,7 @@ class ContentPreview extends React.Component {
             if (isPDF(data.nodeByPath.path)) {
                 return (
                     <div className={this.state.fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
-                        <PDFViewer key={data.nodeByPath.uuid} file={file} fullScreen={this.state.fullScreen}/>
+                        <PDFViewer file={file} fullScreen={this.state.fullScreen}/>
                     </div>
                 );
             }
@@ -312,7 +312,7 @@ class ContentPreview extends React.Component {
             if (isBrowserImage(data.nodeByPath.path)) {
                 return (
                     <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
-                        <ImageViewer key={data.nodeByPath.uuid} file={file} fullScreen={this.state.fullScreen}/>
+                        <ImageViewer file={file} fullScreen={this.state.fullScreen}/>
                     </div>
                 );
             }
@@ -375,7 +375,8 @@ class ContentPreview extends React.Component {
             );
         }
         return (
-            <a download
+            <a
+                download
                 className={classes.colorIcon}
                 href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
                 >

@@ -29,10 +29,9 @@ const styles = () => ({
         width: '100%',
         height: '100vh'
     },
-    CardRoot: {
+    cardRoot: {
         backgroundSize: 'contain'
     }
-
 });
 
 class ImageViewer extends React.Component {
@@ -41,10 +40,11 @@ class ImageViewer extends React.Component {
 
         return (
             <CardMedia
-                classes={{root: fullScreen ? classes.CardRoot : classes.CardRoot}}
+                classes={{root: classes.cardRoot}}
                 className={fullScreen ? classes.bigImage : classes.littleImage}
                 data-cm-role="preview-image"
-                image={file}/>
+                image={file}
+            />
         );
     }
 }

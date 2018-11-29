@@ -61,8 +61,7 @@ class DocumentViewer extends React.Component {
             case 'doc':
                 return (
                     <Paper className={classes.documentPaper} classes={{root: classes.paperChange}} elevation={0}>
-                        <FileViewer fileType={type}
-                            filePath={file}/>
+                        <FileViewer fileType={type} filePath={file}/>
                     </Paper>
                 );
             case 'avi':
@@ -70,8 +69,7 @@ class DocumentViewer extends React.Component {
             case 'video':
                 return (
                     <Paper className={classes.videoPaper} classes={{root: classes.paperChange}} elevation={0}>
-                        <FileViewer fileType={type}
-                            filePath={file}/>
+                        <FileViewer fileType={type} filePath={file}/>
                     </Paper>
                 );
             default:

@@ -505,8 +505,7 @@ class FileCard extends Component {
 
     fileName(node, maxLength, bodyClass, cardType) {
         let name = node.name;
-        let abbreviatableCardType = (!cardType || this.props.cardType === cardType);
-        let showTooltip = abbreviatableCardType && name.length > maxLength;
+        let shortenName = (!cardType || this.props.cardType === cardType) && name.length > maxLength;
         let bodyClassToUse = bodyClass;
 
         if (isMarkedForDeletion(node)) {
@@ -514,11 +513,11 @@ class FileCard extends Component {
         }
         let typography = (
             <Typography classes={{body2: bodyClassToUse}} variant="body2" className={this.props.classes.textTypo} data-cm-role="grid-content-list-card-name">
-                {abbreviatableCardType ? ellipsizeText(name, maxLength) : name}
+                {shortenName ? ellipsizeText(name, maxLength) : name}
             </Typography>
         );
 
-        return showTooltip ? (
+        return shortenName ? (
             <Tooltip title={name}>
                 {typography}
             </Tooltip>

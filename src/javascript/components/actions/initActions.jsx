@@ -28,6 +28,16 @@ import clearAllLocksAction from './clearAllLocksAction';
 import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 
+const PATH_CONTENTS_ITSELF = '^\/sites\/.+?\/contents\/?$';
+const PATH_CONTENTS_DESCENDANTS = '^\/sites\/.+?\/contents\/.+';
+const PATH_CONTENTS_AND_DESCENDANTS = '^\/sites\/.+?\/contents\/?';
+
+const PATH_FILES_ITSELF = '^\/sites\/.+?\/files\/?$';
+const PATH_FILES_DESCENDANTS = '^\/sites\/.+?\/files\/.+';
+const PATH_FILES_AND_DESCENDANTS = '^\/sites\/.+?\/files\/?';
+
+const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^\/sites\/systemsite\/?';
+
 function initActions(actionsRegistry) {
     actionsRegistry.add('router', routerAction);
     actionsRegistry.add('sideMenu', sideMenuAction);
@@ -37,7 +47,8 @@ function initActions(actionsRegistry) {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
         target: ['editPreviewBar:2.5', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
-        hideForPaths: ['^\/sites\/.+?\/files\/?$', '^\/sites\/.+?\/contents\/?$']
+        hideOnNodeTypes: ['jnt:virtualsite'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
@@ -181,28 +192,29 @@ function initActions(actionsRegistry) {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
         target: ['additionalPreviewMenu:3.8', 'tableMenuActions:3.8', 'contextualMenuContentAction:3.8', 'contentTreeMenuActions:3.8', 'tableMenuActions:3'],
-        hideOnNodeTypes: ['jnt:page']
+        hideOnNodeTypes: ['jnt:page'],
+        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('paste', pasteAction, {
         buttonIcon: <ContentPaste/>,
         buttonLabel: 'label.contentManager.contentPreview.paste',
         target: ['contentTreeMenuActions:3.8', 'copyPasteActions:3.8', 'tableHeaderActions:1'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['^\/sites\/.+?\/files\/?', '^\/sites\/.+?\/contents\/?']
+        showForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS]
     });
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
         target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9', 'tableMenuActions:4'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['^\/sites\/.+?\/files\/.+', '^\/sites\/.+?\/contents\/.+']
+        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
         target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4', 'tableMenuActions:4.5'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: ['^\/sites\/.+?\/files\/.+', '^\/sites\/.+?\/contents\/.+']
+        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
@@ -328,7 +340,7 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
         target: ['contentTreeMenuActions', 'contextualMenuContentAction', 'tableMenuActions'],
-        hideForPaths: ['^\/sites\/.+?\/files\/?', '^\/sites\/.+?\/contents\/?', '^\/sites\/systemsite\/?']
+        hideForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS, PATH_SYSTEM_SITE_AND_DESCENDANTS]
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',

@@ -182,7 +182,7 @@ class ContentPreview extends React.Component {
         }));
     }
 
-    // componentDidUpdate() {
+    // ComponentDidUpdate() {
     //     if (this.props.selection[0] === undefined) {
     //         this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
     //     }

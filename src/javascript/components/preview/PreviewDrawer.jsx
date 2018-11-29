@@ -116,7 +116,6 @@ const styles = theme => ({
 });
 
 class PreviewDrawer extends React.Component {
-
     render() {
         const {
             classes, previewMode, setPreviewMode, t, layoutQuery, layoutQueryParams, dxContext, closePreview
@@ -128,7 +127,8 @@ class PreviewDrawer extends React.Component {
                         <TableCell className={classes.drawerTableCell}>
                             <Toolbar disableGutters>
                                 <IconButton color="inherit" style={{padding: 0, marginRight: 10}}
-                                            onClick={closePreview}>
+                                    onClick={closePreview}
+                                    >
                                     <ChevronRightIcon className={classes.chevron} fontSize="small"/>
                                 </IconButton>
                                 <Typography className={classes.insideCell}>
@@ -146,7 +146,7 @@ class PreviewDrawer extends React.Component {
                                         }}
                                         color={previewMode === 'edit' ? 'primary' : 'default'}
                                         onClick={() => setPreviewMode('edit')}
-                                    >{t('label.contentManager.contentPreview.staging')}
+                                        >{t('label.contentManager.contentPreview.staging')}
                                     </Button>
                                     <Button
                                         className={classNames(classes.liveButton, {
@@ -158,7 +158,7 @@ class PreviewDrawer extends React.Component {
                                         variant="contained"
                                         color={previewMode === 'live' ? 'primary' : 'default'}
                                         onClick={() => setPreviewMode('live')}
-                                    >{t('label.contentManager.contentPreview.live')}
+                                        >{t('label.contentManager.contentPreview.live')}
                                     </Button>
                                 </div>
                             </Toolbar>
@@ -184,7 +184,7 @@ class PreviewDrawer extends React.Component {
 const mapStateToProps = state => {
     return {
         selection: state.selection,
-        previewMode: state.previewMode,
+        previewMode: state.previewMode
     };
 };
 

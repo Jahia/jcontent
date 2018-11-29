@@ -12,7 +12,7 @@ const styles = theme => ({
         maxHeight: '100px',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     typoTitle: {
         fontSize: '25px',

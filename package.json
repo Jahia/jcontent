@@ -2,7 +2,7 @@
   "name": "@jahia/content-manager",
   "version": "1.2.0",
   "scripts": {
-    "build": "yarn test && npx --node-arg=--max_old_space_size=2048 webpack",
+    "build": "npx --node-arg=--max_old_space_size=2048 webpack",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build -p",
     "build:production-analyze": "yarn build -p --analyze",

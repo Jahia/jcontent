@@ -28,17 +28,12 @@ let styles = theme => ({
         color: theme.palette.primary.contrastText + '!important'
     },
     listItem: {
-        fontFamily: '"Nunito sans", sans-serif',
-        backgroundPosition: 'left 10px center',
-        backgroundRepeat: 'no-repeat',
-        padding: '0 !important',
-        fontWeight: 300,
-        fontSize: '0.928rem',
+        height: (theme.spacing.unit * 5),
         whiteSpace: 'nowrap',
-        color: '#5E6565'
+        color: theme.palette.text.secondary
     },
     listItemDeleted: {
-        color: '#91A3AE',
+        color: theme.palette.text.disabled,
         textDecoration: 'line-through'
     },
     listItemLabel: {
@@ -59,10 +54,10 @@ let styles = theme => ({
     },
     listItemNodeTypeIcon: {
         marginRight: '5px',
-        color: '#5c6164'
+        color: theme.palette.text.secondary
     },
     selectedText: {
-        color: 'whitesmoke !important'
+        color: theme.palette.text.contrastText
     },
     loadingContainer: {
         position: 'absolute',
@@ -71,10 +66,10 @@ let styles = theme => ({
         zIndex: 999
     },
     toggleUnSelected: {
-        color: '#00a0e3'
+        color: theme.palette.primary.main
     },
     toggleSelected: {
-        color: 'whitesmoke'
+        color: theme.palette.text.contrastText
     },
     buttonContainer: {
         '&:hover': {
@@ -106,7 +101,7 @@ let styles = theme => ({
         fontWeight: 300,
         fontSize: '0.928rem',
         whiteSpace: 'nowrap',
-        color: '#F5F5F5'
+        color: theme.palette.text.contrastText
     },
     treeEntry: {
         display: 'flex',

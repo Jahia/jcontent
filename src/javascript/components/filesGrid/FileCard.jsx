@@ -126,7 +126,7 @@ const styles = theme => ({
         padding: 0,
         minHeight: 200,
         maxHeight: 200,
-        backgroundColor: 'rgb(245,245,245)'
+        backgroundColor: theme.palette.background.paper
     },
     cardContent: {
         marginLeft: Number(theme.spacing.unit),

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Picker} from '@jahia/react-apollo';
 import CmPickerViewMaterial from './picker/CmPickerViewMaterial';
-import {List, ListItem, Table, TableBody, Typography, TableCell, Toolbar, Paper, TableRow, withStyles, IconButton} from '@material-ui/core';
+import {List, ListItem, Table, TableBody, Typography, TableCell, Toolbar, TableRow, withStyles, IconButton} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {ChevronRight} from '@material-ui/icons';
@@ -29,8 +29,6 @@ const styles = theme => ({
         width: '260px'
     },
     tableCellHeight: {
-        // Top: 0,
-        // position: 'sticky',
         padding: '0px 0px 0px 10px',
         color: theme.palette.text.secondary,
         transitionDuration: '.3s',
@@ -40,6 +38,9 @@ const styles = theme => ({
     },
     disablePad: {
         padding: '0!important'
+    },
+    cellPadding: {
+        padding: '4px 56px 4px 0px'
     },
     buttonMenu: {
         display: 'flex',
@@ -62,7 +63,7 @@ const styles = theme => ({
     },
     toolbarHeight: {
         height: theme.spacing.unit * 7,
-        boxShadow: '2px 1px 1px 0px rgba(20, 20, 21, 0.49)'
+        boxShadow: '0px 1px 2px rgba(54, 63, 69, 0.1), 0px 2px 2px rgba(54, 63, 69, 0.08)'
     },
     hideTree: {
         paddingLeft: theme.spacing.unit * 0,
@@ -157,27 +158,25 @@ class ContentTrees extends React.Component {
 
         return (
             <div className={classes.trees}>
-                <Paper elevation={1}>
-                    {isOpen ?
-                        <Toolbar classes={{gutters: classes.overrideToolbar}} className={classes.toolbarHeight}>
-                            <Typography variant="subtitle2" className={classes.toolbarGrow}>
-                                {t('label.contentManager.tree.title')}
-                            </Typography>
-                            <IconButton className={classes.iconColor}>
-                                <ChevronLeft onClick={closeTree}/>
-                            </IconButton>
-                        </Toolbar> :
-                        <Toolbar classes={{gutters: classes.overrideToolbarClose}} className={classes.toolbarHeight}>
-                            <IconButton className={classes.iconColor}>
-                                <ChevronRight onClick={closeTree}/>
-                            </IconButton>
-                        </Toolbar>
+                {isOpen ?
+                    <Toolbar classes={{gutters: classes.overrideToolbar}} className={classes.toolbarHeight}>
+                        <Typography variant="subtitle2" className={classes.toolbarGrow}>
+                            {t('label.contentManager.tree.title')}
+                        </Typography>
+                        <IconButton className={classes.iconColor}>
+                            <ChevronLeft onClick={closeTree}/>
+                        </IconButton>
+                    </Toolbar> :
+                    <Toolbar classes={{gutters: classes.overrideToolbarClose}} className={classes.toolbarHeight}>
+                        <IconButton className={classes.iconColor}>
+                            <ChevronRight onClick={closeTree}/>
+                        </IconButton>
+                    </Toolbar>
                     }
-                </Paper>
                 <Table>
                     <TableBody>
                         <TableRow>
-                            <TableCell>
+                            <TableCell classes={{root: classes.cellPadding}}>
                                 {isOpen ?
 
                                     <List disablePadding>

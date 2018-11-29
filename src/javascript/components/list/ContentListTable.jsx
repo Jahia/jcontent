@@ -28,7 +28,7 @@ const allColumnData = [
 ];
 
 const reducedColumnData = [
-    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
+    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'}
 ];
 
 const APP_TABLE_CELLS = 2;

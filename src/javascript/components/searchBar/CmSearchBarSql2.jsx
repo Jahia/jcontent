@@ -5,7 +5,7 @@ import ActionButton from './ActionButton';
 import Sql2Input from './Sql2Input';
 import _ from 'lodash';
 import {compose} from 'react-apollo';
-import {withStyles, Grid, Button} from '@material-ui/core';
+import {withStyles, Grid} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {translate, Trans} from 'react-i18next';
 import {cmGoto} from '../redux/actions';

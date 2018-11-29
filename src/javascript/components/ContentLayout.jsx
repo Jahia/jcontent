@@ -40,7 +40,7 @@ const styles = theme => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         marginLeft: -treeDrawerWidth,
-        marginRight: -previewDrawerWidth,
+        marginRight: -previewDrawerWidth
     },
     contentLeftShift: {
         marginLeft: 0,
@@ -52,23 +52,23 @@ const styles = theme => ({
     },
     treeDrawer: {
         width: treeDrawerWidth,
-        flexShrink: 0,
+        flexShrink: 0
     },
     treeDrawerPaper: {
         width: treeDrawerWidth,
         top: 'unset',
         left: 'unset',
-        zIndex: 2000,
+        zIndex: 2000
     },
     previewDrawer: {
         width: previewDrawerWidth,
-        flexShrink: 0,
+        flexShrink: 0
     },
     previewDrawerPaper: {
         width: previewDrawerWidth,
         top: 'unset',
         right: 38,
-        zIndex: 2000,
+        zIndex: 2000
     },
     appFrame: {
         zIndex: 0,
@@ -90,7 +90,7 @@ const styles = theme => ({
         '& a': {
             color: 'inherit'
         }
-    },
+    }
 });
 
 const GRID_SIZE = 12;
@@ -144,12 +144,13 @@ class ContentLayout extends React.Component {
             <DxContext.Consumer>{dxContext => {
                 return (
                     <React.Fragment>
-                        <Typography variant={'caption'} className={classes.academyLink}>
+                        <Typography variant="caption" className={classes.academyLink}>
                             <Trans
                                 i18nKey="label.contentManager.link.academy"
                                 components={[<a key="academyLink" href={contextJsParameters.config.academyLink}
-                                                target="_blank" rel="noopener noreferrer"
-                                            >univers</a>]}
+                                    target="_blank" rel="noopener noreferrer"
+                                                    >univers
+                                </a>]}
                             />
                         </Typography>
                         <Grid container spacing={0}>
@@ -164,7 +165,7 @@ class ContentLayout extends React.Component {
                                 anchor="left"
                                 open={treeState === CM_DRAWER_STATES.SHOW}
                                 classes={{paper: classes.treeDrawerPaper}}
-                            >
+                                >
                                 <ContentTrees
                                     isOpen={treeState === CM_DRAWER_STATES.SHOW}
                                     path={path}
@@ -178,31 +179,32 @@ class ContentLayout extends React.Component {
                                     [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
                                 })}
                                 onContextMenu={event => contextualMenu.current.open(event)}
-                            >
-                                <ContentData layoutQuery={layoutQuery}
-                                             layoutQueryParams={layoutQueryParams}
-                                             setRefetch={this.setContentRefetcher}
-                                             orderBy={sort.orderBy}
-                                             treeShown={open}
                                 >
+                                <ContentData layoutQuery={layoutQuery}
+                                    layoutQueryParams={layoutQueryParams}
+                                    setRefetch={this.setContentRefetcher}
+                                    orderBy={sort.orderBy}
+                                    treeShown={open}
+                                    >
                                     {({rows, contentNotFound, totalCount}) => {
                                         return (
                                             <Paper
-                                                className={classes.paper}>{mode === Constants.mode.FILES && filesMode === 'grid' ?
-                                                <FilesGrid
-                                                    totalCount={totalCount}
-                                                    path={path}
-                                                    rows={rows}
-                                                    contentNotFound={contentNotFound}
-                                                    pageSize={pagination.pageSize}
-                                                    page={pagination.currentPage}
+                                                className={classes.paper}
+                                                >{mode === Constants.mode.FILES && filesMode === 'grid' ?
+                                                    <FilesGrid
+                                                        totalCount={totalCount}
+                                                        path={path}
+                                                        rows={rows}
+                                                        contentNotFound={contentNotFound}
+                                                        pageSize={pagination.pageSize}
+                                                        page={pagination.currentPage}
                                                 /> :
-                                                <ContentListTable
-                                                    totalCount={totalCount}
-                                                    rows={rows}
-                                                    contentNotFound={contentNotFound}
-                                                    pageSize={pagination.pageSize}
-                                                    page={pagination.currentPage}
+                                                    <ContentListTable
+                                                        totalCount={totalCount}
+                                                        rows={rows}
+                                                        contentNotFound={contentNotFound}
+                                                        pageSize={pagination.pageSize}
+                                                        page={pagination.currentPage}
                                                 />
                                             }
                                             </Paper>
@@ -217,7 +219,7 @@ class ContentLayout extends React.Component {
                                 anchor="right"
                                 open={previewState === CM_DRAWER_STATES.SHOW}
                                 classes={{paper: classes.previewDrawerPaper}}
-                            >
+                                >
                                 {previewState === CM_DRAWER_STATES.SHOW && <PreviewDrawer
                                     layoutQuery={layoutQuery}
                                     layoutQueryParams={layoutQueryParams}

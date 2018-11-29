@@ -16,10 +16,9 @@ const styles = theme => ({
     grid: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: 'calc(100vh - 140px)',
         maxHeight: 'calc(100vh - 140px)',
         margin: '0!important',
-        backgroundColor: '#efefef',
+        backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3
     },
     gridEmpty: {
@@ -29,16 +28,10 @@ const styles = theme => ({
         height: 'calc(100vh - 140px)',
         maxHeight: 'calc(100vh - 140px)',
         margin: '0!important',
-        backgroundColor: '#efefef'
+        backgroundColor: theme.palette.background.default
     },
     centerGrid: {
         padding: theme.spacing.unit * 2
-    },
-    row: {
-        backgroundColor: 'red'
-    },
-    rowPair: {
-        backgroundColor: 'black'
     },
     empty: {
         width: '100%',
@@ -121,9 +114,9 @@ class FilesGrid extends Component {
                             </Grid>
                         ))
                     }
-                        <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
                     </UploadTransformComponent>
                 </div>
+                <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
             </div>
         );
     }

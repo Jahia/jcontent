@@ -92,9 +92,11 @@ class CmToolbar extends React.Component {
                     <Grid container item xs={GRID_SIZE} direction="row" alignItems="center">
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             <div>
-                                {treeState !== CM_DRAWER_STATES.SHOW && <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
+                                {treeState !== CM_DRAWER_STATES.SHOW &&
+                                <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
                                     <Refresh color="primary"/>
-                                </Button>}
+                                </Button>
+                                }
                                 {this.isSearching() ?
                                     <CmSearchControlBar/> :
                                     <ContentBreadcrumbs mode={this.props.mode}/>
@@ -109,7 +111,7 @@ class CmToolbar extends React.Component {
                             </React.Fragment>
                             }
                             {this.isBrowsing() && !this.isRootNode() &&
-                                <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', classes: {root: classes.buttonCreate}}, true)}/>
+                            <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', classes: {root: classes.buttonCreate}}, true)}/>
                             }
                             <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                                 <Refresh color="primary"/>

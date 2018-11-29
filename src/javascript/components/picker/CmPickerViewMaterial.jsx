@@ -112,6 +112,9 @@ let styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         cursor: 'pointer !important'
+    },
+    unpublishedEntryLabel: {
+        fontStyle: "italic"
     }
 });
 
@@ -198,6 +201,7 @@ class CmPickerViewMaterial extends React.Component {
                                     <ListItemText
                                         disableTypography
                                         inset
+                                        className={entry.node.primaryNodeType.name === "jnt:page" && !(entry.node.isPublished && entry.node.isPublished.value === "true") ? classes.unpublishedEntryLabel : null}
                                         classes={entry.selected ? {
                                         root: classes.listItemLabel,
                                         primary: classes.selectedText

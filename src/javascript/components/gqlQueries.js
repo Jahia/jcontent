@@ -143,6 +143,17 @@ const PickerItemsFragment = {
         }`
 
     },
+    isPublished: {
+        applyFor: 'node',
+        gql: gql`
+            fragment IsPublished on JCRNode {
+                isPublished:property(name:"j:published") {
+                    name
+                    value
+                }
+            }
+        `
+    },
     primaryNodeType: {
         applyFor: 'node',
         gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`

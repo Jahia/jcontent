@@ -116,15 +116,20 @@ const styles = theme => ({
         whiteSpace: 'nowrap'
     },
     activeStatus: {
-        backgroundColor: '#E67D3A',
-        color: '#fff',
+        color: '#E67D3A',
         opacity: '0.9',
         '&:hover': {
             opacity: '1.5'
         },
-        padding: '1px',
-        width: '20px',
-        height: '20px'
+        padding: '1px'
+    },
+    activeStatusSelected: {
+        color: "#FFA83F",
+        opacity: '0.9',
+        '&:hover': {
+            opacity: '1.5'
+        },
+        padding: '1px'
     },
     name: {
         color: '#313131',
@@ -143,7 +148,7 @@ const styles = theme => ({
         minHeight: 37 // Same as row height
     },
     actionCell: {
-        minWidth: '38px'
+        minWidth: '22px'
     },
     hoveredRowAction: {
         color: '#5E6565',
@@ -291,20 +296,23 @@ class ContentListTable extends React.Component {
         }, 100);
     }
 
-    renderLock(row) {
+    renderLock(row, isSelected) {
         let {classes, t} = this.props;
         return row.isLocked ?
-            <Tooltip title={t('label.contentManager.locked')}><Lock className={classes.activeStatus}/></Tooltip> : null;
+            <Tooltip title={t('label.contentManager.locked')}>
+                <Lock style={{width: '22px', height: '22px'}}
+                      className={isSelected ? classes.activeStatusSelected : classes.activeStatus}/>
+            </Tooltip> : null;
     }
 
-    renderWip(row, dxContext) {
+    renderWip(row, dxContext, isSelected) {
         let {classes, t, lang} = this.props;
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip
                     title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}
-                    ><VirtualsiteIcon
-                        className={classes.activeStatus}/>
+                    ><VirtualsiteIcon style={{width: '28px', height: '28px'}}
+                        className={isSelected ? classes.activeStatusSelected : classes.activeStatus}/>
                 </Tooltip>
             );
         }
@@ -334,8 +342,8 @@ class ContentListTable extends React.Component {
                                 {contentNotFound ? <ContentNotFound classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let isHoveredRow = hoveredRow === n.path;
-                                    let renderWip = this.renderWip(n, dxContext);
-                                    let renderLock = this.renderLock(n);
+                                    let renderWip = this.renderWip(n, dxContext, isSelected);
+                                    let renderLock = this.renderLock(n, isSelected);
                                     let icon = this.addIconSuffix(n.icon);
                                     let cellContentClasses = {root: isSelected ? classes.selectedCell : classes.cell};
                                     let nameCellContentClasses = cellContentClasses;

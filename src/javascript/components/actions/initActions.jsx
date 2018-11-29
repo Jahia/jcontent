@@ -191,7 +191,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
-        target: ['additionalPreviewMenu:3.8', 'tableMenuActions:3.8', 'contextualMenuContentAction:3.8', 'contentTreeMenuActions:3.8', 'tableMenuActions:3'],
+        target: ['additionalPreviewMenu:3.8', 'tableMenuActions:3.8', 'contextualMenuContentAction:3.8', 'contentTreeMenuActions:3.8'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
@@ -205,14 +205,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
-        target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9', 'tableMenuActions:4'],
+        target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
-        target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4', 'tableMenuActions:4.5'],
+        target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });

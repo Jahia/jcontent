@@ -35,15 +35,15 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                         return of(false);
                     }
 
-                    let nodeToCopy = context.items[0];
-                    if (nodeToCopy.mutationToUse === 'MOVE' && nodeToCopy.path === targetNode.path + '/' + nodeToCopy.name) {
+                    let nodeToPaste = context.items[0];
+                    if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) {
                         return of(false);
                     }
-                    if (targetNode.path.startsWith(nodeToCopy.path + '/')) {
+                    if (targetNode.path.startsWith(nodeToPaste.path + '/')) {
                         return of(false);
                     }
 
-                    const primaryNodeTypeToPaste = nodeToCopy.primaryNodeType;
+                    const primaryNodeTypeToPaste = nodeToPaste.primaryNodeType;
                     let contributeTypesProperty = targetNode.contributeTypes ||
                         (targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
                     if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {

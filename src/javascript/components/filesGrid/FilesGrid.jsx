@@ -67,7 +67,7 @@ class FilesGrid extends Component {
     }
 
     render() {
-        const {size, t, handleShowPreview, contentNotFound, classes, path} = this.props;
+        const {size, t, contentNotFound, classes, path} = this.props;
         const {hoveredCard} = this.state;
 
         if (contentNotFound) {
@@ -114,8 +114,7 @@ class FilesGrid extends Component {
                                             <FileCard cardType={size}
                                                 isHovered={node.path === hoveredCard}
                                                 node={{...node, displayName: node.name}}
-                                                dxContext={dxContext}
-                                                handleShowPreview={handleShowPreview}/>
+                                                dxContext={dxContext}/>
     )
                                     }
                                 </DxContext.Consumer>

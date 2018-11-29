@@ -5,7 +5,7 @@ import {dsDarkTheme as theme} from '@jahia/ds-mui-theme';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
 import {I18n, I18nextProvider} from 'react-i18next';
-import {Route} from 'react-router';
+import {Route, Switch} from 'react-router';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
 import ManagerLayout from './ManagerLayout';
@@ -18,7 +18,6 @@ import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import getStore from './redux/getStore';
-import Constants from './constants';
 import {PushEventHandler} from './PushEventHandler';
 import initActions from './actions/initActions';
 
@@ -76,8 +75,6 @@ class ContentManager extends React.Component {
     }
 
     render() {
-        let contentTreeConfigs = Constants.contentTreeConfigs;
-
         let {dxContext} = this.props;
         // Work around to restore table headers color
         // TODO: MUST REMOVE IT BACKLOG-8697 !!!!
@@ -104,21 +101,14 @@ class ContentManager extends React.Component {
                                                         dxContext.lang = props.match.params.lang;
                                                         return (
                                                             <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
-                                                                <Route path={`${props.match.url}/browse`} render={() =>
-                                                                    <ContentLayout contentTreeConfigs={[contentTreeConfigs.contents, contentTreeConfigs.pages]}/>
-                                                            }/>
-                                                                <Route path={`${props.match.url}/browse-files`} render={() =>
-                                                                    <ContentLayout contentTreeConfigs={[contentTreeConfigs.files]}/>
-                                                            }/>
-                                                                <Route path={`${props.match.url}/search`} render={() =>
-                                                                    <ContentLayout/>
-                                                            }/>
-                                                                <Route path={`${props.match.url}/sql2Search`} render={() =>
-                                                                    <ContentLayout/>
-                                                            }/>
-                                                                <Route path={`${props.match.url}/apps`} render={() =>
-                                                                    <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
-                                                            }/>
+                                                                <Switch>
+                                                                    <Route path={`${props.match.url}/apps`} render={() =>
+                                                                        <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
+                                                                    }/>
+                                                                    <Route render={() =>
+                                                                        <ContentLayout/>
+                                                                    }/>
+                                                                </Switch>
                                                             </ManagerLayout>
 );
                                                     }}/>

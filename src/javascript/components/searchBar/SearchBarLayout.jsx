@@ -12,6 +12,9 @@ const styles = () => ({
         minHeight: '34px',
         flexGrow: 10,
         boxShadow: 'none!important'
+    },
+    searchFooter: {
+        minHeight: '24px'
     }
 });
 
@@ -31,14 +34,14 @@ class SearchBarLayout extends React.Component {
                         </Tooltip>
                     </Grid>
                 </Paper>
-                <Grid container>
+                <Grid container spacing={0} className={classes.searchFooter}>
                     <Grid item xs={8}>
-                        <Typography gutterBottom color="inherit" align="left">
+                        <Typography color="inherit" align="left">
                             {leftFooter}
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography gutterBottom color="inherit" align="right">
+                        <Typography color="inherit" align="right">
                             {rightFooter}
                         </Typography>
                     </Grid>

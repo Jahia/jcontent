@@ -13,11 +13,10 @@ import {
     uiLanguageReducer,
     selectionReducer,
     previewModeReducer,
-    previewModesReducer,
     previewStateReducer,
     openPathsReducer,
     searchModeReducer,
-    siteDisplayableNameReducer
+    siteDisplayableNameReducer, treeStateReducer, paginationReducer, sortReducer
 } from './reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
@@ -35,12 +34,14 @@ let getStore = (dxContext, history) => {
         params: paramsReducer(currentValueFromUrl.params),
         fileUpload: fileUpload,
         previewMode: previewModeReducer,
-        previewModes: previewModesReducer,
         previewState: previewStateReducer,
+        treeState: treeStateReducer,
         openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode),
         searchMode: searchModeReducer(currentValueFromUrl.params),
         copyPaste: copyPaste,
-        filesGrid: filesGrid
+        filesGrid: filesGrid,
+        pagination: paginationReducer,
+        sort: sortReducer
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

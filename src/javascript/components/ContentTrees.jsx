@@ -7,11 +7,12 @@ import {ChevronLeft} from '@material-ui/icons';
 import {ChevronRight} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths} from './redux/actions';
+import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from './redux/actions';
 import {ContextualMenu, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import {PickerItemsFragment} from './gqlQueries';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import {compose} from 'react-apollo';
+import Constants from './constants';
 
 const styles = theme => ({
     trees: {
@@ -147,10 +148,12 @@ class ContentTrees extends React.Component {
     }
 
     render() {
-        const {lang, siteKey, path, openPaths, t, user, contentTreeConfigs, setPath, openPath,
-            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, openDrawer} = this.props;
+        const {lang, siteKey, path, openPaths, t, user, setPath, openPath,
+            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, closeTree} = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
+
+        let contentTreeConfigs = mode === 'browse' ? [Constants.contentTreeConfigs.contents, Constants.contentTreeConfigs.pages] : [Constants.contentTreeConfigs.files];
 
         return (
             <div className={classes.trees}>
@@ -161,12 +164,12 @@ class ContentTrees extends React.Component {
                                 {t('label.contentManager.tree.title')}
                             </Typography>
                             <IconButton className={classes.iconColor}>
-                                <ChevronLeft onClick={openDrawer}/>
+                                <ChevronLeft onClick={closeTree}/>
                             </IconButton>
                         </Toolbar> :
                         <Toolbar classes={{gutters: classes.overrideToolbarClose}} className={classes.toolbarHeight}>
                             <IconButton className={classes.iconColor}>
-                                <ChevronRight onClick={openDrawer}/>
+                                <ChevronRight onClick={closeTree}/>
                             </IconButton>
                         </Toolbar>
                     }
@@ -232,7 +235,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     openPath: path => dispatch(cmOpenPaths([path])),
-    closePath: path => dispatch(cmClosePaths([path]))
+    closePath: path => dispatch(cmClosePaths([path])),
+    closeTree: () => dispatch(cmSetTreeState(CM_DRAWER_STATES.HIDE))
 });
 
 export default compose(

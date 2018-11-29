@@ -8,7 +8,7 @@ import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
 import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
-import {cmSetSelection, cmGoto} from './redux/actions';
+import {cmSetSelection, cmGoto, cmSetTreeState, CM_DRAWER_STATES} from './redux/actions';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import Constants from './constants';
@@ -78,7 +78,7 @@ class CmToolbar extends React.Component {
     render() {
         const {contentTreeConfigs, t, classes,
             searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms,
-            mode, path, clearSearch} = this.props;
+            mode, path, clearSearch, treeState, setTreeState} = this.props;
 
         const params = {
             searchContentType: searchContentType,
@@ -92,6 +92,9 @@ class CmToolbar extends React.Component {
                     <Grid container item xs={GRID_SIZE} direction="row" alignItems="center">
                         <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
                             <div>
+                                {treeState !== CM_DRAWER_STATES.SHOW && <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
+                                    <Refresh color="primary"/>
+                                </Button>}
                                 {this.isSearching() ?
                                     <CmSearchControlBar/> :
                                     <ContentBreadcrumbs mode={this.props.mode}/>
@@ -137,6 +140,7 @@ const mapStateToProps = state => ({
     path: state.path,
     lang: state.language,
     params: state.params,
+    treeState: state.treeState,
     searchTerms: state.params.searchTerms,
     searchContentType: state.params.searchContentType,
     sql2SearchFrom: state.params.sql2SearchFrom,
@@ -146,6 +150,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onRowSelected: selection => dispatch(cmSetSelection(selection)),
     setPath: (path, params) => dispatch(cmGoto({path, params})),
+    setTreeState: state => dispatch(cmSetTreeState(state)),
     clearSearch: params => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');

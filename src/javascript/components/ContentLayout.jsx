@@ -2,7 +2,7 @@ import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import * as _ from 'lodash';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Drawer, Grid, Paper, withStyles} from '@material-ui/core';
+import {Drawer, Grid, Paper, withStyles, Typography} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
@@ -10,7 +10,15 @@ import ContentTrees from './ContentTrees';
 import {Trans, translate} from 'react-i18next';
 import {DxContext} from './DxContext';
 import Upload from './fileupload/Upload';
-import {CM_PREVIEW_STATES, cmGoto, cmSetPreviewState} from './redux/actions';
+import {
+    CM_DRAWER_STATES,
+    cmGoto,
+    cmSetPage,
+    cmSetPageSize,
+    cmSetPreviewState,
+    cmSetSort,
+    cmSetTreeState
+} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
 import {ContentData, contentQueryHandlerByMode} from './ContentData';
 import CMTopBar from './CMTopBar';
@@ -18,132 +26,56 @@ import {connect} from 'react-redux';
 import Constants from './constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
 
-const drawerWidth = 260;
-const drawerPreviewWidth = 600;
+const treeDrawerWidth = 260;
+const previewDrawerWidth = 600;
 
 const styles = theme => ({
     topBar: {
         color: theme.palette.primary.contrastText
     },
-    previewOn: {
-        color: theme.palette.primary.contrastText
-    },
-    previewOff: {
-        color: theme.palette.text.secondary
-    },
     paper: {
-        backgroundColor: theme.palette.primary.contrastText
-    },
-    blockCore: {
-        marginTop: -28,
-        marginBottom: -2,
-        marginLeft: -24
-    },
-    blockCoreSearch: {
-        marginLeft: -17,
-        marginTop: -28,
-        backgroundColor: theme.palette.layout.dark,
-        maxHeight: 31
-    },
-    buttons: {
-        textAlign: 'right'
-    },
-    showTreeButton: {
-        color: theme.palette.text.contrastText,
-        marginRight: theme.spacing.unit / 2
-    },
-    refreshButton: {
-        color: theme.palette.text.contrastText,
-        padding: 0
-    },
-    showTree: {
-        textAlign: 'right !important'
-    },
-    drawerPaper: {
-        backgroundColor: 'transparent',
-        position: 'relative',
-        width: drawerWidth
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: 'nowrap'
-    },
-    drawerOpen: {
-        position: 'relative',
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    },
-    drawerClose: {
-        position: 'relative',
-
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        }),
-        overflowX: 'hidden',
-        width: (theme.spacing.unit * 7) + 1,
-        [theme.breakpoints.up('sm')]: {
-            width: (theme.spacing.unit * 9) + 1
-        }
-    },
-    drawerPaperPreview: {
-        backgroundColor: 'transparent',
-        position: 'relative',
-        width: drawerPreviewWidth
+        backgroundColor: theme.palette.background.paper
     },
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        })
+        marginLeft: -treeDrawerWidth,
+        marginRight: -previewDrawerWidth,
     },
-    'content-left': {
-        zIndex: '1500',
-        marginLeft: 0
+    contentLeftShift: {
+        marginLeft: 0,
+        transition: ['margin-left 0ms 225ms']
     },
-    'content-right': {
-        marginRight: -drawerPreviewWidth
+    contentRightShift: {
+        marginRight: 0,
+        transition: ['margin-right 0ms 225ms']
     },
-    contentShift: {
-        zIndex: '10000',
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen
-        })
+    treeDrawer: {
+        width: treeDrawerWidth,
+        flexShrink: 0,
     },
-    'contentShift-left': {
-        marginLeft: 0
+    treeDrawerPaper: {
+        width: treeDrawerWidth,
+        top: 'unset',
+        left: 'unset',
+        zIndex: 2000,
     },
-    'contentShift-right': {
-        marginRight: 0
+    previewDrawer: {
+        width: previewDrawerWidth,
+        flexShrink: 0,
     },
-    root: {
-        flexGrow: 1
+    previewDrawerPaper: {
+        width: previewDrawerWidth,
+        top: 'unset',
+        right: 38,
+        zIndex: 2000,
     },
     appFrame: {
         zIndex: 0,
         overflow: 'hidden',
         position: 'relative',
-        marginLeft: '-17px',
         display: 'flex',
         width: '100%'
-    },
-    searchClear: {
-        maxHeight: 25,
-        minHeight: 25,
-        padding: '3px 7px'
-    },
-    searchClearButton: {
-        color: theme.palette.text.contrastText
-    },
-    searchClearIcon: {
-        color: theme.palette.text.contrastText
     },
     academyLink: {
         position: 'fixed',
@@ -154,75 +86,16 @@ const styles = theme => ({
         zIndex: '2000',
         textAlign: 'right',
         color: theme.palette.text.contrastText,
-        fontSize: 12,
         marginRight: 50,
-        fontFamily: 'Nunito Sans'
+        '& a': {
+            color: 'inherit'
+        }
     },
-    link: {
-        color: 'inherit'
-    }
 });
 
 const GRID_SIZE = 12;
 
 class ContentLayout extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            open: true,
-            open_view: false,
-            anchor: 'left',
-            page: 0,
-            rowsPerPage: 25,
-            order: 'ASC',
-            orderBy: 'lastModified.value'
-        };
-
-        this.handleSort = this.handleSort.bind(this);
-        this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
-        this.handleShowPreview = this.handleShowPreview.bind(this);
-        this.handleChangePage = this.handleChangePage.bind(this);
-        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-    }
-
-    handleDrawerOpen() {
-        if (this.state.open) {
-            this.setState({open: false});
-        } else {
-            this.setState({open: true});
-        }
-    }
-
-    // Force can be `show` or `hide`
-    handleShowPreview(selection, force) {
-        let {previewState, setPreviewState} = this.props;
-        if (force !== undefined) {
-            setPreviewState(force);
-        } else if (!_.isEmpty(selection)) {
-            switch (previewState) {
-                case CM_PREVIEW_STATES.HIDE:
-                    setPreviewState(CM_PREVIEW_STATES.SHOW);
-                    break;
-                default:
-                    setPreviewState(CM_PREVIEW_STATES.HIDE);
-            }
-        }
-    }
-
-    handleChangePage(newPage) {
-        this.setState({page: newPage});
-    }
-
-    handleChangeRowsPerPage(value) {
-        if (value !== this.state.rowsPerPage) {
-            this.setState({
-                page: 0,
-                rowsPerPage: value
-            });
-        }
-    }
-
     setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
     }
@@ -233,13 +106,6 @@ class ContentLayout extends React.Component {
 
     refreshContentsAndTree(contentTreeConfigs) {
         refetchContentTreeAndListData(contentTreeConfigs);
-    }
-
-    handleSort(order, orderBy) {
-        this.setState({
-            order: order,
-            orderBy: orderBy
-        });
     }
 
     isBrowsing() {
@@ -258,15 +124,12 @@ class ContentLayout extends React.Component {
     }
 
     render() {
-        const {anchor, open_view, open, order, orderBy} = this.state;
-        const {contentTreeConfigs, mode, selection, path, uiLang, lang, siteKey, previewState, searchTerms,
-            searchContentType, sql2SearchFrom, sql2SearchWhere, classes, filesMode} = this.props;
+        const {
+            contentTreeConfigs, mode, path, uiLang, lang, siteKey, previewState, searchTerms,
+            searchContentType, sql2SearchFrom, sql2SearchWhere, classes, filesMode, treeState, pagination, sort
+        } = this.props;
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
-        const paginationState = {
-            page: this.state.page,
-            rowsPerPage: this.state.rowsPerPage
-        };
         const rootPath = `/sites/${siteKey}`;
         const params = {
             searchContentType: searchContentType,
@@ -275,122 +138,102 @@ class ContentLayout extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
 
-        const openHidden = open ? 'open' : 'hidden';
-        const layoutQueryParams = queryHandler.getQueryParams(path, paginationState, uiLang, lang, params, rootPath, order, orderBy, openHidden);
+        const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort, treeState);
         let contextualMenu = React.createRef();
-
         return (
             <DxContext.Consumer>{dxContext => {
-            return (
-                <React.Fragment>
-                    <div className={classes.academyLink}>
-                        <Trans
-                            i18nKey="label.contentManager.link.academy"
-                            components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer" className={classes.link}>univers</a>]}
-                    />
-                    </div>
-                    <Grid container spacing={0}>
-                        <Grid item xs={GRID_SIZE} className={classes.topBar}>
-                            <CMTopBar dxContext={dxContext} mode={mode}/>
+                return (
+                    <React.Fragment>
+                        <Typography variant={'caption'} className={classes.academyLink}>
+                            <Trans
+                                i18nKey="label.contentManager.link.academy"
+                                components={[<a key="academyLink" href={contextJsParameters.config.academyLink}
+                                                target="_blank" rel="noopener noreferrer"
+                                            >univers</a>]}
+                            />
+                        </Typography>
+                        <Grid container spacing={0}>
+                            <Grid item xs={GRID_SIZE} className={classes.topBar}>
+                                <CMTopBar dxContext={dxContext} mode={mode}/>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <div className={classes.appFrame}>
-                        {this.isBrowsing() &&
-                        <Drawer
-                            variant="permanent"
-                            anchor={anchor}
-                            open={open}
-                            className={classNames(classes.drawer, {
-                                [classes.drawerOpen]: this.state.open,
-                                [classes.drawerClose]: !this.state.open
-                            })}
-
-                            classes={{
-                                paper: classNames({
-                                    [classes.drawerOpen]: this.state.open,
-                                    [classes.drawerClose]: !this.state.open
-                                })
-                            }}
+                        <div className={classes.appFrame}>
+                            <Drawer
+                                className={classes.treeDrawer}
+                                variant="persistent"
+                                anchor="left"
+                                open={treeState === CM_DRAWER_STATES.SHOW}
+                                classes={{paper: classes.treeDrawerPaper}}
                             >
-                            <Paper elevation={2} style={{background: 'red!important'}}>
                                 <ContentTrees
-                                    contentTreeConfigs={contentTreeConfigs}
-                                    openDrawer={this.handleDrawerOpen}
-                                    isOpen={this.state.open}
+                                    isOpen={treeState === CM_DRAWER_STATES.SHOW}
                                     path={path}
                                     setRefetch={this.setTreeRefetcher}
                                 />
-                            </Paper>
-                        </Drawer>
-                        }
-                        <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                        <main
-                            className={classNames(classes.content, classes['content-left'], {
-                                [classes.contentShift]: open,
-                                [classes['contentShift-left']]: open
-                            }) ||
-                            classNames(classes.content, classes['content-right'], {
-                                [classes.contentShift]: open_view,
-                                [classes['contentShift-right']]: open_view
-                            })}
-                            onContextMenu={event => contextualMenu.current.open(event)}
+                            </Drawer>
+                            <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
+                            <main
+                                className={classNames(classes.content, {
+                                    [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
+                                    [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
+                                })}
+                                onContextMenu={event => contextualMenu.current.open(event)}
                             >
-                            <ContentData layoutQuery={layoutQuery}
-                                layoutQueryParams={layoutQueryParams}
-                                setRefetch={this.setContentRefetcher}
-                                orderBy={orderBy}
-                                treeShown={open}
+                                <ContentData layoutQuery={layoutQuery}
+                                             layoutQueryParams={layoutQueryParams}
+                                             setRefetch={this.setContentRefetcher}
+                                             orderBy={sort.orderBy}
+                                             treeShown={open}
                                 >
-                                {({rows, contentNotFound, totalCount}) => {
-                                    return (
-                                        <Paper className={classes.paper}>{mode === Constants.mode.FILES && filesMode === 'grid' ?
-                                            <FilesGrid
-                                                totalCount={totalCount}
-                                                path={path}
-                                                rows={rows}
-                                                contentNotFound={contentNotFound}
-                                                pageSize={this.state.rowsPerPage}
-                                                page={this.state.page}
-                                                handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
-                                                onChangePage={this.handleChangePage}
-                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            /> :
-                                            <ContentListTable
-                                                totalCount={totalCount}
-                                                rows={rows}
-                                                contentNotFound={contentNotFound}
-                                                pageSize={this.state.rowsPerPage}
-                                                page={this.state.page}
-                                                order={order}
-                                                orderBy={orderBy}
-                                                handleShowPreview={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.SHOW)}
-                                                handleSort={this.handleSort}
-                                                onChangePage={this.handleChangePage}
-                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            />
-                                        }
-                                        </Paper>
-);
-                                }}
-                            </ContentData>
-                        </main>
-                        <PreviewDrawer
-                            open={previewState === CM_PREVIEW_STATES.SHOW}
-                            layoutQuery={layoutQuery}
-                            layoutQueryParams={layoutQueryParams}
-                            dxContext={dxContext}
-                            onClose={() => this.handleShowPreview(selection, CM_PREVIEW_STATES.HIDE)}
-                        />
-                    </div>
+                                    {({rows, contentNotFound, totalCount}) => {
+                                        return (
+                                            <Paper
+                                                className={classes.paper}>{mode === Constants.mode.FILES && filesMode === 'grid' ?
+                                                <FilesGrid
+                                                    totalCount={totalCount}
+                                                    path={path}
+                                                    rows={rows}
+                                                    contentNotFound={contentNotFound}
+                                                    pageSize={pagination.pageSize}
+                                                    page={pagination.currentPage}
+                                                /> :
+                                                <ContentListTable
+                                                    totalCount={totalCount}
+                                                    rows={rows}
+                                                    contentNotFound={contentNotFound}
+                                                    pageSize={pagination.pageSize}
+                                                    page={pagination.currentPage}
+                                                />
+                                            }
+                                            </Paper>
+                                        );
+                                    }}
+                                </ContentData>
+                            </main>
+                            <Drawer
+                                data-cm-role="preview-drawer"
+                                className={classes.previewDrawer}
+                                variant="persistent"
+                                anchor="right"
+                                open={previewState === CM_DRAWER_STATES.SHOW}
+                                classes={{paper: classes.previewDrawerPaper}}
+                            >
+                                {previewState === CM_DRAWER_STATES.SHOW && <PreviewDrawer
+                                    layoutQuery={layoutQuery}
+                                    layoutQueryParams={layoutQueryParams}
+                                    dxContext={dxContext}
+                                />}
+                            </Drawer>
+                        </div>
 
-                    <Upload uploadUpdateCallback={status => {
-                    if (status && status.uploading === 0) {
-                        this.refreshContentsAndTree(contentTreeConfigs);
-                    }
-                }}/>
-                </React.Fragment>
-);
-        }}
+                        <Upload uploadUpdateCallback={status => {
+                            if (status && status.uploading === 0) {
+                                this.refreshContentsAndTree(contentTreeConfigs);
+                            }
+                        }}/>
+                    </React.Fragment>
+                );
+            }}
             </DxContext.Consumer>
         );
     }
@@ -404,19 +247,22 @@ const mapStateToProps = state => {
         lang: state.language,
         selection: state.selection,
         previewState: state.previewState,
+        treeState: state.treeState,
         params: state.params,
         uiLang: state.uiLang,
         searchTerms: state.params.searchTerms,
         searchContentType: state.params.searchContentType,
         sql2SearchFrom: state.params.sql2SearchFrom,
         sql2SearchWhere: state.params.sql2SearchWhere,
-        filesMode: state.filesGrid.mode
+        filesMode: state.filesGrid.mode,
+        pagination: state.pagination,
+        sort: state.sort
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto(path, params)),
-    setPreviewState: state => dispatch(cmSetPreviewState(state)),
+    setTreeState: state => dispatch(cmSetTreeState(state)),
     clearSearch: params => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');

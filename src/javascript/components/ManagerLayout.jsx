@@ -18,7 +18,8 @@ const styles = theme => ({
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.layout.dark,
-        padding: theme.spacing.unit * 3
+        padding: 0,
+        paddingRight: '38px'
     },
     openDrawer: {
         marginLeft: drawerWidth,

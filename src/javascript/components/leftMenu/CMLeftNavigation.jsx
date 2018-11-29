@@ -11,21 +11,24 @@ import CmLeftMenuItem from './CmLeftMenuItem';
 import {compose} from 'react-apollo';
 
 export const drawerWidth = 289;
+const leftMargin = 38;
+const width = 70;
+
 const styles = theme => ({
     root: {
-        zIndex: 1,
-        paddingLeft: '38px',
+        zIndex: 2100,
+        minWidth: (leftMargin + width) + 'px',
+        paddingLeft: leftMargin + 'px',
         background: theme.palette.background.paper,
-        minWidth: '105px',
         overflow: 'visible !important', // Safari compatibility
         '-webkit-transform-style': 'preserve-3d', // Safari compatibility
         height: '100%',
         display: 'flex'
     },
     root1: {
-        zIndex: 0,
-        minWidth: '105px',
-        paddingLeft: '38px',
+        zIndex: 2100,
+        minWidth: (leftMargin + width) + 'px',
+        paddingLeft: leftMargin + 'px',
         background: theme.palette.layout.dark,
         overflow: 'hidden',
         height: '100%',
@@ -77,7 +80,7 @@ const styles = theme => ({
         position: 'absolute',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
-        left: 105,
+        left: (leftMargin + width),
         width: drawerWidth,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
@@ -89,7 +92,7 @@ const styles = theme => ({
         position: 'relative',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
-        left: 105,
+        left: (leftMargin + width),
         width: drawerWidth,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,

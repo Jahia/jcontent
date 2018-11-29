@@ -5,10 +5,9 @@ import {compose} from 'react-apollo';
 
 const styles = () => ({
     actionButton: {
-        textTransform: 'none',
-        fontSize: '13px',
-        marginTop: -7,
-        padding: 0
+        margin: 0,
+        padding: 0,
+        minHeight: 'unset'
     }
 });
 

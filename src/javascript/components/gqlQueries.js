@@ -8,19 +8,19 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy, treeState) {
+    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort, treeState) {
         const type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
         return {
             path: path,
             language: lang,
             displayLanguage: uiLang,
-            offset: paginationState.page * paginationState.rowsPerPage,
-            limit: paginationState.rowsPerPage,
-            typeFilter: browseType[treeState][type].typeFilter || 'jnt:contentFolder',
-            recursionTypesFilter: browseType[treeState][type].recursionTypesFilter || Constants.contentType,
-            fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
-                fieldName: orderBy === '' ? null : orderBy,
+            offset: pagination.currentPage * pagination.pageSize,
+            limit: pagination.pageSize,
+            typeFilter: browseType[treeState ? 'open' : 'hidden'][type].typeFilter || 'jnt:contentFolder',
+            recursionTypesFilter: browseType[treeState ? 'open' : 'hidden'][type].recursionTypesFilter || Constants.contentType,
+            fieldSorter: sort.orderBy === '' ? null : {
+                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
+                fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
             ...getGroupingConfiguration(treeState)
@@ -37,18 +37,18 @@ class FilesQueryHandler {
         return filesQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy, treeState) {
+    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort, treeState) {
         return {
             path: path,
             language: lang,
             displayLanguage: uiLang,
-            offset: paginationState.page * paginationState.rowsPerPage,
-            limit: paginationState.rowsPerPage,
-            typeFilter: treeState === 'open' ? 'jnt:file' : ['jnt:file', 'jnt:folder'],
+            offset: pagination.currentPage * pagination.pageSize,
+            limit: pagination.pageSize,
+            typeFilter: treeState ? 'jnt:file' : ['jnt:file', 'jnt:folder'],
             recursionTypesFilter: 'jnt:folder',
-            fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
-                fieldName: orderBy === '' ? null : orderBy,
+            fieldSorter: sort.orderBy === '' ? null : {
+                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
+                fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
             ...getGroupingConfiguration(treeState)
@@ -65,18 +65,18 @@ class SearchQueryHandler {
         return searchContentQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
+    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
         return {
             path: path,
             nodeType: (urlParams.searchContentType || 'jmix:searchable'),
             searchTerms: urlParams.searchTerms,
             language: lang,
             displayLanguage: uiLang,
-            offset: paginationState.page * paginationState.rowsPerPage,
-            limit: paginationState.rowsPerPage,
-            fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
-                fieldName: orderBy === '' ? null : orderBy,
+            offset: pagination.currentPage * pagination.pageSize,
+            limit: pagination.pageSize,
+            fieldSorter: sort.orderBy === '' ? null : {
+                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
+                fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             }
         };
@@ -92,7 +92,7 @@ class Sql2SearchQueryHandler {
         return sql2SearchContentQuery;
     }
 
-    getQueryParams(path, paginationState, uiLang, lang, urlParams, rootPath, order, orderBy) {
+    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
@@ -103,11 +103,11 @@ class Sql2SearchQueryHandler {
             query: query,
             language: lang,
             displayLanguage: uiLang,
-            offset: paginationState.page * paginationState.rowsPerPage,
-            limit: paginationState.rowsPerPage,
-            fieldSorter: orderBy === '' ? null : {
-                sortType: order === '' ? null : (order === 'DESC' ? 'ASC' : 'DESC'),
-                fieldName: orderBy === '' ? null : orderBy,
+            offset: pagination.currentPage * pagination.pageSize,
+            limit: pagination.pageSize,
+            fieldSorter: sort.orderBy === '' ? null : {
+                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
+                fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             }
         };
@@ -646,7 +646,7 @@ class ActionRequirementsQueryHandler {
 }
 
 function getGroupingConfiguration(treeState) {
-    return treeState !== 'open' ? {fieldGrouping: {fieldName: 'primaryNodeType.name', groups: ['jnt:page', 'jnt:folder', 'jnt:contentFolder'], groupingType: 'START'}} : {};
+    return !treeState ? {fieldGrouping: {fieldName: 'primaryNodeType.name', groups: ['jnt:page', 'jnt:folder', 'jnt:contentFolder'], groupingType: 'START'}} : {};
 }
 
 export {

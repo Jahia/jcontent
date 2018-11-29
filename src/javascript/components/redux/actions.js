@@ -1,11 +1,17 @@
 const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
 const CM_SET_SELECTION = 'CM_SET_SELECTION';
+const CM_SET_PREVIEW_MODE = 'CM_SET_PREVIEW_MODE';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
+const CM_SET_TREE = 'CM_SET_TREE';
+const CM_SET_PAGE = 'CM_SET_PAGE';
+const CM_SET_PAGE_SIZE = 'CM_SET_PAGE_SIZE';
+const CM_SET_SORT = 'CM_SET_SORT';
+const CM_SET_SORT_BY = 'CM_SET_SORT_BY';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
 
-const CM_PREVIEW_STATES = {HIDE: 0, SHOW: 1};
+const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 
 function setUiLang(uiLang) {
     return {
@@ -61,15 +67,8 @@ function cmSetParams(params) {
 
 function cmSetPreviewMode(mode) {
     return {
-        type: CM_SET_PREVIEW,
+        type: CM_SET_PREVIEW_MODE,
         previewMode: mode
-    };
-}
-
-function cmSetPreviewModes(modes) {
-    return {
-        type: CM_SET_PREVIEW,
-        previewModes: modes
     };
 }
 
@@ -77,6 +76,41 @@ function cmSetPreviewState(state) {
     return {
         type: CM_SET_PREVIEW,
         previewState: state
+    };
+}
+
+function cmSetTreeState(state) {
+    return {
+        type: CM_SET_TREE,
+        treeState: state
+    };
+}
+
+function cmSetPage(page) {
+    return {
+        type: CM_SET_PAGE,
+        page: page
+    };
+}
+
+function cmSetPageSize(size) {
+    return {
+        type: CM_SET_PAGE_SIZE,
+        pageSize: size
+    };
+}
+
+function cmSetSort(sort) {
+    return {
+        type: CM_SET_SORT,
+        sort: sort
+    };
+}
+
+function cmSetSortBy(sortBy) {
+    return {
+        type: CM_SET_SORT_BY,
+        sortBy: sortBy
     };
 }
 
@@ -92,9 +126,15 @@ export {
     CM_SET_UILANGUAGE,
     CM_SET_SELECTION,
     CM_SET_PREVIEW,
+    CM_SET_PREVIEW_MODE,
+    CM_SET_TREE,
     CM_SET_OPEN_PATHS,
-    CM_PREVIEW_STATES,
     CM_SET_SEARCH_MODE,
+    CM_SET_SORT,
+    CM_SET_SORT_BY,
+    CM_SET_PAGE,
+    CM_SET_PAGE_SIZE,
+    CM_DRAWER_STATES,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -103,10 +143,14 @@ export {
     cmSetMode,
     cmSetPath,
     cmSetParams,
+    cmSetSort,
+    cmSetSortBy,
+    cmSetPage,
+    cmSetPageSize,
     cmSetPreviewMode,
-    cmSetPreviewModes,
     cmOpenPaths,
     cmClosePaths,
     cmSetPreviewState,
+    cmSetTreeState,
     cmSetSearchMode
 };

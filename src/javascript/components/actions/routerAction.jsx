@@ -1,4 +1,4 @@
-import {CM_PREVIEW_STATES, cmGoto, cmSetPreviewState} from '../redux/actions';
+import {CM_DRAWER_STATES, cmGoto, cmSetPreviewState} from '../redux/actions';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from './reduxAction';
 import requirementsAction from './requirementsAction';
@@ -36,7 +36,7 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
             default:
                 pathSuffix = '';
         }
-        setPreviewState(CM_PREVIEW_STATES.HIDE);
+        setPreviewState(CM_DRAWER_STATES.HIDE);
         setUrl(siteKey, language, mode, (mode === 'apps' ? (context.actionPath ? context.actionPath : context.actionKey) : `/sites/${siteKey}${pathSuffix}`), {});
         return null;
     }

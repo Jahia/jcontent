@@ -8,24 +8,20 @@ import {connect} from 'react-redux';
 import {cmSetSearchMode} from '../redux/actions';
 
 const styles = () => ({
-    topBar: {
-        marginTop: '0px',
-        alignItems: 'baseline'
-    }
 });
 
 class CmSearchBar extends React.Component {
     render() {
-        const {searchMode, setSearchMode, classes} = this.props;
+        const {searchMode, setSearchMode} = this.props;
         return (
-            <div className={classes.topBar}>
+            <React.Fragment>
                 {(searchMode === 'normal') &&
                 <CmSearchBarNormal onSql2Click={() => setSearchMode('sql2')}/>
                 }
                 {(searchMode === 'sql2') &&
                 <CmSearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>
                 }
-            </div>
+            </React.Fragment>
         );
     }
 }

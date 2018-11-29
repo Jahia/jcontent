@@ -10,7 +10,7 @@ import {previewQuery} from '../gqlQueries';
 import PublicationInfo from './PublicationStatus';
 import ShareMenu from './ShareMenu';
 import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
-import {CM_PREVIEW_STATES, cmSetPreviewMode, cmSetPreviewModes, cmSetPreviewState} from '../redux/actions';
+import {cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
 import loadable from 'react-loadable';
@@ -182,18 +182,18 @@ class ContentPreview extends React.Component {
         }));
     }
 
-    componentDidUpdate() {
-        if (this.props.selection[0] === undefined) {
-            this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
-        }
-    }
-
+    // componentDidUpdate() {
+    //     if (this.props.selection[0] === undefined) {
+    //         this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
+    //     }
+    // }
+    //
     render() {
         if (_.isEmpty(this.props.selection)) {
             return null;
         }
 
-        const {selection, classes, previewMode, previewModes, setPreviewMode, setPreviewModes} = this.props;
+        const {selection, classes, previewMode, setPreviewMode, setPreviewModes} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
@@ -216,10 +216,6 @@ class ContentPreview extends React.Component {
                                     let selectedMode = _.find(modes, mode => {
                                         return previewMode === mode;
                                     }) === undefined ? 'edit' : previewMode;
-                                    if (previewModes.length !== modes.length) {
-                                        setPreviewMode(selectedMode);
-                                        setPreviewModes(modes);
-                                    }
                                     return this.previewComponent(data[selectedMode]);
                                 }
                             }
@@ -425,7 +421,6 @@ const mapStateToProps = state => {
     return {
         selection: state.selection,
         previewMode: state.previewMode,
-        previewModes: state.previewModes,
         language: state.language
     };
 };
@@ -434,11 +429,10 @@ const mapDispatchToProps = dispatch => ({
     setPreviewMode: mode => {
         dispatch(cmSetPreviewMode(mode));
     },
-    setPreviewModes: modes => {
-        dispatch(cmSetPreviewModes(modes));
-    },
     setPreviewState: state => {
         dispatch(cmSetPreviewState(state));
+    },
+    handleFullScreen: fullScreen => {
     }
 });
 

@@ -11,20 +11,24 @@ import {translate} from 'react-i18next';
 import {DxContext} from '../DxContext';
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
-import {cmSetSelection, cmGoto} from '../redux/actions';
+import {cmSetSelection, cmGoto, cmSetPage, cmSetPageSize, cmSetSort, CM_DRAWER_STATES} from '../redux/actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
 import CmToolbar from '../CmToolbar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
 
-const columnData = [
+const allColumnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
     {id: 'wip', label: '', sortable: false, property: ''},
     {id: 'lock', label: '', sortable: false, property: ''},
     {id: 'type', label: 'label.contentManager.listColumns.type', sortable: true, property: 'primaryNodeType.displayName'},
     {id: 'lastModified', label: 'label.contentManager.listColumns.lastModified', sortable: true, property: 'lastModified.value'},
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy', sortable: true, property: 'createdBy.value'}
+];
+
+const reducedColumnData = [
+    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
 ];
 
 const APP_TABLE_CELLS = 2;
@@ -178,8 +182,8 @@ const styles = theme => ({
         background: theme.palette.background.default,
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: 'calc(100vh - 140px)',
-        maxHeight: 'calc(100vh - 140px)'
+        height: 'calc(100vh - 100px)',
+        maxHeight: 'calc(100vh - 100px)'
     },
     row: {
         backgroundColor: theme.palette.background.paper,
@@ -330,17 +334,16 @@ class ContentListTable extends React.Component {
     }
 
     render() {
-        const {rows, contentNotFound, page, pageSize, onChangeRowsPerPage,
-            onChangePage, onRowSelected, selection, totalCount, t, classes,
-            uiLang, handleSort, order, orderBy, setPath, path} = this.props;
-
+        const {rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
+            onRowSelected, selection, totalCount, t, classes, uiLang, handleSort, setPath, path, previewState} = this.props;
+        let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         return (
             <div className={classes.contentList}>
                 <CmToolbar/>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" classes={{root: classes.tableSticky}}>
                     <ContentListHeader
-                        order={order}
-                        orderBy={orderBy}
+                        order={sort.order}
+                        orderBy={sort.orderBy}
                         columnData={columnData}
                         classes={classes}
                         onRequestSort={handleSort}
@@ -348,7 +351,7 @@ class ContentListTable extends React.Component {
                     <DxContext.Consumer>
                         {dxContext => (
                             <UploadWrapperComponent uploadTargetComponent={TableBody} uploadPath={path}>
-                                {contentNotFound ? <ContentNotFound classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow classes={classes} translate={t}/> : rows.map((n, key) => {
+                                {contentNotFound ? <ContentNotFound columnData={columnData} classes={classes} translate={t}/> : _.isEmpty(rows) ? <EmptyRow columnData={columnData} classes={classes} translate={t}/> : rows.map((n, key) => {
                                     let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                     let renderWip = this.renderWip(n, dxContext, isSelected);
                                     let renderLock = this.renderLock(n, isSelected);
@@ -468,10 +471,10 @@ class ContentListTable extends React.Component {
                 {totalCount > 0 &&
                 <Pagination
                     totalCount={totalCount}
-                    pageSize={pageSize}
-                    currentPage={page}
-                    onChangeRowsPerPage={onChangeRowsPerPage}
-                    onChangePage={onChangePage}
+                    pageSize={pagination.pageSize}
+                    currentPage={pagination.currentPage}
+                    onChangeRowsPerPage={setPageSize}
+                    onChangePage={setCurrentPage}
                 />
                 }
             </div>
@@ -482,7 +485,7 @@ class ContentListTable extends React.Component {
 let EmptyRow = props => {
     return (
         <TableRow>
-            <TableCell colSpan={columnData.length + APP_TABLE_CELLS + 2} className={props.classes.noResults}>
+            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2} className={props.classes.noResults}>
                 {props.translate('label.contentManager.noResults')}
             </TableCell>
         </TableRow>
@@ -492,7 +495,7 @@ let EmptyRow = props => {
 let ContentNotFound = props => {
     return (
         <TableRow>
-            <TableCell colSpan={columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
+            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS} className={props.classes.noResults}>
                 {props.translate('label.contentManager.contentNotFound')}
             </TableCell>
         </TableRow>
@@ -510,12 +513,18 @@ const mapStateToProps = state => ({
     searchTerms: state.params.searchTerms,
     searchContentType: state.params.searchContentType,
     sql2SearchFrom: state.params.sql2SearchFrom,
-    sql2SearchWhere: state.params.sql2SearchWhere
+    sql2SearchWhere: state.params.sql2SearchWhere,
+    pagination: state.pagination,
+    sort: state.sort,
+    previewState: state.previewState
 });
 
 const mapDispatchToProps = dispatch => ({
     onRowSelected: selection => dispatch(cmSetSelection(selection)),
     setPath: (path, params) => dispatch(cmGoto({path, params})),
+    setCurrentPage: page => dispatch(cmSetPage(page)),
+    setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
+    setSort: state => dispatch(cmSetSort(state)),
     clearSearch: params => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');
@@ -528,10 +537,7 @@ const mapDispatchToProps = dispatch => ({
 
 ContentListTable.propTypes = {
     rows: PropTypes.array.isRequired,
-    page: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    onChangeRowsPerPage: PropTypes.func.isRequired,
-    onChangePage: PropTypes.func.isRequired
+    pagination: PropTypes.object.isRequired
 };
 
 export default compose(

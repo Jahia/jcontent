@@ -1,15 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
-import {withStyles, IconButton} from '@material-ui/core';
+import {
+    Button,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Toolbar,
+    Typography,
+    withStyles
+} from '@material-ui/core';
 import classNames from 'classnames';
 import ContentPreview from '../preview/ContentPreview';
 import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
-import {Drawer, Button, Table, TableCell, TableHead, TableBody, TableRow, Typography, Toolbar} from '@material-ui/core';
 import {connect} from 'react-redux';
-import {cmSetPreviewMode} from '../redux/actions';
+import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
-import _ from 'lodash';
 
 const styles = theme => ({
     drawerHeader: {
@@ -108,93 +116,67 @@ const styles = theme => ({
 });
 
 class PreviewDrawer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            fullScreen: false
-        };
-        this.handleFullScreen = this.handleFullScreen.bind(this);
-    }
-
-    handleFullScreen(value) {
-        this.setState({
-            fullScreen: value
-        });
-    }
 
     render() {
-        const {classes, previewMode, previewModes, setPreviewMode, t,
-            layoutQuery, layoutQueryParams, dxContext} = this.props;
+        const {
+            classes, previewMode, setPreviewMode, t, layoutQuery, layoutQueryParams, dxContext, closePreview
+        } = this.props;
         return (
-            <Drawer anchor="right"
-                data-cm-role="preview-drawer"
-                classes={{
-                    paper: this.state.fullScreen ? classes.drawerFullScreen : classes.drawerWidth,
-                    paperAnchorRight: classes.modalTransition,
-                    modal: classes.modalWidth
-                }}
-                className={classes.drawerRoot}
-                open={this.props.open}
-                >
-                <Table data-cm-role="preview-table">
-                    <TableHead>
-                        <TableRow className={classes.drawerTableHead}>
-                            <TableCell className={classes.drawerTableCell}>
-                                <Toolbar disableGutters>
-                                    <IconButton color="inherit" style={{padding: 0, marginRight: 10}} onClick={this.props.onClose}>
-                                        <ChevronRightIcon className={classes.chevron} fontSize="small"/>
-                                    </IconButton>
-                                    <Typography className={classes.insideCell}>
-                                        {t('label.contentManager.contentPreview.preview')}
-                                    </Typography>
-                                    <div style={{display: 'inline', textAlign: 'right', marginRight: '5px'}}>
-                                        <Button
-                                            variant="contained"
-                                            className={classNames(classes.editButton, {
-                                                [classes.inactiveButton]: previewMode !== 'edit'
-                                            })}
+            <Table data-cm-role="preview-table">
+                <TableHead>
+                    <TableRow className={classes.drawerTableHead}>
+                        <TableCell className={classes.drawerTableCell}>
+                            <Toolbar disableGutters>
+                                <IconButton color="inherit" style={{padding: 0, marginRight: 10}}
+                                            onClick={closePreview}>
+                                    <ChevronRightIcon className={classes.chevron} fontSize="small"/>
+                                </IconButton>
+                                <Typography className={classes.insideCell}>
+                                    {t('label.contentManager.contentPreview.preview')}
+                                </Typography>
+                                <div style={{display: 'inline', textAlign: 'right', marginRight: '5px'}}>
+                                    <Button
+                                        variant="contained"
+                                        className={classNames(classes.editButton, {
+                                            [classes.inactiveButton]: previewMode !== 'edit'
+                                        })}
 
-                                            classes={{
-                                                root: classes.buttonStyle
-                                            }}
-                                            color={previewMode === 'edit' ? 'primary' : 'default'}
-                                            onClick={() => setPreviewMode('edit')}
-                                            >{t('label.contentManager.contentPreview.staging')}
-                                        </Button>
-                                        <Button
-                                            className={classNames(classes.liveButton, {
-                                                [classes.inactiveButton]: previewMode !== 'live'
-                                            })}
-                                            classes={{
-                                                root: classes.buttonStyle
-                                            }}
-                                            variant="contained"
-                                            color={previewMode === 'live' ? 'primary' : 'default'}
-                                            disabled={_.find(previewModes, mode => {
-                                                return mode === 'live';
-                                            }) === undefined}
-                                            onClick={() => setPreviewMode('live')}
-                                            >{t('label.contentManager.contentPreview.live')}
-                                        </Button>
-                                    </div>
-                                </Toolbar>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell padding="none">
-                                <ContentPreview
-                                    layoutQuery={layoutQuery}
-                                    layoutQueryParams={layoutQueryParams}
-                                    dxContext={dxContext}
-                                    handleFullScreen={this.handleFullScreen}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Drawer>
+                                        classes={{
+                                            root: classes.buttonStyle
+                                        }}
+                                        color={previewMode === 'edit' ? 'primary' : 'default'}
+                                        onClick={() => setPreviewMode('edit')}
+                                    >{t('label.contentManager.contentPreview.staging')}
+                                    </Button>
+                                    <Button
+                                        className={classNames(classes.liveButton, {
+                                            [classes.inactiveButton]: previewMode !== 'live'
+                                        })}
+                                        classes={{
+                                            root: classes.buttonStyle
+                                        }}
+                                        variant="contained"
+                                        color={previewMode === 'live' ? 'primary' : 'default'}
+                                        onClick={() => setPreviewMode('live')}
+                                    >{t('label.contentManager.contentPreview.live')}
+                                    </Button>
+                                </div>
+                            </Toolbar>
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                        <TableCell padding="none">
+                            <ContentPreview
+                                layoutQuery={layoutQuery}
+                                layoutQueryParams={layoutQueryParams}
+                                dxContext={dxContext}
+                            />
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
         );
     }
 }
@@ -203,19 +185,19 @@ const mapStateToProps = state => {
     return {
         selection: state.selection,
         previewMode: state.previewMode,
-        previewModes: state.previewModes
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     setPreviewMode: mode => {
         dispatch(cmSetPreviewMode(mode));
+    },
+    closePreview: () => {
+        dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE));
     }
 });
 
 PreviewDrawer.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
 };
 
 export default compose(

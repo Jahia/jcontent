@@ -11,10 +11,8 @@ const styles = theme => ({
         minHeight: '100px',
         maxHeight: '100px',
         display: 'flex',
-        marginTop: '12px',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: theme.spacing.unit
     },
     typoTitle: {
         fontSize: '25px',
@@ -26,13 +24,17 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
-        marginTop: '-10px',
         marginLeft: '5px'
     },
     siteSwitcher: {
+        '& button': {
+            margin: '0px'
+        }
     },
     languageSwitcher: {
-        marginTop: '-10px'
+        '& button': {
+            margin: '0px'
+        }
     },
     head: {
         display: 'inline-block',
@@ -44,11 +46,10 @@ const styles = theme => ({
         width: '80%'
     },
     topBarwidth: {
-        width: 'min-content'
+        width: 'min-content',
+        alignSelf: 'flex-end'
     },
     topBarGrid: {
-        marginTop: '-24px',
-        marginLeft: '-22px'
     }
 });
 
@@ -59,7 +60,7 @@ class CMTopBar extends React.Component {
 
         return (
             <div className={classes.root} data-cm-role="cm-top-bar">
-                <Grid container spacing={24}>
+                <Grid container spacing={0} alignItems="center">
                     <Grid item xs={2} className={classes.topBarGrid}>
                         <div className={classes.siteSwitcher}>
                             <SiteSwitcher dark={false}/>

@@ -11,6 +11,7 @@ import {withNotificationContextAction} from './withNotificationContextAction';
 import {withI18nAction} from './withI18nAction';
 import {ContentTypesQuery} from '../gqlQueries';
 import {from, of} from 'rxjs';
+import {isDescendantOrSelf} from '../utils';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({...state.copyPaste, currentlySelectedPath: state.path}),
@@ -26,9 +27,11 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             contentType = nodeToPaste.primaryNodeType.name;
         }
         context.initRequirements({
+
             requiredPermission: 'jcr:addChildNodes',
             contentType: contentType,
             getContributeTypesRestrictions: true,
+
             enabled: context => {
                 return context.node.pipe(switchMap(targetNode => {
                     if (context.items.length === 0) {
@@ -39,7 +42,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) {
                         return of(false);
                     }
-                    if (targetNode.path.startsWith(nodeToPaste.path + '/')) {
+                    if (isDescendantOrSelf(targetNode.path, nodeToPaste.path)) {
                         return of(false);
                     }
 

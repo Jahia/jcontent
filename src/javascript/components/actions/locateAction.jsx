@@ -1,17 +1,23 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {cmSetMode, cmSetPath, cmOpenPaths, cmSetSelection} from '../redux/actions';
+import {cmGoto, cmOpenPaths, cmSetSelection} from '../redux/actions';
 import {reduxAction} from './reduxAction';
 import Constants from '../constants';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
 import {FindParentQuery} from '../gqlQueries';
 
-export default composeActions(requirementsAction, reduxAction(state => ({mode: state.mode}), dispatch => ({
-    setMode: state => dispatch(cmSetMode(state)),
-    setPath: state => dispatch(cmSetPath(state)),
+export default composeActions(requirementsAction, reduxAction(state => ({mode: state.mode, params: state.params}), dispatch => ({
     setOpenPaths: state => dispatch(cmOpenPaths(state)),
-    setSelection: state => dispatch(cmSetSelection(state))
+    setSelection: state => dispatch(cmSetSelection(state)),
+    navigateToPath: (mode, path, params) => {
+        params = _.clone(params);
+        _.unset(params, 'searchContentType');
+        _.unset(params, 'searchTerms');
+        _.unset(params, 'sql2SearchFrom');
+        _.unset(params, 'sql2SearchWhere');
+        dispatch(cmGoto({mode: mode, path:path, params: params}));
+    }
 })), {
     init: context => {
         context.initRequirements({
@@ -33,22 +39,23 @@ export default composeActions(requirementsAction, reduxAction(state => ({mode: s
                     navigateToPath: parent.path,
                     type: parent.type.value
                 };
-                let {setMode, setPath, setOpenPaths, setSelection} = context;
+                let {navigateToPath, setOpenPaths, setSelection} = context;
+                let mode;
                 switch (locate.type) {
                     case 'jnt:contentFolder':
-                        setMode(Constants.mode.BROWSE);
+                        mode = Constants.mode.BROWSE;
                         break;
                     case 'jnt:folder':
-                        setMode(Constants.mode.FILES);
+                        mode = Constants.mode.FILES;
                         break;
                     default: {
                         let base = locate.paths[0].split('/');
                         base.pop();
                         locate.paths.splice(0, 0, base.join('/'));
-                        setMode(Constants.mode.BROWSE);
+                        mode = Constants.mode.BROWSE;
                     }
                 }
-                setPath(locate.navigateToPath);
+                navigateToPath(mode, locate.navigateToPath, context.params);
                 setOpenPaths(locate.paths);
                 setSelection([locate.node]);
             }

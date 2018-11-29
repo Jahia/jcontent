@@ -182,18 +182,12 @@ class ContentPreview extends React.Component {
         }));
     }
 
-    // ComponentDidUpdate() {
-    //     if (this.props.selection[0] === undefined) {
-    //         this.props.setPreviewState(CM_PREVIEW_STATES.HIDE);
-    //     }
-    // }
-    //
     render() {
         if (_.isEmpty(this.props.selection)) {
             return null;
         }
 
-        const {selection, classes, previewMode, setPreviewMode, setPreviewModes} = this.props;
+        const {selection, classes, previewMode} = this.props;
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
@@ -433,6 +427,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(cmSetPreviewState(state));
     },
     handleFullScreen: fullScreen => {
+        console.log(fullScreen);
     }
 });
 

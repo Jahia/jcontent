@@ -65,19 +65,19 @@ module.exports = (env, argv) => {
 
     config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
 
-    // if (argv.watch) {
-    //     config.module.rules.push({
-    //         exclude: /node_modules/,
-    //         use: [
-    //             {
-    //                 loader: 'eslint-loader',
-    //                 options: {
-    //                     fix: true
-    //                 }
-    //             }
-    //         ]
-    //     });
-    // }
+    if (argv.watch) {
+        config.module.rules.push({
+            exclude: /node_modules/,
+            use: [
+                {
+                    loader: 'eslint-loader',
+                    options: {
+                        fix: true
+                    }
+                }
+            ]
+        });
+    }
 
     if (argv.analyze) {
         config.devtool = 'source-map';

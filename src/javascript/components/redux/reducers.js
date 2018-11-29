@@ -1,15 +1,16 @@
 import {
-    CM_SET_UILANGUAGE,
+    CM_DRAWER_STATES,
     CM_NAVIGATE,
-    CM_SET_SELECTION,
+    CM_SET_OPEN_PATHS,
+    CM_SET_PAGE,
+    CM_SET_PAGE_SIZE,
     CM_SET_PREVIEW,
     CM_SET_PREVIEW_MODE,
-    CM_SET_OPEN_PATHS,
-    CM_SET_TREE,
-    CM_SET_PAGER,
-    CM_SET_SORT,
     CM_SET_SEARCH_MODE,
-    CM_DRAWER_STATES, CM_SET_PAGE_SIZE, CM_SET_PAGE
+    CM_SET_SELECTION,
+    CM_SET_SORT,
+    CM_SET_TREE,
+    CM_SET_UILANGUAGE
 } from './actions';
 import * as _ from 'lodash';
 import {extractPaths} from '../utils.js';

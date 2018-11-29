@@ -2,7 +2,7 @@ import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import * as _ from 'lodash';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Drawer, Grid, Paper, withStyles, Typography} from '@material-ui/core';
+import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
@@ -10,15 +10,7 @@ import ContentTrees from './ContentTrees';
 import {Trans, translate} from 'react-i18next';
 import {DxContext} from './DxContext';
 import Upload from './fileupload/Upload';
-import {
-    CM_DRAWER_STATES,
-    cmGoto,
-    cmSetPage,
-    cmSetPageSize,
-    cmSetPreviewState,
-    cmSetSort,
-    cmSetTreeState
-} from './redux/actions';
+import {CM_DRAWER_STATES, cmGoto, cmSetTreeState} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
 import {ContentData, contentQueryHandlerByMode} from './ContentData';
 import CMTopBar from './CMTopBar';
@@ -147,10 +139,7 @@ class ContentLayout extends React.Component {
                         <Typography variant="caption" className={classes.academyLink}>
                             <Trans
                                 i18nKey="label.contentManager.link.academy"
-                                components={[<a key="academyLink" href={contextJsParameters.config.academyLink}
-                                    target="_blank" rel="noopener noreferrer"
-                                                    >univers
-                                </a>]}
+                                components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer">univers</a>]}
                             />
                         </Typography>
                         <Grid container spacing={0}>

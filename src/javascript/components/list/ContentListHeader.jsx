@@ -6,12 +6,9 @@ import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 
 class ContentListHeader extends React.Component {
-    handleSort(order, orderBy) {
-        this.props.onRequestSort(order, orderBy);
-    }
 
     render() {
-        const {order, orderBy, columnData, t, classes} = this.props;
+        const {order, orderBy, columnData, t, classes, setSort} = this.props;
         let direction = order === 'DESC' ? 'ASC' : 'DESC';
         return (
             <TableHead className={classes.head}>
@@ -33,7 +30,7 @@ class ContentListHeader extends React.Component {
                                         classes={{active: classes.sortLabel}}
                                         active={orderBy === column.property}
                                         direction={direction.toLowerCase()}
-                                        onClick={() => this.handleSort(direction, column.property)}
+                                        onClick={() => setSort({order:direction, orderBy:column.property})}
                                         >
                                         {t(column.label)}
                                     </TableSortLabel>

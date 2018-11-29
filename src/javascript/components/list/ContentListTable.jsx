@@ -335,7 +335,7 @@ class ContentListTable extends React.Component {
 
     render() {
         const {rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onRowSelected, selection, totalCount, t, classes, uiLang, handleSort, setPath, path, previewState} = this.props;
+            onRowSelected, selection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState} = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         return (
             <div className={classes.contentList}>
@@ -346,7 +346,7 @@ class ContentListTable extends React.Component {
                         orderBy={sort.orderBy}
                         columnData={columnData}
                         classes={classes}
-                        onRequestSort={handleSort}
+                        setSort={setSort}
                     />
                     <DxContext.Consumer>
                         {dxContext => (

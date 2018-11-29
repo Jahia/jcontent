@@ -9,7 +9,7 @@ import {
     CM_SET_PAGER,
     CM_SET_SORT,
     CM_SET_SEARCH_MODE,
-    CM_DRAWER_STATES
+    CM_DRAWER_STATES, CM_SET_PAGE_SIZE, CM_SET_PAGE
 } from './actions';
 import * as _ from 'lodash';
 import {extractPaths} from '../utils.js';
@@ -138,11 +138,29 @@ let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action) => {
 };
 
 let paginationReducer = (state = {currentPage: 0, pageSize: 25}, action) => {
-    return state;
+    switch (action.type) {
+        case CM_SET_PAGE_SIZE:
+            return {
+                ...state,
+                pageSize: action.pageSize
+            };
+        case CM_SET_PAGE:
+            return {
+                ...state,
+                currentPage: action.page
+            };
+        default:
+            return state;
+    }
 };
 
 let sortReducer = (state = {order: 'ASC', orderBy: 'lastModified.value'}, action) => {
-    return state;
+    switch (action.type) {
+        case CM_SET_SORT:
+            return action.sort;
+        default:
+            return state;
+    }
 };
 
 let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'normal'), action) => {

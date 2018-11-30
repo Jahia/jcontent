@@ -75,7 +75,7 @@ class ContentTree extends React.Component {
                 selectedPaths={[path]}
                 openSelection={false}
                 setRefetch={setRefetch}
-                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PredefinedFragments.displayName]}
+                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PredefinedFragments.displayName]}
                 onOpenItem={(path, open) => handleOpen(path, open)}
                 onSelectItem={path => handleSelect(path)}
                 >

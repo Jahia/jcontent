@@ -28,15 +28,15 @@ import clearAllLocksAction from './clearAllLocksAction';
 import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 
-const PATH_CONTENTS_ITSELF = '^\/sites\/.+?\/contents\/?$';
-const PATH_CONTENTS_DESCENDANTS = '^\/sites\/.+?\/contents\/.+';
-const PATH_CONTENTS_AND_DESCENDANTS = '^\/sites\/.+?\/contents\/?';
+const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
+const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
+const PATH_CONTENTS_AND_DESCENDANTS = '^/sites/.+?/contents/?';
 
-const PATH_FILES_ITSELF = '^\/sites\/.+?\/files\/?$';
-const PATH_FILES_DESCENDANTS = '^\/sites\/.+?\/files\/.+';
-const PATH_FILES_AND_DESCENDANTS = '^\/sites\/.+?\/files\/?';
+const PATH_FILES_ITSELF = '^/sites/.+?/files/?$';
+const PATH_FILES_DESCENDANTS = '^/sites/.+?/files/.+';
+const PATH_FILES_AND_DESCENDANTS = '^/sites/.+?/files/?';
 
-const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^\/sites\/systemsite\/?';
+const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 
 function initActions(actionsRegistry) {
     actionsRegistry.add('router', routerAction);
@@ -192,8 +192,8 @@ function initActions(actionsRegistry) {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
         target: ['additionalPreviewMenu:3.8', 'tableMenuActions:3.8', 'contextualMenuContentAction:3.8', 'contentTreeMenuActions:3.8'],
-        hideOnNodeTypes: ['jnt:page'],
-        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('paste', pasteAction, {
         buttonIcon: <ContentPaste/>,

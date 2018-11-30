@@ -14,6 +14,7 @@ import {cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
 import loadable from 'react-loadable';
+import {DxContext} from '../DxContext';
 
 const DocumentViewer = loadable({
     loader: () => import('./filePreviewer/DocumentViewer'),
@@ -193,38 +194,45 @@ class ContentPreview extends React.Component {
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
         return (
-            <div className={rootClass}>
-                <Paper className={classes.previewPaper} elevation={0}>
-                    <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
-                        {({loading, error, data}) => {
-                            if (error) {
-                                // Ignore error that occurs if node is not published in live mode.
-                            }
-                            if (!loading) {
-                                if (!_.isEmpty(data)) {
-                                    let modes = ['edit'];
-                                    // Check if the node is published in live.
-                                    if (livePreviewAvailable) {
-                                        modes.push('live');
+            <DxContext.Consumer>
+                {dxContext => (
+                    <div className={rootClass}>
+                        <Paper className={classes.previewPaper} elevation={0}>
+                            <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
+                                {({loading, error, data}) => {
+                                    if (error) {
+                                        // Ignore error that occurs if node is not published in live mode.
                                     }
-                                    let selectedMode = _.find(modes, mode => {
-                                        return previewMode === mode;
-                                    }) === undefined ? 'edit' : previewMode;
-                                    return this.previewComponent(data[selectedMode]);
-                                }
-                            }
-                            return null;
-                        }}
-                    </Query>
-                </Paper>
-                <Paper className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit} elevation={0}>
-                    {this.componentFooter()}
-                </Paper>
-            </div>
+                                    if (!loading) {
+                                        if (!_.isEmpty(data)) {
+                                            let modes = ['edit'];
+                                            // Check if the node is published in live.
+                                            if (livePreviewAvailable) {
+                                                modes.push('live');
+                                            }
+                                            let selectedMode = _.find(modes, mode => {
+                                                return previewMode === mode;
+                                            }) === undefined ? 'edit' : previewMode;
+                                            return this.previewComponent(data[selectedMode], dxContext);
+                                        }
+                                    }
+                                    return null;
+                                }}
+                            </Query>
+                        </Paper>
+                        <Paper
+                            className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
+                            elevation={0}
+                            >
+                            {this.componentFooter(dxContext)}
+                        </Paper>
+                    </div>
+                )}
+            </DxContext.Consumer>
         );
     }
 
-    componentFooter() {
+    componentFooter(dxContext) {
         let {classes, previewMode, selection, handleFullScreen} = this.props;
         let selectedItem = selection[0];
 
@@ -252,7 +260,7 @@ class ContentPreview extends React.Component {
                         </div>
                     </Grid>
                     <Grid container item xs={4} justify="flex-end" className={classes.footerButton}>
-                        {selectedItem.type === 'File' && this.downloadButton(selectedItem, workspace)}
+                        {selectedItem.type === 'File' && this.downloadButton(selectedItem, workspace, dxContext)}
                         <ShareMenu/>
                         {this.screenModeButtons(handleFullScreen, classes)}
                     </Grid>
@@ -279,8 +287,8 @@ class ContentPreview extends React.Component {
         );
     }
 
-    previewComponent(data) {
-        const {classes, t, dxContext, previewMode} = this.props;
+    previewComponent(data, dxContext) {
+        const {classes, t, previewMode} = this.props;
 
         let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
         if (displayValue === '') {
@@ -348,8 +356,8 @@ class ContentPreview extends React.Component {
         return null;
     }
 
-    downloadButton(selectedItem, workspace) {
-        let {classes, dxContext, t} = this.props;
+    downloadButton(selectedItem, workspace, dxContext) {
+        let {classes, t} = this.props;
 
         if (isBrowserImage(selectedItem.path) || isPDF(selectedItem.path)) {
             return (

@@ -405,13 +405,13 @@ class ContentListTable extends React.Component {
                                                     return (
                                                         <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderWip}
                                                         </TableCell>
-);
+                                                    );
                                                 }
                                                 if (column.id === 'lock') {
                                                     return (
                                                         <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderLock}
                                                         </TableCell>
-);
+                                                    );
                                                 }
                                                 if (column.id === 'type') {
                                                     return (

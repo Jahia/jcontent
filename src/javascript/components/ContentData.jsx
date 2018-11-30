@@ -127,9 +127,22 @@ class ContentDataView extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy} = this.props;
+        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, treeState} = this.props;
+
+        let queryHandler = contentQueryHandlerByMode(mode);
+        const layoutQuery = queryHandler.getQuery();
+        const rootPath = `/sites/${siteKey}`;
+        const params = {
+            searchContentType: searchContentType,
+            searchTerms: searchTerms,
+            sql2SearchFrom: sql2SearchFrom,
+            sql2SearchWhere: sql2SearchWhere
+        };
+
+        const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort, treeState);
+
         return (
-            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={orderBy === 'displayName' ? 'network-only' : ''}>
+            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={sort.orderBy === 'displayName' ? 'network-only' : ''}>
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
 
@@ -153,13 +166,16 @@ class ContentDataView extends React.Component {
                             layoutQueryParams: layoutQueryParams
                         });
                     }
+                    if (!loading) {
+                        this.currentQueryHandler = queryHandler;
+                    }
 
                     let rows = [];
                     let totalCount = 0;
                     notificationContext.closeNotification();
 
-                    if (data && data.jcr) {
-                        let result = queryHandler.getResultsPath(data.jcr.results);
+                    if (data && data.jcr && this.currentQueryHandler) {
+                        let result = this.currentQueryHandler.getResultsPath(data.jcr.results);
                         totalCount = result.pageInfo.totalCount;
                         rows = _.map(result.nodes, contentNode => {
                             return {
@@ -214,10 +230,21 @@ class ContentDataView extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    mode: state.mode,
     siteKey: state.site,
     path: state.path,
-    mode: state.mode,
+    lang: state.language,
     selection: state.selection,
+    previewState: state.previewState,
+    treeState: state.treeState,
+    uiLang: state.uiLang,
+    searchTerms: state.params.searchTerms,
+    searchContentType: state.params.searchContentType,
+    sql2SearchFrom: state.params.sql2SearchFrom,
+    sql2SearchWhere: state.params.sql2SearchWhere,
+    filesMode: state.filesGrid.mode,
+    pagination: state.pagination,
+    sort: state.sort,
     openedPaths: state.openPaths
 });
 

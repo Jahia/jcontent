@@ -103,16 +103,14 @@ class CmSearchBarNormal extends React.Component {
                 }
                 onSearch={() => this.onSearch(path, params, this.state.contentType)}
                 >
-                <DxContext.Consumer className={classes.searchSize}>{dxContext => {
-                    return (
-                        <ContentTypeSelect
-                            siteKey={siteKey}
-                            displayLanguage={dxContext.uilang}
-                            contentType={this.state.contentType}
-                            onSelectionChange={contentType => this.onContentTypeChange(path, params, contentType)}
-                        />
-                    );
-                }}
+                <DxContext.Consumer className={classes.searchSize}>{dxContext => (
+                    <ContentTypeSelect
+                        siteKey={siteKey}
+                        displayLanguage={dxContext.uilang}
+                        contentType={this.state.contentType}
+                        onSelectionChange={contentType => this.onContentTypeChange(path, params, contentType)}
+                    />
+                )}
                 </DxContext.Consumer>
                 <Input
                     inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}

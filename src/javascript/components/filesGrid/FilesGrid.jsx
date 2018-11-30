@@ -135,6 +135,7 @@ FilesGrid.propTypes = {
 };
 
 let mapStateToProps = state => ({
+    path: state.path,
     pagination: state.pagination,
     size: valueToSizeTransformation(state.filesGrid.size)
 });

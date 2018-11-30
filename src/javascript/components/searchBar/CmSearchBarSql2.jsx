@@ -50,21 +50,18 @@ class CmSearchBarSql2 extends React.Component {
         return (
             <SearchBarLayout t={t}
                 leftFooter={
-                    <DxContext.Consumer>{dxContext => {
-                        return (
-                            <Trans i18nKey="label.contentManager.search.sql2Prompt"
-                                components={[
-                                    <a key="sql2Prompt"
-                                        href={dxContext.config.sql2CheatSheetUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer" className={classes.link}
-                                                                  >
-                                        univers
-                                    </a>
-]}
-                            />
-                        );
-}}
+                    <DxContext.Consumer>{dxContext => (
+                        <Trans i18nKey="label.contentManager.search.sql2Prompt" components={[
+                            <a key="sql2Prompt"
+                                href={dxContext.config.sql2CheatSheetUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={classes.link}
+                                >univers
+                            </a>
+                        ]}
+                        />
+                    )}
                     </DxContext.Consumer>}
                 rightFooter={
                     <React.Fragment>

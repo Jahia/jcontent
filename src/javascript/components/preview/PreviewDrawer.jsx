@@ -118,7 +118,7 @@ const styles = theme => ({
 class PreviewDrawer extends React.Component {
     render() {
         const {
-            classes, previewMode, setPreviewMode, t, layoutQuery, layoutQueryParams, dxContext, closePreview
+            classes, previewMode, setPreviewMode, t, closePreview
         } = this.props;
         return (
             <Table data-cm-role="preview-table">
@@ -168,11 +168,7 @@ class PreviewDrawer extends React.Component {
                 <TableBody>
                     <TableRow>
                         <TableCell padding="none">
-                            <ContentPreview
-                                layoutQuery={layoutQuery}
-                                layoutQueryParams={layoutQueryParams}
-                                dxContext={dxContext}
-                            />
+                            <ContentPreview/>
                         </TableCell>
                     </TableRow>
                 </TableBody>

@@ -344,7 +344,7 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',
-        target: ['contextualMenuContentAction'],
+        target: ['contextualMenuContentAction:0.5'],
         hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']
     });
 }

@@ -16,7 +16,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({mode: s
         _.unset(params, 'searchTerms');
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: mode, path:path, params: params}));
+        dispatch(cmGoto({mode: mode, path: path, params: params}));
     }
 })), {
     init: context => {

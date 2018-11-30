@@ -61,7 +61,9 @@
             }
             var iframe = getNewNode('IFRAME', 'gwt-Frame');
             if (iframe) {
+                console.log('iframe' + iframe.contentDocument.readyState);
                 iframe.contentWindow.addEventListener('load', function () {
+                    console.log('iframe loaded');
                     loader.remove();
                     o.disconnect();
                 });

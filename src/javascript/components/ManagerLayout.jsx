@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
-import {drawerWidth} from './leftMenu/CMLeftNavigation';
 
 const styles = theme => ({
     root: {
@@ -22,7 +21,7 @@ const styles = theme => ({
         paddingRight: '38px'
     },
     openDrawer: {
-        marginLeft: drawerWidth,
+        marginLeft: theme.contentManager.leftNavigationDrawerWidth,
         padding: 0
     }
 });
@@ -53,12 +52,12 @@ let Main = compose(
 
 class ManagerLayout extends React.Component {
     render() {
-        let {leftSide, children, mode} = this.props;
+        let {leftSide, children} = this.props;
 
         return (
             <Grid container spacing={0}>
                 <Grid item xs={12}>
-                    <Main leftSide={leftSide} mode={mode}>
+                    <Main leftSide={leftSide}>
                         {children}
                     </Main>
                 </Grid>

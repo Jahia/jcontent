@@ -92,13 +92,13 @@ class UploadItem extends React.Component {
                     open={open}
                     anchorEl={this.state.anchorEl}
                     anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center'
-                }}
+                        vertical: 'top',
+                        horizontal: 'center'
+                    }}
                     transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center'
-                }}
+                        vertical: 'bottom',
+                        horizontal: 'center'
+                    }}
                     onClose={this.hideChangeNamePopover}
                     >
                     <TextField
@@ -110,7 +110,7 @@ class UploadItem extends React.Component {
                         variant="outlined"
                         defaultValue={file.name}
                         onKeyUp={this.rename}
-                />
+                    />
                 </Popover>
             </ListItem>
         );
@@ -263,7 +263,8 @@ class UploadItem extends React.Component {
         const actions = [];
         if (status === uploadStatuses.QUEUED) {
             actions.push(
-                <Button key="dontupload"
+                <Button
+                    key="dontupload"
                     className={classes.actionButton}
                     component="a"
                     onClick={() => {
@@ -280,7 +281,8 @@ class UploadItem extends React.Component {
             if (error === 'FILE_EXISTS') {
                 if (RENAME_MODE === 'AUTOMATIC') {
                     actions.push(
-                        <Button key="rename"
+                        <Button
+                            key="rename"
                             className={classes.actionButton}
                             component="a"
                             onClick={e => {
@@ -292,7 +294,8 @@ class UploadItem extends React.Component {
                     );
                 } else if (RENAME_MODE === 'MANUAL') {
                     actions.push(
-                        <Button key="rename"
+                        <Button
+                            key="rename"
                             className={classes.actionButton}
                             component="a"
                             onClick={e => {
@@ -304,7 +307,8 @@ class UploadItem extends React.Component {
                     );
                 }
                 actions.push(
-                    <Button key="overwrite"
+                    <Button
+                        key="overwrite"
                         className={classes.actionButton}
                         component="a"
                         onClick={() => {
@@ -313,7 +317,8 @@ class UploadItem extends React.Component {
                         >
                         {t('label.contentManager.fileUpload.replace')}
                     </Button>,
-                    <Button key="dontupload"
+                    <Button
+                        key="dontupload"
                         className={classes.actionButton}
                         component="a"
                         onClick={() => {
@@ -326,7 +331,8 @@ class UploadItem extends React.Component {
                 );
             } else {
                 actions.push(
-                    <Button key="dontupload"
+                    <Button
+                        key="dontupload"
                         className={classes.actionButton}
                         component="a"
                         onClick={() => {
@@ -336,7 +342,8 @@ class UploadItem extends React.Component {
                         >
                         {t('label.contentManager.fileUpload.dontUpload')}
                     </Button>,
-                    <Button key="retry"
+                    <Button
+                        key="retry"
                         className={classes.actionButton}
                         component="a"
                         onClick={() => {
@@ -416,4 +423,5 @@ export default _.flowRight(
     withStyles(styles),
     translate(),
     withApollo,
-    connect(mapStateToProps, mapDispatchToProps))(UploadItem);
+    connect(mapStateToProps, mapDispatchToProps)
+)(UploadItem);

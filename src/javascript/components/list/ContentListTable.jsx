@@ -124,7 +124,7 @@ const styles = theme => ({
         padding: '1px'
     },
     activeStatusSelected: {
-        color: "#FFA83F",
+        color: '#FFA83F',
         opacity: '0.9',
         '&:hover': {
             opacity: '1.5'
@@ -301,7 +301,7 @@ class ContentListTable extends React.Component {
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
                 <Lock style={{width: '22px', height: '22px'}}
-                      className={isSelected ? classes.activeStatusSelected : classes.activeStatus}/>
+                    className={isSelected ? classes.activeStatusSelected : classes.activeStatus}/>
             </Tooltip> : null;
     }
 

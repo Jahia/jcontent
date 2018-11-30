@@ -12,7 +12,7 @@ import {batchActions} from 'redux-batched-actions';
 import {isImageFile} from '../filesGrid/filesGridUtils';
 import {translate} from 'react-i18next';
 import _ from 'lodash';
-import { ellipsizeText } from '../utils';
+import {ellipsizeText} from '../utils';
 
 const styles = () => ({
     progressText: {
@@ -109,7 +109,7 @@ class UploadItem extends React.Component {
                         name="newName"
                         margin="normal"
                         variant="outlined"
-                        defaultValue={ file.name }
+                        defaultValue={file.name}
                         onKeyUp={this.rename}
                 />
                 </Popover>

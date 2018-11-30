@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 
-const uploadFile = gql`mutation uploadImage($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!) {
+const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!) {
     jcr {
         addNode(name:$nameInJCR, parentPathOrId:$path, primaryNodeType:"jnt:file") {
-            addChild(name:"jcr:content", primaryNodeType:"jnt:resource"){
+            addChild(name:"jcr:content", primaryNodeType:"jnt:resource") {
                 content: mutateProperty(name:"jcr:data") {
                     setValue(type:BINARY, value:$fileHandle)
                 }
@@ -19,7 +19,7 @@ const uploadImage = gql`mutation uploadImage($nameInJCR: String!, $path: String!
     jcr {
         addNode(name:$nameInJCR, parentPathOrId:$path, primaryNodeType:"jnt:file") {
             addMixins(mixins:["jmix:image", "jmix:exif"])
-            addChild(name:"jcr:content", primaryNodeType:"jnt:resource"){
+            addChild(name:"jcr:content", primaryNodeType:"jnt:resource") {
                 content: mutateProperty(name:"jcr:data") {
                     setValue(type:BINARY, value:$fileHandle)
                 }
@@ -31,10 +31,19 @@ const uploadImage = gql`mutation uploadImage($nameInJCR: String!, $path: String!
     }
 }`;
 
-const removeFile = gql`mutation removeFile($pathOrId: String!) {
+const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeType: String!, $fileHandle: String!) {
     jcr {
-        deleteNode(pathOrId: $pathOrId)
+        mutateNode(pathOrId:$path) {
+            mutateChildren(names:["jcr:content"]) {
+                content: mutateProperty(name:"jcr:data") {
+                    setValue(type:BINARY, value:$fileHandle)
+                }
+                contentType: mutateProperty(name:"jcr:mimeType") {
+                    setValue(value:$mimeType)
+                }
+            }
+        }
     }
 }`;
 
-export {uploadFile, uploadImage, removeFile};
+export {uploadFile, uploadImage, updateFileContent};

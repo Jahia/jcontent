@@ -52,13 +52,13 @@ const styles = theme => ({
         overflowX: 'none'
     },
     drawerContentOrange: {
-        'background-color': '#E67D3A'
+        'background-color': theme.palette.secondary.main
     },
     drawerContentGreen: {
-        'background-color': '#51a522'
+        'background-color': theme.palette.valid.main
     },
     drawerContentRed: {
-        'background-color': '#aa0022'
+        'background-color': theme.palette.error.main
     },
     drawerContentFull: {
         height: 350
@@ -72,19 +72,19 @@ const styles = theme => ({
     },
     statusIconRed: {
         marginRight: 10,
-        color: '#aa0022'
+        color: theme.palette.error.main
     },
     statusIconGreen: {
         marginRight: 10,
-        color: '#51a522'
+        color: theme.palette.valid.main
     },
     statusIconOrange: {
         marginRight: 10,
-        color: '#E67D3A'
+        color: theme.palette.secondary.main
     },
     statusIconWhite: {
         marginRight: 10,
-        color: 'whitesmoke'
+        color: theme.palette.text.secondary
     }
 });
 

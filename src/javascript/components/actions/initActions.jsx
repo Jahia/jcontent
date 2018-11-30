@@ -46,14 +46,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
-        target: ['editPreviewBar:2.5', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
+        target: ['editPreviewBar:2.5', 'contentTreeMenuActions:2.5', 'tableActions:2', 'thumbnailActions:2', 'contextualMenuContentAction:2.5'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
         buttonLabel: 'label.contentManager.contentPreview.preview',
-        target: ['tableActions:1', 'thumbnailActions:2']
+        target: ['tableActions:1', 'thumbnailActions:1']
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
         buttonLabel: 'label.contentManager.create.contentFolder',
@@ -84,13 +84,13 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('tableMenuActions', menuAction, {
         buttonIcon: <Menu/>,
-        buttonLabel: 'label.contentManager.contentPreview.edit',
-        target: ['tableActions:2.5'],
+        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
+        target: ['tableActions:2.5', 'thumbnailActions:3'],
         menu: 'tableMenuActions'
     });
     actionsRegistry.add('contentTreeActions', menuAction, {
         buttonIcon: <Menu/>,
-        buttonLabel: 'label.contentManager.contentPreview.edit',
+        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
         target: ['contentTreeActions:2.5'],
         menu: 'contentTreeMenuActions'
     });
@@ -113,7 +113,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['editPreviewBar', 'thumbnailActions:1', 'tableMenuActions'],
+        target: ['editPreviewBar', 'tableMenuActions'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
         menu: 'publishMenu'
     });

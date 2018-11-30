@@ -172,7 +172,8 @@
                 "nodeLockedBy": "Contenu verrouillé par {{username}}",
                 "publishAllInAllLanguages": "Publier tout sous <em>{{displayName}}</em> dans toutes les langues",
                 "collapse": "Réduire",
-                "unPublishedBy": "Dépublié par {{userName}} le"
+                "unPublishedBy": "Dépublié par {{userName}} le",
+                "moreOptions": "Plus d'options"
             },
             "contentTypes": {
                 "error": {

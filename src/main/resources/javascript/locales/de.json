@@ -172,7 +172,8 @@
                 "nodeLockedBy": "Content gesperrt von {{username}}",
                 "publishAllInAllLanguages": "Veröffentlichen alles unter <em>{{displayName}}</em> in allen Sprachen",
                 "collapse": "Verkleinern",
-                "unPublishedBy": "Veröffentlichung wurde rückgängig gemacht von {{userName}} am"
+                "unPublishedBy": "Veröffentlichung wurde rückgängig gemacht von {{userName}} am",
+                "moreOptions": "Mehr Optionen"
             },
             "contentTypes": {
                 "error": {

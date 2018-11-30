@@ -2,7 +2,7 @@ import React from 'react';
 import {menuAction} from '@jahia/react-material';
 import {WorkflowIcon, ManageIcon, ContentIcon} from '../icons';
 import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen, Autorenew} from '@material-ui/icons';
-import {ContentPaste, FolderMultipleImage, Account, AccountGroup, Web, ShieldKey, TagMultiple} from 'mdi-material-ui';
+import {ContentPaste, FolderMultipleImage, Account, AccountGroup, Web, ShieldKey, TagMultiple, DotsVertical} from 'mdi-material-ui';
 import Constants from '../constants';
 import createContentOfTypeAction from './createContentOfTypeAction';
 import createContentAction from './createContentAction';
@@ -83,13 +83,13 @@ function initActions(actionsRegistry) {
         target: []
     });
     actionsRegistry.add('tableMenuActions', menuAction, {
-        buttonIcon: <Menu/>,
+        buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
         target: ['tableActions:2.5'],
         menu: 'tableMenuActions'
     });
     actionsRegistry.add('contentTreeActions', menuAction, {
-        buttonIcon: <Menu/>,
+        buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
         target: ['contentTreeActions:2.5'],
         menu: 'contentTreeMenuActions'
@@ -178,7 +178,7 @@ function initActions(actionsRegistry) {
         menu: 'contextualMenuContentAction'
     });
     actionsRegistry.add('additionalPreview', menuAction, {
-        buttonIcon: <Menu/>,
+        buttonIcon: <DotsVertical/>,
         target: ['editAdditionalMenu'],
         iconButton: true,
         menu: 'additionalPreviewMenu'

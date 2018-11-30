@@ -14,7 +14,7 @@ class ContentListHeader extends React.Component {
                 <TableRow className={classes.contentRow}>
                     <TableCell padding="none" className={classes.tableCellHeight} classes={{root: classes.paddingCell}}/>
                     <TableCell className={classes.tableCellHeight + ' ' + classes.paddingCheckbox} padding="none" classes={{root: classes.paddingCell}}>
-                        <CheckBoxOutlineBlank color="secondary"/>
+                        <CheckBoxOutlineBlank className={classes.colorCheckbox}/>
                     </TableCell>
                     {columnData.map(column => {
                         if (column.sortable) {

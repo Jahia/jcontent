@@ -87,49 +87,47 @@ class CmToolbar extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
         return (
-            <div>
-                <Toolbar className={classes.colorToolbar} classes={{gutters: classes.guttersToolbar}}>
-                    <Grid container item xs={GRID_SIZE} direction="row" alignItems="center">
-                        <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
-                            <div>
-                                {treeState !== CM_DRAWER_STATES.SHOW &&
-                                <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
-                                    <Refresh color="primary"/>
-                                </Button>
-                                }
-                                {this.isSearching() ?
-                                    <CmSearchControlBar/> :
-                                    <ContentBreadcrumbs mode={this.props.mode}/>
-                                }
-                            </div>
-                        </Grid>
-                        <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
-                            {mode === Constants.mode.FILES &&
-                            <React.Fragment>
-                                <FilesGridSizeSelector/>
-                                <FilesGridModeSelector/>
-                            </React.Fragment>
-                            }
-                            {this.isBrowsing() && !this.isRootNode() &&
-                            <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', classes: {root: classes.buttonCreate}}, true)}/>
-                            }
-                            <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+            <Toolbar className={classes.colorToolbar} classes={{gutters: classes.guttersToolbar}}>
+                <Grid container item xs={GRID_SIZE} direction="row" alignItems="center">
+                    <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                        <div>
+                            {treeState !== CM_DRAWER_STATES.SHOW &&
+                            <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
                                 <Refresh color="primary"/>
                             </Button>
-                            {this.isSearching() &&
-                            <Button data-cm-role="search-clear" variant="text"
-                                className={classes.searchClearButton}
-                                classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}
-                                                                           >
-                                <Close className={classes.searchClearIcon}/>
-                                {t('label.contentManager.search.clear')}
-                            </Button>
                             }
-                        </Grid>
+                            {this.isSearching() ?
+                                <CmSearchControlBar/> :
+                                <ContentBreadcrumbs mode={this.props.mode}/>
+                            }
+                        </div>
                     </Grid>
+                    <Grid item xs={GRID_PANEL_BUTTONS_SIZE} className={classes.gridDirection}>
+                        {mode === Constants.mode.FILES &&
+                        <React.Fragment>
+                            <FilesGridSizeSelector/>
+                            <FilesGridModeSelector/>
+                        </React.Fragment>
+                        }
+                        {this.isBrowsing() && !this.isRootNode() &&
+                        <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', classes: {root: classes.buttonCreate}}, true)}/>
+                        }
+                        <Button variant="text" className={classes.refreshButton} onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                            <Refresh color="primary"/>
+                        </Button>
+                        {this.isSearching() &&
+                        <Button data-cm-role="search-clear" variant="text"
+                            className={classes.searchClearButton}
+                            classes={{sizeSmall: classes.searchClear}} onClick={() => clearSearch(params)}
+                                                                       >
+                            <Close className={classes.searchClearIcon}/>
+                            {t('label.contentManager.search.clear')}
+                        </Button>
+                        }
+                    </Grid>
+                </Grid>
 
-                </Toolbar>
-            </div>
+            </Toolbar>
         );
     }
 }

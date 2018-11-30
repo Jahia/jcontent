@@ -157,7 +157,6 @@ const styles = theme => ({
         minWidth: '22px'
     },
     hoveredRowAction: {
-        color: theme.palette.primary.main,
         '& svg': {
             width: '18px',
             marginLeft: '10px',
@@ -173,6 +172,9 @@ const styles = theme => ({
     },
     selectedRowAction: {
         color: theme.palette.primary.contrastText + ' !important'
+    },
+    unselectedRowAction: {
+        color: theme.palette.primary.main + ' !important'
     },
     hoveredRowActionsCell: {
         color: theme.palette.text.disabled,
@@ -246,6 +248,10 @@ const styles = theme => ({
     paddingCell: {
         padding: 0
     },
+    cellColor: {
+        padding: 0,
+        backgroundColor: 'transparent'
+    },
     nameCellWidth: {
         maxWidth: 250,
         '@media (min-width: 576px)': {
@@ -291,6 +297,9 @@ const styles = theme => ({
     guttersToolbar: {
         paddingLeft: (theme.spacing.unit * 3) + '!important',
         paddingRight: (theme.spacing.unit * 3) + '!important'
+    },
+    colorCheckbox: {
+        color: theme.palette.text.secondary
     }
 });
 
@@ -381,16 +390,16 @@ class ContentListTable extends React.Component {
                                             >
                                             <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
 
-                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication" classes={{root: classes.paddingCell}}>
+                                            <TableCell className={classes.publicationCell} data-cm-role="table-content-list-cell-publication" classes={{root: classes.cellColor}}>
                                                 <PublicationStatus node={n} publicationInfoWidth={400}/>
                                             </TableCell>
-                                            <TableCell padding="none" className={classes.paddingCheckbox} classes={{root: classes.paddingCell}}>
-                                                <CheckBoxOutlineBlank color="secondary"/>
+                                            <TableCell padding="none" className={classes.paddingCheckbox} classes={{root: classes.cellColor}}>
+                                                <CheckBoxOutlineBlank classes={nameCellContentClasses}/>
                                             </TableCell>
                                             {columnData.map(column => {
                                                 if (column.id === 'name') {
                                                     return (
-                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth} classes={{root: classes.paddingCell}}>
+                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" className={classes.nameCellWidth} classes={{root: classes.cellColor}}>
                                                             <Typography noWrap
                                                                 className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
                                                                 classes={nameCellContentClasses}
@@ -403,19 +412,19 @@ class ContentListTable extends React.Component {
                                                 }
                                                 if (column.id === 'wip') {
                                                     return (
-                                                        <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderWip}
+                                                        <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.cellColor}}>{renderWip}
                                                         </TableCell>
                                                     );
                                                 }
                                                 if (column.id === 'lock') {
                                                     return (
-                                                        <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.paddingCell}}>{renderLock}
+                                                        <TableCell key={column.id} className={classes.actionCell} padding="none" classes={{root: classes.cellColor}}>{renderLock}
                                                         </TableCell>
                                                     );
                                                 }
                                                 if (column.id === 'type') {
                                                     return (
-                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" classes={{root: classes.paddingCell}}>
+                                                        <TableCell key={column.id} data-cm-role="table-content-list-cell-name" classes={{root: classes.cellColor}}>
                                                             <Typography noWrap
                                                                 className={isDeleted ? classes[column.id] + ' ' + classes.isDeleted : classes[column.id]}
                                                                 classes={nameCellContentClasses}
@@ -431,7 +440,7 @@ class ContentListTable extends React.Component {
                                                         <TableCell
                                                             key={column.id}
                                                             padding="none"
-                                                            classes={{root: classes.paddingCell}}
+                                                            classes={{root: classes.cellColor}}
                                                             data-cm-role={'table-content-list-cell-' + column.id}
                                                             >
                                                             <Typography className={classes[column.id]} classes={cellContentClasses}>
@@ -444,7 +453,7 @@ class ContentListTable extends React.Component {
                                                     <TableCell
                                                         key={column.id}
                                                         padding="none"
-                                                        classes={{root: classes.paddingCell}}
+                                                        classes={{root: classes.cellColor}}
                                                         data-cm-role={'table-content-list-cell-' + column.id}
                                                         >
                                                         <Typography className={classes[column.id] + ' ' + classes.textOverflow1} classes={cellContentClasses}>
@@ -453,13 +462,13 @@ class ContentListTable extends React.Component {
                                                     </TableCell>
                                                 );
                                             })}
-                                            <TableCell className={classes.tableCellWidtH} classes={{root: classes.paddingCell}}/>
+                                            <TableCell classes={{root: classes.cellColor}}/>
                                             <TableCell
                                                 padding="none"
                                                 className={classes.hoveredRowActionsCell + ' ' + classes.paddingAction}
                                                 data-cm-role="table-content-list-cell-"
-                                                classes={{root: classes.paddingCell}}
-                                                ><DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple: true, className: classes.tableButton + ' ' + classes.hoveredRowAction + ' ' + (isSelected ? classes.selectedRowAction : '')}, true)}/>
+                                                classes={{root: classes.cellColor}}
+                                                ><DisplayActions target="tableActions" context={{path: n.path}} render={iconButtonRenderer({disableRipple: true, className: classes.tableButton + ' ' + classes.hoveredRowAction, classes: nameCellContentClasses}, true)}/>
                                             </TableCell>
                                         </TableRow>
                                     );

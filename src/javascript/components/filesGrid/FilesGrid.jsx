@@ -11,6 +11,7 @@ import {withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../fileupload/UploadTransformComponent';
 import {valueToSizeTransformation} from './filesGridUtils';
 import {connect} from 'react-redux';
+import {cmSetPage, cmSetPageSize} from '../redux/actions';
 
 const styles = theme => ({
     grid: {
@@ -60,7 +61,7 @@ class FilesGrid extends Component {
     }
 
     render() {
-        const {size, t, contentNotFound, classes, path} = this.props;
+        const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage} = this.props;
         const {hoveredCard} = this.state;
 
         if (contentNotFound) {
@@ -115,8 +116,14 @@ class FilesGrid extends Component {
                         ))
                     }
                     </UploadTransformComponent>
+                    <Pagination
+                        totalCount={totalCount}
+                        pageSize={pagination.pageSize}
+                        currentPage={pagination.currentPage}
+                        onChangeRowsPerPage={setPageSize}
+                        onChangePage={setCurrentPage}
+                    />
                 </div>
-                <Pagination totalCount={this.props.totalCount} pageSize={this.props.pageSize} currentPage={this.props.page} onChangeRowsPerPage={this.props.onChangeRowsPerPage} onChangePage={this.props.onChangePage}/>
             </div>
         );
     }
@@ -127,8 +134,18 @@ FilesGrid.propTypes = {
     rows: PropTypes.array.isRequired
 };
 
+let mapStateToProps = state => ({
+    pagination: state.pagination,
+    size: valueToSizeTransformation(state.filesGrid.size)
+});
+
+let mapDispatchToProps = dispatch => ({
+    setCurrentPage: page => dispatch(cmSetPage(page)),
+    setPageSize: pageSize => dispatch(cmSetPageSize(pageSize))
+});
+
 const ComposedFilesGrid = compose(
-    connect(state => ({size: valueToSizeTransformation(state.filesGrid.size)})),
+    connect(mapStateToProps, mapDispatchToProps),
     translate(),
     withStyles(styles, {withTheme: true}),
 )(FilesGrid);

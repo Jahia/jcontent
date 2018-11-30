@@ -121,7 +121,7 @@ class LanguageSwitcher extends React.Component {
                         />
 );
                     }
-                    this.onSelectLanguage(existingLanguage);
+                    this.onSelectLanguage(lang);
                     return null;
                 }
             }

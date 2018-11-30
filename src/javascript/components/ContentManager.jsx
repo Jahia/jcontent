@@ -20,6 +20,7 @@ import {Provider} from 'react-redux';
 import getStore from './redux/getStore';
 import {PushEventHandler} from './PushEventHandler';
 import initActions from './actions/initActions';
+import styleConstants from './styleConstants';
 
 class ContentManager extends React.Component {
     constructor(props) {
@@ -44,6 +45,8 @@ class ContentManager extends React.Component {
         this.namespaceResolvers = {
             'content-media-manager': lang => require('../../main/resources/javascript/locales/' + lang + '.json')
         };
+
+        theme.contentManager = styleConstants;
     }
 
     getStore(dxContext, t) {

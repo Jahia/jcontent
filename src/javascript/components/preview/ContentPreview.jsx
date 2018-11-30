@@ -124,12 +124,12 @@ const styles = theme => ({
     drawerWidth: {
         boxShadow: 'none',
         backgroundColor: theme.palette.common.white,
-        height: 'calc(100vh - 140px)',
+        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
         overflow: 'hidden !important',
-        maxHeight: 'calc(100vh - 140px)'
+        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)'
     },
     drawerRoot: {
-        top: '140px !important',
+        top: '' + theme.contentManager.headerHeight + 'px !important',
         overflow: 'hidden !important',
         right: '24px !important'
     },

@@ -59,7 +59,7 @@ const styles = theme => ({
     modalTransition: {
         transition: '.55s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
         width: 550,
-        top: '140px!important',
+        top: '' + theme.contentManager.headerHeight + 'px!important',
         right: '41px!important'
     },
     drawerTableHead: {
@@ -85,8 +85,8 @@ const styles = theme => ({
         boxShadow: 'none',
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
-        height: 'calc(100vh - 140px)',
-        maxHeight: 'calc(100vh - 140px)'
+        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
+        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)'
     },
     drawerFullScreen: {
         top: '0px!important',

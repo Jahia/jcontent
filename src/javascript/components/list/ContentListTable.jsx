@@ -43,8 +43,8 @@ const styles = theme => ({
     lastModified: {
         fontSize: '13px',
         color: theme.palette.text.secondary,
-        minWidth: '140px',
-        maxWidth: '140px'
+        minWidth: '' + theme.contentManager.headerHeight + 'px',
+        maxWidth: '' + theme.contentManager.headerHeight + 'px'
     },
     createdBy: {
         fontSize: '13px',
@@ -184,8 +184,8 @@ const styles = theme => ({
         background: theme.palette.background.default,
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: 'calc(100vh - 100px)',
-        maxHeight: 'calc(100vh - 100px)'
+        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
+        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)'
     },
     row: {
         backgroundColor: theme.palette.background.paper,

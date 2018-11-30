@@ -21,8 +21,8 @@ const styles = theme => ({
         overflowX: 'scroll',
         maxWidth: '260px',
         width: '260px',
-        height: 'calc(100vh - 140px)',
-        maxHeight: 'calc(100vh - 140px)'
+        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
+        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)'
     },
     list: {
         maxWidth: '260px',

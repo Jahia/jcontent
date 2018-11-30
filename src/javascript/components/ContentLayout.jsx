@@ -16,9 +16,6 @@ import {connect} from 'react-redux';
 import Constants from './constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
 
-const treeDrawerWidth = 260;
-const previewDrawerWidth = 600;
-
 const styles = theme => ({
     topBar: {
         color: theme.palette.primary.contrastText
@@ -29,8 +26,8 @@ const styles = theme => ({
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        marginLeft: -treeDrawerWidth,
-        marginRight: -previewDrawerWidth
+        marginLeft: -theme.contentManager.treeDrawerWidth,
+        marginRight: -theme.contentManager.previewDrawerWidth
     },
     contentLeftShift: {
         marginLeft: 0,
@@ -41,23 +38,23 @@ const styles = theme => ({
         transition: ['margin-right 0ms 225ms']
     },
     treeDrawer: {
-        width: treeDrawerWidth,
+        width: theme.contentManager.treeDrawerWidth,
         flexShrink: 0
     },
     treeDrawerPaper: {
-        width: treeDrawerWidth,
+        width: theme.contentManager.treeDrawerWidth,
         top: 'unset',
         left: 'unset',
         zIndex: 2000
     },
     previewDrawer: {
-        width: previewDrawerWidth,
+        width: theme.contentManager.previewDrawerWidth,
         flexShrink: 0
     },
     previewDrawerPaper: {
-        width: previewDrawerWidth,
+        width: theme.contentManager.previewDrawerWidth,
         top: 'unset',
-        right: 38,
+        right: theme.contentManager.screenMargin,
         zIndex: 2000
     },
     appFrame: {

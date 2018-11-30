@@ -10,15 +10,11 @@ import {DisplayActions} from '@jahia/react-material';
 import CmLeftMenuItem from './CmLeftMenuItem';
 import {compose} from 'react-apollo';
 
-export const drawerWidth = 289;
-const leftMargin = 38;
-const width = 70;
-
 const styles = theme => ({
     root: {
         zIndex: 2100,
-        minWidth: (leftMargin + width) + 'px',
-        paddingLeft: leftMargin + 'px',
+        minWidth: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth) + 'px',
+        paddingLeft: theme.contentManager.screenMargin + 'px',
         background: theme.palette.background.paper,
         overflow: 'visible !important', // Safari compatibility
         '-webkit-transform-style': 'preserve-3d', // Safari compatibility
@@ -27,8 +23,8 @@ const styles = theme => ({
     },
     root1: {
         zIndex: 2100,
-        minWidth: (leftMargin + width) + 'px',
-        paddingLeft: leftMargin + 'px',
+        minWidth: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth) + 'px',
+        paddingLeft: theme.contentManager.screenMargin + 'px',
         background: theme.palette.layout.dark,
         overflow: 'hidden',
         height: '100%',
@@ -80,8 +76,8 @@ const styles = theme => ({
         position: 'absolute',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
-        left: (leftMargin + width),
-        width: drawerWidth,
+        left: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth),
+        width: theme.contentManager.leftNavigationDrawerWidth,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen
@@ -92,8 +88,8 @@ const styles = theme => ({
         position: 'relative',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
         zIndex: 1,
-        left: (leftMargin + width),
-        width: drawerWidth,
+        left: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth),
+        width: theme.contentManager.leftNavigationDrawerWidth,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen

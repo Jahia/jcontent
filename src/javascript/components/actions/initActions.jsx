@@ -97,7 +97,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publish', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publish',
-        target: ['publishMenu:1', 'contentTreeMenuActions:5', 'contextualMenuContentAction:5'],
+        target: ['publishMenu:1', 'contentTreeMenuActions:5'],
         allSubtree: false,
         allLanguages: false,
         checkForUnpublication: false,
@@ -113,14 +113,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['editPreviewBar', 'thumbnailActions:1', 'tableMenuActions'],
+        target: ['editPreviewBar', 'thumbnailActions:1', 'tableMenuActions', 'contextualMenuContentAction:3'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
         menu: 'publishMenu'
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishInAllLanguages',
-        target: ['publishMenu', 'advancedPublish', 'contextualMenuContentAction'],
+        target: ['publishMenu', 'advancedPublish'],
         hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
         allSubTree: false,
         allLanguages: true,
@@ -150,13 +150,13 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['editPreviewBar:4.2', 'contentTreeMenuActions:4.2', 'tableMenuActions:4.2', 'contextualMenuContentAction:4.2'],
+        target: ['editPreviewBar:4.2', 'contentTreeMenuActions:4.2', 'tableMenuActions:4.2'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.unpublish',
-        target: ['publishMenu', 'advancedPublish', 'contextualMenuContentAction'],
+        target: ['publishMenu', 'advancedPublish'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         allSubTree: false,
         allLanguages: false,

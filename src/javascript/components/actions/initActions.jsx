@@ -211,20 +211,22 @@ function initActions(actionsRegistry) {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
         target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4'],
-        hideOnNodeTypes: ['jnt:page'],
-        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.deletePermanently',
         target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4'],
-        hideOnNodeTypes: ['jnt:page']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('undelete', undeleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.undelete',
         target: ['contentTreeMenuActions:4.1', 'tableMenuActions:4.1', 'additionalPreviewMenu:4.1', 'contextualMenuContentAction:4.1'],
-        hideOnNodeTypes: ['jnt:page']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('createMenu', menuWithRequirementsAction, {
         buttonIcon: <Add/>,

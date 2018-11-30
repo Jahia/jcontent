@@ -99,10 +99,13 @@ const styles = theme => ({
         position: 'absolute',
         top: '11px',
         '&[data-sel-role="preview"]': {
-            right: '10px'
+            right: '60px'
         },
-        '&[data-sel-role="publishMenu"]': {
+        '&[data-sel-role="edit"]': {
             right: '35px'
+        },
+        '&[data-sel-role="tableMenuActions"]': {
+            right: '10px'
         },
         color: theme.palette.background.default,
         padding: 0,

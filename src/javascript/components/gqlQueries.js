@@ -145,11 +145,13 @@ const PickerItemsFragment = {
     },
     isPublished: {
         applyFor: 'node',
+        variables: {
+            lang: 'String!'
+        },
         gql: gql`
-            fragment IsPublished on JCRNode {
-                isPublished:property(name:"j:published") {
-                    name
-                    value
+            fragment PublicationStatus on JCRNode {
+                publicationStatus:aggregatedPublicationInfo(language: $lang) {
+                    publicationStatus
                 }
             }
         `

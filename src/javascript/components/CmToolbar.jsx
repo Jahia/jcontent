@@ -1,14 +1,14 @@
 import React from 'react';
-import {Toolbar, Grid, withStyles, Button} from '@material-ui/core';
-import {Refresh} from '@material-ui/icons';
-import {Close} from '@material-ui/icons';
+import {Button, Grid, Toolbar, withStyles} from '@material-ui/core';
+import {Close, Refresh} from '@material-ui/icons';
+import {FileTree} from 'mdi-material-ui';
 import {DisplayActions} from '@jahia/react-material';
 import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
 import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
-import {cmSetSelection, cmGoto, cmSetTreeState, CM_DRAWER_STATES} from './redux/actions';
+import {CM_DRAWER_STATES, cmGoto, cmSetSelection, cmSetTreeState} from './redux/actions';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import Constants from './constants';
@@ -89,13 +89,15 @@ class CmToolbar extends React.Component {
         return (
             <Toolbar className={classes.colorToolbar} classes={{gutters: classes.guttersToolbar}}>
                 <Grid container item xs={GRID_SIZE} direction="row" alignItems="center">
-                    <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE}>
+                    {treeState !== CM_DRAWER_STATES.SHOW &&
+                    <Grid item xs={1}>
+                        <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
+                            <FileTree color="primary"/>
+                        </Button>
+                    </Grid>
+                    }
+                    <Grid item xs={GRID_SIZE - GRID_PANEL_BUTTONS_SIZE - 1}>
                         <div>
-                            {treeState !== CM_DRAWER_STATES.SHOW &&
-                            <Button variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
-                                <Refresh color="primary"/>
-                            </Button>
-                            }
                             {this.isSearching() ?
                                 <CmSearchControlBar/> :
                                 <ContentBreadcrumbs mode={this.props.mode}/>

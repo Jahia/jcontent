@@ -8,8 +8,8 @@ import CmSearchBar from './searchBar/CmSearchBar';
 
 const styles = theme => ({
     root: {
-        minHeight: theme.contentManager.headerHeight + 'px',
-        maxHeight: theme.contentManager.headerHeight + 'px',
+        minHeight: theme.contentManager.topBarHeight + 'px',
+        maxHeight: theme.contentManager.topBarHeight + 'px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'

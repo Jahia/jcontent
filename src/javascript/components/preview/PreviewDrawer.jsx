@@ -1,17 +1,6 @@
 import React from 'react';
 import {translate} from 'react-i18next';
-import {
-    Button,
-    IconButton,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Toolbar,
-    Typography,
-    withStyles
-} from '@material-ui/core';
+import {Button, IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
 import classNames from 'classnames';
 import ContentPreview from '../preview/ContentPreview';
 import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
@@ -59,7 +48,7 @@ const styles = theme => ({
     modalTransition: {
         transition: '.55s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
         width: 550,
-        top: '' + theme.contentManager.headerHeight + 'px!important',
+        top: String(theme.contentManager.topBarHeight) + 'px!important',
         right: '41px!important'
     },
     drawerTableHead: {
@@ -85,8 +74,8 @@ const styles = theme => ({
         boxShadow: 'none',
         color: theme.palette.background.paper,
         backgroundColor: theme.palette.common.white,
-        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
-        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)'
+        height: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)',
+        maxHeight: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)'
     },
     drawerFullScreen: {
         top: '0px!important',
@@ -112,6 +101,10 @@ const styles = theme => ({
     },
     chevron: {
         color: '#5E6565' // Color is not in the theme
+    },
+    toolbar: {
+        minHeight: theme.contentManager.toolbarHeight + 'px!important',
+        maxHeight: theme.contentManager.toolbarHeight + 'px'
     }
 });
 
@@ -121,58 +114,46 @@ class PreviewDrawer extends React.Component {
             classes, previewMode, setPreviewMode, t, closePreview
         } = this.props;
         return (
-            <Table data-cm-role="preview-table">
-                <TableHead>
-                    <TableRow className={classes.drawerTableHead}>
-                        <TableCell className={classes.drawerTableCell}>
-                            <Toolbar disableGutters>
-                                <IconButton color="inherit" style={{padding: 0, marginRight: 10}}
-                                    onClick={closePreview}
-                                    >
-                                    <ChevronRightIcon className={classes.chevron} fontSize="small"/>
-                                </IconButton>
-                                <Typography className={classes.insideCell}>
-                                    {t('label.contentManager.contentPreview.preview')}
-                                </Typography>
-                                <div style={{display: 'inline', textAlign: 'right', marginRight: '5px'}}>
-                                    <Button
-                                        variant="contained"
-                                        className={classNames(classes.editButton, {
-                                            [classes.inactiveButton]: previewMode !== 'edit'
-                                        })}
+            <React.Fragment>
+                <Toolbar className={classes.toolbar}>
+                    <IconButton color="inherit" style={{padding: 0, marginRight: 10}}
+                        onClick={closePreview}
+                        >
+                        <ChevronRightIcon className={classes.chevron} fontSize="small"/>
+                    </IconButton>
+                    <Typography variant="subtitle2">
+                        {t('label.contentManager.contentPreview.preview')}
+                    </Typography>
+                    <div style={{display: 'inline', textAlign: 'right', marginRight: '5px'}}>
+                        <Button
+                            variant="contained"
+                            className={classNames(classes.editButton, {
+                                [classes.inactiveButton]: previewMode !== 'edit'
+                            })}
 
-                                        classes={{
-                                            root: classes.buttonStyle
-                                        }}
-                                        color={previewMode === 'edit' ? 'primary' : 'default'}
-                                        onClick={() => setPreviewMode('edit')}
-                                        >{t('label.contentManager.contentPreview.staging')}
-                                    </Button>
-                                    <Button
-                                        className={classNames(classes.liveButton, {
-                                            [classes.inactiveButton]: previewMode !== 'live'
-                                        })}
-                                        classes={{
-                                            root: classes.buttonStyle
-                                        }}
-                                        variant="contained"
-                                        color={previewMode === 'live' ? 'primary' : 'default'}
-                                        onClick={() => setPreviewMode('live')}
-                                        >{t('label.contentManager.contentPreview.live')}
-                                    </Button>
-                                </div>
-                            </Toolbar>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell padding="none">
-                            <ContentPreview/>
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+                            classes={{
+                                root: classes.buttonStyle
+                            }}
+                            color={previewMode === 'edit' ? 'primary' : 'default'}
+                            onClick={() => setPreviewMode('edit')}
+                            >{t('label.contentManager.contentPreview.staging')}
+                        </Button>
+                        <Button
+                            className={classNames(classes.liveButton, {
+                                [classes.inactiveButton]: previewMode !== 'live'
+                            })}
+                            classes={{
+                                root: classes.buttonStyle
+                            }}
+                            variant="contained"
+                            color={previewMode === 'live' ? 'primary' : 'default'}
+                            onClick={() => setPreviewMode('live')}
+                            >{t('label.contentManager.contentPreview.live')}
+                        </Button>
+                    </div>
+                </Toolbar>
+                <ContentPreview/>
+            </React.Fragment>
         );
     }
 }
@@ -193,8 +174,7 @@ const mapDispatchToProps = dispatch => ({
     }
 });
 
-PreviewDrawer.propTypes = {
-};
+PreviewDrawer.propTypes = {};
 
 export default compose(
     translate(),

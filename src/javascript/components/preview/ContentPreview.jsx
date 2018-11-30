@@ -3,7 +3,7 @@ import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {Grid, IconButton, Paper, Tooltip, withStyles} from '@material-ui/core';
+import {IconButton, Paper, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {CloudDownload, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import {previewQuery} from '../gqlQueries';
@@ -102,8 +102,6 @@ const styles = theme => ({
         textAlign: 'center'
     },
     titleBar: {
-        color: theme.palette.background.default,
-        paddingBottom: '0px'
     },
     contentTitle: {
         textAlign: 'left',
@@ -124,16 +122,18 @@ const styles = theme => ({
     drawerWidth: {
         boxShadow: 'none',
         backgroundColor: theme.palette.common.white,
-        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
+        height: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)',
         overflow: 'hidden !important',
-        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)'
+        maxHeight: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)'
     },
     drawerRoot: {
-        top: '' + theme.contentManager.headerHeight + 'px !important',
+        top: String(theme.contentManager.topBarHeight) + 'px !important',
         overflow: 'hidden !important',
         right: '24px !important'
     },
     footerGrid: {
+        minHeight: '208px',
+        maxHeight: '208px',
         backgroundColor: '#e8ebed',
         padding: '0px !important'
     },
@@ -171,8 +171,7 @@ class ContentPreview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fullScreen: false,
-            imageControlElementId: 'previewImageControls'
+            fullScreen: false
         };
         this.handleDialogState = this.handleDialogState.bind(this);
     }
@@ -233,7 +232,7 @@ class ContentPreview extends React.Component {
     }
 
     componentFooter(dxContext) {
-        let {classes, previewMode, selection, handleFullScreen} = this.props;
+        let {classes, previewMode, selection} = this.props;
         let selectedItem = selection[0];
 
         let workspace = 'default';
@@ -252,38 +251,23 @@ class ContentPreview extends React.Component {
         }
 
         return (
-            <Grid container spacing={0} className={classes.footerGrid}>
-                <Grid container spacing={0}>
-                    <Grid container item xs={8} className={classes.titleBar}>
-                        <div className={classes.contentTitle} data-cm-role="preview-name">
-                            {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
-                        </div>
-                    </Grid>
-                    <Grid container item xs={4} justify="flex-end" className={classes.footerButton}>
-                        {selectedItem.type === 'File' && this.downloadButton(selectedItem, workspace, dxContext)}
-                        <ShareMenu/>
-                        {this.screenModeButtons(handleFullScreen, classes)}
-                    </Grid>
-                </Grid>
-
-                <Grid container item xs={12}>
-                    <div className={classes.contentSubTitle}>
+            <div className={classes.footerGrid}>
+                <div>
+                    <Typography variant="h5" data-cm-role="preview-name">
+                        {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
+                    </Typography>
+                </div>
+                <div>
+                    <Typography variant="body2">
                         <PublicationInfo/>
-                    </div>
-                </Grid>
-
-                <Grid container item xs={12}>
-                    {/* Element that will contain image controls if an image is the document being previewed */}
-                    <div id={this.state.imageControlElementId} style={{background: 'transparent'}}/>
-                </Grid>
-
-                <Grid item xs={4} className={classes.lockButton}>
-                    {leftButtons}
-                </Grid>
-                <Grid item container xs={8} justify="flex-end">
+                    </Typography>
+                </div>
+                <div>{leftButtons}
+                    {selectedItem.type === 'File' && this.downloadButton(selectedItem, workspace, dxContext)}
+                    <ShareMenu/>
                     {rightButtons}
-                </Grid>
-            </Grid>
+                </div>
+            </div>
         );
     }
 

@@ -5,6 +5,7 @@ const styleConstants = {
     screenMargin: 38,
     leftNavigationWidth: 70,
     leftNavigationDrawerWidth: 289,
+    topBarHeight: 56
 };
 
 export default styleConstants;

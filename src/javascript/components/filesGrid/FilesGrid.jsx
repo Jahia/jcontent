@@ -17,7 +17,7 @@ const styles = theme => ({
     grid: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.contentManager.headerHeight + theme.contentManager.topBarHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3
@@ -26,8 +26,8 @@ const styles = theme => ({
         overflowY: 'scroll',
         overflowX: 'scroll',
         fontFamily: 'Nunito sans, sans-serif',
-        height: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
-        maxHeight: 'calc(100vh - ' + theme.contentManager.headerHeight + 'px)',
+        height: 'calc(100vh - ' + (theme.contentManager.headerHeight + theme.contentManager.topBarHeight) + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.contentManager.headerHeight + theme.contentManager.topBarHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default
     },

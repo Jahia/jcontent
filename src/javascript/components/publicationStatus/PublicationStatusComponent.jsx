@@ -56,7 +56,6 @@ const styles = theme => ({
         backgroundColor: 'inherit',
         width: 0.01, // Safari doesn't take 0 for some strange reason
         opacity: 0,
-        visibility: 'hidden',
         overflow: 'hidden',
         color: theme.palette.getContrastText(theme.palette.publish.main),
         transition: 'width 0.3s ease-in 0s',

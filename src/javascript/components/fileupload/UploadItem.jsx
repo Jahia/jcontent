@@ -12,6 +12,7 @@ import {batchActions} from 'redux-batched-actions';
 import {isImageFile} from '../filesGrid/filesGridUtils';
 import {translate} from 'react-i18next';
 import _ from 'lodash';
+import { ellipsizeText } from '../utils';
 
 const styles = () => ({
     progressText: {
@@ -83,7 +84,7 @@ class UploadItem extends React.Component {
         return (
             <ListItem className={classes.listItem}>
                 { this.avatar() }
-                <ListItemText className={classes.fileNameText} primary={this.state.userChosenName ? this.state.userChosenName : file.name}/>
+                <ListItemText className={classes.fileNameText} primary={this.state.userChosenName ? ellipsizeText(this.state.userChosenName, 60) : ellipsizeText(file.name, 60)}/>
                 <ListItemText className={classes.fileNameText} primary={this.statusText()}/>
                 <ListItemSecondaryAction>
                     { this.secondaryActionsList() }
@@ -108,7 +109,7 @@ class UploadItem extends React.Component {
                         name="newName"
                         margin="normal"
                         variant="outlined"
-                        defaultValue={file.name}
+                        defaultValue={ file.name }
                         onKeyUp={this.rename}
                 />
                 </Popover>

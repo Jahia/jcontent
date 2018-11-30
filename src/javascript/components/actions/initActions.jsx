@@ -1,7 +1,7 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
 import {WorkflowIcon, ManageIcon, ContentIcon} from '../icons';
-import {Add, Delete, Edit, Error, Menu, Publish, Visibility, Lock, LockOpen, Autorenew} from '@material-ui/icons';
+import {Add, Delete, Edit, Error, Publish, Visibility, Lock, LockOpen, Autorenew} from '@material-ui/icons';
 import {ContentPaste, FolderMultipleImage, Account, AccountGroup, Web, ShieldKey, TagMultiple, DotsVertical} from 'mdi-material-ui';
 import Constants from '../constants';
 import createContentOfTypeAction from './createContentOfTypeAction';
@@ -105,7 +105,6 @@ function initActions(actionsRegistry) {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
     actionsRegistry.add('advancedPublish', menuAction, {
-        buttonIcon: <Menu/>,
         buttonLabel: 'label.contentManager.contentPreview.advancedPublish',
         target: ['contentTreeMenuActions:6'],
         menu: 'advancedPublish'
@@ -173,7 +172,6 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: false
     });
     actionsRegistry.add('contextualMenuContent', menuAction, {
-        buttonIcon: <Menu/>,
         iconButton: true,
         menu: 'contextualMenuContentAction'
     });

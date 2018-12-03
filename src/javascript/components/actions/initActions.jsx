@@ -53,7 +53,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('preview', previewAction, {
         buttonIcon: <Visibility/>,
         buttonLabel: 'label.contentManager.contentPreview.preview',
-        target: ['tableActions:1', 'thumbnailActions:2']
+        target: ['tableActions:1']
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
         buttonLabel: 'label.contentManager.create.contentFolder',
@@ -84,7 +84,7 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('tableMenuActions', menuAction, {
         buttonIcon: <DotsVertical/>,
-        buttonLabel: 'label.contentManager.contentPreview.edit',
+        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
         target: ['tableActions:2.5'],
         menu: 'tableMenuActions'
     });

@@ -240,7 +240,7 @@ class FileCard extends Component {
                 />
                 <div className={classes.details}>
                     <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        {isHovered && <DisplayActions target="thumbnailActions" context={{path: node.path}}
+                        {isHovered && <DisplayActions target="tableActions" context={{path: node.path}}
                             render={iconButtonRenderer({disableRipple: true, className: classes.actionsButton}, true)}/>
                         }
                         <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
@@ -295,7 +295,7 @@ class FileCard extends Component {
                 />
                 <div className={classes.details}>
                     <CardContent className={classes.content} classes={{root: classes.cardContent}} style={{width: '100%'}}>
-                        {isHovered && <DisplayActions target="thumbnailActions" context={{path: node.path}}
+                        {isHovered && <DisplayActions target="tableActions" context={{path: node.path}}
                             render={iconButtonRenderer({disableRipple: true, className: classes.actionsButton}, true)}/>
                         }
                         <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
@@ -345,7 +345,7 @@ class FileCard extends Component {
                 <div className={classes.verticalDetails} style={{flex: 1.5}}>
                     <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
                     <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        {isHovered && <DisplayActions target="thumbnailActions" context={{path: node.path}}
+                        {isHovered && <DisplayActions target="tableActions" context={{path: node.path}}
                             render={iconButtonRenderer({disableRipple: true, className: classes.actionsButton}, true)}/>
                         }
                         <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
@@ -380,7 +380,7 @@ class FileCard extends Component {
                 {fileIcon(node.path, '6x', {fontSize: '160px'})}
                 <div className={classes.details}>
                     <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        {isHovered && <DisplayActions target="thumbnailActions" context={{path: node.path}}
+                        {isHovered && <DisplayActions target="tableActions" context={{path: node.path}}
                             render={iconButtonRenderer({disableRipple: true, className: classes.actionsButton}, true)}/>
                         }
                         <Typography classes={{caption: classes.typoCaptionLarge}} variant="caption" className={classes.textTypo}>
@@ -431,7 +431,7 @@ class FileCard extends Component {
                 {fileIcon(node.path, '6x', {fontSize: '110px'})}
                 <div className={classes.details}>
                     <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        {isHovered && <DisplayActions target="thumbnailActions" context={{path: node.path}}
+                        {isHovered && <DisplayActions target="tableActions" context={{path: node.path}}
                             render={iconButtonRenderer({disableRipple: true, className: classes.actionsButton}, true)}/>
                         }
                         <Typography classes={{caption: classes.typoCaption}} variant="caption" className={classes.textTypo}>
@@ -476,7 +476,7 @@ class FileCard extends Component {
                 <div className={classes.details} style={{height: '100%'}}>
                     <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
                     <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        {isHovered && <DisplayActions target="thumbnailActions" context={{path: node.path}}
+                        {isHovered && <DisplayActions target="tableActions" context={{path: node.path}}
                             render={iconButtonRenderer({disableRipple: true, className: classes.actionsButton}, true)}/>
                         }
                         <Typography classes={{caption: classes.typoCaption}} variant="caption">

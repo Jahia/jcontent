@@ -2,7 +2,7 @@ import React from 'react';
 import {Checkbox, Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
 
-import {Lock, CheckBoxOutlineBlank} from '@material-ui/icons';
+import {Lock} from '@material-ui/icons';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
@@ -11,8 +11,8 @@ import {translate} from 'react-i18next';
 import {DxContext} from '../DxContext';
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
-import {cmSetSelection, cmGoto, cmSetPage, cmSetPageSize, cmSetSort, CM_DRAWER_STATES} from '../redux/actions';
-import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
+import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../redux/actions';
+import {allowDoubleClickNavigation} from '../utils';
 import CmToolbar from '../CmToolbar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
@@ -50,7 +50,7 @@ const styles = theme => ({
             display: 'block'
         }
     },
-    // publicationStatusContainer: {
+    // PublicationStatusContainer: {
     //     position: 'relative'
     // },
     // publicationStatus: {
@@ -106,24 +106,24 @@ const styles = theme => ({
     //     whiteSpace: 'nowrap'
     // },
     statusIcon: {
-        // backgroundColor: '#E67D3A',
-        color: theme.palette.text.disabled,
-        // opacity: '0.9',
+        // BackgroundColor: '#E67D3A',
+        color: theme.palette.text.disabled
+        // Opacity: '0.9',
         // '&:hover': {
         //     opacity: '1.5'
         // },
         // padding: '1px'
     },
     statusIconSelected: {
-        color: theme.palette.common.white,
-        // color: '#FFA83F',
+        color: theme.palette.common.white
+        // Color: '#FFA83F',
         // opacity: '0.9',
         // '&:hover': {
         //     opacity: '1.5'
         // },
         // padding: '1px'
     },
-    // name: {
+    // Name: {
     //     color: theme.palette.text.secondary,
     //     marginLeft: '-10px',
     //     fontSize: '14px'
@@ -140,18 +140,18 @@ const styles = theme => ({
     },
     typeCell: {
         minWidth: '100px',
-        maxWidth: '100px',
+        maxWidth: '100px'
     },
     lastModifiedCell: {
         minWidth: '140px',
-        maxWidth: '140px',
+        maxWidth: '140px'
     },
     createdByCell: {
         minWidth: '100px',
         maxWidth: '100px'
     },
 
-    // actionCell: {
+    // ActionCell: {
     //     minWidth: '22px'
     // },
     // hoveredRowAction: {
@@ -201,7 +201,7 @@ const styles = theme => ({
     selectedRow: {
         backgroundColor: theme.palette.primary.main + '!important'
     },
-    // selectedRowMarkedForDeletion: {
+    // SelectedRowMarkedForDeletion: {
     //     backgroundColor: theme.palette.error.dark + '!important'
     // },
     // selectedCell: {
@@ -251,8 +251,8 @@ const styles = theme => ({
     },
     textSelected: {
         color: theme.palette.common.white
-    },
-    // nameCellWidth: {
+    }
+    // NameCellWidth: {
     //     maxWidth: 250,
     //     '@media (min-width: 576px)': {
     //         maxWidth: 250
@@ -323,7 +323,7 @@ class ContentListTable extends React.Component {
         let {classes, t} = this.props;
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
-                <Lock className={classNames({[classes.statusIconSelected]:isSelected, [classes.statusIcon]:!isSelected})}/>
+                <Lock className={classNames({[classes.statusIconSelected]: isSelected, [classes.statusIcon]: !isSelected})}/>
             </Tooltip> : null;
     }
 
@@ -332,7 +332,7 @@ class ContentListTable extends React.Component {
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                    <VirtualsiteIcon className={classNames({[classes.statusIconSelected]:isSelected, [classes.statusIcon]:!isSelected})}/>
+                    <VirtualsiteIcon className={classNames({[classes.statusIconSelected]: isSelected, [classes.statusIcon]: !isSelected})}/>
                 </Tooltip>
             );
         }
@@ -364,7 +364,7 @@ class ContentListTable extends React.Component {
                                     let renderWip = this.renderWip(n, dxContext, isSelected);
                                     let renderLock = this.renderLock(n, isSelected);
                                     let icon = this.addIconSuffix(n.icon);
-                                    let isDeleted = isMarkedForDeletion(n);
+                                    // Let isDeleted = isMarkedForDeletion(n);
                                     let contextualMenu = React.createRef();
                                     return (
                                         <TableRow

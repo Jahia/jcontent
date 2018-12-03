@@ -4,13 +4,13 @@ import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
 import {IconButton, Paper, Tooltip, Typography, withStyles} from '@material-ui/core';
-import {CloudDownload, Fullscreen, FullscreenExit} from '@material-ui/icons';
+import {CloudDownload} from '@material-ui/icons';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import {previewQuery} from '../gqlQueries';
 import PublicationInfo from './PublicationStatus';
 import ShareMenu from './ShareMenu';
 import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
-import {cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
+import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
 import loadable from 'react-loadable';
@@ -168,20 +168,6 @@ const styles = theme => ({
 });
 
 class ContentPreview extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            fullScreen: false
-        };
-        this.handleDialogState = this.handleDialogState.bind(this);
-    }
-
-    handleDialogState() {
-        this.setState(state => ({
-            fullScreen: !state.fullScreen
-        }));
-    }
-
     render() {
         if (_.isEmpty(this.props.selection)) {
             return null;
@@ -191,7 +177,7 @@ class ContentPreview extends React.Component {
         const selectedItem = selection[0];
         const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
-        const rootClass = this.state.fullScreen ? classes.rootFullWidth : classes.root;
+        const rootClass = (previewMode === CM_DRAWER_STATES.FULL_SCREEN) ? classes.rootFullWidth : classes.root;
         return (
             <DxContext.Consumer>
                 {dxContext => (
@@ -273,7 +259,7 @@ class ContentPreview extends React.Component {
 
     previewComponent(data, dxContext) {
         const {classes, t, previewMode} = this.props;
-
+        const fullScreen = (previewMode === CM_DRAWER_STATES.FULL_SCREEN);
         let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
         if (displayValue === '') {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
@@ -285,23 +271,23 @@ class ContentPreview extends React.Component {
 
             if (isPDF(data.nodeByPath.path)) {
                 return (
-                    <div className={this.state.fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
-                        <PDFViewer file={file} fullScreen={this.state.fullScreen}/>
+                    <div className={fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
+                        <PDFViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
             }
 
             if (isBrowserImage(data.nodeByPath.path)) {
                 return (
-                    <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
-                        <ImageViewer file={file} fullScreen={this.state.fullScreen}/>
+                    <div className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                        <ImageViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
             }
 
             let type = getFileType(file);
             return (
-                <div className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                <div className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
                     <DocumentViewer file={file} type={type}/>
                 </div>
             );
@@ -310,7 +296,7 @@ class ContentPreview extends React.Component {
         const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
         return (
             <React.Fragment>
-                <iframe id="previewContent" className={this.state.fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
+                <iframe id="previewContent" className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
                 {this.iframeLoadContent(assets, displayValue)}
             </React.Fragment>
         );
@@ -369,24 +355,6 @@ class ContentPreview extends React.Component {
         );
     }
 
-    screenModeButtons(handleFullScreen, classes) {
-        const {t} = this.props;
-        handleFullScreen(this.state.fullScreen);
-
-        if (this.state.fullScreen) {
-            return (
-                <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
-                    <FullscreenExit className={classes.colorIcon} onClick={this.handleDialogState}/>
-                </Tooltip>
-            );
-        }
-        return (
-            <Tooltip title={t('label.contentManager.contentPreview.expand')}>
-                <Fullscreen className={classes.colorIcon} onClick={this.handleDialogState}/>
-            </Tooltip>
-        );
-    }
-
     queryVariables(path, isPublished) {
         return {
             path: path,
@@ -417,9 +385,6 @@ const mapDispatchToProps = dispatch => ({
     },
     setPreviewState: state => {
         dispatch(cmSetPreviewState(state));
-    },
-    handleFullScreen: fullScreen => {
-        console.log(fullScreen);
     }
 });
 

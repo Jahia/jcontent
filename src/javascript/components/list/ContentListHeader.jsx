@@ -1,6 +1,5 @@
 import React from 'react';
-import {TableHead, TableRow, TableCell, TableSortLabel, Typography,Checkbox} from '@material-ui/core';
-import {CheckBoxOutlineBlank} from '@material-ui/icons';
+import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Typography} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
@@ -14,7 +13,7 @@ class ContentListHeader extends React.Component {
                 <TableRow>
                     <TableCell padding="none"/>
                     <TableCell padding="none">
-                        <Checkbox checked={false} />
+                        <Checkbox checked={false}/>
                     </TableCell>
                     {columnData.map(column => {
                         if (column.sortable) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import {translate} from 'react-i18next';
-import {Button, IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
+import {Button, IconButton, Toolbar, Tooltip, Typography, withStyles} from '@material-ui/core';
 import classNames from 'classnames';
 import ContentPreview from '../preview/ContentPreview';
-import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
+import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
@@ -111,7 +111,7 @@ const styles = theme => ({
 class PreviewDrawer extends React.Component {
     render() {
         const {
-            classes, previewMode, setPreviewMode, t, closePreview
+            classes, previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen
         } = this.props;
         return (
             <React.Fragment>
@@ -125,6 +125,14 @@ class PreviewDrawer extends React.Component {
                         {t('label.contentManager.contentPreview.preview')}
                     </Typography>
                     <div style={{display: 'inline', textAlign: 'right', marginRight: '5px'}}>
+                        {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
+                            <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
+                                <FullscreenExit className={classes.colorIcon} onClick={closeFullScreen}/>
+                            </Tooltip> :
+                            <Tooltip title={t('label.contentManager.contentPreview.expand')}>
+                                <Fullscreen className={classes.colorIcon} onClick={openFullScreen}/>
+                            </Tooltip>
+                        }
                         <Button
                             variant="contained"
                             className={classNames(classes.editButton, {
@@ -161,7 +169,8 @@ class PreviewDrawer extends React.Component {
 const mapStateToProps = state => {
     return {
         selection: state.selection,
-        previewMode: state.previewMode
+        previewMode: state.previewMode,
+        previewState: state.previewState
     };
 };
 
@@ -171,6 +180,12 @@ const mapDispatchToProps = dispatch => ({
     },
     closePreview: () => {
         dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE));
+    },
+    openFullScreen: () => {
+        dispatch(cmSetPreviewState(CM_DRAWER_STATES.FULL_SCREEN));
+    },
+    closeFullScreen: () => {
+        dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
     }
 });
 

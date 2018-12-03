@@ -57,6 +57,13 @@ const styles = theme => ({
         right: theme.contentManager.screenMargin,
         zIndex: 2000
     },
+    previewDrawerPaperFullScreen: {
+        width: '100vw',
+        height: '100vh',
+        top: 0,
+        left: 0,
+        zIndex: theme.zIndex.modal
+    },
     appFrame: {
         zIndex: 0,
         overflow: 'hidden',
@@ -116,11 +123,11 @@ class ContentLayout extends React.Component {
                         className={classes.treeDrawer}
                         variant="persistent"
                         anchor="left"
-                        open={treeState === CM_DRAWER_STATES.SHOW}
+                        open={treeState >= CM_DRAWER_STATES.SHOW}
                         classes={{paper: classes.treeDrawerPaper}}
                         >
                         <ContentTrees
-                            isOpen={treeState === CM_DRAWER_STATES.SHOW}
+                            isOpen={treeState >= CM_DRAWER_STATES.SHOW}
                             setRefetch={this.setTreeRefetcher}
                         />
                     </Drawer>
@@ -151,10 +158,10 @@ class ContentLayout extends React.Component {
                         className={classes.previewDrawer}
                         variant="persistent"
                         anchor="right"
-                        open={previewState === CM_DRAWER_STATES.SHOW}
-                        classes={{paper: classes.previewDrawerPaper}}
+                        open={previewState >= CM_DRAWER_STATES.SHOW}
+                        classes={{paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper}}
                         >
-                        {previewState === CM_DRAWER_STATES.SHOW && <PreviewDrawer/>}
+                        {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer/>}
                     </Drawer>
                 </div>
 

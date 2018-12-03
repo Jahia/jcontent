@@ -149,7 +149,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['editPreviewBar:4.2', 'contentTreeMenuActions:4.2', 'tableMenuActions:4.2'],
+        target: ['editPreviewBar:4.2', 'contentTreeMenuActions:4.2', 'tableMenuActions:4.2', 'contextualMenuContentAction:4.2'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {

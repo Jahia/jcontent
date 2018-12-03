@@ -94,7 +94,7 @@ const styles = theme => ({
         width: '100%'
     },
     controlsPaperLive: {
-        position: 'fixed',
+        position: 'absolute',
         left: '0',
         bottom: '0',
         width: '100%',

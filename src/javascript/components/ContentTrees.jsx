@@ -73,7 +73,7 @@ const styles = theme => ({
         color: theme.palette.text.secondary
     },
     itemAndRowSelected: {
-        backgroundColor: "#E1E0E0"
+        backgroundColor: '#E1E0E0'
     }
 });
 
@@ -208,9 +208,9 @@ class ContentTrees extends React.Component {
                                                             rootLabel={t(contentTreeConfig.rootLabel)}
                                                             setRefetch={setRefetch(contentTreeConfig.key)}
                                                             buttonClass={classes.buttonMenu}
-                                                            onContextualMenu={onContextualMenu}
                                                             itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
-        />
+                                                            onContextualMenu={onContextualMenu}
+                                                        />
                                                     </ListItem>
 );
                                             })

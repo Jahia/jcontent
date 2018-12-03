@@ -1,5 +1,5 @@
 import React from 'react';
-import {TableHead, TableRow, TableCell, TableSortLabel} from '@material-ui/core';
+import {TableHead, TableRow, TableCell, TableSortLabel, Typography,Checkbox} from '@material-ui/core';
 import {CheckBoxOutlineBlank} from '@material-ui/icons';
 import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -7,31 +7,29 @@ import {compose} from 'react-apollo';
 
 class ContentListHeader extends React.Component {
     render() {
-        const {order, orderBy, columnData, t, classes, setSort} = this.props;
+        const {order, orderBy, columnData, t, classes, setSort, showActions} = this.props;
         let direction = order === 'DESC' ? 'ASC' : 'DESC';
         return (
-            <TableHead className={classes.head}>
-                <TableRow className={classes.contentRow}>
-                    <TableCell padding="none" className={classes.tableCellHeight} classes={{root: classes.paddingCell}}/>
-                    <TableCell className={classes.tableCellHeight + ' ' + classes.paddingCheckbox} padding="none" classes={{root: classes.paddingCell}}>
-                        <CheckBoxOutlineBlank className={classes.colorCheckbox}/>
+            <TableHead>
+                <TableRow>
+                    <TableCell padding="none"/>
+                    <TableCell padding="none">
+                        <Checkbox checked={false} />
                     </TableCell>
                     {columnData.map(column => {
                         if (column.sortable) {
                             return (
                                 <TableCell
                                     key={column.id}
-                                    className={classes[column.id] + ' ' + classes.tableCellHeight}
-                                    classes={{root: classes.paddingCell}}
+                                    className={classes[column.id + 'Cell']}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                     >
                                     <TableSortLabel
-                                        classes={{active: classes.sortLabel}}
                                         active={orderBy === column.property}
                                         direction={direction.toLowerCase()}
                                         onClick={() => setSort({order: direction, orderBy: column.property})}
                                         >
-                                        {t(column.label)}
+                                        <Typography variant="subtitle2">{t(column.label)}</Typography>
                                     </TableSortLabel>
                                 </TableCell>
                             );
@@ -40,18 +38,17 @@ class ContentListHeader extends React.Component {
                             <TableCell
                                 key={column.id}
                                 padding="none"
-                                classes={{root: classes.paddingCell}}
-                                className={classes[column.id] + ' ' + classes.tableCellHeight}
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                                 >
-                                {t(column.label)}
+                                <Typography variant="subtitle2">{t(column.label)}</Typography>
                             </TableCell>
                         );
                     }, this)}
-                    <TableCell component="th" scope="row" className={classes.tableCellWidthHead} classes={{root: classes.paddingCell}}/>
-                    <TableCell component="th" scope="row" className={classes.tableCellHeight} classes={{root: classes.paddingCell + ' ' + classes.alignAction}}>
-                        Actions
-                    </TableCell>
+                    {showActions &&
+                        <TableCell component="th" scope="row">
+                            <Typography variant="subtitle2">Actions</Typography>
+                        </TableCell>
+                    }
                 </TableRow>
             </TableHead>
         );

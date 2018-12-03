@@ -132,8 +132,7 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     render() {
-        let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading} = this.props;
-
+        let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading, customSelectedClass} = this.props;
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
@@ -150,7 +149,7 @@ class CmPickerViewMaterial extends React.Component {
                             itemClass = itemClass + ' ' + classes.listItemDeleted;
                         }
                         if (entry.selected) {
-                            itemClass = itemClass + ' ' + classes.listItemSelected;
+                            itemClass = itemClass + ' ' + classes.listItemSelected + ' ' + customSelectedClass;
                         }
                         return (
                             <UploadWrapperComponent

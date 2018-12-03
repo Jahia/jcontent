@@ -71,6 +71,9 @@ const styles = theme => ({
     },
     iconColor: {
         color: theme.palette.text.secondary
+    },
+    itemAndRowSelected: {
+        backgroundColor: "#E1E0E0"
     }
 });
 
@@ -84,8 +87,7 @@ class ContentTree extends React.Component {
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel, buttonClass,
-            setRefetch} = this.props;
-
+            setRefetch, itemAndRowSelected} = this.props;
         return (
             <Picker
                 ref={this.picker}
@@ -104,6 +106,7 @@ class ContentTree extends React.Component {
                 {({handleSelect, ...others}) => (
                     <CmPickerViewMaterial
                         {...others}
+                        customSelectedClass={itemAndRowSelected}
                         textRenderer={entry => {
                         let contextualMenu = React.createRef();
                         return (
@@ -150,7 +153,7 @@ class ContentTrees extends React.Component {
 
     render() {
         const {lang, siteKey, path, openPaths, t, user, setPath, openPath,
-            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, closeTree} = this.props;
+            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, closeTree, selection} = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
@@ -206,6 +209,7 @@ class ContentTrees extends React.Component {
                                                             setRefetch={setRefetch(contentTreeConfig.key)}
                                                             buttonClass={classes.buttonMenu}
                                                             onContextualMenu={onContextualMenu}
+                                                            itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
         />
                                                     </ListItem>
 );
@@ -228,7 +232,8 @@ const mapStateToProps = state => ({
     lang: state.language,
     path: state.path,
     mode: state.mode,
-    openPaths: state.openPaths
+    openPaths: state.openPaths,
+    selection: state.selection
 });
 
 const mapDispatchToProps = dispatch => ({

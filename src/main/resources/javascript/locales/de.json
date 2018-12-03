@@ -39,6 +39,7 @@
                 "rename": "Umbenennen",
                 "successfulUploadMessage_plural": "{{number}} Dateien erfolgreich hochgeladen",
                 "uploaded": "Hochgeladen",
+                "cannotStore": "Datei konnte nicht hochgeladen werden: Datei überschreitet die Größe von {{maxUploadSize}}MB",
                 "exists": "Die Datei existiert bereits",
                 "uploading": "Hochladen...",
                 "retry": "Wiederholen",

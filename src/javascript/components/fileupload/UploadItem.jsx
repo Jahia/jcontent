@@ -161,9 +161,15 @@ class UploadItem extends React.Component {
                 error: null,
                 path: this.props.path
             };
+
             if (e.message.indexOf('ItemExistsException') !== -1) {
                 upload.error = 'FILE_EXISTS';
             }
+
+            if (e.message.indexOf('DataStoreException') !== -1) {
+                upload.error = 'CANNOT_STORE';
+            }
+
             setTimeout(() => {
                 this.props.dispatchBatch([
                     updateUpload(upload),
@@ -230,6 +236,13 @@ class UploadItem extends React.Component {
                 <span className={classes.progressText}>
                     <Info className={classes.statusIconRed}/>
                     {t('label.contentManager.fileUpload.exists')}
+                </span>
+            );
+        } else if (status === uploadStatuses.HAS_ERROR && error === 'CANNOT_STORE') {
+            text = (
+                <span className={classes.progressText}>
+                    <Info className={classes.statusIconRed}/>
+                    {t('label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize})}
                 </span>
             );
         } else if (status === uploadStatuses.HAS_ERROR) {

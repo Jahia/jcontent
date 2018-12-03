@@ -33,6 +33,7 @@
     contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
     contextJsParameters['userName'] = '${renderContext.user.username}';
     contextJsParameters['workspace'] = '${renderContext.workspace}';
+    contextJsParameters['maxUploadSize'] = parseInt("<%= SettingsBean.getInstance().getJahiaFileUploadMaxSize() %>") / (1024 * 1024);
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: [],

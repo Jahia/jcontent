@@ -40,6 +40,7 @@
                 "successfulUploadMessage_plural": "Successfully uploaded {{number}} files",
                 "uploaded": "Uploaded",
                 "exists": "File already exists",
+                "cannotStore": "Could not upload file: file exceeds {{maxUploadSize}}MB and some more text here as well",
                 "uploading": "Uploading...",
                 "retry": "Retry",
                 "errorActionMessage": "Please resolve the issue(s)"

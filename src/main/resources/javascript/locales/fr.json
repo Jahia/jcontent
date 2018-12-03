@@ -38,6 +38,7 @@
                 "uploadingMessage": "Téléchargement ({{uploaded}} sur {{total}} terminé)",
                 "rename": "Renommer",
                 "successfulUploadMessage_plural": "{{number}} Fichiers téléchargés avec succès",
+                "cannotStore": "L'import du fichier a échoué : La taille du fichier dépasse la limite de {{maxUploadSize}}Mo",
                 "uploaded": "Téléchargé",
                 "exists": "Le fichier existe déjà",
                 "uploading": "Téléchargement ...",

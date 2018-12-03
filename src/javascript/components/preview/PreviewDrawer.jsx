@@ -23,7 +23,6 @@ import PublicationInfo from './PublicationStatus';
 class PreviewDrawer extends React.Component {
     render() {
         const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection} = this.props;
-        let selectedItem = selection[0];
         return (
             <React.Fragment>
                 <AppBar position="relative">
@@ -65,17 +64,17 @@ class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <ContentPreview/>
+                <ContentPreview selection={selection}/>
                 <Card>
                     <CardContent>
                         <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
-                            {selectedItem.displayName ? selectedItem.displayName : selectedItem.name}
+                            {selection.displayName ? selection.displayName : selection.name}
                         </Typography>
                         <PublicationInfo/>
                     </CardContent>
                     <CardActions>
-                        <DisplayActions target="previewFooterActions" context={{path: selectedItem.path}} render={iconButtonRenderer({color: 'primary'})}/>
-                        <DisplayActions target="editPreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
+                        <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>
+                        <DisplayActions target="editPreviewBar" context={{path: selection.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
                     </CardActions>
                 </Card>
             </React.Fragment>
@@ -85,7 +84,6 @@ class PreviewDrawer extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        selection: state.selection,
         previewMode: state.previewMode,
         previewState: state.previewState
     };

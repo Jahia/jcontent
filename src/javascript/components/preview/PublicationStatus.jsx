@@ -51,7 +51,7 @@ const component = ({selection, t, classes, uiLang}) => {
     if (_.isEmpty(selection)) {
         return null;
     }
-    const selectedItem = selection[0];
+    const selectedItem = selection;
     // Special handling for marked for deletion content
     if (Constants.availablePublicationStatuses.MARKED_FOR_DELETION === selectedItem.publicationStatus || isMarkedForDeletion(selectedItem)) {
         return (

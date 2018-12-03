@@ -190,7 +190,7 @@ class ContentListTable extends React.Component {
                                         <ContentNotFound columnData={columnData} translate={t}/> : _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData}
                                                       translate={t}/> : rows.map(n => {
-                                                let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
+                                                let isSelected = n.path === selection;
                                                 let renderWip = this.renderWip(n, dxContext, isSelected);
                                                 let renderLock = this.renderLock(n, isSelected);
                                                 let icon = this.addIconSuffix(n.icon);
@@ -207,7 +207,7 @@ class ContentListTable extends React.Component {
                                                         data-cm-node-path={n.path}
                                                         data-cm-role="table-content-list-row"
                                                         selected={isSelected}
-                                                        onClick={() => onRowSelected([n])}
+                                                        onClick={() => onRowSelected(n.path)}
                                                         onContextMenu={event => {
                                                             event.stopPropagation();
                                                             contextualMenu.current.open(event);

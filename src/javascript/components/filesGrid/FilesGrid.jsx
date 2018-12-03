@@ -94,7 +94,7 @@ class FilesGrid extends Component {
                 <div className={classes.grid} data-cm-role="grid-content-list">
                     <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
                         {
-                        this.props.rows.map(node => (
+                        this.props.rows.map((node, index) => (
                             <Grid key={node.uuid}
                                   item
                                   xs={size}
@@ -106,6 +106,7 @@ class FilesGrid extends Component {
                                     {
                                         dxContext => (
                                             <FileCard cardType={size}
+                                                      index={index}
                                                       isHovered={node.path === hoveredCard}
                                                       node={{...node, displayName: node.name}}
                                                       dxContext={dxContext}/>

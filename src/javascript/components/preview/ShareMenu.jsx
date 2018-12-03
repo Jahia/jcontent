@@ -37,7 +37,7 @@ class ShareMenu extends Component {
             return null;
         }
 
-        const selectedItem = selection[0];
+        const selectedItem = selection;
 
         return (
             <span>

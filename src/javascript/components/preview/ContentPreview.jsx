@@ -72,13 +72,24 @@ const styles = theme => ({
 });
 
 class ContentPreview extends React.Component {
+    constructor(props) {
+        super(props);
+        this.refetchPreview = () => {};
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.selection.lastPublished !== this.props.selection.lastPublished) {
+            this.refetchPreview();
+        }
+    }
+
     render() {
         if (_.isEmpty(this.props.selection)) {
             return null;
         }
 
         const {selection, classes, previewMode} = this.props;
-        const selectedItem = selection[0];
+        const selectedItem = selection;
         const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         const rootClass = (previewMode === CM_DRAWER_STATES.FULL_SCREEN) ? classes.rootFullWidth : classes.root;
@@ -88,10 +99,9 @@ class ContentPreview extends React.Component {
                     <div className={rootClass}>
                         <Paper elevation={0}>
                             <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
-                                {({loading, error, data}) => {
-                                    if (error) {
-                                        // Ignore error that occurs if node is not published in live mode.
-                                    }
+                                {({loading, data, refetch}) => {
+                                    this.refetchPreview = refetch;
+
                                     if (!loading) {
                                         if (!_.isEmpty(data)) {
                                             let modes = ['edit'];
@@ -198,7 +208,6 @@ class ContentPreview extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        selection: state.selection,
         previewMode: state.previewMode,
         language: state.language
     };

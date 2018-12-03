@@ -2,7 +2,7 @@ import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {withApollo} from 'react-apollo';
-import {uploadFile, uploadImage, updateFileContent} from './gqlMutations';
+import {uploadFile, updateFileContent} from './gqlMutations';
 import {Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField} from '@material-ui/core';
 import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
 import {connect} from 'react-redux';
@@ -183,13 +183,6 @@ class UploadItem extends React.Component {
             path: path,
             mimeType: file.type
         };
-
-        if (isImageFile(file.name)) {
-            return client.mutate({
-                mutation: uploadImage,
-                variables: variables
-            });
-        }
 
         return client.mutate({
             mutation: uploadFile,

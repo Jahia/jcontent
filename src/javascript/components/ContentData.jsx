@@ -123,6 +123,12 @@ class ContentDataView extends React.Component {
 
     render() {
         const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, treeState, pathsToRefetch, removePathsToRefetch} = this.props;
+        let fetchPolicy = orderBy === 'displayName' ? 'network-only' : 'cache-first';
+        // If the path to display is part of the paths to refetch then refetch
+        if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
+            removePathsToRefetch([path]);
+            fetchPolicy = 'network-only';
+        }
 
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
@@ -137,15 +143,9 @@ class ContentDataView extends React.Component {
         const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort, treeState);
 
         return (
-            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={sort.orderBy === 'displayName' ? 'network-only' : ''}>
+            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy}>
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
-
-                    // If the path to display is part of the paths to refetch then refetch
-                    if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
-                        removePathsToRefetch([path]);
-                        refetch();
-                    }
 
                     if (setRefetch) {
                         setRefetch({

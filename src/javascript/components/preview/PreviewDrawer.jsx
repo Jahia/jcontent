@@ -9,7 +9,6 @@ import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/ac
 import {compose} from 'react-apollo';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
 import PublicationInfo from "./PublicationStatus";
-import ShareMenu from "./ShareMenu";
 
 const styles = theme => ({
     drawerHeader: {

@@ -128,7 +128,7 @@ const styles = theme => ({
     gridUnpublish: {
         marginTop: Number(theme.spacing.unit),
         marginBottom: Number(theme.spacing.unit)
-    },
+    }
 });
 
 class ContentPreview extends React.Component {
@@ -254,7 +254,6 @@ class ContentPreview extends React.Component {
             isPublished: isPublished
         };
     }
-
 }
 
 const mapStateToProps = state => {

@@ -7,8 +7,8 @@ import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@mat
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
-import {buttonRenderer, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
-import PublicationInfo from "./PublicationStatus";
+import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import PublicationInfo from './PublicationStatus';
 
 const styles = theme => ({
     drawerHeader: {

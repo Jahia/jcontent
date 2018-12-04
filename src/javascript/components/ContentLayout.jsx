@@ -52,7 +52,7 @@ const styles = theme => ({
         width: theme.contentManager.previewDrawerWidth,
         flexShrink: 0,
         display: 'flex',
-        overflow: 'hidden',
+        overflow: 'hidden'
     },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,

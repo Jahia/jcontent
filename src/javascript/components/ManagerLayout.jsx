@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-    withStyles,
-    Grid
-} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        zIndex: 1,
-        overflow: 'hidden',
         position: 'relative',
         display: 'flex'
     },
@@ -26,7 +20,7 @@ const styles = theme => ({
     }
 });
 
-class MainView extends React.Component {
+class ManagerLayout extends React.Component {
     render() {
         const {children, leftSide, classes, mode} = this.props;
 
@@ -45,25 +39,7 @@ const mapStateToProps = state => ({
     mode: state.mode
 });
 
-let Main = compose(
+export default compose(
     connect(mapStateToProps, null),
     withStyles(styles)
-)(MainView);
-
-class ManagerLayout extends React.Component {
-    render() {
-        let {leftSide, children} = this.props;
-
-        return (
-            <Grid container spacing={0}>
-                <Grid item xs={12}>
-                    <Main leftSide={leftSide}>
-                        {children}
-                    </Main>
-                </Grid>
-            </Grid>
-        );
-    }
-}
-
-export default ManagerLayout;
+)(ManagerLayout);

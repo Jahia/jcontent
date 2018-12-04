@@ -12,14 +12,7 @@ const styles = theme => ({
         width: 105,
         padding: 5,
         marginRight: theme.spacing.unit,
-        verticalAlign: 'middle',
-        color: theme.palette.common.white
-    },
-    track: {
-        backgroundColor: theme.palette.common.white
-    },
-    thumb: {
-        backgroundColor: theme.palette.common.white
+        verticalAlign: 'middle'
     }
 });
 
@@ -33,8 +26,9 @@ class FilesGridSizeSelector extends React.Component {
         return visible && (
             <Tooltip title={t('label.contentManager.filesGrid.fileSizeSelector')}>
                 <Slider
+                    color="inherit"
                     value={size}
-                    classes={{root: classes.root, track: classes.track, thumb: classes.thumb}}
+                    classes={{root: classes.root}}
                     min={1}
                     max={totalsValues}
                     step={step}

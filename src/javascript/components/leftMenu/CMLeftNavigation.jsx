@@ -12,25 +12,24 @@ import {compose} from 'react-apollo';
 
 const styles = theme => ({
     root: {
-        zIndex: 2100,
         minWidth: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth) + 'px',
         paddingLeft: theme.contentManager.screenMargin + 'px',
+        height: '100%',
+        display: 'flex'
+    },
+    rootOpenDrawer: {
+        zIndex: theme.zIndex.modal,
         background: theme.palette.background.paper,
         overflow: 'visible !important', // Safari compatibility
-        '-webkit-transform-style': 'preserve-3d', // Safari compatibility
-        height: '100%',
-        display: 'flex'
+        '-webkit-transform-style': 'preserve-3d' // Safari compatibility
     },
-    root1: {
-        zIndex: 2100,
-        minWidth: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth) + 'px',
-        paddingLeft: theme.contentManager.screenMargin + 'px',
+    rootClosedDrawer: {
         background: theme.palette.layout.dark,
-        overflow: 'hidden',
-        height: '100%',
-        display: 'flex'
+        overflow: 'hidden'
     },
-    side: {zIndex: 1, position: 'relative'},
+    side: {
+        position: 'relative'
+    },
     childItem: {
         background: theme.palette.primary.main,
         color: theme.palette.text.contrastText,
@@ -236,7 +235,7 @@ class CMLeftNavigation extends React.Component {
         };
 
         return (
-            <div className={this.state.openDrawer ? classes.root : classes.root1}>
+            <div className={classNames(classes.root, {[classes.rootOpenDrawer]: this.state.openDrawer, [classes.rootClosedDrawer]: !this.state.openDrawer})}>
                 <div className={classes.side}>
                     <List className={classes.list} component="nav">
                         <ListItem button className={classes.menuBurger}>

@@ -28,6 +28,7 @@ const ImageViewer = loadable({
 
 const styles = theme => ({
     root: {
+        padding: '8px',
         transition: 'width 0.3s ease-in 0s',
         flex: 1,
         position: 'relative'

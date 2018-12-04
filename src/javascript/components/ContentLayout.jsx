@@ -24,6 +24,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper
     },
     content: {
+        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
@@ -38,30 +39,23 @@ const styles = theme => ({
         transition: ['margin-right 0ms 225ms']
     },
     treeDrawer: {
-        width: theme.contentManager.treeDrawerWidth,
-        flexShrink: 0
+        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )'
     },
     treeDrawerPaper: {
         width: theme.contentManager.treeDrawerWidth,
-        top: theme.contentManager.topBarHeight,
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
-        left: 'unset',
-        zIndex: 2000
+        position: 'inherit',
+        overflow: 'hidden'
     },
     previewDrawer: {
-        width: theme.contentManager.previewDrawerWidth,
-        flexShrink: 0,
+        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
         overflow: 'hidden'
     },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
-        top: theme.contentManager.topBarHeight,
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
-        right: theme.contentManager.screenMargin,
         display: 'flex',
-        overflow: 'hidden',
-        zIndex: 2000
+        position: 'inherit',
+        overflow: 'hidden'
     },
     previewDrawerPaperFullScreen: {
         width: '100vw',
@@ -78,7 +72,7 @@ const styles = theme => ({
         width: '100%'
     },
     academyLink: {
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         right: 0,
         width: '50%',

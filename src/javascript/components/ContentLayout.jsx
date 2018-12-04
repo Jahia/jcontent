@@ -43,18 +43,24 @@ const styles = theme => ({
     },
     treeDrawerPaper: {
         width: theme.contentManager.treeDrawerWidth,
-        top: 'unset',
+        top: theme.contentManager.topBarHeight,
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         left: 'unset',
         zIndex: 2000
     },
     previewDrawer: {
         width: theme.contentManager.previewDrawerWidth,
-        flexShrink: 0
+        flexShrink: 0,
+        display: 'flex',
+        overflow: 'hidden',
     },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
-        top: 'unset',
+        top: theme.contentManager.topBarHeight,
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         right: theme.contentManager.screenMargin,
+        display: 'flex',
+        overflow: 'hidden',
         zIndex: 2000
     },
     previewDrawerPaperFullScreen: {
@@ -77,7 +83,6 @@ const styles = theme => ({
         right: 0,
         width: '50%',
         background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, #4e5156 100%) !important',
-        zIndex: '2000',
         textAlign: 'right',
         color: theme.palette.text.contrastText,
         marginRight: 50,

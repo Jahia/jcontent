@@ -1,12 +1,15 @@
 import React from 'react';
 import {translate} from 'react-i18next';
-import {Button, IconButton, Toolbar, Tooltip, Typography, withStyles} from '@material-ui/core';
+import {Button, IconButton, Toolbar, Tooltip, Typography, withStyles, Card, CardActions, CardContent} from '@material-ui/core';
 import classNames from 'classnames';
 import ContentPreview from '../preview/ContentPreview';
 import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
+import {buttonRenderer, DisplayActions, iconButtonRenderer} from "@jahia/react-material";
+import PublicationInfo from "./PublicationStatus";
+import ShareMenu from "./ShareMenu";
 
 const styles = theme => ({
     drawerHeader: {
@@ -47,7 +50,6 @@ const styles = theme => ({
     },
     modalTransition: {
         transition: '.55s cubic-bezier(0, 0, 0.2, 1) 0ms!important',
-        width: 550,
         top: String(theme.contentManager.topBarHeight) + 'px!important',
         right: '41px!important'
     },
@@ -105,14 +107,24 @@ const styles = theme => ({
     toolbar: {
         minHeight: theme.contentManager.toolbarHeight + 'px!important',
         maxHeight: theme.contentManager.toolbarHeight + 'px'
+    },
+    card: {
+        flex: 0,
+        overflow: 'unset'
+    },
+    ellipsis: {
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
     }
 });
 
 class PreviewDrawer extends React.Component {
     render() {
         const {
-            classes, previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen
+            classes, previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection
         } = this.props;
+        let selectedItem = selection[0];
         return (
             <React.Fragment>
                 <Toolbar className={classes.toolbar}>
@@ -161,6 +173,20 @@ class PreviewDrawer extends React.Component {
                     </div>
                 </Toolbar>
                 <ContentPreview/>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2" className={classes.ellipsis}>
+                            {selectedItem.displayName ? selectedItem.displayName : selectedItem.name}
+                        </Typography>
+                        <Typography component="p">
+                            <PublicationInfo/>
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <DisplayActions target="previewFooterActions" context={{path: selectedItem.path}} render={iconButtonRenderer({color: 'primary'})}/>
+                        <DisplayActions target="editPreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
+                    </CardActions>
+                </Card>
             </React.Fragment>
         );
     }

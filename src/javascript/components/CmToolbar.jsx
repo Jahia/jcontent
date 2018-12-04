@@ -24,7 +24,6 @@ const styles = theme => ({
         minHeight: theme.contentManager.toolbarHeight + 'px!important',
         maxHeight: theme.contentManager.toolbarHeight + 'px',
         background: theme.palette.background.paper,
-        zIndex: '1800',
         position: 'sticky',
         top: 0
     },

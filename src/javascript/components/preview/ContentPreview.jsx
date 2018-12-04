@@ -3,15 +3,10 @@ import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {IconButton, Paper, Tooltip, Typography, withStyles} from '@material-ui/core';
-import {CloudDownload} from '@material-ui/icons';
-import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {Paper, withStyles} from '@material-ui/core';
 import {previewQuery} from '../gqlQueries';
-import PublicationInfo from './PublicationStatus';
-import ShareMenu from './ShareMenu';
 import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
-import {ellipsizeText} from '../utils.js';
 import constants from '../constants';
 import loadable from 'react-loadable';
 import {DxContext} from '../DxContext';
@@ -34,7 +29,8 @@ const ImageViewer = loadable({
 const styles = theme => ({
     root: {
         transition: 'width 0.3s ease-in 0s',
-        width: 550
+        flex: 1,
+        position: 'relative'
     },
     rootFullWidth: {
         width: '100vw',
@@ -43,18 +39,13 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit
     },
-    previewPaper: {
-        flex: 9,
-        width: '550',
-        position: 'relative'
-    },
     previewContainer: {
         // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
-        width: 550,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
         backgroundColor: theme.palette.common.white,
-        paddingBottom: theme.spacing.unit * 16,
         overflow: 'scroll',
-        height: 'calc(100vh - 155px)',
         border: 'none'
     },
     previewContainerFullScreen: {
@@ -80,13 +71,6 @@ const styles = theme => ({
         backgroundColor: theme.palette.common.white,
         overflow: 'scroll',
         height: 'calc(100vh - 203px)'
-    },
-    unpublishButton: {
-        margin: '0 !important',
-        marginRight: '8px !important',
-        display: 'flex',
-        height: 36,
-        maxHeight: 36
     },
     controlsPaperEdit: {
         position: 'absolute',
@@ -137,9 +121,6 @@ const styles = theme => ({
         backgroundColor: '#e8ebed',
         padding: '0px !important'
     },
-    footerButton: {
-        textAlign: 'right'
-    },
     colorIcon: {
         marginTop: 6,
         color: '#303030'
@@ -148,23 +129,6 @@ const styles = theme => ({
         marginTop: Number(theme.spacing.unit),
         marginBottom: Number(theme.spacing.unit)
     },
-    paddingButton: {
-        // Padding: '12px'
-    },
-    lockButton: {
-        textAlign: 'left'
-    },
-    lockButtonLive: {
-        padding: '12px',
-        height: '48px !important',
-        width: '48px !important'
-    },
-    lockIcon: {
-        color: '#007CB0'
-    },
-    unlockIcon: {
-        color: '#E67D3A'
-    }
 });
 
 class ContentPreview extends React.Component {
@@ -182,7 +146,7 @@ class ContentPreview extends React.Component {
             <DxContext.Consumer>
                 {dxContext => (
                     <div className={rootClass}>
-                        <Paper className={classes.previewPaper} elevation={0}>
+                        <Paper elevation={0}>
                             <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
                                 {({loading, error, data}) => {
                                     if (error) {
@@ -205,55 +169,9 @@ class ContentPreview extends React.Component {
                                 }}
                             </Query>
                         </Paper>
-                        <Paper
-                            className={previewMode === 'live' ? classes.controlsPaperLive : classes.controlsPaperEdit}
-                            elevation={0}
-                            >
-                            {this.componentFooter(dxContext)}
-                        </Paper>
                     </div>
                 )}
             </DxContext.Consumer>
-        );
-    }
-
-    componentFooter(dxContext) {
-        let {classes, previewMode, selection} = this.props;
-        let selectedItem = selection[0];
-
-        let workspace = 'default';
-        let leftButtons = <DisplayActions target="previewFooterActions" context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>;
-        let rightButtons = (
-            <React.Fragment>
-                <DisplayActions target="editPreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
-                <DisplayActions target="editAdditionalMenu" context={{path: selectedItem.path}} render={iconButtonRenderer({className: classes.lockIcon})}/>
-            </React.Fragment>
-        );
-
-        if (previewMode === 'live') {
-            workspace = previewMode;
-            leftButtons = <IconButton className={classes.lockButtonLive}/>;
-            rightButtons = <DisplayActions target="livePreviewBar" context={{path: selectedItem.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>;
-        }
-
-        return (
-            <div className={classes.footerGrid}>
-                <div>
-                    <Typography variant="h5" data-cm-role="preview-name">
-                        {this.ellipsisText(selectedItem.displayName ? selectedItem.displayName : selectedItem.name)}
-                    </Typography>
-                </div>
-                <div>
-                    <Typography variant="body2">
-                        <PublicationInfo/>
-                    </Typography>
-                </div>
-                <div>{leftButtons}
-                    {selectedItem.type === 'File' && this.downloadButton(selectedItem, workspace, dxContext)}
-                    <ShareMenu/>
-                    {rightButtons}
-                </div>
-            </div>
         );
     }
 
@@ -271,7 +189,7 @@ class ContentPreview extends React.Component {
 
             if (isPDF(data.nodeByPath.path)) {
                 return (
-                    <div className={fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainerPdf}>
+                    <div className={fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainer}>
                         <PDFViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
@@ -326,35 +244,6 @@ class ContentPreview extends React.Component {
         return null;
     }
 
-    downloadButton(selectedItem, workspace, dxContext) {
-        let {classes, t} = this.props;
-
-        if (isBrowserImage(selectedItem.path) || isPDF(selectedItem.path)) {
-            return (
-                <a
-                    className={classes.colorIcon}
-                    target="_blank" rel="noopener noreferrer"
-                    href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
-                    >
-                    <Tooltip title={t('label.contentManager.contentPreview.download')}>
-                        <CloudDownload/>
-                    </Tooltip>
-                </a>
-            );
-        }
-        return (
-            <a
-                download
-                className={classes.colorIcon}
-                href={`${dxContext.contextPath}/files/${workspace}${selectedItem.path}`}
-                >
-                <Tooltip title={t('label.contentManager.contentPreview.download')}>
-                    <CloudDownload/>
-                </Tooltip>
-            </a>
-        );
-    }
-
     queryVariables(path, isPublished) {
         return {
             path: path,
@@ -366,9 +255,6 @@ class ContentPreview extends React.Component {
         };
     }
 
-    ellipsisText(text) {
-        return ellipsizeText(text, 50);
-    }
 }
 
 const mapStateToProps = state => {

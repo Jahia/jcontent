@@ -4,6 +4,8 @@ const CM_SET_SELECTION = 'CM_SET_SELECTION';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
+const CM_ADD_PATHS_TO_REFETCH = 'CM_ADD_PATHS_TO_REFETCH';
+const CM_REMOVE_PATHS_TO_REFETCH = 'CM_REMOVE_PATHS_TO_REFETCH';
 
 const CM_PREVIEW_STATES = {HIDE: 0, SHOW: 1};
 
@@ -18,6 +20,20 @@ function cmSetSelection(selection) {
     return {
         type: CM_SET_SELECTION,
         selection
+    };
+}
+
+function cmAddPathsToRefetch(paths) {
+    return {
+        type: CM_ADD_PATHS_TO_REFETCH,
+        paths: paths
+    };
+}
+
+function cmRemovePathsToRefetch(paths) {
+    return {
+        type: CM_REMOVE_PATHS_TO_REFETCH,
+        paths: paths
     };
 }
 
@@ -95,6 +111,8 @@ export {
     CM_SET_OPEN_PATHS,
     CM_PREVIEW_STATES,
     CM_SET_SEARCH_MODE,
+    CM_ADD_PATHS_TO_REFETCH,
+    CM_REMOVE_PATHS_TO_REFETCH,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -108,5 +126,7 @@ export {
     cmOpenPaths,
     cmClosePaths,
     cmSetPreviewState,
-    cmSetSearchMode
+    cmSetSearchMode,
+    cmAddPathsToRefetch,
+    cmRemovePathsToRefetch
 };

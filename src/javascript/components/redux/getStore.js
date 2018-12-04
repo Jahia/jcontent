@@ -15,7 +15,8 @@ import {
     previewStateReducer,
     openPathsReducer,
     searchModeReducer,
-    siteDisplayableNameReducer
+    siteDisplayableNameReducer,
+    pathsToRefetchReducer
 } from './reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
@@ -37,7 +38,8 @@ let getStore = (dxContext, history) => {
         previewState: previewStateReducer,
         openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode),
         searchMode: searchModeReducer(currentValueFromUrl.params),
-        copyPaste: copyPaste
+        copyPaste: copyPaste,
+        pathsToRefetch: pathsToRefetchReducer
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

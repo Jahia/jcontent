@@ -1,6 +1,11 @@
 import * as _ from 'lodash';
 import ellipsize from 'ellipsize';
 
+function getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
+    let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
+    return (newAncestorPath + relativePath);
+}
+
 function hasMixin(node, mixin) {
     if (node.mixinTypes) {
         return _.find(node.mixinTypes, t => t.name === mixin) !== undefined;
@@ -55,6 +60,7 @@ function allowDoubleClickNavigation(nodeType, fcn) {
 }
 
 export {
+    getNewNodePath,
     hasMixin,
     isDescendant,
     isDescendantOrSelf,

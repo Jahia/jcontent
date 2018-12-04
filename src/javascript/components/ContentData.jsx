@@ -123,7 +123,7 @@ class ContentDataView extends React.Component {
 
     render() {
         const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, treeState, pathsToRefetch, removePathsToRefetch} = this.props;
-        let fetchPolicy = orderBy === 'displayName' ? 'network-only' : 'cache-first';
+        let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
         // If the path to display is part of the paths to refetch then refetch
         if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
             removePathsToRefetch([path]);

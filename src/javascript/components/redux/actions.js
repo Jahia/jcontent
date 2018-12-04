@@ -171,7 +171,6 @@ export {
     cmSetPreviewState,
     cmSetTreeState,
     cmSetSearchMode,
-    cmSetSearchMode,
     cmAddPathsToRefetch,
     cmRemovePathsToRefetch
 };

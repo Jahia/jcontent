@@ -11,12 +11,6 @@ import {
     CM_SET_SORT,
     CM_SET_TREE,
     CM_SET_UILANGUAGE,
-    CM_NAVIGATE,
-    CM_SET_SELECTION,
-    CM_SET_PREVIEW,
-    CM_SET_OPEN_PATHS,
-    CM_PREVIEW_STATES,
-    CM_SET_SEARCH_MODE,
     CM_ADD_PATHS_TO_REFETCH
 } from './actions';
 import * as _ from 'lodash';

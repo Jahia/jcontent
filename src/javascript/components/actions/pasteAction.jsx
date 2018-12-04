@@ -95,7 +95,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 destName: nodeToPaste.name
             },
             mutation: nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode
-        }).then(() => {
+        }).then(({data}) => {
             context.clear();
             context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
 
@@ -104,7 +104,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
 
             // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the selection
             if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {
-                const newPath = context.path + '/' + nodeToPaste.name;
+                const newPath = data.jcr.pasteNode.node.path;
                 const pathsToClose = _.filter(context.openedPaths, openedPath => isDescendantOrSelf(openedPath, oldPath));
                 if (!_.isEmpty(pathsToClose)) {
                     context.closePaths(pathsToClose);

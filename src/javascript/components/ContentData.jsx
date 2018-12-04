@@ -123,16 +123,18 @@ class ContentDataView extends React.Component {
 
     render() {
         const {notificationContext, t, mode, children, layoutQuery, layoutQueryParams, setRefetch, orderBy, pathsToRefetch, path, removePathsToRefetch} = this.props;
+        let fetchPolicy = orderBy === 'displayName' ? 'network-only' : 'cache-first';
+
+        // If the path to display is part of the paths to refetch then refetch
+        if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
+            removePathsToRefetch([path]);
+            fetchPolicy = 'network-only';
+        }
+
         return (
-            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={orderBy === 'displayName' ? 'network-only' : ''}>
+            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy}>
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
-
-                    // If the path to display is part of the paths to refetch then refetch
-                    if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
-                        removePathsToRefetch([path]);
-                        refetch();
-                    }
 
                     if (setRefetch) {
                         setRefetch({

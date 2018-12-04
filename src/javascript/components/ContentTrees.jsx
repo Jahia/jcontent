@@ -131,31 +131,33 @@ class ContentTrees extends React.Component {
                     </IconButton>
                 </Toolbar>
                 <div className={classes.listContainer}>
-                    {isOpen ?
-                        _.map(contentTreeConfigs, contentTreeConfig => {
-                                                let componentRef = React.createRef();
-                                                this.componentsRefs.push(componentRef);
-                                                return (
-                                                    <ContentTree ref={componentRef}
-                                                        mode={mode}
-                                                        siteKey={siteKey}
-                                                        path={usedPath}
-                                                        rootPath={rootPath + contentTreeConfig.rootPath}
-                                                        openPaths={openPaths}
-                                                        selectableTypes={contentTreeConfig.selectableTypes}
-                                                        lang={lang}
-                                                        user={user}
-                                                        handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                        handleSelect={path => setPath(path)}
-                                                        openableTypes={contentTreeConfig.openableTypes}
-                                                        rootLabel={t(contentTreeConfig.rootLabel)}
-                                                        setRefetch={setRefetch(contentTreeConfig.key)}
-                                                        buttonClass={classes.buttonMenu}
-                                                        itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
-                                                        onContextualMenu={onContextualMenu}
-                                                        />);
-                        }) : null
-                    }
+                    <div className={classes.list}>
+                        {isOpen ?
+                            _.map(contentTreeConfigs, contentTreeConfig => {
+                                let componentRef = React.createRef();
+                                this.componentsRefs.push(componentRef);
+                                return (
+                                    <ContentTree ref={componentRef}
+                                        mode={mode}
+                                        siteKey={siteKey}
+                                        path={usedPath}
+                                        rootPath={rootPath + contentTreeConfig.rootPath}
+                                        openPaths={openPaths}
+                                        selectableTypes={contentTreeConfig.selectableTypes}
+                                        lang={lang}
+                                        user={user}
+                                        handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                        handleSelect={path => setPath(path)}
+                                        openableTypes={contentTreeConfig.openableTypes}
+                                        rootLabel={t(contentTreeConfig.rootLabel)}
+                                        setRefetch={setRefetch(contentTreeConfig.key)}
+                                        buttonClass={classes.buttonMenu}
+                                        itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
+                                        onContextualMenu={onContextualMenu}
+                                    />);
+                            }) : null
+                        }
+                    </div>
                 </div>
             </React.Fragment>
         );

@@ -11,9 +11,9 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from './eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths} from './redux/actions';
+import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from './redux/actions';
 import Constants from './constants';
-import {extractPaths, isDescendantOrSelf} from './utils';
+import {extractPaths, isDescendantOrSelf, getNewNodePath} from './utils';
 import {setModificationHook} from './copyPaste/contentModificationHook';
 import {compose} from 'react-apollo';
 
@@ -96,12 +96,12 @@ class ContentDataView extends React.Component {
                     let ancestorPath = nodePath;
                     let ancestorParentPath = ancestorPath.substring(0, ancestorPath.lastIndexOf('/'));
                     let newAncestorPath = ancestorParentPath + '/' + nodeName;
-                    setPath(ContentDataView.getNewNodePath(path, ancestorPath, newAncestorPath));
+                    setPath(getNewNodePath(path, ancestorPath, newAncestorPath));
 
                     let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, ancestorPath));
                     if (!_.isEmpty(pathsToReopen)) {
                         closePaths(pathsToReopen);
-                        pathsToReopen = _.map(pathsToReopen, pathToReopen => ContentDataView.getNewNodePath(pathToReopen, ancestorPath, newAncestorPath));
+                        pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, ancestorPath, newAncestorPath));
                         openPaths(pathsToReopen);
                     }
 
@@ -121,13 +121,8 @@ class ContentDataView extends React.Component {
         }
     }
 
-    static getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
-        let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
-        return (newAncestorPath + relativePath);
-    }
-
     render() {
-        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, treeState} = this.props;
+        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, treeState, pathsToRefetch, removePathsToRefetch} = this.props;
 
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
@@ -146,6 +141,12 @@ class ContentDataView extends React.Component {
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
 
+                    // If the path to display is part of the paths to refetch then refetch
+                    if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
+                        removePathsToRefetch([path]);
+                        refetch();
+                    }
+
                     if (setRefetch) {
                         setRefetch({
                             query: layoutQuery,
@@ -157,7 +158,6 @@ class ContentDataView extends React.Component {
                     if (error) {
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         console.error(message);
-                        // NotificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         return children({
                             rows: [],
                             totalCount: 0,
@@ -245,14 +245,16 @@ const mapStateToProps = state => ({
     filesMode: state.filesGrid.mode,
     pagination: state.pagination,
     sort: state.sort,
-    openedPaths: state.openPaths
+    openedPaths: state.openPaths,
+    pathsToRefetch: state.pathsToRefetch
 });
 
 const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     setSelection: selection => dispatch(cmSetSelection(selection)),
     openPaths: paths => dispatch(cmOpenPaths(paths)),
-    closePaths: paths => dispatch(cmClosePaths(paths))
+    closePaths: paths => dispatch(cmClosePaths(paths)),
+    removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths))
 });
 
 let ContentData = compose(

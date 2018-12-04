@@ -10,7 +10,14 @@ import {
     CM_SET_SELECTION,
     CM_SET_SORT,
     CM_SET_TREE,
-    CM_SET_UILANGUAGE
+    CM_SET_UILANGUAGE,
+    CM_NAVIGATE,
+    CM_SET_SELECTION,
+    CM_SET_PREVIEW,
+    CM_SET_OPEN_PATHS,
+    CM_PREVIEW_STATES,
+    CM_SET_SEARCH_MODE,
+    CM_ADD_PATHS_TO_REFETCH
 } from './actions';
 import * as _ from 'lodash';
 import {extractPaths} from '../utils.js';
@@ -155,6 +162,18 @@ let paginationReducer = (state = {currentPage: 0, pageSize: 25}, action) => {
     }
 };
 
+let pathsToRefetchReducer = (state, action) => {
+    if (state === undefined) {
+        state = [];
+    }
+
+    if (action.type === CM_ADD_PATHS_TO_REFETCH) {
+        return _.union(state, action.paths);
+    }
+
+    return _.difference(state, action.paths);
+};
+
 let sortReducer = (state = {order: 'ASC', orderBy: 'lastModified.value'}, action) => {
     switch (action.type) {
         case CM_SET_SORT:
@@ -171,4 +190,4 @@ let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'no
     return state;
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, openPathsReducer, previewStateReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, paginationReducer, sortReducer};
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, openPathsReducer, previewStateReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, paginationReducer, sortReducer, pathsToRefetchReducer};

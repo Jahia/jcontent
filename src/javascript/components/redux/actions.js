@@ -10,6 +10,8 @@ const CM_SET_SORT = 'CM_SET_SORT';
 const CM_SET_SORT_BY = 'CM_SET_SORT_BY';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
+const CM_ADD_PATHS_TO_REFETCH = 'CM_ADD_PATHS_TO_REFETCH';
+const CM_REMOVE_PATHS_TO_REFETCH = 'CM_REMOVE_PATHS_TO_REFETCH';
 
 const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 
@@ -24,6 +26,20 @@ function cmSetSelection(selection) {
     return {
         type: CM_SET_SELECTION,
         selection
+    };
+}
+
+function cmAddPathsToRefetch(paths) {
+    return {
+        type: CM_ADD_PATHS_TO_REFETCH,
+        paths: paths
+    };
+}
+
+function cmRemovePathsToRefetch(paths) {
+    return {
+        type: CM_REMOVE_PATHS_TO_REFETCH,
+        paths: paths
     };
 }
 
@@ -135,6 +151,8 @@ export {
     CM_SET_PAGE,
     CM_SET_PAGE_SIZE,
     CM_DRAWER_STATES,
+    CM_ADD_PATHS_TO_REFETCH,
+    CM_REMOVE_PATHS_TO_REFETCH,
     cmGoto,
     cmSetLanguage,
     setUiLang,
@@ -152,5 +170,8 @@ export {
     cmClosePaths,
     cmSetPreviewState,
     cmSetTreeState,
-    cmSetSearchMode
+    cmSetSearchMode,
+    cmSetSearchMode,
+    cmAddPathsToRefetch,
+    cmRemovePathsToRefetch
 };

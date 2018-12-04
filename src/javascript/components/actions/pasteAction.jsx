@@ -11,12 +11,18 @@ import {withNotificationContextAction} from './withNotificationContextAction';
 import {withI18nAction} from './withI18nAction';
 import {ContentTypesQuery} from '../gqlQueries';
 import {from, of} from 'rxjs';
-import {isDescendantOrSelf} from '../utils';
+import {isDescendantOrSelf, getNewNodePath} from '../utils';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../redux/actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
-    state => ({...state.copyPaste, currentlySelectedPath: state.path}),
+    state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, ...state.selection, ...state.pathsToRefetch}),
     dispatch => ({
-        clear: () => dispatch(clear())
+        clear: () => dispatch(clear()),
+        setPath: (path, params) => dispatch(cmGoto({path, params})),
+        setSelection: selection => dispatch(cmSetSelection(selection)),
+        openPaths: paths => dispatch(cmOpenPaths(paths)),
+        closePaths: paths => dispatch(cmClosePaths(paths)),
+        addPathsToRefetch: paths => dispatch(cmAddPathsToRefetch(paths))
     })
 ), {
 
@@ -79,20 +85,47 @@ export default composeActions(requirementsAction, withNotificationContextAction,
 
     onClick: context => {
         const nodeToPaste = context.items[0];
+        const oldPath = nodeToPaste.path;
+
+        // Execute paste
         context.client.mutate({
             variables: {
-                pathOrId: nodeToPaste.path,
+                pathOrId: oldPath,
                 destParentPathOrId: context.path,
                 destName: nodeToPaste.name
             },
-            mutation: nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode,
-            refetchQueries: [{
-                query: context.requirementQueryHandler.getQuery(),
-                variables: context.requirementQueryHandler.getVariables()
-            }]
+            mutation: nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode
         }).then(() => {
             context.clear();
             context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
+
+            // Let's make sure the content table will be refreshed when displayed
+            context.addPathsToRefetch([context.path, oldPath.substring(0, oldPath.lastIndexOf('/'))]);
+
+            // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the selection
+            if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {
+                const newPath = context.path + '/' + nodeToPaste.name;
+                const pathsToClose = _.filter(context.openedPaths, openedPath => isDescendantOrSelf(openedPath, oldPath));
+                if (!_.isEmpty(pathsToClose)) {
+                    context.closePaths(pathsToClose);
+                    const pathsToReopen = _.map(pathsToClose, pathToReopen => getNewNodePath(pathToReopen, oldPath, newPath));
+                    if (pathsToReopen.indexOf(context.path) === -1) {
+                        pathsToReopen.push(context.path);
+                    }
+                    context.openPaths(pathsToReopen);
+                }
+
+                if (context.treePath === oldPath) {
+                    context.setPath(newPath);
+                }
+
+                if (_.find(context.selection, node => node.path === oldPath)) {
+                    let newSelection = _.clone(context.selection);
+                    _.remove(newSelection, node => node.path === oldPath);
+                    context.setSelection(newSelection);
+                }
+            }
+
             refetchContentTreeAndListData();
         }, error => {
             console.error(error);

@@ -68,29 +68,36 @@ class ContentTree extends React.Component {
                     <CmPickerViewMaterial
                         {...others}
                         customSelectedClass={itemAndRowSelected}
-                        textRenderer={entry => {
-                        let contextualMenu = React.createRef();
-                        return (
-                            <React.Fragment>
-                                <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: entry.node.path}}/>
-                                <Typography color="inherit" onContextMenu={event => contextualMenu.current.open(event)}>
-                                    {entry.depth > 0 ? entry.node.displayName : rootLabel}
-                                </Typography>
-                            </React.Fragment>
-);
-}
-                    }
-                        actionsRenderer={entry =>
-                        entry.depth > 0 ?
-                            <DisplayActions target="contentTreeActions" context={{path: entry.node.path}} render={iconButtonRenderer({
-                                color: 'inherit',
-                                className: buttonClass,
-                                'data-cm-role': 'picker-item-menu'
-                            })}/> :
-                            null
-                    }
-                />
-)}
+                        textRenderer={
+                            entry => {
+                                let contextualMenu = React.createRef();
+                                return (
+                                    <React.Fragment>
+                                        <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: entry.node.path}}/>
+                                        <Typography color="inherit" onContextMenu={event => contextualMenu.current.open(event)}>
+                                            {entry.depth > 0 ? entry.node.displayName : rootLabel}
+                                        </Typography>
+                                    </React.Fragment>
+                                );
+                            }
+                        }
+                        actionsRenderer={
+                            entry => {
+                                if (entry.depth > 0) {
+                                    return (
+                                        <DisplayActions
+                                            target="contentTreeActions"
+                                            context={{path: entry.node.path}}
+                                            render={iconButtonRenderer({color: 'inherit', className: buttonClass, 'data-cm-role': 'picker-item-menu'})}
+                                            />
+                                    );
+                                }
+                                return null;
+                            }
+                        }
+                        />
+                    )
+                }
             </Picker>
         );
     }
@@ -137,7 +144,8 @@ class ContentTrees extends React.Component {
                                 let componentRef = React.createRef();
                                 this.componentsRefs.push(componentRef);
                                 return (
-                                    <ContentTree ref={componentRef}
+                                    <ContentTree key={contentTreeConfig.key}
+                                        ref={componentRef}
                                         mode={mode}
                                         siteKey={siteKey}
                                         path={usedPath}
@@ -154,7 +162,8 @@ class ContentTrees extends React.Component {
                                         buttonClass={classes.buttonMenu}
                                         itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
                                         onContextualMenu={onContextualMenu}
-                                    />);
+                                    />
+                                );
                             }) : null
                         }
                     </div>

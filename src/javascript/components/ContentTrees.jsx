@@ -73,7 +73,7 @@ class ContentTree extends React.Component {
                         return (
                             <React.Fragment>
                                 <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: entry.node.path}}/>
-                                <Typography onContextMenu={event => contextualMenu.current.open(event)}>
+                                <Typography color="inherit" onContextMenu={event => contextualMenu.current.open(event)}>
                                     {entry.depth > 0 ? entry.node.displayName : rootLabel}
                                 </Typography>
                             </React.Fragment>

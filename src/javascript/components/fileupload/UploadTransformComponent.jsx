@@ -49,14 +49,17 @@ class UploadTransformComponent extends React.Component {
     }
 
     generatePropertiesForComponent() {
-        const props = {...this.props};
-        delete props.uploadTargetComponent;
-        delete props.uploadPath;
-        delete props.uploadAcceptedFileTypes;
-        delete props.uploadMinSize;
-        delete props.uploadMaxSize;
-        delete props.uploadDispatchBatch;
-        delete props.uploadSetOverlayTarget;
+        const {
+            uploadTargetComponent,
+            uploadPath,
+            uploadAcceptedFileTypes,
+            uploadMinSize,
+            uploadMaxSize,
+            uploadDispatchBatch,
+            uploadSetOverlayTarget,
+            client,
+            ...props
+        } = this.props;
         return props;
     }
 

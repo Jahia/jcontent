@@ -13,6 +13,7 @@ import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../utils';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
+import classNames from 'classnames';
 
 let styles = theme => ({
     root: {
@@ -54,10 +55,10 @@ let styles = theme => ({
     },
     listItemNodeTypeIcon: {
         marginRight: '5px',
-        color: theme.palette.text.secondary
+        color: 'inherit'
     },
-    selectedText: {
-        color: theme.palette.text.contrastText
+    listItemActionIcon: {
+        color: 'inherit'
     },
     loadingContainer: {
         position: 'absolute',
@@ -141,16 +142,14 @@ class CmPickerViewMaterial extends React.Component {
                 {loading &&
                 <div className={classes.loadingContainer}/>
             }
-                <List disablePadding classes={{root: loading ? (classes.root + ' ' + classes.loading) : classes.root}}>
+                <List disablePadding classes={{root: classNames(classes.root, {[classes.loading]: loading})}}>
                     {
                     sortedEntries.map(entry => {
-                        let itemClass = classes.listItem;
-                        if (isMarkedForDeletion(entry.node)) {
-                            itemClass = itemClass + ' ' + classes.listItemDeleted;
-                        }
-                        if (entry.selected) {
-                            itemClass = itemClass + ' ' + classes.listItemSelected + ' ' + customSelectedClass;
-                        }
+                        let itemClass = classNames(classes.listItem, {
+                            [classes.listItemDeleted]: isMarkedForDeletion(entry.node),
+                            [classes.listItemSelected]: entry.selected,
+                            [customSelectedClass]: entry.selected
+                        });
                         return (
                             <UploadWrapperComponent
                                 key={entry.path}
@@ -165,7 +164,7 @@ class CmPickerViewMaterial extends React.Component {
                                 onMouseLeave={this.hoverOff}
                                 >
                                 <div
-                                    className={entry.selected ? (classes.listItemToggle + ' ' + classes.selectedText) : classes.listItemToggle}
+                                    className={classes.listItemToggle}
                                     style={{
                                     paddingLeft: (entry.depth + 0) * 20,
                                     opacity: (entry.openable && entry.hasChildren ? 1 : 0)
@@ -187,9 +186,7 @@ class CmPickerViewMaterial extends React.Component {
                                 <span className={classes.treeEntry}
                                     onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
                                     >
-                                    <ListItemIcon
-                                        className={entry.selected ? (classes.listItemNodeTypeIcon + ' ' + classes.selectedText) : classes.listItemNodeTypeIcon}
-                                        >
+                                    <ListItemIcon className={classes.listItemNodeTypeIcon}>
                                         {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
                                     </ListItemIcon>
                                     <ListItemText
@@ -197,8 +194,7 @@ class CmPickerViewMaterial extends React.Component {
                                         inset
                                         className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
                                         classes={entry.selected ? {
-                                        root: classes.listItemLabel,
-                                        primary: classes.selectedText
+                                        root: classes.listItemLabel
                                     } : {
                                         root: classes.listItemLabel
                                     }}
@@ -207,9 +203,9 @@ class CmPickerViewMaterial extends React.Component {
                                 />
                                 </span>
                                 {actionsRenderer &&
-                                <ListItemText>
+                                <ListItemIcon className={classes.listItemActionIcon}>
                                     {this.state.hover === entry.path && actionsRenderer(entry)}
-                                </ListItemText>
+                                </ListItemIcon>
                             }
                             </UploadWrapperComponent>
 );

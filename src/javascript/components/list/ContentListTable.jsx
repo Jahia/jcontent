@@ -1,5 +1,15 @@
 import React from 'react';
-import {Checkbox, Table, TableBody, TableCell, TableRow, Tooltip, Typography, withStyles} from '@material-ui/core';
+import {
+    Checkbox,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    Tooltip,
+    Typography,
+    Paper,
+    withStyles
+} from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
 
 import {Lock} from '@material-ui/icons';
@@ -23,33 +33,104 @@ const allColumnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
     {id: 'wip', label: '', sortable: false, property: ''},
     {id: 'lock', label: '', sortable: false, property: ''},
-    {id: 'type', label: 'label.contentManager.listColumns.type', sortable: true, property: 'primaryNodeType.displayName'},
-    {id: 'lastModified', label: 'label.contentManager.listColumns.lastModified', sortable: true, property: 'lastModified.value'},
+    {
+        id: 'type',
+        label: 'label.contentManager.listColumns.type',
+        sortable: true,
+        property: 'primaryNodeType.displayName'
+    },
+    {
+        id: 'lastModified',
+        label: 'label.contentManager.listColumns.lastModified',
+        sortable: true,
+        property: 'lastModified.value'
+    },
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy', sortable: true, property: 'createdBy.value'}
 ];
 
 const reducedColumnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
-    {id: 'lastModified', label: 'label.contentManager.listColumns.lastModified', sortable: true, property: 'lastModified.value'},
+    {
+        id: 'lastModified',
+        label: 'label.contentManager.listColumns.lastModified',
+        sortable: true,
+        property: 'lastModified.value'
+    },
     {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy', sortable: true, property: 'createdBy.value'}
 ];
 
 const APP_TABLE_CELLS = 2;
 
 const styles = theme => ({
-    contentRow: {
-        zIndex: 1800,
-        '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
-            width: 20,
-            zIndex: -1,
-            marginLeft: '6px',
-            height: (theme.spacing.unit * 6) + '!important',
-            maxHeight: (theme.spacing.unit * 6) + '!important'
+
+    tableWrapper: {},
+    row: {
+        '&&:nth-of-type(odd)': {
+            backgroundColor: 'rgba(128, 128, 128, 0.05)'
         },
-        '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
-            display: 'block'
+        '&&:hover': {
+            backgroundColor: 'rgba(128, 128, 128, 0.2)'
         }
     },
+    selectedRow: {
+        '&&&': {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.common.white
+        }
+    },
+    cell: {
+        textOverflow: 'ellipsis'
+    },
+    selectedCell: {
+        '&&': {
+            color: 'white'
+        }
+    },
+    publicationCell: {
+        position: 'relative'
+    },
+    nameCell: {
+        maxWidth: '200px',
+        '& img': {
+            marginRight: '6px',
+            verticalAlign: 'sub'
+        }
+    },
+    lockCell: {
+        color: theme.palette.text.disabled
+    },
+    wipCell: {
+        color: theme.palette.text.disabled
+    },
+    actionsCell: {
+        minWidth: '150px',
+        color: theme.palette.primary.dark
+    }
+    // TypeCell: {
+    //     minWidth: '100px',
+    //     maxWidth: '100px'
+    // },
+    // lastModifiedCell: {
+    //     minWidth: '140px',
+    //     maxWidth: '140px'
+    // },
+    // createdByCell: {
+    //     minWidth: '100px',
+    //     maxWidth: '100px'
+    // },
+    // ContentRow: {
+    //     zIndex: 1800,
+    //     '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
+    //         width: 20,
+    //         zIndex: -1,
+    //         marginLeft: '6px',
+    //         height: (theme.spacing.unit * 6) + '!important',
+    //         maxHeight: (theme.spacing.unit * 6) + '!important'
+    //     },
+    //     '&:hover td > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
+    //         display: 'block'
+    //     }
+    // },
     // PublicationStatusContainer: {
     //     position: 'relative'
     // },
@@ -105,51 +186,12 @@ const styles = theme => ({
     // publicationStatusLabel: {
     //     whiteSpace: 'nowrap'
     // },
-    statusIcon: {
-        // BackgroundColor: '#E67D3A',
-        color: theme.palette.text.disabled
-        // Opacity: '0.9',
-        // '&:hover': {
-        //     opacity: '1.5'
-        // },
-        // padding: '1px'
-    },
-    statusIconSelected: {
-        color: theme.palette.common.white
-        // Color: '#FFA83F',
-        // opacity: '0.9',
-        // '&:hover': {
-        //     opacity: '1.5'
-        // },
-        // padding: '1px'
-    },
-    // Name: {
-    //     color: theme.palette.text.secondary,
-    //     marginLeft: '-10px',
-    //     fontSize: '14px'
+    // publicationCell: {
+    //     position: 'relative',
+    //     display: 'flex',
+    //     height: theme.spacing.unit * 6,
+    //     minHeight: theme.spacing.unit * 6
     // },
-    nodeTypeIcon: {
-        marginRight: '6px',
-        verticalAlign: 'sub'
-    },
-    publicationCell: {
-        position: 'relative',
-        display: 'flex',
-        height: theme.spacing.unit * 6,
-        minHeight: theme.spacing.unit * 6
-    },
-    typeCell: {
-        minWidth: '100px',
-        maxWidth: '100px'
-    },
-    lastModifiedCell: {
-        minWidth: '140px',
-        maxWidth: '140px'
-    },
-    createdByCell: {
-        minWidth: '100px',
-        maxWidth: '100px'
-    },
 
     // ActionCell: {
     //     minWidth: '22px'
@@ -185,22 +227,6 @@ const styles = theme => ({
     //     height: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)',
     //     maxHeight: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)'
     // },
-    // row: {
-    //     backgroundColor: theme.palette.background.paper,
-    //     '&:hover': {
-    //         backgroundColor: theme.palette.background.default + '!important'
-    //     }
-    //
-    // },
-    // rowPair: {
-    //     backgroundColor: theme.palette.background.paper,
-    //     '&:hover': {
-    //         backgroundColor: theme.palette.background.default + '!important'
-    //     }
-    // },
-    selectedRow: {
-        backgroundColor: theme.palette.primary.main + '!important'
-    },
     // SelectedRowMarkedForDeletion: {
     //     backgroundColor: theme.palette.error.dark + '!important'
     // },
@@ -246,12 +272,9 @@ const styles = theme => ({
     // paddingCell: {
     //     padding: 0
     // },
-    transparentCell: {
-        backgroundColor: 'transparent'
-    },
-    textSelected: {
-        color: theme.palette.common.white
-    }
+    // textSelected: {
+    //     color: theme.palette.common.white
+    // }
     // NameCellWidth: {
     //     maxWidth: 250,
     //     '@media (min-width: 576px)': {
@@ -304,6 +327,13 @@ const styles = theme => ({
 });
 
 class ContentListTable extends React.Component {
+    getCellClasses(classes, column, isSelected) {
+        let cellClasses = {
+            root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: isSelected, [classes[column + 'CellSelected']]: isSelected})
+        };
+        return cellClasses;
+    }
+
     isWip(node, lang) {
         switch (node.wipStatus) {
             case 'ALL_CONTENT':
@@ -323,7 +353,10 @@ class ContentListTable extends React.Component {
         let {classes, t} = this.props;
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
-                <Lock className={classNames({[classes.statusIconSelected]: isSelected, [classes.statusIcon]: !isSelected})}/>
+                <Lock color="inherit" className={classNames({
+                    [classes.statusIconSelected]: isSelected,
+                    [classes.statusIcon]: !isSelected
+                })}/>
             </Tooltip> : null;
     }
 
@@ -332,7 +365,10 @@ class ContentListTable extends React.Component {
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                    <VirtualsiteIcon className={classNames({[classes.statusIconSelected]: isSelected, [classes.statusIcon]: !isSelected})}/>
+                    <VirtualsiteIcon color="inherit" className={classNames({
+                        [classes.statusIconSelected]: isSelected,
+                        [classes.statusIcon]: !isSelected
+                    })}/>
                 </Tooltip>
             );
         }
@@ -340,137 +376,159 @@ class ContentListTable extends React.Component {
     }
 
     render() {
-        const {rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onRowSelected, selection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState} = this.props;
+        const {
+            rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
+            onRowSelected, selection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState
+        } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let showActions = previewState !== CM_DRAWER_STATES.SHOW;
         return (
-            <div>
+            <Paper>
                 <CmToolbar/>
-                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
-                    <ContentListHeader
-                        order={sort.order}
-                        orderBy={sort.orderBy}
-                        columnData={columnData}
-                        classes={classes}
-                        setSort={setSort}
-                        showActions={showActions}
-                    />
-                    <DxContext.Consumer>
-                        {dxContext => (
-                            <UploadWrapperComponent uploadTargetComponent={TableBody} uploadPath={path}>
-                                {contentNotFound ? <ContentNotFound columnData={columnData} translate={t}/> : _.isEmpty(rows) ? <EmptyRow columnData={columnData} translate={t}/> : rows.map((n, key) => {
-                                    let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
-                                    let renderWip = this.renderWip(n, dxContext, isSelected);
-                                    let renderLock = this.renderLock(n, isSelected);
-                                    let icon = this.addIconSuffix(n.icon);
-                                    // Let isDeleted = isMarkedForDeletion(n);
-                                    let contextualMenu = React.createRef();
-                                    return (
-                                        <TableRow
-                                            key={n.uuid}
-                                            hover
-                                            classes={{root: classes.contentRow, selected: classes.selectedRow}}
-                                            className={isSelected ? '' : ((key % 2 === 0) ? classes.row : classes.rowPair)}
-                                            data-cm-node-path={n.path}
-                                            data-cm-role="table-content-list-row"
-                                            selected={isSelected}
-                                            onClick={() => onRowSelected([n])}
-                                            onContextMenu={event => {
-                                                event.stopPropagation();
-                                                contextualMenu.current.open(event);
-                                            }}
-                                            onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
-                                            >
-                                            <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
-
-                                            <TableCell padding="none" className={classNames(classes.transparentCell, classes.publicationCell)} data-cm-role="table-content-list-cell-publication">
-                                                <PublicationStatus node={n} publicationInfoWidth={400}/>
-                                            </TableCell>
-                                            <TableCell padding="none" className={classNames(classes.transparentCell, classes.checkboxCell)}>
-                                                <Checkbox checked={false}/>
-                                            </TableCell>
-                                            {columnData.map(column => {
-                                                let className = classNames(classes.transparentCell, classes[column.id + 'Cell'], {[classes.selectedCell]: isSelected});
-                                                if (column.id === 'name') {
-                                                    return (
-                                                        <TableCell key={column.id} className={className} data-cm-role="table-content-list-cell-name">
-                                                            <Typography noWrap className={classNames({[classes.textSelected]: isSelected})}>
-                                                                <img src={icon} className={classNames(classes.nodeTypeIcon)}/>
-                                                                {n[column.id]}
-                                                            </Typography>
-                                                        </TableCell>
-                                                    );
-                                                }
-                                                if (column.id === 'wip') {
-                                                    return (
-                                                        <TableCell key={column.id} className={className} padding="none">{renderWip}
-                                                        </TableCell>
-                                                    );
-                                                }
-                                                if (column.id === 'lock') {
-                                                    return (
-                                                        <TableCell key={column.id} className={className} padding="none">{renderLock}
-                                                        </TableCell>
-                                                    );
-                                                }
-                                                if (column.id === 'type') {
-                                                    return (
-                                                        <TableCell key={column.id} className={className} data-cm-role="table-content-list-cell-name">
-                                                            <Typography noWrap className={classNames({[classes.textSelected]: isSelected})}>
-                                                                {n[column.id]}
-                                                            </Typography>
-                                                        </TableCell>
-                                                    );
-                                                }
-                                                if (column.id === 'lastModified') {
-                                                    return (
-                                                        <TableCell
-                                                            key={column.id}
-                                                            className={className}
-                                                            data-cm-role={'table-content-list-cell-' + column.id}
-                                                            >
-                                                            <Typography className={classNames({[classes.textSelected]: isSelected})}>
-                                                                <Moment format="ll" locale={uiLang}>{n[column.id]}</Moment>
-                                                            </Typography>
-                                                        </TableCell>
-                                                    );
-                                                }
+                <div className={classes.tableWrapper}>
+                    <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
+                        <ContentListHeader
+                            order={sort.order}
+                            orderBy={sort.orderBy}
+                            columnData={columnData}
+                            classes={classes}
+                            setSort={setSort}
+                            showActions={showActions}
+                        />
+                        <DxContext.Consumer>
+                            {dxContext => (
+                                <UploadWrapperComponent uploadTargetComponent={TableBody} uploadPath={path}>
+                                    {contentNotFound ?
+                                        <ContentNotFound columnData={columnData} translate={t}/> : _.isEmpty(rows) ?
+                                            <EmptyRow columnData={columnData}
+                                                translate={t}/> : rows.map(n => {
+                                                let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
+                                                let renderWip = this.renderWip(n, dxContext, isSelected);
+                                                let renderLock = this.renderLock(n, isSelected);
+                                                let icon = this.addIconSuffix(n.icon);
+                                                // Let isDeleted = isMarkedForDeletion(n);
+                                                let contextualMenu = React.createRef();
                                                 return (
-                                                    <TableCell
-                                                        key={column.id}
-                                                        className={className}
-                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                    <TableRow
+                                                        key={n.uuid}
+                                                        hover
+                                                        classes={{
+                                                            root: classes.row,
+                                                            selected: classes.selectedRow
+                                                        }}
+                                                        data-cm-node-path={n.path}
+                                                        data-cm-role="table-content-list-row"
+                                                        selected={isSelected}
+                                                        onClick={() => onRowSelected([n])}
+                                                        onContextMenu={event => {
+                                                            event.stopPropagation();
+                                                            contextualMenu.current.open(event);
+                                                        }}
+                                                        onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
                                                         >
-                                                        <Typography className={classNames({[classes.textSelected]: isSelected})}>
-                                                            {n[column.id]}
-                                                        </Typography>
-                                                    </TableCell>
+                                                        <ContextualMenu ref={contextualMenu}
+                                                            actionKey="contextualMenuContent"
+                                                            context={{path: n.path}}/>
+
+                                                        <TableCell padding="none"
+                                                            classes={{root: classes.publicationCell}}
+                                                            data-cm-role="table-content-list-cell-publication"
+                                                            >
+                                                            <PublicationStatus node={n} publicationInfoWidth={400}/>
+                                                        </TableCell>
+                                                        <TableCell padding="none"
+                                                            classes={this.getCellClasses(classes, 'checkbox', isSelected)}
+                                                            >
+                                                            <Checkbox checked={false}/>
+                                                        </TableCell>
+                                                        {columnData.map(column => {
+                                                            if (column.id === 'name') {
+                                                                return (
+                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                        data-cm-role="table-content-list-cell-name"
+                                                                        >
+                                                                        <Typography noWrap color="inherit">
+                                                                            <img src={icon}/>
+                                                                            {n[column.id]}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                );
+                                                            }
+                                                            if (column.id === 'wip') {
+                                                                return (
+                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                        padding="none"
+                                                                        >{renderWip}
+                                                                    </TableCell>
+                                                                );
+                                                            }
+                                                            if (column.id === 'lock') {
+                                                                return (
+                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                        padding="none"
+                                                                        >{renderLock}
+                                                                    </TableCell>
+                                                                );
+                                                            }
+                                                            if (column.id === 'type') {
+                                                                return (
+                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                        data-cm-role="table-content-list-cell-name"
+                                                                        >
+                                                                        <Typography noWrap color="inherit">
+                                                                            {n[column.id]}
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                );
+                                                            }
+                                                            if (column.id === 'lastModified') {
+                                                                return (
+                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                                        >
+                                                                        <Typography noWrap color="inherit">
+                                                                            <Moment format="ll"
+                                                                                locale={uiLang}
+                                                                                >{n[column.id]}
+                                                                            </Moment>
+                                                                        </Typography>
+                                                                    </TableCell>
+                                                                );
+                                                            }
+                                                            return (
+                                                                <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                    data-cm-role={'table-content-list-cell-' + column.id}
+                                                                    >
+                                                                    <Typography noWrap color="inherit">
+                                                                        {n[column.id]}
+                                                                    </Typography>
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                        {showActions &&
+                                                        <TableCell
+                                                            padding="none"
+                                                            classes={this.getCellClasses(classes, 'actions', isSelected)}
+                                                            data-cm-role="table-content-list-cell-"
+                                                            >
+                                                            <DisplayActions
+                                                                target="tableActions"
+                                                                context={{path: n.path}}
+                                                                render={iconButtonRenderer({
+                                                                    color: 'inherit',
+                                                                    disableRipple: true
+                                                                }, true)}
+                                                            />
+                                                        </TableCell>
+                                                        }
+                                                    </TableRow>
                                                 );
                                             })}
-                                            {showActions &&
-                                                <TableCell
-                                                    padding="none"
-                                                    className={classNames(classes.transparentCell, classes.actionsCell)}
-                                                    data-cm-role="table-content-list-cell-"
-                                                    >
-                                                    <DisplayActions
-                                                        target="tableActions"
-                                                        context={{path: n.path}}
-                                                        render={iconButtonRenderer({
-                                                            color: 'primary',
-                                                            disableRipple: true
-                                                        }, true)}
-                                                    />
-                                                </TableCell>
-                                            }
-                                        </TableRow>
-                                    );
-                                })}
-                            </UploadWrapperComponent>
-                        )}
-                    </DxContext.Consumer>
-                </Table>
+                                </UploadWrapperComponent>
+                            )}
+                        </DxContext.Consumer>
+                    </Table>
+                </div>
                 {totalCount > 0 &&
                 <Pagination
                     totalCount={totalCount}
@@ -480,7 +538,7 @@ class ContentListTable extends React.Component {
                     onChangePage={setCurrentPage}
                 />
                 }
-            </div>
+            </Paper>
         );
     }
 }

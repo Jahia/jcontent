@@ -7,7 +7,6 @@ import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from './redux/actions';
-import {ContextualMenu, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import {PickerItemsFragment} from './gqlQueries';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import {compose} from 'react-apollo';
@@ -47,7 +46,7 @@ class ContentTree extends React.Component {
     render() {
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
-            selectableTypes, rootLabel, buttonClass,
+            selectableTypes, rootLabel,
             setRefetch, itemAndRowSelected} = this.props;
         return (
             <Picker
@@ -65,39 +64,8 @@ class ContentTree extends React.Component {
                 onSelectItem={path => handleSelect(path)}
                 >
                 {({handleSelect, ...others}) => (
-                    <CmPickerViewMaterial
-                        {...others}
-                        customSelectedClass={itemAndRowSelected}
-                        textRenderer={
-                            entry => {
-                                let contextualMenu = React.createRef();
-                                return (
-                                    <React.Fragment>
-                                        <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: entry.node.path}}/>
-                                        <Typography color="inherit" onContextMenu={event => contextualMenu.current.open(event)}>
-                                            {entry.depth > 0 ? entry.node.displayName : rootLabel}
-                                        </Typography>
-                                    </React.Fragment>
-                                );
-                            }
-                        }
-                        actionsRenderer={
-                            entry => {
-                                if (entry.depth > 0) {
-                                    return (
-                                        <DisplayActions
-                                            target="contentTreeActions"
-                                            context={{path: entry.node.path}}
-                                            render={iconButtonRenderer({color: 'inherit', className: buttonClass, 'data-cm-role': 'picker-item-menu'})}
-                                            />
-                                    );
-                                }
-                                return null;
-                            }
-                        }
-                        />
-                    )
-                }
+                    <CmPickerViewMaterial {...others} rootLabel={rootLabel} customSelectedClass={itemAndRowSelected}/>
+                )}
             </Picker>
         );
     }
@@ -159,7 +127,6 @@ class ContentTrees extends React.Component {
                                         openableTypes={contentTreeConfig.openableTypes}
                                         rootLabel={t(contentTreeConfig.rootLabel)}
                                         setRefetch={setRefetch(contentTreeConfig.key)}
-                                        buttonClass={classes.buttonMenu}
                                         itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
                                         onContextualMenu={onContextualMenu}
                                     />

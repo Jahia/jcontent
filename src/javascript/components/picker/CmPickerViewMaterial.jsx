@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-    List,
-    ListItem,
-    Button,
-    ListItemIcon,
-    ListItemText,
-    withStyles,
-    withTheme
-} from '@material-ui/core';
+import {Button, List, ListItem, ListItemIcon, ListItemText, Typography, withStyles, withTheme} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../utils';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
 import classNames from 'classnames';
+import {ContextualMenu, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 
 let styles = theme => ({
     root: {
@@ -133,84 +126,97 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     render() {
-        let {classes, pickerEntries, onOpenItem, onSelectItem, textRenderer, actionsRenderer, iconRenderer, loading, customSelectedClass} = this.props;
+        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, customSelectedClass} = this.props;
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
+        let contextualMenu = React.createRef();
 
         return (
             <div className={classes.root}>
-                {loading &&
-                <div className={classes.loadingContainer}/>
-            }
+                {loading && <div className={classes.loadingContainer}/>}
                 <List disablePadding classes={{root: classNames(classes.root, {[classes.loading]: loading})}}>
                     {
-                    sortedEntries.map(entry => {
-                        let itemClass = classNames(classes.listItem, {
-                            [classes.listItemDeleted]: isMarkedForDeletion(entry.node),
-                            [classes.listItemSelected]: entry.selected,
-                            [customSelectedClass]: entry.selected
-                        });
-                        return (
-                            <UploadWrapperComponent
-                                key={entry.path}
-                                divider
-                                data-jrm-role="picker-item"
-                                className={itemClass}
-                                uploadPath={entry.path}
-                                uploadTargetComponent={ListItem}
-                                onClick={() => this.hoverOn(entry.path)}
-                                onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
-                                onMouseEnter={() => this.hoverOn(entry.path)}
-                                onMouseLeave={this.hoverOff}
-                                >
-                                <div
-                                    className={classes.listItemToggle}
-                                    style={{
-                                    paddingLeft: (entry.depth + 0) * 20,
-                                    opacity: (entry.openable && entry.hasChildren ? 1 : 0)
-                                }}
+                        sortedEntries.map(entry => {
+                            let itemClass = classNames(classes.listItem, {
+                                [classes.listItemDeleted]: isMarkedForDeletion(entry.node),
+                                [classes.listItemSelected]: entry.selected,
+                                [customSelectedClass]: entry.selected
+                            });
+                            return (
+                                <UploadWrapperComponent
+                                    key={entry.path}
+                                    divider
+                                    data-jrm-role="picker-item"
+                                    className={itemClass}
+                                    uploadPath={entry.path}
+                                    uploadTargetComponent={ListItem}
+                                    onClick={() => this.hoverOn(entry.path)}
+                                    onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
+                                    onMouseEnter={() => this.hoverOn(entry.path)}
+                                    onMouseLeave={this.hoverOff}
                                     >
-                                    <Button
-                                        className={classes.buttonContainer}
-                                        disabled={!(entry.openable && entry.hasChildren)}
-                                        data-jrm-role="picker-item-toggle"
-                                        data-jrm-state={entry.open ? 'open' : 'closed'}
-                                        onClick={event => {
-                                        onOpenItem(entry.path, !entry.open);
-                                        event.stopPropagation();
-                                    }}
+                                    <div
+                                        className={classes.listItemToggle}
+                                        style={{
+                                            paddingLeft: (entry.depth + 0) * 20,
+                                            opacity: (entry.openable && entry.hasChildren ? 1 : 0)
+                                        }}
                                         >
-                                        <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
-                                    </Button>
-                                </div>
-                                <span className={classes.treeEntry}
-                                    onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
-                                    >
-                                    <ListItemIcon className={classes.listItemNodeTypeIcon}>
-                                        {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                        <Button
+                                            className={classes.buttonContainer}
+                                            disabled={!(entry.openable && entry.hasChildren)}
+                                            data-jrm-role="picker-item-toggle"
+                                            data-jrm-state={entry.open ? 'open' : 'closed'}
+                                            onClick={event => {
+                                                onOpenItem(entry.path, !entry.open);
+                                                event.stopPropagation();
+                                            }}
+                                            >
+                                            <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
+                                        </Button>
+                                    </div>
+                                    <span className={classes.treeEntry}
+                                        onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
+                                        >
+                                        <ListItemIcon className={classes.listItemNodeTypeIcon}>
+                                            {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            disableTypography
+                                            inset
+                                            className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
+                                            classes={entry.selected ? {
+                                            root: classes.listItemLabel
+                                        } : {
+                                            root: classes.listItemLabel
+                                        }}
+                                            primary={
+                                                <React.Fragment>
+                                                    <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions"
+                                                        context={{path: entry.node.path}}/>
+                                                    <Typography color="inherit"
+                                                        onContextMenu={event => contextualMenu.current.open(event)}
+                                                        >
+                                                        {entry.depth > 0 ? entry.node.displayName : rootLabel}
+                                                    </Typography>
+                                                </React.Fragment>
+                                        }
+                                            data-jrm-role="picker-item-text"
+                                    />
+                                    </span>
+                                    {this.state.hover === entry.path && entry.depth > 0 &&
+                                    <ListItemIcon className={classes.listItemActionIcon}>
+                                        <DisplayActions target="contentTreeActions" context={{path: entry.node.path}}
+                                            render={iconButtonRenderer({
+                                                            color: 'inherit',
+                                                            'data-cm-role': 'picker-item-menu'
+                                                        })}/>
                                     </ListItemIcon>
-                                    <ListItemText
-                                        disableTypography
-                                        inset
-                                        className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
-                                        classes={entry.selected ? {
-                                        root: classes.listItemLabel
-                                    } : {
-                                        root: classes.listItemLabel
-                                    }}
-                                        primary={textRenderer ? textRenderer(entry) : entry.name}
-                                        data-jrm-role="picker-item-text"
-                                />
-                                </span>
-                                {actionsRenderer &&
-                                <ListItemIcon className={classes.listItemActionIcon}>
-                                    {this.state.hover === entry.path && actionsRenderer(entry)}
-                                </ListItemIcon>
-                            }
-                            </UploadWrapperComponent>
-);
-                    })
-                }
+                                    }
+                                </UploadWrapperComponent>
+                            );
+                        })
+                    }
                 </List>
             </div>
         );
@@ -253,6 +259,7 @@ class CmPickerViewMaterial extends React.Component {
         const flatArray = [];
 
         dfs(rootNode);
+
         function dfs(node) {
             flatArray.push(node);
             if (node.children) {
@@ -273,6 +280,7 @@ class CmPickerViewMaterial extends React.Component {
                 }
             }
         }
+
         return flatArray;
     }
 }
@@ -280,14 +288,14 @@ class CmPickerViewMaterial extends React.Component {
 CmPickerViewMaterial.propTypes = {
     pickerEntries: PropTypes.array.isRequired,
     onSelectItem: PropTypes.func,
-    onOpenItem: PropTypes.func,
-    textRenderer: PropTypes.func
+    onOpenItem: PropTypes.func
 };
 
 CmPickerViewMaterial.defaultProps = {
-    onSelectItem: () => {},
-    onOpenItem: () => {},
-    textRenderer: () => {}
+    onSelectItem: () => {
+    },
+    onOpenItem: () => {
+    }
 };
 
 export default compose(withTheme(), withStyles(styles, {name: 'DxPickerViewMaterial'}))(CmPickerViewMaterial);

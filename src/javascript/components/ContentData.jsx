@@ -79,10 +79,8 @@ class ContentDataView extends React.Component {
             }
 
             // De-select any removed nodes.
-            if (_.find(selection, node => node.path === nodePath)) {
-                let newSelection = _.clone(selection);
-                _.remove(newSelection, node => node.path === nodePath);
-                setSelection(newSelection);
+            if (selection === nodePath) {
+                setSelection(undefined);
                 stateModificationDone = true;
             }
         } else if (operation === 'update') {

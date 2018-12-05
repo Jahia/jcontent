@@ -6,9 +6,8 @@ import {fileAccepted, fileMatchSize, getDataTransferItems,
     isDragDataWithFiles, getMimeTypes, onFilesSelected} from './utils';
 import {setPanelState, setOverlayTarget} from './redux/actions';
 import {panelStates} from './constants';
-import {withApollo} from 'react-apollo';
+import {withApollo, compose} from 'react-apollo';
 import {UploadRequirementsQuery} from './gqlQueries';
-import _ from 'lodash';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder'];
 
@@ -195,6 +194,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default _.flowRight(
+export default compose(
     withApollo,
     connect(null, mapDispatchToProps))(UploadTransformComponent);

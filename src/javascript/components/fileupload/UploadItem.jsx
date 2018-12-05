@@ -1,7 +1,7 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {withApollo} from 'react-apollo';
+import {withApollo, compose} from 'react-apollo';
 import {uploadFile, updateFileContent} from './gqlMutations';
 import {Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField} from '@material-ui/core';
 import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
@@ -11,7 +11,6 @@ import {updateUpload, removeUpload, takeFromQueue} from './redux/actions';
 import {batchActions} from 'redux-batched-actions';
 import {isImageFile} from '../filesGrid/filesGridUtils';
 import {translate} from 'react-i18next';
-import _ from 'lodash';
 import {ellipsizeText} from '../utils';
 
 const styles = () => ({
@@ -425,7 +424,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default _.flowRight(
+export default compose(
     withStyles(styles),
     translate(),
     withApollo,

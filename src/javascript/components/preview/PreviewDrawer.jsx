@@ -46,7 +46,6 @@ const styles = theme => ({
 });
 
 class PreviewDrawer extends React.Component {
-
     render() {
         const {classes, previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection} = this.props;
         let selectedItem = selection[0];
@@ -60,9 +59,10 @@ class PreviewDrawer extends React.Component {
                         {t('label.contentManager.contentPreview.preview')}
                     </Typography>
                     <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center" className={classes.grid}>
-                        <ToggleButtonGroup exclusive={true}
-                                           value={previewMode === 'edit' ? 'live' : 'edit'}
-                                           onChange={(event) => setPreviewMode(event.target.textContent === 'Staging'? 'edit' : 'live')}>
+                        <ToggleButtonGroup exclusive
+                            value={previewMode === 'edit' ? 'live' : 'edit'}
+                            onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? 'edit' : 'live')}
+                            >
                             <ToggleButton value="edit">
                                 <Typography variant="caption">
                                     {t('label.contentManager.contentPreview.staging')}

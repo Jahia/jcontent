@@ -1,4 +1,4 @@
-import {List, ListItem, withStyles, withTheme} from '@material-ui/core';
+import {List, ListItem, Typography, withStyles, withTheme} from '@material-ui/core';
 import {ChevronRight, ExpandMore} from '@material-ui/icons';
 import React from 'react';
 import {lodash as _} from 'lodash';
@@ -7,76 +7,17 @@ import {DisplayActions, toIconComponent} from '@jahia/react-material';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
-    root: {
-        marginTop: '0px',
-        marginLeft: '6px'
-    },
-    listRoot: {
-        paddingTop: '0'
-    },
-    iconDrawer: {
-        color: '#504e4d'
-    },
-    overList: {
-        paddingTop: '4px',
-        paddingBottom: '4px'
-    },
-    clearList: {
-        boxShadow: 'none !important',
-        textOverflow: 'ellipsis',
-        opacity: '0.8',
-        fontSize: '0.828rem',
-        fontFamily: 'Nunito sans, sans-serif',
-        fontWeight: '400',
-        background: 'transparent',
-        padding: '5px 10px',
-        color: theme.palette.background.default
-
-    },
-    selectedList: {
-        boxShadow: 'none !important',
-        fontSize: '0.872rem',
-        textAlign: 'center',
-        fontFamily: 'Nunito sans, sans-serif',
-        fontWeight: '400',
-        padding: '5px 10px',
-        background: theme.palette.primary.main,
-        color: theme.palette.common.white
-    },
-    triangle: {
-        width: 0,
-        height: 0,
-        padding: 0,
-        marginRight: 10,
-        borderStyle: 'solid',
-        borderWidth: '4px 0 4px 6.5px',
-        borderColor: 'transparent transparent transparent #5c6164'
-    },
-    triangle_bottom: {
-        width: 0,
-        height: 0,
-        borderStyle: 'solid',
-        borderWidth: '6.5px 4px 0 4px',
-        borderColor: '#5c6164 transparent transparent transparent'
-    },
-    iconTree: {
-        fontSize: '15px'
-    },
-    textPadding: {
-        paddingLeft: theme.spacing.unit,
-        textAlign: 'left'
-    },
     expand: {
-        width: '15px'
+        width: (theme.spacing.unit * 3) + 'px'
     },
-    fontSizeSmall: {
-        fontSize: '18px'
+    nested: {
+        paddingLeft: theme.spacing.unit
     }
 });
 
 class CmLeftDrawerListItems extends React.Component {
     render() {
-        let {context, actionPath, classes, theme, t} = this.props;
+        let {context, actionPath, classes, t} = this.props;
 
         return (
             <DisplayActions target={context.menu} context={{...context.originalContext, parent: context}} render={actionProps => {
@@ -88,29 +29,24 @@ class CmLeftDrawerListItems extends React.Component {
                 return (
                     <React.Fragment>
                         <ListItem button
-                            className={classes.clearList}
-                            classes={{root: classes.overList}}
-                            selected={_.includes(_.split(actionPath, '/'), actionContext.actionKey)}
-                            style={{
-                                paddingLeft: (_.split(actionPath, '/').length) * theme.spacing.unit
-                            }}
-                            onClick={event => actionContext.onClick(actionContext, event)}
-                            >
+                            selected={_.includes(_.split(actionPath, '/'), actionContext.actionKey)} onClick={event => actionContext.onClick(actionContext, event)}>
                             <div className={classes.expand}>
                                 {actionContext.hasChildren ?
                                     ((actionContext.open || actionContext.selected) ?
-                                        <ExpandMore classes={{root: classes.iconTree}}/> :
-                                        <ChevronRight classes={{root: classes.iconTree}}/>
+                                        <ExpandMore fontSize="small" classes={{root: classes.iconTree}}/> :
+                                        <ChevronRight fontSize="small" classes={{root: classes.iconTree}}/>
                                     ) :
                                     null
                                 }
                             </div>
                             {icon}
-                            <div className={classes.textPadding}>
+                            <Typography className={classes.textPadding}>
                                 {t(actionContext.buttonLabel)}
-                            </div>
+                            </Typography>
                         </ListItem>
-                        {actionContext.menu && actionContext.open && <CmLeftDrawerListItems context={actionContext} actionPath={actionPath + '/' + actionContext.key} classes={classes} theme={theme} t={t}/>}
+                        <List disablePadding classes={{root: classes.nested}}>
+                        {actionContext.menu && actionContext.open && <CmLeftDrawerListItems context={actionContext} actionPath={actionPath + '/' + actionContext.key} classes={classes} t={t}/>}
+                        </List>
                     </React.Fragment>
                 );
             }}/>
@@ -132,6 +68,5 @@ class CmLeftDrawerContent extends React.Component {
 
 export default compose(
     translate(),
-    withTheme(),
     withStyles(styles),
 )(CmLeftDrawerContent);

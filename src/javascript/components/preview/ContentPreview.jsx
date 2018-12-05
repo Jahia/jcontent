@@ -28,7 +28,6 @@ const ImageViewer = loadable({
 
 const styles = theme => ({
     root: {
-        padding: '8px',
         transition: 'width 0.3s ease-in 0s',
         flex: 1,
         position: 'relative'
@@ -36,9 +35,6 @@ const styles = theme => ({
     rootFullWidth: {
         width: '100vw',
         transition: 'width 0.3s ease-in 0s'
-    },
-    button: {
-        margin: theme.spacing.unit
     },
     previewContainer: {
         // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
@@ -72,63 +68,6 @@ const styles = theme => ({
         backgroundColor: theme.palette.common.white,
         overflow: 'scroll',
         height: 'calc(100vh - 203px)'
-    },
-    controlsPaperEdit: {
-        position: 'absolute',
-        left: '0',
-        bottom: '0',
-        width: '100%'
-    },
-    controlsPaperLive: {
-        position: 'absolute',
-        left: '0',
-        bottom: '0',
-        width: '100%',
-        textAlign: 'center'
-    },
-    titleBar: {
-    },
-    contentTitle: {
-        textAlign: 'left',
-        fontSize: '27px',
-        maxWidth: 360,
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        paddingLeft: theme.spacing.unit,
-        fontWeight: 100
-    },
-    contentSubTitle: {
-        color: theme.palette.background.default,
-        paddingLeft: theme.spacing.unit,
-        fontSize: '18px',
-        fontWeight: 100
-    },
-    drawerWidth: {
-        boxShadow: 'none',
-        backgroundColor: theme.palette.common.white,
-        height: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)',
-        overflow: 'hidden !important',
-        maxHeight: 'calc(100vh - ' + theme.contentManager.topBarHeight + 'px)'
-    },
-    drawerRoot: {
-        top: String(theme.contentManager.topBarHeight) + 'px !important',
-        overflow: 'hidden !important',
-        right: '24px !important'
-    },
-    footerGrid: {
-        minHeight: '208px',
-        maxHeight: '208px',
-        backgroundColor: '#e8ebed',
-        padding: '0px !important'
-    },
-    colorIcon: {
-        marginTop: 6,
-        color: '#303030'
-    },
-    gridUnpublish: {
-        marginTop: Number(theme.spacing.unit),
-        marginBottom: Number(theme.spacing.unit)
     }
 });
 

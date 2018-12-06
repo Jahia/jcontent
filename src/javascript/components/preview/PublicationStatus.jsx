@@ -34,15 +34,15 @@ const styles = theme => ({
         padding: theme.spacing.unit
     },
     publicationInfoMandatoryLanguageUnpublishable: {
-        borderLeft: '5px solid #f6d62f',
+        borderLeft: '5px solid ' + theme.palette.publicationStatus.mandatoryLanguageUnpublishable.main,
         padding: theme.spacing.unit
     },
     publicationInfoMandatoryLanguageValid: {
-        borderLeft: '5px solid #f6d62f',
+        borderLeft: '5px solid ' + theme.palette.publicationStatus.mandatoryLanguageValid.main,
         padding: theme.spacing.unit
     },
     publicationInfoConflict: {
-        borderLeft: '5px solid #f6d62f',
+        borderLeft: '5px solid ' + theme.palette.publicationStatus.conflict.main,
         padding: theme.spacing.unit
     }
 });

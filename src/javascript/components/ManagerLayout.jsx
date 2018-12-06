@@ -12,7 +12,7 @@ const styles = theme => ({
         flexGrow: 1,
         backgroundColor: theme.palette.layout.dark,
         padding: 0,
-        paddingRight: '38px'
+        paddingRight: theme.spacing.unit * 4
     },
     openDrawer: {
         marginLeft: theme.contentManager.leftNavigationDrawerWidth,

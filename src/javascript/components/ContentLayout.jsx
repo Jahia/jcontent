@@ -18,6 +18,7 @@ import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher
 
 const styles = theme => ({
     topBar: {
+        paddingTop: theme.spacing.unit * 2,
         color: theme.palette.primary.contrastText
     },
     paper: {
@@ -75,11 +76,10 @@ const styles = theme => ({
         position: 'absolute',
         top: 0,
         right: 0,
-        width: '50%',
-        background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, #4e5156 100%) !important',
+        padding: theme.spacing.unit + 'px ' + (theme.spacing.unit * 4) + 'px',
+        background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, rgba(31, 38, 42, 0.6392156862745098) 100%) !important',
         textAlign: 'right',
         color: theme.palette.text.contrastText,
-        marginRight: 50,
         '& a': {
             color: 'inherit'
         }

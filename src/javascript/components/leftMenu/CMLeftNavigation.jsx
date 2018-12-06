@@ -13,7 +13,7 @@ import {compose} from 'react-apollo';
 const styles = theme => ({
     root: {
         minWidth: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth) + 'px',
-        paddingLeft: theme.contentManager.screenMargin + 'px',
+        paddingLeft: theme.spacing.unit * 4,
         height: '100%',
         display: 'flex'
     },

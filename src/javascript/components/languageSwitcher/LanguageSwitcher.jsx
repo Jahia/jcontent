@@ -2,7 +2,6 @@ import React from 'react';
 import {compose, Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import gql from 'graphql-tag';
-import {lodash as _} from 'lodash';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
@@ -46,7 +45,6 @@ class LanguageSwitcher extends React.Component {
             ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
         this.onSelectLanguage = this.onSelectLanguage.bind(this);
-        this.validateLanguageExists = this.validateLanguageExists.bind(this);
     }
 
     onSelectLanguage(lang) {
@@ -54,25 +52,6 @@ class LanguageSwitcher extends React.Component {
         this.props.onSelectLanguage(lang);
         // Switch edit mode linker language
         window.parent.authoringApi.switchLanguage(lang);
-    }
-
-    validateLanguageExists(languages, data, lang) {
-        if (!_.isEmpty(languages)) {
-            // If we can't find the selected language in the list of available languages,
-            // we will implicitly switch to the default language of the site.
-            let existingLanguage = _.find(languages, function (language) {
-                return language.language === lang;
-            });
-            if (existingLanguage === undefined) {
-                let language = _.find(languages, function (language) {
-                    const result = data.jcr ? data.jcr.result : data.wsDefault.result;
-                    return language.language === result.site.defaultLanguage;
-                });
-                return language.language;
-            }
-            return true;
-        }
-        return true;
     }
 
     parseSiteLanguages(data) {
@@ -110,19 +89,12 @@ class LanguageSwitcher extends React.Component {
                     }
 
                     let displayableLanguages = this.parseSiteLanguages(data);
-                    let existingLanguage = this.validateLanguageExists(displayableLanguages, data, lang);
-                    if (existingLanguage === true) {
-                        return (
-                            <LanguageSwitcherDisplay
-                                lang={lang}
-                                dark={dark}
-                                languages={displayableLanguages}
-                                onSelectLanguage={lang => this.onSelectLanguage(lang)}
+                    return <LanguageSwitcherDisplay
+                            lang={lang}
+                            dark={dark}
+                            languages={displayableLanguages}
+                            onSelectLanguage={lang => this.onSelectLanguage(lang)}
                         />
-);
-                    }
-                    this.onSelectLanguage(lang);
-                    return null;
                 }
             }
             </Query>

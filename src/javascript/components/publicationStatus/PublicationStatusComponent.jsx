@@ -55,7 +55,6 @@ const styles = theme => ({
     conflict: {
         // Use later: backgroundColor: theme.palette.publicationStatus.conflict.main,
         backgroundColor: '#f6d62f',
-        color: 'black',
         fontFamily: 'Nunito Sans, sans-serif'
     },
     unknown: {

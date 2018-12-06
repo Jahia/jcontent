@@ -62,11 +62,9 @@ const styles = theme => ({
         width: '100vw',
         height: '100vh',
         top: 0,
-        left: 0,
-        zIndex: theme.zIndex.modal
+        left: 0
     },
     appFrame: {
-        zIndex: 0,
         overflow: 'hidden',
         position: 'relative',
         display: 'flex',

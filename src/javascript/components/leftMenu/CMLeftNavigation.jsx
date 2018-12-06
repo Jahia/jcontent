@@ -18,7 +18,6 @@ const styles = theme => ({
         display: 'flex'
     },
     rootOpenDrawer: {
-        zIndex: theme.zIndex.modal,
         background: theme.palette.background.paper,
         overflow: 'visible !important', // Safari compatibility
         '-webkit-transform-style': 'preserve-3d' // Safari compatibility
@@ -74,7 +73,6 @@ const styles = theme => ({
         background: theme.palette.background.paper,
         position: 'absolute',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
-        zIndex: 1,
         left: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth),
         width: theme.contentManager.leftNavigationDrawerWidth,
         transition: theme.transitions.create('width', {
@@ -86,7 +84,6 @@ const styles = theme => ({
         background: theme.palette.background.paper,
         position: 'relative',
         boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
-        zIndex: 1,
         left: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth),
         width: theme.contentManager.leftNavigationDrawerWidth,
         transition: theme.transitions.create('width', {

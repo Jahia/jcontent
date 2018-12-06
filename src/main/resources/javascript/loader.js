@@ -15,7 +15,7 @@
         loader.style.width = '100%';
         loader.style.height = '100%';
         loader.style.height = '100%';
-        loader.style.zIndex = '99999';
+        loader.style.zIndex = '2000';
         loader.style.backgroundColor = 'grey';
 
         loader.innerHTML = '<style>@keyframes loadingBar{0%{width:5%}20%{width:62%}44%{width:85%}80%{width:90%}100%{width:100%}}@keyframes ripple{22%{opacity:0;transform:scale(1)}78%{opacity:.15;transform:scale(160)}100%{opacity:0;transform:scale(180)}}@keyframes bounceLogo{60%{padding-top:2px}}body{font-family:\'Nunito Sans\',sans-serif;margin:0;padding:0}.dx-container{height:100vh;overflow:hidden;width:100%;background-color:#1F262A}.dx-wrapper{width:300px;margin:0 auto;padding:45vh}.dx-logo{width:58px;height:58px;margin:0 auto 40px;position:relative;box-sizing:border-box}.dx-loading,.dx-ripple{position:absolute;background-color:#60717B}.dx-logo svg{margin:0 auto;-webkit-animation:bounceLogo 1.5s infinite;-moz-animation:bounceLogo 1.5s infinite;-o-animation:bounceLogo 1.5s infinite;animation:bounceLogo 1.5s infinite}.dx-ripple{margin-left:-1px;width:10px;height:10px;left:50%;top:43vh;opacity:0;border-radius:50%;-webkit-animation:ripple 1.8s;-moz-animation:ripple 1.8s;-o-animation:ripple 1.8s;animation:ripple 1.8s;animation-delay:.8s}.dx-loading{width:300px;height:4px}.dx-loading-progress{display:block;width:4%;height:4px;position:relative;left:0;top:0;background-color:#E8EBED;-webkit-animation:loadingBar 12s infinite;-moz-animation:loadingBar 12s infinite;-o-animation:loadingBar 12s infinite;animation:loadingBar 12s infinite}.dx-text{padding-top:48px;text-align:center;margin:0;color:#fff}</style>' +

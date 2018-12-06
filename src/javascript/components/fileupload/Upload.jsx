@@ -103,7 +103,6 @@ class Upload extends React.Component {
                 position: 'absolute',
                 backgroundColor: '#E67D3A',
                 opacity: '0.4',
-                zIndex: 1000,
                 pointerEvents: 'none'
             },
             inactive: {

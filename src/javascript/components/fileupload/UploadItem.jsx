@@ -165,8 +165,8 @@ class UploadItem extends React.Component {
                 upload.error = 'FILE_EXISTS';
             }
 
-            if (e.message.indexOf('DataStoreException') !== -1) {
-                upload.error = 'CANNOT_STORE';
+            if (e.message.indexOf('FileSizeLimitExceededException') !== -1) {
+                upload.error = 'INCORRECT_SIZE';
             }
 
             setTimeout(() => {
@@ -237,7 +237,7 @@ class UploadItem extends React.Component {
                     {t('label.contentManager.fileUpload.exists')}
                 </span>
             );
-        } else if (status === uploadStatuses.HAS_ERROR && error === 'CANNOT_STORE') {
+        } else if (status === uploadStatuses.HAS_ERROR && error === 'INCORRECT_SIZE') {
             text = (
                 <span className={classes.progressText}>
                     <Info className={classes.statusIconRed}/>

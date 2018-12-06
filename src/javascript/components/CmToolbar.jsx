@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, IconButton, Toolbar, withStyles} from '@material-ui/core';
 import {Close, Refresh} from '@material-ui/icons';
-import {FileTree} from 'mdi-material-ui';
+import {ChevronRight} from '@material-ui/icons';
 import {DisplayActions} from '@jahia/react-material';
 import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
@@ -23,10 +23,11 @@ const styles = theme => ({
         maxHeight: theme.contentManager.toolbarHeight + 'px'
     },
     grow: {
-        flex: 1
+        flex: 1,
+        paddingLeft: theme.spacing.unit
     },
     guttersToolbar: {
-        paddingLeft: (theme.spacing.unit * 3) + '!important',
+        paddingLeft: (theme.spacing.unit) + '!important',
         paddingRight: (theme.spacing.unit * 3) + '!important'
     }
 });
@@ -71,10 +72,10 @@ class CmToolbar extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
         return (
-            <Toolbar classes={{root: classes.toolbar, gutters: classes.guttersToolbar}}>
+            <Toolbar variant="dense" classes={{root: classes.toolbar, gutters: classes.guttersToolbar}}>
                 {treeState !== CM_DRAWER_STATES.SHOW &&
-                <IconButton variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
-                    <FileTree color="primary"/>
+                <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
+                    <ChevronRight/>
                 </IconButton>
                     }
                 <div className={classes.grow}>

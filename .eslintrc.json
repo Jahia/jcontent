@@ -13,7 +13,7 @@
     "indent": [
       "error", 4,
       {
-        "ignoredNodes": ["JSXElement *"],
+        "ignoredNodes": ["JSXElement *", "JSXElement"],
         "SwitchCase": 1
       }
     ],
@@ -23,11 +23,11 @@
 
     // React specific rules
     "react/jsx-indent": ["error", 4],
-    "react/jsx-indent-props": ["error", 4],
+    "react/jsx-indent-props": ["error", "first"],
     "react/prop-types": "warn",
-    "react/jsx-closing-bracket-location": ["error", {
-      "nonEmpty": "props-aligned",
-      "selfClosing": false
+    "react/jsx-max-props-per-line": ["error", {
+      "maximum": 1,
+      "when": "multiline"
     }]
   },
   "settings": {

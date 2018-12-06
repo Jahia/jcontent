@@ -87,10 +87,10 @@ class LanguageSwitcherDisplay extends React.Component {
                             onSelectLanguage(lang.language);
                             this.handleClose();
                         }}
-                            >
+                        >
                             {this.uppercaseFirst(lang.displayName)}
                         </MenuItem>
-);
+                    );
                 })}
                 </Menu>
             </React.Fragment>

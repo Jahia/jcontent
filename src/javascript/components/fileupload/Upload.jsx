@@ -145,7 +145,7 @@ class Upload extends React.Component {
         if (uploads.length === 0) {
             return (
                 <UploadDropZone acceptedFileTypes={getMimeTypes(acceptedFileTypes)}
-                    onFilesSelected={this.onFilesSelected}/>
+                                onFilesSelected={this.onFilesSelected}/>
             );
         }
         return (
@@ -162,10 +162,10 @@ class Upload extends React.Component {
     showUploads() {
         return this.props.uploads.map((upload, index) => (
             <UploadItem key={upload.id}
-                index={index}
-                file={files.acceptedFiles[index]}
-                removeFile={this.removeFile}
-                updateUploadsStatus={this.updateUploadsStatus}/>
+                        index={index}
+                        file={files.acceptedFiles[index]}
+                        removeFile={this.removeFile}
+                        updateUploadsStatus={this.updateUploadsStatus}/>
         ));
     }
 

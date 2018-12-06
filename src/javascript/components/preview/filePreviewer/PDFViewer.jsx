@@ -201,44 +201,44 @@ class PDFViewer extends React.Component {
 
         let firstPageButton = (
             <IconButton className={classes.colorPagination}
-                disabled={page === 1}
-                onClick={event => {
+                        disabled={page === 1}
+                        onClick={event => {
                             this.handleNavigation(event, 'first');
                         }}
-                >
+            >
                 <StepBackward/>
             </IconButton>
         );
 
         let lastPageButton = (
             <IconButton className={classes.colorPagination}
-                disabled={page === pages}
-                onClick={event => {
+                        disabled={page === pages}
+                        onClick={event => {
                             this.handleNavigation(event, 'last');
                         }}
-                >
+            >
                 <StepForward/>
             </IconButton>
         );
 
         let previousButton = (
             <IconButton className={classes.colorPagination}
-                disabled={page === 1}
-                onClick={event => {
+                        disabled={page === 1}
+                        onClick={event => {
                             this.handleNavigation(event, 'previous');
                         }}
-                >
+            >
                 <ChevronLeft/>
             </IconButton>
         );
 
         let nextButton = (
             <IconButton className={classes.colorPagination}
-                disabled={page === pages}
-                onClick={event => {
+                        disabled={page === pages}
+                        onClick={event => {
                             this.handleNavigation(event, 'next');
                         }}
-                >
+            >
                 <ChevronRight/>
             </IconButton>
         );
@@ -250,18 +250,18 @@ class PDFViewer extends React.Component {
                 onClick={event => {
                             this.handleZoom(event, 'in');
                         }}
-                >
+            >
                 <MagnifyPlusOutline/>
             </IconButton>
         );
 
         let zoomOutButton = (
             <IconButton className={classes.colorPagination}
-                disabled={scaleSize === 0}
-                onClick={event => {
+                        disabled={scaleSize === 0}
+                        onClick={event => {
                             this.handleZoom(event, 'out');
                         }}
-                >
+            >
                 <MagnifyMinusOutline/>
             </IconButton>
         );

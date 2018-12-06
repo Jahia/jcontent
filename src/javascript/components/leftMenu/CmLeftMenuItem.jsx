@@ -73,8 +73,8 @@ class CmLeftMenuItem extends React.Component {
                 {Boolean(icon) && icon}
                 {Boolean(badge) && badge}
                 <Typography className={drawer ? classes.typographyIcon : classes.typographyIconLight}
-                    data-cm-role="left-menu-item-text"
-                    >
+                            data-cm-role="left-menu-item-text"
+                >
                     {t(buttonLabel)}
                 </Typography>
             </Button>

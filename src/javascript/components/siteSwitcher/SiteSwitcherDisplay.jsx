@@ -71,25 +71,31 @@ class SiteSwitcherDisplay extends React.Component {
         const siteNode = _.find(siteNodes, siteNode => siteNode.name === siteKey);
         return (
             <React.Fragment>
-                <Button aria-owns={anchorEl ? 'site-switcher' : null} aria-haspopup="true" data-cm-role="site-switcher" onClick={this.handleClick}>
+                <Button aria-owns={anchorEl ? 'site-switcher' : null}
+                        aria-haspopup="true"
+                        data-cm-role="site-switcher"
+                        onClick={this.handleClick}
+                >
                     <Typography className={dark ? classes.typography : classes.typographyLight}>
                         {siteNode.displayName}
                     </Typography>
-                &nbsp;
+                    &nbsp;
                     <ChevronDown className={dark ? classes.iconDark : classes.iconLight}/>
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map(siteNode => {
-                    return (
-                        <MenuItem key={siteNode.uuid} onClick={() => {
-                        onSelectSite(siteNode, currentLang);
-                        this.handleClose();
-                    }}
-                                                      >
-                            {siteNode.displayName}
-                        </MenuItem>
-);
-                })}
+                        return (
+                            <MenuItem
+                                key={siteNode.uuid}
+                                onClick={() => {
+                                    onSelectSite(siteNode, currentLang);
+                                    this.handleClose();
+                                }}
+                            >
+                                {siteNode.displayName}
+                            </MenuItem>
+                        );
+                    })}
                 </Menu>
             </React.Fragment>
         );

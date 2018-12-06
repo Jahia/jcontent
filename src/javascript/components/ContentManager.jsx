@@ -92,7 +92,7 @@ class ContentManager extends React.Component {
                             defaultNS: this.defaultNS,
                             namespaceResolvers: this.namespaceResolvers
                         })}
-                                         >
+                        >
                             <I18n>{t => {
                                 return (
                                     <Provider store={this.getStore(dxContext, t)}>
@@ -100,20 +100,22 @@ class ContentManager extends React.Component {
                                             <PushEventHandler/>
                                             <ComponentRendererProvider>
                                                 <ConnectedRouter history={this.getHistory(dxContext, t)}>
-                                                    <Route path="/:siteKey/:lang" render={props => {
+                                                    <Route path="/:siteKey/:lang"
+                                                           render={props => {
                                                         dxContext.lang = props.match.params.lang;
                                                         return (
                                                             <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
                                                                 <Switch>
-                                                                    <Route path={`${props.match.url}/apps`} render={() =>
-                                                                        <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
+                                                                    <Route path={`${props.match.url}/apps`}
+                                                                           render={() =>
+                                                                               <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
                                                                     }/>
                                                                     <Route render={() =>
                                                                         <ContentLayout/>
                                                                     }/>
                                                                 </Switch>
                                                             </ManagerLayout>
-);
+                                                        );
                                                     }}/>
                                                 </ConnectedRouter>
                                             </ComponentRendererProvider>

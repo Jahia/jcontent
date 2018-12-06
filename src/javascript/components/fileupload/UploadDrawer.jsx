@@ -7,11 +7,11 @@ class UploadDrawer extends React.Component {
         const {PaperProps, transitionDuration} = this.props;
         return (
             <Drawer anchor="bottom"
-                style={{position: 'initial'}}
-                PaperProps={PaperProps}
-                open={this.props.open}
-                transitionDuration={transitionDuration}
-                >
+                    style={{position: 'initial'}}
+                    PaperProps={PaperProps}
+                    open={this.props.open}
+                    transitionDuration={transitionDuration}
+            >
                 { this.props.children }
             </Drawer>
         );

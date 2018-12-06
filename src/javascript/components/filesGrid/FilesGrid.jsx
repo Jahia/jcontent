@@ -96,20 +96,20 @@ class FilesGrid extends Component {
                         {
                         this.props.rows.map(node => (
                             <Grid key={node.uuid}
-                                item
-                                xs={size}
-                                className={classes.centerGrid}
-                                onMouseEnter={$event => this.onHoverEnter($event, node.path)}
-                                onMouseLeave={$event => this.onHoverExit($event)}
-                                >
+                                  item
+                                  xs={size}
+                                  className={classes.centerGrid}
+                                  onMouseEnter={$event => this.onHoverEnter($event, node.path)}
+                                  onMouseLeave={$event => this.onHoverExit($event)}
+                            >
                                 <DxContext.Consumer>
                                     {
                                         dxContext => (
                                             <FileCard cardType={size}
-                                                isHovered={node.path === hoveredCard}
-                                                node={{...node, displayName: node.name}}
-                                                dxContext={dxContext}/>
-    )
+                                                      isHovered={node.path === hoveredCard}
+                                                      node={{...node, displayName: node.name}}
+                                                      dxContext={dxContext}/>
+                                        )
                                     }
                                 </DxContext.Consumer>
                             </Grid>

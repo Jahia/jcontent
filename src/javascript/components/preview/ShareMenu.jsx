@@ -43,18 +43,18 @@ class ShareMenu extends Component {
             <span>
                 <Tooltip title={t('label.contentManager.contentPreview.share')}>
                     <Button aria-owns={shareMenuAnchor ? 'share-menu' : null}
-                        aria-haspopup="true"
-                        className={classes.colorIcon}
-                        onClick={event => this.handleMenuClick(event, 'shareMenuAnchor')}
-                        >
+                            aria-haspopup="true"
+                            className={classes.colorIcon}
+                            onClick={event => this.handleMenuClick(event, 'shareMenuAnchor')}
+                    >
                         <Share/>
                     </Button>
                 </Tooltip>
                 <Menu id="share-menu"
-                    anchorEl={shareMenuAnchor}
-                    open={Boolean(shareMenuAnchor)}
-                    onClose={() => this.handleMenuClose('shareMenuAnchor')}
-                    >
+                      anchorEl={shareMenuAnchor}
+                      open={Boolean(shareMenuAnchor)}
+                      onClose={() => this.handleMenuClose('shareMenuAnchor')}
+                >
                     <MenuItem onClick={() => this.copy(selectedItem.path)}>
                         {t('label.contentManager.contentPreview.copyPathToClipboard')}
                     </MenuItem>

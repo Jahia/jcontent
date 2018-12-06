@@ -13,7 +13,7 @@ class FilesGridModeSelector extends React.Component {
             <Tooltip
                 title={t(mode === 'list' ? 'label.contentManager.filesGrid.toggleGridDisplay' : 'label.contentManager.filesGrid.toggleListDisplay')}
                 leaveDelay={200}
-                >
+            >
                 <IconButton data-cm-role={mode === 'list' ? 'view-mode-grid' : 'view-mode-list'} color="inherit" onClick={() => onChange(mode === 'list' ? 'grid' : 'list')}>
                     {mode === 'list' ? <ViewModule/> : <ListIcon/>}
                 </IconButton>

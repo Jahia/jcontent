@@ -54,17 +54,18 @@ class CmSearchControlBar extends React.Component {
                     <Search className={classes.searchIcon}/>
                     <div className={classes.infoSearchPath}>
                         <Trans i18nKey="label.contentManager.search.searchPath"
-                            values={{path: path}}
-                            components={[<span key="searchPath" className={classes.infoSearchPathValue}>univers</span>]}
+                               values={{path: path}}
+                               components={[<span key="searchPath" className={classes.infoSearchPathValue}>univers</span>]}
                         />
                     </div>
                 </div>
                 <div>
                     {(path !== siteRootPath) &&
                     <Button variant="contained"
-                        classes={{sizeSmall: classes.searchClear}}
-                        size="small" onClick={() => setPath(siteRootPath)}
-                                     >
+                            classes={{sizeSmall: classes.searchClear}}
+                            size="small"
+                            onClick={() => setPath(siteRootPath)}
+                    >
                         {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
                     </Button>
                     }

@@ -124,7 +124,7 @@ class ContentLayout extends React.Component {
                         anchor="left"
                         open={treeState >= CM_DRAWER_STATES.SHOW}
                         classes={{paper: classes.treeDrawerPaper}}
-                        >
+                    >
                         <ContentTrees
                             isOpen={treeState >= CM_DRAWER_STATES.SHOW}
                             setRefetch={this.setTreeRefetcher}
@@ -137,15 +137,15 @@ class ContentLayout extends React.Component {
                             [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
                         })}
                         onContextMenu={event => contextualMenu.current.open(event)}
-                        >
+                    >
                         <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
                             {({rows, contentNotFound, totalCount}) => {
                                 return (
                                     <Paper
                                         className={classes.paper}
-                                        >{mode === Constants.mode.FILES && filesMode === 'grid' ?
-                                            <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
-                                            <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
+                                    >{mode === Constants.mode.FILES && filesMode === 'grid' ?
+                                        <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
+                                        <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
                                     }
                                     </Paper>
                                 );
@@ -159,7 +159,7 @@ class ContentLayout extends React.Component {
                         anchor="right"
                         open={previewState >= CM_DRAWER_STATES.SHOW}
                         classes={{paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper}}
-                        >
+                    >
                         {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer/>}
                     </Drawer>
                 </div>

@@ -123,13 +123,13 @@ class CmPickerViewMaterial extends React.Component {
                                     onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                                     onMouseEnter={() => this.hoverOn(entry.path)}
                                     onMouseLeave={this.hoverOff}
-                                    >
+                                >
                                     <div
                                         style={{
                                             paddingLeft: ((entry.depth > 1) ? ((entry.depth - 1) * 16) : 0),
                                             opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                         }}
-                                        >
+                                    >
                                         <IconButton
                                             className={entry.selected ? classes.buttonContainerSelected : classes.buttonContainer}
                                             disabled={!(entry.openable && entry.hasChildren)}
@@ -139,14 +139,14 @@ class CmPickerViewMaterial extends React.Component {
                                                 onOpenItem(entry.path, !entry.open);
                                                 event.stopPropagation();
                                             }}
-                                            >
+                                        >
                                             <KeyboardArrowRight
                                                 className={entry.open ? classes.openedTreeEl : null}/>
                                         </IconButton>
                                     </div>
                                     <span className={classes.treeEntry}
-                                        onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
-                                        >
+                                          onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
+                                    >
                                         <ListItemIcon className={classes.listItemNodeTypeIcon}>
                                             {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
                                         </ListItemIcon>
@@ -156,11 +156,12 @@ class CmPickerViewMaterial extends React.Component {
                                             className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
                                             primary={
                                                 <React.Fragment>
-                                                    <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions"
-                                                        context={{path: entry.node.path}}/>
+                                                    <ContextualMenu ref={contextualMenu}
+                                                                    actionKey="contentTreeActions"
+                                                                    context={{path: entry.node.path}}/>
                                                     <Typography color="inherit"
-                                                        onContextMenu={event => contextualMenu.current.open(event)}
-                                                        >
+                                                                onContextMenu={event => contextualMenu.current.open(event)}
+                                                    >
                                                         {entry.depth > 0 ? entry.node.displayName : rootLabel}
                                                     </Typography>
                                                 </React.Fragment>
@@ -170,8 +171,9 @@ class CmPickerViewMaterial extends React.Component {
                                     </span>
                                     {this.state.hover === entry.path && entry.depth > 0 &&
                                     <ListItemIcon className={classes.listItemActionIcon}>
-                                        <DisplayActions target="contentTreeActions" context={{path: entry.node.path}}
-                                            render={iconButtonRenderer({
+                                        <DisplayActions target="contentTreeActions"
+                                                        context={{path: entry.node.path}}
+                                                        render={iconButtonRenderer({
                                                             color: 'inherit',
                                                             'data-cm-role': 'picker-item-menu'
                                                         })}/>

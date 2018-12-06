@@ -242,17 +242,17 @@ class CMLeftNavigation extends React.Component {
                             <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
                         </ListItem>
                         <DisplayActions target="leftMenuActions"
-                            context={actionContext}
-                            render={({context}) => (
-                                <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
+                                        context={actionContext}
+                                        render={({context}) => (
+                                            <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
                                         )}/>
 
                     </List>
 
                     <DisplayActions target="leftMenuBottomActions"
-                        context={actionContext}
-                        render={({context}) => (
-                            <CmLeftMenuItem bottom context={context} drawer={this.state.openDrawer}/>
+                                    context={actionContext}
+                                    render={({context}) => (
+                                        <CmLeftMenuItem bottom context={context} drawer={this.state.openDrawer}/>
                                     )}
                     />
                 </div>
@@ -262,7 +262,7 @@ class CMLeftNavigation extends React.Component {
                         paper: classNames(classes.drawerPaper, !this.state.openDrawer && classes.drawerPaperClose)
                     }}
                     open={this.state.openDrawer}
-                    >
+                >
                     <div className={classes.blockMenu}>
                         <div className={classes.siteSwitcher}>
                             <SiteSwitcher dark/>

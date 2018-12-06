@@ -168,10 +168,11 @@ class BreadcrumbDisplay extends React.Component {
         return (
             <span>
                 <MenuItemContainer key={'dropdown_' + node.uuid}>
-                    <MenuItem disableRipple classes={{root: classes.menuItemSize}}
-                        className={classes.menuItemHeader}
-                        onClick={event => this.onMenuItemSelected(event, node)}
-                        >
+                    <MenuItem disableRipple
+                              classes={{root: classes.menuItemSize}}
+                              className={classes.menuItemHeader}
+                              onClick={event => this.onMenuItemSelected(event, node)}
+                    >
                         {this.renderIcon(node, classes)}
                         <MenuItemLabel className={classes.contentLabelMenu}>
                             {node.name}
@@ -205,13 +206,13 @@ class BreadcrumbDisplay extends React.Component {
         if (node.siblings.length > 1) {
             return (
                 <Button ref={this.anchorButton}
-                    disableRipple
-                    aria-haspopup="true"
-                    aria-owns={'breadcrumbMenu_' + node.uuid}
-                    className={classes.menuButton}
-                    id={'menuToggleButton_' + node.uuid}
-                    onMouseOver={this.onMenuButtonActivatorEnter}
-                    >
+                        disableRipple
+                        aria-haspopup="true"
+                        aria-owns={'breadcrumbMenu_' + node.uuid}
+                        className={classes.menuButton}
+                        id={'menuToggleButton_' + node.uuid}
+                        onMouseOver={this.onMenuButtonActivatorEnter}
+                >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
                     <span className={classes.contentLabel} data-cm-role="breadcrumb-name">
@@ -223,16 +224,16 @@ class BreadcrumbDisplay extends React.Component {
         }
         return (
             <Button ref={this.anchorButton}
-                disableRipple
-                aria-haspopup="true"
-                aria-owns={'breadcrumbMenu_' + node.uuid}
-                className={classes.menuButton}
-                id={'menuToggleButton_' + node.uuid}
-                onClick={() => {
-                    this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
-                }}
-                onMouseOver={this.onMenuButtonActivatorEnter}
-                >
+                    disableRipple
+                    aria-haspopup="true"
+                    aria-owns={'breadcrumbMenu_' + node.uuid}
+                    className={classes.menuButton}
+                    id={'menuToggleButton_' + node.uuid}
+                    onClick={() => {
+                        this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
+                    }}
+                    onMouseOver={this.onMenuButtonActivatorEnter}
+            >
                 {this.renderIcon(node, classes)}
                 {!trimLabel &&
                 <span className={classes.contentLabel} data-cm-role="breadcrumb-name">
@@ -263,14 +264,14 @@ class BreadcrumbDisplay extends React.Component {
             <span ref={this.menu} id={'breadcrumbSpan_' + node.uuid}>
                 {this.generateMenuButton(node, maxLabelLength, trimLabel)}
                 <Menu key={node.uuid}
-                    disableAutoFocusItem
-                    anchorPosition={anchorPosition}
-                    anchorReference="anchorPosition"
-                    container={this.menu.current}
-                    id={'breadcrumbMenu_' + node.uuid}
-                    open={menuActive}
-                    onEnter={this.addMenuExitListener}
-                    >
+                      disableAutoFocusItem
+                      anchorPosition={anchorPosition}
+                      anchorReference="anchorPosition"
+                      container={this.menu.current}
+                      id={'breadcrumbMenu_' + node.uuid}
+                      open={menuActive}
+                      onEnter={this.addMenuExitListener}
+                >
                     {this.generateMenu(node)}
                 </Menu>
             </span>

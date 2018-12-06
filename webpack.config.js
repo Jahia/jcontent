@@ -67,15 +67,15 @@ module.exports = (env, argv) => {
 
     if (argv.watch) {
         config.module.rules.push({
+            test: /\.jsx?$/,
+            include: [path.join(__dirname, 'src')],
             exclude: /node_modules/,
-            use: [
-                {
-                    loader: 'eslint-loader',
-                    options: {
-                        fix: true
-                    }
-                }
-            ]
+            enforce: 'pre',
+            loader: 'eslint-loader',
+            options: {
+                quiet: true,
+                fix: true
+            }
         });
     }
 

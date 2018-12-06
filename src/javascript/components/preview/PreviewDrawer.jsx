@@ -60,9 +60,9 @@ class PreviewDrawer extends React.Component {
                     </Typography>
                     <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center" className={classes.grid}>
                         <ToggleButtonGroup exclusive
-                            value={previewMode === 'edit' ? 'live' : 'edit'}
-                            onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? 'edit' : 'live')}
-                            >
+                                           value={previewMode === 'edit' ? 'live' : 'edit'}
+                                           onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? 'edit' : 'live')}
+                        >
                             <ToggleButton value="edit">
                                 <Typography variant="caption">
                                     {t('label.contentManager.contentPreview.staging')}

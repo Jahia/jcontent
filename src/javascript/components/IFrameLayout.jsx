@@ -62,11 +62,11 @@ class IFrameLayout extends React.Component {
 
                     return (
                         <Iframe allowFullScreen
-                            url={iframeUrl}
-                            position="relative"
-                            width="100%"
-                            className="myClassname"
-                            height="100%"
+                                url={iframeUrl}
+                                position="relative"
+                                width="100%"
+                                className="myClassname"
+                                height="100%"
                         />
                     );
                 }}

@@ -99,7 +99,7 @@ class UploadItem extends React.Component {
                         horizontal: 'center'
                     }}
                     onClose={this.hideChangeNamePopover}
-                    >
+                >
                     <TextField
                         label={t('label.contentManager.fileUpload.newName')}
                         className={`${classes.textField} ${classes.renameField}`}
@@ -277,7 +277,7 @@ class UploadItem extends React.Component {
                         dispatch(removeUpload(index));
                         this.props.updateUploadsStatus();
                     }}
-                    >
+                >
                     {t('label.contentManager.fileUpload.dontUpload')}
                 </Button>
             );
@@ -293,7 +293,7 @@ class UploadItem extends React.Component {
                             onClick={e => {
                                 this.rename(e);
                             }}
-                            >
+                        >
                             {t('label.contentManager.fileUpload.rename')}
                         </Button>
                     );
@@ -306,7 +306,7 @@ class UploadItem extends React.Component {
                             onClick={e => {
                                 this.showChangeNamePopover(e);
                             }}
-                            >
+                        >
                             {t('label.contentManager.fileUpload.rename')}
                         </Button>
                     );
@@ -319,7 +319,7 @@ class UploadItem extends React.Component {
                         onClick={() => {
                             this.doUploadAndStatusUpdate(true);
                         }}
-                        >
+                    >
                         {t('label.contentManager.fileUpload.replace')}
                     </Button>,
                     <Button
@@ -330,7 +330,7 @@ class UploadItem extends React.Component {
                             removeFile(index);
                             dispatch(removeUpload(index));
                         }}
-                        >
+                    >
                         {t('label.contentManager.fileUpload.dontUpload')}
                     </Button>
                 );
@@ -344,7 +344,7 @@ class UploadItem extends React.Component {
                             removeFile(index);
                             dispatch(removeUpload(index));
                         }}
-                        >
+                    >
                         {t('label.contentManager.fileUpload.dontUpload')}
                     </Button>,
                     <Button
@@ -354,7 +354,7 @@ class UploadItem extends React.Component {
                         onClick={() => {
                             this.doUploadAndStatusUpdate(false);
                         }}
-                        >
+                    >
                         {t('label.contentManager.fileUpload.retry')}
                     </Button>
                 );

@@ -71,7 +71,7 @@ class ContentBreadcrumbs extends React.Component {
                 selectableTypes={pickerConfiguration.selectableTypes}
                 selectedPaths={paths}
                 onSelectItem={(mode, path) => setUrl(mode, path)}
-                >
+            >
                 {({error, ...others}) => {
                     if (error) {
                         return null;

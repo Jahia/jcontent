@@ -147,7 +147,7 @@ class Option extends React.Component {
                 title={data.title}
                 onClick={this.handleClick}
                 onFocus={onFocus}
-                >
+            >
                 {data.icon !== null &&
                     <ListItemIcon>
                         <img src={data.icon + '.png'}/>

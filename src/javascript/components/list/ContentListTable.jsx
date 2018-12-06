@@ -353,7 +353,8 @@ class ContentListTable extends React.Component {
         let {classes, t} = this.props;
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
-                <Lock color="inherit" className={classNames({
+                <Lock color="inherit"
+                      className={classNames({
                     [classes.statusIconSelected]: isSelected,
                     [classes.statusIcon]: !isSelected
                 })}/>
@@ -365,7 +366,8 @@ class ContentListTable extends React.Component {
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                    <VirtualsiteIcon color="inherit" className={classNames({
+                    <VirtualsiteIcon color="inherit"
+                                     className={classNames({
                         [classes.statusIconSelected]: isSelected,
                         [classes.statusIcon]: !isSelected
                     })}/>
@@ -401,7 +403,7 @@ class ContentListTable extends React.Component {
                                     {contentNotFound ?
                                         <ContentNotFound columnData={columnData} translate={t}/> : _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData}
-                                                translate={t}/> : rows.map(n => {
+                                                      translate={t}/> : rows.map(n => {
                                                 let isSelected = _.find(selection, item => item.path === n.path) !== undefined;
                                                 let renderWip = this.renderWip(n, dxContext, isSelected);
                                                 let renderLock = this.renderLock(n, isSelected);
@@ -425,28 +427,29 @@ class ContentListTable extends React.Component {
                                                             contextualMenu.current.open(event);
                                                         }}
                                                         onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
-                                                        >
+                                                    >
                                                         <ContextualMenu ref={contextualMenu}
-                                                            actionKey="contextualMenuContent"
-                                                            context={{path: n.path}}/>
+                                                                        actionKey="contextualMenuContent"
+                                                                        context={{path: n.path}}/>
 
                                                         <TableCell padding="none"
-                                                            classes={{root: classes.publicationCell}}
-                                                            data-cm-role="table-content-list-cell-publication"
-                                                            >
+                                                                   classes={{root: classes.publicationCell}}
+                                                                   data-cm-role="table-content-list-cell-publication"
+                                                        >
                                                             <PublicationStatus node={n} publicationInfoWidth={400}/>
                                                         </TableCell>
                                                         <TableCell padding="none"
-                                                            classes={this.getCellClasses(classes, 'checkbox', isSelected)}
-                                                            >
+                                                                   classes={this.getCellClasses(classes, 'checkbox', isSelected)}
+                                                        >
                                                             <Checkbox checked={false}/>
                                                         </TableCell>
                                                         {columnData.map(column => {
                                                             if (column.id === 'name') {
                                                                 return (
-                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                        data-cm-role="table-content-list-cell-name"
-                                                                        >
+                                                                    <TableCell key={column.id}
+                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               data-cm-role="table-content-list-cell-name"
+                                                                    >
                                                                         <Typography noWrap color="inherit">
                                                                             <img src={icon}/>
                                                                             {n[column.id]}
@@ -456,25 +459,28 @@ class ContentListTable extends React.Component {
                                                             }
                                                             if (column.id === 'wip') {
                                                                 return (
-                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                        padding="none"
-                                                                        >{renderWip}
+                                                                    <TableCell key={column.id}
+                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               padding="none"
+                                                                    >{renderWip}
                                                                     </TableCell>
                                                                 );
                                                             }
                                                             if (column.id === 'lock') {
                                                                 return (
-                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                        padding="none"
-                                                                        >{renderLock}
+                                                                    <TableCell key={column.id}
+                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               padding="none"
+                                                                    >{renderLock}
                                                                     </TableCell>
                                                                 );
                                                             }
                                                             if (column.id === 'type') {
                                                                 return (
-                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                        data-cm-role="table-content-list-cell-name"
-                                                                        >
+                                                                    <TableCell key={column.id}
+                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               data-cm-role="table-content-list-cell-name"
+                                                                    >
                                                                         <Typography noWrap color="inherit">
                                                                             {n[column.id]}
                                                                         </Typography>
@@ -483,22 +489,24 @@ class ContentListTable extends React.Component {
                                                             }
                                                             if (column.id === 'lastModified') {
                                                                 return (
-                                                                    <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                        data-cm-role={'table-content-list-cell-' + column.id}
-                                                                        >
+                                                                    <TableCell key={column.id}
+                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               data-cm-role={'table-content-list-cell-' + column.id}
+                                                                    >
                                                                         <Typography noWrap color="inherit">
                                                                             <Moment format="ll"
-                                                                                locale={uiLang}
-                                                                                >{n[column.id]}
+                                                                                    locale={uiLang}
+                                                                            >{n[column.id]}
                                                                             </Moment>
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
                                                             }
                                                             return (
-                                                                <TableCell key={column.id} classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                    data-cm-role={'table-content-list-cell-' + column.id}
-                                                                    >
+                                                                <TableCell key={column.id}
+                                                                           classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                           data-cm-role={'table-content-list-cell-' + column.id}
+                                                                >
                                                                     <Typography noWrap color="inherit">
                                                                         {n[column.id]}
                                                                     </Typography>
@@ -510,7 +518,7 @@ class ContentListTable extends React.Component {
                                                             padding="none"
                                                             classes={this.getCellClasses(classes, 'actions', isSelected)}
                                                             data-cm-role="table-content-list-cell-"
-                                                            >
+                                                        >
                                                             <DisplayActions
                                                                 target="tableActions"
                                                                 context={{path: n.path}}

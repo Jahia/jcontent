@@ -5,9 +5,9 @@ import ActionButton from './ActionButton';
 import Sql2Input from './Sql2Input';
 import _ from 'lodash';
 import {compose} from 'react-apollo';
-import {withStyles, Grid} from '@material-ui/core';
+import {Grid, withStyles} from '@material-ui/core';
 import {connect} from 'react-redux';
-import {translate, Trans} from 'react-i18next';
+import {Trans, translate} from 'react-i18next';
 import {cmGoto} from '../redux/actions';
 
 const styles = theme => ({
@@ -49,33 +49,35 @@ class CmSearchBarSql2 extends React.Component {
 
         return (
             <SearchBarLayout t={t}
-                leftFooter={
-                    <DxContext.Consumer>{dxContext => (
-                        <Trans i18nKey="label.contentManager.search.sql2Prompt" components={[
-                            <a key="sql2Prompt"
-                                href={dxContext.config.sql2CheatSheetUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={classes.link}
-                                >univers
-                            </a>
-                        ]}
-                        />
-                    )}
-                    </DxContext.Consumer>}
-                rightFooter={
-                    <React.Fragment>
-                        {!params.sql2SearchFrom ?
-                            <ActionButton
-                                label="label.contentManager.search.normal"
-                                cmRole="search-type-normal"
-                                onClick={onNormalClick}
-                            /> :
-                            <div className={classes.replaceButtonStyle}/>
-                        }
-                    </React.Fragment>}
-                onSearch={() => this.onSearch(path, params)}
-                >
+                             leftFooter={
+                                 <DxContext.Consumer>{dxContext => (
+                                     <Trans i18nKey="label.contentManager.search.sql2Prompt"
+                                            components={[
+                                                <a key="sql2Prompt"
+                                                   href={dxContext.config.sql2CheatSheetUrl}
+                                                   target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   className={classes.link}
+                                                >
+                                                    univers
+                                                </a>
+                                            ]}
+                                     />
+                                 )}
+                                 </DxContext.Consumer>}
+                             rightFooter={
+                                 <React.Fragment>
+                                     {!params.sql2SearchFrom ?
+                                         <ActionButton
+                                             label="label.contentManager.search.normal"
+                                             cmRole="search-type-normal"
+                                             onClick={onNormalClick}
+                                         /> :
+                                         <div className={classes.replaceButtonStyle}/>
+                                     }
+                                 </React.Fragment>}
+                             onSearch={() => this.onSearch(path, params)}
+            >
                 <Grid container alignItems="center" classes={{container: classes.sql2Form}}>
                     SELECT * FROM [
                     <Sql2Input

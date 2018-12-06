@@ -102,7 +102,7 @@ class CmSearchBarNormal extends React.Component {
                     </React.Fragment>
                 }
                 onSearch={() => this.onSearch(path, params, this.state.contentType)}
-                >
+            >
                 <DxContext.Consumer className={classes.searchSize}>{dxContext => (
                     <ContentTypeSelect
                         siteKey={siteKey}

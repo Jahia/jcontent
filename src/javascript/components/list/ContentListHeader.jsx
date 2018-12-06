@@ -22,12 +22,12 @@ class ContentListHeader extends React.Component {
                                     key={column.id}
                                     className={classes[column.id + 'Cell']}
                                     sortDirection={orderBy === column.property ? order.toLowerCase() : false}
-                                    >
+                                >
                                     <TableSortLabel
                                         active={orderBy === column.property}
                                         direction={direction.toLowerCase()}
                                         onClick={() => setSort({order: direction, orderBy: column.property})}
-                                        >
+                                    >
                                         <Typography noWrap variant="subtitle2">{t(column.label)}</Typography>
                                     </TableSortLabel>
                                 </TableCell>
@@ -38,7 +38,7 @@ class ContentListHeader extends React.Component {
                                 key={column.id}
                                 padding="none"
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
-                                >
+                            >
                                 <Typography noWrap variant="subtitle2">{t(column.label)}</Typography>
                             </TableCell>
                         );

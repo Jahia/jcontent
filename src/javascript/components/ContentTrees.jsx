@@ -62,7 +62,7 @@ class ContentTree extends React.Component {
                 fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PredefinedFragments.displayName]}
                 onOpenItem={(path, open) => handleOpen(path, open)}
                 onSelectItem={path => handleSelect(path)}
-                >
+            >
                 {({handleSelect, ...others}) => (
                     <CmPickerViewMaterial {...others} rootLabel={rootLabel} customSelectedClass={itemAndRowSelected}/>
                 )}
@@ -113,22 +113,22 @@ class ContentTrees extends React.Component {
                                 this.componentsRefs.push(componentRef);
                                 return (
                                     <ContentTree key={contentTreeConfig.key}
-                                        ref={componentRef}
-                                        mode={mode}
-                                        siteKey={siteKey}
-                                        path={usedPath}
-                                        rootPath={rootPath + contentTreeConfig.rootPath}
-                                        openPaths={openPaths}
-                                        selectableTypes={contentTreeConfig.selectableTypes}
-                                        lang={lang}
-                                        user={user}
-                                        handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                        handleSelect={path => setPath(path)}
-                                        openableTypes={contentTreeConfig.openableTypes}
-                                        rootLabel={t(contentTreeConfig.rootLabel)}
-                                        setRefetch={setRefetch(contentTreeConfig.key)}
-                                        itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
-                                        onContextualMenu={onContextualMenu}
+                                                 ref={componentRef}
+                                                 mode={mode}
+                                                 siteKey={siteKey}
+                                                 path={usedPath}
+                                                 rootPath={rootPath + contentTreeConfig.rootPath}
+                                                 openPaths={openPaths}
+                                                 selectableTypes={contentTreeConfig.selectableTypes}
+                                                 lang={lang}
+                                                 user={user}
+                                                 handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                 handleSelect={path => setPath(path)}
+                                                 openableTypes={contentTreeConfig.openableTypes}
+                                                 rootLabel={t(contentTreeConfig.rootLabel)}
+                                                 setRefetch={setRefetch(contentTreeConfig.key)}
+                                                 itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
+                                                 onContextualMenu={onContextualMenu}
                                     />
                                 );
                             }) : null

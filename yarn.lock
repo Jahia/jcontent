@@ -2275,9 +2275,10 @@ eslint-config-xo@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/eslint-config-xo/-/eslint-config-xo-0.25.0.tgz#8e8bbdee06e3d75b47aeba03fb28d4a43cc8092f"
 
-eslint-loader@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-loader/-/eslint-loader-2.1.1.tgz#2a9251523652430bfdd643efdb0afc1a2a89546a"
+eslint-loader@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-loader/-/eslint-loader-2.1.0.tgz#61334c548aeb0b8e20ec3a552fb7a88c47261c6a"
+  integrity sha512-f4A/Yk7qF+HcFSz5Tck2QoKIwJVHlX0soJk5MkROYahb5uvspad5Ba60rrz4u/V2/MEj1dtp/uBi6LlLWVaY7Q==
   dependencies:
     loader-fs-cache "^1.0.0"
     loader-utils "^1.0.2"

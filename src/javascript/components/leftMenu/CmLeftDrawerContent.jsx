@@ -20,7 +20,9 @@ class CmLeftDrawerListItems extends React.Component {
         let {context, actionPath, classes, t} = this.props;
 
         return (
-            <DisplayActions target={context.menu} context={{...context.originalContext, parent: context}} render={actionProps => {
+            <DisplayActions target={context.menu}
+                            context={{...context.originalContext, parent: context}}
+                            render={actionProps => {
                 let actionContext = actionProps.context;
                 let icon = actionContext.buttonIcon;
                 actionContext.actionPath = actionPath + '/' + actionContext.key;

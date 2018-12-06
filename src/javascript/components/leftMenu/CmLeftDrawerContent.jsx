@@ -24,24 +24,22 @@ class CmLeftDrawerListItems extends React.Component {
                 let actionContext = actionProps.context;
                 let icon = actionContext.buttonIcon;
                 actionContext.actionPath = actionPath + '/' + actionContext.key;
-                icon = toIconComponent(icon, {fontSize: 'small', classes: {fontSizeSmall: classes.fontSizeSmall}});
+                icon = toIconComponent(icon, {fontSize: 'small'});
 
                 return (
                     <React.Fragment>
-                        <ListItem button
-                            selected={_.includes(_.split(actionPath, '/'), actionContext.actionKey)} onClick={event => actionContext.onClick(actionContext, event)}
-                                                                                                     >
+                        <ListItem button selected={_.includes(_.split(actionPath, '/'), actionContext.actionKey)} onClick={event => actionContext.onClick(actionContext, event)}>
                             <div className={classes.expand}>
                                 {actionContext.hasChildren ?
                                     ((actionContext.open || actionContext.selected) ?
-                                        <ExpandMore fontSize="small" classes={{root: classes.iconTree}}/> :
-                                        <ChevronRight fontSize="small" classes={{root: classes.iconTree}}/>
+                                        <ExpandMore fontSize="small"/> :
+                                        <ChevronRight fontSize="small"/>
                                     ) :
                                     null
                                 }
                             </div>
                             {icon}
-                            <Typography className={classes.textPadding}>
+                            <Typography>
                                 {t(actionContext.buttonLabel)}
                             </Typography>
                         </ListItem>
@@ -57,10 +55,8 @@ class CmLeftDrawerListItems extends React.Component {
 
 class CmLeftDrawerContent extends React.Component {
     render() {
-        let {classes} = this.props;
-
         return (
-            <List className={classes.root} classes={{root: classes.listRoot}}>
+            <List>
                 <CmLeftDrawerListItems {...this.props}/>
             </List>
         );

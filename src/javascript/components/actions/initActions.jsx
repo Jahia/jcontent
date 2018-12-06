@@ -112,7 +112,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['editPreviewBar', 'tableMenuActions', 'contextualMenuContentAction:5'],
+        target: ['editPreviewBar', 'tableMenuActions', 'contextualMenuContentAction:6'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
         menu: 'publishMenu'
     });
@@ -238,13 +238,13 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ['contentTreeMenuActions:5', 'previewFooterActions', 'tableMenuActions:5', 'contextualMenuContentAction'],
+        target: ['contentTreeMenuActions:5', 'previewFooterActions', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ['contentTreeMenuActions:5', 'previewFooterActions', 'tableMenuActions:5', 'contextualMenuContentAction'],
+        target: ['contentTreeMenuActions:5', 'previewFooterActions', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <Lock/>
     });

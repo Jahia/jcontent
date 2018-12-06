@@ -44,6 +44,27 @@ const styles = theme => ({
         backgroundColor: theme.palette.publicationStatus.markedForDeletion.main,
         fontFamily: 'Nunito Sans, sans-serif'
     },
+    mandatoryLanguageUnpublishable: {
+        // Use later: backgroundColor: theme.palette.publicationStatus.mandatoryLanguageUnpublishable.main,
+        backgroundColor: '#f6d62f',
+        fontFamily: 'Nunito Sans, sans-serif'
+    },
+    mandatoryLanguageValid: {
+        // Use later: backgroundColor: theme.palette.publicationStatus.mandatoryLanguageValid.main,
+        backgroundColor: '#f6d62f',
+        fontFamily: 'Nunito Sans, sans-serif'
+    },
+    conflict: {
+        // Use later: backgroundColor: theme.palette.publicationStatus.conflict.main,
+        backgroundColor: '#f6d62f',
+        color: 'black',
+        fontFamily: 'Nunito Sans, sans-serif'
+    },
+    unknown: {
+        // Use later: backgroundColor: theme.palette.publicationStatus.unknown.main,
+        backgroundColor: '#f6d62f',
+        fontFamily: 'Nunito Sans, sans-serif'
+    },
     noStatus: {
         backgroundColor: '#cecece',
         fontFamily: 'Nunito Sans, sans-serif'

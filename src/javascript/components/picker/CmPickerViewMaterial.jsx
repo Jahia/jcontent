@@ -126,7 +126,7 @@ class CmPickerViewMaterial extends React.Component {
                                 >
                                     <div
                                         style={{
-                                            paddingLeft: ((entry.depth > 1) ? ((entry.depth - 1) * 16) : 0),
+                                            paddingLeft: ((entry.depth > 0) ? ((entry.depth - 1) * 16) : 0),
                                             opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                         }}
                                     >

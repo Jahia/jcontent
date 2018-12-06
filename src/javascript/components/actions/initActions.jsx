@@ -112,7 +112,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['editPreviewBar', 'tableMenuActions'],
+        target: ['editPreviewBar', 'tableMenuActions', 'contextualMenuContentAction:5'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
         menu: 'publishMenu'
     });

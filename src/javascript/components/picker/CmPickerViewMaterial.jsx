@@ -1,5 +1,15 @@
 import React from 'react';
-import {Button, List, ListItem, ListItemIcon, ListItemText, Typography, withStyles, withTheme} from '@material-ui/core';
+import {
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+    withStyles,
+    withTheme
+} from '@material-ui/core';
+import {KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../utils';
@@ -22,29 +32,14 @@ let styles = theme => ({
         color: theme.palette.primary.contrastText + '!important'
     },
     listItem: {
-        height: (theme.spacing.unit * 5),
+        paddingLeft: theme.spacing.unit,
+        height: theme.spacing.unit * 6,
         whiteSpace: 'nowrap',
         color: theme.palette.text.secondary
     },
     listItemDeleted: {
         color: theme.palette.text.disabled,
         textDecoration: 'line-through'
-    },
-    listItemLabel: {
-        userSelect: 'none',
-        fontWeight: '300',
-        fontSize: '0.928rem',
-        padding: '0 !important',
-        '& h3': {
-            fontSize: '0.875rem',
-            color: '#5E6565',
-            fontWeight: '100'
-        }
-    },
-    listItemToggle: {
-        marginRight: '0px',
-        borderRadius: '0',
-        width: 'auto'
     },
     listItemNodeTypeIcon: {
         marginRight: '5px',
@@ -66,36 +61,10 @@ let styles = theme => ({
         color: theme.palette.text.contrastText
     },
     buttonContainer: {
-        '&:hover': {
-            backgroundColor: 'transparent'
-        },
-        minHeight: 20,
-        minWidth: 18
+        color: theme.palette.text.secondary
     },
-    triangle: {
-        width: 0,
-        height: 0,
-        padding: 0,
-        borderStyle: 'solid',
-        borderWidth: '4px 0 4px 6.5px',
-        borderColor: 'transparent transparent transparent #5c6164'
-    },
-    triangle_bottom: {
-        width: 0,
-        height: 0,
-        borderStyle: 'solid',
-        borderWidth: '6.5px 4px 0 4px',
-        borderColor: '#5c6164 transparent transparent transparent'
-    },
-    test: {
-        fontFamily: '"Nunito sans", sans-serif',
-        backgroundSize: '20px',
-        backgroundPosition: 'left 10px center',
-        backgroundRepeat: 'no-repeat',
-        fontWeight: 300,
-        fontSize: '0.928rem',
-        whiteSpace: 'nowrap',
-        color: theme.palette.text.contrastText
+    openedTreeEl: {
+        transform: 'rotate(90deg)'
     },
     treeEntry: {
         display: 'flex',
@@ -156,14 +125,13 @@ class CmPickerViewMaterial extends React.Component {
                                     onMouseLeave={this.hoverOff}
                                     >
                                     <div
-                                        className={classes.listItemToggle}
                                         style={{
-                                            paddingLeft: (entry.depth + 0) * 20,
+                                            paddingLeft: ((entry.depth > 1) ? ((entry.depth - 1) * 16) : 0),
                                             opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                         }}
                                         >
-                                        <Button
-                                            className={classes.buttonContainer}
+                                        <IconButton
+                                            className={entry.selected ? classes.buttonContainerSelected : classes.buttonContainer}
                                             disabled={!(entry.openable && entry.hasChildren)}
                                             data-jrm-role="picker-item-toggle"
                                             data-jrm-state={entry.open ? 'open' : 'closed'}
@@ -172,8 +140,9 @@ class CmPickerViewMaterial extends React.Component {
                                                 event.stopPropagation();
                                             }}
                                             >
-                                            <div className={entry.open ? (classes.triangle_bottom) : classes.triangle}/>
-                                        </Button>
+                                            <KeyboardArrowRight
+                                                className={entry.open ? classes.openedTreeEl : null}/>
+                                        </IconButton>
                                     </div>
                                     <span className={classes.treeEntry}
                                         onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
@@ -185,11 +154,6 @@ class CmPickerViewMaterial extends React.Component {
                                             disableTypography
                                             inset
                                             className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
-                                            classes={entry.selected ? {
-                                            root: classes.listItemLabel
-                                        } : {
-                                            root: classes.listItemLabel
-                                        }}
                                             primary={
                                                 <React.Fragment>
                                                     <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions"
@@ -200,9 +164,9 @@ class CmPickerViewMaterial extends React.Component {
                                                         {entry.depth > 0 ? entry.node.displayName : rootLabel}
                                                     </Typography>
                                                 </React.Fragment>
-                                        }
+                                            }
                                             data-jrm-role="picker-item-text"
-                                    />
+                                        />
                                     </span>
                                     {this.state.hover === entry.path && entry.depth > 0 &&
                                     <ListItemIcon className={classes.listItemActionIcon}>
@@ -289,6 +253,7 @@ CmPickerViewMaterial.propTypes = {
     pickerEntries: PropTypes.array.isRequired,
     onSelectItem: PropTypes.func,
     onOpenItem: PropTypes.func
+
 };
 
 CmPickerViewMaterial.defaultProps = {

@@ -89,12 +89,14 @@ class LanguageSwitcher extends React.Component {
                     }
 
                     let displayableLanguages = this.parseSiteLanguages(data);
-                    return <LanguageSwitcherDisplay
+                    return (
+                        <LanguageSwitcherDisplay
                             lang={lang}
                             dark={dark}
                             languages={displayableLanguages}
                             onSelectLanguage={lang => this.onSelectLanguage(lang)}
-                        />
+                            />
+);
                 }
             }
             </Query>

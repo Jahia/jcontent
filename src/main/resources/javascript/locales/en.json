@@ -16,7 +16,20 @@
                 "unPublished": "Unpublished by {{userName}} on {{timestamp}}",
                 "modified": "Modified by {{userName}} on {{timestamp}}",
                 "published": "Published by {{userName}} on {{timestamp}}",
-                "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}"
+                "mandatoryLanguageUnpublishable": {
+                    "description": "Content cannot be published in the current language because of a missing mandatory property",
+                    "label": "Missing mandatory property"
+                },
+                "mandatoryLanguageValid": {
+                    "description": "Content will be visible in live once published in all the mandatory languages.",
+                    "label": "Not publishable (publish mandatory languages first)"
+                },
+                "conflict": {
+                    "description": "Content with the same name already exists in live and won't be part of this publication",
+                    "label": "Not publishable (conflict)"
+                },
+                "markedForDeletion": "Marked for deletion by {{userName}} on {{timestamp}}",
+                "unknown": "Publication status unavailable"
             },
             "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",
             "link": {

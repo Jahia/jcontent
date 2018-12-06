@@ -32,6 +32,18 @@ const styles = theme => ({
     publicationInfoUnpublished: {
         borderLeft: '5px solid #cecece',
         padding: theme.spacing.unit
+    },
+    publicationInfoMandatoryLanguageUnpublishable: {
+        borderLeft: '5px solid #f6d62f',
+        padding: theme.spacing.unit
+    },
+    publicationInfoMandatoryLanguageValid: {
+        borderLeft: '5px solid #f6d62f',
+        padding: theme.spacing.unit
+    },
+    publicationInfoConflict: {
+        borderLeft: '5px solid #f6d62f',
+        padding: theme.spacing.unit
     }
 });
 
@@ -79,6 +91,24 @@ const component = ({selection, t, classes, uiLang}) => {
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: selectedItem.lastModifiedBy})}
                 &nbsp;
                     <Moment format="LLL" locale={uiLang}>{selectedItem.lastModified}</Moment>
+                </div>
+            );
+        case Constants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
+            return (
+                <div className={classes.publicationInfoMandatoryLanguageUnpublishable} title={t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}>
+                    {t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
+                </div>
+            );
+        case Constants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
+            return (
+                <div className={classes.publicationInfoMandatoryLanguageValid} title={t('label.contentManager.publicationStatus.mandatoryLanguageValid.description')}>
+                    {t('label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
+                </div>
+            );
+        case Constants.availablePublicationStatuses.CONFLICT:
+            return (
+                <div className={classes.publicationInfoConflict} title={t('label.contentManager.publicationStatus.conflict.description')}>
+                    {t('label.contentManager.publicationStatus.conflict.label')}
                 </div>
             );
         default:

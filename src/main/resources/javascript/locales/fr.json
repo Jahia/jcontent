@@ -16,7 +16,20 @@
                 "unPublished": "Dépublié par {{userName}} le {{timestamp}}",
                 "modified": "Modifié par {{userName}} le {{timestamp}}",
                 "published": "Publié par {{userName}} le {{timestamp}}",
-                "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}"
+                "mandatoryLanguageUnpublishable": {
+                    "description":"Le contenu ne peut pas être publié dans la langue courante car une propriété obligatoire n'est pas renseignée.",
+                    "label": "Propriété obligatoire manquante"
+                },
+                "mandatoryLanguageValid": {
+                    "description": "Le contenu ne sera visible en ligne qu'après publication dans toutes les langues obligatoires.",
+                    "label": "Non publiable (publiez les langues obligatoires avant)"
+                },
+                "conflict": {
+                    "description": "Un contenu avec le même nom existe déjà en mode live et ne fera pas partie de cette publication",
+                    "label": "Non publiable (conflit)"
+                },
+                "markedForDeletion": "Effacé par {{userName}} le {{timestamp}}",
+                "unknown": "Statut de publication indisponible"
             },
             "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",
             "link": {

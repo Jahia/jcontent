@@ -50,12 +50,12 @@ const styles = theme => ({
     previewDrawer: {
         height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
+        zIndex: -1,
         overflow: 'hidden'
     },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
         display: 'flex',
-        zIndex: -1,
         position: 'inherit',
         overflow: 'hidden'
     },

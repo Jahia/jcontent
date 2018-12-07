@@ -11,7 +11,11 @@ import {
     CM_SET_SORT,
     CM_SET_TREE,
     CM_SET_UILANGUAGE,
+<<<<<<< HEAD
     CM_ADD_PATHS_TO_REFETCH
+=======
+    CM_SET_AVAILABLE_LANGUAGES
+>>>>>>> BACKLOG-9168 - Created translate actions. Added reducer for available languages of current site.
 } from './actions';
 import * as _ from 'lodash';
 import {extractPaths} from '../utils.js';
@@ -40,6 +44,13 @@ let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayable
 let languageReducer = language => (state = language, action) => {
     if (action.language && action.type === CM_NAVIGATE) {
         return action.language;
+    }
+    return state;
+};
+
+let availableLanguagesReducer = (state = [], action) => {
+    if (action.availableLanguages && action.type === CM_SET_AVAILABLE_LANGUAGES) {
+        return action.availableLanguages;
     }
     return state;
 };
@@ -184,4 +195,4 @@ let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'no
     return state;
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, openPathsReducer, previewStateReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, paginationReducer, sortReducer, pathsToRefetchReducer};
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, openPathsReducer, previewStateReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, paginationReducer, sortReducer, pathsToRefetchReducer, availableLanguagesReducer};

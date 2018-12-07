@@ -50,6 +50,11 @@ const styles = theme => ({
     previewDrawer: {
         height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
+        overflow: 'hidden'
+    },
+    previewDrawerClosed: {
+        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
+        display: 'flex',
         zIndex: -1,
         overflow: 'hidden'
     },
@@ -153,7 +158,7 @@ class ContentLayout extends React.Component {
                     </main>
                     <Drawer
                         data-cm-role="preview-drawer"
-                        className={classes.previewDrawer}
+                        className={previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawer : classes.previewDrawerClosed}
                         variant="persistent"
                         anchor="right"
                         open={previewState >= CM_DRAWER_STATES.SHOW}

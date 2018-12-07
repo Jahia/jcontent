@@ -63,7 +63,10 @@ const APP_TABLE_CELLS = 2;
 
 const styles = theme => ({
 
-    tableWrapper: {},
+    tableWrapper: {
+        height: 'calc(100% - 140px)',
+        overflow: 'auto'
+    },
     row: {
         '&&:nth-of-type(odd)': {
             backgroundColor: 'rgba(128, 128, 128, 0.05)'

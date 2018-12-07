@@ -28,7 +28,7 @@ class ContentListHeader extends React.Component {
                                         direction={direction.toLowerCase()}
                                         onClick={() => setSort({order: direction, orderBy: column.property})}
                                     >
-                                        <Typography noWrap variant="subtitle2">{t(column.label)}</Typography>
+                                        <Typography noWrap variant="subtitle2" color="textPrimary">{t(column.label)}</Typography>
                                     </TableSortLabel>
                                 </TableCell>
                             );
@@ -39,7 +39,7 @@ class ContentListHeader extends React.Component {
                                 padding="none"
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                             >
-                                <Typography noWrap variant="subtitle2">{t(column.label)}</Typography>
+                                <Typography noWrap variant="subtitle2" color="textPrimary">{t(column.label)}</Typography>
                             </TableCell>
                         );
                     }, this)}

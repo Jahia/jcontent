@@ -223,7 +223,7 @@ class ContentListTable extends React.Component {
                                                         >
                                                             <PublicationStatus node={n} publicationInfoWidth={400}/>
                                                         </TableCell>
-                                                        <TableCell padding="none"
+                                                        <TableCell padding="checkbox"
                                                                    classes={this.getCellClasses(classes, 'checkbox', isSelected)}
                                                         >
                                                             <Checkbox checked={false}/>

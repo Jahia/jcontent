@@ -12,7 +12,7 @@ class ContentListHeader extends React.Component {
             <TableHead>
                 <TableRow>
                     <TableCell padding="none"/>
-                    <TableCell padding="none">
+                    <TableCell padding="checkbox">
                         <Checkbox checked={false}/>
                     </TableCell>
                     {columnData.map(column => {

@@ -32,7 +32,6 @@ const styles = theme => ({
     childItem: {
         background: theme.palette.primary.main,
         color: theme.palette.text.contrastText,
-        fontFamily: 'Nunito sans, sans-serif',
         padding: '1px 10px 4px 5px',
         fontWeight: 500,
         whiteSpace: 'nowrap',
@@ -44,7 +43,6 @@ const styles = theme => ({
     },
     childOff: {
         color: theme.palette.text.secondary,
-        fontFamily: 'Nunito sans, sans-serif',
         fontWeight: 500,
         padding: '1px 10px 4px 5px',
         whiteSpace: 'nowrap',
@@ -112,7 +110,6 @@ const styles = theme => ({
         color: theme.palette.text.secondary,
         fontSize: '9px',
         textAlign: 'center',
-        fontFamily: 'Nunito Sans, sans-serif',
         textTransform: 'uppercase',
         fontWeight: 400,
         width: '100%',
@@ -123,7 +120,6 @@ const styles = theme => ({
         color: theme.palette.text.contrastText,
         fontSize: '9px',
         textAlign: 'center',
-        fontFamily: 'Nunito Sans, sans-serif',
         textTransform: 'uppercase',
         fontWeight: 400,
         width: '100%',
@@ -131,7 +127,6 @@ const styles = theme => ({
     },
     typoTitle: {
         fontSize: '25px',
-        fontFamily: 'Nunito sans, sans-serif',
         lineHeight: '32px',
         fontWeight: '100',
         color: theme.palette.text.secondary,

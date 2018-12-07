@@ -27,6 +27,7 @@ import unlockAction from './unlockAction';
 import clearAllLocksAction from './clearAllLocksAction';
 import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
+import translateAction from "./translateAction";
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -77,10 +78,13 @@ function initActions(actionsRegistry) {
         target: ['createMenuActions:4', 'contentTreeMenuActions:4'],
         contentType: 'jnt:file'
     });
-    actionsRegistry.add('translate', {
-        buttonIcon: <Edit/>,
+    actionsRegistry.add('translateMenu', menuWithRequirementsAction, {
         buttonLabel: 'label.contentManager.contentPreview.translate',
-        target: []
+        target: ['contextualMenuContentAction:4.5', 'tableMenuActions:4.5', 'contentTreeMenuActions:3'],
+        menu: 'translateMenu'
+    });
+    actionsRegistry.add('translateAction', translateAction, {
+        target: ['translateMenu']
     });
     actionsRegistry.add('tableMenuActions', menuAction, {
         buttonIcon: <DotsVertical/>,

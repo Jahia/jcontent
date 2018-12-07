@@ -13,29 +13,22 @@ const styles = theme => ({
         paddingTop: '10px',
         display: 'inline-block',
         bottom: '5px',
-        fontFamily: 'Nunito Sans, sans-serif',
-        color: '#eaeaea',
+        color: theme.palette.text.secondary,
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit
     },
     infoSearchPathValue: {
-        fontFamily: 'Nunito Sans, sans-serif',
-        color: '#c5c5c5'
+        color: theme.palette.text.primary
     },
     searchClear: {
         maxHeight: 25,
         minHeight: 25,
-        marginLeft: '18',
-        padding: '4px 7px',
-        fontFamily: 'Nunito Sans, sans-serif',
-        color: '#eaeaea',
-        fontWeight: 600,
-        backgroundColor: '#007bc0'
+        marginLeft: '18'
     },
     searchIcon: {
         marginLeft: theme.spacing.unit,
         fontSize: '20',
-        color: '#d4d9dd'
+        color: theme.palette.text.disabled
     },
     container: {
         display: 'flex',

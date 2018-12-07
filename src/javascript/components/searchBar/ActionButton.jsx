@@ -5,18 +5,16 @@ import {compose} from 'react-apollo';
 
 const styles = () => ({
     actionButton: {
-        margin: 0,
-        padding: 0,
-        minHeight: 'unset'
+        marginTop: 0
     }
 });
 
 class ActionButton extends React.Component {
     render() {
-        let {label, variant, onClick, classes, t, cmRole} = this.props;
+        let {label, onClick, classes, t, cmRole} = this.props;
 
         return (
-            <Button variant={variant} size="small" classes={{root: classes.actionButton}} data-cm-role={cmRole} onClick={onClick}>
+            <Button variant="contained" size="small" classes={{root: classes.actionButton}} data-cm-role={cmRole} onClick={onClick}>
                 {t(label)}
             </Button>
         );

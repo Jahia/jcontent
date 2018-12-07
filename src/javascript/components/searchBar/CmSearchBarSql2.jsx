@@ -12,9 +12,12 @@ import {cmGoto} from '../redux/actions';
 
 const styles = theme => ({
     sql2Form: {
+        height: 48,
         padding: theme.spacing.unit,
-        color: theme.palette.background.default,
-        fontFamily: 'monospace'
+        paddingLeft: theme.spacing.unit * 2,
+        color: theme.palette.text.secondary,
+        fontFamily: 'monospace',
+        backgroundColor: theme.palette.background.default
     },
     link: {
         color: 'inherit'

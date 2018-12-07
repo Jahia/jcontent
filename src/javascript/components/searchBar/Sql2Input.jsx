@@ -1,11 +1,15 @@
 import React from 'react';
 import {withStyles, Input} from '@material-ui/core';
 
-const styles = () => ({
+const styles = theme => ({
     sql2Input: {
         margin: 0,
         padding: 0,
         width: 100,
+        color: theme.palette.secondary.primary,
+        backgroundColor: theme.palette.background.default,
+        border: 0,
+        boxShadow: 'none',
         fontFamily: 'monospace'
     }
 });

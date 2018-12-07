@@ -8,23 +8,16 @@ import CmSearchBar from './searchBar/CmSearchBar';
 
 const styles = theme => ({
     root: {
-        minHeight: theme.contentManager.topBarHeight + 'px',
-        maxHeight: theme.contentManager.topBarHeight + 'px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
     },
     typoTitle: {
-        fontSize: '25px',
-        fontFamily: 'Nunito sans, sans-serif',
-        lineHeight: '32px',
-        fontWeight: '100',
-        color: theme.palette.background.paper,
+        color: theme.palette.text.contrastText,
         width: '260px',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        marginLeft: '5px'
+        overflow: 'hidden'
     },
     siteSwitcher: {
         '& button': {
@@ -45,7 +38,8 @@ const styles = theme => ({
         marginLeft: 'auto',
         width: '80%'
     },
-    topBarwidth: {
+    topBar: {
+        paddingTop: theme.spacing.unit * 4,
         width: 'min-content',
         alignSelf: 'flex-end'
     },
@@ -65,7 +59,7 @@ class CMTopBar extends React.Component {
                         <div className={classes.siteSwitcher}>
                             <SiteSwitcher dark={false}/>
                         </div>
-                        <Typography className={classes.typoTitle} data-cm-role="cm-mode-title">
+                        <Typography variant="h5" className={classes.typoTitle} data-cm-role="cm-mode-title">
                             {modeTitle}
                         </Typography>
                         <div className={classes.languageSwitcher}>
@@ -73,7 +67,7 @@ class CMTopBar extends React.Component {
                         </div>
                     </Grid>
                     <Grid item xs={1}/>
-                    <Grid item xs={9} className={classes.topBarwidth}>
+                    <Grid item xs={9} className={classes.topBar}>
                         <CmSearchBar/>
                     </Grid>
                 </Grid>

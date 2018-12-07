@@ -12,21 +12,16 @@ const styles = () => ({
     root: {
         width: 'auto',
         minWidth: '100px',
-        height: 34
+        height: 48
     },
     inputDetails: {
-        borderBottom: 'none!important',
-        boxShadow: 'none!important'
-    },
-    inputPadding: {
-        padding: '0!important'
+        border: 'none!important'
     },
     selectDetails: {
-        borderBottom: 'none!important',
-        boxShadow: 'none!important'
+        border: 'none!important'
     },
     inputSize: {
-        height: 34,
+        height: 48,
         padding: '0!important'
     },
     colorText: {
@@ -43,8 +38,9 @@ const customStyles = {
     control: () => ({
         display: 'flex',
         color: '#fff',
+        border: 'none',
         alignItems: 'center',
-        height: 34,
+        height: 48,
         width: '155px',
         background: '#007bc0',
         '&:hover': {
@@ -65,14 +61,14 @@ const customStyles = {
         maxWidth: '155px'
     }),
     menu: () => ({
-        backgroundColor: '#ecebeb',
+        backgroundColor: '#fff',
         color: '#3a3c3f!important',
         // BoxShadow: "1px 2px 6px #888888", // should be changed as material-ui
         position: 'absolute',
         left: 0,
         top: 'calc(100% + 1px)',
         width: '100%',
-        zIndex: 2,
+        zIndex: 12,
         maxHeight: ITEM_HEIGHT * 4.5
     }),
     dropdownIndicator: base => ({
@@ -93,7 +89,7 @@ const customStyles = {
         maxHeight: ITEM_HEIGHT * 4.5,
         boxShadow: '1px 3px 4px 0px rgba(38, 38, 38, 0.4)',
         display: 'inline-block',
-        background: '#ecebeb',
+        background: '#fff',
         overflowY: 'auto'
     }),
     input: () => ({

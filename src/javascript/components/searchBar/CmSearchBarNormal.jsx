@@ -13,14 +13,13 @@ import {connect} from 'react-redux';
 
 const styles = () => ({
     searchSize: {
-        height: '34px',
-        maxHeight: '34px',
-        minHeight: '34px',
         flexGrow: 10,
-        boxShadow: 'none!important'
+        boxShadow: 'none!important',
+        height: 48,
+        border: 0
     },
     inputShadow: {
-        boxShadow: 'none'
+        height: 34
     },
     replaceButtonStyle: {
         minHeight: 32,

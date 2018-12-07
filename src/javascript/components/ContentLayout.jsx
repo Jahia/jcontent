@@ -55,6 +55,7 @@ const styles = theme => ({
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
         display: 'flex',
+        zIndex: -1,
         position: 'inherit',
         overflow: 'hidden'
     },

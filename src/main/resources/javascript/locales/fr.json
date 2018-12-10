@@ -33,7 +33,8 @@
             },
             "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",
             "link": {
-                "academy": "Besoin d'aide avec le Gestionnaire de contenu et média ? Consultez <0>l'Academy</0>."
+                "academy": "Besoin d'aide avec le Gestionnaire de contenu et média ?",
+                "visitOurAcademy": "Consultez l'Academy"
             },
             "fileUpload": {
                 "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",

@@ -85,6 +85,22 @@ const styles = theme => ({
 const GRID_SIZE = 12;
 
 class ContentLayout extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            displaySnackbar: true
+        };
+        this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
+    }
+
+    handleSnackbarClose(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({displaySnackbar: false});
+    }
+
     setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
     }
@@ -98,36 +114,43 @@ class ContentLayout extends React.Component {
     }
 
     render() {
-        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState} = this.props;
+        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, t} = this.props;
+        const {displaySnackbar} = this.state;
         let contextualMenu = React.createRef();
         return (
             <React.Fragment>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left'
-                    }}
-                    open="true"
-                    autoHideDuration={6000}
-                    ContentProps={{
-                        'aria-describedby': 'message-id'
-                    }}
-                    message={<Trans
-                        i18nKey="label.contentManager.link.academy"
-                    />}
-                    action={[
-                        <Button key="undo" variant="contained" color="default" size="small">
-                            Go to Academy
-                        </Button>,
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                        >
-                            <Close/>
-                        </IconButton>
-                    ]}
+                <Snackbar anchorOrigin={{
+                              vertical: 'bottom',
+                              horizontal: 'left'
+                          }}
+                          autoHideDuration={6000}
+                          ContentProps={{
+                              'aria-describedby': 'message-id'
+                          }}
+                          message={<span id="message-id"><Trans i18nKey="label.contentManager.link.academy"/></span>}
+                          open={displaySnackbar}
+                          action={[
+                              <Button key="undo"
+                                      variant="contained"
+                                      color="default"
+                                      component="a"
+                                      href={contextJsParameters.config.academyLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      size="small"
+                              >
+                                  {t('label.contentManager.link.visitOurAcademy')}
+                              </Button>,
+                              <IconButton key="close"
+                                          aria-label="Close"
+                                          color="inherit"
+                                          className={classes.close}
+                                          onClick={this.handleSnackbarClose}
+                              >
+                                  <Close/>
+                              </IconButton>
+                          ]}
+                          onClose={this.handleSnackbarClose}
                 />
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
@@ -135,35 +158,31 @@ class ContentLayout extends React.Component {
                     </Grid>
                 </Grid>
                 <div className={classes.appFrame}>
-                    <Drawer
-                        className={classes.treeDrawer}
-                        variant="persistent"
-                        anchor="left"
-                        open={treeState >= CM_DRAWER_STATES.SHOW}
-                        classes={{paper: classes.treeDrawerPaper}}
+                    <Drawer className={classes.treeDrawer}
+                            variant="persistent"
+                            anchor="left"
+                            open={treeState >= CM_DRAWER_STATES.SHOW}
+                            classes={{paper: classes.treeDrawerPaper}}
                     >
-                        <ContentTrees
-                            isOpen={treeState >= CM_DRAWER_STATES.SHOW}
-                            setRefetch={this.setTreeRefetcher}
+                        <ContentTrees isOpen={treeState >= CM_DRAWER_STATES.SHOW}
+                                      setRefetch={this.setTreeRefetcher}
                         />
                     </Drawer>
                     <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                    <main
-                        className={classNames(classes.content, {
-                            [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
-                            [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
-                        })}
-                        onContextMenu={event => contextualMenu.current.open(event)}
+                    <main className={classNames(classes.content, {
+                        [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
+                        [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
+                    })}
+                          onContextMenu={event => contextualMenu.current.open(event)}
                     >
                         <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
                             {({rows, contentNotFound, totalCount}) => {
                                 return (
-                                    <Paper
-                                        className={classes.paper}
-                                    >{mode === Constants.mode.FILES && filesMode === 'grid' ?
-                                        <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
-                                        <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
-                                    }
+                                    <Paper className={classes.paper}>
+                                        {mode === Constants.mode.FILES && filesMode === 'grid' ?
+                                            <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
+                                            <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
+                                        }
                                     </Paper>
                                 );
                             }}

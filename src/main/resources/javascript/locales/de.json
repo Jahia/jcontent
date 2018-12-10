@@ -33,7 +33,8 @@
             },
             "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
             "link": {
-                "academy": "Benötigen Sie Hilfe zum Content- und Medien-Manager? Besuchen Sie unsere <0>Academy</0>."
+                "academy": "Benötigen Sie Hilfe zum Content- und Medien-Manager?",
+                "visitOurAcademy": "Besuchen Sie unsere Academy"
             },
             "fileUpload": {
                 "selectMessage": "Datei von meinem Computer wählen",

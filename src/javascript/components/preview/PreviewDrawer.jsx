@@ -71,9 +71,7 @@ class PreviewDrawer extends React.Component {
                         <Typography gutterBottom variant="h5" component="h2">
                             {selectedItem.displayName ? selectedItem.displayName : selectedItem.name}
                         </Typography>
-                        <Typography component="p">
-                            <PublicationInfo/>
-                        </Typography>
+                        <PublicationInfo/>
                     </CardContent>
                     <CardActions>
                         <DisplayActions target="previewFooterActions" context={{path: selectedItem.path}} render={iconButtonRenderer({color: 'primary'})}/>

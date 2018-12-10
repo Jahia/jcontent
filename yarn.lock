@@ -706,12 +706,12 @@
     lodash "^4.17.10"
     zen-observable "^0.8.8"
 
-"@jahia/ds-mui-theme@^1.0.0-beta.20181205100200":
-  version "1.0.0-beta.20181207133947"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20181207133947.tgz#ff9f115894d2deb43ae670382b2c34aa085264c3"
-  integrity sha512-MTuNi1c5phEHWT/mSsz3XYu68VqJPiGAlSdR6Ih0Unpu762c7RiFXnWI0d2p+Bafas/WpJjLfZ6rdJZ1G9Uceg==
+"@jahia/ds-mui-theme@^1.0.0-beta.20181210101557":
+  version "1.0.0-beta.20181210101557"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20181210101557.tgz#d1cb0ca5c59b7a70f4240308f990b5e98adfd017"
+  integrity sha512-7VmKJhSXlGdakAELUCb7f9ZkPK/+ZVm8uXIThA3qqgK2HGDqlr7hQfV28iuQCLqTTQ2+XQEaMRUGvGXNCIIYJQ==
   dependencies:
-    "@material-ui/core" "^3.2.0"
+    "@material-ui/core" "^3.6.2"
     lodash "^4.17.10"
 
 "@jahia/i18next@^1.0.0-beta.20180628145923":
@@ -722,11 +722,21 @@
     i18next-chained-backend "^0.1.2"
     i18next-xhr-backend "^1.5.1"
 
-"@jahia/icons@^1.0.0-beta.20181010153040", "@jahia/icons@^1.0.0-beta.20181011112119":
+"@jahia/icons@^1.0.0-beta.20181011112119":
   version "1.0.0-beta.20181126100310"
   resolved "http://npm.int.jahia.com:4873/@jahia%2ficons/-/icons-1.0.0-beta.20181126100310.tgz#33aac2501539a64c0ebfb916ab2e854daaadde3f"
   dependencies:
     "@material-ui/core" "^3.2.0"
+    "@material-ui/icons" "^3.0.1"
+    react "^16.4.1"
+    recompose "^0.27.1"
+
+"@jahia/icons@^1.0.0-beta.20181210101557":
+  version "1.0.0-beta.20181210101557"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2ficons/-/icons-1.0.0-beta.20181210101557.tgz#eb3e781345a28ab794d21ffb099aad8e30b7cec4"
+  integrity sha512-+tqTmkqNvqF/gjM+H1GI2BUrfb6oJ4xPaAb4mdYPCE4L4Snz8Z6vAJPSg0M0sedVdPR+ec/0h+1Fag2kgi3nzA==
+  dependencies:
+    "@material-ui/core" "^3.6.2"
     "@material-ui/icons" "^3.0.1"
     react "^16.4.1"
     recompose "^0.27.1"
@@ -742,12 +752,13 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20181127161612":
-  version "1.0.0-beta.20181127161612"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181127161612.tgz#827e63f2220730318c5c9fe5534abd4e5bdce5a1"
+"@jahia/react-material@^1.0.0-beta.20181210101559":
+  version "1.0.0-beta.20181210101559"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181210101559.tgz#3904e9f0b82d9238511fd8dbf5125af93aa06c25"
+  integrity sha512-LSFsFwxDBZLuyaeXX3qVqTAVmig1tK2ODE6VR0tV9EaJZFyBkhn4t+76YM3TxczaQmJwIWLPA+Wp4uzh/rItBQ==
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20181011112119"
-    "@material-ui/core" "^3.2.0"
+    "@material-ui/core" "^3.6.2"
     "@material-ui/icons" "^3.0.1"
     lodash "^4.17.10"
     prop-types "^15.6.1"
@@ -771,6 +782,39 @@
     deepmerge "^2.0.1"
     dom-helpers "^3.2.1"
     hoist-non-react-statics "^3.0.0"
+    is-plain-object "^2.0.4"
+    jss "^9.3.3"
+    jss-camel-case "^6.0.0"
+    jss-default-unit "^8.0.2"
+    jss-global "^3.0.0"
+    jss-nested "^6.0.1"
+    jss-props-sort "^6.0.0"
+    jss-vendor-prefixer "^7.0.0"
+    keycode "^2.1.9"
+    normalize-scroll-left "^0.1.2"
+    popper.js "^1.14.1"
+    prop-types "^15.6.0"
+    react-event-listener "^0.6.2"
+    react-transition-group "^2.2.1"
+    recompose "0.28.0 - 0.30.0"
+    warning "^4.0.1"
+
+"@material-ui/core@^3.6.2":
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-3.6.2.tgz#b1e300ebd717909ffc4c7fd456f48e568156091a"
+  integrity sha512-ONWU8ZCrhzzmeh6QXbYwicZxD0wSxj32UOSmPHXReZs4RTaeXOtLVloIxh7810fIR/GkfGXa/UJIK/woSHW4/Q==
+  dependencies:
+    "@babel/runtime" "7.1.2"
+    "@material-ui/utils" "^3.0.0-alpha.0"
+    "@types/jss" "^9.5.6"
+    "@types/react-transition-group" "^2.0.8"
+    brcast "^3.0.1"
+    classnames "^2.2.5"
+    csstype "^2.5.2"
+    debounce "^1.1.0"
+    deepmerge "^3.0.0"
+    dom-helpers "^3.2.1"
+    hoist-non-react-statics "^3.2.1"
     is-plain-object "^2.0.4"
     jss "^9.3.3"
     jss-camel-case "^6.0.0"
@@ -2065,6 +2109,11 @@ deepmerge@^2.0.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
 
+deepmerge@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-3.0.0.tgz#ca7903b34bfa1f8c2eab6779280775a411bfc6ba"
+  integrity sha512-a8z8bkgHsAML+uHLqmMS83HHlpy3PvZOOuiTQqaa3wu8ZVg3h0hqHk6aCsGdOnZV2XMM/FRimNGjUh0KCcmHBw==
+
 define-properties@^1.1.2:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.1.3.tgz#cf88da6cbee26fe6db7094f61d870cbd84cee9f1"
@@ -2973,6 +3022,13 @@ hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
 hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.1.0.tgz#42414ccdfff019cd2168168be998c7b3bd5245c0"
+  dependencies:
+    react-is "^16.3.2"
+
+hoist-non-react-statics@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.2.1.tgz#c09c0555c84b38a7ede6912b61efddafd6e75e1e"
+  integrity sha512-TFsu3TV3YLY+zFTZDrN8L2DTFanObwmBLpWvJs1qfUuEQ5bTAdFcwfx2T/bsCXfM9QHSLvjfP+nihEl0yvozxw==
   dependencies:
     react-is "^16.3.2"
 

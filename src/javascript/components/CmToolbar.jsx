@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, IconButton, Toolbar, withStyles} from '@material-ui/core';
+import {AppBar, Button, IconButton, Toolbar, withStyles} from '@material-ui/core';
 import {Close, Refresh} from '@material-ui/icons';
 import {ChevronRight} from '@material-ui/icons';
 import {DisplayActions} from '@jahia/react-material';
@@ -17,18 +17,9 @@ import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher
 import CmSearchControlBar from './searchBar/CmSearchControlBar';
 
 const styles = theme => ({
-    toolbar: {
-        color: theme.palette.text.secondary,
-        height: theme.contentManager.toolbarHeight + 'px',
-        maxHeight: theme.contentManager.toolbarHeight + 'px'
-    },
     grow: {
         flex: 1,
         paddingLeft: theme.spacing.unit
-    },
-    guttersToolbar: {
-        paddingLeft: (theme.spacing.unit) + '!important',
-        paddingRight: (theme.spacing.unit * 3) + '!important'
     }
 });
 
@@ -72,37 +63,43 @@ class CmToolbar extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
         return (
-            <Toolbar variant="dense" classes={{root: classes.toolbar, gutters: classes.guttersToolbar}}>
-                {treeState !== CM_DRAWER_STATES.SHOW &&
-                <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
-                    <ChevronRight/>
-                </IconButton>
+            <AppBar position="relative">
+                <Toolbar variant="dense">
+                    {treeState !== CM_DRAWER_STATES.SHOW &&
+                    <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
+                        <ChevronRight/>
+                    </IconButton>
+                        }
+                    <div className={classes.grow}>
+                        {this.isSearching() ?
+                            <CmSearchControlBar/> :
+                            <ContentBreadcrumbs mode={this.props.mode}/>
+                        }
+                    </div>
+                    {mode === Constants.mode.FILES &&
+                    <React.Fragment>
+                        <FilesGridSizeSelector/>
+                        <FilesGridModeSelector/>
+                    </React.Fragment>
                     }
-                <div className={classes.grow}>
-                    {this.isSearching() ?
-                        <CmSearchControlBar/> :
-                        <ContentBreadcrumbs mode={this.props.mode}/>
+                    {this.isBrowsing() && !this.isRootNode() &&
+                    <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'}, true)}/>
                     }
-                </div>
-                {mode === Constants.mode.FILES &&
-                <React.Fragment>
-                    <FilesGridSizeSelector/>
-                    <FilesGridModeSelector/>
-                </React.Fragment>
-                }
-                {this.isBrowsing() && !this.isRootNode() &&
-                <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'}, true)}/>
-                }
-                <IconButton color="inherit" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                    <Refresh/>
-                </IconButton>
-                {this.isSearching() &&
-                <Button data-cm-role="search-clear" color="inherit" variant="text" onClick={() => clearSearch(params)}>
-                    <Close className={classes.searchClearIcon}/>
-                    {t('label.contentManager.search.clear')}
-                </Button>
-                }
-            </Toolbar>
+                    <IconButton color="inherit" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                        <Refresh/>
+                    </IconButton>
+                    {this.isSearching() &&
+                    <Button data-cm-role="search-clear"
+                            color="inherit"
+                            variant="text"
+                            onClick={() => clearSearch(params)}
+                    >
+                        <Close/>
+                        {t('label.contentManager.search.clear')}
+                    </Button>
+                    }
+                </Toolbar>
+            </AppBar>
         );
     }
 }

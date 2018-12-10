@@ -11,7 +11,10 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        width: 6
+        width: theme.spacing.unit,
+        '&:hover': {
+            width: theme.spacing.unit * 2
+        }
     },
     statusRoot: {
         zIndex: 1,
@@ -147,7 +150,7 @@ class PublicationStatusComponent extends Component {
                              data-cm-value={node.publicationStatus}
                         >
 
-                            <Typography color="inherit" variant="caption">
+                            <Typography color="inherit" variant="overline">
                                 <InfoOutlined/>
                                 { publicationStatus.geti18nDetailsMessage(node, t, i18n.language) }
                             </Typography>

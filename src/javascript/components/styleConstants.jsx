@@ -5,7 +5,8 @@ const styleConstants = {
     screenMargin: 38,
     leftNavigationWidth: 70,
     leftNavigationDrawerWidth: 289,
-    toolbarHeight: 56
+    toolbarHeight: 48,
+    paginationHeight: 56
 };
 
 export default styleConstants;

@@ -17,29 +17,13 @@ const styles = theme => ({
         display: 'flex',
         maxHeight: 300,
         cursor: 'pointer',
-        position: 'relative',
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
-            width: 20,
-            marginLeft: '6px',
-            marginRight: '23px'
-        },
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
-            display: 'block'
-        }
+        position: 'relative'
     },
     cardMedium: {
         display: 'flex',
         maxHeight: 150,
         cursor: 'pointer',
-        position: 'relative',
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
-            width: 20,
-            marginLeft: '6px',
-            marginRight: '30px'
-        },
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
-            display: 'block'
-        }
+        position: 'relative'
     },
     cardVertical: {
         display: 'flex',
@@ -47,15 +31,7 @@ const styles = theme => ({
         maxHeight: 200,
         minHeight: 200,
         cursor: 'pointer',
-        position: 'relative',
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
-            width: 20,
-            marginLeft: '6px',
-            marginRight: '30px'
-        },
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
-            display: 'block'
-        }
+        position: 'relative'
     },
     details: {
         display: 'flex',
@@ -64,13 +40,7 @@ const styles = theme => ({
     },
     verticalDetails: {
         display: 'flex',
-        position: 'relative',
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON': {
-            width: 20
-        },
-        '&:hover > div.CM_PUBLICATION_STATUS > div.CM_PUBLICATION_INFO_BUTTON .CM_PUBLICATION_INFO_ICON': {
-            display: 'block'
-        }
+        position: 'relative'
     },
     content: {
         flex: '10'

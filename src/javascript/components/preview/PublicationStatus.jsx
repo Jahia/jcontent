@@ -55,7 +55,10 @@ const component = ({selection, t, classes, uiLang}) => {
     // Special handling for marked for deletion content
     if (Constants.availablePublicationStatuses.MARKED_FOR_DELETION === selectedItem.publicationStatus || isMarkedForDeletion(selectedItem)) {
         return (
-            <Typography component="span" className={classes.publicationInfoMarkedForDeletion}>
+            <Typography color="textSecondary"
+                        component="span"
+                        className={classes.publicationInfoMarkedForDeletion}
+            >
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selectedItem.deletedBy})}
             &nbsp;
                 <Moment format="LLL" locale={uiLang}>{selectedItem.deleted}</Moment>
@@ -65,7 +68,8 @@ const component = ({selection, t, classes, uiLang}) => {
     switch (selectedItem.publicationStatus) {
         case Constants.availablePublicationStatuses.MODIFIED:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoModified}
                 >
                     {t('label.contentManager.contentPreview.modifiedBy', {userName: selectedItem.lastModifiedBy})}
@@ -75,7 +79,8 @@ const component = ({selection, t, classes, uiLang}) => {
             );
         case Constants.availablePublicationStatuses.PUBLISHED:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoPublished}
                 >
                     {t('label.contentManager.contentPreview.publishedBy', {userName: selectedItem.lastPublishedBy})}
@@ -85,7 +90,8 @@ const component = ({selection, t, classes, uiLang}) => {
             );
         case Constants.availablePublicationStatuses.NOT_PUBLISHED:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoNotPublished}
                 >
                     {t('label.contentManager.contentPreview.notPublished')}
@@ -93,7 +99,8 @@ const component = ({selection, t, classes, uiLang}) => {
             );
         case Constants.availablePublicationStatuses.UNPUBLISHED:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoUnpublished}
                 >
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: selectedItem.lastModifiedBy})}
@@ -103,7 +110,8 @@ const component = ({selection, t, classes, uiLang}) => {
             );
         case Constants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoMandatoryLanguageUnpublishable}
                             title={t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
                 >
@@ -112,7 +120,8 @@ const component = ({selection, t, classes, uiLang}) => {
             );
         case Constants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoMandatoryLanguageValid}
                             title={t('label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
                 >
@@ -121,7 +130,8 @@ const component = ({selection, t, classes, uiLang}) => {
             );
         case Constants.availablePublicationStatuses.CONFLICT:
             return (
-                <Typography component="p"
+                <Typography color="textSecondary"
+                            component="p"
                             className={classes.publicationInfoConflict}
                             title={t('label.contentManager.publicationStatus.conflict.description')}
                 >

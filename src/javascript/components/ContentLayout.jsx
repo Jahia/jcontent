@@ -56,23 +56,23 @@ const styles = theme => ({
         display: 'flex',
         overflow: 'hidden'
     },
-    previewDrawerClosed: {
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
-        display: 'flex',
-        zIndex: -1,
-        overflow: 'hidden'
-    },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
         display: 'flex',
         position: 'inherit',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        top: '150px',
+        right: theme.spacing.unit * 5
     },
     previewDrawerPaperFullScreen: {
         width: '100vw',
         height: '100vh',
         top: 0,
-        left: 0
+        right: 0
+    },
+    previewDrawerTransition: {
+        transition: 'inherit !important',
+        transitionDuration: '.2s !important'
     },
     appFrame: {
         overflow: 'hidden',
@@ -169,13 +169,15 @@ class ContentLayout extends React.Component {
                             }}
                         </ContentData>
                     </main>
-                    <Drawer
-                        data-cm-role="preview-drawer"
-                        className={previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawer : classes.previewDrawerClosed}
-                        variant="persistent"
-                        anchor="right"
-                        open={previewState >= CM_DRAWER_STATES.SHOW}
-                        classes={{paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper}}
+                    <Drawer data-cm-role="preview-drawer"
+                            variant="persistent"
+                            anchor="right"
+                            open={previewState >= CM_DRAWER_STATES.SHOW}
+                            classes={{
+                                docked: classes.previewDrawer,
+                                paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
+                                paperAnchorDockedRight: previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawerTransition : ''
+                            }}
                     >
                         {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer/>}
                     </Drawer>

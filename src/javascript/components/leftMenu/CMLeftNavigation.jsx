@@ -18,6 +18,7 @@ const styles = theme => ({
         display: 'flex'
     },
     rootOpenDrawer: {
+        zIndex: theme.zIndex.modal,
         background: theme.palette.background.paper,
         overflow: 'visible !important', // Safari compatibility
         '-webkit-transform-style': 'preserve-3d' // Safari compatibility

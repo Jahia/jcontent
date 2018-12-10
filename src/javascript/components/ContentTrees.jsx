@@ -1,7 +1,7 @@
 import React from 'react';
 import {Picker} from '@jahia/react-apollo';
 import CmPickerViewMaterial from './picker/CmPickerViewMaterial';
-import {IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
+import {AppBar, Grid, IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
@@ -13,16 +13,6 @@ import {compose} from 'react-apollo';
 import Constants from './constants';
 
 const styles = theme => ({
-    toolbar: {
-        color: theme.palette.text.secondary,
-        height: theme.contentManager.toolbarHeight + 'px',
-        maxHeight: theme.contentManager.toolbarHeight + 'px',
-        boxShadow: '0px 1px 2px rgba(54, 63, 69, 0.1), 0px 2px 2px rgba(54, 63, 69, 0.08)'
-    },
-    toolbarTitle: {
-        marginLeft: theme.spacing.unit * 3,
-        flexGrow: 1
-    },
     itemAndRowSelected: {
         backgroundColor: '#E1E0E0'
     },
@@ -97,14 +87,22 @@ class ContentTrees extends React.Component {
 
         return (
             <React.Fragment>
-                <Toolbar disableGutters classes={{root: classes.toolbar}}>
-                    <Typography variant="subtitle2" color="inherit" className={classes.toolbarTitle}>
-                        {t('label.contentManager.tree.title')}
-                    </Typography>
-                    <IconButton color="inherit" onClick={closeTree}>
-                        <ChevronLeft fontSize="small"/>
-                    </IconButton>
-                </Toolbar>
+                <AppBar position="relative">
+                    <Toolbar variant="dense">
+                        <Grid container alignItems="center" spacing={8} justify="space-between">
+                            <Grid item>
+                                <Typography variant="subtitle2" color="inherit">
+                                    {t('label.contentManager.tree.title')}
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <IconButton color="inherit" onClick={closeTree}>
+                                    <ChevronLeft fontSize="small"/>
+                                </IconButton>
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
                 <div className={classes.listContainer}>
                     <div className={classes.list}>
                         {isOpen ?

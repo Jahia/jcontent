@@ -1,7 +1,8 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
+import {Button, Drawer, Grid, IconButton, Paper, Snackbar, withStyles} from '@material-ui/core';
+import {Close} from '@material-ui/icons';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
@@ -17,6 +18,9 @@ import Constants from './constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
 
 const styles = theme => ({
+    close: {
+        padding: theme.spacing.unit / 2
+    },
     topBar: {
         paddingTop: theme.spacing.unit * 2,
         color: theme.palette.primary.contrastText
@@ -75,18 +79,6 @@ const styles = theme => ({
         position: 'relative',
         display: 'flex',
         width: '100%'
-    },
-    academyLink: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        padding: theme.spacing.unit + 'px ' + (theme.spacing.unit * 4) + 'px',
-        background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, rgba(31, 38, 42, 0.6392156862745098) 100%) !important',
-        textAlign: 'right',
-        color: theme.palette.text.contrastText,
-        '& a': {
-            color: 'inherit'
-        }
     }
 });
 
@@ -110,12 +102,33 @@ class ContentLayout extends React.Component {
         let contextualMenu = React.createRef();
         return (
             <React.Fragment>
-                <Typography variant="caption" className={classes.academyLink}>
-                    <Trans
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open="true"
+                    autoHideDuration={6000}
+                    ContentProps={{
+                        'aria-describedby': 'message-id'
+                    }}
+                    message={<Trans
                         i18nKey="label.contentManager.link.academy"
-                        components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer">univers</a>]}
-                    />
-                </Typography>
+                    />}
+                    action={[
+                        <Button key="undo" variant="contained" color="default" size="small">
+                            Go to Academy
+                        </Button>,
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className={classes.close}
+                        >
+                            <Close/>
+                        </IconButton>
+                    ]}
+                />
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar mode={mode}/>

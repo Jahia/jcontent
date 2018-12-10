@@ -222,7 +222,7 @@ class ContentListTable extends React.Component {
                                                                    classes={{root: classes.publicationCell}}
                                                                    data-cm-role="table-content-list-cell-publication"
                                                         >
-                                                            <PublicationStatus node={n} publicationInfoWidth={400}/>
+                                                            <PublicationStatus node={n}/>
                                                         </TableCell>
                                                         <TableCell padding="checkbox"
                                                                    classes={this.getCellClasses(classes, 'checkbox', isSelected)}

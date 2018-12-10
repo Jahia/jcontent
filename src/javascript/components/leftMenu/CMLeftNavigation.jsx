@@ -30,37 +30,6 @@ const styles = theme => ({
     side: {
         position: 'relative'
     },
-    childItem: {
-        background: theme.palette.primary.main,
-        color: theme.palette.text.contrastText,
-        padding: '1px 10px 4px 5px',
-        fontWeight: 500,
-        whiteSpace: 'nowrap',
-        textAlign: 'left',
-        width: '100%',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        fontSize: '0.828rem'
-    },
-    childOff: {
-        color: theme.palette.text.secondary,
-        fontWeight: 500,
-        padding: '1px 10px 4px 5px',
-        whiteSpace: 'nowrap',
-        textAlign: 'left',
-        width: '100%',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        fontSize: '0.828rem'
-    },
-    childIcon: {
-        fontSize: '18px',
-        color: theme.palette.text.secondary
-    },
-    childIconLight: {
-        fontSize: '18px',
-        color: theme.palette.background.default
-    },
     menuBurger: {
         paddingRight: '0px !important',
         paddingTop: '34px !important',
@@ -79,17 +48,6 @@ const styles = theme => ({
             duration: theme.transitions.duration.enteringScreen
         })
     },
-    drawerPaperPersistent: {
-        background: theme.palette.background.paper,
-        position: 'relative',
-        boxShadow: '2px 0 1px -2px rgba(0, 0, 21, 0.29)',
-        left: (theme.contentManager.screenMargin + theme.contentManager.leftNavigationWidth),
-        width: theme.contentManager.leftNavigationDrawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    },
     drawerPaperClose: {
         width: 0,
         overflowX: 'hidden',
@@ -97,34 +55,6 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         })
-    },
-    iconDark: {
-        color: theme.palette.text.secondary,
-        fontSize: '1.7em'
-    },
-    iconLight: {
-        color: theme.palette.text.contrastText,
-        fontSize: '1.7em'
-    },
-    typographyIcon: {
-        display: 'block',
-        color: theme.palette.text.secondary,
-        fontSize: '9px',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        fontWeight: 400,
-        width: '100%',
-        transition: 'all 0.2s ease-in 0s'
-    },
-    typographyIconLight: {
-        display: 'block',
-        color: theme.palette.text.contrastText,
-        fontSize: '9px',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        fontWeight: 400,
-        width: '100%',
-        transition: 'all 0.2s ease-in 0s'
     },
     typoTitle: {
         fontSize: '25px',
@@ -138,38 +68,12 @@ const styles = theme => ({
         marginTop: '-3px',
         marginLeft: '5px'
     },
-    backgroundBurger: {
-    },
-    margin: {
-        margin: theme.spacing.unit * 2
-    },
     blockMenu: {
         marginTop: 24
-    },
-    padding: {
-        padding: `0 ${theme.spacing.unit * 2}px`
-    },
-    switcher: {
-        marginBottom: '-100px !important'
-    },
-    badge: {
-        background: theme.palette.error.light,
-        fontWeight: 600,
-        fontSize: '11px',
-        color: theme.palette.text.contrastText
     },
     list: {
         paddingTop: '0 !important',
         height: '100vh'
-    },
-    listItem: {
-        display: 'block',
-        padding: '0 !important',
-        textAlign: 'center',
-        position: 'absolute',
-        bottom: '10px',
-        width: '48px !important',
-        paddingBottom: '10px !important'
     },
     drawerTree: {
         marginTop: '18px'

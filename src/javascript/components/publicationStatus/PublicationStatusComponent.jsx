@@ -11,16 +11,12 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        width: theme.spacing.unit,
-        '&:hover': {
-            width: theme.spacing.unit * 2
-        }
+        width: theme.spacing.unit
     },
     statusRoot: {
         zIndex: 1,
         display: 'flex',
         minHeight: theme.spacing.unit * 6,
-        height: theme.spacing.unit * 6,
         flexDirection: 'row',
         alignItems: 'stretch',
         position: 'absolute',
@@ -58,45 +54,39 @@ const styles = theme => ({
         backgroundColor: '#cecece'
     },
     publicationInfo: {
-        flex: 20,
+        flex: 'auto',
         display: 'flex',
         alignItems: 'center',
-        height: theme.spacing.unit * 6,
+        minHeight: theme.spacing.unit * 6,
         backgroundColor: 'inherit',
         width: 0.01, // Safari doesn't take 0 for some strange reason
-        opacity: 0,
+        opacity: 1,
         overflow: 'hidden',
         color: theme.palette.getContrastText(theme.palette.publish.main),
-        transition: 'width 0.3s ease-in 0s',
-        '&:hover': {
-            opacity: 1,
-            visibility: 'visible'
-        }
-    },
-    infoIcon: {
-        display: 'none'
+        transition: 'width 0.3s cubic-bezier(0, 0, 0.2, 1)'
     },
     infoButton: {
         flex: 'auto',
         display: 'flex',
         alignItems: 'center',
         minHeight: theme.spacing.unit * 6,
-        maxHeight: theme.spacing.unit * 6,
         width: 6,
         backgroundColor: 'inherit',
-        transition: 'width 0.2s ease-in 0s',
+        transition: 'width 0.3s cubic-bezier(0, 0, 0.2, 1)',
         overflow: 'hidden',
         cursor: 'pointer',
         color: theme.palette.getContrastText(theme.palette.publish.main),
         '&:hover ~ div.CM_PUBLICATION_INFO': {
-            width: 0,
-            marginLeft: 0,
-            opacity: 1,
-            visibility: 'visible'
+            opacity: '1',
+            visibility: 'visible',
+            width: (theme.spacing.unit * 4) + 'vw'
         }
     },
-    publicationSvg: {
-        fontSize: '13px'
+    info: {
+        minWidth: (theme.spacing.unit * 4) + 'vw'
+    },
+    infoIcon: {
+        marginRight: theme.spacing.unit
     }
 });
 
@@ -110,19 +100,6 @@ const styles = theme => ({
  *       }
  */
 class PublicationStatusComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            publicationInfoWidth: 0
-        };
-    }
-
-    setPublicationInfoWidth(width) {
-        this.setState({
-            publicationInfoWidth: width
-        });
-    }
-
     render() {
         const {classes, node, t, i18n} = this.props;
         const publicationStatus = publicationStatusByName.getStatus(node);
@@ -131,27 +108,17 @@ class PublicationStatusComponent extends Component {
         return (
             <React.Fragment>
                 <div className={`${publicationStatusClass} ${classes.root}`}/>
-                <div className={`${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}
-                     onMouseLeave={() => this.setPublicationInfoWidth(0)}
-                >
-                    <div className={`${classes.infoButton} CM_PUBLICATION_INFO_BUTTON`}
-                         onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
-                    >
-                        <div className={classes.infoContainer}/>
+                <div className={`${classes.statusRoot} ${publicationStatusClass} CM_PUBLICATION_STATUS`}>
+                    <div className={`${classes.infoButton} CM_PUBLICATION_INFO_BUTTON`}/>
+                    <div className={`${classes.publicationInfo} CM_PUBLICATION_INFO`}>
 
-                    </div>
-                    <div className={`${classes.publicationInfo} CM_PUBLICATION_INFO`}
-                         style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '14px'}}
-                    >
-
-                        <div className={classes.infoContainer}
-                             style={{width: this.props.publicationInfoWidth, minWidth: this.props.publicationInfoWidth}}
+                        <div className={classes.info}
                              data-cm-role="publication-info"
                              data-cm-value={node.publicationStatus}
                         >
 
-                            <Typography color="inherit" variant="overline">
-                                <InfoOutlined/>
+                            <Typography color="inherit" variant="caption">
+                                <InfoOutlined className={classes.infoIcon} fontSize="small"/>
                                 { publicationStatus.geti18nDetailsMessage(node, t, i18n.language) }
                             </Typography>
                         </div>
@@ -163,8 +130,7 @@ class PublicationStatusComponent extends Component {
 }
 
 PublicationStatusComponent.propTypes = {
-    node: PropTypes.object.isRequired,
-    publicationInfoWidth: PropTypes.number.isRequired
+    node: PropTypes.object.isRequired
 };
 
 export default translate()(withStyles(styles)(PublicationStatusComponent));

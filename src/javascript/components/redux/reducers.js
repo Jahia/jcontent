@@ -11,11 +11,8 @@ import {
     CM_SET_SORT,
     CM_SET_TREE,
     CM_SET_UILANGUAGE,
-<<<<<<< HEAD
-    CM_ADD_PATHS_TO_REFETCH
-=======
+    CM_ADD_PATHS_TO_REFETCH,
     CM_SET_AVAILABLE_LANGUAGES
->>>>>>> BACKLOG-9168 - Created translate actions. Added reducer for available languages of current site.
 } from './actions';
 import * as _ from 'lodash';
 import {extractPaths} from '../utils.js';

@@ -39,7 +39,6 @@ const styles = theme => ({
         width: '80%'
     },
     topBar: {
-        paddingTop: theme.spacing.unit * 4,
         width: 'min-content',
         alignSelf: 'flex-end'
     },

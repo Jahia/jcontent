@@ -1,5 +1,5 @@
 const styleConstants = {
-    topBarHeight: 100,
+    topBarHeight: 130,
     treeDrawerWidth: 260,
     previewDrawerWidth: 600,
     screenMargin: 38,

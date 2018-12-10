@@ -107,8 +107,7 @@ const styles = theme => ({
         color: theme.palette.text.disabled
     },
     actionsCell: {
-        minWidth: '145px',
-        textAlign: 'right',
+        minWidth: '135px',
         color: theme.palette.primary.dark
     }
 });

@@ -27,7 +27,7 @@ import unlockAction from './unlockAction';
 import clearAllLocksAction from './clearAllLocksAction';
 import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
-import translateAction from "./translateAction";
+import translateAction from './translateAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';

@@ -114,7 +114,9 @@ const mapDispatchToProps = dispatch => ({
     onSelectLanguage: lang => {
         dispatch(cmSetLanguage(lang));
     },
-    setAvailableLanguages: availableLanguages => {dispatch(cmSetAvailableLanguages(availableLanguages));}
+    setAvailableLanguages: availableLanguages => {
+        dispatch(cmSetAvailableLanguages(availableLanguages));
+    }
 });
 
 export default compose(

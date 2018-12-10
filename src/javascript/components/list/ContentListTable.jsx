@@ -82,6 +82,7 @@ const styles = theme => ({
         }
     },
     cell: {
+        maxWidth: '2vw',
         textOverflow: 'ellipsis'
     },
     selectedCell: {
@@ -93,7 +94,7 @@ const styles = theme => ({
         position: 'relative'
     },
     nameCell: {
-        maxWidth: '200px',
+        maxWidth: '15vw',
         '& img': {
             marginRight: '6px',
             verticalAlign: 'sub'
@@ -106,7 +107,8 @@ const styles = theme => ({
         color: theme.palette.text.disabled
     },
     actionsCell: {
-        minWidth: '150px',
+        minWidth: '145px',
+        textAlign: 'right',
         color: theme.palette.primary.dark
     }
 });
@@ -292,7 +294,7 @@ class ContentListTable extends React.Component {
                                                                            classes={this.getCellClasses(classes, column.id, isSelected)}
                                                                            data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
-                                                                    <Typography noWrap color="inherit">
+                                                                    <Typography noWrap color="inherit" variant="">
                                                                         {n[column.id]}
                                                                     </Typography>
                                                                 </TableCell>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core';
+import {withStyles, Typography} from '@material-ui/core';
 import {InfoOutlined} from '@material-ui/icons';
 import {publicationStatusByName} from './publicationStatus';
 import {translate} from 'react-i18next';
@@ -25,44 +25,34 @@ const styles = theme => ({
         bottom: 0
     },
     published: {
-        backgroundColor: theme.palette.publicationStatus.published.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.published.main
     },
     modified: {
-        backgroundColor: theme.palette.publicationStatus.modified.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.modified.main
     },
     notPublished: {
-        backgroundColor: theme.palette.publicationStatus.notPublished.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.notPublished.main
     },
     unPublished: {
-        backgroundColor: '#cecece',
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: '#cecece'
     },
     markedForDeletion: {
-        backgroundColor: theme.palette.publicationStatus.markedForDeletion.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.markedForDeletion.main
     },
     mandatoryLanguageUnpublishable: {
-        backgroundColor: theme.palette.publicationStatus.mandatoryLanguageUnpublishable.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.mandatoryLanguageUnpublishable.main
     },
     mandatoryLanguageValid: {
-        backgroundColor: theme.palette.publicationStatus.mandatoryLanguageValid.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.mandatoryLanguageValid.main
     },
     conflict: {
-        backgroundColor: theme.palette.publicationStatus.conflict.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.conflict.main
     },
     unknown: {
-        backgroundColor: theme.palette.publicationStatus.conflict.main,
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: theme.palette.publicationStatus.conflict.main
     },
     noStatus: {
-        backgroundColor: '#cecece',
-        fontFamily: 'Nunito Sans, sans-serif'
+        backgroundColor: '#cecece'
     },
     publicationInfo: {
         flex: 20,
@@ -79,9 +69,6 @@ const styles = theme => ({
             opacity: 1,
             visibility: 'visible'
         }
-    },
-    infoContainer: {
-        overflow: 'hidden'
     },
     infoIcon: {
         display: 'none'
@@ -100,6 +87,7 @@ const styles = theme => ({
         color: theme.palette.getContrastText(theme.palette.publish.main),
         '&:hover ~ div.CM_PUBLICATION_INFO': {
             width: 0,
+            marginLeft: 0,
             opacity: 1,
             visibility: 'visible'
         }
@@ -146,9 +134,8 @@ class PublicationStatusComponent extends Component {
                     <div className={`${classes.infoButton} CM_PUBLICATION_INFO_BUTTON`}
                          onClick={() => this.setPublicationInfoWidth(this.state.publicationInfoWidth === 0 ? this.props.publicationInfoWidth : 0)}
                     >
-                        <div className={classes.infoContainer}>
-                            <InfoOutlined className={`${classes.infoIcon} ${classes.publicationSvg} CM_PUBLICATION_INFO_ICON`}/>
-                        </div>
+                        <div className={classes.infoContainer}/>
+
                     </div>
                     <div className={`${classes.publicationInfo} CM_PUBLICATION_INFO`}
                          style={{width: this.state.publicationInfoWidth === 0 ? 0.01 : this.state.publicationInfoWidth, marginLeft: '-23px', fontSize: '14px'}}
@@ -159,7 +146,11 @@ class PublicationStatusComponent extends Component {
                              data-cm-role="publication-info"
                              data-cm-value={node.publicationStatus}
                         >
-                            { publicationStatus.geti18nDetailsMessage(node, t, i18n.language) }
+
+                            <Typography color="inherit" variant="caption">
+                                <InfoOutlined/>
+                                { publicationStatus.geti18nDetailsMessage(node, t, i18n.language) }
+                            </Typography>
                         </div>
                     </div>
                 </div>

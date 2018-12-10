@@ -64,7 +64,7 @@ const APP_TABLE_CELLS = 2;
 const styles = theme => ({
 
     tableWrapper: {
-        height: 'calc(100% - 170px)',
+        height: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         overflow: 'auto'
     },
     row: {

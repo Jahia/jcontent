@@ -25,7 +25,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper
     },
     content: {
-        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
@@ -40,7 +40,7 @@ const styles = theme => ({
         transition: ['margin-right 0ms 225ms']
     },
     treeDrawer: {
-        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )'
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )'
     },
     treeDrawerPaper: {
         width: theme.contentManager.treeDrawerWidth,
@@ -48,12 +48,12 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     previewDrawer: {
-        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
         overflow: 'hidden'
     },
     previewDrawerClosed: {
-        height: 'calc( 100% - ' + theme.contentManager.topBarHeight + 'px )',
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
         zIndex: -1,
         overflow: 'hidden'

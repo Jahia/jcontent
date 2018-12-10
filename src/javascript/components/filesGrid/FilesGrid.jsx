@@ -17,7 +17,7 @@ const styles = theme => ({
     grid: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3
@@ -116,14 +116,14 @@ class FilesGrid extends Component {
                         ))
                     }
                     </UploadTransformComponent>
-                    <Pagination
-                        totalCount={totalCount}
-                        pageSize={pagination.pageSize}
-                        currentPage={pagination.currentPage}
-                        onChangeRowsPerPage={setPageSize}
-                        onChangePage={setCurrentPage}
-                    />
                 </div>
+                <Pagination
+                    totalCount={totalCount}
+                    pageSize={pagination.pageSize}
+                    currentPage={pagination.currentPage}
+                    onChangeRowsPerPage={setPageSize}
+                    onChangePage={setCurrentPage}
+                />
             </div>
         );
     }

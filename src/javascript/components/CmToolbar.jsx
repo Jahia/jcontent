@@ -20,6 +20,9 @@ const styles = theme => ({
     grow: {
         flex: 1,
         paddingLeft: theme.spacing.unit
+    },
+    appBarElevation: {
+        zIndex: 10
     }
 });
 
@@ -63,7 +66,7 @@ class CmToolbar extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
         return (
-            <AppBar position="relative">
+            <AppBar position="relative" classes={{root: classes.appBarElevation}}>
                 <Toolbar variant="dense">
                     {treeState !== CM_DRAWER_STATES.SHOW &&
                     <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>

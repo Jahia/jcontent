@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
 import {ArrowDropDown as ArrowDropDownIcon} from '@material-ui/icons';
 import {Close as CloseIcon} from '@material-ui/icons';
-import {ListItemIcon, ListItemText, Input, withStyles, MenuItem} from '@material-ui/core';
+import {ListItemIcon, ListItemText, Input, withStyles, withTheme, MenuItem} from '@material-ui/core';
 import * as _ from 'lodash';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
@@ -30,19 +30,18 @@ const styles = () => ({
 
 const ITEM_HEIGHT = 48;
 
-const customStyles = {
+const customStyles = theme => ({
     container: () => ({
-        padding: 0,
-        color: '#fff'
+        padding: 0
     }),
     control: () => ({
         display: 'flex',
-        color: '#fff',
+        color: theme.palette.text.contrastText,
         border: 'none',
         alignItems: 'center',
         height: 48,
         width: '155px',
-        background: '#007bc0',
+        background: theme.palette.primary.main,
         '&:hover': {
             boxShadow: 'none'
         },
@@ -51,18 +50,18 @@ const customStyles = {
         }
     }),
     group: () => ({
-        color: '#fff'
+        color: 'orange'
     }),
     noOptionsMessage: () => ({
         width: '155px',
-        color: '#8f9498',
+        color: theme.palette.text.secondary,
         padding: '8px 16px',
         minWidth: '155px',
         maxWidth: '155px'
     }),
     menu: () => ({
         backgroundColor: '#fff',
-        color: '#3a3c3f!important',
+        color: 'red!important',
         // BoxShadow: "1px 2px 6px #888888", // should be changed as material-ui
         position: 'absolute',
         left: 0,
@@ -73,7 +72,7 @@ const customStyles = {
     }),
     dropdownIndicator: base => ({
         ...base,
-        color: '#fff',
+        color: theme.palette.text.constrastText,
         cursor: '-webkit-grabbing'
     }),
     clearIndicator: base => ({
@@ -89,15 +88,15 @@ const customStyles = {
         maxHeight: ITEM_HEIGHT * 4.5,
         boxShadow: '1px 3px 4px 0px rgba(38, 38, 38, 0.4)',
         display: 'inline-block',
-        background: '#fff',
+        background: theme.palette.background.paper,
         overflowY: 'auto'
     }),
     input: () => ({
-        color: '#fff!important'
+        color: theme.palette.text.constrastText
     }),
     placeholder: () => ({
         textAlign: 'center',
-        color: '#fff!important'
+        color: theme.palette.text.constrastText
     }),
     singleValue: () => ({
         marginLeft: '2px',
@@ -109,7 +108,7 @@ const customStyles = {
         whiteSpace: 'nowrap',
         top: '50%'
     })
-};
+});
 
 class Option extends React.Component {
     constructor(props) {
@@ -185,9 +184,9 @@ class ClearIndicator extends React.Component {
     }
 }
 
-class SelectWrapped extends React.Component {
+class SelectWrappedComponent extends React.Component {
     render() {
-        const {value, open, options, ...other} = this.props;
+        const {value, open, options, theme, ...other} = this.props;
         let optionValue = _.find(options, data => data.value === value);
 
         return (
@@ -198,7 +197,7 @@ class SelectWrapped extends React.Component {
                     DropdownIndicator,
                     ...other
                 }}
-                styles={customStyles}
+                styles={customStyles(theme)}
                 open={open}
                 isClearable={open}
                 options={options}
@@ -208,6 +207,8 @@ class SelectWrapped extends React.Component {
         );
     }
 }
+
+let SelectWrapped = withTheme()(SelectWrappedComponent);
 
 class FilterSelect extends React.Component {
     render() {

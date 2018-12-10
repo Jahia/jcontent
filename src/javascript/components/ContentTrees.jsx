@@ -18,7 +18,6 @@ const styles = theme => ({
     },
     listContainer: {
         overflow: 'scroll',
-        height: 'calc( 100% - ' + theme.contentManager.toolbarHeight + 'px )',
         width: theme.contentManager.treeDrawerWidth + 'px'
     },
     list: {

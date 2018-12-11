@@ -33,15 +33,9 @@ export default composeActions(requirementsAction, reduxAction(state => ({mode: s
                 _.each(n.parents, parent => {
                     paths.push(parent.path);
                 });
-                let locate = {
-                    node: n,
-                    paths: paths,
-                    navigateToPath: parent.path,
-                    type: parent.type.value
-                };
                 let {navigateToPath, setOpenPaths, setSelection} = context;
                 let mode;
-                switch (locate.type) {
+                switch (parent.type.value) {
                     case 'jnt:contentFolder':
                         mode = Constants.mode.BROWSE;
                         break;
@@ -49,15 +43,15 @@ export default composeActions(requirementsAction, reduxAction(state => ({mode: s
                         mode = Constants.mode.FILES;
                         break;
                     default: {
-                        let base = locate.paths[0].split('/');
+                        let base = paths[0].split('/');
                         base.pop();
-                        locate.paths.splice(0, 0, base.join('/'));
+                        paths.splice(0, 0, base.join('/'));
                         mode = Constants.mode.BROWSE;
                     }
                 }
-                navigateToPath(mode, locate.navigateToPath, context.params);
-                setOpenPaths(locate.paths);
-                setSelection([locate.node]);
+                navigateToPath(mode, parent.path, context.params);
+                setOpenPaths(paths);
+                setSelection(n.path);
             }
         });
     }

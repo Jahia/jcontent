@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {translate} from 'react-i18next';
-import {withStyles, Button, MenuItem, Menu, Tooltip} from '@material-ui/core';
+import {Button, Menu, MenuItem, Tooltip, withStyles} from '@material-ui/core';
 import {Share} from '@material-ui/icons';
 import copy from 'copy-to-clipboard';
 import {lodash as _} from 'lodash';
-import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
@@ -37,8 +36,6 @@ class ShareMenu extends Component {
             return null;
         }
 
-        const selectedItem = selection;
-
         return (
             <span>
                 <Tooltip title={t('label.contentManager.contentPreview.share')}>
@@ -55,10 +52,10 @@ class ShareMenu extends Component {
                       open={Boolean(shareMenuAnchor)}
                       onClose={() => this.handleMenuClose('shareMenuAnchor')}
                 >
-                    <MenuItem onClick={() => this.copy(selectedItem.path)}>
+                    <MenuItem onClick={() => this.copy(selection.path)}>
                         {t('label.contentManager.contentPreview.copyPathToClipboard')}
                     </MenuItem>
-                    <MenuItem onClick={() => this.copy(selectedItem.uuid)}>
+                    <MenuItem onClick={() => this.copy(selection.uuid)}>
                         {t('label.contentManager.contentPreview.copyUUIDToClipboard')}
                     </MenuItem>
                 </Menu>
@@ -75,12 +72,7 @@ class ShareMenu extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    selection: state.selection
-});
-
 export default compose(
     translate(),
     withStyles(styles),
-    connect(mapStateToProps)
 )(ShareMenu);

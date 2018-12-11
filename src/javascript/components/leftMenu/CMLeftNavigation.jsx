@@ -66,7 +66,7 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     blockMenu: {
-        marginTop: theme.spacing.unit * 4
+        marginTop: 21
     },
     list: {
         paddingTop: '0 !important',
@@ -78,13 +78,13 @@ const styles = theme => ({
     siteSwitcher: {
         marginLeft: 0,
         '& button': {
-            margin: '4px 0'
+            margin: '2px 0'
         }
     },
     languageSwitcher: {
         marginLeft: 0,
         '& button': {
-            margin: '4px 0'
+            margin: '2px 0'
         }
     }
 

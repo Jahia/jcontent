@@ -22,30 +22,10 @@ const MAX_FIRST_LABEL_LENGTH = 20;
 const MAX_LABEL_LENGTH = 10;
 
 class Breadcrumb extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            breadcrumbs: []
-        };
-    }
-
-    componentDidMount() {
-        let {pickerEntries: entries, path: selectedPath, rootLabel, t, rootPath, mode} = this.props;
-        this.setState({
-            breadcrumbs: Breadcrumb.parseEntries(entries, selectedPath, rootLabel, t, rootPath, mode)
-        });
-    }
-
-    static getDerivedStateFromProps(nextProps) {
-        let {pickerEntries: entries, path: selectedPath, rootLabel, t, rootPath, mode} = nextProps;
-        return {
-            breadcrumbs: Breadcrumb.parseEntries(entries, selectedPath, rootLabel, t, rootPath, mode)
-        };
-    }
-
     render() {
-        let {classes} = this.props;
-        let {breadcrumbs} = this.state;
+        let {pickerEntries, path, rootLabel, t, rootPath, mode, classes} = this.props;
+
+        let breadcrumbs = Breadcrumb.parseEntries(pickerEntries, path, rootLabel, t, rootPath, mode);
 
         if (_.isEmpty(breadcrumbs)) {
             return null;

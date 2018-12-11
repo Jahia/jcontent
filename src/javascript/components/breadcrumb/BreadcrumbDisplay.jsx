@@ -8,14 +8,8 @@ import {ellipsizeText} from '../utils.js';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
-    menuItem: {
-        backgroundColor: theme.palette.background.paper
-    },
-    contentIcon: {
-        fontSize: '20px'
-    },
     contentLabel: {
-        marginLeft: theme.spacing.unit
+        paddingLeft: theme.spacing.unit
     }
 });
 
@@ -23,9 +17,7 @@ class BreadcrumbDisplay extends React.Component {
     constructor(props) {
         super(props);
 
-        this.addMenuExitListener = this.addMenuExitListener.bind(this);
-        this.onMenuButtonActivatorEnter = this.onMenuButtonActivatorEnter.bind(this);
-        this.onMenuExit = this.onMenuExit.bind(this);
+        this.onMenuButtonMouseOver = this.onMenuButtonMouseOver.bind(this);
         this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
 
         this.menu = React.createRef();
@@ -40,128 +32,23 @@ class BreadcrumbDisplay extends React.Component {
         };
     }
 
-    static getDerivedStateFromProps(nextProps) {
-        let {node} = nextProps;
-        let anchorEl = document.getElementById('menuToggleButton_' + node.uuid);
-        if (anchorEl) {
-            let anchorElPosition = anchorEl.getBoundingClientRect();
-            return {
-                anchorPosition: {
-                    top: anchorElPosition.top - 5,
-                    left: anchorElPosition.left
-                }
-            };
-        }
-        return {};
-    }
-
-    componentDidMount() {
-        let {node} = this.props;
-        let position = document.getElementById('menuToggleButton_' + node.uuid).getBoundingClientRect();
-        this.setState({
-            anchorPosition: {
-                top: position.top - 5,
-                left: position.left
-            }
-        });
-    }
-
-    addMenuExitListener() {
-        let {node} = this.props;
-        setTimeout(() => {
-            let backdropEl = document.getElementById('breadcrumbMenu_' + node.uuid).children[0];
-            backdropEl.addEventListener('mouseover', this.onMenuExit);
-        }, 10);
-    }
-
-    onMenuExit() {
-        setTimeout(() => {
-            this.setState(() => ({
-                menuActive: false
-            }));
-        }, 100);
-    }
-
-    onMenuButtonActivatorEnter() {
+    onMenuButtonMouseOver() {
         if (!this.state.menuActive) {
-            this.setState({menuActive: true});
+            this.setState({
+                menuActive: true,
+                anchorPosition: {
+                    top: this.anchorButton.current.getBoundingClientRect().top - 5,
+                    left: this.anchorButton.current.getBoundingClientRect().left
+                }
+            });
         }
     }
 
     onMenuItemSelected(event, node) {
         this.props.handleSelect(node.mode, node.path);
-        this.onMenuExit(event);
     }
 
-    generateMenu(node) {
-        let {classes} = this.props;
-        return (
-            <span>
-                <MenuItem key={'dropdown_' + node.uuid}
-                          disableRipple
-                          selected
-                          disableGutters
-                          onClick={event => this.onMenuItemSelected(event, node)}
-                >
-                    {this.renderIcon(node, classes)}{node.name}
-                </MenuItem>
-                {node.siblings.map(siblingNode => {
-                    if (siblingNode.name === node.name) {
-                        return null;
-                    }
-                    return (
-                        <MenuItem key={siblingNode.uuid} disableRipple classes={{root: classes.menuItem}} onClick={event => this.onMenuItemSelected(event, siblingNode)}>
-                            {this.renderIcon(siblingNode, classes)}{siblingNode.name}
-                        </MenuItem>
-
-                    );
-                })}
-            </span>
-        );
-    }
-
-    generateMenuButton(node, maxLabelLength, trimLabel) {
-        let {classes} = this.props;
-        if (node.siblings.length > 1) {
-            return (
-                <Button ref={this.anchorButton}
-                        disableRipple
-                        aria-haspopup="true"
-                        aria-owns={'breadcrumbMenu_' + node.uuid}
-                        id={'menuToggleButton_' + node.uuid}
-                        onMouseOver={this.onMenuButtonActivatorEnter}
-                >
-                    {this.renderIcon(node, classes)}
-                    {!trimLabel &&
-                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name">
-                        {ellipsizeText(node.name, maxLabelLength)}
-                    </Typography>
-                    }
-                </Button>
-            );
-        }
-        return (
-            <Button ref={this.anchorButton}
-                    disableRipple
-                    aria-haspopup="true"
-                    aria-owns={'breadcrumbMenu_' + node.uuid}
-                    id={'menuToggleButton_' + node.uuid}
-                    onClick={() => {
-                        this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
-                    }}
-                    onMouseOver={this.onMenuButtonActivatorEnter}
-            >
-                {this.renderIcon(node, classes)}
-                {!trimLabel &&
-                <span className={classes.contentLabel} data-cm-role="breadcrumb-name">
-                    {ellipsizeText(node.name, maxLabelLength)}
-                </span>
-                }
-            </Button>
-        );
-    }
-
-    renderIcon(node, classes) {
+    renderIcon(node) {
         switch (node.type) {
             case 'jnt:virtualsite':
                 return <Public fontSize="small"/>;
@@ -170,26 +57,66 @@ class BreadcrumbDisplay extends React.Component {
                 return <Folder fontSize="small"/>;
             case 'jnt:page':
             default:
-                return <PageIcon className={classes.contentIcon}/>;
+                return <PageIcon fontSize="small"/>;
         }
     }
 
     render() {
         let {menuActive, anchorPosition} = this.state;
-        let {node, maxLabelLength, trimLabel} = this.props;
+        let {node, maxLabelLength, trimLabel, classes} = this.props;
         return (
-            <span ref={this.menu} id={'breadcrumbSpan_' + node.uuid}>
-                {this.generateMenuButton(node, maxLabelLength, trimLabel)}
+            <span ref={this.menu}>
+                <Button disableRipple
+                        buttonRef={this.anchorButton}
+                        aria-haspopup="true"
+                        aria-owns={'breadcrumbMenu_' + node.uuid}
+                        onMouseOver={() => node.siblings.length > 1 && this.onMenuButtonMouseOver()}
+                        onClick={ev => node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
+                >
+                    {this.renderIcon(node, classes)}
+                    {!trimLabel &&
+                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                        {ellipsizeText(node.name, maxLabelLength)}
+                    </Typography>
+                    }
+                </Button>
                 <Menu key={node.uuid}
                       disableAutoFocusItem
                       anchorPosition={anchorPosition}
                       anchorReference="anchorPosition"
                       container={this.menu.current}
-                      id={'breadcrumbMenu_' + node.uuid}
                       open={menuActive}
-                      onEnter={this.addMenuExitListener}
+                      BackdropProps={{
+                          style: {
+                              opacity: 0
+                          },
+                          onMouseOver: () => {
+                            this.setState({menuActive: false});
+                        }
+                      }}
+                      onClose={() => this.setState({menuActive: false})}
                 >
-                    {this.generateMenu(node)}
+                    <MenuItem key={'dropdown_' + node.uuid}
+                              disableRipple
+                              selected
+                              disableGutters
+                              onClick={event => this.onMenuItemSelected(event, node)}
+                    >
+                        {this.renderIcon(node, classes)}{node.name}
+                    </MenuItem>
+                    {node.siblings.map(siblingNode => {
+                        if (siblingNode.name === node.name) {
+                            return null;
+                        }
+                        return (
+                            <MenuItem key={siblingNode.uuid}
+                                      disableRipple
+                                      onClick={event => this.onMenuItemSelected(event, siblingNode)}
+                            >
+                                {this.renderIcon(siblingNode, classes)}<Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>{siblingNode.name}</Typography>
+                            </MenuItem>
+                        );
+                    })}
                 </Menu>
             </span>
         );

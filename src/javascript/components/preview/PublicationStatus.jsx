@@ -30,7 +30,7 @@ const styles = theme => ({
         padding: theme.spacing.unit
     },
     publicationInfoUnpublished: {
-        borderLeft: '5px solid #cecece',
+        borderLeft: '5px solid ' + theme.palette.publicationStatus.unpublished.main,
         padding: theme.spacing.unit
     },
     publicationInfoMandatoryLanguageUnpublishable: {

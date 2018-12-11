@@ -26,7 +26,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
     "@jahia/apollo-dx": "^1.0.0-beta.20181113171842",
-    "@jahia/ds-mui-theme": "^1.0.0-beta.20181211141322",
+    "@jahia/ds-mui-theme": "^1.0.0-beta.20181211162447",
     "@jahia/i18next": "^1.0.0-beta.20180628145923",
     "@jahia/icons": "^1.0.0-beta.20181210101557",
     "@jahia/react-apollo": "^1.0.0-beta.20181113171845",

@@ -28,6 +28,7 @@ import clearAllLocksAction from './clearAllLocksAction';
 import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 import translateAction from './translateAction';
+import translateMenuAction from './translateMenuAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -78,7 +79,7 @@ function initActions(actionsRegistry) {
         target: ['createMenuActions:4', 'contentTreeMenuActions:4'],
         contentType: 'jnt:file'
     });
-    actionsRegistry.add('translateMenu', menuWithRequirementsAction, {
+    actionsRegistry.add('translateMenu', translateMenuAction, {
         buttonLabel: 'label.contentManager.contentPreview.translate',
         target: ['contextualMenuContentAction:4.5', 'tableMenuActions:4.5', 'contentTreeMenuActions:3'],
         menu: 'translateMenu'

@@ -10,7 +10,9 @@ export default composeActions(requirementsAction, reduxAction(state => ({languag
             _.each(context.availableLanguages, dest => {
                 if (source.language !== dest.language && (source.language === context.language || dest.language === context.language)) {
                     actions.push({
-                        buttonLabel: `${_.upperFirst(source.displayName)} -> ${_.upperFirst(dest.displayName)}`,
+                        key: source.displayName + dest.displayName,
+                        buttonLabel: 'label.contentManager.translateAction',
+                        buttonLabelParams: {source: _.upperFirst(source.displayName), dest: _.upperFirst(dest.displayName)},
                         sourceLang: source.language,
                         destLang: dest.language
                     });

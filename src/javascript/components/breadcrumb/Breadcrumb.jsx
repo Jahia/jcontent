@@ -10,8 +10,8 @@ import BreadcrumbDisplay from './BreadcrumbDisplay';
 const styles = theme => ({
     chevronSvg: {
         marginRight: theme.spacing.unit * 2,
-        fontSize: '18px',
-        verticalAlign: 'middle'
+        verticalAlign: 'middle',
+        color: theme.palette.text.disabled
     }
 });
 
@@ -101,7 +101,7 @@ class Breadcrumb extends React.Component {
                     trimLabel={(items.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) && (itemIndex < items.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY)}
                 />
                 {itemIndex < items.length - 1 &&
-                <ChevronRightIcon classes={{root: classes.chevronSvg}}/>
+                <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
                 }
             </span>
         );

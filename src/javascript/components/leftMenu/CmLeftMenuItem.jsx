@@ -17,10 +17,9 @@ const styles = theme => ({
     },
     typographyIconLight: {
         display: 'block',
-        color: '#F5F5F5',
+        color: theme.palette.text.contrastText,
         fontSize: '9px',
         textAlign: 'center',
-        fontFamily: 'Nunito sans, sans-serif',
         textTransform: 'uppercase',
         fontWeight: 400,
         width: '100%',
@@ -28,10 +27,9 @@ const styles = theme => ({
     },
     typographyIcon: {
         display: 'block',
-        color: '#504e4d',
+        color: theme.palette.text.primary,
         fontSize: '9px',
         textAlign: 'center',
-        fontFamily: 'Nunito sans, sans-serif',
         textTransform: 'uppercase',
         fontWeight: 400,
         width: '100%',

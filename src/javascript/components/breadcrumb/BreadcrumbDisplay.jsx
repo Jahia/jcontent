@@ -1,10 +1,9 @@
 import React from 'react';
 import {Button, Menu, MenuItem} from '@material-ui/core';
-import {Folder} from '@material-ui/icons';
+import {Folder, Public} from '@material-ui/icons';
 import {PageIcon} from '@jahia/icons';
-import {withStyles} from '@material-ui/core';
+import {Typography, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import * as icons from '@jahia/icons';
 import {ellipsizeText} from '../utils.js';
 import {compose} from 'react-apollo';
 
@@ -16,10 +15,7 @@ const styles = theme => ({
         fontSize: '20px'
     },
     contentLabel: {
-        paddingLeft: theme.spacing.unit * 2,
-        paddingRight: theme.spacing.unit * 2,
-        color: theme.palette.layout.dark,
-        marginRight: '-3px'
+        marginLeft: theme.spacing.unit
     }
 });
 
@@ -137,9 +133,9 @@ class BreadcrumbDisplay extends React.Component {
                 >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
-                    <span className={classes.contentLabel} data-cm-role="breadcrumb-name">
+                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name">
                         {ellipsizeText(node.name, maxLabelLength)}
-                    </span>
+                    </Typography>
                     }
                 </Button>
             );
@@ -168,10 +164,10 @@ class BreadcrumbDisplay extends React.Component {
     renderIcon(node, classes) {
         switch (node.type) {
             case 'jnt:virtualsite':
-                return <icons.VirtualsiteIcon className={classes.contentIcon}/>;
+                return <Public fontSize="small"/>;
             case 'jnt:folder':
             case 'jnt:contentFolder':
-                return <Folder className={classes.contentIcon}/>;
+                return <Folder fontSize="small"/>;
             case 'jnt:page':
             default:
                 return <PageIcon className={classes.contentIcon}/>;

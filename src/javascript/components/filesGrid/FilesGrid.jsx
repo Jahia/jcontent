@@ -25,7 +25,6 @@ const styles = theme => ({
     gridEmpty: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        fontFamily: 'Nunito sans, sans-serif',
         height: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         margin: '0!important',

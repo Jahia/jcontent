@@ -7,6 +7,9 @@ import {translate} from 'react-i18next';
 
 const styles = theme => ({
     typography: {
+        color: theme.palette.text.primary
+    },
+    typographyLight: {
         color: theme.palette.text.contrastText
     },
     formControl: {
@@ -17,7 +20,7 @@ const styles = theme => ({
         fontSize: '18px'
     },
     iconDark: {
-        color: '#504e4d',
+        color: theme.palette.text.primary,
         fontSize: '18px'
     },
     input1: {
@@ -61,7 +64,7 @@ class SiteSwitcherDisplay extends React.Component {
                         data-cm-role="site-switcher"
                         onClick={this.handleClick}
                 >
-                    <Typography variant="body1" color="inherit" className={classes.typography}>
+                    <Typography variant="body1" color="inherit" className={dark ? classes.typography : classes.typographyLight}>
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Drawer, List, ListItem, Typography, withStyles} from '@material-ui/core';
+import {Drawer, Grid, List, ListItem, Typography, withStyles} from '@material-ui/core';
 import LanguageSwitcher from '../languageSwitcher/LanguageSwitcher';
 import SiteSwitcher from '../siteSwitcher/SiteSwitcher';
 import {translate} from 'react-i18next';
@@ -59,19 +59,14 @@ const styles = theme => ({
         })
     },
     typoTitle: {
-        fontSize: '25px',
-        lineHeight: '32px',
-        fontWeight: '100',
         color: theme.palette.text.secondary,
         width: '260px',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        marginTop: '-3px',
-        marginLeft: '5px'
+        overflow: 'hidden'
     },
     blockMenu: {
-        marginTop: 24
+        marginTop: theme.spacing.unit * 4
     },
     list: {
         paddingTop: '0 !important',
@@ -81,13 +76,18 @@ const styles = theme => ({
         marginTop: '18px'
     },
     siteSwitcher: {
-        marginBottom: '-10px',
-        marginLeft: 0
+        marginLeft: 0,
+        '& button': {
+            margin: '4px 0'
+        }
     },
     languageSwitcher: {
-        marginTop: '-10px',
-        marginLeft: 0
+        marginLeft: 0,
+        '& button': {
+            margin: '4px 0'
+        }
     }
+
 });
 
 class CMLeftNavigation extends React.Component {
@@ -163,18 +163,23 @@ class CMLeftNavigation extends React.Component {
                     open={this.state.openDrawer}
                 >
                     <div className={classes.blockMenu}>
-                        <div className={classes.siteSwitcher}>
-                            <SiteSwitcher dark/>
-                        </div>
-                        <Typography className={classes.typoTitle}>
-                            {this.state.drawerContent &&
+                        <Grid container spacing={0} alignItems="center">
+                            <Grid item xs={2}>
+                                <div className={classes.siteSwitcher}>
+                                    <SiteSwitcher dark/>
+                                </div>
+                                <Typography variant="h5" color="inherit" className={classes.typoTitle}>
+                                    {this.state.drawerContent &&
                             t(this.state.drawerContent.title)
                             }
-                        </Typography>
-                        <div className={classes.languageSwitcher}>
-                            <LanguageSwitcher dark/>
-                        </div>
+                                </Typography>
+                                <div className={classes.languageSwitcher}>
+                                    <LanguageSwitcher dark/>
+                                </div>
+                            </Grid>
+                        </Grid>
                     </div>
+
                     <div className={classes.drawerTree}>
                         {this.state.drawerContent &&
                         this.state.drawerContent.content

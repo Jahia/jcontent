@@ -1,5 +1,5 @@
 import React from 'react';
-import {CircularProgress, IconButton, List, withStyles} from '@material-ui/core';
+import {CircularProgress, IconButton, List, Typography, withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {CheckCircle, Close, Fullscreen, FullscreenExit, Info} from '@material-ui/icons';
 import {connect} from 'react-redux';
@@ -34,7 +34,6 @@ const styles = theme => ({
         justifyContent: 'flex-end'
     },
     headerText: {
-        fontFamily: 'Nunito sans, sans-serif',
         marginBottom: '15px',
         display: 'flex',
         flex: 12,
@@ -126,7 +125,7 @@ class Upload extends React.Component {
                 <UploadDrawer open={this.isDrawerOpen()} transitionDuration={this.transitionDuration()}>
                     <div className={this.contentClasses()}>
                         <div className={classes.contentHeader}>
-                            { this.headerText() }
+                            <Typography> { this.headerText() }</Typography>
                             { this.headerButton() }
                         </div>
                         <div className={classes.contentBody}>

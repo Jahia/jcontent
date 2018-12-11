@@ -98,7 +98,6 @@ class CmPickerViewMaterial extends React.Component {
         let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, customSelectedClass} = this.props;
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
-        let contextualMenu = React.createRef();
 
         return (
             <div className={classes.root}>
@@ -106,6 +105,8 @@ class CmPickerViewMaterial extends React.Component {
                 <List disablePadding classes={{root: classNames(classes.root, {[classes.loading]: loading})}}>
                     {
                         sortedEntries.map(entry => {
+                            let contextualMenu = React.createRef();
+
                             let itemClass = classNames(classes.listItem, {
                                 [classes.listItemDeleted]: isMarkedForDeletion(entry.node),
                                 [classes.listItemSelected]: entry.selected,

@@ -15,7 +15,7 @@ import {isDescendantOrSelf, getNewNodePath} from '../utils';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../redux/actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
-    state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, ...state.selection, ...state.pathsToRefetch}),
+    state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, selection: state.selection}),
     dispatch => ({
         clear: () => dispatch(clear()),
         setPath: (path, params) => dispatch(cmGoto({path, params})),
@@ -119,10 +119,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     context.setPath(newPath);
                 }
 
-                if (_.find(context.selection, node => node.path === oldPath)) {
-                    let newSelection = _.clone(context.selection);
-                    _.remove(newSelection, node => node.path === oldPath);
-                    context.setSelection(newSelection);
+                if (context.selection === oldPath) {
+                    context.setSelection(undefined);
                 }
             }
 

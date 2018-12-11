@@ -47,7 +47,7 @@ const styles = theme => ({
     }
 });
 
-const component = ({selection, t, classes, uiLang}) => {
+const PublicationStatus = ({selection, t, classes, uiLang}) => {
     if (_.isEmpty(selection)) {
         return null;
     }
@@ -144,7 +144,6 @@ const component = ({selection, t, classes, uiLang}) => {
 };
 
 const mapStateToProps = state => ({
-    selection: state.selection,
     uiLang: state.uiLang
 });
 
@@ -152,4 +151,4 @@ export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps)
-)(component);
+)(PublicationStatus);

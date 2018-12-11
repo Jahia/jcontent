@@ -18,7 +18,7 @@ import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
-import PublicationInfo from './PublicationStatus';
+import PublicationStatus from './PublicationStatus';
 
 class PreviewDrawer extends React.Component {
     render() {
@@ -73,7 +73,7 @@ class PreviewDrawer extends React.Component {
                             <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
                                 {selection.displayName ? selection.displayName : selection.name}
                             </Typography>
-                            <PublicationInfo/>
+                            <PublicationStatus selection={selection}/>
                         </CardContent>
                         <CardActions>
                             <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>

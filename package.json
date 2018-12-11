@@ -26,7 +26,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "^0.1.0-11",
     "@jahia/apollo-dx": "^1.0.0-beta.20181113171842",
-    "@jahia/ds-mui-theme": "^1.0.0-beta.20181211162447",
+    "@jahia/ds-mui-theme": "^1.0.0-beta.20181211180650",
     "@jahia/i18next": "^1.0.0-beta.20180628145923",
     "@jahia/icons": "^1.0.0-beta.20181210101557",
     "@jahia/react-apollo": "^1.0.0-beta.20181113171845",
@@ -63,7 +63,6 @@
     "redux": "^4.0.0",
     "redux-batched-actions": "^0.4.0",
     "rxjs": "^6.3.3",
-    "styled-components": "^3.3.3",
     "uuid": "^3.3.2",
     "whatwg-fetch": "^3.0.0"
   },

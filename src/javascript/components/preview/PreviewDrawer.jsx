@@ -64,10 +64,10 @@ class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                {this.props.selection &&
+                {selection &&
                     <ContentPreview selection={selection}/>
                 }
-                {this.props.selection &&
+                {selection &&
                     <Card>
                         <CardContent>
                             <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">

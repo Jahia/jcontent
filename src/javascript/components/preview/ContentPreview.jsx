@@ -10,6 +10,7 @@ import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/ac
 import constants from '../constants';
 import loadable from 'react-loadable';
 import {DxContext} from '../DxContext';
+import classNames from 'classnames';
 
 const DocumentViewer = loadable({
     loader: () => import('./filePreviewer/DocumentViewer'),
@@ -28,46 +29,30 @@ const ImageViewer = loadable({
 
 const styles = theme => ({
     root: {
-        transition: 'width 0.3s ease-in 0s',
         flex: 1,
         position: 'relative'
     },
-    rootFullWidth: {
-        width: '100vw',
-        transition: 'width 0.3s ease-in 0s'
-    },
     previewContainer: {
-        // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
+        backgroundColor: theme.palette.background.default,
+        overflow: 'scroll',
         position: 'absolute',
         width: '100%',
-        height: '100%',
-        backgroundColor: theme.palette.common.white,
-        overflow: 'scroll',
-        border: 'none'
+        height: '100%'
     },
-    previewContainerFullScreen: {
-        width: '100vw',
-        backgroundColor: theme.palette.common.white,
-        paddingBottom: theme.spacing.unit * 16,
-        overflow: 'scroll',
-        height: 'calc(100vh - 28px)',
-        border: 'none'
+    mediaContainer: {
+        backgroundColor: theme.palette.background.dark
     },
-    previewContainerPdf: {
-        // MaxHeight: 1150, //Fix scroll issue on firefox TODO find better solution, only works for 25 results
+    contentContainer: {
+        padding: (theme.spacing.unit * 3) + 'px'
+    },
+    contentPaper: {
         width: '100%',
-        maxHeight: 'calc(100vh - 330px);',
-        color: theme.palette.background.default,
-        backgroundColor: theme.palette.common.white,
-        paddingBottom: theme.spacing.unit * 16,
-        overflow: 'scroll'
+        height: '100%'
     },
-    previewContainerFullScreenPdf: {
-        width: '100vw',
-        color: theme.palette.background.default,
-        backgroundColor: theme.palette.common.white,
-        overflow: 'scroll',
-        height: 'calc(100vh - 203px)'
+    contentIframe: {
+        border: 'none',
+        width: '100%',
+        height: '100%'
     }
 });
 
@@ -88,33 +73,30 @@ class ContentPreview extends React.Component {
         const selectedItem = selection;
         const path = selectedItem ? selectedItem.path : '';
         const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
-        const rootClass = (previewMode === CM_DRAWER_STATES.FULL_SCREEN) ? classes.rootFullWidth : classes.root;
         return (
             <DxContext.Consumer>
                 {dxContext => (
-                    <div className={rootClass}>
-                        <Paper elevation={0}>
-                            <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
-                                {({loading, data, refetch}) => {
-                                    this.refetchPreview = refetch;
+                    <div className={classes.root}>
+                        <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
+                            {({loading, data, refetch}) => {
+                                this.refetchPreview = refetch;
 
-                                    if (!loading) {
-                                        if (!_.isEmpty(data)) {
-                                            let modes = ['edit'];
-                                            // Check if the node is published in live.
-                                            if (livePreviewAvailable) {
-                                                modes.push('live');
-                                            }
-                                            let selectedMode = _.find(modes, mode => {
-                                                return previewMode === mode;
-                                            }) === undefined ? 'edit' : previewMode;
-                                            return this.previewComponent(data[selectedMode], dxContext);
+                                if (!loading) {
+                                    if (!_.isEmpty(data)) {
+                                        let modes = ['edit'];
+                                        // Check if the node is published in live.
+                                        if (livePreviewAvailable) {
+                                            modes.push('live');
                                         }
+                                        let selectedMode = _.find(modes, mode => {
+                                            return previewMode === mode;
+                                        }) === undefined ? 'edit' : previewMode;
+                                        return this.previewComponent(data[selectedMode], dxContext);
                                     }
-                                    return null;
-                                }}
-                            </Query>
-                        </Paper>
+                                }
+                                return null;
+                            }}
+                        </Query>
                     </div>
                 )}
             </DxContext.Consumer>
@@ -122,20 +104,20 @@ class ContentPreview extends React.Component {
     }
 
     previewComponent(data, dxContext) {
-        const {classes, t, previewMode} = this.props;
-        const fullScreen = (previewMode === CM_DRAWER_STATES.FULL_SCREEN);
+        const {classes, t, previewMode, previewState} = this.props;
+        const fullScreen = (previewState === CM_DRAWER_STATES.FULL_SCREEN);
         let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
         if (displayValue === '') {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
 
-        // If node type is "jnt:file" use pdf viewer
+        // If node type is "jnt:file" use specific viewer
         if (data && data.nodeByPath.isFile) {
             let file = dxContext.contextPath + '/files/' + (previewMode === 'edit' ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
 
             if (isPDF(data.nodeByPath.path)) {
                 return (
-                    <div className={fullScreen ? classes.previewContainerFullScreenPdf : classes.previewContainer}>
+                    <div className={classes.previewContainer}>
                         <PDFViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
@@ -143,26 +125,29 @@ class ContentPreview extends React.Component {
 
             if (isBrowserImage(data.nodeByPath.path)) {
                 return (
-                    <div className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
+                    <div className={classNames(classes.previewContainer, classes.mediaContainer)}>
                         <ImageViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
             }
 
-            let type = getFileType(data.nodeByPath.path);
+            const type = getFileType(data.nodeByPath.path);
+            const isMedia = (type === 'avi' || type === 'mp4' || type === 'video');
             return (
-                <div className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
-                    <DocumentViewer file={file} type={type}/>
+                <div className={classNames(classes.previewContainer, isMedia && classes.mediaContainer)}>
+                    <DocumentViewer file={file} type={type} fullScreen={fullScreen}/>
                 </div>
             );
         }
 
         const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
         return (
-            <React.Fragment>
-                <iframe id="previewContent" className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}/>
-                {this.iframeLoadContent(assets, displayValue)}
-            </React.Fragment>
+            <div className={classNames(classes.previewContainer, classes.contentContainer)}>
+                <Paper elevation={1} classes={{root: classes.contentPaper}}>
+                    <iframe id="previewContent" className={classes.contentIframe}/>
+                    {this.iframeLoadContent(assets, displayValue)}
+                </Paper>
+            </div>
         );
     }
 
@@ -205,6 +190,7 @@ class ContentPreview extends React.Component {
 const mapStateToProps = state => {
     return {
         previewMode: state.previewMode,
+        previewState: state.previewState,
         language: state.language
     };
 };

@@ -1,49 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core';
+import {CardMedia, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import {CardMedia} from '@material-ui/core';
 import {compose} from 'react-apollo';
+import classNames from 'classnames';
 
-const styles = () => ({
-    root: {},
-    controls: {
-        background: 'transparent'
+const styles = theme => ({
+    container: {
+        backgroundSize: 'contain',
+        height: '100%',
+        maxWidth: '550px',
+        paddingTop: (theme.spacing.unit * 3) + 'px',
+        paddingBottom: (theme.spacing.unit * 3) + 'px',
+        margin: '0 auto',
+        '&$fullScreen': {
+            maxWidth: '90%'
+        }
     },
-    icon: {
-        color: '#fff'
-    },
-    iconLabel: {
-        color: '#fff',
-        display: 'inline',
-        marginLeft: '-5px',
-        fontWeight: 500,
-        fontSize: '.95em',
-        fontFamily: 'sans-serif'
-    },
-    littleImage: {
-        width: 550,
-        height: 550
-    },
-    bigImage: {
-        width: '100%',
-        height: '100vh'
-    },
-    cardRoot: {
-        backgroundSize: 'contain'
-    }
+    fullScreen: {}
 });
 
 class ImageViewer extends React.Component {
     render() {
-        let {fullScreen, classes, file} = this.props;
+        let {classes, file, fullScreen} = this.props;
 
         return (
-            <CardMedia
-                classes={{root: classes.cardRoot}}
-                className={fullScreen ? classes.bigImage : classes.littleImage}
-                data-cm-role="preview-image"
-                image={file}
+            <CardMedia className={classNames(classes.container, fullScreen && classes.fullScreen)}
+                       data-cm-role="preview-image"
+                       image={file}
             />
         );
     }

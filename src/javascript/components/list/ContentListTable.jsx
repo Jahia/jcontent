@@ -236,7 +236,7 @@ class ContentListTable extends React.Component {
                                                                                classes={this.getCellClasses(classes, column.id, isSelected)}
                                                                                data-cm-role="table-content-list-cell-name"
                                                                     >
-                                                                        <Typography noWrap color="inherit">
+                                                                        <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
                                                                             {n[column.id]}
                                                                         </Typography>
@@ -267,7 +267,7 @@ class ContentListTable extends React.Component {
                                                                                classes={this.getCellClasses(classes, column.id, isSelected)}
                                                                                data-cm-role="table-content-list-cell-name"
                                                                     >
-                                                                        <Typography noWrap color="inherit">
+                                                                        <Typography noWrap variant="body2" color="inherit">
                                                                             {n[column.id]}
                                                                         </Typography>
                                                                     </TableCell>
@@ -279,7 +279,7 @@ class ContentListTable extends React.Component {
                                                                                classes={this.getCellClasses(classes, column.id, isSelected)}
                                                                                data-cm-role={'table-content-list-cell-' + column.id}
                                                                     >
-                                                                        <Typography noWrap color="inherit">
+                                                                        <Typography noWrap variant="body2" color="inherit">
                                                                             <Moment format="ll"
                                                                                     locale={uiLang}
                                                                             >{n[column.id]}
@@ -293,7 +293,7 @@ class ContentListTable extends React.Component {
                                                                            classes={this.getCellClasses(classes, column.id, isSelected)}
                                                                            data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
-                                                                    <Typography noWrap color="inherit">
+                                                                    <Typography noWrap variant="body2" color="inherit">
                                                                         {n[column.id]}
                                                                     </Typography>
                                                                 </TableCell>

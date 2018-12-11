@@ -6,22 +6,7 @@ import {ChevronDown} from 'mdi-material-ui';
 
 const styles = theme => ({
     typography: {
-        opacity: '0.9',
-        fontFamily: 'Nunito sans, sans-serif',
-        fontSize: '1rem',
-        fontWeight: 200,
-        marginRight: '7px',
-        color: '#504e4d',
-        backgroundSize: '18px'
-    },
-    typographyLight: {
-        opacity: '0.9',
-        fontFamily: 'Nunito sans, sans-serif',
-        fontSize: '1rem',
-        fontWeight: 200,
-        marginRight: '7px',
-        color: '#f5f5f5',
-        backgroundSize: '18px'
+        color: theme.palette.text.contrastText
     },
     formControl: {
         minWidth: 120
@@ -72,7 +57,7 @@ class LanguageSwitcherDisplay extends React.Component {
         return (
             <React.Fragment>
                 <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" data-cm-role="language-switcher" onClick={this.handleClick}>
-                    <Typography className={dark ? classes.typography : classes.typographyLight}>
+                    <Typography variant="body1" color="inherit" className={classes.typography}>
                         {this.uppercaseFirst(_.find(languages, language => language.language === lang).displayName)}
                     &nbsp;
                     </Typography>

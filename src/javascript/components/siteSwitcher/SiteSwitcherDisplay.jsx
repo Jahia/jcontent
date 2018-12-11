@@ -7,22 +7,7 @@ import {translate} from 'react-i18next';
 
 const styles = theme => ({
     typography: {
-        opacity: '0.9',
-        fontFamily: 'Nunito sans, sans-serif',
-        fontSize: '1rem',
-        fontWeight: 200,
-        marginRight: '5px',
-        color: '#504e4d',
-        backgroundSize: '18px'
-    },
-    typographyLight: {
-        opacity: '0.9',
-        fontFamily: 'Nunito sans, sans-serif',
-        fontSize: '1rem',
-        fontWeight: 200,
-        marginRight: '5px',
-        color: theme.palette.background.paper,
-        backgroundSize: '18px'
+        color: theme.palette.text.contrastText
     },
     formControl: {
         minWidth: 120
@@ -76,7 +61,7 @@ class SiteSwitcherDisplay extends React.Component {
                         data-cm-role="site-switcher"
                         onClick={this.handleClick}
                 >
-                    <Typography className={dark ? classes.typography : classes.typographyLight}>
+                    <Typography variant="body1" color="inherit" className={classes.typography}>
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;

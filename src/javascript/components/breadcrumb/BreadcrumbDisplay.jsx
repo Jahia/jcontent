@@ -20,11 +20,6 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit * 2,
         color: theme.palette.layout.dark,
         marginRight: '-3px'
-    },
-    divider: {
-        background: theme.palette.background.default,
-        lineHeight: '1px',
-        height: '1px'
     }
 });
 

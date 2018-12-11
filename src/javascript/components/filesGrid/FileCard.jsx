@@ -257,7 +257,7 @@ class FileCard extends Component {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
                 }}
-                  onClick={() => this.props.onSelect([node])}
+                  onClick={() => this.props.onSelect(node.path)}
                   onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                   onMouseEnter={event => this.onHoverEnter(event)}
                   onMouseLeave={event => this.onHoverExit(event)}
@@ -307,7 +307,7 @@ class FileCard extends Component {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
                 }}
-                  onClick={() => this.props.onSelect([node])}
+                  onClick={() => this.props.onSelect(node.path)}
                   onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                   onMouseEnter={event => this.onHoverEnter(event)}
                   onMouseLeave={event => this.onHoverExit(event)}
@@ -348,7 +348,7 @@ class FileCard extends Component {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
                 }}
-                  onClick={() => this.props.onSelect([node])}
+                  onClick={() => this.props.onSelect(node.path)}
                   onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                   onMouseEnter={event => this.onHoverEnter(event)}
                   onMouseLeave={event => this.onHoverExit(event)}
@@ -400,7 +400,7 @@ class FileCard extends Component {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
                 }}
-                  onClick={() => this.props.onSelect([node])}
+                  onClick={() => this.props.onSelect(node.path)}
                   onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                   onMouseEnter={event => this.onHoverEnter(event)}
                   onMouseLeave={event => this.onHoverExit(event)}
@@ -446,7 +446,7 @@ class FileCard extends Component {
                     event.stopPropagation();
                     contextualMenu.current.open(event);
                 }}
-                  onClick={() => this.props.onSelect([node])}
+                  onClick={() => this.props.onSelect(node.path)}
                   onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
                   onMouseEnter={event => this.onHoverEnter(event)}
                   onMouseLeave={event => this.onHoverExit(event)}

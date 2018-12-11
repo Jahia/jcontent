@@ -14,7 +14,7 @@ import Constants from './constants';
 
 const styles = theme => ({
     itemAndRowSelected: {
-        backgroundColor: theme.palette.background.default
+        backgroundColor: theme.palette.primary.main
     },
     listContainer: {
         overflow: 'scroll',

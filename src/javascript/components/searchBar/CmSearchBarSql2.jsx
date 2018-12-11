@@ -23,9 +23,9 @@ const styles = theme => ({
         color: 'inherit'
     },
     replaceButtonStyle: {
-        minHeight: 32,
-        maxHeight: 32,
-        height: 32
+        minHeight: 43,
+        maxHeight: 43,
+        height: 43
     }
 });
 

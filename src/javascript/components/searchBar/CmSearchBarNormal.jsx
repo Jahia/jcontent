@@ -22,9 +22,9 @@ const styles = () => ({
         height: 34
     },
     replaceButtonStyle: {
-        minHeight: 51,
-        maxHeight: 51,
-        height: 51
+        minHeight: 43,
+        maxHeight: 43,
+        height: 43
     }
 });
 

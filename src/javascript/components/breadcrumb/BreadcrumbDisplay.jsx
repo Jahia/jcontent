@@ -1,6 +1,5 @@
 import React from 'react';
 import {Button, Menu, MenuItem} from '@material-ui/core';
-import styled from 'styled-components/dist/styled-components';
 import {Folder} from '@material-ui/icons';
 import {PageIcon} from '@jahia/icons';
 import {withStyles} from '@material-ui/core';
@@ -10,84 +9,24 @@ import {ellipsizeText} from '../utils.js';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
-    root: {
-        color: theme.palette.text.primary
-    },
-    menuItemHeader: {
-        width: '100%',
-        display: 'inline-block',
-        backgroundColor: theme.palette.background.default
-    },
     menuItem: {
-        width: '100%',
-        display: 'inline-block',
-        '&:hover': {
-            backgroundColor: theme.palette.background.default
-        }
-    },
-    menuButton: {
-        '&:hover': {
-            backgroundColor: 'transparent !important'
-        }
+        backgroundColor: theme.palette.background.paper
     },
     contentIcon: {
-        color: theme.palette.layout.dark,
-        fontSize: '18px'
-    },
-    contentIcon2: {
         fontSize: '20px'
     },
     contentLabel: {
         paddingLeft: theme.spacing.unit * 2,
         paddingRight: theme.spacing.unit * 2,
         color: theme.palette.layout.dark,
-        marginLeft: '1px',
-        marginRight: '-3px',
-        fontSize: '13px'
-    },
-    contentLabelMenu: {
-        color: theme.palette.text.dark,
-        marginLeft: '1px',
-        marginRight: '-3px',
-        fontSize: '13px'
-    },
-    betweenIcon: {
-        verticalAlign: 'middle',
-        position: 'relative',
-        color: theme.palette.text.primary
-    },
-    menu: {
-        background: 'red'
+        marginRight: '-3px'
     },
     divider: {
         background: theme.palette.background.default,
         lineHeight: '1px',
         height: '1px'
-    },
-    chevronSvg: {
-        marginRight: theme.spacing.unit * 2,
-        fontSize: '18px',
-        color: theme.palette.text.primary
-    },
-    menuItemSize: {
-        paddingLeft: '10px !important'
-    },
-    colorMenu: {
-        background: theme.palette.background.paper
     }
 });
-
-const MenuItemContainer = styled.div`
-    width:100%;
-    background: #F5F5f5;
-    outline: none;
-`;
-
-const MenuItemLabel = styled.div`
-    bottom: 7px;
-    display: inline;
-    position: relative;
-`;
 
 class BreadcrumbDisplay extends React.Component {
     constructor(props) {
@@ -167,34 +106,23 @@ class BreadcrumbDisplay extends React.Component {
         let {classes} = this.props;
         return (
             <span>
-                <MenuItemContainer key={'dropdown_' + node.uuid}>
-                    <MenuItem disableRipple
-                              classes={{root: classes.menuItemSize}}
-                              className={classes.menuItemHeader}
-                              onClick={event => this.onMenuItemSelected(event, node)}
-                    >
-                        {this.renderIcon(node, classes)}
-                        <MenuItemLabel className={classes.contentLabelMenu}>
-                            {node.name}
-                        </MenuItemLabel>
-                    </MenuItem>
-                </MenuItemContainer>
-                {node.siblings.length > 1 &&
-                <div className={classes.divider}/>
-                }
+                <MenuItem key={'dropdown_' + node.uuid}
+                          disableRipple
+                          selected
+                          disableGutters
+                          onClick={event => this.onMenuItemSelected(event, node)}
+                >
+                    {this.renderIcon(node, classes)}{node.name}
+                </MenuItem>
                 {node.siblings.map(siblingNode => {
                     if (siblingNode.name === node.name) {
                         return null;
                     }
                     return (
-                        <MenuItemContainer key={siblingNode.uuid}>
-                            <MenuItem disableRipple classes={{root: classes.menuItemSize}} className={classes.menuItem} onClick={event => this.onMenuItemSelected(event, siblingNode)}>
-                                {this.renderIcon(siblingNode, classes)}
-                                <MenuItemLabel className={classes.contentLabelMenu}>
-                                    {siblingNode.name}
-                                </MenuItemLabel>
-                            </MenuItem>
-                        </MenuItemContainer>
+                        <MenuItem key={siblingNode.uuid} disableRipple classes={{root: classes.menuItem}} onClick={event => this.onMenuItemSelected(event, siblingNode)}>
+                            {this.renderIcon(siblingNode, classes)}{siblingNode.name}
+                        </MenuItem>
+
                     );
                 })}
             </span>
@@ -209,7 +137,6 @@ class BreadcrumbDisplay extends React.Component {
                         disableRipple
                         aria-haspopup="true"
                         aria-owns={'breadcrumbMenu_' + node.uuid}
-                        className={classes.menuButton}
                         id={'menuToggleButton_' + node.uuid}
                         onMouseOver={this.onMenuButtonActivatorEnter}
                 >
@@ -227,7 +154,6 @@ class BreadcrumbDisplay extends React.Component {
                     disableRipple
                     aria-haspopup="true"
                     aria-owns={'breadcrumbMenu_' + node.uuid}
-                    className={classes.menuButton}
                     id={'menuToggleButton_' + node.uuid}
                     onClick={() => {
                         this.props.handleSelect(node.siblings[0].mode, node.siblings[0].path);
@@ -247,7 +173,7 @@ class BreadcrumbDisplay extends React.Component {
     renderIcon(node, classes) {
         switch (node.type) {
             case 'jnt:virtualsite':
-                return <icons.VirtualsiteIcon className={classes.contentIcon2}/>;
+                return <icons.VirtualsiteIcon className={classes.contentIcon}/>;
             case 'jnt:folder':
             case 'jnt:contentFolder':
                 return <Folder className={classes.contentIcon}/>;

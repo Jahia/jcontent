@@ -8,67 +8,10 @@ import _ from 'lodash';
 import BreadcrumbDisplay from './BreadcrumbDisplay';
 
 const styles = theme => ({
-    root: {
-        color: theme.palette.text.primary
-    },
-    menuItemHeader: {
-        width: '100%',
-        display: 'inline-block',
-        backgroundColor: theme.palette.background.default
-    },
-    menuItem: {
-        width: '100%',
-        display: 'inline-block',
-        '&:hover': {
-            backgroundColor: theme.palette.background.default
-        }
-    },
-    menuButton: {
-        '&:hover': {
-            backgroundColor: 'transparent !important'
-        }
-    },
-    contentIcon: {
-        fontSize: '18px'
-    },
-    contentIcon2: {
-        fontSize: '20px'
-    },
-    contentLabel: {
-        color: theme.palette.text.primary,
-        marginLeft: '1px',
-        marginRight: '-3px',
-        fontSize: '13px'
-    },
-    contentLabelMenu: {
-        color: theme.palette.text.dark,
-        marginLeft: '1px',
-        marginRight: '-3px',
-        fontSize: '13px'
-    },
-    betweenIcon: {
-        verticalAlign: 'middle',
-        position: 'relative',
-        color: theme.palette.text.primary
-    },
-    menu: {
-        background: 'red'
-    },
-    divider: {
-        background: theme.palette.background.default,
-        lineHeight: '1px',
-        height: '1px'
-    },
     chevronSvg: {
         marginRight: theme.spacing.unit * 2,
         fontSize: '18px',
-        color: theme.palette.text.primary
-    },
-    menuItemSize: {
-        paddingLeft: '10px !important'
-    },
-    colorMenu: {
-        background: theme.palette.background.paper
+        verticalAlign: 'middle'
     }
 });
 
@@ -127,7 +70,7 @@ class Breadcrumb extends React.Component {
 
                 {/* Render an ellipsis in case we are about to cut any intermediate breadcrumb items. */}
                 {firstVisibleIndex > 1 &&
-                <MoreHoriz className={classes.betweenIcon}/>
+                <MoreHoriz className={classes.chevronSvg}/>
                 }
 
                 {breadcrumbs.map((breadcrumb, i) => {
@@ -158,7 +101,7 @@ class Breadcrumb extends React.Component {
                     trimLabel={(items.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) && (itemIndex < items.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY)}
                 />
                 {itemIndex < items.length - 1 &&
-                <ChevronRightIcon classes={{root: classes.chevronSvg}} className={classes.betweenIcon}/>
+                <ChevronRightIcon classes={{root: classes.chevronSvg}}/>
                 }
             </span>
         );

@@ -84,10 +84,6 @@ class ContentPreview extends React.Component {
     }
 
     render() {
-        if (_.isEmpty(this.props.selection)) {
-            return null;
-        }
-
         const {selection, classes, previewMode} = this.props;
         const selectedItem = selection;
         const path = selectedItem ? selectedItem.path : '';

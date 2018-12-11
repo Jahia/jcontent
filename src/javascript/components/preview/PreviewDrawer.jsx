@@ -64,19 +64,23 @@ class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <ContentPreview selection={selection}/>
-                <Card>
-                    <CardContent>
-                        <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
-                            {selection.displayName ? selection.displayName : selection.name}
-                        </Typography>
-                        <PublicationInfo/>
-                    </CardContent>
-                    <CardActions>
-                        <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>
-                        <DisplayActions target="editPreviewBar" context={{path: selection.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
-                    </CardActions>
-                </Card>
+                {this.props.selection &&
+                    <ContentPreview selection={selection}/>
+                }
+                {this.props.selection &&
+                    <Card>
+                        <CardContent>
+                            <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
+                                {selection.displayName ? selection.displayName : selection.name}
+                            </Typography>
+                            <PublicationInfo/>
+                        </CardContent>
+                        <CardActions>
+                            <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>
+                            <DisplayActions target="editPreviewBar" context={{path: selection.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
+                        </CardActions>
+                    </Card>
+                }
             </React.Fragment>
         );
     }

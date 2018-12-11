@@ -111,7 +111,7 @@ class ContentLayout extends React.Component {
     }
 
     render() {
-        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState} = this.props;
+        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, selection} = this.props;
         let contextualMenu = React.createRef();
         return (
             <React.Fragment>
@@ -123,50 +123,48 @@ class ContentLayout extends React.Component {
                         <CMTopBar mode={mode}/>
                     </Grid>
                 </Grid>
-                <div className={classes.appFrame}>
-                    <Drawer className={classes.treeDrawer}
-                            variant="persistent"
-                            anchor="left"
-                            open={treeState >= CM_DRAWER_STATES.SHOW}
-                            classes={{paper: classes.treeDrawerPaper}}
-                    >
-                        <ContentTrees isOpen={treeState >= CM_DRAWER_STATES.SHOW}
-                                      setRefetch={this.setTreeRefetcher}
-                        />
-                    </Drawer>
-                    <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                    <main className={classNames(classes.content, {
-                        [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
-                        [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
-                    })}
-                          onContextMenu={event => contextualMenu.current.open(event)}
-                    >
-                        <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
-                            {({rows, contentNotFound, totalCount}) => {
-                                return (
-                                    <Paper className={classes.paper}>
-                                        {mode === Constants.mode.FILES && filesMode === 'grid' ?
-                                            <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
-                                            <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
-                                        }
-                                    </Paper>
-                                );
-                            }}
-                        </ContentData>
-                    </main>
-                    <Drawer data-cm-role="preview-drawer"
-                            variant="persistent"
-                            anchor="right"
-                            open={previewState >= CM_DRAWER_STATES.SHOW}
-                            classes={{
-                                docked: classes.previewDrawer,
-                                paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
-                                paperAnchorDockedRight: previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawerTransition : ''
-                            }}
-                    >
-                        {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer/>}
-                    </Drawer>
-                </div>
+                <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
+                    {({rows, contentNotFound, totalCount}) => (
+                        <div className={classes.appFrame}>
+                            <Drawer className={classes.treeDrawer}
+                                    variant="persistent"
+                                    anchor="left"
+                                    open={treeState >= CM_DRAWER_STATES.SHOW}
+                                    classes={{paper: classes.treeDrawerPaper}}
+                            >
+                                <ContentTrees isOpen={treeState >= CM_DRAWER_STATES.SHOW}
+                                              setRefetch={this.setTreeRefetcher}
+                                />
+                            </Drawer>
+                            <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
+                            <main className={classNames(classes.content, {
+                                [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
+                                [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
+                            })}
+                                  onContextMenu={event => contextualMenu.current.open(event)}
+                            >
+                                <Paper className={classes.paper}>
+                                    {mode === Constants.mode.FILES && filesMode === 'grid' ?
+                                        <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
+                                        <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
+                                    }
+                                </Paper>
+                            </main>
+                            <Drawer data-cm-role="preview-drawer"
+                                    variant="persistent"
+                                    anchor="right"
+                                    open={previewState >= CM_DRAWER_STATES.SHOW}
+                                    classes={{
+                                        docked: classes.previewDrawer,
+                                        paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
+                                        paperAnchorDockedRight: previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawerTransition : ''
+                                    }}
+                            >
+                                {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}
+                            </Drawer>
+                        </div>
+                    )}
+                </ContentData>
 
                 <Upload uploadUpdateCallback={status => {
                     if (status && status.uploading === 0) {
@@ -185,7 +183,8 @@ const mapStateToProps = state => {
         path: state.path,
         previewState: state.previewState,
         treeState: state.treeState,
-        filesMode: state.filesGrid.mode
+        filesMode: state.filesGrid.mode,
+        selection: state.selection
     };
 };
 

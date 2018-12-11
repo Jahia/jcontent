@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select, {components} from 'react-select';
-import {ArrowDropDown as ArrowDropDownIcon} from '@material-ui/icons';
+import {ChevronDown} from 'mdi-material-ui';
 import {Close as CloseIcon} from '@material-ui/icons';
 import {ListItemIcon, ListItemText, Input, withStyles, withTheme, MenuItem} from '@material-ui/core';
 import * as _ from 'lodash';
@@ -161,7 +161,7 @@ class DropdownIndicator extends React.Component {
         if (!this.props.selectProps.open) {
             return (
                 <components.DropdownIndicator {...this.props}>
-                    <ArrowDropDownIcon/>
+                    <ChevronDown style={{fontSize: '18px'}}/>
                 </components.DropdownIndicator>
             );
         }

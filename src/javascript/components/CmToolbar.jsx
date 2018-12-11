@@ -1,26 +1,15 @@
 import React from 'react';
-import {AppBar, Button, IconButton, Toolbar, withStyles} from '@material-ui/core';
-import {Close, Refresh} from '@material-ui/icons';
-import {ChevronRight} from '@material-ui/icons';
-import {DisplayActions} from '@jahia/react-material';
-import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
-import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
-import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
-import * as _ from 'lodash';
-import {translate} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto, cmSetSelection, cmSetTreeState} from './redux/actions';
+import {AppBar, IconButton, Toolbar, withStyles} from '@material-ui/core';
+import {ChevronRight, Refresh} from '@material-ui/icons';
+import {CM_DRAWER_STATES, cmSetTreeState} from './redux/actions';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import Constants from './constants';
-import {buttonRenderer} from '@jahia/react-material/index';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
 import CmSearchControlBar from './searchBar/CmSearchControlBar';
+import CmBrowseControlBar from './CmBrowseControlBar';
 
-const styles = theme => ({
-    grow: {
-        flex: 1,
-        paddingLeft: theme.spacing.unit
-    },
+const styles = () => ({
     appBarElevation: {
         zIndex: 10
     }
@@ -39,32 +28,9 @@ class CmToolbar extends React.Component {
         refetchContentTreeAndListData(contentTreeConfigs);
     }
 
-    isBrowsing() {
-        let {mode} = this.props;
-        return (mode === Constants.mode.BROWSE || mode === Constants.mode.FILES);
-    }
-
-    isSearching() {
-        let {mode} = this.props;
-        return (mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH);
-    }
-
-    isRootNode() {
-        let {path, siteKey} = this.props;
-        return (path === ('/sites/' + siteKey));
-    }
-
     render() {
-        const {contentTreeConfigs, t, classes,
-            searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms,
-            mode, path, clearSearch, treeState, setTreeState} = this.props;
+        const {contentTreeConfigs, classes, mode, treeState, setTreeState} = this.props;
 
-        const params = {
-            searchContentType: searchContentType,
-            searchTerms: searchTerms,
-            sql2SearchFrom: sql2SearchFrom,
-            sql2SearchWhere: sql2SearchWhere
-        };
         return (
             <AppBar position="relative" classes={{root: classes.appBarElevation}}>
                 <Toolbar variant="dense">
@@ -72,35 +38,14 @@ class CmToolbar extends React.Component {
                     <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
                         <ChevronRight/>
                     </IconButton>
-                        }
-                    <div className={classes.grow}>
-                        {this.isSearching() ?
-                            <CmSearchControlBar/> :
-                            <ContentBreadcrumbs mode={this.props.mode}/>
-                        }
-                    </div>
-                    {mode === Constants.mode.FILES &&
-                    <React.Fragment>
-                        <FilesGridSizeSelector/>
-                        <FilesGridModeSelector/>
-                    </React.Fragment>
                     }
-                    {this.isBrowsing() && !this.isRootNode() &&
-                    <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'}, true)}/>
+                    {(mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH) ?
+                        <CmSearchControlBar/> :
+                        <CmBrowseControlBar/>
                     }
                     <IconButton color="inherit" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                         <Refresh/>
                     </IconButton>
-                    {this.isSearching() &&
-                    <Button data-cm-role="search-clear"
-                            color="inherit"
-                            variant="text"
-                            onClick={() => clearSearch(params)}
-                    >
-                        <Close/>
-                        {t('label.contentManager.search.clear')}
-                    </Button>
-                    }
                 </Toolbar>
             </AppBar>
         );
@@ -109,35 +54,14 @@ class CmToolbar extends React.Component {
 
 const mapStateToProps = state => ({
     mode: state.mode,
-    selection: state.selection,
-    uiLang: state.uiLang,
-    siteKey: state.site,
-    path: state.path,
-    lang: state.language,
-    params: state.params,
-    treeState: state.treeState,
-    searchTerms: state.params.searchTerms,
-    searchContentType: state.params.searchContentType,
-    sql2SearchFrom: state.params.sql2SearchFrom,
-    sql2SearchWhere: state.params.sql2SearchWhere
+    treeState: state.treeState
 });
 
 const mapDispatchToProps = dispatch => ({
-    onRowSelected: selection => dispatch(cmSetSelection(selection)),
-    setPath: (path, params) => dispatch(cmGoto({path, params})),
-    setTreeState: state => dispatch(cmSetTreeState(state)),
-    clearSearch: params => {
-        params = _.clone(params);
-        _.unset(params, 'searchContentType');
-        _.unset(params, 'searchTerms');
-        _.unset(params, 'sql2SearchFrom');
-        _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: 'browse', params: params}));
-    }
+    setTreeState: state => dispatch(cmSetTreeState(state))
 });
 
 export default compose(
     withStyles(styles),
-    translate(),
     connect(mapStateToProps, mapDispatchToProps)
 )(CmToolbar);

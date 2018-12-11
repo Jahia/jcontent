@@ -25,9 +25,7 @@ class SearchBarLayout extends React.Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <Typography align="right">
-                            {rightFooter}
-                        </Typography>
+                        {rightFooter}
                     </Grid>
                 </Grid>
             </React.Fragment>

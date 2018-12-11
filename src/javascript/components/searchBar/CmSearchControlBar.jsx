@@ -1,69 +1,72 @@
 import React from 'react';
-import {translate, Trans} from 'react-i18next';
+import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmSetPath} from '../redux/actions';
-import {Button, withStyles} from '@material-ui/core';
-import {Search} from '@material-ui/icons';
+import {cmGoto, cmSetPath} from '../redux/actions';
+import {Button, Typography, withStyles} from '@material-ui/core';
+import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
+import * as _ from 'lodash';
+import {VirtualsiteIcon} from '@jahia/icons';
 
 const styles = theme => ({
-    infoSearchPath: {
-        position: 'relative',
-        fontSize: '14px',
-        paddingTop: '10px',
-        display: 'inline-block',
-        bottom: '5px',
-        color: theme.palette.text.secondary,
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit
+    grow: {
+        flex: 1
     },
     infoSearchPathValue: {
         color: theme.palette.text.primary
-    },
-    searchClear: {
-        maxHeight: 25,
-        minHeight: 25,
-        marginLeft: '18'
     },
     searchIcon: {
         marginLeft: theme.spacing.unit,
         fontSize: '20',
         color: theme.palette.text.disabled
-    },
-    container: {
-        display: 'flex',
-        alignItems: 'center'
     }
 });
 
 class CmSearchControlBar extends React.Component {
     render() {
-        let {siteKey, path, setPath, t, classes, siteDisplayableName} = this.props;
+        let {
+            siteKey, path, setPath, t, classes, siteDisplayableName, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms
+        } = this.props;
         let siteRootPath = '/sites/' + siteKey;
-
+        const params = {
+            searchContentType: searchContentType,
+            searchTerms: searchTerms,
+            sql2SearchFrom: sql2SearchFrom,
+            sql2SearchWhere: sql2SearchWhere
+        };
         return (
-            <div className={classes.container}>
-                <div>
-                    <Search className={classes.searchIcon}/>
-                    <div className={classes.infoSearchPath}>
-                        <Trans i18nKey="label.contentManager.search.searchPath"
-                               values={{path: path}}
-                               components={[<span key="searchPath" className={classes.infoSearchPathValue}>univers</span>]}
-                        />
-                    </div>
-                </div>
-                <div>
-                    {(path !== siteRootPath) &&
-                    <Button variant="contained"
-                            classes={{sizeSmall: classes.searchClear}}
-                            size="small"
-                            onClick={() => setPath(siteRootPath)}
-                    >
-                        {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
-                    </Button>
-                    }
-                </div>
-            </div>
+            <React.Fragment>
+                <Search fontSize="small"/>
+                <Typography color="textSecondary">
+                    <Trans i18nKey="label.contentManager.search.searchPath"
+                           values={{path: path}}
+                           components={[<span key="searchPath" className={classes.infoSearchPathValue}>univers</span>]}
+                    />
+                </Typography>
+
+                <div className={classes.grow}/>
+
+                {(path !== siteRootPath) &&
+                <Button data-cm-role="search-all"
+                        variant="contained"
+                        size="small"
+                        onClick={() => setPath(siteRootPath)}
+                >
+                    <VirtualsiteIcon/>
+                    {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
+                </Button>
+                }
+                <Button data-cm-role="search-clear"
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                        onClick={() => clearSearch(params)}
+                >
+                    <Close/>
+                    {t('label.contentManager.search.clear')}
+                </Button>
+
+            </React.Fragment>
         );
     }
 }
@@ -72,12 +75,24 @@ const mapStateToProps = state => {
     return {
         siteDisplayableName: state.siteDisplayableName,
         siteKey: state.site,
-        path: state.path
+        path: state.path,
+        searchTerms: state.params.searchTerms,
+        searchContentType: state.params.searchContentType,
+        sql2SearchFrom: state.params.sql2SearchFrom,
+        sql2SearchWhere: state.params.sql2SearchWhere
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    setPath: path => dispatch(cmSetPath(path))
+    setPath: path => dispatch(cmSetPath(path)),
+    clearSearch: params => {
+        params = _.clone(params);
+        _.unset(params, 'searchContentType');
+        _.unset(params, 'searchTerms');
+        _.unset(params, 'sql2SearchFrom');
+        _.unset(params, 'sql2SearchWhere');
+        dispatch(cmGoto({mode: 'browse', params: params}));
+    }
 });
 
 export default compose(

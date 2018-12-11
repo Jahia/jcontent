@@ -86,7 +86,7 @@
                 "normal": "Basic",
                 "search": "Search",
                 "searchEverywhere": "Search all of {{site}}",
-                "searchPath": "Searching under: <0>{{path}}</0>",
+                "searchPath": "<0>Searching under: </0> <1>{{path}}<1>",
                 "clear": "Clear search",
                 "refresh": "Refresh results",
                 "normalPrompt": "What are you looking for?",

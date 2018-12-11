@@ -14,11 +14,6 @@ const styles = theme => ({
     },
     infoSearchPathValue: {
         color: theme.palette.text.primary
-    },
-    searchIcon: {
-        marginLeft: theme.spacing.unit,
-        fontSize: '20',
-        color: theme.palette.text.disabled
     }
 });
 
@@ -37,12 +32,11 @@ class CmSearchControlBar extends React.Component {
         return (
             <React.Fragment>
                 <Search fontSize="small"/>
-                <Typography color="textSecondary">
-                    <Trans i18nKey="label.contentManager.search.searchPath"
-                           values={{path: path}}
-                           components={[<span key="searchPath" className={classes.infoSearchPathValue}>univers</span>]}
-                    />
-                </Typography>
+                <Trans i18nKey="label.contentManager.search.searchPath"
+                       values={{path: path}}
+                >
+                    <Typography key="searchPath" color="textSecondary">Searching under: </Typography><Typography key="searchPath" color="textPrimary">path</Typography>
+                </Trans>
 
                 <div className={classes.grow}/>
 

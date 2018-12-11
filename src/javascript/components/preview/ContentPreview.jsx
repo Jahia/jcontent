@@ -149,7 +149,7 @@ class ContentPreview extends React.Component {
                 );
             }
 
-            let type = getFileType(file);
+            let type = getFileType(data.nodeByPath.path);
             return (
                 <div className={fullScreen ? classes.previewContainerFullScreen : classes.previewContainer}>
                     <DocumentViewer file={file} type={type}/>

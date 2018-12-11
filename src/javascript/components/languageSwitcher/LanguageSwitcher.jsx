@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {cmSetLanguage} from '../redux/actions';
+import {cmSetAvailableLanguages, cmSetLanguage} from '../redux/actions';
 import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
 class LanguageSwitcher extends React.Component {
@@ -64,6 +64,7 @@ class LanguageSwitcher extends React.Component {
                 }
             }
         }
+        this.props.setAvailableLanguages(parsedSiteLanguages);
         return parsedSiteLanguages;
     }
 
@@ -112,6 +113,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onSelectLanguage: lang => {
         dispatch(cmSetLanguage(lang));
+    },
+    setAvailableLanguages: availableLanguages => {
+        dispatch(cmSetAvailableLanguages(availableLanguages));
     }
 });
 

@@ -12,6 +12,7 @@ const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
 const CM_ADD_PATHS_TO_REFETCH = 'CM_ADD_PATHS_TO_REFETCH';
 const CM_REMOVE_PATHS_TO_REFETCH = 'CM_REMOVE_PATHS_TO_REFETCH';
+const CM_SET_AVAILABLE_LANGUAGES = 'CM_SET_AVAILABLE_LANGUAGES';
 
 const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 
@@ -67,6 +68,13 @@ function cmSetSite(site, language, siteDisplayableName) {
 
 function cmSetLanguage(language) {
     return cmGoto({language});
+}
+
+function cmSetAvailableLanguages(availableLanguages) {
+    return {
+        type: CM_SET_AVAILABLE_LANGUAGES,
+        availableLanguages: availableLanguages
+    };
 }
 
 function cmSetMode(mode) {
@@ -153,8 +161,10 @@ export {
     CM_DRAWER_STATES,
     CM_ADD_PATHS_TO_REFETCH,
     CM_REMOVE_PATHS_TO_REFETCH,
+    CM_SET_AVAILABLE_LANGUAGES,
     cmGoto,
     cmSetLanguage,
+    cmSetAvailableLanguages,
     setUiLang,
     cmSetSelection,
     cmSetSite,

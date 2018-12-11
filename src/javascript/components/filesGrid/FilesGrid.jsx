@@ -7,7 +7,7 @@ import FileCard from './FileCard';
 import {Grid} from '@material-ui/core';
 import {Pagination} from '@jahia/react-material';
 import {DxContext} from '../DxContext';
-import {withStyles} from '@material-ui/core';
+import {Typography, withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../fileupload/UploadTransformComponent';
 import {valueToSizeTransformation} from './filesGridUtils';
 import {connect} from 'react-redux';
@@ -35,7 +35,8 @@ const styles = theme => ({
     },
     empty: {
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginTop: theme.spacing.unit * 3
     }
 });
 
@@ -80,9 +81,9 @@ class FilesGrid extends Component {
                 <div>
                     <CmToolbar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                        <h3 className={classes.empty}>
+                        <Typography variant="subtitle1" className={classes.empty}>
                             { t('label.contentManager.filesGrid.emptyMessage') }
-                        </h3>
+                        </Typography>
                     </Grid>
                 </div>
             );

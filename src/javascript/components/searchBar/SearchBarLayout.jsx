@@ -18,7 +18,7 @@ class SearchBarLayout extends React.Component {
                         </Tooltip>
                     </Grid>
                 </Paper>
-                <Grid container spacing={0}>
+                <Grid container spacing={0} alignItems="center">
                     <Grid item xs={8}>
                         <Typography align="left">
                             {leftFooter}

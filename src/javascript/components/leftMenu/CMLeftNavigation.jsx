@@ -35,7 +35,10 @@ const styles = theme => ({
         paddingTop: '34px !important',
         paddingLeft: '20px !important',
         paddingBottom: '22px !important',
-        boxShadow: 'none !important'
+        boxShadow: 'none !important',
+        '&:hover': {
+            backgroundColor: theme.palette.layout.dark + 'important'
+        }
     },
     drawerPaper: {
         background: theme.palette.background.paper,

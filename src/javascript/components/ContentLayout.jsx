@@ -1,8 +1,7 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Button, Drawer, Grid, IconButton, Paper, Snackbar, withStyles} from '@material-ui/core';
-import {Close} from '@material-ui/icons';
+import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
@@ -79,28 +78,26 @@ const styles = theme => ({
         position: 'relative',
         display: 'flex',
         width: '100%'
+    },
+    metaNav: {
+        position: 'absolute',
+        width: '50%',
+        height: theme.spacing.unit * 3,
+        top: 0,
+        right: 0,
+        paddingRight: theme.spacing.unit * 4,
+        textAlign: 'right',
+        color: theme.palette.text.contrastText + '!important',
+        background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, ' + theme.palette.layout.main + ' 100%) !important;',
+        '& a': {
+            color: 'inherit!important'
+        }
     }
 });
 
 const GRID_SIZE = 12;
 
 class ContentLayout extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            displaySnackbar: true
-        };
-        this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
-    }
-
-    handleSnackbarClose(event, reason) {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({displaySnackbar: false});
-    }
-
     setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
     }
@@ -114,91 +111,62 @@ class ContentLayout extends React.Component {
     }
 
     render() {
-        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, t, selection} = this.props;
-        const {displaySnackbar} = this.state;
+        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState} = this.props;
         let contextualMenu = React.createRef();
         return (
             <React.Fragment>
-                <Snackbar anchorOrigin={{
-                              vertical: 'bottom',
-                              horizontal: 'left'
-                          }}
-                          autoHideDuration={6000}
-                          ContentProps={{
-                              'aria-describedby': 'message-id'
-                          }}
-                          message={<span id="message-id"><Trans i18nKey="label.contentManager.link.academy"/></span>}
-                          open={displaySnackbar}
-                          action={[
-                              <Button key="undo"
-                                      variant="contained"
-                                      color="default"
-                                      component="a"
-                                      href={contextJsParameters.config.academyLink}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      size="small"
-                              >
-                                  {t('label.contentManager.link.visitOurAcademy')}
-                              </Button>,
-                              <IconButton key="close"
-                                          aria-label="Close"
-                                          color="inherit"
-                                          className={classes.close}
-                                          onClick={this.handleSnackbarClose}
-                              >
-                                  <Close/>
-                              </IconButton>
-                          ]}
-                          onClose={this.handleSnackbarClose}
-                />
+                <div className={classes.metaNav}>
+                    <Typography variant="overline" color="inherit"><Trans i18nKey="label.contentManager.link.academy" components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer">univers</a>]}/></Typography>
+                </div>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
                         <CMTopBar mode={mode}/>
                     </Grid>
                 </Grid>
-                <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
-                    {({rows, contentNotFound, totalCount}) => (
-                        <div className={classes.appFrame}>
-                            <Drawer className={classes.treeDrawer}
-                                    variant="persistent"
-                                    anchor="left"
-                                    open={treeState >= CM_DRAWER_STATES.SHOW}
-                                    classes={{paper: classes.treeDrawerPaper}}
-                            >
-                                <ContentTrees isOpen={treeState >= CM_DRAWER_STATES.SHOW}
-                                              setRefetch={this.setTreeRefetcher}
-                                />
-                            </Drawer>
-                            <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                            <main className={classNames(classes.content, {
-                                [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
-                                [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
-                            })}
-                                  onContextMenu={event => contextualMenu.current.open(event)}
-                            >
-                                <Paper className={classes.paper}>
-                                    {mode === Constants.mode.FILES && filesMode === 'grid' ?
-                                        <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
-                                        <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
-                                    }
-                                </Paper>
-                            </main>
-                            <Drawer data-cm-role="preview-drawer"
-                                    variant="persistent"
-                                    anchor="right"
-                                    open={previewState >= CM_DRAWER_STATES.SHOW}
-                                    classes={{
-                                        docked: classes.previewDrawer,
-                                        paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
-                                        paperAnchorDockedRight: previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawerTransition : ''
-                                    }}
-                            >
-                                {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}
-                            </Drawer>
-                        </div>
-                    )}
-                </ContentData>
+                <div className={classes.appFrame}>
+                    <Drawer className={classes.treeDrawer}
+                            variant="persistent"
+                            anchor="left"
+                            open={treeState >= CM_DRAWER_STATES.SHOW}
+                            classes={{paper: classes.treeDrawerPaper}}
+                    >
+                        <ContentTrees isOpen={treeState >= CM_DRAWER_STATES.SHOW}
+                                      setRefetch={this.setTreeRefetcher}
+                        />
+                    </Drawer>
+                    <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
+                    <main className={classNames(classes.content, {
+                        [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
+                        [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
+                    })}
+                          onContextMenu={event => contextualMenu.current.open(event)}
+                    >
+                        <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
+                            {({rows, contentNotFound, totalCount}) => {
+                                return (
+                                    <Paper className={classes.paper}>
+                                        {mode === Constants.mode.FILES && filesMode === 'grid' ?
+                                            <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
+                                            <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
+                                        }
+                                    </Paper>
+                                );
+                            }}
+                        </ContentData>
+                    </main>
+                    <Drawer data-cm-role="preview-drawer"
+                            variant="persistent"
+                            anchor="right"
+                            open={previewState >= CM_DRAWER_STATES.SHOW}
+                            classes={{
+                                docked: classes.previewDrawer,
+                                paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
+                                paperAnchorDockedRight: previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawerTransition : ''
+                            }}
+                    >
+                        {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer/>}
+                    </Drawer>
+                </div>
 
                 <Upload uploadUpdateCallback={status => {
                     if (status && status.uploading === 0) {
@@ -217,8 +185,7 @@ const mapStateToProps = state => {
         path: state.path,
         previewState: state.previewState,
         treeState: state.treeState,
-        filesMode: state.filesGrid.mode,
-        selection: state.selection
+        filesMode: state.filesGrid.mode
     };
 };
 

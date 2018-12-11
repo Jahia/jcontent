@@ -114,7 +114,6 @@ class CmPickerViewMaterial extends React.Component {
                             return (
                                 <UploadWrapperComponent
                                     key={entry.path}
-                                    divider
                                     data-jrm-role="picker-item"
                                     className={itemClass}
                                     uploadPath={entry.path}
@@ -126,7 +125,7 @@ class CmPickerViewMaterial extends React.Component {
                                 >
                                     <div
                                         style={{
-                                            paddingLeft: ((entry.depth > 0) ? ((entry.depth) * 16) : 16),
+                                            paddingLeft: ((entry.depth > 0) ? ((entry.depth) * 16) : 0),
                                             opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                         }}
                                     >

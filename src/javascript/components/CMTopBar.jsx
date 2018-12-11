@@ -41,9 +41,10 @@ const styles = theme => ({
     topBar: {
         width: 'min-content',
         alignSelf: 'flex-end',
-        paddingTop: theme.spacing.unit * 2
+        paddingTop: theme.spacing.unit * 3
     },
     topBarGrid: {
+        marginBottom: theme.spacing.unit * 2
     }
 });
 

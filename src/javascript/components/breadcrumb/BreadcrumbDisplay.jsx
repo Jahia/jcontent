@@ -7,6 +7,12 @@ import {translate} from 'react-i18next';
 import {ellipsizeText} from '../utils.js';
 import {compose} from 'react-apollo';
 
+const styles = theme => ({
+    contentLabel: {
+        paddingLeft: theme.spacing.unit
+    }
+});
+
 class BreadcrumbDisplay extends React.Component {
     constructor(props) {
         super(props);
@@ -69,7 +75,7 @@ class BreadcrumbDisplay extends React.Component {
                 >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
-                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name">
+                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                         {ellipsizeText(node.name, maxLabelLength)}
                     </Typography>
                     }
@@ -107,7 +113,7 @@ class BreadcrumbDisplay extends React.Component {
                                       disableRipple
                                       onClick={event => this.onMenuItemSelected(event, siblingNode)}
                             >
-                                {this.renderIcon(siblingNode, classes)}{siblingNode.name}
+                                {this.renderIcon(siblingNode, classes)}<Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>{siblingNode.name}</Typography>
                             </MenuItem>
                         );
                     })}
@@ -117,4 +123,4 @@ class BreadcrumbDisplay extends React.Component {
     }
 }
 
-export default translate()(BreadcrumbDisplay);
+export default compose(translate(), withStyles(styles))(BreadcrumbDisplay);

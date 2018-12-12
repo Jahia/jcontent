@@ -73,12 +73,9 @@ let paramsReducer = params => (state = params, action) => {
     return state;
 };
 
-let selectionReducer = (state = [], action) => {
+let selectionReducer = (state = null, action) => {
     if (action.type === CM_SET_SELECTION) {
         return action.selection;
-    }
-    if (action.type === CM_NAVIGATE) {
-        return [];
     }
     return state;
 };

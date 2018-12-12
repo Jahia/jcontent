@@ -5,8 +5,9 @@ import gql from 'graphql-tag';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {cmSetSite} from '../redux/actions';
+import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState, cmSetSite, cmSetSelection} from '../redux/actions';
 import SiteSwitcherDisplay from './SiteSwitcherDisplay';
+import {batchActions} from 'redux-batched-actions';
 
 class SiteSwitcher extends React.Component {
     constructor(props) {
@@ -100,7 +101,14 @@ class SiteSwitcher extends React.Component {
                             currentLang={currentLang}
                             dark={dark}
                             siteNodes={sites}
-                            onSelectSite={(siteNode, currentLang) => this.onSelectSite(siteNode, currentLang)}
+                            onSelectSite={(siteNode, currentLang) =>
+                                this.props.dispatchBatch([
+                                    cmSetSite(siteNode.name, currentLang, siteNode.displayName),
+                                    cmSetPreviewMode('edit'),
+                                    cmSetPreviewState(CM_DRAWER_STATES.HIDE),
+                                    cmSetSelection(null)
+                                ])
+                            }
                     />
 );
                 }
@@ -116,9 +124,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    selectSite: (siteNode, language) => {
-        dispatch(cmSetSite(siteNode.name, language, siteNode.displayName));
-    }
+    dispatchBatch: actions => dispatch(batchActions(actions))
 });
 
 export default compose(

@@ -27,15 +27,15 @@ class Sql2Input extends React.Component {
     }
 
     render() {
-        let {maxLength, size, defaultValue, inputRef, classes, style, cmRole} = this.props;
+        let {maxLength, size, value, onChange, classes, style, cmRole} = this.props;
 
         return (
             <Input
                 inputProps={{maxLength: maxLength, size: size, 'data-cm-role': cmRole}}
-                defaultValue={defaultValue}
-                inputRef={inputRef}
+                value={value}
                 classes={{root: classes.sql2Input, input: classes.sql2Input}}
                 style={style}
+                onChange={onChange}
                 onKeyDown={e => this.onKeyDown(e)}
             />
         );

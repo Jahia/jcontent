@@ -69,10 +69,10 @@ const styles = theme => ({
     },
     row: {
         '&&:nth-of-type(odd)': {
-            //  BackgroundColor: theme.palette.background.default
+            BackgroundColor: theme.palette.background.default
         },
         '&&:hover': {
-            // BackgroundColor: theme.palette.background.default
+            BackgroundColor: theme.palette.background.default
         }
     },
     selectedRow: {
@@ -174,7 +174,7 @@ class ContentListTable extends React.Component {
             <Paper>
                 <CmToolbar/>
                 <div className={classes.tableWrapper}>
-                    <Table striped aria-labelledby="tableTitle" data-cm-role="table-content-list">
+                    <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
                         <ContentListHeader
                             order={sort.order}
                             orderBy={sort.orderBy}

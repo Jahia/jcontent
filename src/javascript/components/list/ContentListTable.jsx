@@ -69,10 +69,10 @@ const styles = theme => ({
     },
     row: {
         '&&:nth-of-type(odd)': {
-            BackgroundColor: theme.palette.background.default
+            backgroundColor: theme.palette.background.default
         },
         '&&:hover': {
-            BackgroundColor: theme.palette.background.default
+            backgroundColor: theme.palette.background.default
         }
     },
     selectedRow: {

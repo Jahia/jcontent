@@ -64,7 +64,7 @@ const APP_TABLE_CELLS = 2;
 const styles = theme => ({
 
     tableWrapper: {
-        height: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         overflow: 'auto'
     },
     row: {
@@ -342,7 +342,7 @@ let EmptyRow = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
-                {props.translate('label.contentManager.noResults')}
+                <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
             </TableCell>
         </TableRow>
     );
@@ -352,7 +352,7 @@ let ContentNotFound = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                {props.translate('label.contentManager.contentNotFound')}
+                <Typography variant="subtitle1">{props.translate('label.contentManager.contentNotFound')}</Typography>
             </TableCell>
         </TableRow>
     );

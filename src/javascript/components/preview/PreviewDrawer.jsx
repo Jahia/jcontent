@@ -49,7 +49,7 @@ class PreviewDrawer extends React.Component {
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                             <ToggleButtonGroup exclusive
                                                value={previewMode}
-                                               onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? 'edit' : 'live')}
+                                               onChange={() => setPreviewMode(previewMode === 'live' ? 'edit' : 'live')}
                             >
                                 <ToggleButton value="edit">
                                     <Typography variant="caption" color="inherit">

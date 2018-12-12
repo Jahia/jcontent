@@ -48,7 +48,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
-        target: ['editPreviewBar:2.5', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
+        target: ['previewFooterEdit', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -90,7 +90,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('tableMenuActions', menuAction, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        target: ['tableActions:2.5'],
+        target: ['tableActions:2.5', 'previewFooterActions'],
         menu: 'tableMenuActions'
     });
     actionsRegistry.add('contentTreeActions', menuAction, {
@@ -117,7 +117,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['editPreviewBar', 'tableMenuActions', 'contextualMenuContentAction:6'],
+        target: ['tableMenuActions', 'contextualMenuContentAction:6', 'previewFooterPublish'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
         menu: 'publishMenu'
     });
@@ -154,7 +154,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['editPreviewBar:4.2', 'contentTreeMenuActions:4.2', 'tableMenuActions:4.2', 'contextualMenuContentAction:4.2'],
+        target: ['contentTreeMenuActions:4.2', 'tableMenuActions:4.2', 'contextualMenuContentAction:4.2'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {
@@ -243,13 +243,13 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ['contentTreeMenuActions:5', 'previewFooterActions', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
+        target: ['contentTreeMenuActions:5', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ['contentTreeMenuActions:5', 'previewFooterActions', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
+        target: ['contentTreeMenuActions:5', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <Lock/>
     });

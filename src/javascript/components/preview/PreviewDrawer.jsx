@@ -9,7 +9,8 @@ import {
     Toolbar,
     Tooltip,
     Typography,
-    Grid
+    Grid,
+    withStyles
 } from '@material-ui/core';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import ContentPreview from '../preview/ContentPreview';
@@ -20,9 +21,20 @@ import {compose} from 'react-apollo';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
 
+const styles = theme => ({
+    leftButtons: {
+        flex: 'auto',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        '& button': {
+            margin: theme.spacing.unit
+        }
+    }
+});
+
 class PreviewDrawer extends React.Component {
     render() {
-        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection} = this.props;
+        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection, classes} = this.props;
         return (
             <React.Fragment>
                 <AppBar position="relative">
@@ -75,9 +87,18 @@ class PreviewDrawer extends React.Component {
                             </Typography>
                             <PublicationStatus selection={selection}/>
                         </CardContent>
-                        <CardActions>
-                            <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>
-                            <DisplayActions target="editPreviewBar" context={{path: selection.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
+                        <CardActions disableActionSpacing={false}>
+                            <DisplayActions target="previewFooterActions"
+                                            context={{path: selection.path}}
+                                            render={iconButtonRenderer({disableRipple: true, color: 'primary'}, true)}/>
+                            <div className={classes.leftButtons}>
+                                <DisplayActions target="previewFooterEdit"
+                                                context={{path: selection.path}}
+                                                render={buttonRenderer({variant: 'contained', size: 'small'})}/>
+                                <DisplayActions target="previewFooterPublish"
+                                                context={{path: selection.path}}
+                                                render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'})}/>
+                            </div>
                         </CardActions>
                     </Card>
                 }
@@ -112,5 +133,6 @@ PreviewDrawer.propTypes = {};
 
 export default compose(
     translate(),
+    withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(PreviewDrawer);

@@ -707,9 +707,9 @@
     zen-observable "^0.8.8"
 
 "@jahia/ds-mui-theme@^1.0.0-beta.20181211180650":
-  version "1.0.0-beta.20181211180650"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20181211180650.tgz#a1ece1d342676aaeb848837dd5938c5e6d72c560"
-  integrity sha512-Qws8eCzZ2g62EgjCCVTsyh5u0W8pJkEUMKa1tjjbq0TlwB6JfyldyuLkHMiHigOB+tBmwcHGVbxkxZykGkRMbg==
+  version "1.0.0-beta.20181212102157"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20181212102157.tgz#f450d507a7e783ede6f1f9677f911c2d54c8a32a"
+  integrity sha512-QHVKLpuNIvzkRLZ0wgirHyWYx8cPz2WY8ZHa3mvoRICB+mLIGQ3RfmiPokPXo6clf93AEiqME2+76KPvnEZ5QA==
   dependencies:
     "@material-ui/core" "^3.6.2"
     lodash "^4.17.10"

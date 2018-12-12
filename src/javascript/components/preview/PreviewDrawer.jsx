@@ -39,12 +39,12 @@ class PreviewDrawer extends React.Component {
                                                onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? 'edit' : 'live')}
                             >
                                 <ToggleButton value="edit">
-                                    <Typography variant="caption">
+                                    <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.staging')}
                                     </Typography>
                                 </ToggleButton>
                                 <ToggleButton value="live">
-                                    <Typography variant="caption">
+                                    <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.live')}
                                     </Typography>
                                 </ToggleButton>

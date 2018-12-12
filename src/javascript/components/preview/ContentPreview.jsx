@@ -3,7 +3,7 @@ import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {Paper, withStyles} from '@material-ui/core';
+import {Paper, Typography, withStyles} from '@material-ui/core';
 import {previewQuery} from '../gqlQueries';
 import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
@@ -39,6 +39,12 @@ const styles = theme => ({
         width: '100%',
         height: '100%'
     },
+    noPreviewContainer: {
+        backgroundColor: theme.palette.background.default,
+        overflow: 'scroll',
+        width: '100%',
+        height: '100%'
+    },
     mediaContainer: {
         backgroundColor: theme.palette.background.dark
     },
@@ -70,9 +76,13 @@ class ContentPreview extends React.Component {
 
     render() {
         const {selection, classes, previewMode} = this.props;
-        const selectedItem = selection;
-        const path = selectedItem ? selectedItem.path : '';
-        const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
+
+        if (_.isEmpty(selection)) {
+            return this.noPreviewComponent();
+        }
+
+        const path = selection.path;
+        const livePreviewAvailable = selection.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selection.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         return (
             <DxContext.Consumer>
                 {dxContext => (
@@ -100,6 +110,19 @@ class ContentPreview extends React.Component {
                     </div>
                 )}
             </DxContext.Consumer>
+        );
+    }
+
+    noPreviewComponent() {
+        const {classes, t} = this.props;
+        return (
+            <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>
+                <Paper elevation={1} className={classes.contentContainer} classes={{root: classes.contentPaper}}>
+                    <Typography variant="h5">
+                        {t('label.contentManager.contentPreview.noViewAvailable')}
+                    </Typography>
+                </Paper>
+            </div>
         );
     }
 

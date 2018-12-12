@@ -19,10 +19,11 @@ import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState}
 import {compose} from 'react-apollo';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
+import {lodash as _} from 'lodash';
 
 class PreviewDrawer extends React.Component {
     render() {
-        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection} = this.props;
+        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen} = this.props;
         return (
             <React.Fragment>
                 <AppBar position="relative">
@@ -64,23 +65,33 @@ class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                {selection &&
-                    <ContentPreview selection={selection}/>
-                }
-                {selection &&
-                    <Card>
-                        <CardContent>
-                            <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
-                                {selection.displayName ? selection.displayName : selection.name}
-                            </Typography>
-                            <PublicationStatus selection={selection}/>
-                        </CardContent>
-                        <CardActions>
-                            <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>
-                            <DisplayActions target="editPreviewBar" context={{path: selection.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
-                        </CardActions>
-                    </Card>
-                }
+                {this.previewWithFooter()}
+            </React.Fragment>
+        );
+    }
+
+    previewWithFooter() {
+        const {selection} = this.props;
+        if (_.isEmpty(selection)) {
+            return (
+                <ContentPreview selection={selection}/>
+            );
+        }
+        return (
+            <React.Fragment>
+                <ContentPreview selection={selection}/>
+                <Card>
+                    <CardContent>
+                        <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
+                            {selection.displayName ? selection.displayName : selection.name}
+                        </Typography>
+                        <PublicationStatus selection={selection}/>
+                    </CardContent>
+                    <CardActions>
+                        <DisplayActions target="previewFooterActions" context={{path: selection.path}} render={iconButtonRenderer({color: 'primary'})}/>
+                        <DisplayActions target="editPreviewBar" context={{path: selection.path}} render={buttonRenderer({variant: 'contained', color: 'primary'})}/>
+                    </CardActions>
+                </Card>
             </React.Fragment>
         );
     }

@@ -69,7 +69,7 @@ const styles = theme => ({
     },
     row: {
         '&&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default
+            backgroundColor: theme.palette.background.default + '7F'
         },
         '&&:hover': {
             backgroundColor: theme.palette.background.default

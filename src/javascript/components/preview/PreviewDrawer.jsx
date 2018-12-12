@@ -18,7 +18,7 @@ import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@mat
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
-import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {buttonRenderer, DisplayActions, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
 
 const styles = theme => ({
@@ -92,12 +92,12 @@ class PreviewDrawer extends React.Component {
                                             context={{path: selection.path}}
                                             render={iconButtonRenderer({disableRipple: true, color: 'primary'}, true)}/>
                             <div className={classes.leftButtons}>
-                                <DisplayActions target="previewFooterEdit"
-                                                context={{path: selection.path}}
-                                                render={buttonRenderer({variant: 'contained', size: 'small'})}/>
-                                <DisplayActions target="previewFooterPublish"
-                                                context={{path: selection.path}}
-                                                render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'})}/>
+                                <DisplayAction actionKey="edit"
+                                               context={{path: selection.path}}
+                                               render={buttonRenderer({variant: 'contained', size: 'small'})}/>
+                                <DisplayAction actionKey="publishMenu"
+                                               context={{path: selection.path}}
+                                               render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'})}/>
                             </div>
                         </CardActions>
                     </Card>

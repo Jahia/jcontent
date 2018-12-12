@@ -48,7 +48,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
-        target: ['previewFooterEdit', 'contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
+        target: ['contentTreeMenuActions:2.5', 'tableActions:2', 'contextualMenuContentAction:2.5'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -81,7 +81,7 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('translateMenu', translateMenuAction, {
         buttonLabel: 'label.contentManager.contentPreview.translate',
-        target: ['contextualMenuContentAction:4.5', 'tableMenuActions:4.5', 'contentTreeMenuActions:3'],
+        target: ['contextualMenuContentAction:4.5', 'tableMenuActions:4.5', 'contentTreeMenuActions:3', 'previewFooterMenuActions:4.5'],
         menu: 'translateMenu'
     });
     actionsRegistry.add('translateAction', translateAction, {
@@ -90,8 +90,14 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('tableMenuActions', menuAction, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        target: ['tableActions:2.5', 'previewFooterActions'],
+        target: ['tableActions:2.5'],
         menu: 'tableMenuActions'
+    });
+    actionsRegistry.add('previewFooterMenuActions', menuAction, {
+        buttonIcon: <DotsVertical/>,
+        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
+        target: ['previewFooterActions'],
+        menu: 'previewFooterMenuActions'
     });
     actionsRegistry.add('contentTreeActions', menuAction, {
         buttonIcon: <DotsVertical/>,
@@ -117,7 +123,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['tableMenuActions', 'contextualMenuContentAction:6', 'previewFooterPublish'],
+        target: ['tableMenuActions', 'contextualMenuContentAction:6'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],
         menu: 'publishMenu'
     });
@@ -154,7 +160,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['contentTreeMenuActions:4.2', 'tableMenuActions:4.2', 'contextualMenuContentAction:4.2'],
+        target: ['contentTreeMenuActions:4.2', 'tableMenuActions:4.2', 'contextualMenuContentAction:4.2', 'previewFooterMenuActions:4.2'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {
@@ -194,7 +200,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
-        target: ['additionalPreviewMenu:3.8', 'tableMenuActions:3.8', 'contextualMenuContentAction:3.8', 'contentTreeMenuActions:3.8'],
+        target: ['additionalPreviewMenu:3.8', 'tableMenuActions:3.8', 'contextualMenuContentAction:3.8', 'contentTreeMenuActions:3.8', 'previewFooterMenuActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -208,28 +214,28 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
-        target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9'],
+        target: ['additionalPreviewMenu:3.9', 'tableMenuActions:3.9', 'contextualMenuContentAction:3.9', 'contentTreeMenuActions:3.9', 'previewFooterMenuActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
-        target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4'],
+        target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4', 'previewFooterMenuActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.deletePermanently',
-        target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4'],
+        target: ['contentTreeMenuActions:4', 'tableMenuActions:4', 'additionalPreviewMenu:4', 'contextualMenuContentAction:4', 'previewFooterMenuActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('undelete', undeleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.undelete',
-        target: ['contentTreeMenuActions:4.1', 'tableMenuActions:4.1', 'additionalPreviewMenu:4.1', 'contextualMenuContentAction:4.1'],
+        target: ['contentTreeMenuActions:4.1', 'tableMenuActions:4.1', 'additionalPreviewMenu:4.1', 'contextualMenuContentAction:4.1', 'previewFooterMenuActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -243,19 +249,19 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ['contentTreeMenuActions:5', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
+        target: ['contentTreeMenuActions:5', 'tableMenuActions:5', 'contextualMenuContentAction:5', 'previewFooterMenuActions:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ['contentTreeMenuActions:5', 'tableMenuActions:5', 'contextualMenuContentAction:5'],
+        target: ['contentTreeMenuActions:5', 'tableMenuActions:5', 'contextualMenuContentAction:5', 'previewFooterMenuActions:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks', clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        target: ['contentTreeMenuActions:5', 'tableMenuActions:5.5'],
+        target: ['contentTreeMenuActions:5', 'tableMenuActions:5.5', 'previewFooterMenuActions:5.5'],
         hideOnNodeTypes: ['jnt:page']
     });
 
@@ -344,12 +350,12 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('openInEditMode', openInEditModeAction, {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
-        target: ['contentTreeMenuActions', 'contextualMenuContentAction', 'tableMenuActions'],
+        target: ['contentTreeMenuActions', 'contextualMenuContentAction', 'tableMenuActions', 'previewFooterMenuActions'],
         hideForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS, PATH_SYSTEM_SITE_AND_DESCENDANTS]
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',
-        target: ['contextualMenuContentAction:0.5', 'tableMenuActions:0.5'],
+        target: ['contextualMenuContentAction:0.5', 'tableMenuActions:0.5', 'previewFooterMenuActions:0.5'],
         hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']
     });
 }

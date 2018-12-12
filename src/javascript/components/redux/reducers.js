@@ -1,5 +1,6 @@
 import {
     CM_DRAWER_STATES,
+    CM_PREVIEW_MODES,
     CM_NAVIGATE,
     CM_SET_OPEN_PATHS,
     CM_SET_PAGE,
@@ -80,7 +81,7 @@ let selectionReducer = (state = null, action) => {
     return state;
 };
 
-let previewModeReducer = (state = 'edit', action) => {
+let previewModeReducer = (state = CM_PREVIEW_MODES.EDIT, action) => {
     if (action.previewMode && action.type === CM_SET_PREVIEW_MODE) {
         return action.previewMode;
     }

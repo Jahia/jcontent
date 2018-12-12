@@ -6,7 +6,7 @@ import {lodash as _} from 'lodash';
 import {Paper, withStyles} from '@material-ui/core';
 import {previewQuery} from '../gqlQueries';
 import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
-import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import constants from '../constants';
 import loadable from 'react-loadable';
 import {DxContext} from '../DxContext';
@@ -83,14 +83,14 @@ class ContentPreview extends React.Component {
 
                                 if (!loading) {
                                     if (!_.isEmpty(data)) {
-                                        let modes = ['edit'];
+                                        let modes = [CM_PREVIEW_MODES.EDIT];
                                         // Check if the node is published in live.
                                         if (livePreviewAvailable) {
-                                            modes.push('live');
+                                            modes.push(CM_PREVIEW_MODES.LIVE);
                                         }
                                         let selectedMode = _.find(modes, mode => {
                                             return previewMode === mode;
-                                        }) === undefined ? 'edit' : previewMode;
+                                        }) === undefined ? CM_PREVIEW_MODES.EDIT : previewMode;
                                         return this.previewComponent(data[selectedMode], dxContext);
                                     }
                                 }
@@ -113,7 +113,7 @@ class ContentPreview extends React.Component {
 
         // If node type is "jnt:file" use specific viewer
         if (data && data.nodeByPath.isFile) {
-            let file = dxContext.contextPath + '/files/' + (previewMode === 'edit' ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
+            let file = dxContext.contextPath + '/files/' + (previewMode === CM_PREVIEW_MODES.EDIT ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
 
             if (isPDF(data.nodeByPath.path)) {
                 return (

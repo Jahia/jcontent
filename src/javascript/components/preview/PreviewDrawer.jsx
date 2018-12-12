@@ -15,7 +15,7 @@ import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import ContentPreview from '../preview/ContentPreview';
 import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
 import {buttonRenderer, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
@@ -36,7 +36,7 @@ class PreviewDrawer extends React.Component {
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                             <ToggleButtonGroup exclusive
                                                value={previewMode}
-                                               onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? 'edit' : 'live')}
+                                               onChange={event => setPreviewMode(event.target.textContent === 'Staging' ? CM_PREVIEW_MODES.EDIT : CM_PREVIEW_MODES.LIVE)}
                             >
                                 <ToggleButton value="edit">
                                     <Typography variant="caption" color="inherit">

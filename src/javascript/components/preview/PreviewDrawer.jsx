@@ -37,7 +37,7 @@ class PreviewDrawer extends React.Component {
         const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection, classes} = this.props;
         return (
             <React.Fragment>
-                <AppBar position="relative">
+                <AppBar position="relative" color="default">
                     <Toolbar variant="dense">
                         <IconButton color="inherit" onClick={closePreview}>
                             <ChevronRightIcon fontSize="small"/>

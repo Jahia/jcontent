@@ -86,7 +86,7 @@ class ContentTrees extends React.Component {
 
         return (
             <React.Fragment>
-                <AppBar position="relative">
+                <AppBar position="relative" color="default">
                     <Toolbar variant="dense">
                         <Grid container alignItems="center" spacing={8} justify="space-between">
                             <Grid item>

@@ -32,7 +32,7 @@ class CmToolbar extends React.Component {
         const {contentTreeConfigs, classes, mode, treeState, setTreeState} = this.props;
 
         return (
-            <AppBar position="relative" classes={{root: classes.appBarElevation}}>
+            <AppBar position="relative" color="default" classes={{root: classes.appBarElevation}}>
                 <Toolbar variant="dense">
                     {treeState !== CM_DRAWER_STATES.SHOW &&
                     <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>

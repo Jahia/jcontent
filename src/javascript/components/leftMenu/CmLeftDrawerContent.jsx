@@ -41,7 +41,8 @@ class CmLeftDrawerListItems extends React.Component {
                                 }
                             </div>
                             {icon}
-                            <Typography>
+                            &nbsp;
+                            <Typography color="textPrimary">
                                 {t(actionContext.buttonLabel)}
                             </Typography>
                         </ListItem>

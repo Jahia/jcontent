@@ -27,9 +27,6 @@ const styles = theme => ({
         background: theme.palette.layout.dark,
         overflow: 'hidden'
     },
-    side: {
-        position: 'relative'
-    },
     menuBurger: {
         paddingRight: '0px !important',
         paddingTop: '34px !important',
@@ -73,6 +70,10 @@ const styles = theme => ({
     list: {
         paddingTop: '0 !important',
         height: '100vh'
+    },
+    listBottom: {
+        position: 'absolute',
+        bottom: '8px'
     },
     drawerTree: {
         marginTop: '18px'
@@ -124,26 +125,25 @@ class CMLeftNavigation extends React.Component {
 
         return (
             <div className={classNames(classes.root, {[classes.rootOpenDrawer]: this.state.openDrawer, [classes.rootClosedDrawer]: !this.state.openDrawer})}>
-                <div className={classes.side}>
-                    <List className={classes.list} component="nav">
-                        <ListItem button className={classes.menuBurger}>
-                            <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
-                        </ListItem>
-                        <DisplayActions target="leftMenuActions"
-                                        context={actionContext}
-                                        render={({context}) => (
-                                            <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
-                                        )}/>
+                <List className={classes.list} component="nav">
+                    <ListItem button className={classes.menuBurger}>
+                        <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
+                    </ListItem>
+                    <DisplayActions target="leftMenuActions"
+                                    context={actionContext}
+                                    render={({context}) => (
+                                        <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
+                                    )}/>
 
-                    </List>
-
+                </List>
+                <List className={classes.listBottom} component="nav">
                     <DisplayActions target="leftMenuBottomActions"
                                     context={actionContext}
                                     render={({context}) => (
-                                        <CmLeftMenuItem bottom context={context} drawer={this.state.openDrawer}/>
+                                        <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
                                     )}
                     />
-                </div>
+                </List>
                 <Drawer
                     variant="persistent"
                     classes={{

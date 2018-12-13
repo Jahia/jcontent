@@ -59,14 +59,16 @@ const styles = theme => ({
         })
     },
     typoTitle: {
-        color: theme.palette.text.secondary,
         width: '260px',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden'
     },
     blockMenu: {
-        marginTop: 21
+        marginTop: 28,
+        '& button': {
+            margin: '0px'
+        }
     },
     list: {
         paddingTop: '0 !important',
@@ -74,20 +76,7 @@ const styles = theme => ({
     },
     drawerTree: {
         marginTop: '18px'
-    },
-    siteSwitcher: {
-        marginLeft: 0,
-        '& button': {
-            margin: '2px 0'
-        }
-    },
-    languageSwitcher: {
-        marginLeft: 0,
-        '& button': {
-            margin: '2px 0'
-        }
     }
-
 });
 
 class CMLeftNavigation extends React.Component {
@@ -165,17 +154,13 @@ class CMLeftNavigation extends React.Component {
                     <div className={classes.blockMenu}>
                         <Grid container spacing={0} alignItems="center">
                             <Grid item xs={2}>
-                                <div className={classes.siteSwitcher}>
-                                    <SiteSwitcher/>
-                                </div>
+                                <SiteSwitcher/>
                                 <Typography variant="h5" color="inherit" className={classes.typoTitle}>
                                     {this.state.drawerContent &&
                             t(this.state.drawerContent.title)
                             }
                                 </Typography>
-                                <div className={classes.languageSwitcher}>
-                                    <LanguageSwitcher/>
-                                </div>
+                                <LanguageSwitcher/>
                             </Grid>
                         </Grid>
                     </div>

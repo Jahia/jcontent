@@ -161,7 +161,7 @@ class DropdownIndicator extends React.Component {
         if (!this.props.selectProps.open) {
             return (
                 <components.DropdownIndicator {...this.props}>
-                    <ChevronDown style={{fontSize: '18px'}}/>
+                    <ChevronDown fontSize="small"/>
                 </components.DropdownIndicator>
             );
         }
@@ -175,7 +175,7 @@ class ClearIndicator extends React.Component {
         if (this.props.selectProps.open) {
             return (
                 <components.ClearIndicator {...this.props}>
-                    <CloseIcon style={{fontSize: '18px'}}/>
+                    <CloseIcon fontSize="small"/>
                 </components.ClearIndicator>
             );
         }

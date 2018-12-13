@@ -13,17 +13,10 @@ const styles = theme => ({
         alignItems: 'center'
     },
     typoTitle: {
-        color: theme.palette.text.contrastText,
         width: '260px',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
         overflow: 'hidden'
-    },
-    switcher: {
-        color: theme.palette.text.contrastText,
-        '& button': {
-            margin: '0px'
-        }
     },
     head: {
         display: 'inline-block',
@@ -40,7 +33,10 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 3
     },
     topBarGrid: {
-        marginBottom: theme.spacing.unit * 2
+        marginBottom: theme.spacing.unit * 2,
+        '& button': {
+            margin: '0px'
+        }
     }
 });
 
@@ -53,15 +49,12 @@ class CMTopBar extends React.Component {
             <div className={classes.root} data-cm-role="cm-top-bar">
                 <Grid container spacing={0} alignItems="center">
                     <Grid item xs={2} className={classes.topBarGrid}>
-                        <div className={classes.switcher}>
-                            <SiteSwitcher/>
-                        </div>
-                        <Typography variant="h5" className={classes.typoTitle} data-cm-role="cm-mode-title">
+                        <SiteSwitcher/>
+                        <Typography variant="h5" color="inherit" className={classes.typoTitle} data-cm-role="cm-mode-title">
                             {modeTitle}
                         </Typography>
-                        <div className={classes.switcher}>
-                            <LanguageSwitcher dark={false}/>
-                        </div>
+
+                        <LanguageSwitcher/>
                     </Grid>
                     <Grid item xs={1}/>
                     <Grid item xs={9} className={classes.topBar}>

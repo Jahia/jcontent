@@ -33,6 +33,12 @@ const styles = theme => ({
 });
 
 class PreviewDrawer extends React.Component {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.selection || (this.props.selection && prevProps.selection.path !== this.props.selection.path)) {
+            this.props.setPreviewMode('edit');
+        }
+    }
+
     render() {
         const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection, classes} = this.props;
         const disabledToggle = !selection;
@@ -50,7 +56,7 @@ class PreviewDrawer extends React.Component {
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                             <ToggleButtonGroup exclusive
                                                value={disabledToggle ? '' : previewMode}
-                                               onChange={() => setPreviewMode(previewMode === 'live' ? 'edit' : 'live')}
+                                               onChange={(event, value) => setPreviewMode(value)}
                             >
                                 <ToggleButton value="edit" disabled={disabledToggle}>
                                     <Typography variant="caption" color="inherit">

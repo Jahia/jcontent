@@ -5,11 +5,11 @@ import {
     Card,
     CardActions,
     CardContent,
+    Grid,
     IconButton,
     Toolbar,
     Tooltip,
     Typography,
-    Grid,
     withStyles
 } from '@material-ui/core';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
@@ -18,7 +18,7 @@ import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@mat
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import {compose} from 'react-apollo';
-import {buttonRenderer, DisplayActions, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
+import {buttonRenderer, DisplayAction, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
 
 const styles = theme => ({
@@ -77,9 +77,7 @@ class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                {selection &&
-                    <ContentPreview selection={selection}/>
-                }
+                <ContentPreview selection={selection}/>
                 {selection &&
                     <Card>
                         <CardContent>

@@ -3,10 +3,10 @@ import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {Paper, withStyles} from '@material-ui/core';
+import {Paper, Typography, withStyles} from '@material-ui/core';
 import {previewQuery} from '../gqlQueries';
 import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
-import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import constants from '../constants';
 import loadable from 'react-loadable';
 import {DxContext} from '../DxContext';
@@ -36,6 +36,12 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
         overflow: 'scroll',
         position: 'absolute',
+        width: '100%',
+        height: '100%'
+    },
+    noPreviewContainer: {
+        backgroundColor: theme.palette.background.default,
+        overflow: 'scroll',
         width: '100%',
         height: '100%'
     },
@@ -70,9 +76,13 @@ class ContentPreview extends React.Component {
 
     render() {
         const {selection, classes, previewMode} = this.props;
-        const selectedItem = selection;
-        const path = selectedItem ? selectedItem.path : '';
-        const livePreviewAvailable = selectedItem.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selectedItem.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
+
+        if (_.isEmpty(selection)) {
+            return this.noPreviewComponent();
+        }
+
+        const path = selection.path;
+        const livePreviewAvailable = selection.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selection.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
         return (
             <DxContext.Consumer>
                 {dxContext => (
@@ -83,14 +93,14 @@ class ContentPreview extends React.Component {
 
                                 if (!loading) {
                                     if (!_.isEmpty(data)) {
-                                        let modes = ['edit'];
+                                        let modes = [CM_PREVIEW_MODES.EDIT];
                                         // Check if the node is published in live.
                                         if (livePreviewAvailable) {
-                                            modes.push('live');
+                                            modes.push(CM_PREVIEW_MODES.LIVE);
                                         }
                                         let selectedMode = _.find(modes, mode => {
                                             return previewMode === mode;
-                                        }) === undefined ? 'edit' : previewMode;
+                                        }) === undefined ? CM_PREVIEW_MODES.EDIT : previewMode;
                                         return this.previewComponent(data[selectedMode], dxContext);
                                     }
                                 }
@@ -100,6 +110,19 @@ class ContentPreview extends React.Component {
                     </div>
                 )}
             </DxContext.Consumer>
+        );
+    }
+
+    noPreviewComponent() {
+        const {classes, t} = this.props;
+        return (
+            <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>
+                <Paper elevation={1} className={classes.contentContainer} classes={{root: classes.contentPaper}}>
+                    <Typography variant="h5">
+                        {t('label.contentManager.contentPreview.noViewAvailable')}
+                    </Typography>
+                </Paper>
+            </div>
         );
     }
 
@@ -113,7 +136,7 @@ class ContentPreview extends React.Component {
 
         // If node type is "jnt:file" use specific viewer
         if (data && data.nodeByPath.isFile) {
-            let file = dxContext.contextPath + '/files/' + (previewMode === 'edit' ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
+            let file = dxContext.contextPath + '/files/' + (previewMode === CM_PREVIEW_MODES.EDIT ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
 
             if (isPDF(data.nodeByPath.path)) {
                 return (

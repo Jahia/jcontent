@@ -69,7 +69,7 @@ class ContentPreview extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.selection && prevProps.selection.lastPublished !== this.props.selection.lastPublished) {
+        if (this.props.selection && prevProps.selection && prevProps.selection.lastPublished !== this.props.selection.lastPublished) {
             this.refetchPreview();
         }
     }
@@ -167,19 +167,17 @@ class ContentPreview extends React.Component {
         return (
             <div className={classNames(classes.previewContainer, classes.contentContainer)}>
                 <Paper elevation={1} classes={{root: classes.contentPaper}}>
-                    <iframe id="previewContent" className={classes.contentIframe}/>
-                    {this.iframeLoadContent(assets, displayValue)}
+                    <iframe ref={element => this.iframeLoadContent(assets, displayValue, element)} className={classes.contentIframe}/>
                 </Paper>
             </div>
         );
     }
 
-    iframeLoadContent(assets, displayValue) {
-        setTimeout(() => {
-            let iframe = document.getElementById('previewContent');
-            let frameDoc = iframe.document;
-            if (iframe.contentWindow) {
-                frameDoc = iframe.contentWindow.document;
+    iframeLoadContent(assets, displayValue, element) {
+        if (element) {
+            let frameDoc = element.document;
+            if (element.contentWindow) {
+                frameDoc = element.contentWindow.document;
             }
             frameDoc.open();
             frameDoc.writeln(displayValue);
@@ -194,8 +192,7 @@ class ContentPreview extends React.Component {
                     iframeHeadEl.appendChild(linkEl);
                 });
             }
-        }, 200);
-        return null;
+        }
     }
 
     queryVariables(path, isPublished) {

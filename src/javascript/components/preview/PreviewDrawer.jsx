@@ -35,7 +35,7 @@ const styles = theme => ({
 class PreviewDrawer extends React.Component {
     render() {
         const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection, classes} = this.props;
-        const disabledLive = selection.publicationStatus === 'NOT_PUBLISHED';
+        const disabledLive = !selection || selection.publicationStatus === 'NOT_PUBLISHED';
         return (
             <React.Fragment>
                 <AppBar position="relative" color="default">

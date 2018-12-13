@@ -35,7 +35,8 @@ const styles = theme => ({
 class PreviewDrawer extends React.Component {
     render() {
         const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection, classes} = this.props;
-        const disabledLive = !selection || selection.publicationStatus === 'NOT_PUBLISHED';
+        const disabledToggle = !selection;
+        const disabledLive = !selection || selection.publicationStatus === 'NOT_PUBLISHED' || selection.publicationStatus === 'UNPUBLISHED';
         return (
             <React.Fragment>
                 <AppBar position="relative" color="default">
@@ -48,10 +49,10 @@ class PreviewDrawer extends React.Component {
                         </Typography>
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                             <ToggleButtonGroup exclusive
-                                               value={previewMode}
+                                               value={disabledToggle ? '' : previewMode}
                                                onChange={() => setPreviewMode(previewMode === 'live' ? 'edit' : 'live')}
                             >
-                                <ToggleButton value="edit">
+                                <ToggleButton value="edit" disabled={disabledToggle}>
                                     <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.staging')}
                                     </Typography>

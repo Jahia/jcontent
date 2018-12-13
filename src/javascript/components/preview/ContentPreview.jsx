@@ -82,7 +82,7 @@ class ContentPreview extends React.Component {
         }
 
         const path = selection.path;
-        const livePreviewAvailable = selection.publicationStatus === constants.availablePublicationStatuses.PUBLISHED || selection.publicationStatus === constants.availablePublicationStatuses.MODIFIED;
+        const livePreviewAvailable = selection.publicationStatus !== constants.availablePublicationStatuses.UNPUBLISHED && selection.publicationStatus !== constants.availablePublicationStatuses.NOT_PUBLISHED;
         return (
             <DxContext.Consumer>
                 {dxContext => (

@@ -96,7 +96,7 @@ class PreviewDrawer extends React.Component {
                         <CardActions disableActionSpacing={false}>
                             <DisplayActions target="previewFooterActions"
                                             context={{path: selection.path}}
-                                            render={iconButtonRenderer({disableRipple: true, color: 'primary'}, true)}/>
+                                            render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}/>
                             <div className={classes.leftButtons}>
                                 <DisplayAction actionKey="edit"
                                                context={{path: selection.path}}

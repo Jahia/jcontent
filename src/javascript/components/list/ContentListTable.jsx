@@ -310,8 +310,9 @@ class ContentListTable extends React.Component {
                                                                 context={{path: n.path}}
                                                                 render={iconButtonRenderer({
                                                                     color: 'inherit',
-                                                                    size: 'small',
                                                                     disableRipple: true
+                                                                }, {
+                                                                    fontSize: 'small'
                                                                 }, true)}
                                                             />
                                                         </TableCell>

@@ -17,15 +17,9 @@ import Constants from './constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './refetches';
 
 const styles = theme => ({
-    close: {
-        padding: theme.spacing.unit / 2
-    },
     topBar: {
         paddingTop: theme.spacing.unit * 2,
         color: theme.palette.primary.contrastText
-    },
-    paper: {
-        backgroundColor: theme.palette.background.paper
     },
     content: {
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
@@ -143,7 +137,7 @@ class ContentLayout extends React.Component {
                             })}
                                   onContextMenu={event => contextualMenu.current.open(event)}
                             >
-                                <Paper className={classes.paper}>
+                                <Paper>
                                     {mode === Constants.mode.FILES && filesMode === 'grid' ?
                                         <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
                                         <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>

@@ -1,14 +1,10 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import CmSearchBarNormal from './CmSearchBarNormal';
 import CmSearchBarSql2 from './CmSearchBarSql2';
 import {connect} from 'react-redux';
 import {cmSetSearchMode} from '../redux/actions';
-
-const styles = () => ({
-});
 
 class CmSearchBar extends React.Component {
     render() {
@@ -38,6 +34,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
     translate(),
-    withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(CmSearchBar);

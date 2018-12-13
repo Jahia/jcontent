@@ -54,15 +54,6 @@ let styles = theme => ({
         height: '100%',
         zIndex: 999
     },
-    toggleUnSelected: {
-        color: theme.palette.primary.main
-    },
-    toggleSelected: {
-        color: theme.palette.text.contrastText
-    },
-    buttonContainer: {
-        color: theme.palette.text.secondary
-    },
     openedTreeEl: {
         transform: 'rotate(90deg)'
     },
@@ -131,7 +122,7 @@ class CmPickerViewMaterial extends React.Component {
                                         }}
                                     >
                                         <IconButton
-                                            className={entry.selected ? classes.buttonContainerSelected : classes.buttonContainer}
+                                            color="inherit"
                                             disabled={!(entry.openable && entry.hasChildren)}
                                             data-jrm-role="picker-item-toggle"
                                             data-jrm-state={entry.open ? 'open' : 'closed'}

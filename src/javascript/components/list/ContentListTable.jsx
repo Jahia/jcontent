@@ -265,7 +265,7 @@ class ContentListTable extends React.Component {
                                                                 return (
                                                                     <TableCell key={column.id}
                                                                                classes={this.getCellClasses(classes, column.id, isSelected)}
-                                                                               data-cm-role="table-content-list-cell-name"
+                                                                               data-cm-role="table-content-list-cell-type"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             {n[column.id]}

@@ -78,7 +78,7 @@ class SiteSwitcher extends React.Component {
     }
 
     render() {
-        const {siteKey, currentLang, notificationContext, dark, t} = this.props;
+        const {siteKey, currentLang, notificationContext, t} = this.props;
         return (
             <Query query={this.query} variables={this.variables}>
                 {
@@ -99,7 +99,6 @@ class SiteSwitcher extends React.Component {
                         <SiteSwitcherDisplay
                             siteKey={siteKey}
                             currentLang={currentLang}
-                            dark={dark}
                             siteNodes={sites}
                             onSelectSite={(siteNode, currentLang) => {
                                 this.onSelectSite(siteNode, currentLang);

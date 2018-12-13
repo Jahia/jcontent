@@ -166,7 +166,7 @@ class CMLeftNavigation extends React.Component {
                         <Grid container spacing={0} alignItems="center">
                             <Grid item xs={2}>
                                 <div className={classes.siteSwitcher}>
-                                    <SiteSwitcher dark/>
+                                    <SiteSwitcher/>
                                 </div>
                                 <Typography variant="h5" color="inherit" className={classes.typoTitle}>
                                     {this.state.drawerContent &&
@@ -174,7 +174,7 @@ class CMLeftNavigation extends React.Component {
                             }
                                 </Typography>
                                 <div className={classes.languageSwitcher}>
-                                    <LanguageSwitcher dark/>
+                                    <LanguageSwitcher/>
                                 </div>
                             </Grid>
                         </Grid>

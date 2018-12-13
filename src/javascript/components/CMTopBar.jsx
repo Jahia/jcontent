@@ -19,12 +19,8 @@ const styles = theme => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden'
     },
-    siteSwitcher: {
-        '& button': {
-            margin: '0px'
-        }
-    },
-    languageSwitcher: {
+    switcher: {
+        color: theme.palette.text.contrastText,
         '& button': {
             margin: '0px'
         }
@@ -57,13 +53,13 @@ class CMTopBar extends React.Component {
             <div className={classes.root} data-cm-role="cm-top-bar">
                 <Grid container spacing={0} alignItems="center">
                     <Grid item xs={2} className={classes.topBarGrid}>
-                        <div className={classes.siteSwitcher}>
-                            <SiteSwitcher dark={false}/>
+                        <div className={classes.switcher}>
+                            <SiteSwitcher/>
                         </div>
                         <Typography variant="h5" className={classes.typoTitle} data-cm-role="cm-mode-title">
                             {modeTitle}
                         </Typography>
-                        <div className={classes.languageSwitcher}>
+                        <div className={classes.switcher}>
                             <LanguageSwitcher dark={false}/>
                         </div>
                     </Grid>

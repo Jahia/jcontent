@@ -1,35 +1,7 @@
 import React from 'react';
-import {compose} from 'react-apollo';
-import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
+import {Button, Menu, MenuItem, Typography} from '@material-ui/core';
 import {ChevronDown} from 'mdi-material-ui';
 import {lodash as _} from 'lodash';
-import {translate} from 'react-i18next';
-
-const styles = theme => ({
-    typography: {
-        color: theme.palette.text.primary
-    },
-    typographyLight: {
-        color: theme.palette.text.contrastText
-    },
-    formControl: {
-        minWidth: 120
-    },
-    iconLight: {
-        color: theme.palette.background.paper,
-        fontSize: '18px'
-    },
-    iconDark: {
-        color: theme.palette.text.primary,
-        fontSize: '18px'
-    },
-    input1: {
-        backgroundColor: 'transparent',
-        color: '#ffffff',
-        boxShadow: 'none',
-        fontSize: '0.875rem'
-    }
-});
 
 class SiteSwitcherDisplay extends React.Component {
     constructor(props) {
@@ -50,7 +22,7 @@ class SiteSwitcherDisplay extends React.Component {
     }
 
     render() {
-        let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang, dark} = this.props;
+        let {siteKey, siteNodes, loading, onSelectSite, currentLang} = this.props;
         let {anchorEl} = this.state;
 
         if (loading) {
@@ -60,15 +32,16 @@ class SiteSwitcherDisplay extends React.Component {
         return (
             <React.Fragment>
                 <Button aria-owns={anchorEl ? 'site-switcher' : null}
+                        color="inherit"
                         aria-haspopup="true"
                         data-cm-role="site-switcher"
                         onClick={this.handleClick}
                 >
-                    <Typography variant="body1" color="inherit" className={dark ? classes.typography : classes.typographyLight}>
+                    <Typography noWrap variant="body1" color="inherit">
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;
-                    <ChevronDown className={dark ? classes.iconDark : classes.iconLight}/>
+                    <ChevronDown fontSize="small" color="inherit"/>
                 </Button>
                 <Menu id="site-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {siteNodes.map(siteNode => {
@@ -90,7 +63,4 @@ class SiteSwitcherDisplay extends React.Component {
     }
 }
 
-export default compose(
-    translate(),
-    withStyles(styles)
-)(SiteSwitcherDisplay);
+export default SiteSwitcherDisplay;

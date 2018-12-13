@@ -1,34 +1,7 @@
 import React from 'react';
-import {compose} from 'react-apollo';
 import {lodash as _} from 'lodash';
-import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
+import {Button, Menu, MenuItem, Typography} from '@material-ui/core';
 import {ChevronDown} from 'mdi-material-ui';
-
-const styles = theme => ({
-    typography: {
-        color: theme.palette.text.primary
-    },
-    typographyLight: {
-        color: theme.palette.text.contrastText
-    },
-    formControl: {
-        minWidth: 120
-    },
-    iconLight: {
-        color: theme.palette.background.paper,
-        fontSize: '18px'
-    },
-    iconDark: {
-        color: '#504e4d',
-        fontSize: '18px'
-    },
-    input1: {
-        backgroundColor: 'transparent',
-        color: '#ffffff',
-        boxShadow: 'none',
-        fontSize: '0.875rem'
-    }
-});
 
 class LanguageSwitcherDisplay extends React.Component {
     constructor(props) {
@@ -54,17 +27,22 @@ class LanguageSwitcherDisplay extends React.Component {
     }
 
     render() {
-        let {lang, languages, onSelectLanguage, classes, dark} = this.props;
+        let {lang, languages, onSelectLanguage} = this.props;
         let {anchorEl} = this.state;
 
         return (
             <React.Fragment>
-                <Button aria-owns={anchorEl ? 'language-switcher' : null} aria-haspopup="true" data-cm-role="language-switcher" onClick={this.handleClick}>
-                    <Typography variant="body1" color="inherit" className={dark ? classes.typography : classes.typographyLight}>
+                <Button aria-owns={anchorEl ? 'language-switcher' : null}
+                        aria-haspopup="true"
+                        data-cm-role="language-switcher"
+                        color="inherit"
+                        onClick={this.handleClick}
+                >
+                    <Typography noWrap variant="body1" color="inherit">
                         {this.uppercaseFirst(_.find(languages, language => language.language === lang).displayName)}
                     &nbsp;
                     </Typography>
-                    <ChevronDown className={dark ? classes.iconDark : classes.iconLight}/>
+                    <ChevronDown fontSize="small" color="inherit"/>
                 </Button>
                 <Menu id="language-switcher" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
                     {languages.map(lang => {
@@ -86,4 +64,4 @@ class LanguageSwitcherDisplay extends React.Component {
     }
 }
 
-export default compose(withStyles(styles, {withTheme: true}))(LanguageSwitcherDisplay);
+export default LanguageSwitcherDisplay;

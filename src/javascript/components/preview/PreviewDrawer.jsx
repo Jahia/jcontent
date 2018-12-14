@@ -87,7 +87,7 @@ class PreviewDrawer extends React.Component {
                 <ContentPreview selection={selection}/>
                 {selection &&
                     <Card>
-                        <CardContent>
+                        <CardContent data-cm-role="preview-name">
                             <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
                                 {selection.displayName ? selection.displayName : selection.name}
                             </Typography>

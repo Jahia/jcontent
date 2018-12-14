@@ -303,7 +303,7 @@ class ContentListTable extends React.Component {
                                                         <TableCell
                                                             padding="none"
                                                             classes={this.getCellClasses(classes, 'actions', isSelected)}
-                                                            data-cm-role="table-content-list-cell-"
+                                                            data-cm-role="table-content-list-cell-actions"
                                                         >
                                                             <DisplayActions
                                                                 target="tableActions"

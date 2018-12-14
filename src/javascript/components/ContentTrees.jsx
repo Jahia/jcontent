@@ -36,7 +36,7 @@ class ContentTree extends React.Component {
         let {rootPath, path, openPaths, handleOpen,
             handleSelect, lang, openableTypes,
             selectableTypes, rootLabel,
-            setRefetch, itemAndRowSelected} = this.props;
+            setRefetch, itemAndRowSelected, dataCmRole} = this.props;
         return (
             <Picker
                 ref={this.picker}
@@ -53,7 +53,7 @@ class ContentTree extends React.Component {
                 onSelectItem={path => handleSelect(path)}
             >
                 {({handleSelect, ...others}) => (
-                    <CmPickerViewMaterial {...others} rootLabel={rootLabel} customSelectedClass={itemAndRowSelected}/>
+                    <CmPickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} customSelectedClass={itemAndRowSelected}/>
                 )}
             </Picker>
         );
@@ -119,6 +119,7 @@ class ContentTrees extends React.Component {
                                                  selectableTypes={contentTreeConfig.selectableTypes}
                                                  lang={lang}
                                                  user={user}
+                                                 dataCmRole={contentTreeConfig.key}
                                                  handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
                                                  handleSelect={path => setPath(path)}
                                                  openableTypes={contentTreeConfig.openableTypes}

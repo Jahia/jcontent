@@ -86,7 +86,7 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     render() {
-        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, customSelectedClass} = this.props;
+        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, customSelectedClass, dataCmRole} = this.props;
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
@@ -107,6 +107,7 @@ class CmPickerViewMaterial extends React.Component {
                                 <UploadWrapperComponent
                                     key={entry.path}
                                     data-jrm-role="picker-item"
+                                    data-cm-role={dataCmRole}
                                     className={itemClass}
                                     uploadPath={entry.path}
                                     uploadTargetComponent={ListItem}

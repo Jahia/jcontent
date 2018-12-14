@@ -514,6 +514,13 @@ const ActionRequirementsFragments = {
             isNotNodeType: isNodeType(type: $isNotNodeType)
         }`
     },
+    retrievePermission: permissionNames => ({
+        variables: permissionNames.map((name, idx) => idx).reduce((acc, idx) => Object.assign(acc, {['permission' + idx]: 'String!'}), {}),
+        applyFor: 'requirements',
+        gql: gql`fragment NodePermission on JCRNode {
+            ${permissionNames.map((name, idx) => idx).reduce((acc, idx) => acc + ' ' + permissionNames[idx].replace(':', '_') + ':hasPermission(permissionName: $permission' + idx + ') ', '')}
+        }`
+    }),
     permission: {
         variables: {
             permission: 'String!'
@@ -598,6 +605,10 @@ class ActionRequirementsQueryHandler {
         if (!_.isEmpty(context.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);
             this.variables.permission = context.requiredPermission;
+        }
+        if (!_.isEmpty(context.retrievePermission)) {
+            this.requirementsFragments.push(ActionRequirementsFragments.retrievePermission(context.retrievePermission));
+            Object.assign(this.variables, context.retrievePermission.map((name, idx) => idx).reduce((acc, idx) => Object.assign(acc, {['permission' + idx]: context.retrievePermission[idx]}), {}));
         }
         if (!_.isEmpty(context.hideOnNodeTypes)) {
             this.requirementsFragments.push(ActionRequirementsFragments.isNotNodeType);

@@ -459,7 +459,7 @@ class FileCard extends Component {
 
         let typography = (
             <Typography color="textSecondary"
-                        classeName={isMarkedForDeletion(node) ? this.props.classes.isDeleted : ''}
+                        className={isMarkedForDeletion(node) ? this.props.classes.isDeleted : ''}
                         variant="body2"
                         data-cm-role="grid-content-list-card-name"
             >

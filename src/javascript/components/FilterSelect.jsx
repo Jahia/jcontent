@@ -14,6 +14,9 @@ const styles = () => ({
         minWidth: '100px',
         height: 48
     },
+    inputPadding: {
+        padding: 0
+    },
     inputDetails: {
         border: 'none!important'
     },

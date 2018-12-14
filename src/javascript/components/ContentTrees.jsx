@@ -95,7 +95,7 @@ class ContentTrees extends React.Component {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <IconButton color="inherit" onClick={closeTree}>
+                                <IconButton color="inherit" data-cm-role="hide-tree" onClick={closeTree}>
                                     <ChevronLeft fontSize="small"/>
                                 </IconButton>
                             </Grid>

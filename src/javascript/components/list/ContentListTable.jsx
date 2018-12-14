@@ -22,7 +22,7 @@ import {DxContext} from '../DxContext';
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../redux/actions';
-import {allowDoubleClickNavigation} from '../utils';
+import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
 import CmToolbar from '../CmToolbar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
@@ -109,13 +109,16 @@ const styles = theme => ({
     actionsCell: {
         minWidth: '144px',
         color: theme.palette.primary.dark
+    },
+    isDeleted: {
+        textDecoration: 'line-through'
     }
 });
 
 class ContentListTable extends React.Component {
-    getCellClasses(classes, column, isSelected) {
+    getCellClasses(node, classes, column, isSelected) {
         let cellClasses = {
-            root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: isSelected, [classes[column + 'CellSelected']]: isSelected})
+            root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: isSelected, [classes[column + 'CellSelected']]: isSelected, [classes.isDeleted]: isMarkedForDeletion(node)})
         };
         return cellClasses;
     }
@@ -233,7 +236,7 @@ class ContentListTable extends React.Component {
                                                             if (column.id === 'name') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
                                                                                data-cm-role="table-content-list-cell-name"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">

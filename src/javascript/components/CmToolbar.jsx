@@ -43,7 +43,7 @@ class CmToolbar extends React.Component {
                         <CmSearchControlBar/> :
                         <CmBrowseControlBar/>
                     }
-                    <IconButton color="inherit" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                    <IconButton color="inherit" data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                         <Refresh/>
                     </IconButton>
                 </Toolbar>

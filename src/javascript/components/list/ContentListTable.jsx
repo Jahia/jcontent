@@ -228,7 +228,7 @@ class ContentListTable extends React.Component {
                                                             <PublicationStatus node={n}/>
                                                         </TableCell>
                                                         <TableCell padding="checkbox"
-                                                                   classes={this.getCellClasses(classes, 'checkbox', isSelected)}
+                                                                   classes={this.getCellClasses(n, classes, 'checkbox', isSelected)}
                                                         >
                                                             <Checkbox checked={false}/>
                                                         </TableCell>
@@ -249,7 +249,7 @@ class ContentListTable extends React.Component {
                                                             if (column.id === 'wip') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
                                                                                padding="none"
                                                                     >{renderWip}
                                                                     </TableCell>
@@ -258,7 +258,7 @@ class ContentListTable extends React.Component {
                                                             if (column.id === 'lock') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
                                                                                padding="none"
                                                                     >{renderLock}
                                                                     </TableCell>
@@ -267,7 +267,7 @@ class ContentListTable extends React.Component {
                                                             if (column.id === 'type') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
                                                                                data-cm-role="table-content-list-cell-type"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
@@ -279,7 +279,7 @@ class ContentListTable extends React.Component {
                                                             if (column.id === 'lastModified') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
                                                                                data-cm-role={'table-content-list-cell-' + column.id}
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
@@ -293,7 +293,7 @@ class ContentListTable extends React.Component {
                                                             }
                                                             return (
                                                                 <TableCell key={column.id}
-                                                                           classes={this.getCellClasses(classes, column.id, isSelected)}
+                                                                           classes={this.getCellClasses(n, classes, column.id, isSelected)}
                                                                            data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
                                                                     <Typography noWrap variant="body2" color="inherit">
@@ -305,7 +305,7 @@ class ContentListTable extends React.Component {
                                                         {showActions &&
                                                         <TableCell
                                                             padding="none"
-                                                            classes={this.getCellClasses(classes, 'actions', isSelected)}
+                                                            classes={this.getCellClasses(n, classes, 'actions', isSelected)}
                                                             data-cm-role="table-content-list-cell-actions"
                                                         >
                                                             <DisplayActions

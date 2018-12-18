@@ -9,9 +9,14 @@ import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
 import {buttonRenderer, DisplayActions} from '@jahia/react-material';
 import connect from 'react-redux/es/connect/connect';
 
-const styles = () => ({
+const styles = theme => ({
     grow: {
         flex: 1
+    },
+    buttons: {
+        '&&': {
+            marginRight: theme.spacing.unit
+        }
     }
 });
 
@@ -42,7 +47,9 @@ class CmBrowseControlBar extends React.Component {
                 </React.Fragment>
                 }
                 {this.isBrowsing() && !this.isRootNode() &&
-                <DisplayActions target="tableHeaderActions" context={{path: path}} render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small'}, true)}/>
+                <DisplayActions target="tableHeaderActions"
+                                context={{path: path}}
+                                render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small', classes: {root: classes.buttons}}, true)}/>
                 }
             </React.Fragment>
         );

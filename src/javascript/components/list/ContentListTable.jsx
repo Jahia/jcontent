@@ -112,6 +112,9 @@ const styles = theme => ({
     },
     isDeleted: {
         textDecoration: 'line-through'
+    },
+    empty: {
+        textAlign: 'center'
     }
 });
 
@@ -190,7 +193,7 @@ class ContentListTable extends React.Component {
                             {dxContext => (
                                 <UploadWrapperComponent uploadTargetComponent={TableBody} uploadPath={path}>
                                     {contentNotFound ?
-                                        <ContentNotFound columnData={columnData} translate={t}/> : _.isEmpty(rows) ?
+                                        <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> : _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData}
                                                       translate={t}/> : rows.map(n => {
                                                 let isSelected = n.path === selection;
@@ -356,7 +359,7 @@ let ContentNotFound = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                <Typography variant="subtitle1">{props.translate('label.contentManager.contentNotFound')}</Typography>
+                <Typography variant="subtitle1" className={props.class}>{props.translate('label.contentManager.contentNotFound')}</Typography>
             </TableCell>
         </TableRow>
     );

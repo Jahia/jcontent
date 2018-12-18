@@ -34,9 +34,8 @@ const styles = theme => ({
         padding: theme.spacing.unit * 2
     },
     empty: {
-        width: '100%',
         textAlign: 'center',
-        marginTop: theme.spacing.unit * 3
+        margin: theme.spacing.unit * 3
     }
 });
 
@@ -67,10 +66,11 @@ class FilesGrid extends Component {
         if (contentNotFound) {
             return (
                 <div>
+                    <CmToolbar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                        <h3 className={classes.empty}>
+                        <Typography variant="subtitle1" className={classes.empty}>
                             { t('label.contentManager.contentNotFound') }
-                        </h3>
+                        </Typography>
                     </Grid>
                 </div>
             );

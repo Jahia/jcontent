@@ -6,7 +6,7 @@ import Dropzone from 'react-dropzone';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 
-const styles = () => ({
+const styles = theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -17,18 +17,17 @@ const styles = () => ({
     dropZone: {
         width: '100%',
         textAlign: 'center',
-        color: 'whitesmoke',
-        border: '2px dashed transparent',
-        flex: 3
+        color: theme.palette.background.paper,
+        border: '2px dashed transparent'
     },
     dropZoneHeader: {
         marginTop: 100
     },
     dropZoneActive: {
-        border: '2px dashed #cecece'
+        border: '2px dashed ' + theme.palette.border.main
     },
     button: {
-        flex: 1
+        minHeight: theme.spacing.unit * 3
     }
 });
 

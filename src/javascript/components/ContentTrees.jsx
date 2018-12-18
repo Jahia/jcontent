@@ -17,7 +17,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main
     },
     listContainer: {
-        overflow: 'scroll',
+        overflow: 'auto',
         width: theme.contentManager.treeDrawerWidth + 'px'
     },
     list: {

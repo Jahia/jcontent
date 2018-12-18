@@ -107,7 +107,7 @@ const customStyles = theme => ({
         maxWidth: 'calc(100% - 8px)',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        width: '100px',
+        flex: 1,
         whiteSpace: 'nowrap',
         top: '50%'
     })

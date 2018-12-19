@@ -73,7 +73,7 @@ const styles = theme => ({
     },
     listBottom: {
         position: 'absolute',
-        bottom: theme.spacing.unit * 16
+        bottom: theme.spacing.unit
     },
     drawerTree: {
         marginTop: '18px'

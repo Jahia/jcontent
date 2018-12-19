@@ -1,5 +1,5 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core';
+import {Typography, withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {Button} from '@material-ui/core';
 import Dropzone from 'react-dropzone';
@@ -11,6 +11,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        alignItems: 'center',
         width: '80%',
         height: '80%'
     },
@@ -20,14 +21,8 @@ const styles = theme => ({
         color: theme.palette.background.paper,
         border: '2px dashed transparent'
     },
-    dropZoneHeader: {
-        marginTop: 100
-    },
     dropZoneActive: {
         border: '2px dashed ' + theme.palette.border.main
-    },
-    button: {
-        minHeight: theme.spacing.unit * 3
     }
 });
 
@@ -48,10 +43,11 @@ class UploadDropZone extends React.Component {
                           activeClassName={classes.dropZoneActive}
                           onDrop={this.onDrop}
                 >
-                    <h2 className={classes.dropZoneHeader}>{t('label.contentManager.fileUpload.dropMessage')}</h2>
-                    <h3>{t('label.contentManager.fileUpload.or')}</h3>
+                    <Typography variant="h4" color="inherit">{t('label.contentManager.fileUpload.dropMessage')}</Typography>
+                    <Typography variant="h5" color="inherit">{t('label.contentManager.fileUpload.or')}</Typography>
                 </Dropzone>
-                <Button className={classes.button}
+                <Button disableRipple
+                        variant="outlined"
                         onClick={() => this.dropZone.current.open()}
                 >{t('label.contentManager.fileUpload.selectMessage')}
                 </Button>

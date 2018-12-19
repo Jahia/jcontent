@@ -34,14 +34,19 @@ class CmToolbar extends React.Component {
         return (
             <AppBar position="relative" color="default" classes={{root: classes.appBarElevation}}>
                 <Toolbar variant="dense">
-                    {treeState !== CM_DRAWER_STATES.SHOW &&
-                    <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
-                        <ChevronRight/>
-                    </IconButton>
-                    }
                     {(mode === Constants.mode.SEARCH || mode === Constants.mode.SQL2SEARCH) ?
                         <CmSearchControlBar/> :
-                        <CmBrowseControlBar/>
+                        <React.Fragment>
+                            {treeState !== CM_DRAWER_STATES.SHOW &&
+                            <IconButton color="inherit"
+                                        variant="text"
+                                        onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}
+                            >
+                                <ChevronRight/>
+                            </IconButton>
+                            }
+                            <CmBrowseControlBar/>
+                        </React.Fragment>
                     }
                     <IconButton color="inherit" data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
                         <Refresh/>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
+import {Drawer, Grid, Paper, Toolbar, Typography, withStyles} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';
@@ -107,6 +107,8 @@ class ContentLayout extends React.Component {
     render() {
         const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, selection} = this.props;
         let contextualMenu = React.createRef();
+        let treeOpen = treeState >= CM_DRAWER_STATES.SHOW && mode !== Constants.mode.SEARCH && mode !== Constants.mode.SQL2SEARCH;
+        let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
         return (
             <React.Fragment>
                 <div className={classes.metaNav}>
@@ -123,17 +125,17 @@ class ContentLayout extends React.Component {
                             <Drawer className={classes.treeDrawer}
                                     variant="persistent"
                                     anchor="left"
-                                    open={treeState >= CM_DRAWER_STATES.SHOW}
+                                    open={treeOpen}
                                     classes={{paper: classes.treeDrawerPaper}}
                             >
-                                <ContentTrees isOpen={treeState >= CM_DRAWER_STATES.SHOW}
+                                <ContentTrees isOpen={treeOpen}
                                               setRefetch={this.setTreeRefetcher}
                                 />
                             </Drawer>
                             <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
                             <main className={classNames(classes.content, {
-                                [classes.contentLeftShift]: treeState === CM_DRAWER_STATES.SHOW,
-                                [classes.contentRightShift]: previewState === CM_DRAWER_STATES.SHOW
+                                [classes.contentLeftShift]: treeOpen,
+                                [classes.contentRightShift]: previewOpen
                             })}
                                   onContextMenu={event => contextualMenu.current.open(event)}
                             >
@@ -147,14 +149,14 @@ class ContentLayout extends React.Component {
                             <Drawer data-cm-role="preview-drawer"
                                     variant="persistent"
                                     anchor="right"
-                                    open={previewState >= CM_DRAWER_STATES.SHOW}
+                                    open={previewOpen}
                                     classes={{
                                         docked: classes.previewDrawer,
                                         paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
-                                        paperAnchorDockedRight: previewState >= CM_DRAWER_STATES.SHOW ? classes.previewDrawerTransition : ''
+                                        paperAnchorDockedRight: previewOpen ? classes.previewDrawerTransition : ''
                                     }}
                             >
-                                {previewState >= CM_DRAWER_STATES.SHOW && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}
+                                {previewOpen && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}
                             </Drawer>
                         </div>
                     )}

@@ -16,7 +16,7 @@ import {isMarkedForDeletion} from '../utils';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
 import classNames from 'classnames';
-import {ContextualMenu, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {ContextualMenu, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
 
 let styles = theme => ({
     root: {
@@ -46,6 +46,7 @@ let styles = theme => ({
         color: 'inherit'
     },
     listItemActionIcon: {
+        position: 'absolute',
         color: 'inherit'
     },
     loadingContainer: {
@@ -86,7 +87,7 @@ class CmPickerViewMaterial extends React.Component {
     }
 
     render() {
-        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, customSelectedClass, dataCmRole} = this.props;
+        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, dataCmRole, container} = this.props;
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
@@ -100,8 +101,7 @@ class CmPickerViewMaterial extends React.Component {
 
                             let itemClass = classNames(classes.listItem, {
                                 [classes.listItemDeleted]: isMarkedForDeletion(entry.node),
-                                [classes.listItemSelected]: entry.selected,
-                                [customSelectedClass]: entry.selected
+                                [classes.listItemSelected]: entry.selected
                             });
                             return (
                                 <UploadWrapperComponent
@@ -162,13 +162,13 @@ class CmPickerViewMaterial extends React.Component {
                                         />
                                     </span>
                                     {this.state.hover === entry.path && entry.depth > 0 &&
-                                    <ListItemIcon className={classes.listItemActionIcon}>
-                                        <DisplayActions target="contentTreeActions"
-                                                        context={{path: entry.node.path}}
-                                                        render={iconButtonRenderer({
-                                                            color: 'inherit',
-                                                            'data-cm-role': 'picker-item-menu'
-                                                        })}/>
+                                    <ListItemIcon className={classes.listItemActionIcon} style={container.current ? {left: (container.current.clientWidth - 48 + container.current.scrollLeft)} : {}}>
+                                        <DisplayAction actionKey="contentTreeActions"
+                                                       context={{path: entry.node.path}}
+                                                       render={iconButtonRenderer({
+                                                           color: 'inherit',
+                                                           'data-cm-role': 'picker-item-menu'
+                                                       })}/>
                                     </ListItemIcon>
                                     }
                                 </UploadWrapperComponent>

@@ -13,9 +13,6 @@ import {compose} from 'react-apollo';
 import Constants from './constants';
 
 const styles = theme => ({
-    itemAndRowSelected: {
-        backgroundColor: theme.palette.primary.main
-    },
     listContainer: {
         overflow: 'auto',
         width: theme.contentManager.treeDrawerWidth + 'px'
@@ -33,10 +30,7 @@ class ContentTree extends React.Component {
     }
 
     render() {
-        let {rootPath, path, openPaths, handleOpen,
-            handleSelect, lang, openableTypes,
-            selectableTypes, rootLabel,
-            setRefetch, itemAndRowSelected, dataCmRole} = this.props;
+        let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, setRefetch, dataCmRole, container} = this.props;
         return (
             <Picker
                 ref={this.picker}
@@ -53,7 +47,7 @@ class ContentTree extends React.Component {
                 onSelectItem={path => handleSelect(path)}
             >
                 {({handleSelect, ...others}) => (
-                    <CmPickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} customSelectedClass={itemAndRowSelected}/>
+                    <CmPickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container}/>
                 )}
             </Picker>
         );
@@ -73,17 +67,21 @@ class ContentTree extends React.Component {
 class ContentTrees extends React.Component {
     constructor(props) {
         super(props);
-        this.componentsRefs = [];
+        this.container = React.createRef();
     }
 
     render() {
         const {lang, siteKey, path, openPaths, t, user, setPath, openPath,
-            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, closeTree, selection} = this.props;
+            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, closeTree} = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
         let contentTreeConfigs = mode === 'browse' ? [Constants.contentTreeConfigs.contents, Constants.contentTreeConfigs.pages] : [Constants.contentTreeConfigs.files];
-
+        let setContainer = r => {
+            if (r) {
+                this.container.current = r;
+            }
+        };
         return (
             <React.Fragment>
                 <AppBar position="relative" color="default">
@@ -102,15 +100,13 @@ class ContentTrees extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <div className={classes.listContainer}>
+                <div ref={setContainer} className={classes.listContainer}>
                     <div className={classes.list}>
                         {isOpen ?
                             _.map(contentTreeConfigs, contentTreeConfig => {
-                                let componentRef = React.createRef();
-                                this.componentsRefs.push(componentRef);
                                 return (
                                     <ContentTree key={contentTreeConfig.key}
-                                                 ref={componentRef}
+                                                 container={this.container}
                                                  mode={mode}
                                                  siteKey={siteKey}
                                                  path={usedPath}
@@ -125,7 +121,6 @@ class ContentTrees extends React.Component {
                                                  openableTypes={contentTreeConfig.openableTypes}
                                                  rootLabel={t(contentTreeConfig.rootLabel)}
                                                  setRefetch={setRefetch(contentTreeConfig.key)}
-                                                 itemAndRowSelected={!_.isEmpty(selection) ? classes.itemAndRowSelected : null}
                                                  onContextualMenu={onContextualMenu}
                                     />
                                 );

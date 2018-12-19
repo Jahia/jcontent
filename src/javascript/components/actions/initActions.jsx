@@ -102,7 +102,6 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('contentTreeActions', menuAction, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        target: ['contentTreeActions:2.5'],
         menu: 'contentTreeMenuActions'
     });
     actionsRegistry.add('publish', publishAction, {

@@ -10,95 +10,107 @@ import 'moment-timezone';
 import {fileIcon, isBrowserImage} from './filesGridUtils';
 import {cmSetSelection, cmGoto} from '../redux/actions';
 import {connect} from 'react-redux';
-import {ellipsizeText, allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
+import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
+import classNames from 'classnames';
 
 const styles = theme => ({
-    card: {
+    defaultCard: {
         display: 'flex',
-        maxHeight: 300,
+        flexDirection: 'row',
         cursor: 'pointer',
-        position: 'relative'
-    },
-    cardMedium: {
-        display: 'flex',
-        maxHeight: 150,
-        cursor: 'pointer',
-        position: 'relative'
-    },
-    cardVertical: {
-        display: 'flex',
-        flexDirection: 'column',
-        maxHeight: 200,
-        minHeight: 200,
-        cursor: 'pointer',
-        position: 'relative'
-    },
-    details: {
-        display: 'flex',
-        '-ms-flex': 1,
-        flexDirection: 'row'
-    },
-    verticalDetails: {
-        display: 'flex',
-        position: 'relative'
-    },
-    content: {
-        flex: '10'
-    },
-    publicationStatus: {
-        flex: '1',
-        height: 'auto'
-    },
-    coverLarge: {
-        width: 300,
-        backgroundColor: theme.palette.common.white,
-        height: 300
-    },
-    coverMedium: {
-        width: 150,
-        height: 150
-    },
-    coverVertical: {
-        height: 150
-    },
-    selectedCard: {
-        backgroundColor: 'rgb(250,250,250)',
-        boxShadow: '1px 0px 15px 4px rgba(247,150,5,1)'
-    },
-    actionButtons: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        '& button': {
-            padding: '8px'
-        }
-    },
-    cardStyle: {
+        position: 'relative',
         marginLeft: 0,
         marginRight: 0,
         padding: 0,
         minHeight: 200,
         maxHeight: 200,
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
+        '& $mediaCardContentContainer': {
+            width: 'calc(100% - 300px)'
+        },
+        '& $fileCardContentContainer': {
+            width: 'calc(100% - 120px)'
+        }
+    },
+    smallCard: {
+        minHeight: 150,
+        maxHeight: 150,
+        '& $mediaCardContentContainer': {
+            width: 'calc(100% - 100px)'
+        },
+        '& $fileCardContentContainer': {
+            width: 'calc(100% - 84px)'
+        }
+    },
+    verticalCard: {
+        flexDirection: 'column',
+        minHeight: 252,
+        maxHeight: 252,
+        '& $defaultFileCover': {
+            height: 150
+        },
+        '& $mediaCardContentContainer': {
+            width: '100%'
+        },
+        '& $fileCardContentContainer': {
+            width: '100%'
+        }
+    },
+    defaultCover: {
+        minWidth: 300,
+        maxWidth: 300,
+        height: 300
+    },
+    defaultFileCover: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    smallCover: {
+        minWidth: 100,
+        maxWidth: 100,
+        height: 150
+    },
+    verticalCover: {
+        height: 150
+    },
+    mediaCardContentContainer: {
+        position: 'relative',
+        width: '100%'
+    },
+    fileCardContentContainer: {
+        position: 'relative',
+        width: '100%'
     },
     cardContent: {
-        marginLeft: Number(theme.spacing.unit),
-        marginRight: '0 !important',
-        padding: '5 !important'
+        paddingLeft: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingTop: theme.spacing.unit * 3,
+        '& div': {
+            marginBottom: theme.spacing.unit * 2,
+            '&:first-child': {
+                display: 'grid'
+            }
+        }
+    },
+    actionButtons: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        '& button': {
+            padding: '8px'
+        }
     },
     isDeleted: {
         textDecoration: 'line-through'
+    },
+    tooltip: {
+        display: 'unset'
+    },
+    selectedCard: {
+        boxShadow: '1px 0px 15px 4px ' + theme.palette.primary.main
     }
 });
-
-const PUBLICATION_INFO_WIDTH_LARGE = 400;
-const PUBLICATION_INFO_WIDTH_MED = 300;
-const PUBLICATION_INFO_WIDTH_SMALL = 150;
-
-const MAX_LENGTH_MEDIA_LABELS_LARGE = 30;
-const MAX_LENGTH_MEDIA_LABELS_MEDIUM = 25;
-const MAX_LENGTH_MEDIA_LABELS_VERTICAL = 25;
-const MAX_LENGTH_FILES_LABELS_VERTICAL = 15;
 
 let Actions = ({classes, isHovered, node}) => isHovered &&
     <div className={classes.actionButtons}>
@@ -120,44 +132,106 @@ class FileCard extends Component {
     }
 
     render() {
-        const {node} = this.props;
+        const {cardType, classes, t, node, dxContext, uiLang, setPath, selection} = this.props;
+        const {isHovered} = this.state;
+
         let contextualMenu = React.createRef();
+
+        const isImage = isBrowserImage(node.path);
+        const isSelected = (selection && selection === node.path);
+
+        let isSmallCard = false;
+        let isDefaultCard = false;
+        let isVerticalCard = false;
+        let maxLengthLabels;
+        switch (cardType) {
+            case 2:
+                isVerticalCard = true;
+                maxLengthLabels = 18;
+                break;
+            case 6:
+            case 12:
+                isDefaultCard = true;
+                maxLengthLabels = 28;
+                break;
+            default:
+                maxLengthLabels = 16;
+                isSmallCard = true;
+        }
+
+        console.log(node);
+
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: node.path}}/>
-                {isBrowserImage(node.path) ? this.regularMediaCard(contextualMenu) : this.fileCard(contextualMenu)}
+
+                <Card className={classNames(classes.defaultCard, isSmallCard && classes.smallCard,
+                    isVerticalCard && classes.verticalCard, isSelected && classes.selectedCard)}
+                      data-cm-role="grid-content-list-card"
+                      onContextMenu={event => {
+                          event.stopPropagation();
+                          contextualMenu.current.open(event);
+                      }}
+                      onClick={() => this.props.onSelect(node.path)}
+                      onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
+                      onMouseEnter={event => this.onHoverEnter(event)}
+                      onMouseLeave={event => this.onHoverExit(event)}
+                >
+                    {!isVerticalCard && <PublicationStatus node={node}/>}
+
+                    { isImage ?
+                        <CardMedia className={classNames(isDefaultCard && classes.defaultCover,
+                                                isSmallCard && classes.smallCover,
+                                                isVerticalCard && classes.verticalCover)}
+                                   image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}&t=thumbnail2`}
+                                   title={node.name}
+                        /> :
+                        <div className={classes.defaultFileCover}>
+                            {fileIcon(node.path, isDefaultCard ? '10x' : '7x')}
+                        </div>
+                    }
+
+                    <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
+                        {isVerticalCard && <PublicationStatus node={node}/>}
+
+                        <Actions classes={classes} node={node} isHovered={isHovered}/>
+
+                        <CardContent classes={{root: classes.cardContent}}>
+                            <div>
+                                <Typography color="textSecondary" variant="caption">
+                                    {t('label.contentManager.filesGrid.name')}
+                                </Typography>
+                                {this.fileName(maxLengthLabels)}
+                            </div>
+                            {(isDefaultCard || isSmallCard) &&
+                                <div>
+                                    <Typography color="textSecondary" variant="caption">
+                                        {t('label.contentManager.filesGrid.createdBy')}
+                                    </Typography>
+                                    <Typography color="textSecondary" variant="body2">
+                                        {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
+                                        &nbsp;
+                                        <Moment format="LLL" locale={uiLang}>
+                                            {node.created}
+                                        </Moment>
+                                    </Typography>
+                                </div>
+                            }
+                            {(isDefaultCard && node.width && node.height) &&
+                                <div>
+                                    <Typography color="textSecondary" variant="caption">
+                                        {t('label.contentManager.filesGrid.fileInfo')}
+                                    </Typography>
+                                    <Typography color="textSecondary" variant="body2">
+                                        {`${node.width} x ${node.height}`}
+                                    </Typography>
+                                </div>
+                            }
+                        </CardContent>
+                    </div>
+                </Card>
             </React.Fragment>
         );
-    }
-
-    regularMediaCard(contextualMenu) {
-        let {cardType} = this.props;
-
-        switch (cardType) {
-            case 2:
-                return this.verticalMediaCard(contextualMenu);
-            case 6:
-            case 12:
-                return this.largeMediaCard(contextualMenu);
-            default:
-                return this.mediumMediaCard(contextualMenu);
-        }
-    }
-
-    fileCard(contextualMenu) {
-        let {cardType} = this.props;
-
-        switch (cardType) {
-            case 2:
-                return this.verticalFileCard(contextualMenu);
-            case 3:
-                return this.mediumFileCard(contextualMenu);
-            case 6:
-            case 12:
-                return this.largeFileCard(contextualMenu);
-            default:
-                return this.mediumFileCard(contextualMenu);
-        }
     }
 
     onHoverEnter() {
@@ -168,315 +242,27 @@ class FileCard extends Component {
         this.setState({isHovered: false});
     }
 
-    largeMediaCard(contextualMenu) {
-        const {classes, t, node, dxContext, uiLang, setPath} = this.props;
-
-        let {isHovered} = this.state;
-
-        return (
-            <Card
-                className={this.generateCardClass(node, classes.card)}
-                classes={{root: classes.cardStyle}}
-                data-cm-role="grid-content-list-card"
-                onContextMenu={event => {
-                    event.stopPropagation();
-                    contextualMenu.current.open(event);
-                }}
-                onClick={() => this.props.onSelect(node.path)}
-                onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                onMouseEnter={event => this.onHoverEnter(event)}
-                onMouseLeave={event => this.onHoverExit(event)}
-            >
-                <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
-                <CardMedia
-                    className={classes.coverLarge}
-                    image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}`}
-                    title={node.name}
-                />
-                <div className={classes.details}>
-                    <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.name')}
-                        </Typography>
-                        {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_LARGE, 6)}
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.createdBy')}
-                        </Typography>
-                        <Typography color="textSecondary" variant="body2">
-                            {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
-                            &nbsp;
-                            <Moment format="LLL" locale={uiLang}>
-                                {node.created}
-                            </Moment>
-                        </Typography>
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.fileInfo')}
-                        </Typography>
-                        <Typography color="textSecondary" variant="body2">
-                            {`${node.width} x ${node.height}`}
-                        </Typography>
-                    </CardContent>
-                </div>
-            </Card>
-        );
-    }
-
-    mediumMediaCard(contextualMenu) {
-        const {classes, t, node, dxContext, uiLang, setPath} = this.props;
-
-        let {isHovered} = this.state;
-
-        return (
-            <Card className={this.generateCardClass(node, classes.cardMedium)}
-                  classes={{root: classes.cardStyle}}
-                  data-cm-role="grid-content-list-card"
-                  onContextMenu={event => {
-                      event.stopPropagation();
-                      contextualMenu.current.open(event);
-                  }}
-                  onClick={() => this.props.onSelect(node.path)}
-                  onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                  onMouseEnter={event => this.onHoverEnter(event)}
-                  onMouseLeave={event => this.onHoverExit(event)}
-            >
-                <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
-                <CardMedia
-                    className={classes.coverMedium}
-                    image={`${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2`}
-                    title={node.name}
-                />
-                <div className={classes.details}>
-                    <CardContent className={classes.content}
-                                 classes={{root: classes.cardContent}}
-                                 style={{width: '100%'}}
-                    >
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.name')}
-                        </Typography>
-                        {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_MEDIUM)}
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.createdBy')}
-                        </Typography>
-                        <Typography color="textSecondary" variant="body2">
-                            {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
-                            &nbsp;
-                            <Moment format="LLL" locale={uiLang}>
-                                {node.created}
-                            </Moment>
-                        </Typography>
-                    </CardContent>
-                </div>
-            </Card>
-        );
-    }
-
-    verticalMediaCard(contextualMenu) {
-        const {classes, t, node, dxContext, setPath} = this.props;
-
-        let {isHovered} = this.state;
-
-        return (
-            <Card className={this.generateCardClass(node, classes.cardVertical)}
-                  classes={{root: classes.cardStyle}}
-                  data-cm-role="grid-content-list-card"
-                  onContextMenu={event => {
-                      event.stopPropagation();
-                      contextualMenu.current.open(event);
-                  }}
-                  onClick={() => this.props.onSelect(node.path)}
-                  onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                  onMouseEnter={event => this.onHoverEnter(event)}
-                  onMouseLeave={event => this.onHoverExit(event)}
-            >
-                <CardMedia
-                    style={{flex: 2}}
-                    className={classes.coverVertical}
-                    image={`${dxContext.contextPath}/files/default/${node.path}?t=thumbnail2`}
-                    title={node.name}
-                />
-                <div className={classes.verticalDetails} style={{flex: 1.5}}>
-                    <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
-                    <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
-
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.name')}
-                        </Typography>
-                        {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_VERTICAL)}
-                    </CardContent>
-                </div>
-            </Card>
-        );
-    }
-
-    largeFileCard(contextualMenu) {
-        const {classes, t, node, uiLang, setPath} = this.props;
-
-        let {isHovered} = this.state;
-
-        return (
-            <Card className={this.generateCardClass(node, classes.card)}
-                  classes={{root: classes.cardStyle}}
-                  data-cm-role="grid-content-list-card"
-                  onContextMenu={event => {
-                      event.stopPropagation();
-                      contextualMenu.current.open(event);
-                  }}
-                  onClick={() => this.props.onSelect(node.path)}
-                  onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                  onMouseEnter={event => this.onHoverEnter(event)}
-                  onMouseLeave={event => this.onHoverExit(event)}
-            >
-                <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_LARGE}/>
-                {fileIcon(node.path, '6x', {fontSize: '160px'})}
-                <div className={classes.details}>
-                    <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
-
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.name')}
-                        </Typography>
-                        {this.fileName(node)}
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.createdBy')}
-                        </Typography>
-                        <Typography color="textSecondary" variant="body2">
-                            {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
-                            &nbsp;
-                            <Moment format="LLL" locale={uiLang}>
-                                {node.created}
-                            </Moment>
-                        </Typography>
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.fileInfo')}
-                        </Typography>
-                        <Typography color="textSecondary" variant="body2">
-                            {`${node.width} x ${node.height}`}
-                        </Typography>
-                    </CardContent>
-                </div>
-            </Card>
-        );
-    }
-
-    mediumFileCard(contextualMenu) {
-        const {classes, t, node, uiLang, setPath} = this.props;
-
-        let {isHovered} = this.state;
-
-        return (
-            <Card className={this.generateCardClass(node, classes.card)}
-                  classes={{root: classes.cardStyle}}
-                  data-cm-role="grid-content-list-card"
-                  onContextMenu={event => {
-                      event.stopPropagation();
-                      contextualMenu.current.open(event);
-                  }}
-                  onClick={() => this.props.onSelect(node.path)}
-                  onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                  onMouseEnter={event => this.onHoverEnter(event)}
-                  onMouseLeave={event => this.onHoverExit(event)}
-            >
-                <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_MED}/>
-                {fileIcon(node.path, '6x', {fontSize: '110px'})}
-                <div className={classes.details}>
-                    <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
-
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.name')}
-                        </Typography>
-                        {this.fileName(node, MAX_LENGTH_MEDIA_LABELS_VERTICAL, 3)}
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.createdBy')}
-                        </Typography>
-                        <Typography color="textSecondary" variant="body2">
-                            {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
-                            &nbsp;
-                            <Moment format="LLL" locale={uiLang}>
-                                {node.created}
-                            </Moment>
-                        </Typography>
-                    </CardContent>
-                </div>
-            </Card>
-        );
-    }
-
-    verticalFileCard(contextualMenu) {
-        const {classes, t, node, cardType, uiLang, setPath} = this.props;
-
-        let {isHovered} = this.state;
-
-        return (
-            <Card className={this.generateCardClass(node, classes.cardVertical)}
-                  classes={{root: classes.cardStyle}}
-                  data-cm-role="grid-content-list-card"
-                  onContextMenu={event => {
-                      event.stopPropagation();
-                      contextualMenu.current.open(event);
-                  }}
-                  onClick={() => this.props.onSelect(node.path)}
-                  onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                  onMouseEnter={event => this.onHoverEnter(event)}
-                  onMouseLeave={event => this.onHoverExit(event)}
-            >
-                {fileIcon(node.path, '6x', {fontSize: '110px'})}
-                <div className={classes.details} style={{height: '100%'}}>
-                    <PublicationStatus node={node} publicationInfoWidth={PUBLICATION_INFO_WIDTH_SMALL}/>
-                    <CardContent className={classes.content} classes={{root: classes.cardContent}}>
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
-
-                        <Typography color="textSecondary" variant="caption">
-                            {t('label.contentManager.filesGrid.name')}
-                        </Typography>
-                        {this.fileName(node, MAX_LENGTH_FILES_LABELS_VERTICAL)}
-                        {cardType !== 2 &&
-                        <React.Fragment>
-                            <Typography color="textSecondary" variant="caption">
-                                {t('label.contentManager.filesGrid.createdBy')}
-                            </Typography>
-                            <Typography color="textSecondary" variant="body2">
-                                {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
-                                &nbsp;
-                                <Moment format="LLL" locale={uiLang}>
-                                    {node.created}
-                                </Moment>
-                            </Typography>
-                        </React.Fragment>
-                        }
-                    </CardContent>
-                </div>
-            </Card>
-        );
-    }
-
-    fileName(node, maxLength, cardType) {
-        let name = node.name;
-        let shortenName = (!cardType || this.props.cardType === cardType) && name.length > maxLength;
+    fileName(maxLength) {
+        const {classes, node} = this.props;
+        const name = node.name;
+        const shortenName = name.length > maxLength;
 
         let typography = (
-            <Typography color="textSecondary"
-                        className={isMarkedForDeletion(node) ? this.props.classes.isDeleted : ''}
+            <Typography noWrap
+                        color="textSecondary"
+                        className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
                         variant="body2"
                         data-cm-role="grid-content-list-card-name"
             >
-                {shortenName ? ellipsizeText(name, maxLength) : name}
+                {name}
             </Typography>
         );
 
         return shortenName ? (
-            <Tooltip title={name}>
+            <Tooltip title={name} classes={{tooltip: classes.tooltip}}>
                 {typography}
             </Tooltip>
         ) : typography;
-    }
-
-    generateCardClass(node, baseClass) {
-        const {classes} = this.props;
-        return node.isSelected ? `${baseClass} ${classes.selectedCard}` : baseClass;
     }
 }
 
@@ -487,7 +273,8 @@ FileCard.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    uiLang: state.uiLang
+    uiLang: state.uiLang,
+    selection: state.selection
 });
 
 const mapDispatchToProps = dispatch => ({

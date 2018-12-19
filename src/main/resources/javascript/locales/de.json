@@ -33,8 +33,7 @@
             },
             "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
             "link": {
-                "academy": "Benötigen Sie Hilfe zum Content- und Medien-Manager?",
-                "visitOurAcademy": "Besuchen Sie unsere Academy"
+                "academy": "Benötigen Sie Hilfe zum Content- und Medien-Manager? Besuchen Sie unsere <0>Academy</0>."
             },
             "fileUpload": {
                 "selectMessage": "Datei von meinem Computer wählen",
@@ -87,7 +86,7 @@
                 "normal": "Einfache Suche",
                 "search": "Suchen",
                 "searchEverywhere": "Suche alles von {{site}}",
-                "searchPath": "Suche unter: <0>{{path}}</0>",
+                "searchPath": "<0>Suche unter: </0> <1>{{path}}</1>",
                 "clear": "Suche zurücksetzen",
                 "refresh": "Ergebnis aktualisieren",
                 "normalPrompt": "Wonach suchen Sie?",

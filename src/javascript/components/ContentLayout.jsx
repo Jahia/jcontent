@@ -67,7 +67,7 @@ const styles = theme => ({
         right: 0
     },
     previewDrawerTransition: {
-        transition: 'inherit !important',
+        transition: 'cubic-bezier(.42,0,.58,1) .2s !important',
         transitionDuration: '.2s !important'
     },
     appFrame: {

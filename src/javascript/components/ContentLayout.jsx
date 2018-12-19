@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Drawer, Grid, Paper, Toolbar, Typography, withStyles} from '@material-ui/core';
+import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
 import ContentListTable from './list/ContentListTable';
 import PreviewDrawer from './preview/PreviewDrawer';
 import classNames from 'classnames';

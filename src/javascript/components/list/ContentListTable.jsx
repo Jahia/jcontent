@@ -107,7 +107,8 @@ const styles = theme => ({
         color: theme.palette.text.disabled
     },
     actionsCell: {
-        minWidth: '144px',
+        minWidth: theme.spacing.unit * 18,
+        width: theme.spacing.unit * 18,
         color: theme.palette.primary.dark
     },
     isDeleted: {

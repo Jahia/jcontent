@@ -49,6 +49,12 @@ const styles = theme => ({
         display: 'flex',
         overflow: 'hidden'
     },
+    previewDrawerHidden: {
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
+        display: 'flex',
+        overflow: 'hidden',
+        zIndex: -20
+    },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
         display: 'flex',
@@ -151,9 +157,9 @@ class ContentLayout extends React.Component {
                                     anchor="right"
                                     open={previewOpen}
                                     classes={{
-                                        docked: classes.previewDrawer,
+                                        docked: previewOpen ? classes.previewDrawer : classes.previewDrawerHidden,
                                         paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
-                                        paperAnchorDockedRight: previewOpen ? classes.previewDrawerTransition : ''
+                                        paperAnchorDockedRight: previewOpen ? classes.previewDrawerTransition : classes.previewDrawerHidden
                                     }}
                             >
                                 {previewOpen && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}

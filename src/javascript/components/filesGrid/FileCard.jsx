@@ -26,20 +26,38 @@ const styles = theme => ({
         maxHeight: 200,
         backgroundColor: theme.palette.background.paper,
         '& $mediaCardContentContainer': {
-            width: 'calc(100% - 300px)'
+            width: 'calc(100% - 200px)'
         },
         '& $fileCardContentContainer': {
             width: 'calc(100% - 120px)'
+        }
+    },
+    extraSmallCard: {
+        minHeight: 150,
+        maxHeight: 150,
+        '& $mediaCardContentContainer': {
+            width: 'calc(100% - 75px)'
+        },
+        '& $fileCardContentContainer': {
+            width: 'calc(100% - 84px)'
         }
     },
     smallCard: {
         minHeight: 150,
         maxHeight: 150,
         '& $mediaCardContentContainer': {
-            width: 'calc(100% - 100px)'
+            width: 'calc(100% - 125px)'
         },
         '& $fileCardContentContainer': {
             width: 'calc(100% - 84px)'
+        }
+    },
+    largeCard: {
+        '& $mediaCardContentContainer': {
+            width: 'calc(100% - 300px)'
+        },
+        '& $fileCardContentContainer': {
+            width: 'calc(100% - 120px)'
         }
     },
     verticalCard: {
@@ -56,20 +74,30 @@ const styles = theme => ({
             width: '100%'
         }
     },
-    defaultCover: {
-        minWidth: 300,
-        maxWidth: 300,
-        height: 300
-    },
     defaultFileCover: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
     },
+    extraSmallCover: {
+        minWidth: 75,
+        maxWidth: 75,
+        height: 100
+    },
     smallCover: {
-        minWidth: 100,
-        maxWidth: 100,
+        minWidth: 125,
+        maxWidth: 125,
         height: 150
+    },
+    defaultCover: {
+        minWidth: 200,
+        maxWidth: 200,
+        height: 200
+    },
+    largeCover: {
+        minWidth: 300,
+        maxWidth: 300,
+        height: 300
     },
     verticalCover: {
         height: 150
@@ -140,8 +168,10 @@ class FileCard extends Component {
         const isImage = isBrowserImage(node.path);
         const isSelected = (selection && selection === node.path);
 
+        let isExtraSmallCard = false;
         let isSmallCard = false;
         let isDefaultCard = false;
+        let isLargeCard = false;
         let isVerticalCard = false;
         let maxLengthLabels;
         switch (cardType) {
@@ -149,24 +179,29 @@ class FileCard extends Component {
                 isVerticalCard = true;
                 maxLengthLabels = 18;
                 break;
+            case 3:
+                isExtraSmallCard = true;
+                maxLengthLabels = 16;
+                break;
+            case 4:
+                isSmallCard = true;
+                maxLengthLabels = 16;
+                break;
             case 6:
-            case 12:
                 isDefaultCard = true;
                 maxLengthLabels = 28;
                 break;
             default:
-                maxLengthLabels = 16;
-                isSmallCard = true;
+                isLargeCard = true;
+                maxLengthLabels = 28;
         }
-
-        console.log(node);
 
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: node.path}}/>
 
-                <Card className={classNames(classes.defaultCard, isSmallCard && classes.smallCard,
-                    isVerticalCard && classes.verticalCard, isSelected && classes.selectedCard)}
+                <Card className={classNames(classes.defaultCard, isExtraSmallCard && classes.extraSmallCard, isSmallCard && classes.smallCard,
+                    isLargeCard && classes.largeCard, isVerticalCard && classes.verticalCard, isSelected && classes.selectedCard)}
                       data-cm-role="grid-content-list-card"
                       onContextMenu={event => {
                           event.stopPropagation();
@@ -181,7 +216,9 @@ class FileCard extends Component {
 
                     { isImage ?
                         <CardMedia className={classNames(isDefaultCard && classes.defaultCover,
+                                                isExtraSmallCard && classes.extraSmallCover,
                                                 isSmallCard && classes.smallCover,
+                                                isLargeCard && classes.largeCover,
                                                 isVerticalCard && classes.verticalCover)}
                                    image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}&t=thumbnail2`}
                                    title={node.name}
@@ -203,7 +240,7 @@ class FileCard extends Component {
                                 </Typography>
                                 {this.fileName(maxLengthLabels)}
                             </div>
-                            {(isDefaultCard || isSmallCard) &&
+                            {(!isVerticalCard) &&
                                 <div>
                                     <Typography color="textSecondary" variant="caption">
                                         {t('label.contentManager.filesGrid.createdBy')}
@@ -217,7 +254,7 @@ class FileCard extends Component {
                                     </Typography>
                                 </div>
                             }
-                            {(isDefaultCard && node.width && node.height) &&
+                            {((isDefaultCard || isLargeCard) && node.width && node.height) &&
                                 <div>
                                     <Typography color="textSecondary" variant="caption">
                                         {t('label.contentManager.filesGrid.fileInfo')}

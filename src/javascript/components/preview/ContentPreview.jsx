@@ -34,7 +34,7 @@ const styles = theme => ({
     },
     previewContainer: {
         backgroundColor: theme.palette.background.default,
-        overflow: 'scroll',
+        overflow: 'hidden',
         position: 'absolute',
         width: '100%',
         height: '100%'

@@ -50,12 +50,10 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     previewDrawerHidden: {
-        zIndex: -20,
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )'
+        zIndex: -20
     },
     previewDrawerPaper: {
         width: theme.contentManager.previewDrawerWidth,
-        display: 'flex',
         position: 'inherit',
         overflow: 'hidden',
         top: '150px',
@@ -126,11 +124,13 @@ class ContentLayout extends React.Component {
                 <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
                     {({rows, contentNotFound, totalCount}) => (
                         <div className={classes.appFrame}>
-                            <Drawer className={classes.treeDrawer}
-                                    variant="persistent"
+                            <Drawer variant="persistent"
                                     anchor="left"
                                     open={treeOpen}
-                                    classes={{paper: classes.treeDrawerPaper}}
+                                    classes={{
+                                        root: classes.treeDrawer,
+                                        paper: classes.treeDrawerPaper
+                                    }}
                             >
                                 <ContentTrees isOpen={treeOpen}
                                               setRefetch={this.setTreeRefetcher}
@@ -155,9 +155,12 @@ class ContentLayout extends React.Component {
                                     anchor="right"
                                     open={previewOpen}
                                     classes={{
-                                        docked: previewOpen ? classes.previewDrawer : classes.previewDrawerHidden,
-                                        paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
-                                        paperAnchorDockedRight: previewOpen ? classes.previewDrawerTransition : ''
+                                        root: classNames(classes.previewDrawer, {[classes.previewDrawerHidden]: !previewOpen}),
+                                        paper: classNames({
+                                            [classes.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
+                                            [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN,
+                                            [classes.previewDrawerTransition]: previewOpen
+                                        })
                                     }}
                             >
                                 {previewOpen && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}

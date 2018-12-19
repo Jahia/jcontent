@@ -156,7 +156,7 @@ class ContentLayout extends React.Component {
                                     classes={{
                                         docked: previewOpen ? classes.previewDrawer : classes.previewDrawerHidden,
                                         paper: previewState === CM_DRAWER_STATES.FULL_SCREEN ? classes.previewDrawerPaperFullScreen : classes.previewDrawerPaper,
-                                        paperAnchorDockedRight: previewOpen ? classes.previewDrawerTransition : classes.previewDrawerHidden
+                                        paperAnchorDockedRight: previewOpen ? classes.previewDrawerTransition : ''
                                     }}
                             >
                                 {previewOpen && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}

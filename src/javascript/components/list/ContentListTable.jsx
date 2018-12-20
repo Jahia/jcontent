@@ -64,6 +64,7 @@ const APP_TABLE_CELLS = 2;
 const styles = theme => ({
 
     tableWrapper: {
+        minHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         overflow: 'auto'
     },
@@ -335,7 +336,6 @@ class ContentListTable extends React.Component {
                         </DxContext.Consumer>
                     </Table>
                 </div>
-                {totalCount > 0 &&
                 <Pagination
                     totalCount={totalCount}
                     pageSize={pagination.pageSize}
@@ -343,7 +343,6 @@ class ContentListTable extends React.Component {
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}
                 />
-                }
             </Paper>
         );
     }

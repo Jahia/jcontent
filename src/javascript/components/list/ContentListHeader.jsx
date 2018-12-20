@@ -36,6 +36,7 @@ class ContentListHeader extends React.Component {
                         return (
                             <TableCell
                                 key={column.id}
+                                className={classes[column.id + 'Cell']}
                                 padding="none"
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                             >
@@ -44,7 +45,7 @@ class ContentListHeader extends React.Component {
                         );
                     }, this)}
                     {showActions &&
-                        <TableCell component="th" scope="row">
+                        <TableCell component="th" scope="row" className={classes.actionsCell}>
                             <Typography variant="subtitle2">Actions</Typography>
                         </TableCell>
                     }

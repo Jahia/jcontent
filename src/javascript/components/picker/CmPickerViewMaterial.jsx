@@ -46,6 +46,7 @@ let styles = theme => ({
         color: 'inherit'
     },
     listItemActionIcon: {
+        top: 0,
         position: 'absolute',
         color: 'inherit'
     },

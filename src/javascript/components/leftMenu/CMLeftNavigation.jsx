@@ -1,5 +1,5 @@
 import React from 'react';
-import {Drawer, Grid, List, ListItem, Typography, withStyles} from '@material-ui/core';
+import {Drawer, List, ListItem, Typography, withStyles} from '@material-ui/core';
 import LanguageSwitcher from '../languageSwitcher/LanguageSwitcher';
 import SiteSwitcher from '../siteSwitcher/SiteSwitcher';
 import {translate} from 'react-i18next';
@@ -73,7 +73,9 @@ const styles = theme => ({
     },
     listBottom: {
         position: 'absolute',
-        bottom: theme.spacing.unit
+        left: theme.spacing.unit * 4,
+        bottom: theme.spacing.unit,
+        zIndex: theme.zIndex.modal
     },
     drawerTree: {
         marginTop: '18px'
@@ -124,7 +126,10 @@ class CMLeftNavigation extends React.Component {
         };
 
         return (
-            <div className={classNames(classes.root, {[classes.rootOpenDrawer]: this.state.openDrawer, [classes.rootClosedDrawer]: !this.state.openDrawer})}>
+            <div className={classNames(classes.root, {
+                [classes.rootOpenDrawer]: this.state.openDrawer,
+                [classes.rootClosedDrawer]: !this.state.openDrawer})}
+            >
                 <List className={classes.list} component="nav">
                     <ListItem button className={classes.menuBurger}>
                         <BurgerMenuButton contextPath={contextPath} isDrawerOpen={this.state.openDrawer}/>
@@ -152,17 +157,13 @@ class CMLeftNavigation extends React.Component {
                     open={this.state.openDrawer}
                 >
                     <div className={classes.blockMenu}>
-                        <Grid container spacing={0} alignItems="center">
-                            <Grid item xs={2}>
-                                <SiteSwitcher/>
-                                <Typography variant="h5" color="inherit" className={classes.typoTitle}>
-                                    {this.state.drawerContent &&
+                        <SiteSwitcher/>
+                        <Typography variant="h5" color="inherit" className={classes.typoTitle}>
+                            {this.state.drawerContent &&
                             t(this.state.drawerContent.title)
                             }
-                                </Typography>
-                                <LanguageSwitcher/>
-                            </Grid>
-                        </Grid>
+                        </Typography>
+                        <LanguageSwitcher/>
                     </div>
 
                     <div className={classes.drawerTree}>

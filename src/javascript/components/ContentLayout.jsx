@@ -137,11 +137,11 @@ class ContentLayout extends React.Component {
                                 />
                             </Drawer>
                             <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                            <main className={classNames(classes.content, {
+                            <div className={classNames(classes.content, {
                                 [classes.contentLeftShift]: treeOpen,
                                 [classes.contentRightShift]: previewOpen
                             })}
-                                  onContextMenu={event => contextualMenu.current.open(event)}
+                                 onContextMenu={event => contextualMenu.current.open(event)}
                             >
                                 <Paper>
                                     {mode === Constants.mode.FILES && filesMode === 'grid' ?
@@ -149,7 +149,7 @@ class ContentLayout extends React.Component {
                                         <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
                                     }
                                 </Paper>
-                            </main>
+                            </div>
                             <Drawer data-cm-role="preview-drawer"
                                     variant="persistent"
                                     anchor="right"

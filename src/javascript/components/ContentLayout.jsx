@@ -37,7 +37,8 @@ const styles = theme => ({
         transition: ['margin-right 0ms 225ms']
     },
     treeDrawer: {
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )'
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
+        transition: '.2s ease-in-out !important'
     },
     treeDrawerPaper: {
         width: theme.contentManager.treeDrawerWidth,
@@ -47,27 +48,26 @@ const styles = theme => ({
     previewDrawer: {
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transition: '.2s ease-in-out !important'
     },
     previewDrawerHidden: {
-        zIndex: -20
+        transform: 'translate(600px)'
     },
     previewDrawerPaper: {
+        transition: '.2s ease-in-out !important',
         width: theme.contentManager.previewDrawerWidth,
         position: 'inherit',
         overflow: 'hidden',
         top: '150px',
-        right: theme.spacing.unit * 5
+        right: '640px'
     },
     previewDrawerPaperFullScreen: {
+        transition: '.2s ease-in-out !important',
         width: '100vw',
         height: '100vh',
         top: 0,
         right: 0
-    },
-    previewDrawerTransition: {
-        transition: 'cubic-bezier(.42,0,.58,1) .2s !important',
-        transitionDuration: '.2s !important'
     },
     appFrame: {
         overflow: 'hidden',
@@ -158,8 +158,7 @@ class ContentLayout extends React.Component {
                                         root: classNames(classes.previewDrawer, {[classes.previewDrawerHidden]: !previewOpen}),
                                         paper: classNames({
                                             [classes.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
-                                            [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN,
-                                            [classes.previewDrawerTransition]: previewOpen
+                                            [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
                                         })
                                     }}
                             >

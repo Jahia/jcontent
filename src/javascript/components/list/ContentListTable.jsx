@@ -116,6 +116,9 @@ const styles = theme => ({
     },
     empty: {
         textAlign: 'center'
+    },
+    publicationStatus: {
+        minWidth: 500
     }
 });
 
@@ -229,7 +232,7 @@ class ContentListTable extends React.Component {
                                                                    classes={{root: classes.publicationCell}}
                                                                    data-cm-role="table-content-list-cell-publication"
                                                         >
-                                                            <PublicationStatus node={n}/>
+                                                            <PublicationStatus node={n} classes={{root: classes.publicationStatus}}/>
                                                         </TableCell>
                                                         <TableCell padding="checkbox"
                                                                    classes={this.getCellClasses(n, classes, 'checkbox', isSelected)}

@@ -62,7 +62,7 @@ class DocumentViewer extends React.Component {
             default:
                 return (
                     <div className={classes.icon}>
-                        {fileIcon(file, null, {fontSize: '24em'})}
+                        {fileIcon(file, '10x', {height: '100%'})}
                     </div>
                 );
         }

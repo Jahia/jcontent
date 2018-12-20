@@ -50,6 +50,7 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     previewDrawerHidden: {
+        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         zIndex: -20
     },
     previewDrawerPaper: {

@@ -115,10 +115,7 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit,
         paddingTop: theme.spacing.unit * 3,
         '& div': {
-            marginBottom: theme.spacing.unit * 2,
-            '&:first-child': {
-                display: 'grid'
-            }
+            marginBottom: theme.spacing.unit * 2
         }
     },
     actionButtons: {
@@ -235,17 +232,17 @@ class FileCard extends Component {
 
                         <CardContent classes={{root: classes.cardContent}}>
                             <div>
-                                <Typography color="textSecondary" variant="caption">
+                                <Typography color="textSecondary" variant="caption" component="p">
                                     {t('label.contentManager.filesGrid.name')}
                                 </Typography>
                                 {this.fileName(maxLengthLabels)}
                             </div>
                             {(!isVerticalCard) &&
                                 <div>
-                                    <Typography color="textSecondary" variant="caption">
+                                    <Typography color="textSecondary" variant="caption" component="p">
                                         {t('label.contentManager.filesGrid.createdBy')}
                                     </Typography>
-                                    <Typography color="textSecondary" variant="body2">
+                                    <Typography color="textSecondary" variant="body2" component="p">
                                         {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
                                         &nbsp;
                                         <Moment format="LLL" locale={uiLang}>
@@ -256,10 +253,10 @@ class FileCard extends Component {
                             }
                             {((isDefaultCard || isLargeCard) && node.width && node.height) &&
                                 <div>
-                                    <Typography color="textSecondary" variant="caption">
+                                    <Typography color="textSecondary" variant="caption" component="p">
                                         {t('label.contentManager.filesGrid.fileInfo')}
                                     </Typography>
-                                    <Typography color="textSecondary" variant="body2">
+                                    <Typography color="textSecondary" variant="body2" component="p">
                                         {`${node.width} x ${node.height}`}
                                     </Typography>
                                 </div>
@@ -286,6 +283,7 @@ class FileCard extends Component {
 
         let typography = (
             <Typography noWrap
+                        component="p"
                         color="textSecondary"
                         className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
                         variant="body2"

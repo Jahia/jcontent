@@ -30,7 +30,7 @@ const styles = theme => ({
     menuBurger: {
         paddingRight: '0px !important',
         paddingTop: '34px !important',
-        paddingLeft: '20px !important',
+        paddingLeft: '0px !important',
         paddingBottom: '22px !important',
         boxShadow: 'none !important',
         background: 'none!important',

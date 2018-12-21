@@ -2,23 +2,17 @@ import React from 'react';
 import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
+import classNames from 'classnames';
 
 const styles = () => ({
     menuButton: {
-        background: 'url(' + contextJsParameters.contextPath + '/engines/jahia-anthracite/images/logos/dx_logo_solid-white.png) center center no-repeat',
-        marginLeft: -12,
-        marginRight: 6,
-        width: '3.5em',
-        height: '3.5em',
+        background: 'url(' + contextJsParameters.contextPath + '/engines/jahia-anthracite/images/logos/dx_logo_solid-white.png) center/100% no-repeat',
+        width: '60px',
+        height: '60px',
         backgroundSize: '100%'
     },
     menuButtonBlue: {
-        background: 'url(' + contextJsParameters.contextPath + '/engines/jahia-anthracite/images/dx_logo_solid.png) center center no-repeat',
-        marginLeft: -12,
-        marginRight: 6,
-        width: '3.5em',
-        height: '3.5em',
-        backgroundSize: '100%'
+        background: 'url(' + contextJsParameters.contextPath + '/engines/jahia-anthracite/images/dx_logo_solid.png) center/100% no-repeat'
     }
 });
 
@@ -32,12 +26,7 @@ class BurgerMenuButton extends React.Component {
     render() {
         let {classes, isDrawerOpen} = this.props;
         return (
-            <div>
-                { isDrawerOpen ?
-                    <div className={classes.menuButtonBlue} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/> :
-                    <div className={classes.menuButton} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/>
-                }
-            </div>
+            <div className={classNames(classes.menuButton, isDrawerOpen && classes.menuButtonBlue)} data-cm-role="cm-burger-menu" onClick={() => this.openMenu()}/>
         );
     }
 }

@@ -8,11 +8,9 @@ import {setSize} from './redux/actions';
 
 const styles = theme => ({
     root: {
-        display: 'inline-grid',
         width: 105,
         padding: 5,
-        marginRight: theme.spacing.unit,
-        verticalAlign: 'middle'
+        marginRight: theme.spacing.unit
     }
 });
 

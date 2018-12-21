@@ -75,7 +75,7 @@ const styles = theme => ({
         position: 'absolute',
         left: theme.spacing.unit * 4,
         bottom: theme.spacing.unit,
-        zIndex: theme.zIndex.modal
+        zIndex: 'inherit'
     },
     drawerTree: {
         marginTop: '18px'

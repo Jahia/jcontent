@@ -14,7 +14,6 @@ import * as _ from 'lodash';
 import {DxContext} from './DxContext';
 import ContentLayout from './ContentLayout';
 import IFrameLayout from './IFrameLayout';
-import {initFontawesomeIcons} from './icons/initFontawesomeIcons';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import getStore from './redux/getStore';
@@ -30,8 +29,6 @@ class ContentManager extends React.Component {
         this.getStore = this.getStore.bind(this);
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
-
-        initFontawesomeIcons();
 
         initActions(actionsRegistry);
 

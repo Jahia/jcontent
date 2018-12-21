@@ -7,7 +7,8 @@ import {translate} from 'react-i18next';
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import {fileIcon, isBrowserImage} from './filesGridUtils';
+import {isBrowserImage} from './filesGridUtils';
+import {FileIcon} from './FileIcon';
 import {cmSetSelection, cmGoto} from '../redux/actions';
 import {connect} from 'react-redux';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../utils';
@@ -79,6 +80,12 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    largeFileCoverIcon: {
+        fontSize: '160px'
+    },
+    smallFileCoverIcon: {
+        fontSize: '112px'
+    },
     extraSmallCover: {
         minWidth: 75,
         maxWidth: 75,
@@ -147,6 +154,29 @@ let Actions = ({classes, isHovered, node}) => isHovered &&
                             fontSize: 'small'
                         }, true)}/>
     </div>;
+
+let FileName = ({maxLength, classes, node}) => {
+    const name = node.name;
+    const shortenName = name.length > maxLength;
+
+    let typography = (
+        <Typography noWrap
+                    component="p"
+                    color="textSecondary"
+                    className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
+                    variant="body2"
+                    data-cm-role="grid-content-list-card-name"
+        >
+            {name}
+        </Typography>
+    );
+
+    return shortenName ? (
+        <Tooltip title={name} classes={{tooltip: classes.tooltip}}>
+            {typography}
+        </Tooltip>
+    ) : typography;
+};
 
 class FileCard extends Component {
     constructor(props) {
@@ -221,7 +251,7 @@ class FileCard extends Component {
                                    title={node.name}
                         /> :
                         <div className={classes.defaultFileCover}>
-                            {fileIcon(node.path, isDefaultCard ? '10x' : '7x')}
+                            <FileIcon filename={node.path} color="disabled" classes={{root: isLargeCard || isDefaultCard ? classes.largeFileCoverIcon : classes.smallFileCoverIcon}}/>
                         </div>
                     }
 
@@ -235,7 +265,7 @@ class FileCard extends Component {
                                 <Typography color="textSecondary" variant="caption" component="p">
                                     {t('label.contentManager.filesGrid.name')}
                                 </Typography>
-                                {this.fileName(maxLengthLabels)}
+                                <FileName maxLength={maxLengthLabels} classes={classes} node={node}/>
                             </div>
                             {(!isVerticalCard) &&
                                 <div>
@@ -274,30 +304,6 @@ class FileCard extends Component {
 
     onHoverExit() {
         this.setState({isHovered: false});
-    }
-
-    fileName(maxLength) {
-        const {classes, node} = this.props;
-        const name = node.name;
-        const shortenName = name.length > maxLength;
-
-        let typography = (
-            <Typography noWrap
-                        component="p"
-                        color="textSecondary"
-                        className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
-                        variant="body2"
-                        data-cm-role="grid-content-list-card-name"
-            >
-                {name}
-            </Typography>
-        );
-
-        return shortenName ? (
-            <Tooltip title={name} classes={{tooltip: classes.tooltip}}>
-                {typography}
-            </Tooltip>
-        ) : typography;
     }
 }
 

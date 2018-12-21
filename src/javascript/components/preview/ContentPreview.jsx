@@ -3,29 +3,13 @@ import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {Paper, Typography, withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
 import {previewQuery} from '../gqlQueries';
-import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
-import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
+import {CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import constants from '../constants';
-import loadable from 'react-loadable';
 import {DxContext} from '../DxContext';
-import classNames from 'classnames';
-
-const DocumentViewer = loadable({
-    loader: () => import('./filePreviewer/DocumentViewer'),
-    loading: () => <div/>
-});
-
-const PDFViewer = loadable({
-    loader: () => import('./filePreviewer/PDFViewer'),
-    loading: () => <div/>
-});
-
-const ImageViewer = loadable({
-    loader: () => import('./filePreviewer/ImageViewer'),
-    loading: () => <div/>
-});
+import {NoPreviewComponent} from './NoPreviewComponent';
+import {PreviewComponent} from './PreviewComponent';
 
 const styles = theme => ({
     root: {
@@ -65,7 +49,8 @@ const styles = theme => ({
 class ContentPreview extends React.Component {
     constructor(props) {
         super(props);
-        this.refetchPreview = () => {};
+        this.refetchPreview = () => {
+        };
     }
 
     componentDidUpdate(prevProps) {
@@ -78,16 +63,28 @@ class ContentPreview extends React.Component {
         const {selection, classes, previewMode} = this.props;
 
         if (_.isEmpty(selection)) {
-            return this.noPreviewComponent();
+            return <NoPreviewComponent {...this.props}/>;
         }
 
         const path = selection.path;
         const livePreviewAvailable = selection.publicationStatus !== constants.availablePublicationStatuses.UNPUBLISHED && selection.publicationStatus !== constants.availablePublicationStatuses.NOT_PUBLISHED;
+        const queryVariables = {
+            path: path,
+            templateType: 'html',
+            view: 'cm',
+            contextConfiguration: 'preview',
+            language: this.props.language,
+            isPublished: livePreviewAvailable
+        };
+
         return (
             <DxContext.Consumer>
                 {dxContext => (
                     <div className={classes.root}>
-                        <Query query={previewQuery} errorPolicy="all" variables={this.queryVariables(path, livePreviewAvailable)}>
+                        <Query query={previewQuery}
+                               errorPolicy="all"
+                               variables={queryVariables}
+                        >
                             {({loading, data, refetch}) => {
                                 this.refetchPreview = refetch;
 
@@ -101,7 +98,11 @@ class ContentPreview extends React.Component {
                                         let selectedMode = _.find(modes, mode => {
                                             return previewMode === mode;
                                         }) === undefined ? CM_PREVIEW_MODES.EDIT : previewMode;
-                                        return this.previewComponent(data[selectedMode], dxContext);
+                                        return (
+                                            <PreviewComponent data={data[selectedMode]}
+                                                              dxContext={dxContext}
+                                                              {...this.props}/>
+                                        );
                                     }
                                 }
                                 return null;
@@ -111,99 +112,6 @@ class ContentPreview extends React.Component {
                 )}
             </DxContext.Consumer>
         );
-    }
-
-    noPreviewComponent() {
-        const {classes, t} = this.props;
-        return (
-            <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>
-                <Paper elevation={1} className={classes.contentContainer} classes={{root: classes.contentPaper}}>
-                    <Typography variant="h5">
-                        {t('label.contentManager.contentPreview.noViewAvailable')}
-                    </Typography>
-                </Paper>
-            </div>
-        );
-    }
-
-    previewComponent(data, dxContext) {
-        const {classes, t, previewMode, previewState} = this.props;
-        const fullScreen = (previewState === CM_DRAWER_STATES.FULL_SCREEN);
-        let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
-        if (displayValue === '') {
-            displayValue = t('label.contentManager.contentPreview.noViewAvailable');
-        }
-
-        // If node type is "jnt:file" use specific viewer
-        if (data && data.nodeByPath.isFile) {
-            let file = dxContext.contextPath + '/files/' + (previewMode === CM_PREVIEW_MODES.EDIT ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
-
-            if (isPDF(data.nodeByPath.path)) {
-                return (
-                    <div className={classes.previewContainer}>
-                        <PDFViewer file={file} fullScreen={fullScreen}/>
-                    </div>
-                );
-            }
-
-            if (isBrowserImage(data.nodeByPath.path)) {
-                return (
-                    <div className={classNames(classes.previewContainer, classes.mediaContainer)}>
-                        <ImageViewer file={file} fullScreen={fullScreen}/>
-                    </div>
-                );
-            }
-
-            const type = getFileType(data.nodeByPath.path);
-            const isMedia = (type === 'avi' || type === 'mp4' || type === 'video');
-            return (
-                <div className={classNames(classes.previewContainer, isMedia && classes.mediaContainer)}>
-                    <DocumentViewer file={file} type={type} fullScreen={fullScreen}/>
-                </div>
-            );
-        }
-
-        const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
-        return (
-            <div className={classNames(classes.previewContainer, classes.contentContainer)}>
-                <Paper elevation={1} classes={{root: classes.contentPaper}}>
-                    <iframe ref={element => this.iframeLoadContent(assets, displayValue, element)} className={classes.contentIframe}/>
-                </Paper>
-            </div>
-        );
-    }
-
-    iframeLoadContent(assets, displayValue, element) {
-        if (element) {
-            let frameDoc = element.document;
-            if (element.contentWindow) {
-                frameDoc = element.contentWindow.document;
-            }
-            frameDoc.open();
-            frameDoc.writeln(displayValue);
-            frameDoc.close();
-            if (assets !== null) {
-                let iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
-                assets.forEach(asset => {
-                    let linkEl = document.createElement('link');
-                    linkEl.setAttribute('rel', 'stylesheet');
-                    linkEl.setAttribute('type', 'text/css');
-                    linkEl.setAttribute('href', asset.key);
-                    iframeHeadEl.appendChild(linkEl);
-                });
-            }
-        }
-    }
-
-    queryVariables(path, isPublished) {
-        return {
-            path: path,
-            templateType: 'html',
-            view: 'cm',
-            contextConfiguration: 'preview',
-            language: this.props.language,
-            isPublished: isPublished
-        };
     }
 }
 

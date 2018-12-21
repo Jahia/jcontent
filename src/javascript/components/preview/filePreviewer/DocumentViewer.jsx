@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FileViewer from 'react-file-viewer';
 import {withStyles} from '@material-ui/core';
-import {fileIcon} from '../../filesGrid/filesGridUtils';
+import {FileIcon} from '../../filesGrid/FileIcon';
 import classNames from 'classnames';
 
 const styles = theme => ({
@@ -35,8 +35,10 @@ const styles = theme => ({
     },
     fullScreen: {},
     icon: {
+        fontSize: '160px',
         display: 'flex',
         height: '100%',
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: theme.palette.common.white
@@ -61,9 +63,7 @@ class DocumentViewer extends React.Component {
                 return <FileViewer fileType={type} filePath={file}/>;
             default:
                 return (
-                    <div className={classes.icon}>
-                        {fileIcon(file, '10x', {height: '100%'})}
-                    </div>
+                    <FileIcon filename={file} color="disabled" classes={{root: classes.icon}}/>
                 );
         }
     }

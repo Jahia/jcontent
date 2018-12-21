@@ -18,14 +18,14 @@ const styles = theme => ({
     },
     previewContainer: {
         backgroundColor: theme.palette.background.default,
-        overflow: 'hidden',
+        overflow: 'auto',
         position: 'absolute',
         width: '100%',
         height: '100%'
     },
     noPreviewContainer: {
         backgroundColor: theme.palette.background.default,
-        overflow: 'scroll',
+        overflow: 'auto',
         width: '100%',
         height: '100%'
     },

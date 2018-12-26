@@ -101,12 +101,6 @@ const styles = theme => ({
             verticalAlign: 'sub'
         }
     },
-    lockCell: {
-        color: theme.palette.text.disabled
-    },
-    wipCell: {
-        color: theme.palette.text.disabled
-    },
     actionsCell: {
         minWidth: theme.spacing.unit * 18,
         width: theme.spacing.unit * 18,
@@ -150,7 +144,9 @@ class ContentListTable extends React.Component {
         let {classes, t} = this.props;
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
-                <Lock color="inherit"
+                <Lock
+                      fontSize="small"
+                      color="inherit"
                       className={classNames({
                     [classes.statusIconSelected]: isSelected,
                     [classes.statusIcon]: !isSelected
@@ -163,7 +159,8 @@ class ContentListTable extends React.Component {
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                    <VirtualsiteIcon color="inherit"
+                    <VirtualsiteIcon fontSize="small"
+                                     color="inherit"
                                      className={classNames({
                         [classes.statusIconSelected]: isSelected,
                         [classes.statusIcon]: !isSelected

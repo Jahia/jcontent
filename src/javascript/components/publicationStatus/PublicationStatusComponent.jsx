@@ -15,22 +15,25 @@ const styles = theme => ({
     },
     publicationInfoWrapper: {
         display: 'flex',
-        transition: 'all 1s ease-in-out'
+        overflow: 'hidden'
     },
     publicationInfo: {
-        display: 'none',
+        display: 'flex',
         alignItems: 'center',
-        width: '100%',
-        transition: 'all 0.3s ease-in-out',
-        '&:hover': {
-            display: 'flex'
-        }
+        opacity: 0,
+        width: 0,
+        minWidth: '0px',
+        padding: 0,
+        whiteSpace: 'nowrap',
+        transition: 'min-width .3s ease 0s, opacity .2s ease 0s, padding .2s ease 0s'
     },
     border: {
         width: 6,
         cursor: 'pointer',
         '&:hover ~ $publicationInfoWrapper > $publicationInfo': {
-            display: 'flex'
+            minWidth: '640px',
+            opacity: 1,
+            padding: '0 ' + (theme.spacing.unit * 2) + 'px'
         }
     },
     spacing: {

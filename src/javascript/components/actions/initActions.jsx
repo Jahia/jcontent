@@ -1,7 +1,7 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
 import {WorkflowIcon, ManageIcon, ContentIcon} from '../icons';
-import {Add, Delete, Edit, Error, Publish, Visibility, Lock, LockOpen, Autorenew} from '@material-ui/icons';
+import {Add, Delete, Edit, Error, Publish, Visibility, Lock, LockOpen} from '@material-ui/icons';
 import {ContentPaste, FolderMultipleImage, Account, AccountGroup, Web, ShieldKey, TagMultiple, DotsVertical} from 'mdi-material-ui';
 import Constants from '../constants';
 import createContentOfTypeAction from './createContentOfTypeAction';
@@ -120,7 +120,7 @@ function initActions(actionsRegistry) {
         menu: 'advancedPublish'
     });
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
-        buttonIcon: <Autorenew/>,
+        buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
         target: ['tableMenuActions', 'contextualMenuContentAction:6'],
         hideOnNodeTypes: ['jnt:contentFolder', 'jnt:page'],

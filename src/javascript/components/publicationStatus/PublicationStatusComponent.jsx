@@ -15,7 +15,9 @@ const styles = theme => ({
     },
     publicationInfoWrapper: {
         display: 'flex',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        maxWidth: '0px',
+        transitionDuration: '.2s'
     },
     publicationInfo: {
         display: 'flex',
@@ -34,6 +36,9 @@ const styles = theme => ({
             minWidth: '640px',
             opacity: 1,
             padding: '0 ' + (theme.spacing.unit * 2) + 'px'
+        },
+        '&:hover ~ $publicationInfoWrapper': {
+            maxWidth: '640px'
         }
     },
     spacing: {

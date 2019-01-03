@@ -13,10 +13,12 @@ const query = gql`query getActiveWorkflowTaskCountForUser{
 
 let workflowDashboardAction = composeActions(withApolloAction, {
     init: context => {
-        let watchQuery = from(context.client.watchQuery({query}));
+        let watchQuery = context.client.watchQuery({query});
+        let watchQueryObs = from(watchQuery);
+
         // Empty subscription to correctly watch the result
-        watchQuery.pipe(first()).subscribe();
-        context.badge = watchQuery
+        watchQueryObs.pipe(first()).subscribe();
+        context.badge = watchQueryObs
             .pipe(
                 filter(res => (res.data && res.data.jcr)),
                 map(res => res.data.jcr.result > 0 ? res.data.jcr.result : null)

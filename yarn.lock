@@ -723,10 +723,10 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20181220143605":
-  version "1.0.0-beta.20181220143605"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20181220143605.tgz#59a265073795a30200cddbc8c876f7b3902435a5"
-  integrity sha512-WXYzgv1zfP7hY4EL1vRZoLtpvibMa9UpoHFTShH4hnlJTwPZf4nbgwnBeRLTBiNLexiEMiLUZ05dDaVBU5XWIQ==
+"@jahia/react-material@^1.0.0-beta.20190104141430":
+  version "1.0.0-beta.20190104141430"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20190104141430.tgz#0a8e36b3ea08d5b36af57ee6cc15be09bf297c53"
+  integrity sha512-APDa0n1SlBzPINZ3G8+YuzSGo+sxqIUjO+3bhIK9qAdI9NP77iWkisqeFxuZONVqdjpte7PapRd/jsZIK6q/fQ==
   dependencies:
     "@jahia/icons" "^1.0.0-beta.20181011112119"
     "@material-ui/core" "^3.6.2"
@@ -736,6 +736,7 @@
     react-dom "^16.4.0"
     react-i18next "^7.6.1"
     react-select "^2.0.0"
+    recompose "^0.30.0"
     rxjs "^6.3.3"
 
 "@material-ui/core@^3.2.0":
@@ -4730,7 +4731,7 @@ readdirp@^2.0.0:
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
 
-"recompose@0.28.0 - 0.30.0":
+"recompose@0.28.0 - 0.30.0", recompose@^0.30.0:
   version "0.30.0"
   resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.30.0.tgz#82773641b3927e8c7d24a0d87d65aeeba18aabd0"
   dependencies:

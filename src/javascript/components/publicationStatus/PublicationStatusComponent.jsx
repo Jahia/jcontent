@@ -8,7 +8,7 @@ import {translate} from 'react-i18next';
 const styles = theme => ({
     root: {
         display: 'flex',
-        height: '100%',
+        height: 48,
         position: 'absolute',
         zIndex: 1,
         bottom: 0

@@ -1,12 +1,12 @@
 import React from 'react';
-import {registerPushEventHandler, unregisterPushEventHandler} from './eventHandlerRegistry';
-import {refetchContentTreeAndListData, refetchActiveWorkflowTasks} from './ContentManager.refetches';
+import {registerPushEventHandler, unregisterPushEventHandler} from '../eventHandlerRegistry';
+import {refetchContentTreeAndListData, refetchActiveWorkflowTasks} from '../ContentManager.refetches';
 
 /**
  * Renderless component that registers listeners for push events, sent by the Atmosphere Framework after content actions
  * or background / workflow task completion. This component then triggers the refetch of the data to "update" the data set.
  */
-class PushEventHandler extends React.Component {
+export default class PushEventHandler extends React.Component {
     constructor(props) {
         super(props);
         this.onPushEvent = this.onPushEvent.bind(this);
@@ -56,5 +56,3 @@ class PushEventHandler extends React.Component {
         return null;
     }
 }
-
-export {PushEventHandler};

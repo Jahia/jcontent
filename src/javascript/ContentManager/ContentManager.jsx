@@ -17,7 +17,7 @@ import IFrameLayout from './IFrameLayout';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import getStore from './redux/getStore';
-import {PushEventHandler} from './PushEventHandler';
+import PushEventHandler from './PushEventHandler';
 import initActions from './actions/initActions';
 import contentManagerStyleConstants from './ContentManager.style-constants';
 

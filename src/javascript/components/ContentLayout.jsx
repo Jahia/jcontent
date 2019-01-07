@@ -24,21 +24,20 @@ const styles = theme => ({
     content: {
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         flexGrow: 1,
+        transitionDuration: '.25s',
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
         marginRight: -theme.contentManager.previewDrawerWidth
     },
     contentLeftShift: {
-        marginLeft: 0,
-        transition: ['margin-left 0ms 225ms']
+        marginLeft: 0
     },
     contentRightShift: {
-        marginRight: 0,
-        transition: ['margin-right 0ms 225ms']
+        marginRight: 0
     },
     treeDrawer: {
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
-        transition: '.2s ease-in-out !important'
+        transitionDuration: '.15s'
     },
     treeDrawerPaper: {
         width: theme.contentManager.treeDrawerWidth,
@@ -49,21 +48,21 @@ const styles = theme => ({
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
         overflow: 'hidden',
-        transition: '.2s ease-in-out !important'
+        transitionDuration: '0s'
     },
     previewDrawerHidden: {
         transform: 'translate(600px)'
     },
     previewDrawerPaper: {
-        transition: '.2s ease-in-out !important',
+        transitionDuration: '0s',
         width: theme.contentManager.previewDrawerWidth,
         position: 'inherit',
         overflow: 'hidden',
         top: '150px',
-        right: '640px'
+        right: '600px'
     },
     previewDrawerPaperFullScreen: {
-        transition: '.2s ease-in-out !important',
+        transitionDuration: '.15s',
         width: '100vw',
         height: '100vh',
         top: 0,
@@ -73,7 +72,8 @@ const styles = theme => ({
         overflow: 'hidden',
         position: 'relative',
         display: 'flex',
-        width: '100%'
+        width: '100%',
+        backgroundColor: theme.palette.background.paper
     },
     metaNav: {
         position: 'absolute',

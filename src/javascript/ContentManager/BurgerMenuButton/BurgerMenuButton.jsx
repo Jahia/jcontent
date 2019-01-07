@@ -16,7 +16,7 @@ const styles = () => ({
     }
 });
 
-class BurgerMenuButton extends React.Component {
+export class BurgerMenuButton extends React.Component {
     openMenu() {
         const clickEvent = window.top.document.createEvent('MouseEvents');
         clickEvent.initEvent('click', true, true);

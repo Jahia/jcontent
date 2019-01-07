@@ -1,16 +1,13 @@
 import React from 'react';
-import {Picker} from '@jahia/react-apollo';
-import CmPickerViewMaterial from './picker/CmPickerViewMaterial';
 import {AppBar, Grid, IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from './redux/actions';
-import {PickerItemsFragment} from './gqlQueries';
-import {PredefinedFragments} from '@jahia/apollo-dx';
+import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from '../redux/actions';
 import {compose} from 'react-apollo';
-import ContentManagerConstants from './ContentManager.constants';
+import ContentManagerConstants from '../ContentManager.constants';
+import ContentTree from './ContentTree';
 
 const styles = theme => ({
     listContainer: {
@@ -23,48 +20,7 @@ const styles = theme => ({
     }
 });
 
-class ContentTree extends React.Component {
-    constructor(props) {
-        super(props);
-        this.picker = React.createRef();
-    }
-
-    render() {
-        let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, setRefetch, dataCmRole, container} = this.props;
-        return (
-            <Picker
-                ref={this.picker}
-                rootPaths={[rootPath]}
-                openPaths={openPaths}
-                openableTypes={openableTypes}
-                selectableTypes={selectableTypes}
-                queryVariables={{lang: lang}}
-                selectedPaths={[path]}
-                openSelection={false}
-                setRefetch={setRefetch}
-                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PredefinedFragments.displayName]}
-                onOpenItem={(path, open) => handleOpen(path, open)}
-                onSelectItem={path => handleSelect(path)}
-            >
-                {({handleSelect, ...others}) => (
-                    <CmPickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container}/>
-                )}
-            </Picker>
-        );
-    }
-
-    resolveMenu(path) {
-        let {mode, siteKey} = this.props;
-        switch (mode) {
-            case 'browse-files':
-                return 'contextualMenuFiles';
-            default:
-                return path.indexOf(`/sites/${siteKey}/contents`) !== -1 ? 'contextualMenuFolders' : 'contextualMenuPages';
-        }
-    }
-}
-
-class ContentTrees extends React.Component {
+export class ContentTrees extends React.Component {
     constructor(props) {
         super(props);
         this.container = React.createRef();

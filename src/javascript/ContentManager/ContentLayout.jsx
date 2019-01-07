@@ -11,7 +11,7 @@ import Upload from './fileupload/Upload';
 import {CM_DRAWER_STATES} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
 import {ContentData} from './ContentData';
-import CMTopBar from './CMTopBar';
+import TopBar from './TopBar';
 import {connect} from 'react-redux';
 import ContentManagerConstants from './ContentManager.constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './ContentManager.refetches';
@@ -121,7 +121,7 @@ class ContentLayout extends React.Component {
                 </div>
                 <Grid container spacing={0}>
                     <Grid item xs={GRID_SIZE} className={classes.topBar}>
-                        <CMTopBar mode={mode}/>
+                        <TopBar mode={mode}/>
                     </Grid>
                 </Grid>
                 <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>

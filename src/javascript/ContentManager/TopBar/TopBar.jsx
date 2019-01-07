@@ -1,10 +1,10 @@
 import React from 'react';
 import {withStyles, Typography, Grid} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import LanguageSwitcher from './languageSwitcher/LanguageSwitcher';
-import SiteSwitcher from './siteSwitcher/SiteSwitcher';
+import LanguageSwitcher from '../languageSwitcher/LanguageSwitcher';
+import SiteSwitcher from '../siteSwitcher/SiteSwitcher';
 import {compose} from 'react-apollo';
-import CmSearchBar from './searchBar/CmSearchBar';
+import CmSearchBar from '../searchBar/CmSearchBar';
 
 const styles = theme => ({
     root: {
@@ -40,7 +40,7 @@ const styles = theme => ({
     }
 });
 
-class CMTopBar extends React.Component {
+export class TopBar extends React.Component {
     render() {
         const {classes, mode, t} = this.props;
         let modeTitle = t('label.contentManager.title.' + (mode || 'browse'));
@@ -69,4 +69,4 @@ class CMTopBar extends React.Component {
 export default compose(
     translate(),
     withStyles(styles)
-)(CMTopBar);
+)(TopBar);

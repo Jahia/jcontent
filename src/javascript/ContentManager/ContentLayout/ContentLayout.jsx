@@ -2,19 +2,19 @@ import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
 import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
-import ContentListTable from './list/ContentListTable';
-import PreviewDrawer from './preview/PreviewDrawer';
+import ContentListTable from '../list/ContentListTable';
+import PreviewDrawer from '../preview/PreviewDrawer';
 import classNames from 'classnames';
-import ContentTrees from './ContentTrees';
+import ContentTrees from '../ContentTrees';
 import {Trans, translate} from 'react-i18next';
-import Upload from './fileupload/Upload';
-import {CM_DRAWER_STATES} from './redux/actions';
-import FilesGrid from './filesGrid/FilesGrid';
-import ContentData from './ContentData';
-import TopBar from './TopBar';
+import Upload from '../fileupload/Upload';
+import {CM_DRAWER_STATES} from '../redux/actions';
+import FilesGrid from '../filesGrid/FilesGrid';
+import ContentData from '../ContentData';
+import TopBar from '../TopBar';
 import {connect} from 'react-redux';
-import ContentManagerConstants from './ContentManager.constants';
-import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './ContentManager.refetches';
+import ContentManagerConstants from '../ContentManager.constants';
+import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from '../ContentManager.refetches';
 
 const styles = theme => ({
     topBar: {
@@ -96,7 +96,7 @@ const styles = theme => ({
 
 const GRID_SIZE = 12;
 
-class ContentLayout extends React.Component {
+export class ContentLayout extends React.Component {
     setContentRefetcher(refetchingData) {
         setContentListDataRefetcher(refetchingData);
     }

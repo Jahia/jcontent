@@ -5,10 +5,10 @@ import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
-import {SiteContentTypesQuery} from './gqlQueries';
-import FilterSelect from './FilterSelect';
+import {SiteContentTypesQuery} from '../gqlQueries';
+import FilterSelect from '../FilterSelect';
 
-class ContentTypeSelect extends React.Component {
+export class ContentTypeSelect extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

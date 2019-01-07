@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ContentManager from './components/ContentManager';
+import ContentManager from './ContentManager/ContentManager';
 import {CssBaseline} from '@material-ui/core';
 
 function renderContentManager(target, id, dxContext) {

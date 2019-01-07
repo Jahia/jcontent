@@ -54,16 +54,17 @@ const styles = theme => ({
         transform: 'translate(600px)'
     },
     previewDrawerPaper: {
-        transitionDuration: '.15s',
+        transition: '.15s !important',
         width: theme.contentManager.previewDrawerWidth,
+        height: 'calc(100vh - 130px)',
+
         position: 'inherit',
         overflow: 'hidden',
-        transform: 'none',
         top: '150px',
         right: '600px'
     },
     previewDrawerPaperFullScreen: {
-        transitionDuration: '.15s',
+        transition: '.15s !important',
         width: '100vw',
         height: '100vh',
         top: 0,

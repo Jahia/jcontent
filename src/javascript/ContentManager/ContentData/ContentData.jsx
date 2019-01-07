@@ -5,16 +5,16 @@ import {
     SearchQueryHandler,
     Sql2SearchQueryHandler,
     FilesQueryHandler
-} from './gqlQueries';
+} from '../gqlQueries';
 import * as _ from 'lodash';
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
-import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from './eventHandlerRegistry';
+import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from '../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from './redux/actions';
-import ContentManagerConstants from './ContentManager.constants';
-import {extractPaths, isDescendantOrSelf, getNewNodePath} from './ContentManager.utils';
-import {setModificationHook} from './copyPaste/contentModificationHook';
+import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../redux/actions';
+import ContentManagerConstants from '../ContentManager.constants';
+import {extractPaths, isDescendantOrSelf, getNewNodePath} from '../ContentManager.utils';
+import {setModificationHook} from '../copyPaste/contentModificationHook';
 import {compose} from 'react-apollo';
 
 const contentQueryHandlerByMode = mode => {
@@ -30,7 +30,7 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
-class ContentDataView extends React.Component {
+export class ContentData extends React.Component {
     constructor(props) {
         super(props);
 
@@ -255,11 +255,9 @@ const mapDispatchToProps = dispatch => ({
     removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths))
 });
 
-let ContentData = compose(
+export default compose(
     withNotifications(),
     translate(),
     withApollo,
     connect(mapStateToProps, mapDispatchToProps)
-)(ContentDataView);
-
-export {ContentData, contentQueryHandlerByMode};
+)(ContentData);

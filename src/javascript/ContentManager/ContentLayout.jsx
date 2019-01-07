@@ -10,7 +10,7 @@ import {Trans, translate} from 'react-i18next';
 import Upload from './fileupload/Upload';
 import {CM_DRAWER_STATES} from './redux/actions';
 import FilesGrid from './filesGrid/FilesGrid';
-import {ContentData} from './ContentData';
+import ContentData from './ContentData';
 import TopBar from './TopBar';
 import {connect} from 'react-redux';
 import ContentManagerConstants from './ContentManager.constants';

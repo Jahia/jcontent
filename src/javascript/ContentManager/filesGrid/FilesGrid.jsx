@@ -6,7 +6,7 @@ import {translate} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid} from '@material-ui/core';
 import {Pagination} from '@jahia/react-material';
-import {DxContext} from '../DxContext';
+import DxContext from '../DxContext';
 import {Typography, withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../fileupload/UploadTransformComponent';
 import {valueToSizeTransformation} from './filesGridUtils';

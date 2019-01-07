@@ -18,7 +18,7 @@ import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@j
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
-import {DxContext} from '../DxContext';
+import DxContext from '../DxContext';
 import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../redux/actions';

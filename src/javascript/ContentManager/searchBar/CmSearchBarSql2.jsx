@@ -1,5 +1,5 @@
 import React from 'react';
-import {DxContext} from '../DxContext';
+import DxContext from '../DxContext';
 import SearchBarLayout from './SearchBarLayout';
 import ActionButton from './ActionButton';
 import Sql2Input from './Sql2Input';

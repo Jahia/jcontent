@@ -1,6 +1,6 @@
 import React from 'react';
 import {Input, withStyles} from '@material-ui/core';
-import {DxContext} from '../DxContext';
+import DxContext from '../DxContext';
 import ContentTypeSelect from '../ContentTypeSelect';
 import {cmGoto} from '../redux/actions';
 import {withNotifications} from '@jahia/react-material';

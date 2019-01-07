@@ -1,5 +1,5 @@
 import React from 'react';
-import {DxContext} from '../DxContext';
+import DxContext from '../DxContext';
 
 let withDxContextAction = {
     init: (context, props) => {

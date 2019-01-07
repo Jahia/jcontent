@@ -7,7 +7,7 @@ import {withStyles} from '@material-ui/core';
 import {previewQuery} from '../gqlQueries';
 import {CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../redux/actions';
 import ContentManagerConstants from '../ContentManager.constants';
-import {DxContext} from '../DxContext';
+import DxContext from '../DxContext';
 import {NoPreviewComponent} from './NoPreviewComponent';
 import {PreviewComponent} from './PreviewComponent';
 

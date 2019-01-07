@@ -11,7 +11,7 @@ import {createBrowserHistory} from 'history';
 import ManagerLayout from './ManagerLayout';
 import CMLeftNavigation from './leftMenu/CMLeftNavigation';
 import * as _ from 'lodash';
-import {DxContext} from './DxContext';
+import DxContext from './DxContext';
 import ContentLayout from './ContentLayout';
 import IFrameLayout from './IFrameLayout';
 import {ConnectedRouter} from 'connected-react-router';

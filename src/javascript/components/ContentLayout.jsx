@@ -124,7 +124,7 @@ class ContentLayout extends React.Component {
                         <CMTopBar mode={mode}/>
                     </Grid>
                 </Grid>
-                <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
+                <ContentData setRefetch={this.setContentRefetcher}>
                     {({rows, contentNotFound, totalCount}) => (
                         <div className={classes.appFrame}>
                             <Drawer variant="persistent"

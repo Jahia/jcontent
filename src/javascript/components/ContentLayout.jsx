@@ -48,16 +48,17 @@ const styles = theme => ({
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         display: 'flex',
         overflow: 'hidden',
-        transitionDuration: '0s'
+        transitionDuration: '.15s'
     },
     previewDrawerHidden: {
         transform: 'translate(600px)'
     },
     previewDrawerPaper: {
-        transitionDuration: '0s',
+        transitionDuration: '.15s',
         width: theme.contentManager.previewDrawerWidth,
         position: 'inherit',
         overflow: 'hidden',
+        transform: 'none',
         top: '150px',
         right: '600px'
     },
@@ -73,6 +74,7 @@ const styles = theme => ({
         position: 'relative',
         display: 'flex',
         width: '100%',
+        maxWidth: 'calc(100vw - 140px)',
         backgroundColor: theme.palette.background.paper
     },
     metaNav: {

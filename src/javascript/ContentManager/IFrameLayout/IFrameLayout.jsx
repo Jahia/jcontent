@@ -4,11 +4,11 @@ import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {actionsRegistry} from '@jahia/react-material';
 import {compose, Query} from 'react-apollo';
-import {ActionRequirementsQueryHandler} from './gqlQueries';
+import {ActionRequirementsQueryHandler} from '../gqlQueries';
 import {translate} from 'react-i18next';
 import {withNotifications} from '@jahia/react-material';
 
-class IFrameLayout extends React.Component {
+export class IFrameLayout extends React.Component {
     showError(errorKey, errorData) {
         let {notificationContext, t} = this.props;
         let message = errorData !== null ? t(errorKey, errorData) : t(errorKey);

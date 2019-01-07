@@ -23,7 +23,7 @@ import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../redux/actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../ContentManager.utils';
-import CmToolbar from '../CmToolbar';
+import BrowseBar from '../BrowseBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
@@ -180,7 +180,7 @@ class ContentListTable extends React.Component {
         let showActions = previewState !== CM_DRAWER_STATES.SHOW;
         return (
             <Paper>
-                <CmToolbar/>
+                <BrowseBar/>
                 <div className={classes.tableWrapper}>
                     <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
                         <ContentListHeader

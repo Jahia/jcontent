@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import CmToolbar from '../CmToolbar';
+import BrowseBar from '../BrowseBar';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import FileCard from './FileCard';
@@ -66,7 +66,7 @@ class FilesGrid extends Component {
         if (contentNotFound) {
             return (
                 <div>
-                    <CmToolbar/>
+                    <BrowseBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                         <Typography variant="subtitle1" className={classes.empty}>
                             { t('label.contentManager.contentNotFound') }
@@ -79,7 +79,7 @@ class FilesGrid extends Component {
         if (!this.props.rows || this.props.rows.length === 0) {
             return (
                 <div>
-                    <CmToolbar/>
+                    <BrowseBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                         <Typography variant="subtitle1" className={classes.empty}>
                             { t('label.contentManager.filesGrid.emptyMessage') }
@@ -90,7 +90,7 @@ class FilesGrid extends Component {
         }
         return (
             <div>
-                <CmToolbar/>
+                <BrowseBar/>
                 <div className={classes.grid} data-cm-role="grid-content-list">
                     <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
                         {

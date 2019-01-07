@@ -1,12 +1,12 @@
 import React from 'react';
 import {AppBar, IconButton, Toolbar, withStyles} from '@material-ui/core';
 import {ChevronRight} from '@material-ui/icons';
-import {CM_DRAWER_STATES, cmSetTreeState} from './redux/actions';
+import {CM_DRAWER_STATES, cmSetTreeState} from '../redux/actions';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
-import ContentManagerConstants from './ContentManager.constants';
-import CmSearchControlBar from './searchBar/CmSearchControlBar';
-import BrowseControlBar from './BrowseControlBar';
+import ContentManagerConstants from '../ContentManager.constants';
+import CmSearchControlBar from '../searchBar/CmSearchControlBar';
+import BrowseControlBar from '../BrowseControlBar';
 
 const styles = () => ({
     appBarElevation: {
@@ -14,7 +14,7 @@ const styles = () => ({
     }
 });
 
-class CmToolbar extends React.Component {
+export class BrowseBar extends React.Component {
     render() {
         const {classes, mode, treeState, setTreeState} = this.props;
 
@@ -53,4 +53,4 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
-)(CmToolbar);
+)(BrowseBar);

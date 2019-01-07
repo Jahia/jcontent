@@ -2,14 +2,14 @@ import React from 'react';
 import {translate} from 'react-i18next';
 import {IconButton, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
-import ContentBreadcrumbs from './breadcrumb/ContentBreadcrumbs';
-import ContentManagerConstants from './ContentManager.constants';
-import FilesGridSizeSelector from './filesGrid/FilesGridSizeSelector';
-import FilesGridModeSelector from './filesGrid/FilesGridModeSelector';
+import ContentBreadcrumbs from '../breadcrumb/ContentBreadcrumbs';
+import ContentManagerConstants from '../ContentManager.constants';
+import FilesGridSizeSelector from '../filesGrid/FilesGridSizeSelector';
+import FilesGridModeSelector from '../filesGrid/FilesGridModeSelector';
 import {buttonRenderer, DisplayActions} from '@jahia/react-material';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
-import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from './ContentManager.refetches';
+import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from '../ContentManager.refetches';
 
 const styles = theme => ({
     grow: {
@@ -22,7 +22,7 @@ const styles = theme => ({
     }
 });
 
-class CmBrowseControlBar extends React.Component {
+export class BrowseControlBar extends React.Component {
     isBrowsing() {
         let {mode} = this.props;
         return (mode === ContentManagerConstants.mode.BROWSE || mode === ContentManagerConstants.mode.FILES);
@@ -82,4 +82,4 @@ export default compose(
     translate(),
     connect(mapStateToProps),
     withStyles(styles),
-)(CmBrowseControlBar);
+)(BrowseControlBar);

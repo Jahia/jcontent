@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import ContentManagerConstants from './ContentManager.constants';
 import CmSearchControlBar from './searchBar/CmSearchControlBar';
-import CmBrowseControlBar from './CmBrowseControlBar';
+import BrowseControlBar from './BrowseControlBar';
 
 const styles = () => ({
     appBarElevation: {
@@ -32,7 +32,7 @@ class CmToolbar extends React.Component {
                                 <ChevronRight/>
                             </IconButton>
                             }
-                            <CmBrowseControlBar/>
+                            <BrowseControlBar/>
                         </React.Fragment>
                     }
                 </Toolbar>

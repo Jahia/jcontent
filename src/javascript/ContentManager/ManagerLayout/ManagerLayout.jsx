@@ -20,7 +20,7 @@ const styles = theme => ({
     }
 });
 
-class ManagerLayout extends React.Component {
+export class ManagerLayout extends React.Component {
     render() {
         const {children, leftSide, classes, mode} = this.props;
 

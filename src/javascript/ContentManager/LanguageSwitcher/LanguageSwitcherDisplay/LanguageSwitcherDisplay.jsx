@@ -3,7 +3,7 @@ import {lodash as _} from 'lodash';
 import {Button, Menu, MenuItem, Typography} from '@material-ui/core';
 import {ChevronDown} from 'mdi-material-ui';
 
-class LanguageSwitcherDisplay extends React.Component {
+export default class LanguageSwitcherDisplay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -63,5 +63,3 @@ class LanguageSwitcherDisplay extends React.Component {
         );
     }
 }
-
-export default LanguageSwitcherDisplay;

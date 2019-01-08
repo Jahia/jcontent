@@ -8,7 +8,7 @@ import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {cmSetAvailableLanguages, cmSetLanguage} from '../redux/actions';
 import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
-class LanguageSwitcher extends React.Component {
+export class LanguageSwitcher extends React.Component {
     constructor(props) {
         super(props);
         this.query = gql`

@@ -1,7 +1,7 @@
 import React from 'react';
 import {withStyles, Typography, Grid} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import LanguageSwitcher from '../languageSwitcher/LanguageSwitcher';
+import LanguageSwitcher from '../LanguageSwitcher';
 import SiteSwitcher from '../siteSwitcher/SiteSwitcher';
 import {compose} from 'react-apollo';
 import CmSearchBar from '../searchBar/CmSearchBar';

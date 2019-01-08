@@ -4,7 +4,7 @@ import Slider from '@material-ui/lab/Slider';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import connect from 'react-redux/es/connect/connect';
-import {setSize} from './redux/actions';
+import {setSize} from '../FilesGrid/FilesGrid.redux-actions';
 
 const styles = theme => ({
     root: {
@@ -17,7 +17,7 @@ const styles = theme => ({
 const totalsValues = 5;
 const step = 1;
 
-class FilesGridSizeSelector extends React.Component {
+export class FilesGridSizeSelector extends React.Component {
     render() {
         const {classes, t, setSize, size, visible} = this.props;
 

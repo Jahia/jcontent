@@ -9,7 +9,7 @@ import {Pagination} from '@jahia/react-material';
 import DxContext from '../DxContext';
 import {Typography, withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../fileupload/UploadTransformComponent';
-import {valueToSizeTransformation} from './filesGridUtils';
+import {valueToSizeTransformation} from './FilesGrid.utils';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../redux/actions';
 
@@ -39,7 +39,7 @@ const styles = theme => ({
     }
 });
 
-class FilesGrid extends Component {
+export class FilesGrid extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -146,10 +146,8 @@ let mapDispatchToProps = dispatch => ({
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize))
 });
 
-const ComposedFilesGrid = compose(
+export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     translate(),
     withStyles(styles, {withTheme: true}),
 )(FilesGrid);
-
-export default ComposedFilesGrid;

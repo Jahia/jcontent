@@ -85,3 +85,5 @@ export const FileIcon = ({filename, ...props}) => {
             );
     }
 };
+
+export default FileIcon;

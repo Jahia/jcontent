@@ -1,18 +1,20 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardContent, CardMedia, Tooltip, Typography, withStyles} from '@material-ui/core';
+import {Card, CardContent, CardMedia, Typography, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
-import {ContextualMenu, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {ContextualMenu} from '@jahia/react-material';
 import {translate} from 'react-i18next';
-import PublicationStatus from '../publicationStatus/PublicationStatusComponent';
+import PublicationStatus from '../../publicationStatus/PublicationStatusComponent';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import {isBrowserImage} from './filesGridUtils';
-import {FileIcon} from './FileIcon';
-import {cmSetSelection, cmGoto} from '../redux/actions';
+import {isBrowserImage} from '../FilesGrid.utils';
+import FileIcon from '../FileIcon';
+import {cmSetSelection, cmGoto} from '../../redux/actions';
 import {connect} from 'react-redux';
-import {allowDoubleClickNavigation, isMarkedForDeletion} from '../ContentManager.utils';
+import {allowDoubleClickNavigation} from '../../ContentManager.utils';
 import classNames from 'classnames';
+import FileName from './FileName';
+import Actions from './Actions';
 
 const styles = theme => ({
     defaultCard: {
@@ -125,17 +127,6 @@ const styles = theme => ({
             marginBottom: theme.spacing.unit * 2
         }
     },
-    actionButtons: {
-        position: 'absolute',
-        top: 8,
-        right: 8,
-        '& button': {
-            padding: '8px'
-        }
-    },
-    isDeleted: {
-        textDecoration: 'line-through'
-    },
     tooltip: {
         display: 'unset'
     },
@@ -144,41 +135,7 @@ const styles = theme => ({
     }
 });
 
-let Actions = ({classes, isHovered, node}) => isHovered &&
-    <div className={classes.actionButtons}>
-        <DisplayActions target="tableActions"
-                        context={{path: node.path}}
-                        render={iconButtonRenderer({
-                            disableRipple: true
-                        }, {
-                            fontSize: 'small'
-                        }, true)}/>
-    </div>;
-
-let FileName = ({maxLength, classes, node}) => {
-    const name = node.name;
-    const shortenName = name.length > maxLength;
-
-    let typography = (
-        <Typography noWrap
-                    component="p"
-                    color="textSecondary"
-                    className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
-                    variant="body2"
-                    data-cm-role="grid-content-list-card-name"
-        >
-            {name}
-        </Typography>
-    );
-
-    return shortenName ? (
-        <Tooltip title={name} classes={{tooltip: classes.tooltip}}>
-            {typography}
-        </Tooltip>
-    ) : typography;
-};
-
-class FileCard extends Component {
+export class FileCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -258,14 +215,14 @@ class FileCard extends Component {
                     <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
                         {isVerticalCard && <PublicationStatus node={node}/>}
 
-                        <Actions classes={classes} node={node} isHovered={isHovered}/>
+                        <Actions node={node} isHovered={isHovered}/>
 
                         <CardContent classes={{root: classes.cardContent}}>
                             <div>
                                 <Typography color="textSecondary" variant="caption" component="p">
                                     {t('label.contentManager.filesGrid.name')}
                                 </Typography>
-                                <FileName maxLength={maxLengthLabels} classes={classes} node={node}/>
+                                <FileName maxLength={maxLengthLabels} node={node}/>
                             </div>
                             {(!isVerticalCard) &&
                                 <div>
@@ -323,10 +280,8 @@ const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params}))
 });
 
-const ComposedFileCard = compose(
+export default compose(
     withStyles(styles),
     translate(),
     connect(mapStateToProps, mapDispatchToProps)
 )(FileCard);
-
-export default ComposedFileCard;

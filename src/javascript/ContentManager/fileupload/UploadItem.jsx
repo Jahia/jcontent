@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE} from './constants';
 import {updateUpload, removeUpload, takeFromQueue} from './redux/actions';
 import {batchActions} from 'redux-batched-actions';
-import {isImageFile} from '../filesGrid/filesGridUtils';
+import {isImageFile} from '../FilesGrid/FilesGrid.utils';
 import {translate} from 'react-i18next';
 import {ellipsizeText} from '../ContentManager.utils';
 

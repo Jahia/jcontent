@@ -4,9 +4,9 @@ import {IconButton, Tooltip} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
-import {setMode} from './redux/actions';
+import {setMode} from '../FilesGrid/FilesGrid.redux-actions';
 
-class FilesGridModeSelector extends React.Component {
+export class FilesGridModeSelector extends React.Component {
     render() {
         const {mode, onChange, t} = this.props;
         return (

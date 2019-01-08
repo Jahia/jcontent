@@ -1,7 +1,7 @@
 import loadable from 'react-loadable';
 import React from 'react';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES} from '../redux/actions';
-import {getFileType, isBrowserImage, isPDF} from '../filesGrid/filesGridUtils';
+import {getFileType, isBrowserImage, isPDF} from '../FilesGrid/FilesGrid.utils';
 import classNames from 'classnames';
 import {Paper} from '@material-ui/core';
 

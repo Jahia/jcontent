@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {withStyles, Typography} from '@material-ui/core';
 import {InfoOutlined} from '@material-ui/icons';
-import {publicationStatusByName} from './publicationStatus';
+import {publicationStatusByName} from './publicationStatusRenderer';
 import {translate} from 'react-i18next';
 
 const styles = theme => ({
@@ -87,7 +87,7 @@ const styles = theme => ({
     }
 });
 
-class PublicationStatusComponent extends Component {
+export class PublicationStatus extends Component {
     render() {
         const {classes, node, t, i18n} = this.props;
         const publicationStatus = publicationStatusByName.getStatus(node);
@@ -113,8 +113,8 @@ class PublicationStatusComponent extends Component {
     }
 }
 
-PublicationStatusComponent.propTypes = {
+PublicationStatus.propTypes = {
     node: PropTypes.object.isRequired
 };
 
-export default translate()(withStyles(styles)(PublicationStatusComponent));
+export default translate()(withStyles(styles)(PublicationStatus));

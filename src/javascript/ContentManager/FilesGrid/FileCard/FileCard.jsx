@@ -4,7 +4,7 @@ import {Card, CardContent, CardMedia, Typography, withStyles} from '@material-ui
 import {compose} from 'react-apollo';
 import {ContextualMenu} from '@jahia/react-material';
 import {translate} from 'react-i18next';
-import PublicationStatus from '../../publicationStatus/PublicationStatusComponent';
+import PublicationStatus from '../../PublicationStatus';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';

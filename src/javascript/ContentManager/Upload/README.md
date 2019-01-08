@@ -2,23 +2,23 @@
 
 This implementation is selfcontained and was designed to be easily portable to other areas of DX and React DX environments
 in general. All that's required from receiving environment is to be able to provide/create a batchable Redux store. As result this
-folder can be easily converted into a repository at which point only ```./redux/reducer.js```, ```./redux/actions.js```
-and ```./upload.jsx``` need to be exported.
+folder can be easily converted into a repository at which point only ```./Upload.redux-reducer.js```, ```./Upload.redux-actions.js```
+and ```./Upload.jsx``` need to be exported.
 
 ## How to use
 
 In order to use file upload  you need to do 2 things:
 
-- Import ```fileUpload``` reducer function from ```./redux/reducer.js``` and add it to your Redux store. It is important that your store
+- Import ```Upload``` reducer function from ```./Upload.redux-reducer.js``` and add it to your Redux store. It is important that your store
 can support batched actions. For more info on supporting batched actions see this repository: https://github.com/tshelburne/redux-batched-actions.
 
-    When you add your reducer function you can name it ```fileUpload``` which is the default name or you can create a custom name in
+    When you add your reducer function you can name it ```Upload``` which is the default name or you can create a custom name in
 which case you will need to specify it as a property ```statePartName``` in step two.
 
 - Once you have your reducer setup you can add file upload component from ```./upload.jsx``` to your page. This component
 can take two parameters.
 
-    ```statePartName``` parameter which you would use if you named your reducer function something other than ```fileUpload```. This parameter is optional.
+    ```statePartName``` parameter which you would use if you named your reducer function something other than ```Upload```. This parameter is optional.
     ```acceptedFileTypes``` parameter which takes an array of allowed extensions, for example ```[".jpg", ".png"]```. This parameter is optional, all file types will be allowed if it is ignored.
 
 Now file upload is setup and ready for use.

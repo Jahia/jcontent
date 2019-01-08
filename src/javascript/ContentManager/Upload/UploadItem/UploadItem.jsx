@@ -2,16 +2,16 @@ import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {withApollo, compose} from 'react-apollo';
-import {uploadFile, updateFileContent} from './gqlMutations';
+import {uploadFile, updateFileContent} from './UploadItem.gql-mutations';
 import {Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField} from '@material-ui/core';
 import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE} from './constants';
-import {updateUpload, removeUpload, takeFromQueue} from './redux/actions';
+import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE} from '../Upload.constants';
+import {updateUpload, removeUpload, takeFromQueue} from '../Upload.redux-actions';
 import {batchActions} from 'redux-batched-actions';
-import {isImageFile} from '../FilesGrid/FilesGrid.utils';
+import {isImageFile} from '../../FilesGrid/FilesGrid.utils';
 import {translate} from 'react-i18next';
-import {ellipsizeText} from '../ContentManager.utils';
+import {ellipsizeText} from '../../ContentManager.utils';
 
 const styles = () => ({
     progressText: {
@@ -55,7 +55,7 @@ const styles = () => ({
 
 const UPLOAD_DELAY = 500;
 
-class UploadItem extends React.Component {
+export class UploadItem extends React.Component {
     constructor(props) {
         super(props);
         this.client = null;

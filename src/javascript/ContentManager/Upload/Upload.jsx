@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 import {CheckCircle, Close, Fullscreen, FullscreenExit, Info} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import UploadDrawer from './UploadDrawer';
-import {panelStates, uploadsStatuses, uploadStatuses} from './constants';
-import {setPanelState, setStatus, setUploads} from './redux/actions';
+import {panelStates, uploadsStatuses, uploadStatuses} from './Upload.constants';
+import {setPanelState, setStatus, setUploads} from './Upload.redux-actions';
 import UploadDropZone from './UploadDropZone';
 import UploadItem from './UploadItem';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import {files, getMimeTypes, onFilesSelected} from './utils';
+import {files, getMimeTypes, onFilesSelected} from './Upload.utils';
+import classNames from 'classnames';
 
 const styles = theme => ({
     drawerContent: {
@@ -89,7 +90,7 @@ const styles = theme => ({
 
 const DRAWER_ANIMATION_TIME = 300;
 
-class Upload extends React.Component {
+export class Upload extends React.Component {
     constructor(props) {
         super(props);
         this.client = null;
@@ -125,7 +126,7 @@ class Upload extends React.Component {
                 <UploadDrawer open={this.isDrawerOpen()} transitionDuration={this.transitionDuration()}>
                     <div className={this.contentClasses()}>
                         <div className={classes.contentHeader}>
-                            <Typography> { this.headerText() }</Typography>
+                            { this.headerText() }
                             { this.headerButton() }
                         </div>
                         <div className={classes.contentBody}>
@@ -332,71 +333,64 @@ class Upload extends React.Component {
         const {panelState, classes, t} = this.props;
         const status = this.uploadStatus();
 
-        if (panelState === panelStates.PARTIALLY_VISIBLE) {
-            if (!status) {
-                return null;
-            }
-            if (status.uploading !== 0) {
-                return (
-                    <div className={`${classes.headerText} ${classes.justifyCenter}`}>
-                        <CircularProgress size={20} className={classes.statusIconWhite}/>
-                        <h3 className={classes.statusIconWhite}>{t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}</h3>
-                    </div>
-                );
-            }
-            if (status.error !== 0) {
-                return (
-                    <div className={`${classes.headerText} ${classes.justifyCenter}`}>
-                        <Info className={classes.statusIconWhite}/>
-                        <h3 className={classes.statusIconWhite}>{t('label.contentManager.fileUpload.errorMessage')}</h3>
-                        <a className={classes.statusIconWhite} href="#" onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>{t('label.contentManager.fileUpload.errorActionMessage')}</a>
-                    </div>
-                );
-            }
+        if (!status) {
+            return null;
+        }
 
+        let isPartiallyVisible = (panelState === panelStates.PARTIALLY_VISIBLE);
+        if (status.uploading !== 0) {
             return (
-                <div className={`${classes.headerText} ${classes.justifyCenter}`}>
-                    <CheckCircle className={classes.statusIconWhite}/>
-                    <h3 className={classes.statusIconWhite}>{t('label.contentManager.fileUpload.successfulUploadMessage', {count: status.total, number: status.total})}</h3>
-                </div>
+                <Typography variant="h3"
+                            className={classNames(classes.headerText, isPartiallyVisible && classes.justifyCenter)}
+                >
+                    <CircularProgress size={isPartiallyVisible ? 20 : 40} className={isPartiallyVisible ? classes.statusIconWhite : classes.statusIconOrange}/>
+                    <Typography gutterBottom={!isPartiallyVisible}
+                                className={classNames(isPartiallyVisible && classes.statusIconWhite)}
+                    >
+                        {t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}
+                    </Typography>
+                    { (!isPartiallyVisible && status.error !== 0) && <div>{t('label.contentManager.fileUpload.uploadingActionMessage')}</div> }
+                </Typography>
             );
         }
-        if (panelState === panelStates.VISIBLE) {
-            if (!status) {
-                return null;
-            }
-            if (status.uploading !== 0) {
-                return (
-                    <div className={classes.headerText}>
-                        <CircularProgress size={40} className={classes.statusIconOrange}/>
-                        <div>
-                            <h3 style={{marginBottom: 5}}>{t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}</h3>
-                            { status.error !== 0 && <div>{t('label.contentManager.fileUpload.uploadingActionMessage')}</div>}
-                        </div>
-                    </div>
-                );
-            }
-            if (status.error !== 0) {
-                return (
-                    <div className={classes.headerText}>
-                        <Info className={classes.statusIconRed} fontSize="large"/>
-                        <div>
-                            <h3 style={{marginBottom: 5}}>{t('label.contentManager.fileUpload.errorMessage')}</h3>
-                            <div>{t('label.contentManager.fileUpload.errorActionMessage')}</div>
-                        </div>
-                    </div>
-                );
-            }
-
+        if (status.error !== 0) {
             return (
-                <div className={classes.headerText}>
-                    <CheckCircle className={classes.statusIconGreen} fontSize="large"/>
-                    <div>
-                        <h3 style={{marginBottom: 5}}>{t('label.contentManager.fileUpload.successfulUploadMessage', {count: status.total, number: status.total})}</h3>
-                    </div>
-                </div>
+                <Typography variant="h3"
+                            className={classNames(classes.headerText, isPartiallyVisible && classes.justifyCenter)}
+                >
+                    <Info className={isPartiallyVisible ? classes.statusIconWhite : classes.statusIconRed}
+                          fontSize={isPartiallyVisible ? 'default' : 'large'}/>
+                    <Typography gutterBottom={!isPartiallyVisible}
+                                className={classNames(isPartiallyVisible && classes.statusIconWhite)}
+                    >
+                        {t('label.contentManager.fileUpload.errorMessage')}
+                    </Typography>
+                    {isPartiallyVisible ?
+                        <a className={classes.statusIconWhite}
+                           href="#"
+                           onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}
+                        >
+                            {t('label.contentManager.fileUpload.errorActionMessage')}
+                        </a> :
+                        <div>{t('label.contentManager.fileUpload.errorActionMessage')}</div>
+                    }
+                </Typography>
             );
         }
+
+        return (
+            <Typography variant="h3"
+                        className={classNames(classes.headerText, isPartiallyVisible && classes.justifyCenter)}
+            >
+                <CheckCircle className={isPartiallyVisible ? classes.statusIconWhite : classes.statusIconGreen}
+                             fontSize={isPartiallyVisible ? 'default' : 'large'}/>
+                <Typography className={classNames(isPartiallyVisible && classes.statusIconWhite)}
+                            gutterBottom={!isPartiallyVisible}
+                >
+                    {t('label.contentManager.fileUpload.successfulUploadMessage', {count: status.total, number: status.total})}
+                </Typography>
+            </Typography>
+        );
     }
 
     generateOverlayStyle() {

@@ -7,7 +7,7 @@ import PreviewDrawer from '../preview/PreviewDrawer';
 import classNames from 'classnames';
 import ContentTrees from '../ContentTrees';
 import {Trans, translate} from 'react-i18next';
-import Upload from '../fileupload/Upload';
+import Upload from '../Upload';
 import {CM_DRAWER_STATES} from '../redux/actions';
 import FilesGrid from '../FilesGrid';
 import ContentData from '../ContentData';

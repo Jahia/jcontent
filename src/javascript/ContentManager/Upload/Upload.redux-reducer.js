@@ -1,4 +1,4 @@
-import {uploadStatuses, panelStates, uploadsStatuses} from '../constants';
+import {uploadStatuses, panelStates, uploadsStatuses} from './Upload.constants';
 
 const initialState = {
     path: null, // Folder that will get files

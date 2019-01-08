@@ -26,7 +26,7 @@ import {allowDoubleClickNavigation, isMarkedForDeletion} from '../ContentManager
 import BrowseBar from '../BrowseBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
-import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
+import UploadTransformComponent from '../UploadTransformComponent';
 import classNames from 'classnames';
 
 const allColumnData = [
@@ -193,7 +193,7 @@ class ContentListTable extends React.Component {
                         />
                         <DxContext.Consumer>
                             {dxContext => (
-                                <UploadWrapperComponent uploadTargetComponent={TableBody} uploadPath={path}>
+                                <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
                                     {contentNotFound ?
                                         <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> : _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData}
@@ -326,7 +326,7 @@ class ContentListTable extends React.Component {
                                                     </TableRow>
                                                 );
                                             })}
-                                </UploadWrapperComponent>
+                                </UploadTransformComponent>
                             )}
                         </DxContext.Consumer>
                     </Table>

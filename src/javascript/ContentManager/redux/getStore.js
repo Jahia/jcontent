@@ -1,6 +1,6 @@
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
-import {fileUpload} from '../fileupload/redux/reducer';
+import {fileUpload} from '../Upload/Upload.redux-reducer';
 import {copyPaste} from '../copyPaste/redux/reducer';
 import {filesGrid} from '../FilesGrid/FilesGrid.redux-reducer';
 

@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {batchActions} from 'redux-batched-actions/lib/index';
 import {fileAccepted, fileMatchSize, getDataTransferItems,
-    isDragDataWithFiles, getMimeTypes, onFilesSelected} from './utils';
-import {setPanelState, setOverlayTarget} from './redux/actions';
-import {panelStates} from './constants';
+    isDragDataWithFiles, getMimeTypes, onFilesSelected} from '../Upload/Upload.utils';
+import {setPanelState, setOverlayTarget} from '../Upload/Upload.redux-actions';
+import {panelStates} from '../Upload/Upload.constants';
 import {withApollo, compose} from 'react-apollo';
-import {UploadRequirementsQuery} from './gqlQueries';
+import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder'];
 
-class UploadTransformComponent extends React.Component {
+export class UploadTransformComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

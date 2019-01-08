@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../ContentManager.utils';
 import {compose} from 'react-apollo';
-import UploadWrapperComponent from '../fileupload/UploadTransformComponent';
+import UploadTransformComponent from '../UploadTransformComponent';
 import classNames from 'classnames';
 import {ContextualMenu, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
 
@@ -105,7 +105,7 @@ class CmPickerViewMaterial extends React.Component {
                                 [classes.listItemSelected]: entry.selected
                             });
                             return (
-                                <UploadWrapperComponent
+                                <UploadTransformComponent
                                     key={entry.path}
                                     data-jrm-role="picker-item"
                                     data-cm-role={dataCmRole}
@@ -172,7 +172,7 @@ class CmPickerViewMaterial extends React.Component {
                                                        })}/>
                                     </ListItemIcon>
                                     }
-                                </UploadWrapperComponent>
+                                </UploadTransformComponent>
                             );
                         })
                     }

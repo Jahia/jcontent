@@ -8,7 +8,7 @@ import {Grid} from '@material-ui/core';
 import {Pagination} from '@jahia/react-material';
 import DxContext from '../DxContext';
 import {Typography, withStyles} from '@material-ui/core';
-import UploadTransformComponent from '../fileupload/UploadTransformComponent';
+import UploadTransformComponent from '../UploadTransformComponent';
 import {valueToSizeTransformation} from './FilesGrid.utils';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../redux/actions';

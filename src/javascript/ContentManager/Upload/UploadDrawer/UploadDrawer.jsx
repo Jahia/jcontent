@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Drawer} from '@material-ui/core';
 
-class UploadDrawer extends React.Component {
+export default class UploadDrawer extends React.Component {
     render() {
         const {PaperProps, transitionDuration} = this.props;
         return (
@@ -27,5 +27,3 @@ UploadDrawer.propTypes = {
 UploadDrawer.defaultProps = {
     PaperProps: null
 };
-
-export default UploadDrawer;

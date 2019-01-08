@@ -26,7 +26,7 @@ const styles = theme => ({
     }
 });
 
-class UploadDropZone extends React.Component {
+export class UploadDropZone extends React.Component {
     constructor(props) {
         super(props);
         this.onDrop = this.onDrop.bind(this);

@@ -1,5 +1,5 @@
-import {setPanelState, setPath} from '../fileupload/redux/actions';
-import {panelStates} from '../fileupload/constants';
+import {setPanelState, setPath} from '../Upload/Upload.redux-actions';
+import {panelStates} from '../Upload/Upload.constants';
 import {batchActions} from 'redux-batched-actions';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';

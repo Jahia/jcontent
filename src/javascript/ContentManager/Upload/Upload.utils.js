@@ -1,6 +1,6 @@
-import {uploadSeed} from './redux/reducer';
-import {takeFromQueue, addUploads} from './redux/actions';
-import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './constants';
+import {uploadSeed} from './Upload.redux-reducer';
+import {takeFromQueue, addUploads} from './Upload.redux-actions';
+import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
 import accepts from 'attr-accept';
 import mimetypes from 'mime-types';
 import randomUUID from 'uuid/v4';

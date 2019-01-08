@@ -9,7 +9,7 @@ import {Route, Switch} from 'react-router';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
 import ManagerLayout from './ManagerLayout';
-import CMLeftNavigation from './leftMenu/CMLeftNavigation';
+import LeftNavigation from './LeftNavigation';
 import * as _ from 'lodash';
 import DxContext from './DxContext';
 import ContentLayout from './ContentLayout';
@@ -101,7 +101,7 @@ export default class ContentManager extends React.Component {
                                                            render={props => {
                                                         dxContext.lang = props.match.params.lang;
                                                         return (
-                                                            <ManagerLayout leftSide={<CMLeftNavigation contextPath={dxContext.contextPath}/>}>
+                                                            <ManagerLayout leftSide={<LeftNavigation contextPath={dxContext.contextPath}/>}>
                                                                 <Switch>
                                                                     <Route path={`${props.match.url}/apps`}
                                                                            render={() =>

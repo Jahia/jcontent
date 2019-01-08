@@ -1,5 +1,5 @@
 import React from 'react';
-import CmLeftDrawerContent from '../leftMenu/CmLeftDrawerContent';
+import LeftDrawerContent from '../LeftNavigation/LeftDrawerContent';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
 import {reduxAction} from './reduxAction';
@@ -13,7 +13,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({statePa
             // Drawer is open on the current menu and the site has changed: reopen the drawer to "refresh" the action list
             context.drawer.handleDrawerClose();
             context.drawer.handleDrawerOpen({
-                content: <CmLeftDrawerContent context={context} actionPath={context.actionKey}/>,
+                content: <LeftDrawerContent context={context} actionPath={context.actionKey}/>,
                 title: context.buttonLabel,
                 site: context.site
             },
@@ -23,7 +23,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({statePa
         if (context.mode === 'apps' && !context.drawer.drawerOpen && context.statePath) {
             if (context.statePath.split('/')[0] === context.actionKey) {
                 context.drawer.handleDrawerOpen({
-                    content: <CmLeftDrawerContent context={context} actionPath={context.actionKey}/>,
+                    content: <LeftDrawerContent context={context} actionPath={context.actionKey}/>,
                     title: context.buttonLabel,
                     site: context.site
                 }, context.menu);
@@ -37,7 +37,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({statePa
                 context.drawer.handleDrawerClose();
             }
         } else {
-            context.drawer.handleDrawerOpen({content: <CmLeftDrawerContent context={context} actionPath={context.actionKey}/>, title: context.buttonLabel, site: context.site}, context.menu);
+            context.drawer.handleDrawerOpen({content: <LeftDrawerContent context={context} actionPath={context.actionKey}/>, title: context.buttonLabel, site: context.site}, context.menu);
         }
     },
 

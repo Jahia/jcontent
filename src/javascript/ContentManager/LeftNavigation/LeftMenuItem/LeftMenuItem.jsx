@@ -48,7 +48,7 @@ const styles = theme => ({
     }
 });
 
-class CmLeftMenuItem extends React.Component {
+export class LeftMenuItem extends React.Component {
     render() {
         const {classes, t, drawer, context} = this.props;
         const {onClick, buttonLabel, buttonIcon, badge} = context;
@@ -80,5 +80,5 @@ class CmLeftMenuItem extends React.Component {
 export default compose(
     translate(),
     withStyles(styles, {withTheme: true})
-)(CmLeftMenuItem);
+)(LeftMenuItem);
 

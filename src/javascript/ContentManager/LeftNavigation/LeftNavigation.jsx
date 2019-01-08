@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import BurgerMenuButton from '../BurgerMenuButton';
 import {connect} from 'react-redux';
 import {DisplayActions} from '@jahia/react-material';
-import CmLeftMenuItem from './CmLeftMenuItem';
+import LeftMenuItem from './LeftMenuItem';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
@@ -82,7 +82,7 @@ const styles = theme => ({
     }
 });
 
-class CMLeftNavigation extends React.Component {
+export class LeftNavigation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -137,7 +137,7 @@ class CMLeftNavigation extends React.Component {
                     <DisplayActions target="leftMenuActions"
                                     context={actionContext}
                                     render={({context}) => (
-                                        <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
+                                        <LeftMenuItem context={context} drawer={this.state.openDrawer}/>
                                     )}/>
 
                 </List>
@@ -145,7 +145,7 @@ class CMLeftNavigation extends React.Component {
                     <DisplayActions target="leftMenuBottomActions"
                                     context={actionContext}
                                     render={({context}) => (
-                                        <CmLeftMenuItem context={context} drawer={this.state.openDrawer}/>
+                                        <LeftMenuItem context={context} drawer={this.state.openDrawer}/>
                                     )}
                     />
                 </List>
@@ -186,4 +186,4 @@ export default compose(
     translate(),
     withStyles(styles, {withTheme: true}),
     connect(mapStateToProps)
-)(CMLeftNavigation);
+)(LeftNavigation);

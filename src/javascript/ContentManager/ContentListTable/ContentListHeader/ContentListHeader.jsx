@@ -4,7 +4,7 @@ import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 
-class ContentListHeader extends React.Component {
+export class ContentListHeader extends React.Component {
     render() {
         const {order, orderBy, columnData, t, classes, setSort, showActions} = this.props;
         let direction = order === 'DESC' ? 'ASC' : 'DESC';

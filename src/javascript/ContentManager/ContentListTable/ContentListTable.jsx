@@ -117,7 +117,7 @@ const styles = theme => ({
     }
 });
 
-class ContentListTable extends React.Component {
+export class ContentListTable extends React.Component {
     getCellClasses(node, classes, column, isSelected) {
         let cellClasses = {
             root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: isSelected, [classes[column + 'CellSelected']]: isSelected, [classes.isDeleted]: isMarkedForDeletion(node)})

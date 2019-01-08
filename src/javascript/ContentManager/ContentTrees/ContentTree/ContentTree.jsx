@@ -2,7 +2,7 @@ import React from 'react';
 import {Picker} from '@jahia/react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import {PickerItemsFragment} from '../../gqlQueries';
-import CmPickerViewMaterial from '../../picker/CmPickerViewMaterial';
+import PickerViewMaterial from '../../PickerViewMaterial';
 
 export default class ContentTree extends React.Component {
     constructor(props) {
@@ -28,7 +28,7 @@ export default class ContentTree extends React.Component {
                 onSelectItem={path => handleSelect(path)}
             >
                 {({handleSelect, ...others}) => (
-                    <CmPickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container}/>
+                    <PickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container}/>
                 )}
             </Picker>
         );

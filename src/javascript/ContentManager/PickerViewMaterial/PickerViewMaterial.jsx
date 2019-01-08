@@ -69,7 +69,7 @@ let styles = theme => ({
     }
 });
 
-class CmPickerViewMaterial extends React.Component {
+export class PickerViewMaterial extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -244,18 +244,18 @@ class CmPickerViewMaterial extends React.Component {
     }
 }
 
-CmPickerViewMaterial.propTypes = {
+PickerViewMaterial.propTypes = {
     pickerEntries: PropTypes.array.isRequired,
     onSelectItem: PropTypes.func,
     onOpenItem: PropTypes.func
 
 };
 
-CmPickerViewMaterial.defaultProps = {
+PickerViewMaterial.defaultProps = {
     onSelectItem: () => {
     },
     onOpenItem: () => {
     }
 };
 
-export default compose(withTheme(), withStyles(styles, {name: 'DxPickerViewMaterial'}))(CmPickerViewMaterial);
+export default compose(withTheme(), withStyles(styles, {name: 'DxPickerViewMaterial'}))(PickerViewMaterial);

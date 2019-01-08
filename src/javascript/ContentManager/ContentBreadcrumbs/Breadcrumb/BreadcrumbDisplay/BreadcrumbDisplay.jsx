@@ -4,7 +4,7 @@ import {Folder, Public} from '@material-ui/icons';
 import {PageIcon} from '@jahia/icons';
 import {Typography, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import {ellipsizeText} from '../ContentManager.utils';
+import {ellipsizeText} from '../../../ContentManager.utils';
 import {compose} from 'react-apollo';
 
 const styles = theme => ({
@@ -13,7 +13,7 @@ const styles = theme => ({
     }
 });
 
-class BreadcrumbDisplay extends React.Component {
+export class BreadcrumbDisplay extends React.Component {
     constructor(props) {
         super(props);
 

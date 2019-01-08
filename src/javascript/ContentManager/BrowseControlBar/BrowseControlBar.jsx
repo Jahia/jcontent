@@ -2,7 +2,7 @@ import React from 'react';
 import {translate} from 'react-i18next';
 import {IconButton, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
-import ContentBreadcrumbs from '../breadcrumb/ContentBreadcrumbs';
+import ContentBreadcrumbs from '../ContentBreadcrumbs';
 import ContentManagerConstants from '../ContentManager.constants';
 import FilesGridSizeSelector from '../filesGrid/FilesGridSizeSelector';
 import FilesGridModeSelector from '../filesGrid/FilesGridModeSelector';

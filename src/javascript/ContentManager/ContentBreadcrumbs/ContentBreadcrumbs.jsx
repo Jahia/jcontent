@@ -1,5 +1,5 @@
 import React from 'react';
-import Breadcrumb from './Breadcrumb';
+import Breadcrumb from './Breadcrumb/Breadcrumb';
 import gql from 'graphql-tag';
 import {Picker} from '@jahia/react-apollo';
 import {translate} from 'react-i18next';
@@ -9,7 +9,7 @@ import {extractPaths} from '../ContentManager.utils';
 import ContentManagerConstants from '../ContentManager.constants';
 import {compose} from 'react-apollo';
 
-class ContentBreadcrumbs extends React.Component {
+export class ContentBreadcrumbs extends React.Component {
     constructor(props) {
         super(props);
         this.picker = React.createRef();

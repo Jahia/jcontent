@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {ChevronRight as ChevronRightIcon, MoreHoriz} from '@material-ui/icons';
 import {withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import ContentManagerConstants from '../ContentManager.constants';
+import ContentManagerConstants from '../../ContentManager.constants';
 import _ from 'lodash';
 import BreadcrumbDisplay from './BreadcrumbDisplay';
 
@@ -21,7 +21,7 @@ const MAX_TOTAL_ITEMS_ON_CUT_DISPLAY = 6;
 const MAX_FIRST_LABEL_LENGTH = 20;
 const MAX_LABEL_LENGTH = 10;
 
-class Breadcrumb extends React.Component {
+export class Breadcrumb extends React.Component {
     render() {
         let {pickerEntries, path, rootLabel, t, rootPath, mode, classes} = this.props;
 

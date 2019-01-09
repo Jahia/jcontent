@@ -4,7 +4,7 @@ import LanguageSwitcher from '../LanguageSwitcher';
 import SiteSwitcher from '../SiteSwitcher';
 import {translate} from 'react-i18next';
 import classNames from 'classnames';
-import BurgerMenuButton from '../BurgerMenuButton';
+import BurgerMenuButton from './BurgerMenuButton';
 import {connect} from 'react-redux';
 import {DisplayActions} from '@jahia/react-material';
 import LeftMenuItem from './LeftMenuItem';

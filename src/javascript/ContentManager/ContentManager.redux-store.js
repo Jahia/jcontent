@@ -1,8 +1,8 @@
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
-import {fileUpload} from './Upload/Upload.redux-reducer';
+import {fileUpload} from './ContentLayout/Upload/Upload.redux-reducer';
 import {copyPaste} from './actions/actions.redux-reducer';
-import {filesGrid} from './FilesGrid/FilesGrid.redux-reducer';
+import {filesGrid} from './ContentLayout/FilesGrid/FilesGrid.redux-reducer';
 import {
     languageReducer,
     siteReducer,

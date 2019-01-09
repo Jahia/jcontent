@@ -3,7 +3,7 @@ import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
 import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
 import ContentListTable from '../ContentListTable';
-import PreviewDrawer from '../preview/PreviewDrawer';
+import PreviewDrawer from '../PreviewDrawer';
 import classNames from 'classnames';
 import ContentTrees from '../ContentTrees';
 import {Trans, translate} from 'react-i18next';

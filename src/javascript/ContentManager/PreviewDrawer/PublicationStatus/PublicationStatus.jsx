@@ -3,10 +3,10 @@ import {translate} from 'react-i18next';
 import {Typography, withStyles} from '@material-ui/core';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import ContentManagerConstants from '../ContentManager.constants';
+import ContentManagerConstants from '../../ContentManager.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {isMarkedForDeletion} from '../ContentManager.utils';
+import {isMarkedForDeletion} from '../../ContentManager.utils';
 import {compose} from 'react-apollo';
 
 // TODO Here as well as in ContentListTable unpublished status is not clear
@@ -47,7 +47,7 @@ const styles = theme => ({
     }
 });
 
-const PublicationStatus = ({selection, t, classes, uiLang}) => {
+export const PublicationStatus = ({selection, t, classes, uiLang}) => {
     if (_.isEmpty(selection)) {
         return null;
     }

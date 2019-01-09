@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FileViewer from 'react-file-viewer';
 import {withStyles} from '@material-ui/core';
-import FileIcon from '../../FilesGrid/FileIcon';
+import FileIcon from '../../../../FilesGrid/FileIcon';
 import classNames from 'classnames';
 
 const styles = theme => ({
@@ -45,7 +45,7 @@ const styles = theme => ({
     }
 });
 
-class DocumentViewer extends React.Component {
+export class DocumentViewer extends React.Component {
     constructor(props) {
         super(props);
         this.renderViewer = this.renderViewer.bind(this);

@@ -32,7 +32,7 @@ const styles = theme => ({
     }
 });
 
-class PreviewDrawer extends React.Component {
+export class PreviewDrawer extends React.Component {
     componentDidUpdate(prevProps) {
         if (!prevProps.selection || (this.props.selection && prevProps.selection.path !== this.props.selection.path)) {
             this.props.setPreviewMode('edit');

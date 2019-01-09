@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {Paper, Typography} from '@material-ui/core';
 
-export class NoPreviewComponent extends React.Component {
+export default class NoPreviewComponent extends React.Component {
     render() {
         const {classes, t} = this.props;
         return (

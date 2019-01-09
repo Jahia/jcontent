@@ -1,24 +1,24 @@
 import loadable from 'react-loadable';
 import React from 'react';
-import {CM_DRAWER_STATES, CM_PREVIEW_MODES} from '../redux/actions';
-import {getFileType, isBrowserImage, isPDF} from '../FilesGrid/FilesGrid.utils';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES} from '../../../redux/actions';
+import {getFileType, isBrowserImage, isPDF} from '../../../FilesGrid/FilesGrid.utils';
 import classNames from 'classnames';
 import {Paper} from '@material-ui/core';
 
 const DocumentViewer = loadable({
-    loader: () => import('./filePreviewer/DocumentViewer'),
+    loader: () => import('./DocumentViewer'),
     loading: () => <div/>
 });
 const PDFViewer = loadable({
-    loader: () => import('./filePreviewer/PDFViewer'),
+    loader: () => import('./PDFViewer'),
     loading: () => <div/>
 });
 const ImageViewer = loadable({
-    loader: () => import('./filePreviewer/ImageViewer'),
+    loader: () => import('./ImageViewer'),
     loading: () => <div/>
 });
 
-export class PreviewComponent extends React.Component {
+export default class PreviewComponent extends React.Component {
     iframeLoadContent(assets, displayValue, element) {
         if (element) {
             let frameDoc = element.document;

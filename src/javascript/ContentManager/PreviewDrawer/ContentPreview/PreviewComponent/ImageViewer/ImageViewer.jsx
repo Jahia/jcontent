@@ -20,7 +20,7 @@ const styles = theme => ({
     fullScreen: {}
 });
 
-class ImageViewer extends React.Component {
+export class ImageViewer extends React.Component {
     render() {
         let {classes, file, fullScreen} = this.props;
 

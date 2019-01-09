@@ -11,7 +11,7 @@ const styles = theme => ({
     }
 });
 
-class ActionButton extends React.Component {
+export class ActionButton extends React.Component {
     render() {
         let {label, onClick, classes, t, cmRole} = this.props;
 

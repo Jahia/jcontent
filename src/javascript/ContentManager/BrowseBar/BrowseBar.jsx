@@ -5,7 +5,7 @@ import {CM_DRAWER_STATES, cmSetTreeState} from '../redux/actions';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import ContentManagerConstants from '../ContentManager.constants';
-import CmSearchControlBar from '../searchBar/CmSearchControlBar';
+import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from '../BrowseControlBar';
 
 const styles = () => ({
@@ -22,7 +22,7 @@ export class BrowseBar extends React.Component {
             <AppBar position="relative" color="default" classes={{root: classes.appBarElevation}}>
                 <Toolbar variant="dense">
                     {(mode === ContentManagerConstants.mode.SEARCH || mode === ContentManagerConstants.mode.SQL2SEARCH) ?
-                        <CmSearchControlBar/> :
+                        <SearchControlBar/> :
                         <React.Fragment>
                             {treeState !== CM_DRAWER_STATES.SHOW &&
                             <IconButton color="inherit"

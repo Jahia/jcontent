@@ -1,7 +1,7 @@
 import React from 'react';
 import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetPath} from '../redux/actions';
+import {cmGoto, cmSetPath} from '../../redux/actions';
 import {Button, Typography, withStyles} from '@material-ui/core';
 import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
@@ -17,7 +17,7 @@ const styles = theme => ({
     }
 });
 
-class CmSearchControlBar extends React.Component {
+export class SearchControlBar extends React.Component {
     render() {
         let {
             siteKey, path, setPath, t, classes, siteDisplayableName, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms
@@ -93,4 +93,4 @@ export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
-)(CmSearchControlBar);
+)(SearchControlBar);

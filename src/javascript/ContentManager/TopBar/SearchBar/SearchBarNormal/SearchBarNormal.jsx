@@ -1,13 +1,13 @@
 import React from 'react';
 import {Input, withStyles} from '@material-ui/core';
-import DxContext from '../DxContext';
-import ContentTypeSelect from '../ContentTypeSelect';
-import {cmGoto} from '../redux/actions';
+import DxContext from '../../../DxContext/index';
+import ContentTypeSelect from '../../../ContentTypeSelect/index';
+import {cmGoto} from '../../../redux/actions';
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import SearchBarLayout from './SearchBarLayout';
-import ActionButton from './ActionButton';
+import SearchBarLayout from '../SearchBarLayout';
+import ActionButton from '../ActionButton';
 import {connect} from 'react-redux';
 
 const styles = () => ({
@@ -27,7 +27,7 @@ const styles = () => ({
     }
 });
 
-class CmSearchBarNormal extends React.Component {
+export class SearchBarNormal extends React.Component {
     constructor(props) {
         super(props);
 
@@ -167,4 +167,4 @@ export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
-)(CmSearchBarNormal);
+)(SearchBarNormal);

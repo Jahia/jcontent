@@ -2,7 +2,7 @@ import React from 'react';
 import {Paper, Grid, Tooltip, IconButton, Typography} from '@material-ui/core';
 import {Search} from '@material-ui/icons';
 
-class SearchBarLayout extends React.Component {
+export class SearchBarLayout extends React.Component {
     render() {
         let {children, leftFooter, rightFooter, onSearch, t} = this.props;
 

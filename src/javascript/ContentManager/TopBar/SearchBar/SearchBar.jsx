@@ -1,21 +1,21 @@
 import React from 'react';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import CmSearchBarNormal from './CmSearchBarNormal';
-import CmSearchBarSql2 from './CmSearchBarSql2';
+import SearchBarNormal from './SearchBarNormal';
+import SearchBarSql2 from './SearchBarSql2';
 import {connect} from 'react-redux';
-import {cmSetSearchMode} from '../redux/actions';
+import {cmSetSearchMode} from '../../redux/actions';
 
-class CmSearchBar extends React.Component {
+export class SearchBar extends React.Component {
     render() {
         const {searchMode, setSearchMode} = this.props;
         return (
             <React.Fragment>
                 {(searchMode === 'normal') &&
-                <CmSearchBarNormal onSql2Click={() => setSearchMode('sql2')}/>
+                <SearchBarNormal onSql2Click={() => setSearchMode('sql2')}/>
                 }
                 {(searchMode === 'sql2') &&
-                <CmSearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>
+                <SearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>
                 }
             </React.Fragment>
         );
@@ -35,4 +35,4 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     translate(),
     connect(mapStateToProps, mapDispatchToProps)
-)(CmSearchBar);
+)(SearchBar);

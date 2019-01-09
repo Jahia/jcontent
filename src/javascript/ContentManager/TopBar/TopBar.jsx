@@ -4,7 +4,7 @@ import {translate} from 'react-i18next';
 import LanguageSwitcher from '../LanguageSwitcher';
 import SiteSwitcher from '../SiteSwitcher';
 import {compose} from 'react-apollo';
-import CmSearchBar from '../searchBar/CmSearchBar';
+import SearchBar from './SearchBar';
 
 const styles = theme => ({
     root: {
@@ -58,7 +58,7 @@ export class TopBar extends React.Component {
                     </Grid>
                     <Grid item xs={1}/>
                     <Grid item xs={9} className={classes.topBar}>
-                        <CmSearchBar/>
+                        <SearchBar/>
                     </Grid>
                 </Grid>
             </div>

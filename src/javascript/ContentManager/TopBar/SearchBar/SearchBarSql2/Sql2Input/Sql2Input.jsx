@@ -14,7 +14,7 @@ const styles = theme => ({
     }
 });
 
-class Sql2Input extends React.Component {
+export class Sql2Input extends React.Component {
     constructor(props) {
         super(props);
         this.onKeyDown = this.onKeyDown.bind(this);

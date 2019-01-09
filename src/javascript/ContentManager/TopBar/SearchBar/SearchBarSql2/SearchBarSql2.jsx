@@ -1,13 +1,13 @@
 import React from 'react';
-import DxContext from '../DxContext';
-import SearchBarLayout from './SearchBarLayout';
-import ActionButton from './ActionButton';
+import DxContext from '../../../DxContext/index';
+import SearchBarLayout from '../SearchBarLayout';
+import ActionButton from '../ActionButton';
 import Sql2Input from './Sql2Input';
 import {compose} from 'react-apollo';
 import {Grid, withStyles} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {Trans, translate} from 'react-i18next';
-import {cmGoto} from '../redux/actions';
+import {cmGoto} from '../../../redux/actions';
 
 const styles = theme => ({
     sql2Form: {
@@ -28,7 +28,7 @@ const styles = theme => ({
     }
 });
 
-class CmSearchBarSql2 extends React.Component {
+export class SearchBarSql2 extends React.Component {
     constructor(props) {
         super(props);
 
@@ -140,4 +140,4 @@ export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
-)(CmSearchBarSql2);
+)(SearchBarSql2);

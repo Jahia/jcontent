@@ -21,7 +21,7 @@ import {translate} from 'react-i18next';
 import DxContext from '../DxContext';
 import PublicationStatus from '../PublicationStatus';
 import Moment from 'react-moment';
-import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../redux/actions';
+import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../ContentManager.redux-actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../ContentManager.utils';
 import BrowseBar from '../BrowseBar';
 import {connect} from 'react-redux';

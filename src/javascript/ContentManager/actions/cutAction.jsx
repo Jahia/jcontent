@@ -1,5 +1,5 @@
-import Node from '../copyPaste/node';
-import {copy} from '../copyPaste/redux/actions';
+import Node from './Node';
+import {copy} from './actions.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from './reduxAction';
 import requirementsAction from './requirementsAction';

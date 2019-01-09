@@ -7,7 +7,7 @@ import {compose} from 'react-apollo';
 import {Grid, withStyles} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {Trans, translate} from 'react-i18next';
-import {cmGoto} from '../../../redux/actions';
+import {cmGoto} from '../../../ContentManager.redux-actions';
 
 const styles = theme => ({
     sql2Form: {

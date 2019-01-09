@@ -196,4 +196,5 @@ const mapDispatchToProps = dispatch => {
 
 export default compose(
     withApollo,
-    connect(null, mapDispatchToProps))(UploadTransformComponent);
+    connect(null, mapDispatchToProps)
+)(UploadTransformComponent);

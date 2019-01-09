@@ -1,6 +1,6 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {cmGoto, cmOpenPaths, cmSetSelection} from '../redux/actions';
+import {cmGoto, cmOpenPaths, cmSetSelection} from '../ContentManager.redux-actions';
 import {reduxAction} from './reduxAction';
 import ContentManagerConstants from '../ContentManager.constants';
 import {of} from 'rxjs';

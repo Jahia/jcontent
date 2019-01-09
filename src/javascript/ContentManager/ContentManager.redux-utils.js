@@ -1,4 +1,4 @@
-import {cmGoto} from './actions';
+import {cmGoto} from './ContentManager.redux-actions';
 import _ from 'lodash';
 
 const PARAMS_KEY = '?params=';
@@ -101,5 +101,4 @@ let getSyncListener = (store, history) => () => {
     }
 };
 
-export {extractParamsFromUrl};
-export default getSyncListener;
+export {getSyncListener, extractParamsFromUrl};

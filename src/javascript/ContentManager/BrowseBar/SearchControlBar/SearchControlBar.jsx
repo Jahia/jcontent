@@ -1,7 +1,7 @@
 import React from 'react';
 import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetPath} from '../../redux/actions';
+import {cmGoto, cmSetPath} from '../../ContentManager.redux-actions';
 import {Button, Typography, withStyles} from '@material-ui/core';
 import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';

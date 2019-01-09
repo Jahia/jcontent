@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
 import {withStyles} from '@material-ui/core';
 import {previewQuery} from './ContentPreview.gql-queries';
-import {CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../../redux/actions';
+import {CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import DxContext from '../../DxContext';
 import NoPreviewComponent from './NoPreviewComponent';

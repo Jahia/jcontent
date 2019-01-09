@@ -9,7 +9,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
-import {cmSetSelection, cmGoto} from '../../redux/actions';
+import {cmSetSelection, cmGoto} from '../../ContentManager.redux-actions';
 import {connect} from 'react-redux';
 import {allowDoubleClickNavigation} from '../../ContentManager.utils';
 import classNames from 'classnames';

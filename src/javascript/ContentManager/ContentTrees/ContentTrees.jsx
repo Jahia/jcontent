@@ -4,7 +4,7 @@ import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from '../redux/actions';
+import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from '../ContentManager.redux-actions';
 import {compose} from 'react-apollo';
 import ContentManagerConstants from '../ContentManager.constants';
 import ContentTree from './ContentTree';

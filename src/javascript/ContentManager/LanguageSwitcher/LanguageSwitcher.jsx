@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {cmSetAvailableLanguages, cmSetLanguage} from '../redux/actions';
+import {cmSetAvailableLanguages, cmSetLanguage} from '../ContentManager.redux-actions';
 import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
 export class LanguageSwitcher extends React.Component {

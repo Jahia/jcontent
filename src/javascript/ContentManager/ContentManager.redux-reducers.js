@@ -14,9 +14,9 @@ import {
     CM_SET_UILANGUAGE,
     CM_ADD_PATHS_TO_REFETCH,
     CM_SET_AVAILABLE_LANGUAGES
-} from './actions';
+} from './ContentManager.redux-actions';
 import * as _ from 'lodash';
-import {extractPaths} from '../ContentManager.utils';
+import {extractPaths} from './ContentManager.utils';
 
 let uiLanguageReducer = dxContext => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {

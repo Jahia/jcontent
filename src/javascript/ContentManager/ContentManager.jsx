@@ -16,7 +16,7 @@ import ContentLayout from './ContentLayout';
 import IFrameLayout from './IFrameLayout';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
-import getStore from './redux/getStore';
+import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import initActions from './actions/initActions';
 import contentManagerStyleConstants from './ContentManager.style-constants';
@@ -48,7 +48,7 @@ export default class ContentManager extends React.Component {
 
     getStore(dxContext, t) {
         if (!this.store) {
-            this.store = getStore(dxContext, this.getHistory(dxContext, t));
+            this.store = contentManagerReduxStore(dxContext, this.getHistory(dxContext, t));
         }
         return this.store;
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppBar, IconButton, Toolbar, withStyles} from '@material-ui/core';
 import {ChevronRight} from '@material-ui/icons';
-import {CM_DRAWER_STATES, cmSetTreeState} from '../redux/actions';
+import {CM_DRAWER_STATES, cmSetTreeState} from '../ContentManager.redux-actions';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import ContentManagerConstants from '../ContentManager.constants';

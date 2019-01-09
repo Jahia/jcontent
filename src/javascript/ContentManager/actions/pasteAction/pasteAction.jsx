@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import Node from '../../copyPaste/node';
+import Node from '../Node';
 import pasteMutations from './pasteAction.gql-mutations';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
-import {clear} from '../../copyPaste/redux/actions';
+import {clear} from '../actions.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {reduxAction} from '../reduxAction';
@@ -12,7 +12,7 @@ import {withI18nAction} from '../withI18nAction';
 import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../../redux/actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../../ContentManager.redux-actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, selection: state.selection}),
@@ -120,7 +120,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 }
 
                 if (context.selection === oldPath) {
-                    context.setSelection(undefined);
+                    context.setSelection(null);
                 }
             }
 

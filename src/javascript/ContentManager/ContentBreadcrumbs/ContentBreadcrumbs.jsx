@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import {Picker} from '@jahia/react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto} from '../redux/actions';
+import {cmGoto} from '../ContentManager.redux-actions';
 import {extractPaths} from '../ContentManager.utils';
 import ContentManagerConstants from '../ContentManager.constants';
 import {compose} from 'react-apollo';

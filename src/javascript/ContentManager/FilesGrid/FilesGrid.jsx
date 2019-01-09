@@ -11,7 +11,7 @@ import {Typography, withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {valueToSizeTransformation} from './FilesGrid.utils';
 import {connect} from 'react-redux';
-import {cmSetPage, cmSetPageSize} from '../redux/actions';
+import {cmSetPage, cmSetPageSize} from '../ContentManager.redux-actions';
 
 const styles = theme => ({
     grid: {

@@ -1,9 +1,8 @@
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
-import {fileUpload} from '../Upload/Upload.redux-reducer';
-import {copyPaste} from '../copyPaste/redux/reducer';
-import {filesGrid} from '../FilesGrid/FilesGrid.redux-reducer';
-
+import {fileUpload} from './Upload/Upload.redux-reducer';
+import {copyPaste} from './actions/actions.redux-reducer';
+import {filesGrid} from './FilesGrid/FilesGrid.redux-reducer';
 import {
     languageReducer,
     siteReducer,
@@ -19,11 +18,11 @@ import {
     siteDisplayableNameReducer, treeStateReducer, paginationReducer, sortReducer,
     pathsToRefetchReducer,
     availableLanguagesReducer
-} from './reducers';
+} from './ContentManager.redux-reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
-import getSyncListener, {extractParamsFromUrl} from './getSyncListener';
+import {getSyncListener, extractParamsFromUrl} from './ContentManager.redux-utils';
 
-let getStore = (dxContext, history) => {
+let contentManagerReduxStore = (dxContext, history) => {
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
     const rootReducer = combineReducers({
         uiLang: uiLanguageReducer(dxContext),
@@ -66,4 +65,4 @@ let getStore = (dxContext, history) => {
     return store;
 };
 
-export default getStore;
+export default contentManagerReduxStore;

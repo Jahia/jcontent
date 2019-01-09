@@ -11,10 +11,10 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from '../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../redux/actions';
+import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../ContentManager.redux-actions';
 import ContentManagerConstants from '../ContentManager.constants';
 import {extractPaths, isDescendantOrSelf, getNewNodePath} from '../ContentManager.utils';
-import {setModificationHook} from '../copyPaste/contentModificationHook';
+import {setModificationHook} from './ContentData.utils';
 import {compose} from 'react-apollo';
 
 const contentQueryHandlerByMode = mode => {
@@ -80,7 +80,7 @@ export class ContentData extends React.Component {
 
             // De-select any removed nodes.
             if (selection === nodePath) {
-                setSelection(undefined);
+                setSelection(null);
                 stateModificationDone = true;
             }
         } else if (operation === 'update') {

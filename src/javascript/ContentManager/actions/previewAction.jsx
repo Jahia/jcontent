@@ -1,6 +1,6 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {CM_DRAWER_STATES, cmSetPreviewState, cmSetSelection} from '../redux/actions';
+import {CM_DRAWER_STATES, cmSetPreviewState, cmSetSelection} from '../ContentManager.redux-actions';
 import {reduxAction} from './reduxAction';
 
 export default composeActions(requirementsAction, reduxAction(() => ({}), dispatch => ({

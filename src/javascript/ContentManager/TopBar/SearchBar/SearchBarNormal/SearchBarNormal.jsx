@@ -1,7 +1,7 @@
 import React from 'react';
 import {Input, withStyles} from '@material-ui/core';
-import DxContext from '../../../DxContext/index';
-import ContentTypeSelect from '../../../ContentTypeSelect/index';
+import DxContext from '../../../DxContext';
+import ContentTypeSelect from '../../../ContentTypeSelect';
 import {cmGoto} from '../../../redux/actions';
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';

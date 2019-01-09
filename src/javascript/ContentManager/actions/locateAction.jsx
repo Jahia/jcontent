@@ -5,7 +5,27 @@ import {reduxAction} from './reduxAction';
 import ContentManagerConstants from '../ContentManager.constants';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
-import {FindParentQuery} from '../gqlQueries';
+import gql from 'graphql-tag';
+import {PredefinedFragments} from '@jahia/apollo-dx';
+
+const FindParentQuery = gql`
+    query findParentQuery($path:String!) {
+        jcr {
+            nodeByPath(path:$path) {
+                parents:ancestors(fieldFilter: {filters: {fieldName: "type.value", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
+                    type:property(name: "jcr:primaryType") {
+                        value
+                    }
+                    name
+                    path
+                    ...NodeCacheRequiredFields
+                }
+                ...NodeCacheRequiredFields
+            }
+        }
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
 
 export default composeActions(requirementsAction, reduxAction(state => ({mode: state.mode, params: state.params}), dispatch => ({
     setOpenPaths: state => dispatch(cmOpenPaths(state)),

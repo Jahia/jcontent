@@ -5,8 +5,22 @@ import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
-import {SiteContentTypesQuery} from '../gqlQueries';
 import FilterSelect from '../FilterSelect';
+import gql from 'graphql-tag';
+
+const SiteContentTypesQuery = gql`
+    query SiteContentTypesQuery($siteKey: String!, $displayLanguage:String!) {
+        jcr {
+            nodeTypes(filter: {includeMixins: false, siteKey: $siteKey, includeTypes: ["jmix:editorialContent", "jnt:page", "jnt:file"], excludeTypes: ["jmix:studioOnly", "jmix:hiddenType", "jnt:editableFile"]}) {
+                nodes {
+                    name
+                    displayName(language: $displayLanguage)
+                    icon
+                }
+            }
+        }
+    }
+`;
 
 export class ContentTypeSelect extends React.Component {
     constructor(props) {

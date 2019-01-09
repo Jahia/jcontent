@@ -4,7 +4,7 @@ import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
 import {withStyles} from '@material-ui/core';
-import {previewQuery} from '../../gqlQueries';
+import {previewQuery} from './ContentPreview.gql-queries';
 import {CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState} from '../../redux/actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import DxContext from '../../DxContext';

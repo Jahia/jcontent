@@ -1,5 +1,5 @@
 import ContentManagerConstants from '../ContentManager.constants';
-import {ContentTypeNamesQuery, ContentTypesQuery} from '../gqlQueries';
+import {ContentTypeNamesQuery, ContentTypesQuery} from './actions.gql-queries';
 import * as _ from 'lodash';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';

@@ -4,7 +4,7 @@ import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {actionsRegistry} from '@jahia/react-material';
 import {compose, Query} from 'react-apollo';
-import {ActionRequirementsQueryHandler} from '../gqlQueries';
+import {ActionRequirementsQueryHandler} from '../ContentManager.gql-queries';
 import {translate} from 'react-i18next';
 import {withNotifications} from '@jahia/react-material';
 

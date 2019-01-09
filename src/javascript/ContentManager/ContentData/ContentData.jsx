@@ -5,7 +5,7 @@ import {
     SearchQueryHandler,
     Sql2SearchQueryHandler,
     FilesQueryHandler
-} from '../gqlQueries';
+} from './ContentData.gql-queries';
 import * as _ from 'lodash';
 import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from '../eventHandlerRegistry';

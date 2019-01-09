@@ -9,7 +9,7 @@ import {reduxAction} from '../reduxAction';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {withNotificationContextAction} from '../withNotificationContextAction';
 import {withI18nAction} from '../withI18nAction';
-import {ContentTypesQuery} from '../../gqlQueries';
+import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../../redux/actions';

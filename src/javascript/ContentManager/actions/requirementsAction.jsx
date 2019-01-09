@@ -2,7 +2,7 @@ import {composeActions} from '@jahia/react-material';
 import {withApolloAction} from './withApolloAction';
 import {from, concat, of, combineLatest} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
-import {ActionRequirementsQueryHandler} from '../gqlQueries';
+import {ActionRequirementsQueryHandler} from '../ContentManager.gql-queries';
 import * as _ from 'lodash';
 import {reduxAction} from './reduxAction';
 

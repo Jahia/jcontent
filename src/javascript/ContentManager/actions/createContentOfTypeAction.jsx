@@ -1,4 +1,4 @@
-import {ContentTypeNamesQuery} from '../gqlQueries';
+import {ContentTypeNamesQuery} from './actions.gql-queries';
 import {from} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {composeActions} from '@jahia/react-material';

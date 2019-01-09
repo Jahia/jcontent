@@ -1,18 +1,18 @@
 import * as _ from 'lodash';
-import Node from '../copyPaste/node';
-import {pasteMutations} from '../gqlMutations';
-import {refetchContentTreeAndListData} from '../ContentManager.refetches';
-import {clear} from '../copyPaste/redux/actions';
+import Node from '../../copyPaste/node';
+import pasteMutations from './pasteAction.gql-mutations';
+import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
+import {clear} from '../../copyPaste/redux/actions';
 import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
-import {reduxAction} from './reduxAction';
+import requirementsAction from '../requirementsAction';
+import {reduxAction} from '../reduxAction';
 import {filter, map, switchMap} from 'rxjs/operators';
-import {withNotificationContextAction} from './withNotificationContextAction';
-import {withI18nAction} from './withI18nAction';
-import {ContentTypesQuery} from '../gqlQueries';
+import {withNotificationContextAction} from '../withNotificationContextAction';
+import {withI18nAction} from '../withI18nAction';
+import {ContentTypesQuery} from '../../gqlQueries';
 import {from, of} from 'rxjs';
-import {isDescendantOrSelf, getNewNodePath} from '../ContentManager.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../redux/actions';
+import {isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../../redux/actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, selection: state.selection}),

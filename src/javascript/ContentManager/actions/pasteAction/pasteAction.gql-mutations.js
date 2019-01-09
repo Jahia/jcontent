@@ -1,29 +1,5 @@
 import gql from 'graphql-tag';
 
-const lockMutations = {
-    lock: gql`mutation lockNode($pathOrId: String!) {
-        jcr {
-            mutateNode(pathOrId: $pathOrId) {
-                lock
-            }
-        }
-    }`,
-    unlock: gql`mutation unlockNode($pathOrId: String!) {
-        jcr {
-            mutateNode(pathOrId: $pathOrId) {
-                unlock
-            }
-        }
-    }`,
-    clearAllLocks: gql`mutation clearAllLocks($pathOrId: String!) {
-        jcr {
-            mutateNode(pathOrId: $pathOrId) {
-                clearAllLocks
-            }
-        }
-    }`
-};
-
 const pasteMutations = {
     pasteNode: gql`mutation pasteNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String) {
         jcr {
@@ -54,4 +30,4 @@ const pasteMutations = {
     }`
 };
 
-export {lockMutations, pasteMutations};
+export default pasteMutations;

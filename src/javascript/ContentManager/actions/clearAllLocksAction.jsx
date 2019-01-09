@@ -1,7 +1,7 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
 import {map} from 'rxjs/operators';
-import {lockMutations} from '../gqlMutations';
+import gql from 'graphql-tag';
 import * as _ from 'lodash';
 import {withDxContextAction} from './withDxContextAction';
 
@@ -17,7 +17,13 @@ export default composeActions(requirementsAction, withDxContextAction, {
     onClick: context => {
         context.client.mutate({
             variables: {pathOrId: context.path},
-            mutation: lockMutations.clearAllLocks,
+            mutation: gql`mutation clearAllLocks($pathOrId: String!) {
+                jcr {
+                    mutateNode(pathOrId: $pathOrId) {
+                        clearAllLocks
+                    }
+                }
+            }`,
             refetchQueries: [
                 {
                     query: context.requirementQueryHandler.getQuery(),

@@ -67,7 +67,7 @@ export class LeftMenuItem extends React.Component {
         return (
             <Button className={classes.listItem} onClick={e => onClick(context, e)}>
                 {badge ?
-                    <Badge badgeContent={badge} color="error" classes={{root: classes.badgeRoot, badge: classes.badgeBadge}}>
+                    <Badge badgeContent={badge} color="error" classes={{root: classes.badgeRoot, badge: classes.badgeBadge}} data-cm-role="workflow-active-task-count">
                         {Content}
                     </Badge> :
                     Content

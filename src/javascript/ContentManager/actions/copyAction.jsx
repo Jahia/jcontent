@@ -1,4 +1,4 @@
-import Node from './Node';
+import CopyPasteNode from './CopyPasteNode';
 import {copy} from './actions.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from './reduxAction';
@@ -10,6 +10,6 @@ export default composeActions(requirementsAction, reduxAction(() => ({}), dispat
 
     onClick: context => {
         const {copy, path, node: {uuid, name, displayName, primaryNodeType}} = context;
-        copy([new Node(path, uuid, name, displayName, primaryNodeType, Node.PASTE_MODES.COPY)]);
+        copy([new CopyPasteNode(path, uuid, name, displayName, primaryNodeType, Node.PASTE_MODES.COPY)]);
     }
 });

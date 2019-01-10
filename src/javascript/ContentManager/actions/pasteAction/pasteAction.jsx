@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import Node from '../Node';
+import CopyPasteNode from '../CopyPasteNode';
 import pasteMutations from './pasteAction.gql-mutations';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
 import {clear} from '../actions.redux-actions';
@@ -45,7 +45,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     }
 
                     let nodeToPaste = context.items[0];
-                    if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) {
+                    if (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) {
                         return of(false);
                     }
                     if (isDescendantOrSelf(targetNode.path, nodeToPaste.path)) {
@@ -94,7 +94,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 destParentPathOrId: context.path,
                 destName: nodeToPaste.name
             },
-            mutation: nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode
+            mutation: nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode
         }).then(({data}) => {
             context.clear();
             context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
@@ -103,7 +103,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             context.addPathsToRefetch([context.path, oldPath.substring(0, oldPath.lastIndexOf('/'))]);
 
             // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the selection
-            if (nodeToPaste.mutationToUse === Node.PASTE_MODES.MOVE) {
+            if (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE) {
                 const newPath = data.jcr.pasteNode.node.path;
                 const pathsToClose = _.filter(context.openedPaths, openedPath => isDescendantOrSelf(openedPath, oldPath));
                 if (!_.isEmpty(pathsToClose)) {

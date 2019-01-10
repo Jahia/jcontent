@@ -1,0 +1,35 @@
+import {composeActions} from '@jahia/react-material';
+import requirementsAction from './requirementsAction';
+import {map} from 'rxjs/operators';
+import gql from 'graphql-tag';
+import * as _ from 'lodash';
+import {withDxContextAction} from './withDxContextAction';
+
+export default composeActions(requirementsAction, withDxContextAction, {
+    init: context => {
+        context.initRequirements({
+            getLockInfo: true,
+            requiredPermission: 'jcr:lockManagement',
+            enabled: context => context.node.pipe(map(node => node.lockTypes !== null && !_.includes(node.lockTypes.values, ' deletion :deletion') &&
+                context.dxContext.userName === 'root'))
+        });
+    },
+    onClick: context => {
+        context.client.mutate({
+            variables: {pathOrId: context.path},
+            mutation: gql`mutation clearAllLocks($pathOrId: String!) {
+                jcr {
+                    mutateNode(pathOrId: $pathOrId) {
+                        clearAllLocks
+                    }
+                }
+            }`,
+            refetchQueries: [
+                {
+                    query: context.requirementQueryHandler.getQuery(),
+                    variables: context.requirementQueryHandler.getVariables()
+                }
+            ]
+        });
+    }
+});

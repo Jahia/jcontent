@@ -120,7 +120,7 @@ class ContentDataView extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, pathsToRefetch, removePathsToRefetch} = this.props;
+        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, treeState, pathsToRefetch, removePathsToRefetch} = this.props;
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
         // If the path to display is part of the paths to refetch then refetch
         if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
@@ -138,7 +138,7 @@ class ContentDataView extends React.Component {
             sql2SearchWhere: sql2SearchWhere
         };
 
-        const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort);
+        const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort, treeState);
 
         return (
             <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy}>
@@ -234,6 +234,7 @@ const mapStateToProps = state => ({
     lang: state.language,
     selection: state.selection,
     previewState: state.previewState,
+    treeState: state.treeState,
     uiLang: state.uiLang,
     searchTerms: state.params.searchTerms,
     searchContentType: state.params.searchContentType,

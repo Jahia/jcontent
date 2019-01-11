@@ -15,6 +15,7 @@ import {allowDoubleClickNavigation} from '../../../ContentManager.utils';
 import classNames from 'classnames';
 import FileName from './FileName';
 import Actions from './Actions';
+import {Folder} from 'mdi-material-ui';
 
 const styles = theme => ({
     defaultCard: {
@@ -180,40 +181,59 @@ export class FileCard extends Component {
                 maxLengthLabels = 28;
         }
 
+        let fileIconClasses = {root: isLargeCard || isDefaultCard ? classes.largeFileCoverIcon : classes.smallFileCoverIcon};
+
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: node.path}}/>
 
-                <Card className={classNames(classes.defaultCard, isExtraSmallCard && classes.extraSmallCard, isSmallCard && classes.smallCard,
-                    isLargeCard && classes.largeCard, isVerticalCard && classes.verticalCard, isSelected && classes.selectedCard)}
-                      data-cm-role="grid-content-list-card"
-                      onContextMenu={event => {
-                          event.stopPropagation();
-                          contextualMenu.current.open(event);
-                      }}
-                      onClick={() => this.props.onSelect(node.path)}
-                      onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
-                      onMouseEnter={event => this.onHoverEnter(event)}
-                      onMouseLeave={event => this.onHoverExit(event)}
+                <Card
+                    className={classNames(
+                        classes.defaultCard,
+                        isExtraSmallCard && classes.extraSmallCard,
+                        isSmallCard && classes.smallCard,
+                        isLargeCard && classes.largeCard,
+                        isVerticalCard && classes.verticalCard,
+                        isSelected && classes.selectedCard
+                    )}
+                    data-cm-role="grid-content-list-card"
+                    onContextMenu={event => {
+                        event.stopPropagation();
+                        contextualMenu.current.open(event);
+                    }}
+                    onClick={() => this.props.onSelect(node.path)}
+                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
+                    onMouseEnter={event => this.onHoverEnter(event)}
+                    onMouseLeave={event => this.onHoverExit(event)}
                 >
-                    {!isVerticalCard && <PublicationStatus node={node}/>}
+                    {!isVerticalCard &&
+                        <PublicationStatus node={node}/>
+                    }
 
-                    { isImage ?
-                        <CardMedia className={classNames(isDefaultCard && classes.defaultCover,
-                                                isExtraSmallCard && classes.extraSmallCover,
-                                                isSmallCard && classes.smallCover,
-                                                isLargeCard && classes.largeCover,
-                                                isVerticalCard && classes.verticalCover)}
-                                   image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}&t=thumbnail2`}
-                                   title={node.name}
+                    {isImage ?
+                        <CardMedia
+                            className={classNames(
+                                isDefaultCard && classes.defaultCover,
+                                isExtraSmallCard && classes.extraSmallCover,
+                                isSmallCard && classes.smallCover,
+                                isLargeCard && classes.largeCover,
+                                isVerticalCard && classes.verticalCover
+                            )}
+                            image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}&t=thumbnail2`}
+                            title={node.name}
                         /> :
                         <div className={classes.defaultFileCover}>
-                            <FileIcon filename={node.path} color="disabled" classes={{root: isLargeCard || isDefaultCard ? classes.largeFileCoverIcon : classes.smallFileCoverIcon}}/>
+                            {node.primaryNodeType === 'jnt:folder' ?
+                                <Folder color="action" classes={fileIconClasses}/> :
+                                <FileIcon filename={node.path} color="disabled" classes={fileIconClasses}/>
+                            }
                         </div>
                     }
 
                     <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
-                        {isVerticalCard && <PublicationStatus node={node}/>}
+                        {isVerticalCard &&
+                            <PublicationStatus node={node}/>
+                        }
 
                         <Actions node={node} isHovered={isHovered}/>
 
@@ -224,7 +244,7 @@ export class FileCard extends Component {
                                 </Typography>
                                 <FileName maxLength={maxLengthLabels} node={node}/>
                             </div>
-                            {(!isVerticalCard) &&
+                            {!isVerticalCard &&
                                 <div>
                                     <Typography color="textSecondary" variant="caption" component="p">
                                         {t('label.contentManager.filesGrid.createdBy')}
@@ -238,7 +258,7 @@ export class FileCard extends Component {
                                     </Typography>
                                 </div>
                             }
-                            {((isDefaultCard || isLargeCard) && node.width && node.height) &&
+                            {(isDefaultCard || isLargeCard) && node.width && node.height &&
                                 <div>
                                     <Typography color="textSecondary" variant="caption" component="p">
                                         {t('label.contentManager.filesGrid.fileInfo')}

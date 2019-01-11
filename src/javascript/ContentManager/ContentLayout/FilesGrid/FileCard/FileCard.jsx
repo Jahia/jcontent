@@ -9,13 +9,14 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
-import {cmSetSelection, cmGoto} from '../../../ContentManager.redux-actions';
+import {cmSetSelection, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
 import {connect} from 'react-redux';
 import {allowDoubleClickNavigation} from '../../../ContentManager.utils';
 import classNames from 'classnames';
 import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
+import {extractPaths} from '../../../ContentManager.utils';
 
 const styles = theme => ({
     defaultCard: {
@@ -145,7 +146,7 @@ export class FileCard extends Component {
     }
 
     render() {
-        const {cardType, classes, t, node, dxContext, uiLang, setPath, selection} = this.props;
+        const {cardType, classes, t, node, dxContext, uiLang, setPath, selection, siteKey, mode} = this.props;
         const {isHovered} = this.state;
 
         let contextualMenu = React.createRef();
@@ -202,7 +203,7 @@ export class FileCard extends Component {
                         contextualMenu.current.open(event);
                     }}
                     onClick={() => this.props.onSelect(node.path)}
-                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(node.path))}
+                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
                     onMouseEnter={event => this.onHoverEnter(event)}
                     onMouseLeave={event => this.onHoverExit(event)}
                 >
@@ -292,12 +293,17 @@ FileCard.propTypes = {
 
 const mapStateToProps = state => ({
     uiLang: state.uiLang,
-    selection: state.selection
+    selection: state.selection,
+    mode: state.mode,
+    siteKey: state.site
 });
 
 const mapDispatchToProps = dispatch => ({
     onSelect: selection => dispatch(cmSetSelection(selection)),
-    setPath: (path, params) => dispatch(cmGoto({path, params}))
+    setPath: (siteKey, path, mode) => {
+        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
+        dispatch(cmGoto({path: path}));
+    }
 });
 
 export default compose(

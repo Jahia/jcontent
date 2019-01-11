@@ -11,7 +11,6 @@ import {
     withStyles
 } from '@material-ui/core';
 import {VirtualsiteIcon} from '@jahia/icons';
-
 import {Lock} from '@material-ui/icons';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
@@ -21,18 +20,34 @@ import {translate} from 'react-i18next';
 import DxContext from '../../DxContext';
 import PublicationStatus from '../../PublicationStatus';
 import Moment from 'react-moment';
-import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort} from '../../ContentManager.redux-actions';
+import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort, cmOpenPaths} from '../../ContentManager.redux-actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../../ContentManager.utils';
 import BrowseBar from '../BrowseBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../UploadTransformComponent';
 import classNames from 'classnames';
+import {extractPaths} from '../../ContentManager.utils';
 
 const allColumnData = [
-    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
-    {id: 'wip', label: '', sortable: false, property: ''},
-    {id: 'lock', label: '', sortable: false, property: ''},
+    {
+        id: 'name',
+        label: 'label.contentManager.listColumns.name',
+        sortable: true,
+        property: 'displayName'
+    },
+    {
+        id: 'wip',
+        label: '',
+        sortable: false,
+        property: ''
+    },
+    {
+        id: 'lock',
+        label: '',
+        sortable: false,
+        property: ''
+    },
     {
         id: 'type',
         label: 'label.contentManager.listColumns.type',
@@ -45,26 +60,50 @@ const allColumnData = [
         sortable: true,
         property: 'lastModified.value'
     },
-    {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy', sortable: true, property: 'createdBy.value'}
+    {
+        id: 'createdBy',
+        label: 'label.contentManager.listColumns.createdBy',
+        sortable: true,
+        property: 'createdBy.value'
+    }
 ];
 
 const reducedColumnData = [
-    {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
-    {id: 'wip', label: '', sortable: false, property: ''},
-    {id: 'lock', label: '', sortable: false, property: ''},
+    {
+        id: 'name',
+        label: 'label.contentManager.listColumns.name',
+        sortable: true,
+        property: 'displayName'
+    },
+    {
+        id: 'wip',
+        label: '',
+        sortable: false,
+        property: ''
+    },
+    {
+        id: 'lock',
+        label: '',
+        sortable: false,
+        property: ''
+    },
     {
         id: 'lastModified',
         label: 'label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value'
     },
-    {id: 'createdBy', label: 'label.contentManager.listColumns.createdBy', sortable: true, property: 'createdBy.value'}
+    {
+        id: 'createdBy',
+        label: 'label.contentManager.listColumns.createdBy',
+        sortable: true,
+        property: 'createdBy.value'
+    }
 ];
 
 const APP_TABLE_CELLS = 2;
 
 const styles = theme => ({
-
     tableWrapper: {
         minHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
@@ -128,7 +167,15 @@ export class ContentListTable extends React.Component {
     getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
         let selected = isSelected && isPreviewOpened;
         let cellClasses = {
-            root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: selected, [classes[column + 'CellSelected']]: selected, [classes.isDeleted]: isMarkedForDeletion(node)})
+            root: classNames(
+                classes.cell,
+                classes[column + 'Cell'],
+                {
+                    [classes.selectedCell]: selected,
+                    [classes[column + 'CellSelected']]: selected,
+                    [classes.isDeleted]: isMarkedForDeletion(node)
+                }
+            )
         };
         return cellClasses;
     }
@@ -145,17 +192,16 @@ export class ContentListTable extends React.Component {
     }
 
     addIconSuffix(icon) {
-        return (!icon.includes('.png') ? icon + '.png' : icon);
+        return (icon.includes('.png') ? icon : icon + '.png');
     }
 
     renderLock(row) {
         let {t} = this.props;
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
-                <Lock
-                      fontSize="small"
-                      color="inherit"/>
-            </Tooltip> : null;
+                <Lock fontSize="small" color="inherit"/>
+            </Tooltip> :
+            null;
     }
 
     renderWip(row, dxContext) {
@@ -163,8 +209,7 @@ export class ContentListTable extends React.Component {
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                    <VirtualsiteIcon fontSize="small"
-                                     color="inherit"/>
+                    <VirtualsiteIcon fontSize="small" color="inherit"/>
                 </Tooltip>
             );
         }
@@ -174,7 +219,8 @@ export class ContentListTable extends React.Component {
     render() {
         const {
             rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onRowSelected, selection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState
+            onRowSelected, selection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
+            siteKey, mode
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let showActions = previewState !== CM_DRAWER_STATES.SHOW;
@@ -197,9 +243,10 @@ export class ContentListTable extends React.Component {
                             {dxContext => (
                                 <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
                                     {contentNotFound ?
-                                        <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> : _.isEmpty(rows) ?
-                                            <EmptyRow columnData={columnData}
-                                                      translate={t}/> : rows.map(n => {
+                                        <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> :
+                                        _.isEmpty(rows) ?
+                                            <EmptyRow columnData={columnData} translate={t}/> :
+                                            rows.map(n => {
                                                 let isSelected = n.path === selection && isPreviewOpened;
                                                 let renderWip = this.renderWip(n, dxContext);
                                                 let renderLock = this.renderLock(n);
@@ -222,29 +269,29 @@ export class ContentListTable extends React.Component {
                                                             event.stopPropagation();
                                                             contextualMenu.current.open(event);
                                                         }}
-                                                        onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(n.path))}
+                                                        onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(siteKey, n.path, mode))}
                                                     >
-                                                        <ContextualMenu ref={contextualMenu}
-                                                                        actionKey="contextualMenuContent"
-                                                                        context={{path: n.path}}/>
-
-                                                        <TableCell padding="none"
-                                                                   classes={{root: classes.publicationCell}}
-                                                                   data-cm-role="table-content-list-cell-publication"
+                                                        <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
+                                                        <TableCell
+                                                            padding="none"
+                                                            classes={{root: classes.publicationCell}}
+                                                            data-cm-role="table-content-list-cell-publication"
                                                         >
                                                             <PublicationStatus node={n} classes={{root: classes.publicationStatus}}/>
                                                         </TableCell>
-                                                        <TableCell padding="checkbox"
-                                                                   classes={this.getCellClasses(n, classes, 'checkbox', isSelected, isPreviewOpened)}
+                                                        <TableCell
+                                                            padding="checkbox"
+                                                            classes={this.getCellClasses(n, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                         >
                                                             <Checkbox checked={false}/>
                                                         </TableCell>
                                                         {columnData.map(column => {
                                                             if (column.id === 'name') {
                                                                 return (
-                                                                    <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
-                                                                               data-cm-role="table-content-list-cell-name"
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        data-cm-role="table-content-list-cell-name"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
@@ -255,27 +302,32 @@ export class ContentListTable extends React.Component {
                                                             }
                                                             if (column.id === 'wip') {
                                                                 return (
-                                                                    <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
-                                                                               padding="none"
-                                                                    >{renderWip}
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        padding="none"
+                                                                    >
+                                                                        {renderWip}
                                                                     </TableCell>
                                                                 );
                                                             }
                                                             if (column.id === 'lock') {
                                                                 return (
-                                                                    <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
-                                                                               padding="none"
-                                                                    >{renderLock}
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        padding="none"
+                                                                    >
+                                                                        {renderLock}
                                                                     </TableCell>
                                                                 );
                                                             }
                                                             if (column.id === 'type') {
                                                                 return (
-                                                                    <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
-                                                                               data-cm-role="table-content-list-cell-type"
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        data-cm-role="table-content-list-cell-type"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             {n[column.id]}
@@ -285,23 +337,24 @@ export class ContentListTable extends React.Component {
                                                             }
                                                             if (column.id === 'lastModified') {
                                                                 return (
-                                                                    <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
-                                                                               data-cm-role={'table-content-list-cell-' + column.id}
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        data-cm-role={'table-content-list-cell-' + column.id}
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
-                                                                            <Moment format="ll"
-                                                                                    locale={uiLang}
-                                                                            >{n[column.id]}
+                                                                            <Moment format="ll" locale={uiLang}>
+                                                                                {n[column.id]}
                                                                             </Moment>
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
                                                             }
                                                             return (
-                                                                <TableCell key={column.id}
-                                                                           classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
-                                                                           data-cm-role={'table-content-list-cell-' + column.id}
+                                                                <TableCell
+                                                                    key={column.id}
+                                                                    classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                    data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
                                                                     <Typography noWrap variant="body2" color="inherit">
                                                                         {n[column.id]}
@@ -310,24 +363,25 @@ export class ContentListTable extends React.Component {
                                                             );
                                                         })}
                                                         {showActions &&
-                                                        <TableCell
-                                                            padding="none"
-                                                            classes={this.getCellClasses(n, classes, 'actions', isSelected, isPreviewOpened)}
-                                                            data-cm-role="table-content-list-cell-actions"
-                                                        >
-                                                            <DisplayActions
-                                                                target="tableActions"
-                                                                context={{path: n.path}}
-                                                                render={iconButtonRenderer({
-                                                                    color: 'inherit',
-                                                                    disableRipple: true
-                                                                }, true)}
-                                                            />
-                                                        </TableCell>
+                                                            <TableCell
+                                                                padding="none"
+                                                                classes={this.getCellClasses(n, classes, 'actions', isSelected, isPreviewOpened)}
+                                                                data-cm-role="table-content-list-cell-actions"
+                                                            >
+                                                                <DisplayActions
+                                                                    target="tableActions"
+                                                                    context={{path: n.path}}
+                                                                    render={iconButtonRenderer({
+                                                                        color: 'inherit',
+                                                                        disableRipple: true
+                                                                    }, true)}
+                                                                />
+                                                            </TableCell>
                                                         }
                                                     </TableRow>
                                                 );
-                                            })}
+                                            })
+                                    }
                                 </UploadTransformComponent>
                             )}
                         </DxContext.Consumer>
@@ -384,7 +438,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onRowSelected: selection => dispatch(cmSetSelection(selection)),
-    setPath: (path, params) => dispatch(cmGoto({path, params})),
+    setPath: (siteKey, path, mode) => {
+        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
+        dispatch(cmGoto({path}));
+    },
     setCurrentPage: page => dispatch(cmSetPage(page)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
     setSort: state => dispatch(cmSetSort(state)),

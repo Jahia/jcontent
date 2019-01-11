@@ -72,22 +72,38 @@ class BrowsingQueryHandler {
         return getNodeSubTree;
     }
 
-    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort, treeState) {
+    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
         const type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
+
+        const paramsByBrowseType = {
+            pages: {
+                recursionTypesFilter: ['jnt:page'],
+                typeFilter: [ContentManagerConstants.contentType, 'jnt:page']
+            },
+            contents: {
+                recursionTypesFilter: ['jnt:contentFolder'],
+                typeFilter: [ContentManagerConstants.contentType, 'jnt:contentFolder']
+            }
+        };
+
         return {
             path: path,
             language: lang,
             displayLanguage: uiLang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: browseType[treeState ? 'open' : 'hidden'][type].typeFilter || 'jnt:contentFolder',
-            recursionTypesFilter: browseType[treeState ? 'open' : 'hidden'][type].recursionTypesFilter || ContentManagerConstants.contentType,
+            typeFilter: paramsByBrowseType[type].typeFilter,
+            recursionTypesFilter: paramsByBrowseType[type].recursionTypesFilter,
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
-            ...getGroupingConfiguration(treeState)
+            fieldGrouping: {
+                fieldName: 'primaryNodeType.name',
+                groups: paramsByBrowseType[type].recursionTypesFilter,
+                groupingType: 'START'
+            }
         };
     }
 
@@ -101,21 +117,25 @@ class FilesQueryHandler {
         return filesQuery;
     }
 
-    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort, treeState) {
+    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
         return {
             path: path,
             language: lang,
             displayLanguage: uiLang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: treeState ? 'jnt:file' : ['jnt:file', 'jnt:folder'],
+            typeFilter: ['jnt:file', 'jnt:folder'],
             recursionTypesFilter: 'jnt:folder',
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
-            ...getGroupingConfiguration(treeState)
+            fieldGrouping: {
+                fieldName: 'primaryNodeType.name',
+                groups: ['jnt:folder'],
+                groupingType: 'START'
+            }
         };
     }
 
@@ -182,22 +202,11 @@ class Sql2SearchQueryHandler {
     }
 }
 
-const browseType = {
-    open: {
-        pages: {recursionTypesFilter: ['jnt:page'], typeFilter: [ContentManagerConstants.contentType]},
-        contents: {recursionTypesFilter: ['jnt:contentFolder'], typeFilter: [ContentManagerConstants.contentType]}
-    },
-    hidden: {
-        pages: {recursionTypesFilter: ['jnt:page'], typeFilter: [ContentManagerConstants.contentType, 'jnt:page']},
-        contents: {recursionTypesFilter: ['jnt:contentFolder'], typeFilter: [ContentManagerConstants.contentType, 'jnt:contentFolder']}
-    }
-};
-
 const getNodeSubTree = gql`
-    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!,$fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
         jcr {
             results: nodeByPath(path: $path) {
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                     pageInfo {
                         totalCount
                     }
@@ -245,12 +254,12 @@ const sql2SearchContentQuery = gql`
 `;
 
 const filesQuery = gql`
-    query Files($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+    query getFiles($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
         jcr {
             results: nodeByPath(path: $path) {
                 uuid
                 workspace
-                descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi:ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                descendants(offset: $offset, limit: $limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                     pageInfo {
                         totalCount
                     }
@@ -272,7 +281,7 @@ const filesQuery = gql`
 `;
 
 const GetNodeAndChildrenByPathQuery = gql`
-    query GetNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
+    query getNodeByPathQuery($path: String!, $language: String!, $displayLanguage:String!) {
         jcr {
             results: nodeByPath(path: $path) {
                 ...NodeFields
@@ -286,10 +295,6 @@ const GetNodeAndChildrenByPathQuery = gql`
     }
     ${nodeFields}
 `;
-
-function getGroupingConfiguration(treeState) {
-    return !treeState ? {fieldGrouping: {fieldName: 'primaryNodeType.name', groups: ['jnt:page', 'jnt:folder', 'jnt:contentFolder'], groupingType: 'START'}} : {};
-}
 
 export {
     BrowsingQueryHandler,

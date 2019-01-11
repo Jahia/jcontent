@@ -89,7 +89,7 @@ const styles = theme => ({
         color: theme.palette.text.contrastText + '!important',
         background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, ' + theme.palette.layout.main + ' 100%) !important;',
         '& a': {
-            color: 'inherit!important'
+            color: 'inherit !important'
         }
     }
 });
@@ -124,27 +124,27 @@ export class ContentLayout extends React.Component {
                         <TopBar mode={mode}/>
                     </Grid>
                 </Grid>
-                <ContentData setRefetch={this.setContentRefetcher} treeShown={open}>
+                <ContentData setRefetch={this.setContentRefetcher}>
                     {({rows, contentNotFound, totalCount}) => (
                         <div className={classes.appFrame}>
-                            <Drawer variant="persistent"
-                                    anchor="left"
-                                    open={treeOpen}
-                                    classes={{
-                                        root: classes.treeDrawer,
-                                        paper: classes.treeDrawerPaper
-                                    }}
+                            <Drawer
+                                variant="persistent"
+                                anchor="left"
+                                open={treeOpen}
+                                classes={{
+                                    root: classes.treeDrawer,
+                                    paper: classes.treeDrawerPaper
+                                }}
                             >
-                                <ContentTrees isOpen={treeOpen}
-                                              setRefetch={this.setTreeRefetcher}
-                                />
+                                <ContentTrees isOpen={treeOpen} setRefetch={this.setTreeRefetcher}/>
                             </Drawer>
                             <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
-                            <div className={classNames(classes.content, {
-                                [classes.contentLeftShift]: treeOpen,
-                                [classes.contentRightShift]: previewOpen
-                            })}
-                                 onContextMenu={event => contextualMenu.current.open(event)}
+                            <div
+                                className={classNames(classes.content, {
+                                    [classes.contentLeftShift]: treeOpen,
+                                    [classes.contentRightShift]: previewOpen
+                                })}
+                                onContextMenu={event => contextualMenu.current.open(event)}
                             >
                                 <Paper>
                                     {mode === ContentManagerConstants.mode.FILES && filesMode === 'grid' ?
@@ -153,19 +153,22 @@ export class ContentLayout extends React.Component {
                                     }
                                 </Paper>
                             </div>
-                            <Drawer data-cm-role="preview-drawer"
-                                    variant="persistent"
-                                    anchor="right"
-                                    open={previewOpen}
-                                    classes={{
-                                        root: classNames(classes.previewDrawer, {[classes.previewDrawerHidden]: !previewOpen}),
-                                        paper: classNames({
-                                            [classes.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
-                                            [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
-                                        })
-                                    }}
+                            <Drawer
+                                data-cm-role="preview-drawer"
+                                variant="persistent"
+                                anchor="right"
+                                open={previewOpen}
+                                classes={{
+                                    root: classNames(classes.previewDrawer, {[classes.previewDrawerHidden]: !previewOpen}),
+                                    paper: classNames({
+                                        [classes.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
+                                        [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
+                                    })
+                                }}
                             >
-                                {previewOpen && <PreviewDrawer selection={rows.find(node => node.path === selection)}/>}
+                                {previewOpen &&
+                                    <PreviewDrawer selection={rows.find(node => node.path === selection)}/>
+                                }
                             </Drawer>
                         </div>
                     )}

@@ -9,7 +9,7 @@ export default class NoPreviewComponent extends React.Component {
             <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>
                 <Paper elevation={1} className={classes.contentContainer} classes={{root: classes.contentPaper}}>
                     <Typography variant="h5">
-                        {t('label.contentManager.contentPreview.noViewAvailable')}
+                        {t('label.contentManager.contentPreview.noContentSelected')}
                     </Typography>
                 </Paper>
             </div>

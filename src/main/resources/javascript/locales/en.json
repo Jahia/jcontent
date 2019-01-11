@@ -158,6 +158,7 @@
                 "cut": "Cut",
                 "lockNode": "Lock content",
                 "noViewAvailable": "No preview available",
+                "noContentSelected": "Select a content item to preview it",
                 "paste": "Paste",
                 "delete": "Delete",
                 "translate": "Translate",

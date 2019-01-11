@@ -157,6 +157,7 @@
                 "cut": "Couper",
                 "lockNode": "Verrouiller le contenu",
                 "noViewAvailable": "Aperçu non disponible",
+                "noContentSelected": "Sélectionnez un contenu pour le prévisualiser",
                 "paste": "Coller",
                 "delete": "Supprimer",
                 "translate": "Traduire",

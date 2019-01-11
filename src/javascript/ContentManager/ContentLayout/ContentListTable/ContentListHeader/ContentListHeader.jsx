@@ -6,7 +6,7 @@ import {compose} from 'react-apollo';
 
 export class ContentListHeader extends React.Component {
     render() {
-        const {order, orderBy, columnData, t, classes, setSort, showActions} = this.props;
+        const {order, orderBy, columnData, t, classes, setSort} = this.props;
         let direction = order === 'DESC' ? 'ASC' : 'DESC';
         return (
             <TableHead>
@@ -44,11 +44,6 @@ export class ContentListHeader extends React.Component {
                             </TableCell>
                         );
                     }, this)}
-                    {showActions &&
-                        <TableCell component="th" scope="row" className={classes.actionsCell}>
-                            <Typography variant="subtitle2">Actions</Typography>
-                        </TableCell>
-                    }
                 </TableRow>
             </TableHead>
         );

@@ -250,71 +250,34 @@ export class Upload extends React.Component {
     }
 
     headerButton() {
-        const {panelState, uploads, status, classes} = this.props;
+        const {panelState, status, classes} = this.props;
 
-        if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.VISIBLE) {
+        if (status === uploadsStatuses.NOT_STARTED || status === uploadsStatuses.UPLOADED) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton color="secondary" onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
-                        <FullscreenExit/>
+                    <IconButton color={(status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) ? 'secondary' : 'default'} data-cm-role="upload-close-button" onClick={() => this.closePanelAndClearUploads()}>
+                        <Close/>
                     </IconButton>
                 </div>
             );
         }
-        if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.PARTIALLY_VISIBLE) {
-            return (
-                <div className={classes.buttonHolder}>
-                    <IconButton color="secondary" onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
+
+        return (
+            <div className={classes.buttonHolder}>
+                <IconButton color={(panelState === panelStates.VISIBLE) ? 'secondary' : 'default'}
+                            onClick={() => {
+                                    const newState = (panelState === panelStates.PARTIALLY_VISIBLE) ? panelStates.VISIBLE : panelStates.PARTIALLY_VISIBLE;
+                                    this.props.dispatch(setPanelState(newState));
+                                }
+                            }
+                >
+                    {(panelState === panelStates.VISIBLE) ?
+                        <FullscreenExit/> :
                         <Fullscreen/>
-                    </IconButton>
-                </div>
-            );
-        }
-        if (status === uploadsStatuses.NOT_STARTED) {
-            return (
-                <div className={classes.buttonHolder}>
-                    <IconButton onClick={() => this.closePanelAndClearUploads()}>
-                        <Close/>
-                    </IconButton>
-                </div>
-            );
-        }
-        if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.VISIBLE) {
-            return (
-                <div className={classes.buttonHolder}>
-                    <IconButton color="secondary" onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
-                        <FullscreenExit/>
-                    </IconButton>
-                </div>
-            );
-        }
-        if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.PARTIALLY_VISIBLE) {
-            return (
-                <div className={classes.buttonHolder}>
-                    <IconButton onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
-                        <Fullscreen/>
-                    </IconButton>
-                </div>
-            );
-        }
-        if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
-            return (
-                <div className={classes.buttonHolder}>
-                    <IconButton color="secondary" onClick={() => this.closePanelAndClearUploads()}>
-                        <Close/>
-                    </IconButton>
-                </div>
-            );
-        }
-        if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
-            return (
-                <div className={classes.buttonHolder}>
-                    <IconButton onClick={() => this.closePanelAndClearUploads()}>
-                        <Close/>
-                    </IconButton>
-                </div>
-            );
-        }
+                    }
+                </IconButton>
+            </div>
+        );
     }
 
     closePanelAndClearUploads() {
@@ -380,6 +343,7 @@ export class Upload extends React.Component {
                     <Typography gutterBottom={!isPartiallyVisible}
                                 className={classNames(isPartiallyVisible && classes.contentColor)}
                                 color="textSecondary"
+                                data-cm-role="upload-status-uploading"
                     >
                         {t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}
                     </Typography>
@@ -401,6 +365,7 @@ export class Upload extends React.Component {
                     <Typography gutterBottom={!isPartiallyVisible}
                                 className={classNames(isPartiallyVisible && classes.contentColor)}
                                 color="textSecondary"
+                                data-cm-role="upload-status-error"
                     >
                         {t('label.contentManager.fileUpload.errorMessage')}
                     </Typography>
@@ -431,6 +396,7 @@ export class Upload extends React.Component {
                 <Typography gutterBottom={!isPartiallyVisible}
                             className={classNames(isPartiallyVisible && classes.contentColor)}
                             color="textSecondary"
+                            data-cm-role="upload-status-success"
                 >
                     {t('label.contentManager.fileUpload.successfulUploadMessage', {count: status.total, number: status.total})}
                 </Typography>

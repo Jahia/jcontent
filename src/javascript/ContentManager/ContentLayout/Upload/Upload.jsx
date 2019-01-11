@@ -25,7 +25,7 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'flex-end',
         flexDirection: 'row',
-        padding: '0 8px',
+        padding: '0 ' + theme.spacing.unit + 'px',
         ...theme.mixins.toolbar
     },
     buttonHolder: {
@@ -52,13 +52,46 @@ const styles = theme => ({
         overflowX: 'none'
     },
     drawerContentOrange: {
-        'background-color': theme.palette.secondary.main
+        backgroundColor: theme.palette.secondary.main,
+        '&$drawerContentPartial': {
+            '& $contentColor': {
+                color: theme.palette.getContrastText(theme.palette.secondary.main)
+            },
+            '& $buttonHolder': {
+                '& button': {
+                    color: theme.palette.getContrastText(theme.palette.secondary.main)
+                }
+            }
+        }
     },
     drawerContentGreen: {
-        'background-color': theme.palette.valid.main
+        backgroundColor: theme.palette.valid.main,
+        '&$drawerContentPartial': {
+            '& $contentColor': {
+                color: theme.palette.getContrastText(theme.palette.valid.main)
+            },
+            '& $buttonHolder': {
+                '& button': {
+                    color: theme.palette.getContrastText(theme.palette.valid.main)
+                }
+            }
+        }
     },
     drawerContentRed: {
-        'background-color': theme.palette.error.main
+        backgroundColor: theme.palette.error.main,
+        '&$drawerContentPartial': {
+            '& $contentColor': {
+                color: theme.palette.getContrastText(theme.palette.error.main)
+            },
+            '& $buttonHolder': {
+                '& button': {
+                    color: theme.palette.getContrastText(theme.palette.error.main)
+                }
+            }
+        }
+    },
+    contentColor: {
+        color: theme.palette.text.secondary
     },
     drawerContentFull: {
         height: 350
@@ -71,20 +104,19 @@ const styles = theme => ({
         width: '100%'
     },
     statusIconRed: {
-        marginRight: 10,
+        marginRight: theme.spacing.unit,
         color: theme.palette.error.main
     },
     statusIconGreen: {
-        marginRight: 10,
+        marginRight: theme.spacing.unit,
         color: theme.palette.valid.main
     },
     statusIconOrange: {
-        marginRight: 10,
+        marginRight: theme.spacing.unit,
         color: theme.palette.secondary.main
     },
-    statusIconWhite: {
-        marginRight: 10,
-        color: theme.palette.text.secondary
+    statusErrorText: {
+        marginLeft: theme.spacing.unit
     }
 });
 
@@ -101,7 +133,7 @@ export class Upload extends React.Component {
             active: {
                 display: 'block',
                 position: 'absolute',
-                backgroundColor: '#E67D3A',
+                backgroundColor: props.theme.palette.secondary.main,
                 opacity: '0.4',
                 pointerEvents: 'none'
             },
@@ -223,7 +255,7 @@ export class Upload extends React.Component {
         if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.VISIBLE) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
+                    <IconButton color="secondary" onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
                         <FullscreenExit/>
                     </IconButton>
                 </div>
@@ -232,7 +264,7 @@ export class Upload extends React.Component {
         if (uploads.length !== 0 && status === uploadsStatuses.NOT_STARTED && panelState === panelStates.PARTIALLY_VISIBLE) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
+                    <IconButton color="secondary" onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
                         <Fullscreen/>
                     </IconButton>
                 </div>
@@ -241,7 +273,7 @@ export class Upload extends React.Component {
         if (status === uploadsStatuses.NOT_STARTED) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
+                    <IconButton onClick={() => this.closePanelAndClearUploads()}>
                         <Close/>
                     </IconButton>
                 </div>
@@ -250,7 +282,7 @@ export class Upload extends React.Component {
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.VISIBLE) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
+                    <IconButton color="secondary" onClick={() => this.props.dispatch(setPanelState(panelStates.PARTIALLY_VISIBLE))}>
                         <FullscreenExit/>
                     </IconButton>
                 </div>
@@ -259,7 +291,7 @@ export class Upload extends React.Component {
         if ((status === uploadsStatuses.UPLOADING || status === uploadsStatuses.HAS_ERROR) && panelState === panelStates.PARTIALLY_VISIBLE) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: 'whitesmoke'}} onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
+                    <IconButton onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}>
                         <Fullscreen/>
                     </IconButton>
                 </div>
@@ -268,7 +300,7 @@ export class Upload extends React.Component {
         if (status === uploadsStatuses.UPLOADED && panelState === panelStates.VISIBLE) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: '#E67D3A'}} onClick={() => this.closePanelAndClearUploads()}>
+                    <IconButton color="secondary" onClick={() => this.closePanelAndClearUploads()}>
                         <Close/>
                     </IconButton>
                 </div>
@@ -277,7 +309,7 @@ export class Upload extends React.Component {
         if (status === uploadsStatuses.UPLOADED && panelStates.PARTIALLY_VISIBLE) {
             return (
                 <div className={classes.buttonHolder}>
-                    <IconButton style={{color: 'whitesmoke'}} onClick={() => this.closePanelAndClearUploads()}>
+                    <IconButton onClick={() => this.closePanelAndClearUploads()}>
                         <Close/>
                     </IconButton>
                 </div>
@@ -343,13 +375,19 @@ export class Upload extends React.Component {
                 <Typography variant="h3"
                             className={classNames(classes.headerText, isPartiallyVisible && classes.justifyCenter)}
                 >
-                    <CircularProgress size={isPartiallyVisible ? 20 : 40} className={isPartiallyVisible ? classes.statusIconWhite : classes.statusIconOrange}/>
+                    <CircularProgress size={isPartiallyVisible ? 20 : 40}
+                                      className={classNames(classes.statusIconOrange, isPartiallyVisible && classes.contentColor)}/>
                     <Typography gutterBottom={!isPartiallyVisible}
-                                className={classNames(isPartiallyVisible && classes.statusIconWhite)}
+                                className={classNames(isPartiallyVisible && classes.contentColor)}
+                                color="textSecondary"
                     >
                         {t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}
                     </Typography>
-                    { (!isPartiallyVisible && status.error !== 0) && <div>{t('label.contentManager.fileUpload.uploadingActionMessage')}</div> }
+                    { (!isPartiallyVisible && status.error !== 0) &&
+                        <Typography gutterBottom color="textSecondary">
+                            {t('label.contentManager.fileUpload.uploadingActionMessage')}
+                        </Typography>
+                    }
                 </Typography>
             );
         }
@@ -358,22 +396,28 @@ export class Upload extends React.Component {
                 <Typography variant="h3"
                             className={classNames(classes.headerText, isPartiallyVisible && classes.justifyCenter)}
                 >
-                    <Info className={isPartiallyVisible ? classes.statusIconWhite : classes.statusIconRed}
+                    <Info className={classNames(classes.statusIconRed, isPartiallyVisible && classes.contentColor)}
                           fontSize={isPartiallyVisible ? 'default' : 'large'}/>
                     <Typography gutterBottom={!isPartiallyVisible}
-                                className={classNames(isPartiallyVisible && classes.statusIconWhite)}
+                                className={classNames(isPartiallyVisible && classes.contentColor)}
+                                color="textSecondary"
                     >
                         {t('label.contentManager.fileUpload.errorMessage')}
                     </Typography>
-                    {isPartiallyVisible ?
-                        <a className={classes.statusIconWhite}
-                           href="#"
-                           onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}
-                        >
-                            {t('label.contentManager.fileUpload.errorActionMessage')}
-                        </a> :
-                        <div>{t('label.contentManager.fileUpload.errorActionMessage')}</div>
-                    }
+                    <Typography gutterBottom={!isPartiallyVisible}
+                                className={classNames(classes.statusErrorText, isPartiallyVisible && classes.contentColor)}
+                                color="textSecondary"
+                    >
+                        {isPartiallyVisible ?
+                            <a className={classes.contentColor}
+                               href="#"
+                               onClick={() => this.props.dispatch(setPanelState(panelStates.VISIBLE))}
+                            >
+                                {t('label.contentManager.fileUpload.errorActionMessage')}
+                            </a> :
+                            t('label.contentManager.fileUpload.errorActionMessage')
+                        }
+                    </Typography>
                 </Typography>
             );
         }
@@ -382,10 +426,11 @@ export class Upload extends React.Component {
             <Typography variant="h3"
                         className={classNames(classes.headerText, isPartiallyVisible && classes.justifyCenter)}
             >
-                <CheckCircle className={isPartiallyVisible ? classes.statusIconWhite : classes.statusIconGreen}
+                <CheckCircle className={classNames(classes.statusIconGreen, isPartiallyVisible && classes.contentColor)}
                              fontSize={isPartiallyVisible ? 'default' : 'large'}/>
-                <Typography className={classNames(isPartiallyVisible && classes.statusIconWhite)}
-                            gutterBottom={!isPartiallyVisible}
+                <Typography gutterBottom={!isPartiallyVisible}
+                            className={classNames(isPartiallyVisible && classes.contentColor)}
+                            color="textSecondary"
                 >
                     {t('label.contentManager.fileUpload.successfulUploadMessage', {count: status.total, number: status.total})}
                 </Typography>
@@ -434,6 +479,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default compose(
-    withStyles(styles),
+    withStyles(styles, {withTheme: true}),
     translate(),
     connect(mapStateToProps, mapDispatchToProps))(Upload);

@@ -13,7 +13,7 @@ import {isImageFile} from '../../FilesGrid/FilesGrid.utils';
 import {translate} from 'react-i18next';
 import {ellipsizeText} from '../../../ContentManager.utils';
 
-const styles = () => ({
+const styles = theme => ({
     progressText: {
         display: 'flex',
         justifyContent: 'start',
@@ -23,33 +23,36 @@ const styles = () => ({
     },
     fileNameText: {
         width: 350,
-        // MaxWidth: 350,
         '& span': {
-            color: '#555'
+            color: theme.palette.text.secondary
         }
     },
     statusIcon: {
-        marginRight: 10
+        marginRight: theme.spacing.unit
     },
     statusIconRed: {
-        marginRight: 10,
-        color: '#aa0022'
+        marginRight: theme.spacing.unit,
+        color: theme.palette.error.main
     },
     statusIconGreen: {
-        marginRight: 10,
-        color: '#51a522'
+        marginRight: theme.spacing.unit,
+        color: theme.palette.valid.main
     },
     statusIconOrange: {
-        marginRight: 10,
-        color: '#E67D3A'
+        marginRight: theme.spacing.unit,
+        color: theme.palette.secondary.main
     },
     renameField: {
-        marginLeft: 5,
-        marginRight: 5,
-        width: 250
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 250,
+        '& label': {
+            color: theme.palette.text.secondary
+        }
     },
     actionButton: {
-        color: '#555'
+        margin: theme.spacing.unit,
+        color: theme.palette.text.secondary
     }
 });
 
@@ -102,7 +105,7 @@ export class UploadItem extends React.Component {
                 >
                     <TextField
                         label={t('label.contentManager.fileUpload.newName')}
-                        className={`${classes.textField} ${classes.renameField}`}
+                        className={classes.renameField}
                         type="text"
                         name="newName"
                         margin="normal"

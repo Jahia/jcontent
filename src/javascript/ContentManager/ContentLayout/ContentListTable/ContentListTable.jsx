@@ -78,6 +78,11 @@ const styles = theme => ({
             backgroundColor: theme.palette.background.default
         }
     },
+    rowCursor: {
+        '&&:hover': {
+            cursor: 'pointer'
+        }
+    },
     selectedRow: {
         '&&&': {
             backgroundColor: theme.palette.primary.main,
@@ -206,7 +211,7 @@ export class ContentListTable extends React.Component {
                                                         key={n.uuid}
                                                         hover
                                                         classes={{
-                                                            root: classes.row,
+                                                            root: classNames(classes.row, {[classes.rowCursor]: isPreviewOpened}),
                                                             selected: selectedRow
                                                         }}
                                                         data-cm-node-path={n.path}

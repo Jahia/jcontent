@@ -50,6 +50,8 @@ const allColumnData = [
 
 const reducedColumnData = [
     {id: 'name', label: 'label.contentManager.listColumns.name', sortable: true, property: 'displayName'},
+    {id: 'wip', label: '', sortable: false, property: ''},
+    {id: 'lock', label: '', sortable: false, property: ''},
     {
         id: 'lastModified',
         label: 'label.contentManager.listColumns.lastModified',
@@ -118,9 +120,10 @@ const styles = theme => ({
 });
 
 export class ContentListTable extends React.Component {
-    getCellClasses(node, classes, column, isSelected) {
+    getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
+        let selected = isSelected && isPreviewOpened;
         let cellClasses = {
-            root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: isSelected, [classes[column + 'CellSelected']]: isSelected, [classes.isDeleted]: isMarkedForDeletion(node)})
+            root: classNames(classes.cell, classes[column + 'Cell'], {[classes.selectedCell]: selected, [classes[column + 'CellSelected']]: selected, [classes.isDeleted]: isMarkedForDeletion(node)})
         };
         return cellClasses;
     }
@@ -140,31 +143,23 @@ export class ContentListTable extends React.Component {
         return (!icon.includes('.png') ? icon + '.png' : icon);
     }
 
-    renderLock(row, isSelected) {
-        let {classes, t} = this.props;
+    renderLock(row) {
+        let {t} = this.props;
         return row.isLocked ?
             <Tooltip title={t('label.contentManager.locked')}>
                 <Lock
                       fontSize="small"
-                      color="inherit"
-                      className={classNames({
-                    [classes.statusIconSelected]: isSelected,
-                    [classes.statusIcon]: !isSelected
-                })}/>
+                      color="inherit"/>
             </Tooltip> : null;
     }
 
-    renderWip(row, dxContext, isSelected) {
-        let {classes, t, lang} = this.props;
+    renderWip(row, dxContext) {
+        let {t, lang} = this.props;
         if (this.isWip(row, lang)) {
             return (
                 <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
                     <VirtualsiteIcon fontSize="small"
-                                     color="inherit"
-                                     className={classNames({
-                        [classes.statusIconSelected]: isSelected,
-                        [classes.statusIcon]: !isSelected
-                    })}/>
+                                     color="inherit"/>
                 </Tooltip>
             );
         }
@@ -178,6 +173,8 @@ export class ContentListTable extends React.Component {
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let showActions = previewState !== CM_DRAWER_STATES.SHOW;
+        let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+        let selectedRow = isPreviewOpened ? classes.selectedRow : '';
         return (
             <Paper>
                 <BrowseBar/>
@@ -198,9 +195,9 @@ export class ContentListTable extends React.Component {
                                         <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> : _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData}
                                                       translate={t}/> : rows.map(n => {
-                                                let isSelected = n.path === selection;
-                                                let renderWip = this.renderWip(n, dxContext, isSelected);
-                                                let renderLock = this.renderLock(n, isSelected);
+                                                let isSelected = n.path === selection && isPreviewOpened;
+                                                let renderWip = this.renderWip(n, dxContext);
+                                                let renderLock = this.renderLock(n);
                                                 let icon = this.addIconSuffix(n.icon);
                                                 // Let isDeleted = isMarkedForDeletion(n);
                                                 let contextualMenu = React.createRef();
@@ -210,7 +207,7 @@ export class ContentListTable extends React.Component {
                                                         hover
                                                         classes={{
                                                             root: classes.row,
-                                                            selected: classes.selectedRow
+                                                            selected: selectedRow
                                                         }}
                                                         data-cm-node-path={n.path}
                                                         data-cm-role="table-content-list-row"
@@ -233,7 +230,7 @@ export class ContentListTable extends React.Component {
                                                             <PublicationStatus node={n} classes={{root: classes.publicationStatus}}/>
                                                         </TableCell>
                                                         <TableCell padding="checkbox"
-                                                                   classes={this.getCellClasses(n, classes, 'checkbox', isSelected)}
+                                                                   classes={this.getCellClasses(n, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                         >
                                                             <Checkbox checked={false}/>
                                                         </TableCell>
@@ -241,7 +238,7 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'name') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                                data-cm-role="table-content-list-cell-name"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
@@ -254,7 +251,7 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'wip') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                                padding="none"
                                                                     >{renderWip}
                                                                     </TableCell>
@@ -263,7 +260,7 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'lock') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                                padding="none"
                                                                     >{renderLock}
                                                                     </TableCell>
@@ -272,7 +269,7 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'type') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                                data-cm-role="table-content-list-cell-type"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
@@ -284,7 +281,7 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'lastModified') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected)}
+                                                                               classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                                data-cm-role={'table-content-list-cell-' + column.id}
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
@@ -298,7 +295,7 @@ export class ContentListTable extends React.Component {
                                                             }
                                                             return (
                                                                 <TableCell key={column.id}
-                                                                           classes={this.getCellClasses(n, classes, column.id, isSelected)}
+                                                                           classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                            data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
                                                                     <Typography noWrap variant="body2" color="inherit">
@@ -310,7 +307,7 @@ export class ContentListTable extends React.Component {
                                                         {showActions &&
                                                         <TableCell
                                                             padding="none"
-                                                            classes={this.getCellClasses(n, classes, 'actions', isSelected)}
+                                                            classes={this.getCellClasses(n, classes, 'actions', isSelected, isPreviewOpened)}
                                                             data-cm-role="table-content-list-cell-actions"
                                                         >
                                                             <DisplayActions

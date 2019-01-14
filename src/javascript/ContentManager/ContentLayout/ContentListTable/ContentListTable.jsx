@@ -169,13 +169,18 @@ export class ContentListTable extends React.Component {
         this.state = {
             hover: ''
         };
-        this.hoverOn = this.hoverOn.bind(this);
+        this.onRowHover = this.onRowHover.bind(this);
+        this.onHoverExit = this.onHoverExit.bind(this);
     }
 
-    hoverOn(path) {
+    onRowHover(path) {
         this.setState({
             hover: path
         });
+    }
+
+    onHoverExit() {
+        this.setState({hover: ''});
     }
 
     getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
@@ -263,7 +268,8 @@ export class ContentListTable extends React.Component {
                                                             contextualMenu.current.open(event);
                                                         }}
                                                         onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
-                                                        onMouseEnter={() => this.hoverOn(node.path)}
+                                                        onMouseEnter={() => this.onRowHover(node.path)}
+                                                        onMouseLeave={this.onHoverExit}
                                                     >
                                                         <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
                                                         <TableCell

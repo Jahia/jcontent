@@ -18,7 +18,7 @@ export const Actions = ({classes, isHovered, node}) => {
     return isHovered &&
         <div className={classes.actionButtons}>
             <DisplayActions
-                target="tableMenuActions"
+                target="contentActions"
                 filter={value => {
                     return _.includes(['edit', 'preview'], value.key);
                 }}
@@ -26,8 +26,13 @@ export const Actions = ({classes, isHovered, node}) => {
                 render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
             />
             <DisplayAction
-                actionKey="tableMenuActions"
-                context={{path: node.path}}
+                actionKey="contentMenu"
+                context={{
+                    path: node.path,
+                    menuFilter: value => {
+                        return !_.includes(['edit', 'preview'], value.key);
+                    }
+                }}
                 render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
             />
         </div>;

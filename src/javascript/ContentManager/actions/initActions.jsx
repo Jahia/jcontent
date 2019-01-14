@@ -3,8 +3,17 @@ import {menuAction} from '@jahia/react-material';
 import ContentIcon from './ContentIcon';
 import ManageIcon from './ManageIcon';
 import WorkflowIcon from './WorkflowIcon';
-import {Add, Delete, Edit, Error, Publish, Visibility, Lock, LockOpen} from '@material-ui/icons';
-import {ContentPaste, FolderMultipleImage, Account, AccountGroup, Web, ShieldKey, TagMultiple, DotsVertical} from 'mdi-material-ui';
+import {Add, Delete, Edit, Error, Lock, LockOpen, Publish, Visibility} from '@material-ui/icons';
+import {
+    Account,
+    AccountGroup,
+    ContentPaste,
+    DotsVertical,
+    FolderMultipleImage,
+    ShieldKey,
+    TagMultiple,
+    Web
+} from 'mdi-material-ui';
 import ContentManagerConstants from '../ContentManager.constants';
 import createContentOfTypeAction from './createContentOfTypeAction';
 import createContentAction from './createContentAction';
@@ -31,7 +40,6 @@ import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 import translateAction from './translateAction';
 import translateMenuAction from './translateMenuAction';
-import * as _ from 'lodash';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -51,7 +59,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.edit',
-        target: ['tableMenuActions:2'],
+        target: ['contentActions:2'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -59,61 +67,37 @@ function initActions(actionsRegistry) {
         buttonIcon: <Visibility/>,
         buttonLabel: 'label.contentManager.contentPreview.preview',
         hideOnNodeTypes: ['jnt:page', 'jnt:virtualsite'],
-        target: ['tableMenuActions:1']
+        target: ['contentActions:1']
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
         buttonLabel: 'label.contentManager.create.contentFolder',
-        target: ['createMenuActions:3', 'tableMenuActions:2'],
+        target: ['createMenuActions:3', 'contentActions:2'],
         contentType: 'jnt:contentFolder',
         showOnNodeTypes: ['jnt:contentFolder']
     });
     actionsRegistry.add('createContent', createContentAction, {
         buttonLabel: 'label.contentManager.create.content',
-        target: ['createMenuActions:3.1', 'tableMenuActions:3'],
+        target: ['createMenuActions:3.1', 'contentActions:3'],
         showOnNodeTypes: ['jnt:contentFolder'],
         baseContentType: ContentManagerConstants.contentType
     });
     actionsRegistry.add('createFolder', createContentOfTypeAction, {
         buttonLabel: 'label.contentManager.create.folder',
-        target: ['createMenuActions:3', 'tableMenuActions:3'],
+        target: ['createMenuActions:3', 'contentActions:3'],
         contentType: 'jnt:folder'
     });
     actionsRegistry.add('fileUpload', fileUploadAction, {
         buttonLabel: 'label.contentManager.fileUpload.uploadButtonLabel',
-        target: ['createMenuActions:4', 'tableMenuActions:4'],
+        target: ['createMenuActions:4', 'contentActions:4'],
         contentType: 'jnt:file'
     });
     actionsRegistry.add('translateMenu', translateMenuAction, {
         buttonLabel: 'label.contentManager.contentPreview.translate',
-        target: ['tableMenuActions:4.5'],
+        target: ['contentActions:4.5'],
         menu: 'translateMenu'
     });
     actionsRegistry.add('translateAction', translateAction, {
         target: ['translateMenu']
-    });
-    actionsRegistry.add('tableMenuActions', menuAction, {
-        buttonIcon: <DotsVertical/>,
-        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        menuFilter: value => {
-            return !_.includes(['edit', 'preview'], value.key);
-        },
-        menu: 'tableMenuActions'
-    });
-    actionsRegistry.add('previewFooterMenuActions', menuAction, {
-        buttonIcon: <DotsVertical/>,
-        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        menuFilter: value => {
-            return !_.includes(['edit', 'publishMenu', 'preview'], value.key);
-        },
-        menu: 'tableMenuActions'
-    });
-    actionsRegistry.add('contentTreeActions', menuAction, {
-        buttonIcon: <DotsVertical/>,
-        menuFilter: value => {
-            return !_.includes(['preview', 'lock'], value.key);
-        },
-        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        menu: 'tableMenuActions'
     });
     actionsRegistry.add('publish', publishAction, {
         buttonIcon: <Publish/>,
@@ -128,7 +112,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['tableMenuActions:6'],
+        target: ['contentActions:6'],
         hideOnNodeTypes: ['jnt:contentFolder'],
         menu: 'publishMenu'
     });
@@ -165,7 +149,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['tableMenuActions:4.2'],
+        target: ['contentActions:4.2'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {
@@ -187,10 +171,10 @@ function initActions(actionsRegistry) {
         checkForUnpublication: true,
         checkIfLanguagesMoreThanOne: false
     });
-    actionsRegistry.add('contextualMenuContent', menuAction, {
-        iconButton: <DotsVertical/>,
+    actionsRegistry.add('contentMenu', menuAction, {
+        buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        menu: 'tableMenuActions'
+        menu: 'contentActions'
     });
     actionsRegistry.add('duplicate', {
         buttonIcon: <Edit/>,
@@ -200,42 +184,42 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
-        target: ['tableMenuActions:3.8'],
+        target: ['contentActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('paste', pasteAction, {
         buttonIcon: <ContentPaste/>,
         buttonLabel: 'label.contentManager.contentPreview.paste',
-        target: ['copyPasteActions:3.8', 'tableHeaderActions:1'],
+        target: ['tableHeaderActions:1'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS]
     });
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <Error/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
-        target: ['tableMenuActions:3.9'],
+        target: ['contentActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
-        target: ['tableMenuActions:4'],
+        target: ['contentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.deletePermanently',
-        target: ['tableMenuActions:4'],
+        target: ['contentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('undelete', undeleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.undelete',
-        target: ['tableMenuActions:4.1'],
+        target: ['contentActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -249,19 +233,19 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
-        target: ['tableMenuActions:5'],
+        target: ['contentActions:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
-        target: ['tableMenuActions:5'],
+        target: ['contentActions:5'],
         hideOnNodeTypes: ['jnt:page'],
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks', clearAllLocksAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
-        target: ['tableMenuActions:5.5'],
+        target: ['contentActions:5.5'],
         hideOnNodeTypes: ['jnt:page']
     });
 
@@ -277,15 +261,6 @@ function initActions(actionsRegistry) {
         buttonIcon: <FolderMultipleImage/>,
         mode: 'browse-files'
     });
-    /*
-    SavedSearchesLeftMenu: {
-        priority : 3.0,
-        component: "sideMenuAction",
-        menuId : "leftMenuSavedSearchActions",
-        target: ["leftMenuActions"],
-        labelKey: 'label.contentManager.leftMenu.savedSearches',
-    },
-    */
     actionsRegistry.add('manageLeftMenu', sideMenuAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.title',
         // ButtonIcon: <Error/>,
@@ -294,14 +269,6 @@ function initActions(actionsRegistry) {
         menu: 'leftMenuManageActions',
         hasChildren: true
     });
-    // ActionsRegistry.add('bottomLeftMenu', {
-    //     component: "sideMenuAction",
-    //     // buttonIcon: <Error/>,
-    //     menuId: "bottomLeftMenuActions",
-    //     target: ["bottomLeftMenu"],
-    //     requiredPermission: "",
-    //     buttonLabel: 'label.contentManager.bottomLeftMenu'
-    // });
     actionsRegistry.add('workflowsLeftMenu', workflowDashboardAction, {
         buttonLabel: 'label.contentManager.leftMenu.workflow',
         buttonIcon: <WorkflowIcon/>,
@@ -350,12 +317,12 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('openInEditMode', openInEditModeAction, {
         buttonLabel: 'label.contentManager.actions.openInEditMode',
         buttonIcon: <Edit/>,
-        target: ['tableMenuActions'],
+        target: ['contentActions'],
         hideForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS, PATH_SYSTEM_SITE_AND_DESCENDANTS]
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',
-        target: ['tableMenuActions:0.5'],
+        target: ['contentActions:0.5'],
         hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']
     });
 }

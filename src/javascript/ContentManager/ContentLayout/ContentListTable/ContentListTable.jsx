@@ -265,7 +265,7 @@ export class ContentListTable extends React.Component {
                                                         onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
                                                         onMouseEnter={() => this.hoverOn(node.path)}
                                                     >
-                                                        <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: node.path}}/>
+                                                        <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
                                                         <TableCell
                                                             padding="none"
                                                             classes={{root: classes.publicationCell}}
@@ -346,7 +346,7 @@ export class ContentListTable extends React.Component {
                                                                         {showActions ?
                                                                             <React.Fragment>
                                                                                 <DisplayActions
-                                                                                target="tableMenuActions"
+                                                                                target="contentActions"
                                                                                 filter={value => {
                                                                                     return _.includes(['edit', 'preview'], value.key);
                                                                                 }}
@@ -357,8 +357,13 @@ export class ContentListTable extends React.Component {
                                                                                 }, true)}
                                                                             />
                                                                                 <DisplayAction
-                                                                                actionKey="tableMenuActions"
-                                                                                context={{path: node.path}}
+                                                                                actionKey="contentMenu"
+                                                                                context={{
+                                                                                    path: node.path,
+                                                                                    menuFilter: value => {
+                                                                                        return !_.includes(['edit', 'preview'], value.key);
+                                                                                    }
+                                                                                }}
                                                                                 render={iconButtonRenderer({
                                                                                     color: 'inherit',
                                                                                     disableRipple: true

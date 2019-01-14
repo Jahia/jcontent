@@ -150,7 +150,7 @@ export class PickerViewMaterial extends React.Component {
                                             primary={
                                                 <React.Fragment>
                                                     <ContextualMenu ref={contextualMenu}
-                                                                    actionKey="contentTreeActions"
+                                                                    actionKey="contentMenu"
                                                                     context={{path: entry.node.path}}/>
                                                     <Typography color="inherit"
                                                                 onContextMenu={event => contextualMenu.current.open(event)}
@@ -164,7 +164,7 @@ export class PickerViewMaterial extends React.Component {
                                     </span>
                                     {this.state.hover === entry.path && entry.depth > 0 &&
                                     <ListItemIcon className={classes.listItemActionIcon} style={container.current ? {left: (container.current.clientWidth - 48 + container.current.scrollLeft)} : {}}>
-                                        <DisplayAction actionKey="contentTreeActions"
+                                        <DisplayAction actionKey="contentMenu"
                                                        context={{path: entry.node.path}}
                                                        render={iconButtonRenderer({
                                                            color: 'inherit',

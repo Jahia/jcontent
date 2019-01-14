@@ -97,7 +97,7 @@ export class PreviewDrawer extends React.Component {
                         <CardActions disableActionSpacing={false}>
                             <div className={classes.leftButtons}>
                                 <DisplayActions
-                                    target="tableMenuActions"
+                                    target="contentActions"
                                     filter={value => {
                                         return _.includes(['edit', 'publishMenu'], value.key);
                                     }}
@@ -105,8 +105,13 @@ export class PreviewDrawer extends React.Component {
                                     render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
                                 />
                                 <DisplayAction
-                                    actionKey="previewFooterMenuActions"
-                                    context={{path: selection.path}}
+                                    actionKey="contentMenu"
+                                    context={{
+                                        path: selection.path,
+                                        menuFilter: value => {
+                                            return !_.includes(['edit', 'publishMenu', 'preview'], value.key);
+                                        }
+                                    }}
                                     render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
                                 />
                             </div>

@@ -187,7 +187,7 @@ export class FileCard extends Component {
 
         return (
             <React.Fragment>
-                <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: node.path}}/>
+                <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
 
                 <Card
                     className={classNames(

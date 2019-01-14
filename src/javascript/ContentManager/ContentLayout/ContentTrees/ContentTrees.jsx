@@ -28,7 +28,7 @@ export class ContentTrees extends React.Component {
 
     render() {
         const {lang, siteKey, path, openPaths, t, user, setPath, openPath,
-            closePath, classes, setRefetch, onContextualMenu, mode, isOpen, closeTree} = this.props;
+            closePath, classes, setRefetch, mode, isOpen, closeTree} = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
@@ -77,7 +77,6 @@ export class ContentTrees extends React.Component {
                                                  openableTypes={contentTreeConfig.openableTypes}
                                                  rootLabel={t(contentTreeConfig.rootLabel)}
                                                  setRefetch={setRefetch(contentTreeConfig.key)}
-                                                 onContextualMenu={onContextualMenu}
                                     />
                                 );
                             }) : null

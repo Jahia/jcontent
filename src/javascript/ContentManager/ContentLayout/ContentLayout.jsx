@@ -138,7 +138,7 @@ export class ContentLayout extends React.Component {
                             >
                                 <ContentTrees isOpen={treeOpen} setRefetch={this.setTreeRefetcher}/>
                             </Drawer>
-                            <ContextualMenu ref={contextualMenu} actionKey="contentTreeActions" context={{path: path}}/>
+                            <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: path}}/>
                             <div
                                 className={classNames(classes.content, {
                                     [classes.contentLeftShift]: treeOpen,

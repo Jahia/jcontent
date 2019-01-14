@@ -181,7 +181,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('paste', pasteAction, {
         buttonIcon: <ContentPaste/>,
         buttonLabel: 'label.contentManager.contentPreview.paste',
-        target: ['tableHeaderActions:1'],
+        target: ['tableHeaderActions:1', 'contentActions:3.91'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS]
     });

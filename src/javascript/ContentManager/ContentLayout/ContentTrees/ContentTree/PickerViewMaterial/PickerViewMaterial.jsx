@@ -155,7 +155,7 @@ export class PickerViewMaterial extends React.Component {
                                                                     context={{
                                                                         path: entry.node.path,
                                                                         menuFilter: value => {
-                                                                            return !_.includes(['preview', 'lock'], value.key);
+                                                                            return !_.includes(['preview'], value.key);
                                                                         }
                                                                     }}/>
                                                     <Typography color="inherit"

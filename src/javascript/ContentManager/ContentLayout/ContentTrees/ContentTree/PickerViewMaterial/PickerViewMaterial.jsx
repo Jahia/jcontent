@@ -17,6 +17,7 @@ import {compose} from 'react-apollo';
 import UploadTransformComponent from '../../../UploadTransformComponent';
 import classNames from 'classnames';
 import {ContextualMenu, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
+import * as _ from 'lodash';
 
 let styles = theme => ({
     root: {
@@ -151,7 +152,12 @@ export class PickerViewMaterial extends React.Component {
                                                 <React.Fragment>
                                                     <ContextualMenu ref={contextualMenu}
                                                                     actionKey="contentMenu"
-                                                                    context={{path: entry.node.path}}/>
+                                                                    context={{
+                                                                        path: entry.node.path,
+                                                                        menuFilter: value => {
+                                                                            return !_.includes(['preview', 'lock'], value.key);
+                                                                        }
+                                                                    }}/>
                                                     <Typography color="inherit"
                                                                 onContextMenu={event => contextualMenu.current.open(event)}
                                                     >

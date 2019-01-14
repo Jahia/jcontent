@@ -204,7 +204,8 @@ export class ContentData extends React.Component {
                                 }),
                                 icon: contentNode.primaryNodeType.icon,
                                 width: (contentNode.width ? contentNode.width.value : ''),
-                                height: (contentNode.width ? contentNode.height.value : '')
+                                height: (contentNode.width ? contentNode.height.value : ''),
+                                notSelectableForPreview: contentNode.notSelectableForPreview
                             };
                         });
                     }

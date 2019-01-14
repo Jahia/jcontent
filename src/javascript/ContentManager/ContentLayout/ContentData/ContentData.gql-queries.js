@@ -59,6 +59,7 @@ const nodeFields = gql`
                 value
             }
         }
+        notSelectableForPreview: isNodeType(type: {types:["jnt:page", "jnt:folder", "jnt:contentFolder"]}) 
         site {
             ...NodeCacheRequiredFields
         }

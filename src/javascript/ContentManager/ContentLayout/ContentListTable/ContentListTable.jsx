@@ -212,12 +212,11 @@ export class ContentListTable extends React.Component {
     render() {
         const {
             rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onRowSelected, previewSelection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
+            onPreviewSelect, previewSelection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
             siteKey, mode, lang
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
-        let selectedRow = isPreviewOpened ? classes.selectedRow : '';
         return (
             <Paper>
                 <BrowseBar/>
@@ -237,42 +236,46 @@ export class ContentListTable extends React.Component {
                                         <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> :
                                         _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData} translate={t}/> :
-                                            rows.map(n => {
-                                                let isSelected = n.path === previewSelection && isPreviewOpened;
-                                                let icon = this.addIconSuffix(n.icon);
-                                                let showActions = this.state.hover === n.path && !isPreviewOpened;
+                                            rows.map(node => {
+                                                let isSelected = node.path === previewSelection && isPreviewOpened;
+                                                let icon = this.addIconSuffix(node.icon);
+                                                let showActions = this.state.hover === node.path && !isPreviewOpened;
                                                 // Let isDeleted = isMarkedForDeletion(n);
                                                 let contextualMenu = React.createRef();
                                                 return (
                                                     <TableRow
-                                                        key={n.uuid}
+                                                        key={node.uuid}
                                                         hover
                                                         classes={{
                                                             root: classNames(classes.row, {[classes.rowCursor]: isPreviewOpened}),
-                                                            selected: selectedRow
+                                                            selected: classes.selectedRow
                                                         }}
-                                                        data-cm-node-path={n.path}
+                                                        data-cm-node-path={node.path}
                                                         data-cm-role="table-content-list-row"
                                                         selected={isSelected}
-                                                        onClick={() => onRowSelected(n.path)}
+                                                        onClick={() => {
+                                                            if (!node.notSelectableForPreview) {
+                                                                onPreviewSelect(node.path);
+                                                            }
+                                                        }}
                                                         onContextMenu={event => {
                                                             event.stopPropagation();
                                                             contextualMenu.current.open(event);
                                                         }}
-                                                        onDoubleClick={allowDoubleClickNavigation(n.primaryNodeType, () => setPath(siteKey, n.path, mode))}
-                                                        onMouseEnter={() => this.hoverOn(n.path)}
+                                                        onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
+                                                        onMouseEnter={() => this.hoverOn(node.path)}
                                                     >
-                                                        <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: n.path}}/>
+                                                        <ContextualMenu ref={contextualMenu} actionKey="contextualMenuContent" context={{path: node.path}}/>
                                                         <TableCell
                                                             padding="none"
                                                             classes={{root: classes.publicationCell}}
                                                             data-cm-role="table-content-list-cell-publication"
                                                         >
-                                                            <PublicationStatus node={n} classes={{root: classes.publicationStatus}}/>
+                                                            <PublicationStatus node={node} classes={{root: classes.publicationStatus}}/>
                                                         </TableCell>
                                                         <TableCell
                                                             padding="checkbox"
-                                                            classes={this.getCellClasses(n, classes, 'checkbox', isSelected, isPreviewOpened)}
+                                                            classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                         >
                                                             <Checkbox checked={false}/>
                                                         </TableCell>
@@ -281,12 +284,12 @@ export class ContentListTable extends React.Component {
                                                                 return (
                                                                     <TableCell
                                                                         key={column.id}
-                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         data-cm-role="table-content-list-cell-name"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
-                                                                            {n[column.id]}
+                                                                            {node[column.id]}
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
@@ -295,10 +298,10 @@ export class ContentListTable extends React.Component {
                                                                 return (
                                                                     <TableCell
                                                                         key={column.id}
-                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         padding="none"
                                                                     >
-                                                                        {this.isWip(n, lang) &&
+                                                                        {this.isWip(node, lang) &&
                                                                         <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
                                                                             <VirtualsiteIcon fontSize="small" color="inherit"/>
                                                                         </Tooltip>
@@ -310,10 +313,10 @@ export class ContentListTable extends React.Component {
                                                                 return (
                                                                     <TableCell
                                                                         key={column.id}
-                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         padding="none"
                                                                     >
-                                                                        {n.isLocked &&
+                                                                        {node.isLocked &&
                                                                         <Tooltip title={t('label.contentManager.locked')}>
                                                                             <Lock fontSize="small" color="inherit"/>
                                                                         </Tooltip>
@@ -325,11 +328,11 @@ export class ContentListTable extends React.Component {
                                                                 return (
                                                                     <TableCell
                                                                         key={column.id}
-                                                                        classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         data-cm-role="table-content-list-cell-type"
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
-                                                                            {n[column.id]}
+                                                                            {node[column.id]}
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
@@ -337,7 +340,7 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'lastModified') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(n, classes, showActions ? 'actions' : column.id, isSelected, isPreviewOpened)}
+                                                                               classes={this.getCellClasses(node, classes, showActions ? 'actions' : column.id, isSelected, isPreviewOpened)}
                                                                                data-cm-role={'table-content-list-cell-' + showActions ? 'actions' : column.id}
                                                                     >
                                                                         {showActions ?
@@ -347,7 +350,7 @@ export class ContentListTable extends React.Component {
                                                                                 filter={value => {
                                                                                     return _.includes(['edit', 'preview'], value.key);
                                                                                 }}
-                                                                                context={{path: n.path}}
+                                                                                context={{path: node.path}}
                                                                                 render={iconButtonRenderer({
                                                                                     color: 'inherit',
                                                                                     disableRipple: true
@@ -355,7 +358,7 @@ export class ContentListTable extends React.Component {
                                                                             />
                                                                                 <DisplayAction
                                                                                 actionKey="tableMenuActions"
-                                                                                context={{path: n.path}}
+                                                                                context={{path: node.path}}
                                                                                 render={iconButtonRenderer({
                                                                                     color: 'inherit',
                                                                                     disableRipple: true
@@ -366,7 +369,7 @@ export class ContentListTable extends React.Component {
                                                                                 <Moment format="ll"
                                                                                         locale={uiLang}
                                                                                 >
-                                                                                    {n[column.id]}
+                                                                                    {node[column.id]}
                                                                                 </Moment>
                                                                             </Typography>
                                                                         }
@@ -376,11 +379,11 @@ export class ContentListTable extends React.Component {
                                                             return (
                                                                 <TableCell
                                                                     key={column.id}
-                                                                    classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
+                                                                    classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                     data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
                                                                     <Typography noWrap variant="body2" color="inherit">
-                                                                        {n[column.id]}
+                                                                        {node[column.id]}
                                                                     </Typography>
                                                                 </TableCell>
                                                             );
@@ -444,7 +447,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onRowSelected: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
+    onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     setPath: (siteKey, path, mode) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
         dispatch(cmGoto({path}));

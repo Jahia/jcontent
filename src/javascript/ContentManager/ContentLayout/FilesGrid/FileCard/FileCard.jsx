@@ -9,7 +9,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
-import {cmSetPreviewSelection, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
+import {cmSetPreviewSelection, cmGoto, cmOpenPaths, CM_DRAWER_STATES} from '../../../ContentManager.redux-actions';
 import {connect} from 'react-redux';
 import {allowDoubleClickNavigation} from '../../../ContentManager.utils';
 import classNames from 'classnames';
@@ -146,13 +146,14 @@ export class FileCard extends Component {
     }
 
     render() {
-        const {cardType, classes, t, node, dxContext, uiLang, setPath, previewSelection, siteKey, mode} = this.props;
+        const {cardType, classes, t, node, dxContext, uiLang, setPath, previewSelection, onPreviewSelect, previewState, siteKey, mode} = this.props;
         const {isHovered} = this.state;
 
         let contextualMenu = React.createRef();
 
         const isImage = isBrowserImage(node.path);
-        const isPreviewSelected = (previewSelection && previewSelection === node.path);
+        const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+        const isPreviewSelected = (previewSelection && previewSelection === node.path) && isPreviewOpened;
 
         let isExtraSmallCard = false;
         let isSmallCard = false;
@@ -202,7 +203,11 @@ export class FileCard extends Component {
                         event.stopPropagation();
                         contextualMenu.current.open(event);
                     }}
-                    onClick={() => this.props.onPreviewSelect(node.path)}
+                    onClick={() => {
+                        if (!node.notSelectableForPreview) {
+                            onPreviewSelect(node.path);
+                        }
+                    }}
                     onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
                     onMouseEnter={event => this.onHoverEnter(event)}
                     onMouseLeave={event => this.onHoverExit(event)}
@@ -294,6 +299,7 @@ FileCard.propTypes = {
 const mapStateToProps = state => ({
     uiLang: state.uiLang,
     previewSelection: state.previewSelection,
+    previewState: state.previewState,
     mode: state.mode,
     siteKey: state.site
 });

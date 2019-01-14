@@ -10,8 +10,8 @@ import {
     Paper,
     withStyles
 } from '@material-ui/core';
-import {VirtualsiteIcon} from '@jahia/icons';
 import {Lock} from '@material-ui/icons';
+import {Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayActions, DisplayAction, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
@@ -303,7 +303,7 @@ export class ContentListTable extends React.Component {
                                                                     >
                                                                         {this.isWip(node, lang) &&
                                                                         <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                                                                            <VirtualsiteIcon fontSize="small" color="inherit"/>
+                                                                            <Wrench fontSize="small" color="inherit"/>
                                                                         </Tooltip>
                                                                         }
                                                                     </TableCell>

@@ -113,7 +113,6 @@ function initActions(actionsRegistry) {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
         target: ['contentActions:6'],
-        hideOnNodeTypes: ['jnt:contentFolder'],
         menu: 'publishMenu'
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
@@ -130,7 +129,7 @@ function initActions(actionsRegistry) {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishAll',
         target: ['publishMenu'],
-        hideOnNodeTypes: ['nt:file'],
+        showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
         allSubTree: true,
         allLanguages: false,
         checkForUnpublication: false,
@@ -140,7 +139,7 @@ function initActions(actionsRegistry) {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishAllInAllLanguages',
         target: ['publishMenu'],
-        hideOnNodeTypes: ['nt:file'],
+        showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
         allSubTree: true,
         allLanguages: true,
         checkForUnpublication: false,
@@ -156,15 +155,6 @@ function initActions(actionsRegistry) {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.unpublish',
         target: ['publishMenu'],
-        hideOnNodeTypes: ['jnt:virtualsite'],
-        allSubTree: false,
-        allLanguages: false,
-        checkForUnpublication: true,
-        checkIfLanguagesMoreThanOne: false
-    });
-    actionsRegistry.add('unpublishPreview', publishAction, {
-        buttonLabel: 'label.contentManager.unpublish',
-        target: ['livePreviewBar'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         allSubTree: false,
         allLanguages: false,

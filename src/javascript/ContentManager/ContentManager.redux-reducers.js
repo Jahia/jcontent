@@ -8,7 +8,7 @@ import {
     CM_SET_PREVIEW,
     CM_SET_PREVIEW_MODE,
     CM_SET_SEARCH_MODE,
-    CM_SET_SELECTION,
+    CM_SET_PREVIEW_SELECTION,
     CM_SET_SORT,
     CM_SET_TREE,
     CM_SET_UILANGUAGE,
@@ -74,9 +74,9 @@ let paramsReducer = params => (state = params, action) => {
     return state;
 };
 
-let selectionReducer = (state = null, action) => {
-    if (action.type === CM_SET_SELECTION) {
-        return action.selection;
+let previewSelectionReducer = (state = null, action) => {
+    if (action.type === CM_SET_PREVIEW_SELECTION) {
+        return action.previewSelection;
     }
     return state;
 };
@@ -190,4 +190,4 @@ let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'no
     return state;
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, selectionReducer, previewModeReducer, openPathsReducer, previewStateReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, paginationReducer, sortReducer, pathsToRefetchReducer, availableLanguagesReducer};
+export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, previewSelectionReducer, previewModeReducer, openPathsReducer, previewStateReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, paginationReducer, sortReducer, pathsToRefetchReducer, availableLanguagesReducer};

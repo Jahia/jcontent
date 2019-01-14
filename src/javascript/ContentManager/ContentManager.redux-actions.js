@@ -1,6 +1,6 @@
 const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
-const CM_SET_SELECTION = 'CM_SET_SELECTION';
+const CM_SET_PREVIEW_SELECTION = 'CM_SET_PREVIEW_SELECTION';
 const CM_SET_PREVIEW_MODE = 'CM_SET_PREVIEW_MODE';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 const CM_SET_TREE = 'CM_SET_TREE';
@@ -24,10 +24,10 @@ function setUiLang(uiLang) {
     };
 }
 
-function cmSetSelection(selection) {
+function cmSetPreviewSelection(previewSelection) {
     return {
-        type: CM_SET_SELECTION,
-        selection
+        type: CM_SET_PREVIEW_SELECTION,
+        previewSelection
     };
 }
 
@@ -149,7 +149,7 @@ function cmSetSearchMode(searchMode) {
 export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
-    CM_SET_SELECTION,
+    CM_SET_PREVIEW_SELECTION,
     CM_SET_PREVIEW,
     CM_SET_PREVIEW_MODE,
     CM_SET_TREE,
@@ -168,7 +168,7 @@ export {
     cmSetLanguage,
     cmSetAvailableLanguages,
     setUiLang,
-    cmSetSelection,
+    cmSetPreviewSelection,
     cmSetSite,
     cmSetMode,
     cmSetPath,

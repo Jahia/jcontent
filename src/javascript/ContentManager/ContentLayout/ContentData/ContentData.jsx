@@ -11,7 +11,7 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from '../../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmGoto, cmSetPreviewSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import {extractPaths, isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
 import {setModificationHook} from './ContentData.utils';
@@ -46,7 +46,7 @@ export class ContentData extends React.Component {
     }
 
     onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {
-        let {client, siteKey, path, selection, openedPaths, setPath, setSelection, openPaths, closePaths, mode} = this.props;
+        let {client, siteKey, path, previewSelection, openedPaths, setPath, setPreviewSelection, openPaths, closePaths, mode} = this.props;
 
         let stateModificationDone = false;
 
@@ -78,8 +78,8 @@ export class ContentData extends React.Component {
             }
 
             // De-select any removed nodes.
-            if (selection === nodePath) {
-                setSelection(null);
+            if (previewSelection === nodePath) {
+                setPreviewSelection(null);
                 stateModificationDone = true;
             }
         } else if (operation === 'update') {
@@ -233,7 +233,7 @@ const mapStateToProps = state => ({
     siteKey: state.site,
     path: state.path,
     lang: state.language,
-    selection: state.selection,
+    previewSelection: state.previewSelection,
     previewState: state.previewState,
     uiLang: state.uiLang,
     searchTerms: state.params.searchTerms,
@@ -249,7 +249,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
-    setSelection: selection => dispatch(cmSetSelection(selection)),
+    setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     openPaths: paths => dispatch(cmOpenPaths(paths)),
     closePaths: paths => dispatch(cmClosePaths(paths)),
     removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths))

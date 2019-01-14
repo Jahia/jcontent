@@ -9,7 +9,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
-import {cmSetSelection, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
+import {cmSetPreviewSelection, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
 import {connect} from 'react-redux';
 import {allowDoubleClickNavigation} from '../../../ContentManager.utils';
 import classNames from 'classnames';
@@ -146,13 +146,13 @@ export class FileCard extends Component {
     }
 
     render() {
-        const {cardType, classes, t, node, dxContext, uiLang, setPath, selection, siteKey, mode} = this.props;
+        const {cardType, classes, t, node, dxContext, uiLang, setPath, previewSelection, siteKey, mode} = this.props;
         const {isHovered} = this.state;
 
         let contextualMenu = React.createRef();
 
         const isImage = isBrowserImage(node.path);
-        const isSelected = (selection && selection === node.path);
+        const isPreviewSelected = (previewSelection && previewSelection === node.path);
 
         let isExtraSmallCard = false;
         let isSmallCard = false;
@@ -195,14 +195,14 @@ export class FileCard extends Component {
                         isSmallCard && classes.smallCard,
                         isLargeCard && classes.largeCard,
                         isVerticalCard && classes.verticalCard,
-                        isSelected && classes.selectedCard
+                        isPreviewSelected && classes.selectedCard
                     )}
                     data-cm-role="grid-content-list-card"
                     onContextMenu={event => {
                         event.stopPropagation();
                         contextualMenu.current.open(event);
                     }}
-                    onClick={() => this.props.onSelect(node.path)}
+                    onClick={() => this.props.onPreviewSelect(node.path)}
                     onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
                     onMouseEnter={event => this.onHoverEnter(event)}
                     onMouseLeave={event => this.onHoverExit(event)}
@@ -288,18 +288,18 @@ export class FileCard extends Component {
 FileCard.propTypes = {
     cardType: PropTypes.number.isRequired,
     node: PropTypes.object.isRequired,
-    onSelect: PropTypes.func.isRequired
+    onPreviewSelect: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     uiLang: state.uiLang,
-    selection: state.selection,
+    previewSelection: state.previewSelection,
     mode: state.mode,
     siteKey: state.site
 });
 
 const mapDispatchToProps = dispatch => ({
-    onSelect: selection => dispatch(cmSetSelection(selection)),
+    onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     setPath: (siteKey, path, mode) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
         dispatch(cmGoto({path: path}));

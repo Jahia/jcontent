@@ -95,7 +95,7 @@ const mapStateToProps = state => ({
     path: state.path,
     mode: state.mode,
     openPaths: state.openPaths,
-    selection: state.selection
+    previewSelection: state.previewSelection
 });
 
 const mapDispatchToProps = dispatch => ({

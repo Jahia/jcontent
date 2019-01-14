@@ -10,7 +10,7 @@ import {
     pathReducer,
     paramsReducer,
     uiLanguageReducer,
-    selectionReducer,
+    previewSelectionReducer,
     previewModeReducer,
     previewStateReducer,
     openPathsReducer,
@@ -26,7 +26,6 @@ let contentManagerReduxStore = (dxContext, history) => {
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
     const rootReducer = combineReducers({
         uiLang: uiLanguageReducer(dxContext),
-        selection: selectionReducer,
         site: siteReducer(currentValueFromUrl.site),
         siteDisplayableName: siteDisplayableNameReducer(dxContext.siteDisplayableName),
         language: languageReducer(currentValueFromUrl.language),
@@ -37,6 +36,7 @@ let contentManagerReduxStore = (dxContext, history) => {
         fileUpload: fileUpload,
         previewMode: previewModeReducer,
         previewState: previewStateReducer,
+        previewSelection: previewSelectionReducer,
         treeState: treeStateReducer,
         openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode),
         searchMode: searchModeReducer(currentValueFromUrl.params),

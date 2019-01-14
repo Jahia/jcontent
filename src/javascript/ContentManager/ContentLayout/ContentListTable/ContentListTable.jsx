@@ -20,7 +20,7 @@ import {translate} from 'react-i18next';
 import DxContext from '../../DxContext';
 import PublicationStatus from '../../PublicationStatus';
 import Moment from 'react-moment';
-import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetSelection, cmSetSort, cmOpenPaths} from '../../ContentManager.redux-actions';
+import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetPreviewSelection, cmSetSort, cmOpenPaths} from '../../ContentManager.redux-actions';
 import {allowDoubleClickNavigation, isMarkedForDeletion} from '../../ContentManager.utils';
 import BrowseBar from '../BrowseBar';
 import {connect} from 'react-redux';
@@ -209,32 +209,11 @@ export class ContentListTable extends React.Component {
         return (icon.includes('.png') ? icon : icon + '.png');
     }
 
-    renderLock(row) {
-        let {t} = this.props;
-        return row.isLocked ?
-            <Tooltip title={t('label.contentManager.locked')}>
-                <Lock fontSize="small" color="inherit"/>
-            </Tooltip> :
-            null;
-    }
-
-    renderWip(row, dxContext) {
-        let {t, lang} = this.props;
-        if (this.isWip(row, lang)) {
-            return (
-                <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                    <VirtualsiteIcon fontSize="small" color="inherit"/>
-                </Tooltip>
-            );
-        }
-        return null;
-    }
-
     render() {
         const {
             rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onRowSelected, selection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
-            siteKey, mode
+            onRowSelected, previewSelection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
+            siteKey, mode, lang
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
@@ -259,9 +238,7 @@ export class ContentListTable extends React.Component {
                                         _.isEmpty(rows) ?
                                             <EmptyRow columnData={columnData} translate={t}/> :
                                             rows.map(n => {
-                                                let isSelected = n.path === selection && isPreviewOpened;
-                                                let renderWip = this.renderWip(n, dxContext);
-                                                let renderLock = this.renderLock(n);
+                                                let isSelected = n.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(n.icon);
                                                 let showActions = this.state.hover === n.path && !isPreviewOpened;
                                                 // Let isDeleted = isMarkedForDeletion(n);
@@ -321,7 +298,11 @@ export class ContentListTable extends React.Component {
                                                                         classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                         padding="none"
                                                                     >
-                                                                        {renderWip}
+                                                                        {this.isWip(n, lang) &&
+                                                                        <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
+                                                                            <VirtualsiteIcon fontSize="small" color="inherit"/>
+                                                                        </Tooltip>
+                                                                        }
                                                                     </TableCell>
                                                                 );
                                                             }
@@ -332,7 +313,11 @@ export class ContentListTable extends React.Component {
                                                                         classes={this.getCellClasses(n, classes, column.id, isSelected, isPreviewOpened)}
                                                                         padding="none"
                                                                     >
-                                                                        {renderLock}
+                                                                        {n.isLocked &&
+                                                                        <Tooltip title={t('label.contentManager.locked')}>
+                                                                            <Lock fontSize="small" color="inherit"/>
+                                                                        </Tooltip>
+                                                                        }
                                                                     </TableCell>
                                                                 );
                                                             }
@@ -430,7 +415,7 @@ let ContentNotFound = props => {
 
 const mapStateToProps = state => ({
     mode: state.mode,
-    selection: state.selection,
+    previewSelection: state.previewSelection,
     uiLang: state.uiLang,
     siteKey: state.site,
     path: state.path,
@@ -446,7 +431,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onRowSelected: selection => dispatch(cmSetSelection(selection)),
+    onRowSelected: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     setPath: (siteKey, path, mode) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
         dispatch(cmGoto({path}));

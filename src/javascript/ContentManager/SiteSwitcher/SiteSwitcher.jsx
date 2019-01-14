@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState, cmSetSite, cmSetSelection} from '../ContentManager.redux-actions';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetPreviewMode, cmSetPreviewState, cmSetSite, cmSetPreviewSelection} from '../ContentManager.redux-actions';
 import SiteSwitcherDisplay from './SiteSwitcherDisplay';
 import {batchActions} from 'redux-batched-actions';
 
@@ -105,7 +105,7 @@ class SiteSwitcher extends React.Component {
                                 this.props.dispatchBatch([
                                     cmSetPreviewMode(CM_PREVIEW_MODES.EDIT),
                                     cmSetPreviewState(CM_DRAWER_STATES.HIDE),
-                                    cmSetSelection(null)
+                                    cmSetPreviewSelection(null)
                                 ]);
                             }}
                     />

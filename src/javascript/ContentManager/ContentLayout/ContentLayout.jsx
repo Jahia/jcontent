@@ -110,7 +110,7 @@ export class ContentLayout extends React.Component {
     }
 
     render() {
-        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, selection} = this.props;
+        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, previewSelection} = this.props;
         let contextualMenu = React.createRef();
         let treeOpen = treeState >= CM_DRAWER_STATES.SHOW && mode !== ContentManagerConstants.mode.SEARCH && mode !== ContentManagerConstants.mode.SQL2SEARCH;
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -167,7 +167,7 @@ export class ContentLayout extends React.Component {
                                 }}
                             >
                                 {previewOpen &&
-                                    <PreviewDrawer selection={rows.find(node => node.path === selection)}/>
+                                    <PreviewDrawer selection={rows.find(node => node.path === previewSelection)}/>
                                 }
                             </Drawer>
                         </div>
@@ -192,7 +192,7 @@ const mapStateToProps = state => {
         previewState: state.previewState,
         treeState: state.treeState,
         filesMode: state.filesGrid.mode,
-        selection: state.selection
+        previewSelection: state.previewSelection
     };
 };
 

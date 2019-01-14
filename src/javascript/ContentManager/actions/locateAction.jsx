@@ -1,6 +1,6 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {cmGoto, cmOpenPaths, cmSetSelection} from '../ContentManager.redux-actions';
+import {cmGoto, cmOpenPaths, cmSetPreviewSelection} from '../ContentManager.redux-actions';
 import {reduxAction} from './reduxAction';
 import ContentManagerConstants from '../ContentManager.constants';
 import {of} from 'rxjs';
@@ -29,7 +29,7 @@ const FindParentQuery = gql`
 
 export default composeActions(requirementsAction, reduxAction(state => ({mode: state.mode, params: state.params}), dispatch => ({
     setOpenPaths: state => dispatch(cmOpenPaths(state)),
-    setSelection: state => dispatch(cmSetSelection(state)),
+    setPreviewSelection: state => dispatch(cmSetPreviewSelection(state)),
     navigateToPath: (mode, path, params) => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');
@@ -53,7 +53,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({mode: s
                 _.each(n.parents, parent => {
                     paths.push(parent.path);
                 });
-                let {navigateToPath, setOpenPaths, setSelection} = context;
+                let {navigateToPath, setOpenPaths, setPreviewSelection} = context;
                 let mode;
                 switch (parent.type.value) {
                     case 'jnt:contentFolder':
@@ -71,7 +71,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({mode: s
                 }
                 navigateToPath(mode, parent.path, context.params);
                 setOpenPaths(paths);
-                setSelection(n.path);
+                setPreviewSelection(n.path);
             }
         });
     }

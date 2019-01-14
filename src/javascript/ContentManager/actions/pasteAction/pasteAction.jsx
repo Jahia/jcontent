@@ -12,14 +12,14 @@ import {withI18nAction} from '../withI18nAction';
 import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmSetSelection, cmAddPathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmSetPreviewSelection, cmAddPathsToRefetch} from '../../ContentManager.redux-actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
-    state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, selection: state.selection}),
+    state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, previewSelection: state.previewSelection}),
     dispatch => ({
         clear: () => dispatch(clear()),
         setPath: (path, params) => dispatch(cmGoto({path, params})),
-        setSelection: selection => dispatch(cmSetSelection(selection)),
+        setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
         openPaths: paths => dispatch(cmOpenPaths(paths)),
         closePaths: paths => dispatch(cmClosePaths(paths)),
         addPathsToRefetch: paths => dispatch(cmAddPathsToRefetch(paths))
@@ -119,8 +119,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                     context.setPath(newPath);
                 }
 
-                if (context.selection === oldPath) {
-                    context.setSelection(null);
+                if (context.previewSelection === oldPath) {
+                    context.setPreviewSelection(null);
                 }
             }
 

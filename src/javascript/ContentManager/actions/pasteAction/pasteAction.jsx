@@ -102,7 +102,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             // Let's make sure the content table will be refreshed when displayed
             context.addPathsToRefetch([context.path, oldPath.substring(0, oldPath.lastIndexOf('/'))]);
 
-            // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the selection
+            // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the preview selection
             if (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE) {
                 const newPath = data.jcr.pasteNode.node.path;
                 const pathsToClose = _.filter(context.openedPaths, openedPath => isDescendantOrSelf(openedPath, oldPath));

@@ -150,7 +150,7 @@ export class PickerViewMaterial extends React.Component {
                                             primary={
                                                 <React.Fragment>
                                                     <ContextualMenu ref={contextualMenu}
-                                                                    actionKey="contextualMenuContent"
+                                                                    actionKey="contentTreeActions"
                                                                     context={{path: entry.node.path}}/>
                                                     <Typography color="inherit"
                                                                 onContextMenu={event => contextualMenu.current.open(event)}

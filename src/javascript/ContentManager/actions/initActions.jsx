@@ -109,6 +109,9 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('contentTreeActions', menuAction, {
         buttonIcon: <DotsVertical/>,
+        menuFilter: value => {
+            return !_.includes(['preview', 'lock'], value.key);
+        },
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
         menu: 'tableMenuActions'
     });
@@ -122,11 +125,6 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
-    /* ActionsRegistry.add('advancedPublish', menuAction, {
-        buttonLabel: 'label.contentManager.contentPreview.advancedPublish',
-        target: ['contentTreeMenuActions:6'],
-        menu: 'advancedPublish'
-    }); */
     actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',

@@ -150,7 +150,9 @@ const styles = theme => ({
     actionsCell: {
         minWidth: theme.spacing.unit * 18,
         width: theme.spacing.unit * 18,
-        color: theme.palette.primary.dark
+        color: theme.palette.primary.dark,
+        paddingTop: 0,
+        paddingBottom: 0
     },
     isDeleted: {
         textDecoration: 'line-through'
@@ -352,29 +354,29 @@ export class ContentListTable extends React.Component {
                                                                         {showActions ?
                                                                             <React.Fragment>
                                                                                 <DisplayActions
-                                                                                target="contentActions"
-                                                                                filter={value => {
-                                                                                    return _.includes(['edit', 'preview'], value.key);
-                                                                                }}
-                                                                                context={{path: node.path}}
-                                                                                render={iconButtonRenderer({
-                                                                                    color: 'inherit',
-                                                                                    disableRipple: true
-                                                                                }, true)}
-                                                                            />
+                                                                                    target="contentActions"
+                                                                                    filter={value => {
+                                                                                        return _.includes(['edit', 'preview'], value.key);
+                                                                                    }}
+                                                                                    context={{path: node.path}}
+                                                                                    render={iconButtonRenderer({
+                                                                                        color: 'inherit',
+                                                                                        disableRipple: true
+                                                                                    }, true)}
+                                                                                />
                                                                                 <DisplayAction
-                                                                                actionKey="contentMenu"
-                                                                                context={{
-                                                                                    path: node.path,
-                                                                                    menuFilter: value => {
-                                                                                        return !_.includes(['edit', 'preview'], value.key);
-                                                                                    }
-                                                                                }}
-                                                                                render={iconButtonRenderer({
-                                                                                    color: 'inherit',
-                                                                                    disableRipple: true
-                                                                                }, true)}
-                                                                            />
+                                                                                    actionKey="contentMenu"
+                                                                                    context={{
+                                                                                        path: node.path,
+                                                                                        menuFilter: value => {
+                                                                                            return !_.includes(['edit', 'preview'], value.key);
+                                                                                        }
+                                                                                    }}
+                                                                                    render={iconButtonRenderer({
+                                                                                        color: 'inherit',
+                                                                                        disableRipple: true
+                                                                                    }, true)}
+                                                                                />
                                                                             </React.Fragment> :
                                                                             <Typography noWrap variant="body2" color="inherit">
                                                                                 <Moment format="ll"

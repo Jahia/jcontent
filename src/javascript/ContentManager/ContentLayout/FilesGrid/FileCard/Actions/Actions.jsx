@@ -1,6 +1,7 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
-import {DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {DisplayAction, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import * as _ from 'lodash';
 
 const styles = () => ({
     actionButtons: {
@@ -16,9 +17,19 @@ const styles = () => ({
 export const Actions = ({classes, isHovered, node}) => {
     return isHovered &&
         <div className={classes.actionButtons}>
-            <DisplayActions target="tableActions"
-                            context={{path: node.path}}
-                            render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}/>
+            <DisplayActions
+                target="tableMenuActions"
+                filter={value => {
+                    return _.includes(['edit', 'preview'], value.key);
+                }}
+                context={{path: node.path}}
+                render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
+            />
+            <DisplayAction
+                actionKey="tableMenuActions"
+                context={{path: node.path}}
+                render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
+            />
         </div>;
 };
 

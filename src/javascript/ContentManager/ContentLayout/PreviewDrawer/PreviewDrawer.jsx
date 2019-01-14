@@ -20,6 +20,7 @@ import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../../Conte
 import {compose} from 'react-apollo';
 import {DisplayAction, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
+import * as _ from 'lodash';
 
 const styles = theme => ({
     leftButtons: {
@@ -95,15 +96,19 @@ export class PreviewDrawer extends React.Component {
                         </CardContent>
                         <CardActions disableActionSpacing={false}>
                             <div className={classes.leftButtons}>
-                                <DisplayActions target="previewFooterActions"
-                                                context={{path: selection.path}}
-                                                render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}/>
-                                <DisplayAction actionKey="edit"
-                                               context={{path: selection.path}}
-                                               render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}/>
-                                <DisplayAction actionKey="publishMenu"
-                                               context={{path: selection.path}}
-                                               render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}/>
+                                <DisplayActions
+                                    target="tableMenuActions"
+                                    filter={value => {
+                                        return _.includes(['edit', 'publishMenu'], value.key);
+                                    }}
+                                    context={{path: selection.path}}
+                                    render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
+                                />
+                                <DisplayAction
+                                    actionKey="previewFooterMenuActions"
+                                    context={{path: selection.path}}
+                                    render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
+                                />
                             </div>
                         </CardActions>
                     </Card>

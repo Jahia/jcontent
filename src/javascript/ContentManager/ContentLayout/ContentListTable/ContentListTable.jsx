@@ -13,7 +13,7 @@ import {
 import {VirtualsiteIcon} from '@jahia/icons';
 import {Lock} from '@material-ui/icons';
 import ContentListHeader from './ContentListHeader';
-import {ContextualMenu, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
+import {ContextualMenu, DisplayActions, DisplayAction, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
@@ -341,14 +341,27 @@ export class ContentListTable extends React.Component {
                                                                                data-cm-role={'table-content-list-cell-' + showActions ? 'actions' : column.id}
                                                                     >
                                                                         {showActions ?
-                                                                            <DisplayActions
-                                                                                target="tableActions"
+                                                                            <React.Fragment>
+                                                                                <DisplayActions
+                                                                                target="tableMenuActions"
+                                                                                filter={value => {
+                                                                                    return _.includes(['edit', 'preview'], value.key);
+                                                                                }}
                                                                                 context={{path: n.path}}
                                                                                 render={iconButtonRenderer({
                                                                                     color: 'inherit',
                                                                                     disableRipple: true
                                                                                 }, true)}
-                                                                            /> :
+                                                                            />
+                                                                                <DisplayAction
+                                                                                actionKey="tableMenuActions"
+                                                                                context={{path: n.path}}
+                                                                                render={iconButtonRenderer({
+                                                                                    color: 'inherit',
+                                                                                    disableRipple: true
+                                                                                }, true)}
+                                                                            />
+                                                                            </React.Fragment> :
                                                                             <Typography noWrap variant="body2" color="inherit">
                                                                                 <Moment format="ll"
                                                                                         locale={uiLang}

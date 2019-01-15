@@ -150,9 +150,7 @@ const styles = theme => ({
     actionsCell: {
         minWidth: theme.spacing.unit * 18,
         width: theme.spacing.unit * 18,
-        color: theme.palette.primary.dark,
-        paddingTop: 0,
-        paddingBottom: 0
+        color: theme.palette.primary.dark
     },
     isDeleted: {
         textDecoration: 'line-through'
@@ -347,6 +345,7 @@ export class ContentListTable extends React.Component {
                                                                     <TableCell key={column.id}
                                                                                classes={this.getCellClasses(node, classes, showActions ? 'actions' : column.id, isSelected, isPreviewOpened)}
                                                                                data-cm-role={'table-content-list-cell-' + showActions ? 'actions' : column.id}
+                                                                               padding={showActions ? 'checkbox' : 'default'}
                                                                     >
                                                                         {showActions ?
                                                                             <React.Fragment>

@@ -680,10 +680,10 @@
     lodash "^4.17.10"
     zen-observable "^0.8.8"
 
-"@jahia/ds-mui-theme@^1.0.0-beta.20190114145051":
-  version "1.0.0-beta.20190114145051"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20190114145051.tgz#0572191841bbf0722c4fc614ce462081debf52da"
-  integrity sha512-DAz+BCaYj1LAFN5I3dn+8swg7OgBmdtHZaB5kq6b7/4xCOZpK6cs2rHMamtc8Xm7ImWkltl0M4YPaFqHtUYu8g==
+"@jahia/ds-mui-theme@^1.0.0-beta.20190115140458":
+  version "1.0.0-beta.20190115140458"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20190115140458.tgz#09fd0ea438334272f89f19995c28453d0f82fadd"
+  integrity sha512-s5zWpKI65HxT2M7HYQwH2wpk6aDN2nR17zjFaFHOFvIYIMo6gwCUUR3duRAKab38cRfswDWnK1O1O6YGEXgw8w==
   dependencies:
     "@material-ui/core" "^3.6.2"
     lodash "^4.17.10"

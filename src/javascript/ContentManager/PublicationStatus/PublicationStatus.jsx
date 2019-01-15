@@ -12,7 +12,8 @@ const styles = theme => ({
         height: '100%',
         position: 'absolute',
         zIndex: 1,
-        bottom: 0
+        bottom: 0,
+        minWidth: 6
     },
     publicationInfoWrapper: {
         display: 'flex',

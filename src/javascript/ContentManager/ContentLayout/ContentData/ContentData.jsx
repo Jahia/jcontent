@@ -163,18 +163,21 @@ export class ContentData extends React.Component {
                             layoutQueryParams: layoutQueryParams
                         });
                     }
-                    if (!loading) {
-                        this.currentQueryHandler = queryHandler;
+
+                    if (loading) {
+                        // While loading new results, render current ones loaded during previous render invocation (if any).
+                    } else {
+                        // When new results have been loaded, use them for rendering.
+                        this.currentResult = queryHandler.getResultsPath(data.jcr.results);
                     }
 
                     let rows = [];
                     let totalCount = 0;
                     notificationContext.closeNotification();
 
-                    if (data && data.jcr && this.currentQueryHandler) {
-                        let result = this.currentQueryHandler.getResultsPath(data.jcr.results);
-                        totalCount = result.pageInfo.totalCount;
-                        rows = _.map(result.nodes, contentNode => {
+                    if (this.currentResult) {
+                        totalCount = this.currentResult.pageInfo.totalCount;
+                        rows = _.map(this.currentResult.nodes, contentNode => {
                             return {
                                 uuid: contentNode.uuid,
                                 name: contentNode.displayName,

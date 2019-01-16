@@ -20,24 +20,29 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
         context.initRequirements();
     },
     onClick: context => {
-        const {mode, siteKey, language, drawer: {handleDrawerClose}, setUrl, setPreviewState} = context;
+        const {mode, siteKey, language, setUrl, setPreviewState, path} = context;
 
-        if (mode !== 'apps' && handleDrawerClose) {
-            handleDrawerClose();
+        if (mode !== 'apps' && context.drawer) {
+            context.drawer.handleDrawerClose();
         }
-        let pathSuffix = '';
+
+        let resolvedPath = '';
         switch (mode) {
+            case 'apps':
+                resolvedPath = context.actionPath ? context.actionPath : context.actionKey;
+                break;
             case 'browse':
-                pathSuffix = '/contents';
+                resolvedPath = `/sites/${siteKey}/contents`;
                 break;
             case 'browse-files':
-                pathSuffix = '/files';
+                resolvedPath = `/sites/${siteKey}/files`;
                 break;
             default:
-                pathSuffix = '';
+                resolvedPath = path;
         }
+
         setPreviewState(CM_DRAWER_STATES.HIDE);
-        setUrl(siteKey, language, mode, (mode === 'apps' ? (context.actionPath ? context.actionPath : context.actionKey) : `/sites/${siteKey}${pathSuffix}`), {});
+        setUrl(siteKey, language, mode, resolvedPath, {});
         return null;
     }
 });

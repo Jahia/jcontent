@@ -65,31 +65,31 @@ export class FilesGrid extends Component {
 
         if (contentNotFound) {
             return (
-                <div>
+                <React.Fragment>
                     <BrowseBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                         <Typography variant="subtitle1" className={classes.empty}>
                             { t('label.contentManager.contentNotFound') }
                         </Typography>
                     </Grid>
-                </div>
+                </React.Fragment>
             );
         }
 
         if (!this.props.rows || this.props.rows.length === 0) {
             return (
-                <div>
+                <React.Fragment>
                     <BrowseBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                         <Typography variant="subtitle1" className={classes.empty}>
                             { t('label.contentManager.filesGrid.emptyMessage') }
                         </Typography>
                     </Grid>
-                </div>
+                </React.Fragment>
             );
         }
         return (
-            <div>
+            <React.Fragment>
                 <BrowseBar/>
                 <div className={classes.grid} data-cm-role="grid-content-list">
                     <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
@@ -125,7 +125,7 @@ export class FilesGrid extends Component {
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}
                 />
-            </div>
+            </React.Fragment>
         );
     }
 }

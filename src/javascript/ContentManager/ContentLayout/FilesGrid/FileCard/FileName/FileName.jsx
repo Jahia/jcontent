@@ -5,6 +5,9 @@ import {Tooltip, Typography, withStyles} from '@material-ui/core';
 const styles = () => ({
     isDeleted: {
         textDecoration: 'line-through'
+    },
+    tooltip: {
+        display: 'unset'
     }
 });
 

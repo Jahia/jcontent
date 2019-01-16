@@ -27,12 +27,15 @@ const styles = theme => ({
         transitionDuration: '.25s',
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
-        marginRight: -theme.contentManager.previewDrawerWidth
+        marginRight: -theme.contentManager.previewDrawerWidth,
+        width: '100%'
     },
     contentLeftShift: {
+        width: 'calc(100% - ' + theme.contentManager.treeDrawerWidth + 'px)',
         marginLeft: 0
     },
     contentRightShift: {
+        width: 'calc(100% - ' + theme.contentManager.previewDrawerWidth + 'px)',
         marginRight: 0
     },
     treeDrawer: {
@@ -57,7 +60,6 @@ const styles = theme => ({
         transition: '.15s !important',
         width: theme.contentManager.previewDrawerWidth,
         height: 'calc(100vh - 130px)',
-
         position: 'inherit',
         overflow: 'hidden',
         top: '150px',

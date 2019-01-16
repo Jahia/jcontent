@@ -34,7 +34,7 @@ const styles = theme => ({
             width: 'calc(100% - 200px)'
         },
         '& $fileCardContentContainer': {
-            width: 'calc(100% - 120px)'
+            width: 'calc(100% - 160px)'
         }
     },
     extraSmallCard: {
@@ -44,7 +44,7 @@ const styles = theme => ({
             width: 'calc(100% - 75px)'
         },
         '& $fileCardContentContainer': {
-            width: 'calc(100% - 84px)'
+            width: 'calc(100% - 112px)'
         }
     },
     smallCard: {
@@ -54,7 +54,7 @@ const styles = theme => ({
             width: 'calc(100% - 125px)'
         },
         '& $fileCardContentContainer': {
-            width: 'calc(100% - 84px)'
+            width: 'calc(100% - 112px)'
         }
     },
     largeCard: {
@@ -62,7 +62,7 @@ const styles = theme => ({
             width: 'calc(100% - 300px)'
         },
         '& $fileCardContentContainer': {
-            width: 'calc(100% - 120px)'
+            width: 'calc(100% - 160px)'
         }
     },
     verticalCard: {
@@ -128,9 +128,6 @@ const styles = theme => ({
         '& div': {
             marginBottom: theme.spacing.unit * 2
         }
-    },
-    tooltip: {
-        display: 'unset'
     },
     selectedCard: {
         boxShadow: '1px 0px 15px 4px ' + theme.palette.primary.main

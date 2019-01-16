@@ -157,6 +157,22 @@ const styles = theme => ({
     },
     empty: {
         textAlign: 'center'
+    },
+    publicationStatusRoot: {
+        top: 0,
+        '&:hover': {
+            width: 640
+        }
+    },
+    publicationStatusBorder: {
+        '&:hover ~ $publicationInfoWrapper': {
+            width: 640
+        }
+    },
+    publicationInfoWrapper: {
+        '&:hover': {
+            width: 640
+        }
     }
 });
 
@@ -274,7 +290,7 @@ export class ContentListTable extends React.Component {
                                                             classes={{root: classes.publicationCell}}
                                                             data-cm-role="table-content-list-cell-publication"
                                                         >
-                                                            <PublicationStatus node={node}/>
+                                                            <PublicationStatus node={node} classes={{root: classes.publicationStatusRoot, border: classes.publicationStatusBorder, publicationInfoWrapper: classes.publicationInfoWrapper}}/>
                                                         </TableCell>
                                                         <TableCell
                                                             padding="checkbox"

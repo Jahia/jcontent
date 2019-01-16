@@ -4,6 +4,7 @@ import {withStyles, Typography} from '@material-ui/core';
 import {InfoOutlined} from '@material-ui/icons';
 import {publicationStatusByName} from './publicationStatusRenderer';
 import {translate} from 'react-i18next';
+import classNames from 'classnames';
 
 const styles = theme => ({
     root: {
@@ -15,33 +16,39 @@ const styles = theme => ({
         bottom: 0,
         minWidth: 6
     },
+    border: {
+        width: 6,
+        cursor: 'pointer',
+        '&:hover ~ $publicationInfoWrapper': {
+            width: '100%'
+        },
+        '&:hover ~ $publicationInfoWrapper > $publicationInfo': {
+            visibility: 'visible',
+            width: '100%',
+            opacity: 1
+        }
+    },
     publicationInfoWrapper: {
         display: 'flex',
-        overflow: 'hidden',
-        maxWidth: '0px',
-        transitionDuration: '.2s'
+        width: 0,
+        transitionDuration: '.2s',
+        '&:hover': {
+            width: '100%'
+        },
+        '&:hover > $publicationInfo': {
+            visibility: 'visible',
+            width: '100%',
+            opacity: 1
+        }
     },
     publicationInfo: {
         display: 'flex',
         alignItems: 'center',
         opacity: 0,
         width: 0,
-        minWidth: '0px',
-        padding: 0,
-        whiteSpace: 'nowrap',
-        transition: 'min-width .3s ease 0s, opacity .2s ease 0s, padding .2s ease 0s'
-    },
-    border: {
-        width: 6,
-        cursor: 'pointer',
-        '&:hover ~ $publicationInfoWrapper > $publicationInfo': {
-            minWidth: '640px',
-            opacity: 1,
-            padding: '0 ' + (theme.spacing.unit * 2) + 'px'
-        },
-        '&:hover ~ $publicationInfoWrapper': {
-            maxWidth: '640px'
-        }
+        margin: '0 ' + (theme.spacing.unit * 2) + 'px',
+        transition: 'width .3s ease 0s, visibility .3s ease 0s',
+        visibility: 'hidden'
     },
     spacing: {
         marginRight: theme.spacing.unit
@@ -96,8 +103,8 @@ export class PublicationStatus extends Component {
 
         return (
             <div className={classes.root}>
-                <div className={`${classes.border} ${publicationStatusClass}`}/>
-                <div className={`${classes.publicationInfoWrapper} ${publicationStatusClass}`}>
+                <div className={classNames(classes.border, publicationStatusClass)}/>
+                <div className={classNames(classes.publicationInfoWrapper, publicationStatusClass)}>
                     <div className={classes.publicationInfo}
                          data-cm-role="publication-info"
                          data-cm-value={node.publicationStatus}

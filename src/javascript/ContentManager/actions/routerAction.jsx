@@ -22,7 +22,7 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
     onClick: context => {
         const {mode, siteKey, language, setUrl, setPreviewState, path} = context;
 
-        if (mode !== 'apps' && context.drawer) {
+        if (mode !== 'apps' && context.drawer && context.drawer.handleDrawerClose) {
             context.drawer.handleDrawerClose();
         }
 

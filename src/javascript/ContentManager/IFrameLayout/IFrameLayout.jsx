@@ -27,8 +27,10 @@ export class IFrameLayout extends React.Component {
             return null;
         }
 
+        let sitePath = '/sites/' + siteKey;
+
         // Ensure requirements (permissions and module state on site)
-        let requirementQueryHandler = new ActionRequirementsQueryHandler({...action, path: '/sites/' + siteKey, language: lang, uiLang: lang});
+        let requirementQueryHandler = new ActionRequirementsQueryHandler({...action, path: sitePath, language: lang, uiLang: lang});
         let {requiredPermission, requireModuleInstalledOnSite} = action;
 
         return (
@@ -44,10 +46,19 @@ export class IFrameLayout extends React.Component {
                         return null;
                     }
 
+                    const site = data.jcr.nodeByPath;
+
+                    // The data check above related to the BACKLOG-8649 is not fully reliable,
+                    // so a wrong (likely previously cached) site node might be supplied while loading new data.
+                    // Return null in this case as data are still loading so it is too early to render anything.
+                    if (!site || site.path !== sitePath) {
+                        return null;
+                    }
+
                     // Check display of the action
-                    const node = data.jcr.nodeByPath;
-                    if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
-                    (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
+                    if ((!_.isEmpty(requiredPermission) && !site.hasPermission) ||
+                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(site.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
+                    ) {
                         this.showError('label.contentManager.error.contentUnavailable');
                         return null;
                     }
@@ -61,12 +72,13 @@ export class IFrameLayout extends React.Component {
                     iframeUrl = iframeUrl.replace(/:frame/g, (siteKey === 'systemsite' ? 'adminframe' : 'editframe'));
 
                     return (
-                        <Iframe allowFullScreen
-                                url={iframeUrl}
-                                position="relative"
-                                width="100%"
-                                className="myClassname"
-                                height="100%"
+                        <Iframe
+                            allowFullScreen
+                            url={iframeUrl}
+                            position="relative"
+                            width="100%"
+                            className="myClassname"
+                            height="100%"
                         />
                     );
                 }}

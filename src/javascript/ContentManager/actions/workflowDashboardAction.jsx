@@ -3,7 +3,7 @@ import {setActiveWorkflowTaskRefetcher} from '../ContentManager.refetches';
 import {composeActions} from '@jahia/react-material';
 import {withApolloAction} from './withApolloAction';
 import {from} from 'rxjs';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 
 const query = gql`query getActiveWorkflowTaskCountForUser{
           jcr {
@@ -16,8 +16,6 @@ let workflowDashboardAction = composeActions(withApolloAction, {
         let watchQuery = context.client.watchQuery({query});
         let watchQueryObs = from(watchQuery);
 
-        // Empty subscription to correctly watch the result
-        watchQueryObs.pipe(first()).subscribe();
         context.badge = watchQueryObs
             .pipe(
                 filter(res => (res.data && res.data.jcr)),

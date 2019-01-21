@@ -2,11 +2,10 @@ import React from 'react';
 import Iframe from 'react-iframe';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {actionsRegistry} from '@jahia/react-material';
+import {ProgressOverlay, actionsRegistry, withNotifications} from '@jahia/react-material';
 import {compose, Query} from 'react-apollo';
 import {ActionRequirementsQueryHandler} from '../ContentManager.gql-queries';
 import {translate} from 'react-i18next';
-import {withNotifications} from '@jahia/react-material';
 
 export class IFrameLayout extends React.Component {
     showError(errorKey, errorData) {
@@ -30,35 +29,40 @@ export class IFrameLayout extends React.Component {
         let sitePath = '/sites/' + siteKey;
 
         // Ensure requirements (permissions and module state on site)
-        let requirementQueryHandler = new ActionRequirementsQueryHandler({...action, path: sitePath, language: lang, uiLang: lang});
+        let context = {...action, path: sitePath, language: lang, uiLang: lang};
+        let requirementQueryHandler = new ActionRequirementsQueryHandler(context);
         let {requiredPermission, requireModuleInstalledOnSite} = action;
 
         return (
-            <Query key={actionKey} query={requirementQueryHandler.getQuery()} variables={requirementQueryHandler.getVariables()}>
-                {({error, data}) => {
+            <Query key={actionKey}
+                   query={requirementQueryHandler.getQuery()}
+                   variables={requirementQueryHandler.getVariables()}
+            >
+                {({error, data, loading}) => {
                     if (error) {
                         this.showError('label.contentManager.actions.error.loading', {details: (error.message ? error.message : '')});
                         return null;
                     }
 
-                    // Todo: restore loading test BACKLOG-8649
-                    if (!data || !data.jcr) {
-                        return null;
+                    if (loading) {
+                        return <ProgressOverlay/>;
                     }
 
-                    const site = data.jcr.nodeByPath;
+                    if (!data || !data.jcr) {
+                        return <ProgressOverlay/>;
+                    }
 
                     // The data check above related to the BACKLOG-8649 is not fully reliable,
                     // so a wrong (likely previously cached) site node might be supplied while loading new data.
                     // Return null in this case as data are still loading so it is too early to render anything.
+                    const site = data.jcr.nodeByPath;
                     if (!site || site.path !== sitePath) {
-                        return null;
+                        return <ProgressOverlay/>;
                     }
 
                     // Check display of the action
                     if ((!_.isEmpty(requiredPermission) && !site.hasPermission) ||
-                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(site.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
-                    ) {
+                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(site.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
                         this.showError('label.contentManager.error.contentUnavailable');
                         return null;
                     }
@@ -72,13 +76,12 @@ export class IFrameLayout extends React.Component {
                     iframeUrl = iframeUrl.replace(/:frame/g, (siteKey === 'systemsite' ? 'adminframe' : 'editframe'));
 
                     return (
-                        <Iframe
-                            allowFullScreen
-                            url={iframeUrl}
-                            position="relative"
-                            width="100%"
-                            className="myClassname"
-                            height="100%"
+                        <Iframe allowFullScreen
+                                url={iframeUrl}
+                                position="relative"
+                                width="100%"
+                                className="myClassname"
+                                height="100%"
                         />
                     );
                 }}

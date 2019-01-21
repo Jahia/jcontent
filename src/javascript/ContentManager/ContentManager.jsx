@@ -59,7 +59,6 @@ export default class ContentManager extends React.Component {
             if (window.top !== window) {
                 this.history.listen(location => {
                     const title = t('label.contentManager.appTitle', {path: location.pathname});
-                    // Const title = 'title';
                     window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
                     window.parent.document.title = title;
                 });
@@ -76,8 +75,6 @@ export default class ContentManager extends React.Component {
 
     render() {
         let {dxContext} = this.props;
-        // Work around to restore table headers color
-        // TODO: MUST REMOVE IT BACKLOG-8697 !!!!
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>

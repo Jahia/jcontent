@@ -12,7 +12,8 @@ import {withI18nAction} from '../withI18nAction';
 import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmSetPreviewSelection, cmAddPathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmSetPreviewSelection} from '../../preview.redux-actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, previewSelection: state.previewSelection}),

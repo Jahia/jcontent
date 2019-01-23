@@ -1,5 +1,6 @@
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
+import {selectionReducer} from './ContentLayout/contentSelection.redux-reducers';
 import {fileUpload} from './ContentLayout/Upload/Upload.redux-reducer';
 import {copyPaste} from './actions/actions.redux-reducer';
 import {filesGrid} from './ContentLayout/FilesGrid/FilesGrid.redux-reducer';
@@ -10,17 +11,16 @@ import {
     pathReducer,
     paramsReducer,
     uiLanguageReducer,
-    previewSelectionReducer,
-    previewModeReducer,
-    previewStateReducer,
     openPathsReducer,
     searchModeReducer,
-    siteDisplayableNameReducer, treeStateReducer, paginationReducer, sortReducer,
-    pathsToRefetchReducer,
+    siteDisplayableNameReducer, treeStateReducer, pathsToRefetchReducer,
     availableLanguagesReducer
 } from './ContentManager.redux-reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import {getSyncListener, extractParamsFromUrl} from './ContentManager.redux-utils';
+import {previewModeReducer, previewSelectionReducer, previewStateReducer} from './preview.redux-reducers';
+import {sortReducer} from './ContentLayout/sort.redux-reducers';
+import {paginationReducer} from './ContentLayout/pagination.redux-reducers';
 
 let contentManagerReduxStore = (dxContext, history) => {
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
@@ -44,7 +44,8 @@ let contentManagerReduxStore = (dxContext, history) => {
         filesGrid: filesGrid,
         pagination: paginationReducer,
         sort: sortReducer,
-        pathsToRefetch: pathsToRefetchReducer
+        pathsToRefetch: pathsToRefetchReducer,
+        selection: selectionReducer
     });
 
     const composeEnhancers = window.top.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -11,11 +11,12 @@ import {withNotifications, ProgressOverlay} from '@jahia/react-material';
 import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from '../../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetPreviewSelection, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmGoto, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import {extractPaths, isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
 import {setModificationHook} from './ContentData.utils';
 import {compose} from 'react-apollo';
+import {cmSetPreviewSelection} from '../../preview.redux-actions';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {

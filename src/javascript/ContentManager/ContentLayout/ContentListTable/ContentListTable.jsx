@@ -1,33 +1,36 @@
 import React from 'react';
 import {
     Checkbox,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableRow,
     Tooltip,
     Typography,
-    Paper,
     withStyles
 } from '@material-ui/core';
 import {Lock} from '@material-ui/icons';
 import {Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
-import {ContextualMenu, DisplayActions, DisplayAction, iconButtonRenderer, Pagination} from '@jahia/react-material';
+import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
 import DxContext from '../../DxContext';
 import PublicationStatus from '../../PublicationStatus';
 import Moment from 'react-moment';
-import {CM_DRAWER_STATES, cmGoto, cmSetPage, cmSetPageSize, cmSetPreviewSelection, cmSetSort, cmOpenPaths} from '../../ContentManager.redux-actions';
-import {allowDoubleClickNavigation, isMarkedForDeletion} from '../../ContentManager.utils';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../ContentManager.redux-actions';
+import {allowDoubleClickNavigation, extractPaths, isMarkedForDeletion} from '../../ContentManager.utils';
 import BrowseBar from '../BrowseBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../UploadTransformComponent';
 import classNames from 'classnames';
-import {extractPaths} from '../../ContentManager.utils';
+import {cmSetPreviewSelection} from '../../preview.redux-actions';
+import {cmSetSort} from '../sort.redux-actions';
+import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
+import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux-actions';
 
 const allColumnData = [
     {
@@ -231,7 +234,7 @@ export class ContentListTable extends React.Component {
         const {
             rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
             onPreviewSelect, previewSelection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
-            siteKey, mode, lang
+            siteKey, mode, lang, switchSelection, addSelection, removeSelection, selection
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
@@ -246,6 +249,10 @@ export class ContentListTable extends React.Component {
                             columnData={columnData}
                             classes={classes}
                             setSort={setSort}
+                            anySelected={selection.length > 0 && rows.reduce((acc, node) => acc || selection.indexOf(node.path) !== -1, false)}
+                            allSelected={selection.length > 0 && rows.reduce((acc, node) => acc && selection.indexOf(node.path) !== -1, true)}
+                            selectAll={() => addSelection(rows.map(n => n.path))}
+                            unselectAll={() => removeSelection(rows.map(n => n.path))}
                         />
                         <DxContext.Consumer>
                             {dxContext => (
@@ -296,7 +303,7 @@ export class ContentListTable extends React.Component {
                                                             padding="checkbox"
                                                             classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                         >
-                                                            <Checkbox checked={false}/>
+                                                            <Checkbox checked={selection.indexOf(node.path) !== -1} onClick={() => switchSelection(node.path)}/>
                                                         </TableCell>
                                                         {columnData.map(column => {
                                                             if (column.id === 'name') {
@@ -468,7 +475,8 @@ const mapStateToProps = state => ({
     sql2SearchWhere: state.params.sql2SearchWhere,
     pagination: state.pagination,
     sort: state.sort,
-    previewState: state.previewState
+    previewState: state.previewState,
+    selection: state.selection
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -487,7 +495,10 @@ const mapDispatchToProps = dispatch => ({
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
         dispatch(cmGoto({mode: 'browse', params: params}));
-    }
+    },
+    switchSelection: path => dispatch(cmSwitchSelection(path)),
+    addSelection: path => dispatch(cmAddSelection(path)),
+    removeSelection: path => dispatch(cmRemoveSelection(path))
 });
 
 ContentListTable.propTypes = {

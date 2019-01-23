@@ -16,11 +16,12 @@ import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import ContentPreview from './ContentPreview';
 import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {CM_DRAWER_STATES, cmSetPreviewMode, cmSetPreviewState} from '../../ContentManager.redux-actions';
+import {CM_DRAWER_STATES} from '../../ContentManager.redux-actions';
 import {compose} from 'react-apollo';
 import {DisplayAction, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
 import * as _ from 'lodash';
+import {cmSetPreviewMode, cmSetPreviewState} from '../../preview.redux-actions';
 
 const styles = theme => ({
     leftButtons: {

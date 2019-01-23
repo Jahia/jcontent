@@ -1,12 +1,13 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {cmGoto, cmOpenPaths, cmSetPreviewSelection} from '../ContentManager.redux-actions';
+import {cmGoto, cmOpenPaths} from '../ContentManager.redux-actions';
 import {reduxAction} from './reduxAction';
 import ContentManagerConstants from '../ContentManager.constants';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/apollo-dx';
+import {cmSetPreviewSelection} from '../preview.redux-actions';
 
 const FindParentQuery = gql`
     query findParentQuery($path:String!) {

@@ -6,14 +6,14 @@ import {compose} from 'react-apollo';
 
 export class ContentListHeader extends React.Component {
     render() {
-        const {order, orderBy, columnData, t, classes, setSort} = this.props;
+        const {order, orderBy, columnData, t, classes, setSort, allSelected, anySelected, selectAll, unselectAll} = this.props;
         let direction = order === 'DESC' ? 'ASC' : 'DESC';
         return (
             <TableHead>
                 <TableRow>
                     <TableCell padding="none"/>
                     <TableCell padding="checkbox">
-                        <Checkbox checked={false}/>
+                        <Checkbox indeterminate={anySelected && !allSelected} checked={anySelected} onClick={allSelected ? unselectAll : selectAll}/>
                     </TableCell>
                     {columnData.map(column => {
                         if (column.sortable) {

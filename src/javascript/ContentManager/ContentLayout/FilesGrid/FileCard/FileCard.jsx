@@ -9,7 +9,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
-import {cmSetPreviewSelection, cmGoto, cmOpenPaths, CM_DRAWER_STATES} from '../../../ContentManager.redux-actions';
+import {cmGoto, cmOpenPaths, CM_DRAWER_STATES} from '../../../ContentManager.redux-actions';
 import {connect} from 'react-redux';
 import {allowDoubleClickNavigation} from '../../../ContentManager.utils';
 import classNames from 'classnames';
@@ -17,6 +17,7 @@ import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
 import {extractPaths} from '../../../ContentManager.utils';
+import {cmSetPreviewSelection} from '../../../preview.redux-actions';
 
 const styles = theme => ({
     defaultCard: {

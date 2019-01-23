@@ -39,7 +39,7 @@
                 "selectMessage": "Select files from my computer",
                 "uploadingActionMessage": "There are error(s) which need your attention",
                 "or": "or",
-                "dropMessage": "Drop files here to upload",
+                "dropMessage": "Drag and drop a file here or use the \"Create\" button",
                 "queued": "Queued",
                 "errorMessage": "There were problems uploading some files",
                 "replace": "Replace",
@@ -56,7 +56,12 @@
                 "cannotStore": "Could not upload file: file exceeds {{maxUploadSize}}MB",
                 "uploading": "Uploading...",
                 "retry": "Retry",
-                "errorActionMessage": "Please resolve the issue(s)"
+                "errorActionMessage": "Please resolve the issue(s)",
+                "dialogRenameTitle": "Rename the imported file",
+                "dialogRenameText": "Which name would you want for the new imported file ?",
+                "dialogRenameExample": "ex: filename",
+                "dialogRenameCancel": "Resign",
+                "dialogRename" : "Rename"
             },
             "error": {
                 "contentUnavailable": "The requested content is unavailable",

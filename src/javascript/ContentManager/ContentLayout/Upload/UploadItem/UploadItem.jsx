@@ -3,7 +3,7 @@ import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {withApollo, compose} from 'react-apollo';
 import {uploadFile, updateFileContent} from './UploadItem.gql-mutations';
-import {Button, CircularProgress, ListItem, ListItemText, Avatar, ListItemSecondaryAction, Popover, TextField} from '@material-ui/core';
+import {Button, CircularProgress, Typography, Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE} from '../Upload.constants';
@@ -15,44 +15,44 @@ import {ellipsizeText} from '../../../ContentManager.utils';
 
 const styles = theme => ({
     progressText: {
-        display: 'flex',
-        justifyContent: 'start',
-        alignItems: 'center',
-        alignContent: 'center',
-        justifyItems: 'center'
+        display: 'inline-block',
+        width: 212,
+        padding: '16px 0px 0px 32px',
+        color: theme.palette.text.contrastText
     },
     fileNameText: {
-        width: 350,
-        '& span': {
-            color: theme.palette.text.secondary
-        }
+        display: 'inline-block',
+        width: 212,
+        padding: '16px 0px 0px 32px',
+        color: theme.palette.text.contrastText
     },
     statusIcon: {
         marginRight: theme.spacing.unit
-    },
-    statusIconRed: {
-        marginRight: theme.spacing.unit,
-        color: theme.palette.error.main
-    },
-    statusIconGreen: {
-        marginRight: theme.spacing.unit,
-        color: theme.palette.valid.main
-    },
-    statusIconOrange: {
-        marginRight: theme.spacing.unit,
-        color: theme.palette.secondary.main
     },
     renameField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: 250,
         '& label': {
-            color: theme.palette.text.secondary
+            color: theme.palette.text.contrastText
         }
     },
     actionButton: {
-        margin: theme.spacing.unit,
-        color: theme.palette.text.secondary
+        color: theme.palette.text.contrastText
+    },
+    secondaryList: {
+        display: 'inline-block'
+    },
+    listItem: {
+        display: 'block'
+    },
+    snackBarFiles: {
+        float: 'left',
+        minWidth: '60%'
+        // MarginBottom: theme.spacing.unit * 4
+    },
+    snackBarStatus: {
+        float: 'right'
     }
 });
 
@@ -80,41 +80,47 @@ export class UploadItem extends React.Component {
     }
 
     render() {
-        const {classes, file, t} = this.props;
+        const {classes, t} = this.props;
         const open = Boolean(this.state.anchorEl);
         return (
-            <ListItem className={classes.listItem}>
-                { this.avatar() }
-                <ListItemText className={classes.fileNameText} primary={ellipsizeText(this.getFileName(), 60)}/>
-                <ListItemText className={classes.fileNameText} primary={this.statusText()}/>
-                <ListItemSecondaryAction>
-                    { this.secondaryActionsList() }
-                </ListItemSecondaryAction>
-                <Popover
-                    open={open}
-                    anchorEl={this.state.anchorEl}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center'
-                    }}
-                    transformOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center'
-                    }}
-                    onClose={this.hideChangeNamePopover}
-                >
-                    <TextField
-                        label={t('label.contentManager.fileUpload.newName')}
-                        className={classes.renameField}
-                        type="text"
-                        name="newName"
-                        margin="normal"
-                        variant="outlined"
-                        defaultValue={file.name}
-                        onKeyUp={this.rename}
-                    />
-                </Popover>
-            </ListItem>
+            <div className={classes.listItem}>
+                <div className={classes.snackBarFiles}>
+                    <Typography variant="subtitle2" className={classes.fileNameText}>{ellipsizeText(this.getFileName(), 20)}</Typography>
+                    <div className={classes.secondaryList}>
+                        { this.secondaryActionsList() }
+                    </div>
+                </div>
+                <div className={classes.snackBarStatus}>
+                    {this.statusText()}
+                </div>
+                <Dialog open={open}>
+                    <DialogTitle>{t('label.contentManager.fileUpload.dialogRenameTitle')}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {t('label.contentManager.fileUpload.dialogRenameText')}
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            label={t('label.contentManager.fileUpload.newName')}
+                            // ClassName={classes.renameField}
+                            type="text"
+                            name={t('label.contentManager.fileUpload.dialogRenameExample')}
+                            // Margin="normal"
+                            // variant="outlined"
+                            // defaultValue={file.name}
+                            // onKeyUp={this.rename}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.rename}>
+                            {t('label.contentManager.fileUpload.dialogRenameCancel')}
+                        </Button>
+                        <Button onClick={this.hideChangeNamePopover}>
+                            {t('label.contentManager.fileUpload.dialogRename')}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 
@@ -221,45 +227,45 @@ export class UploadItem extends React.Component {
 
         if (status === uploadStatuses.QUEUED) {
             text = (
-                <span className={classes.progressText}>
+                <Typography variant="subtitle2" className={classes.progressText}>
                     <FiberManualRecord className={classes.statusIcon}/>
                     {t('label.contentManager.fileUpload.queued')}
-                </span>
+                </Typography>
             );
         } else if (status === uploadStatuses.UPLOADED) {
             text = (
-                <span className={classes.progressText}>
-                    <CheckCircle className={classes.statusIconGreen}/>
+                <Typography variant="subtitle2" className={classes.progressText}>
+                    <CheckCircle className={classes.statusIcon}/>
                     {t('label.contentManager.fileUpload.uploaded')}
-                </span>
+                </Typography>
             );
         } else if (status === uploadStatuses.HAS_ERROR && error === 'FILE_EXISTS') {
             text = (
-                <span className={classes.progressText}>
-                    <Info className={classes.statusIconRed}/>
+                <Typography variant="subtitle2" className={classes.progressText}>
+                    <Info className={classes.statusIcon}/>
                     {t('label.contentManager.fileUpload.exists')}
-                </span>
+                </Typography>
             );
         } else if (status === uploadStatuses.HAS_ERROR && error === 'INCORRECT_SIZE') {
             text = (
-                <span className={classes.progressText}>
-                    <Info className={classes.statusIconRed}/>
+                <Typography variant="subtitle2" className={classes.progressText}>
+                    <Info className={classes.statusIcon}/>
                     {t('label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize})}
-                </span>
+                </Typography>
             );
         } else if (status === uploadStatuses.HAS_ERROR) {
             text = (
-                <span className={classes.progressText}>
-                    <Info className={classes.statusIconRed}/>
+                <Typography variant="subtitle2" className={classes.progressText}>
+                    <Info className={classes.statusIcon}/>
                     {t('label.contentManager.fileUpload.failed')}
-                </span>
+                </Typography>
             );
         } else if (status === uploadStatuses.UPLOADING) {
             text = (
-                <span className={classes.progressText}>
-                    <CircularProgress size={20} className={classes.statusIconOrange}/>
+                <Typography variant="subtitle2" className={classes.progressText}>
+                    <CircularProgress size={20} className={classes.statusIcon}/>
                     {t('label.contentManager.fileUpload.uploading')}
-                </span>
+                </Typography>
             );
         }
 
@@ -275,6 +281,7 @@ export class UploadItem extends React.Component {
                     key="dontupload"
                     className={classes.actionButton}
                     component="a"
+                    size="small"
                     onClick={() => {
                         removeFile(index);
                         dispatch(removeUpload(index));
@@ -293,6 +300,7 @@ export class UploadItem extends React.Component {
                             key="rename"
                             className={classes.actionButton}
                             component="a"
+                            size="small"
                             onClick={e => {
                                 this.rename(e);
                             }}
@@ -306,6 +314,7 @@ export class UploadItem extends React.Component {
                             key="rename"
                             className={classes.actionButton}
                             component="a"
+                            size="small"
                             onClick={e => {
                                 this.showChangeNamePopover(e);
                             }}
@@ -319,6 +328,7 @@ export class UploadItem extends React.Component {
                         key="overwrite"
                         className={classes.actionButton}
                         component="a"
+                        size="small"
                         onClick={() => {
                             this.doUploadAndStatusUpdate(true);
                         }}
@@ -329,6 +339,7 @@ export class UploadItem extends React.Component {
                         key="dontupload"
                         className={classes.actionButton}
                         component="a"
+                        size="small"
                         onClick={() => {
                             removeFile(index);
                             dispatch(removeUpload(index));
@@ -343,6 +354,7 @@ export class UploadItem extends React.Component {
                         key="dontupload"
                         className={classes.actionButton}
                         component="a"
+                        size="small"
                         onClick={() => {
                             removeFile(index);
                             dispatch(removeUpload(index));
@@ -354,6 +366,7 @@ export class UploadItem extends React.Component {
                         key="retry"
                         className={classes.actionButton}
                         component="a"
+                        size="small"
                         onClick={() => {
                             this.doUploadAndStatusUpdate(false);
                         }}

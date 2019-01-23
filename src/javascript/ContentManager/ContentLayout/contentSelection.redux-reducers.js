@@ -7,7 +7,7 @@ import {CM_NAVIGATE} from '../ContentManager.redux-actions';
 let selectionReducer = (state = [], action) => {
     if (action.type === CM_ADD_SELECTION || action.type === CM_REMOVE_SELECTION || action.type === CM_SWITCH_SELECTION) {
         if (Array.isArray(action.path)) {
-            state = action.path.map(path => ({type: action.type, path})).reduce(selectionReducer, state);
+            return action.path.map(path => ({type: action.type, path})).reduce(selectionReducer, state);
         }
     }
     switch (action.type) {

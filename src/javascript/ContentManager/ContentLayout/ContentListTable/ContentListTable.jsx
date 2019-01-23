@@ -264,7 +264,7 @@ export class ContentListTable extends React.Component {
                                             rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.icon);
-                                                let showActions = this.state.hover === node.path && !isPreviewOpened;
+                                                let showActions = this.state.hover === node.path && !isPreviewOpened && selection.length === 0;
                                                 // Let isDeleted = isMarkedForDeletion(n);
                                                 let contextualMenu = React.createRef();
                                                 return (

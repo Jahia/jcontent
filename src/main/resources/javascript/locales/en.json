@@ -208,7 +208,11 @@
                 },
                 "locate": "Locate"
             },
-            "browseFolders": "Browse Folders"
+            "browseFolders": "Browse Folders",
+            "selection": {
+                "itemsSelected": "{{count}} item selected",
+                "itemsSelected_plural": "{{count}} items selected"
+            }
         }
     }
 }

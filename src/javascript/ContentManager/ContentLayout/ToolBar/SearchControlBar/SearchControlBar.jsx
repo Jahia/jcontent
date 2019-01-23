@@ -20,7 +20,7 @@ const styles = theme => ({
 export class SearchControlBar extends React.Component {
     render() {
         let {
-            siteKey, path, setPath, t, classes, siteDisplayableName, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms
+            siteKey, path, setPath, t, classes, siteDisplayableName, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms, showActions
         } = this.props;
         let siteRootPath = '/sites/' + siteKey;
         const params = {
@@ -40,7 +40,7 @@ export class SearchControlBar extends React.Component {
 
                 <div className={classes.grow}/>
 
-                {(path !== siteRootPath) &&
+                {showActions && (path !== siteRootPath) &&
                 <Button data-cm-role="search-all"
                         variant="contained"
                         size="small"
@@ -50,6 +50,7 @@ export class SearchControlBar extends React.Component {
                     {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
                 </Button>
                 }
+                {showActions &&
                 <Button data-cm-role="search-clear"
                         color="primary"
                         variant="contained"
@@ -59,7 +60,7 @@ export class SearchControlBar extends React.Component {
                     <Close/>
                     {t('label.contentManager.search.clear')}
                 </Button>
-
+                }
             </React.Fragment>
         );
     }

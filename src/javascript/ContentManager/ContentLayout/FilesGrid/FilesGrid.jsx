@@ -81,9 +81,9 @@ export class FilesGrid extends Component {
         });
     }
 
-    onFilesSelected(acceptedFiles) {
+    /* OnFilesSelected(acceptedFiles) {
         onFilesSelected(acceptedFiles, this.props.dispatchBatch, {path: this.props.path});
-    }
+    } */
 
     render() {
         const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage} = this.props;
@@ -105,7 +105,7 @@ export class FilesGrid extends Component {
         if (!this.props.rows || this.props.rows.length === 0) {
             return (
                 <React.Fragment>
-                    <Toolbar/>
+                    <ToolBar/>
                     <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
                         <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                             <div className={classes.dragZoneRoot}>

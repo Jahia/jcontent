@@ -25,11 +25,6 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.mjs$/,
-                    include: /node_modules/,
-                    type: 'javascript/auto'
-                },
-                {
                     test: /\.jsx?$/,
                     include: [path.join(__dirname, 'src')],
                     loader: 'babel-loader',
@@ -43,22 +38,20 @@ module.exports = (env, argv) => {
                             '@babel/plugin-syntax-dynamic-import'
                         ]
                     }
-                },
-                {
-                    test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                    use: [{
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'fonts/'
-                        }
-                    }]
                 }
             ]
         },
         plugins: [
+            new webpack.DllReferencePlugin({
+                manifest: require('./target/dependency/dx-commons-webpack-1.0.0-SNAPSHOT-manifest')
+            }),
             new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/),
-            new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'))
+            new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),
+            new webpack.HashedModuleIdsPlugin({
+                hashFunction: 'sha256',
+                hashDigest: 'hex',
+                hashDigestLength: 20
+            })
         ],
         mode: 'development'
     };

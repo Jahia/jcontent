@@ -20,7 +20,10 @@
 
 <body style="overflow: hidden; ">
 <template:addResources type="javascript" resources="polyfills.js"/>
-<template:addResources type="javascript" resources="apps/cmm.bundle.js"/>
+
+<template:addResources type="javascript" resources="js-load.js"/>
+
+<%--<js:loader baseExt="cmm"/>--%>
 
 <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 <div id="${targetId}">loading..</div>
@@ -44,7 +47,9 @@
     window.cmmContext = {
         targetId: '${targetId}',
         nodeIdentifier: '${currentNode.identifier}'
-    }
+    };
+
+    bootstrap(['/modules/content-media-manager/javascript/apps/cmm.bundle.js']);
 </script>
 
 ${cmFunctions:generateActionLists(renderContext)}

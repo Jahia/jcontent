@@ -216,7 +216,8 @@
             "browseFolders": "Browse Folders",
             "selection": {
                 "itemsSelected": "{{count}} item selected",
-                "itemsSelected_plural": "{{count}} items selected"
+                "itemsSelected_plural": "{{count}} items selected",
+                "clearMultipleSelection": "Clear selection"
             }
         }
     }

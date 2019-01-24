@@ -47,11 +47,11 @@ const styles = theme => ({
     }
 });
 
-export const PublicationStatus = ({selection, t, classes, uiLang}) => {
-    if (_.isEmpty(selection)) {
+export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
+    if (_.isEmpty(previewSelection)) {
         return null;
     }
-    const selectedItem = selection;
+    const selectedItem = previewSelection;
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === selectedItem.publicationStatus || isMarkedForDeletion(selectedItem)) {
         return (

@@ -36,15 +36,15 @@ const styles = theme => ({
 
 export class PreviewDrawer extends React.Component {
     componentDidUpdate(prevProps) {
-        if (!prevProps.selection || (this.props.selection && prevProps.selection.path !== this.props.selection.path)) {
+        if (!prevProps.previewSelection || (this.props.previewSelection && prevProps.previewSelection.path !== this.props.previewSelection.path)) {
             this.props.setPreviewMode('edit');
         }
     }
 
     render() {
-        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, selection, classes} = this.props;
-        const disabledToggle = !selection;
-        const disabledLive = !selection || selection.publicationStatus === 'NOT_PUBLISHED' || selection.publicationStatus === 'UNPUBLISHED';
+        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, classes} = this.props;
+        const disabledToggle = !previewSelection;
+        const disabledLive = !previewSelection || previewSelection.publicationStatus === 'NOT_PUBLISHED' || previewSelection.publicationStatus === 'UNPUBLISHED';
         return (
             <React.Fragment>
                 <AppBar position="relative" color="default">
@@ -86,14 +86,14 @@ export class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <ContentPreview selection={selection}/>
-                {selection &&
+                <ContentPreview previewSelection={previewSelection}/>
+                {previewSelection &&
                     <Card>
                         <CardContent data-cm-role="preview-name">
                             <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
-                                {selection.displayName ? selection.displayName : selection.name}
+                                {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                             </Typography>
-                            <PublicationStatus selection={selection}/>
+                            <PublicationStatus previewSelection={previewSelection}/>
                         </CardContent>
                         <CardActions disableActionSpacing={false}>
                             <div className={classes.leftButtons}>
@@ -102,13 +102,13 @@ export class PreviewDrawer extends React.Component {
                                     filter={value => {
                                         return _.includes(['edit', 'publishMenu'], value.key);
                                     }}
-                                    context={{path: selection.path}}
+                                    context={{path: previewSelection.path}}
                                     render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
                                 />
                                 <DisplayAction
                                     actionKey="contentMenu"
                                     context={{
-                                        path: selection.path,
+                                        path: previewSelection.path,
                                         menuFilter: value => {
                                             return !_.includes(['edit', 'publishMenu', 'preview'], value.key);
                                         }

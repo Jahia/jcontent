@@ -169,7 +169,7 @@ export class ContentLayout extends React.Component {
                                 }}
                             >
                                 {previewOpen &&
-                                    <PreviewDrawer selection={rows.find(node => node.path === previewSelection)}/>
+                                    <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
                                 }
                             </Drawer>
                         </div>

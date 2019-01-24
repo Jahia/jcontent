@@ -11,6 +11,8 @@ import DxContext from '../../../DxContext';
 import NoPreviewComponent from './NoPreviewComponent';
 import PreviewComponent from './PreviewComponent';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../preview.redux-actions';
+import MultipleSelection from './MultipleSelection/MultipleSelection';
+import {cmClearSelection} from '../../contentSelection.redux-actions';
 
 const styles = theme => ({
     root: {
@@ -29,6 +31,18 @@ const styles = theme => ({
         overflow: 'auto',
         width: '100%',
         height: '100%'
+    },
+    center: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        textAlign: 'center',
+        color: theme.palette.text.disabled
+    },
+    centerIcon: {
+        margin: '8 auto'
     },
     mediaContainer: {
         backgroundColor: theme.palette.background.dark
@@ -61,14 +75,17 @@ export class ContentPreview extends React.Component {
     }
 
     render() {
-        const {selection, classes, previewMode} = this.props;
+        const {previewSelection, classes, previewMode, selection} = this.props;
 
-        if (_.isEmpty(selection)) {
+        if (selection.length > 0) {
+            return <MultipleSelection {...this.props}/>;
+        }
+        if (_.isEmpty(previewSelection)) {
             return <NoPreviewComponent {...this.props}/>;
         }
 
-        const path = selection.path;
-        const livePreviewAvailable = selection.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED && selection.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED;
+        const path = previewSelection.path;
+        const livePreviewAvailable = previewSelection.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED && previewSelection.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED;
         const queryVariables = {
             path: path,
             templateType: 'html',
@@ -120,7 +137,8 @@ const mapStateToProps = state => {
     return {
         previewMode: state.previewMode,
         previewState: state.previewState,
-        language: state.language
+        language: state.language,
+        selection: state.selection
     };
 };
 
@@ -130,7 +148,8 @@ const mapDispatchToProps = dispatch => ({
     },
     setPreviewState: state => {
         dispatch(cmSetPreviewState(state));
-    }
+    },
+    clearSelection: () => dispatch(cmClearSelection())
 });
 
 export default compose(

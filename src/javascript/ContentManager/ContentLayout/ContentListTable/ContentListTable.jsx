@@ -303,7 +303,11 @@ export class ContentListTable extends React.Component {
                                                             padding="checkbox"
                                                             classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                         >
-                                                            <Checkbox checked={selection.indexOf(node.path) !== -1} onClick={() => switchSelection(node.path)}/>
+                                                            <Checkbox checked={selection.indexOf(node.path) !== -1}
+                                                                      onClick={event => {
+                                                                switchSelection(node.path);
+                                                                event.stopPropagation();
+                                                            }}/>
                                                         </TableCell>
                                                         {columnData.map(column => {
                                                             if (column.id === 'name') {

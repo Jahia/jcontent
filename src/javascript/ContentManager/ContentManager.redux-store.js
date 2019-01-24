@@ -1,5 +1,6 @@
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
+import thunk from 'redux-thunk';
 import {selectionReducer} from './ContentLayout/contentSelection.redux-reducers';
 import {fileUpload} from './ContentLayout/Upload/Upload.redux-reducer';
 import {copyPaste} from './actions/actions.redux-reducer';
@@ -56,6 +57,7 @@ let contentManagerReduxStore = (dxContext, history) => {
             applyMiddleware(
                 routerMiddleware(history),
                 batchDispatchMiddleware,
+                thunk
                 // Logger
             ),
         ),

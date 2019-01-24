@@ -3,9 +3,13 @@ const CM_SET_PREVIEW_MODE = 'CM_SET_PREVIEW_MODE';
 const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
 
 function cmSetPreviewSelection(previewSelection) {
-    return {
-        type: CM_SET_PREVIEW_SELECTION,
-        previewSelection
+    return (dispatch, getState) => {
+        if (!previewSelection || getState().selection.length === 0) {
+            dispatch({
+                type: CM_SET_PREVIEW_SELECTION,
+                previewSelection
+            });
+        }
     };
 }
 

@@ -1,5 +1,5 @@
 import {CM_SET_PAGE} from './pagination.redux-actions';
-import {CM_ADD_SELECTION, CM_REMOVE_SELECTION, CM_SWITCH_SELECTION} from './contentSelection.redux-actions';
+import {CM_ADD_SELECTION, CM_REMOVE_SELECTION, CM_SWITCH_SELECTION, CM_CLEAR_SELECTION} from './contentSelection.redux-actions';
 import {CM_SET_SORT} from './sort.redux-actions';
 import {CM_SET_PAGE_SIZE} from './pagination.redux-actions';
 import {CM_NAVIGATE} from '../ContentManager.redux-actions';
@@ -27,6 +27,7 @@ let selectionReducer = (state = [], action) => {
             }
             return state.filter(path => path !== action.path);
 
+        case CM_CLEAR_SELECTION:
         case CM_SET_SORT:
         case CM_SET_PAGE:
         case CM_SET_PAGE_SIZE:

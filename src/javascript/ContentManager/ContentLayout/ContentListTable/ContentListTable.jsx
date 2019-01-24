@@ -120,6 +120,14 @@ const styles = theme => ({
             backgroundColor: theme.palette.background.default
         }
     },
+    rowShowActions: {
+        '&:hover $actionsDiv': {
+            display: 'block'
+        },
+        '&:hover $lastModifiedTypography': {
+            display: 'none'
+        }
+    },
     rowCursor: {
         '&&:hover': {
             cursor: 'pointer'
@@ -150,10 +158,17 @@ const styles = theme => ({
             verticalAlign: 'sub'
         }
     },
-    actionsCell: {
-        minWidth: theme.spacing.unit * 18,
-        width: theme.spacing.unit * 18,
-        color: theme.palette.primary.dark
+    lastModifiedCell: {
+        paddingRight: '8px'
+    },
+    lastModifiedTypography: {
+        textAlign: 'right',
+        paddingRight: theme.spacing.unit * 2
+    },
+    actionsDiv: {
+        float: 'right',
+        color: theme.palette.primary.dark,
+        display: 'none'
     },
     isDeleted: {
         textDecoration: 'line-through'
@@ -183,25 +198,6 @@ const styles = theme => ({
 });
 
 export class ContentListTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            hover: ''
-        };
-        this.onRowHover = this.onRowHover.bind(this);
-        this.onHoverExit = this.onHoverExit.bind(this);
-    }
-
-    onRowHover(path) {
-        this.setState({
-            hover: path
-        });
-    }
-
-    onHoverExit() {
-        this.setState({hover: ''});
-    }
-
     getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
         let selected = isSelected && isPreviewOpened;
         let cellClasses = {
@@ -267,7 +263,7 @@ export class ContentListTable extends React.Component {
                                             rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.icon);
-                                                let showActions = this.state.hover === node.path && !isPreviewOpened && selection.length === 0;
+                                                let showActions = !isPreviewOpened && selection.length === 0;
                                                 // Let isDeleted = isMarkedForDeletion(n);
                                                 let contextualMenu = React.createRef();
                                                 return (
@@ -275,7 +271,7 @@ export class ContentListTable extends React.Component {
                                                         key={node.uuid}
                                                         hover
                                                         classes={{
-                                                            root: classNames(classes.row, {[classes.rowCursor]: isPreviewOpened}),
+                                                            root: classNames(classes.row, {[classes.rowCursor]: isPreviewOpened, [classes.rowShowActions]: showActions}),
                                                             selected: classes.selectedRow
                                                         }}
                                                         data-cm-node-path={node.path}
@@ -291,8 +287,6 @@ export class ContentListTable extends React.Component {
                                                             contextualMenu.current.open(event);
                                                         }}
                                                         onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
-                                                        onMouseEnter={() => this.onRowHover(node.path)}
-                                                        onMouseLeave={this.onHoverExit}
                                                     >
                                                         <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
                                                         <TableCell
@@ -373,44 +367,48 @@ export class ContentListTable extends React.Component {
                                                             if (column.id === 'lastModified') {
                                                                 return (
                                                                     <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(node, classes, showActions ? 'actions' : column.id, isSelected, isPreviewOpened)}
-                                                                               data-cm-role={'table-content-list-cell-' + showActions ? 'actions' : column.id}
+                                                                               classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                               data-cm-role={'table-content-list-cell-' + column.id}
                                                                                padding={showActions ? 'checkbox' : 'default'}
                                                                     >
-                                                                        {showActions ?
-                                                                            <React.Fragment>
-                                                                                <DisplayActions
-                                                                                    target="contentActions"
-                                                                                    filter={value => {
-                                                                                        return _.includes(['edit', 'preview'], value.key);
-                                                                                    }}
-                                                                                    context={{path: node.path}}
-                                                                                    render={iconButtonRenderer({
-                                                                                        color: 'inherit',
-                                                                                        disableRipple: true
-                                                                                    }, true)}
-                                                                                />
-                                                                                <DisplayAction
-                                                                                    actionKey="contentMenu"
-                                                                                    context={{
-                                                                                        path: node.path,
-                                                                                        menuFilter: value => {
-                                                                                            return !_.includes(['edit', 'preview'], value.key);
-                                                                                        }
-                                                                                    }}
-                                                                                    render={iconButtonRenderer({
-                                                                                        color: 'inherit',
-                                                                                        disableRipple: true
-                                                                                    }, true)}
-                                                                                />
-                                                                            </React.Fragment> :
-                                                                            <Typography noWrap variant="body2" color="inherit">
-                                                                                <Moment format="ll"
-                                                                                        locale={uiLang}
-                                                                                >
-                                                                                    {node[column.id]}
-                                                                                </Moment>
-                                                                            </Typography>
+                                                                        <Typography noWrap variant="body2" color="inherit" className={classes.lastModifiedTypography}>
+                                                                            <Moment format="ll"
+                                                                                    locale={uiLang}
+                                                                            >
+                                                                                {node[column.id]}
+                                                                            </Moment>
+                                                                        </Typography>
+
+                                                                        {showActions &&
+                                                                        <div key="actions"
+                                                                             className={classes.actionsDiv}
+                                                                             data-cm-role="table-content-list-cell-actions"
+                                                                        >
+                                                                            <DisplayActions
+                                                                                target="contentActions"
+                                                                                filter={value => {
+                                                                                    return _.includes(['edit', 'preview'], value.key);
+                                                                                }}
+                                                                                context={{path: node.path}}
+                                                                                render={iconButtonRenderer({
+                                                                                    color: 'inherit',
+                                                                                    disableRipple: true
+                                                                                }, true)}
+                                                                            />
+                                                                            <DisplayAction
+                                                                                actionKey="contentMenu"
+                                                                                context={{
+                                                                                    path: node.path,
+                                                                                    menuFilter: value => {
+                                                                                        return !_.includes(['edit', 'preview'], value.key);
+                                                                                    }
+                                                                                }}
+                                                                                render={iconButtonRenderer({
+                                                                                    color: 'inherit',
+                                                                                    disableRipple: true
+                                                                                }, true)}
+                                                                            />
+                                                                        </div>
                                                                         }
                                                                     </TableCell>
                                                                 );

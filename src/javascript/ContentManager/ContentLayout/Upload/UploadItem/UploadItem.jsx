@@ -3,13 +3,12 @@ import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {withApollo, compose} from 'react-apollo';
 import {uploadFile, updateFileContent} from './UploadItem.gql-mutations';
-import {Button, CircularProgress, Typography, Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
-import {CheckCircle, Info, FiberManualRecord, InsertDriveFile} from '@material-ui/icons';
+import {Button, CircularProgress, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
+import {CheckCircle, Info, FiberManualRecord} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS, RENAME_MODE} from '../Upload.constants';
+import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS} from '../Upload.constants';
 import {updateUpload, removeUpload, takeFromQueue} from '../Upload.redux-actions';
 import {batchActions} from 'redux-batched-actions';
-import {isImageFile} from '../../FilesGrid/FilesGrid.utils';
 import {translate} from 'react-i18next';
 import {ellipsizeText} from '../../../ContentManager.utils';
 
@@ -29,14 +28,6 @@ const styles = theme => ({
     statusIcon: {
         marginRight: theme.spacing.unit
     },
-    renameField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 250,
-        '& label': {
-            color: theme.palette.text.contrastText
-        }
-    },
     actionButton: {
         color: theme.palette.text.contrastText
     },
@@ -49,7 +40,6 @@ const styles = theme => ({
     snackBarFiles: {
         float: 'left',
         minWidth: '60%'
-        // MarginBottom: theme.spacing.unit * 4
     },
     snackBarStatus: {
         float: 'right'
@@ -67,9 +57,10 @@ export class UploadItem extends React.Component {
             anchorEl: null
         };
 
-        this.showChangeNamePopover = this.showChangeNamePopover.bind(this);
-        this.hideChangeNamePopover = this.hideChangeNamePopover.bind(this);
+        this.showRenameDialog = this.showRenameDialog.bind(this);
+        this.hideRenameDialog = this.hideRenameDialog.bind(this);
         this.rename = this.rename.bind(this);
+        this.onChangeName = this.onChangeName.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -79,9 +70,14 @@ export class UploadItem extends React.Component {
         }
     }
 
+    onChangeName(e) {
+        this.setState({
+            userChosenName: e.target.value
+        });
+    }
+
     render() {
-        const {classes, t} = this.props;
-        const open = Boolean(this.state.anchorEl);
+        const {classes, t, file} = this.props;
         return (
             <div className={classes.listItem}>
                 <div className={classes.snackBarFiles}>
@@ -93,7 +89,7 @@ export class UploadItem extends React.Component {
                 <div className={classes.snackBarStatus}>
                     {this.statusText()}
                 </div>
-                <Dialog open={open}>
+                <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>{t('label.contentManager.fileUpload.dialogRenameTitle')}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -102,20 +98,17 @@ export class UploadItem extends React.Component {
                         <TextField
                             autoFocus
                             label={t('label.contentManager.fileUpload.newName')}
-                            // ClassName={classes.renameField}
                             type="text"
                             name={t('label.contentManager.fileUpload.dialogRenameExample')}
-                            // Margin="normal"
-                            // variant="outlined"
-                            // defaultValue={file.name}
-                            // onKeyUp={this.rename}
+                            defaultValue={file.name}
+                            onChange={event => this.onChangeName(event)}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.rename}>
+                        <Button variant="contained" color="default" onClick={this.hideRenameDialog}>
                             {t('label.contentManager.fileUpload.dialogRenameCancel')}
                         </Button>
-                        <Button onClick={this.hideChangeNamePopover}>
+                        <Button variant="contained" color="primary" onClick={this.rename}>
                             {t('label.contentManager.fileUpload.dialogRename')}
                         </Button>
                     </DialogActions>
@@ -124,25 +117,12 @@ export class UploadItem extends React.Component {
         );
     }
 
-    rename(e) {
-        if (RENAME_MODE === 'AUTOMATIC') {
-            const {file} = this.props;
-            // Note that this may have issues, better strategy would be to generate name first
-            this.setState({
-                userChosenName: file.name.replace('.', '-1.')
-            }, () => {
-                this.changeStatusToUploading();
-            });
-        } else if (RENAME_MODE === 'MANUAL') {
-            if (e.keyCode === 13) {
-                this.setState({
-                    userChosenName: e.target.value,
-                    anchorEl: null
-                }, () => {
-                    this.changeStatusToUploading();
-                });
-            }
-        }
+    rename() {
+        this.setState({
+            anchorEl: null
+        }, () => {
+            this.changeStatusToUploading();
+        });
     }
 
     doUploadAndStatusUpdate(replace) {
@@ -294,35 +274,20 @@ export class UploadItem extends React.Component {
         }
         if (status === uploadStatuses.HAS_ERROR) {
             if (error === 'FILE_EXISTS') {
-                if (RENAME_MODE === 'AUTOMATIC') {
-                    actions.push(
-                        <Button
+                actions.push(
+                    <Button
                             key="rename"
                             className={classes.actionButton}
                             component="a"
                             size="small"
                             onClick={e => {
-                                this.rename(e);
+                                this.showRenameDialog(e);
                             }}
-                        >
-                            {t('label.contentManager.fileUpload.rename')}
-                        </Button>
-                    );
-                } else if (RENAME_MODE === 'MANUAL') {
-                    actions.push(
-                        <Button
-                            key="rename"
-                            className={classes.actionButton}
-                            component="a"
-                            size="small"
-                            onClick={e => {
-                                this.showChangeNamePopover(e);
-                            }}
-                        >
-                            {t('label.contentManager.fileUpload.rename')}
-                        </Button>
-                    );
-                }
+                    >
+                        {t('label.contentManager.fileUpload.rename')}
+                    </Button>
+                );
+
                 actions.push(
                     <Button
                         key="overwrite"
@@ -380,13 +345,13 @@ export class UploadItem extends React.Component {
         return actions;
     }
 
-    showChangeNamePopover(e) {
+    showRenameDialog(e) {
         this.setState({
             anchorEl: e.currentTarget
         });
     }
 
-    hideChangeNamePopover() {
+    hideRenameDialog() {
         this.setState({
             anchorEl: null
         });
@@ -400,18 +365,6 @@ export class UploadItem extends React.Component {
             path: this.props.path
         };
         this.props.dispatch(updateUpload(upload));
-    }
-
-    avatar() {
-        const {file} = this.props;
-        if (isImageFile(file.name)) {
-            return <Avatar alt={file.name} src={file.preview}/>;
-        }
-        return (
-            <Avatar>
-                <InsertDriveFile/>
-            </Avatar>
-        );
     }
 }
 

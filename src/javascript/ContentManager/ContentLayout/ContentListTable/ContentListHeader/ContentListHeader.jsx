@@ -8,6 +8,7 @@ export class ContentListHeader extends React.Component {
     render() {
         const {order, orderBy, columnData, t, classes, setSort, allSelected, anySelected, selectAll, unselectAll} = this.props;
         let direction = order === 'DESC' ? 'ASC' : 'DESC';
+        let noneSelected = !anySelected;
         return (
             <TableHead>
                 <TableRow>
@@ -26,7 +27,8 @@ export class ContentListHeader extends React.Component {
                                     <TableSortLabel
                                         active={orderBy === column.property}
                                         direction={direction.toLowerCase()}
-                                        onClick={() => setSort({order: direction, orderBy: column.property})}
+                                        className={anySelected ? classes.disabledSort : ''}
+                                        onClick={() => noneSelected && setSort({order: direction, orderBy: column.property})}
                                     >
                                         <Typography noWrap variant="subtitle2" color="textPrimary">{t(column.label)}</Typography>
                                     </TableSortLabel>
@@ -37,7 +39,6 @@ export class ContentListHeader extends React.Component {
                             <TableCell
                                 key={column.id}
                                 className={classes[column.id + 'Cell']}
-                                padding="none"
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                             >
                                 <Typography noWrap variant="subtitle2" color="textPrimary">{t(column.label)}</Typography>

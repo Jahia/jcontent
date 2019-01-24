@@ -176,6 +176,9 @@ const styles = theme => ({
         '&:hover': {
             width: 640
         }
+    },
+    disabledSort: {
+        cursor: 'initial'
     }
 });
 

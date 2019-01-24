@@ -39,7 +39,7 @@
                 "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
                 "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
                 "or": "ou",
-                "dropMessage": "Déposez les fichiers ici pour les télécharger",
+                "dropMessage": "Déposez les fichiers ici pour les télécharger ou utilisez le menu \"Créer\"",
                 "queued": "Mis en file d'attente",
                 "errorMessage": "Il y a eu des problèmes lors du téléchargement de certains fichiers",
                 "replace": "Remplacer",
@@ -56,7 +56,12 @@
                 "exists": "Le fichier existe déjà",
                 "uploading": "Téléchargement ...",
                 "retry": "Réessayer",
-                "errorActionMessage": "Veuillez résoudre le(s) problème(s)"
+                "errorActionMessage": "Veuillez résoudre le(s) problème(s)",
+                "dialogRenameTitle": "Renommer le fichier importé",
+                "dialogRenameText": "Quel nom voulez vous pour le fichier importé ?",
+                "dialogRenameExample": "ex: filename",
+                "dialogRenameCancel": "Anuuler",
+                "dialogRename" : "Renommer"
             },
             "error": {
                 "contentUnavailable": "Le contenu demandé n'est pas disponible",

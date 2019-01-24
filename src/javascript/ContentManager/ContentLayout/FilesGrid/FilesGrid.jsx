@@ -81,10 +81,6 @@ export class FilesGrid extends Component {
         });
     }
 
-    /* OnFilesSelected(acceptedFiles) {
-        onFilesSelected(acceptedFiles, this.props.dispatchBatch, {path: this.props.path});
-    } */
-
     render() {
         const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage} = this.props;
         const {hoveredCard} = this.state;

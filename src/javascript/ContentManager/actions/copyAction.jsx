@@ -9,7 +9,10 @@ export default composeActions(requirementsAction, reduxAction(() => ({}), dispat
     init: context => context.initRequirements({retrievePrimaryNodeType: true, retrieveDisplayName: true}),
 
     onClick: context => {
-        const {copy, path, node: {uuid, name, displayName, primaryNodeType}} = context;
-        copy([new CopyPasteNode({path, uuid, name, displayName, primaryNodeType, mutationToUse: CopyPasteNode.PASTE_MODES.COPY})]);
+        if (context.node) {
+            context.copy([new CopyPasteNode({...context.node, mutationToUse: CopyPasteNode.PASTE_MODES.COPY})]);
+        } else if (context.nodes) {
+            context.copy(context.nodes.map(node => new CopyPasteNode({...node, mutationToUse: CopyPasteNode.PASTE_MODES.COPY})));
+        }
     }
 });

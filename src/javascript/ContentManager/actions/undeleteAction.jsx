@@ -14,9 +14,9 @@ export default composeActions(requirementsAction, {
     },
     onClick: context => {
         if (context.node) {
-            window.parent.authoringApi.undeleteContent(context.node.uuid, context.node.path, (context.node.displayName ? ellipsizeText(context.displayName, 100) : ''), context.node.name)
+            window.parent.authoringApi.undeleteContent(context.node.uuid, context.node.path, (context.node.displayName ? ellipsizeText(context.displayName, 100) : ''), context.node.name);
         } else if (context.nodes) {
-            window.parent.authoringApi.undeleteContents(context.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes:['jnt:content'], inheritedNodeTypes:['nt:base']})));
+            window.parent.authoringApi.undeleteContents(context.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})));
         }
     }
 });

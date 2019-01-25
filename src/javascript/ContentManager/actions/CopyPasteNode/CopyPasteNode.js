@@ -1,5 +1,5 @@
 export default class CopyPasteNode {
-    constructor(path, uuid, name, displayName, primaryNodeType, mutationToUse) {
+    constructor({path, uuid, name, displayName, primaryNodeType, mutationToUse}) {
         this.path = path;
         this.uuid = uuid;
         this.name = name;

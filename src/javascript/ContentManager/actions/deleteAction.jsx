@@ -12,5 +12,11 @@ export default composeActions(requirementsAction, {
             enabled: context => context.node.pipe(map(node => !isMarkedForDeletion(node)))
         });
     },
-    onClick: context => window.parent.authoringApi.deleteContent(context.node.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, false)
+    onClick: context => {
+        if (context.node) {
+            window.parent.authoringApi.deleteContent(context.node.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, false);
+        } else if (context.nodes) {
+            window.parent.authoringApi.deleteContents(context.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes:['jnt:content'], inheritedNodeTypes:['nt:base']})), false, false);
+        }
+    }
 });

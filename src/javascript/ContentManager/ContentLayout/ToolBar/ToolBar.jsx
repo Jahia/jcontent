@@ -46,7 +46,7 @@ export class ToolBar extends React.Component {
                             {t('label.contentManager.selection.itemsSelected', {count: selection.length})}
                         </Typography>
                         <div className={classes.spacer}/>
-                        <DisplayActions target="contentActions"
+                        <DisplayActions target="multipleContentActions"
                                         context={{paths: selection}}
                                         render={iconButtonRenderer({color: 'secondary', size: 'small'})}/>
                     </React.Fragment>

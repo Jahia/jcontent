@@ -10,6 +10,6 @@ export default composeActions(requirementsAction, reduxAction(() => ({}), dispat
 
     onClick: context => {
         const {copy, path, node: {uuid, name, displayName, primaryNodeType}} = context;
-        copy([new CopyPasteNode(path, uuid, name, displayName, primaryNodeType, CopyPasteNode.PASTE_MODES.COPY)]);
+        copy([new CopyPasteNode({path, uuid, name, displayName, primaryNodeType, mutationToUse: CopyPasteNode.PASTE_MODES.COPY})]);
     }
 });

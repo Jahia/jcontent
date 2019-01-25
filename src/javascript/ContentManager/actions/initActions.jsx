@@ -3,11 +3,12 @@ import {menuAction} from '@jahia/react-material';
 import ContentIcon from './ContentIcon';
 import ManageIcon from './ManageIcon';
 import WorkflowIcon from './WorkflowIcon';
-import {Add, Delete, Edit, Error, Lock, LockOpen, Publish, Visibility} from '@material-ui/icons';
+import {Add, Delete, DeleteForever, Edit, Error, Lock, LockOpen, Publish, Visibility} from '@material-ui/icons';
 import {
     Account,
     AccountGroup,
     ContentPaste,
+    DeleteRestore,
     DotsVertical,
     FolderMultipleImage,
     ShieldKey,
@@ -200,14 +201,14 @@ function initActions(actionsRegistry) {
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
-        buttonIcon: <Delete/>,
+        buttonIcon: <DeleteForever/>,
         buttonLabel: 'label.contentManager.contentPreview.deletePermanently',
         target: ['contentActions:4', 'multipleContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('undelete', undeleteAction, {
-        buttonIcon: <Delete/>,
+        buttonIcon: <DeleteRestore/>,
         buttonLabel: 'label.contentManager.contentPreview.undelete',
         target: ['contentActions:4.1', 'multipleContentActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],

@@ -39,7 +39,7 @@
                 "selectMessage": "Datei von meinem Computer wählen",
                 "uploadingActionMessage": "Es gibt Fehler, die Ihre Aufmerksamkeit benötigen",
                 "or": "oder",
-                "dropMessage": "Datei hier zum hochladen hereinziehen",
+                "dropMessage": "Datei mit Drag & Drop hier einfügen oder den Button \"Inhalt hinzufügen\" verwenden",
                 "queued": "In Warteschlange",
                 "errorMessage": "Es gab Probleme beim Hochladen einiger Dateien",
                 "replace": "Ersetzen",
@@ -56,7 +56,12 @@
                 "exists": "Die Datei existiert bereits",
                 "uploading": "Hochladen...",
                 "retry": "Wiederholen",
-                "errorActionMessage": "Bitte lösen Sie die folgenden Probleme"
+                "errorActionMessage": "Bitte lösen Sie die folgenden Probleme",
+                "dialogRenameTitle": "Importierte Datei umbenennen",
+                "dialogRenameText": "Wie soll die importierte Datei benannt werden?",
+                "dialogRenameExample": "ex: Dateiname",
+                "dialogRenameCancel": "Abbrechen",
+                "dialogRename" : "Umbenennen"
             },
             "error": {
                 "contentUnavailable": "Der angeforderte Inhalt ist nicht verfügbar",

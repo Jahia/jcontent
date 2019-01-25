@@ -236,12 +236,10 @@ export class Upload extends React.Component {
 Upload.propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    // AcceptedFileTypes: PropTypes.array,
     uploadUpdateCallback: PropTypes.func
 };
 
 Upload.defaultProps = {
-    // AcceptedFileTypes: null,
     uploadUpdateCallback: () => {}
 };
 

@@ -237,6 +237,7 @@ export class ContentListTable extends React.Component {
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+
         return (
             <Paper>
                 <ToolBar/>
@@ -264,7 +265,6 @@ export class ContentListTable extends React.Component {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
-                                                // Let isDeleted = isMarkedForDeletion(n);
                                                 let contextualMenu = React.createRef();
                                                 return (
                                                     <TableRow
@@ -300,11 +300,13 @@ export class ContentListTable extends React.Component {
                                                             padding="checkbox"
                                                             classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                         >
-                                                            <Checkbox checked={selection.indexOf(node.path) !== -1}
-                                                                      onClick={event => {
-                                                                switchSelection(node.path);
-                                                                event.stopPropagation();
-                                                            }}/>
+                                                            <Checkbox
+                                                                checked={selection.indexOf(node.path) !== -1}
+                                                                onClick={event => {
+                                                                    switchSelection(node.path);
+                                                                    event.stopPropagation();
+                                                                }}
+                                                            />
                                                         </TableCell>
                                                         {columnData.map(column => {
                                                             if (column.id === 'name') {
@@ -329,9 +331,9 @@ export class ContentListTable extends React.Component {
                                                                         padding="none"
                                                                     >
                                                                         {this.isWip(node, lang) &&
-                                                                        <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                                                                            <Wrench fontSize="small" color="inherit"/>
-                                                                        </Tooltip>
+                                                                            <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
+                                                                                <Wrench fontSize="small" color="inherit"/>
+                                                                            </Tooltip>
                                                                         }
                                                                     </TableCell>
                                                                 );
@@ -344,9 +346,9 @@ export class ContentListTable extends React.Component {
                                                                         padding="none"
                                                                     >
                                                                         {node.isLocked &&
-                                                                        <Tooltip title={t('label.contentManager.locked')}>
-                                                                            <Lock fontSize="small" color="inherit"/>
-                                                                        </Tooltip>
+                                                                            <Tooltip title={t('label.contentManager.locked')}>
+                                                                                <Lock fontSize="small" color="inherit"/>
+                                                                            </Tooltip>
                                                                         }
                                                                     </TableCell>
                                                                 );
@@ -366,49 +368,48 @@ export class ContentListTable extends React.Component {
                                                             }
                                                             if (column.id === 'lastModified') {
                                                                 return (
-                                                                    <TableCell key={column.id}
-                                                                               classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
-                                                                               data-cm-role={'table-content-list-cell-' + column.id}
-                                                                               padding={showActions ? 'checkbox' : 'default'}
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        data-cm-role={'table-content-list-cell-' + column.id}
+                                                                        padding={showActions ? 'checkbox' : 'default'}
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit" className={classes.lastModifiedTypography}>
-                                                                            <Moment format="ll"
-                                                                                    locale={uiLang}
-                                                                            >
+                                                                            <Moment format="ll" locale={uiLang}>
                                                                                 {node[column.id]}
                                                                             </Moment>
                                                                         </Typography>
 
                                                                         {showActions &&
-                                                                        <div key="actions"
-                                                                             className={classes.actionsDiv}
-                                                                             data-cm-role="table-content-list-cell-actions"
-                                                                        >
-                                                                            <DisplayActions
-                                                                                target="contentActions"
-                                                                                filter={value => {
-                                                                                    return _.includes(['edit', 'preview'], value.key);
-                                                                                }}
-                                                                                context={{path: node.path}}
-                                                                                render={iconButtonRenderer({
-                                                                                    color: 'inherit',
-                                                                                    disableRipple: true
-                                                                                }, true)}
-                                                                            />
-                                                                            <DisplayAction
-                                                                                actionKey="contentMenu"
-                                                                                context={{
-                                                                                    path: node.path,
-                                                                                    menuFilter: value => {
-                                                                                        return !_.includes(['edit', 'preview'], value.key);
-                                                                                    }
-                                                                                }}
-                                                                                render={iconButtonRenderer({
-                                                                                    color: 'inherit',
-                                                                                    disableRipple: true
-                                                                                }, true)}
-                                                                            />
-                                                                        </div>
+                                                                            <div key="actions"
+                                                                                 className={classes.actionsDiv}
+                                                                                 data-cm-role="table-content-list-cell-actions"
+                                                                            >
+                                                                                <DisplayActions
+                                                                                    target="contentActions"
+                                                                                    filter={value => {
+                                                                                        return _.includes(['edit', 'preview'], value.key);
+                                                                                    }}
+                                                                                    context={{path: node.path}}
+                                                                                    render={iconButtonRenderer({
+                                                                                        color: 'inherit',
+                                                                                        disableRipple: true
+                                                                                    }, true)}
+                                                                                />
+                                                                                <DisplayAction
+                                                                                    actionKey="contentMenu"
+                                                                                    context={{
+                                                                                        path: node.path,
+                                                                                        menuFilter: value => {
+                                                                                            return !_.includes(['edit', 'preview'], value.key);
+                                                                                        }
+                                                                                    }}
+                                                                                    render={iconButtonRenderer({
+                                                                                        color: 'inherit',
+                                                                                        disableRipple: true
+                                                                                    }, true)}
+                                                                                />
+                                                                            </div>
                                                                         }
                                                                     </TableCell>
                                                                 );

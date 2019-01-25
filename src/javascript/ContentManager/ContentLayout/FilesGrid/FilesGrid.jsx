@@ -91,7 +91,7 @@ export class FilesGrid extends Component {
                     <ToolBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                         <Typography variant="subtitle1" className={classes.empty}>
-                            { t('label.contentManager.contentNotFound') }
+                            {t('label.contentManager.contentNotFound')}
                         </Typography>
                     </Grid>
                 </React.Fragment>
@@ -115,34 +115,34 @@ export class FilesGrid extends Component {
                 </React.Fragment>
             );
         }
+
         return (
             <React.Fragment>
                 <ToolBar/>
                 <div className={classes.grid} data-cm-role="grid-content-list">
                     <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
-                        {
-                        this.props.rows.map((node, index) => (
-                            <Grid key={node.uuid}
-                                  item
-                                  xs={size}
-                                  className={classes.centerGrid}
-                                  onMouseEnter={$event => this.onHoverEnter($event, node.path)}
-                                  onMouseLeave={$event => this.onHoverExit($event)}
+                        {this.props.rows.map((node, index) => (
+                            <Grid
+                                key={node.uuid}
+                                item
+                                xs={size}
+                                className={classes.centerGrid}
+                                onMouseEnter={$event => this.onHoverEnter($event, node.path)}
+                                onMouseLeave={$event => this.onHoverExit($event)}
                             >
                                 <DxContext.Consumer>
-                                    {
-                                        dxContext => (
-                                            <FileCard cardType={size}
-                                                      index={index}
-                                                      isHovered={node.path === hoveredCard}
-                                                      node={{...node, displayName: node.name}}
-                                                      dxContext={dxContext}/>
-                                        )
-                                    }
+                                    {dxContext => (
+                                        <FileCard
+                                            cardType={size}
+                                            index={index}
+                                            isHovered={node.path === hoveredCard}
+                                            node={{...node, displayName: node.name}}
+                                            dxContext={dxContext}
+                                        />
+                                    )}
                                 </DxContext.Consumer>
                             </Grid>
-                        ))
-                    }
+                        ))}
                     </UploadTransformComponent>
                 </div>
                 <Pagination

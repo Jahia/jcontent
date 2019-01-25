@@ -29,37 +29,36 @@ export class SearchControlBar extends React.Component {
             sql2SearchFrom: sql2SearchFrom,
             sql2SearchWhere: sql2SearchWhere
         };
+
         return (
             <React.Fragment>
                 <Search fontSize="small"/>
-                <Trans i18nKey="label.contentManager.search.searchPath"
-                       values={{path: path}}
-                >
+                <Trans i18nKey="label.contentManager.search.searchPath" values={{path: path}}>
                     <Typography key="searchPath" color="textSecondary">Searching under: </Typography><Typography key="searchPath" color="textPrimary">path</Typography>
                 </Trans>
-
                 <div className={classes.grow}/>
-
                 {showActions && (path !== siteRootPath) &&
-                <Button data-cm-role="search-all"
+                    <Button
+                        data-cm-role="search-all"
                         variant="contained"
                         size="small"
                         onClick={() => setPath(siteRootPath)}
-                >
-                    <VirtualsiteIcon/>
-                    {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
-                </Button>
+                    >
+                        <VirtualsiteIcon/>
+                        {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
+                    </Button>
                 }
                 {showActions &&
-                <Button data-cm-role="search-clear"
+                    <Button
+                        data-cm-role="search-clear"
                         color="primary"
                         variant="contained"
                         size="small"
                         onClick={() => clearSearch(params)}
-                >
-                    <Close/>
-                    {t('label.contentManager.search.clear')}
-                </Button>
+                    >
+                        <Close/>
+                        {t('label.contentManager.search.clear')}
+                    </Button>
                 }
             </React.Fragment>
         );

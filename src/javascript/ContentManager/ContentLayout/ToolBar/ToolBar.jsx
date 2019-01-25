@@ -30,26 +30,25 @@ export class ToolBar extends React.Component {
                         <SearchControlBar showActions={selection.length === 0}/> :
                         <React.Fragment>
                             {treeState !== CM_DRAWER_STATES.SHOW &&
-                            <IconButton color="inherit"
-                                        variant="text"
-                                        onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}
-                            >
-                                <ChevronRight/>
-                            </IconButton>
+                                <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
+                                    <ChevronRight/>
+                                </IconButton>
                             }
                             <BrowseControlBar showActions={selection.length === 0}/>
                         </React.Fragment>
                     }
                     {selection.length > 0 &&
-                    <React.Fragment>
-                        <Typography variant="caption" color="textSecondary">
-                            {t('label.contentManager.selection.itemsSelected', {count: selection.length})}
-                        </Typography>
-                        <div className={classes.spacer}/>
-                        <DisplayActions target="multipleContentActions"
-                                        context={{paths: selection}}
-                                        render={iconButtonRenderer({color: 'secondary', size: 'small'})}/>
-                    </React.Fragment>
+                        <React.Fragment>
+                            <Typography variant="caption" color="textSecondary">
+                                {t('label.contentManager.selection.itemsSelected', {count: selection.length})}
+                            </Typography>
+                            <div className={classes.spacer}/>
+                            <DisplayActions
+                                target="multipleContentActions"
+                                context={{paths: selection}}
+                                render={iconButtonRenderer({color: 'secondary', size: 'small'})}
+                            />
+                        </React.Fragment>
                     }
                 </Toolbar>
             </AppBar>

@@ -35,25 +35,28 @@ export class BrowseControlBar extends React.Component {
         let {
             path, classes, mode, contentTreeConfigs, showActions
         } = this.props;
+
         return (
             <React.Fragment>
                 <ContentBreadcrumbs mode={mode}/>
                 <div className={classes.grow}/>
                 {showActions && mode === ContentManagerConstants.mode.FILES &&
-                <React.Fragment>
-                    <FilesGridSizeSelector/>
-                    <FilesGridModeSelector/>
-                </React.Fragment>
+                    <React.Fragment>
+                        <FilesGridSizeSelector/>
+                        <FilesGridModeSelector/>
+                    </React.Fragment>
                 }
                 {showActions &&
-                <IconButton color="inherit" data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                    <Refresh/>
-                </IconButton>
+                    <IconButton color="inherit" data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
+                        <Refresh/>
+                    </IconButton>
                 }
                 {showActions && !this.isRootNode() &&
-                <DisplayActions target="tableHeaderActions"
-                                context={{path: path}}
-                                render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small', classes: {root: classes.buttons}}, true)}/>
+                    <DisplayActions
+                        target="tableHeaderActions"
+                        context={{path: path}}
+                        render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small', classes: {root: classes.buttons}}, true)}
+                    />
                 }
             </React.Fragment>
         );

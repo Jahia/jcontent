@@ -381,10 +381,7 @@ export class ContentListTable extends React.Component {
                                                                         </Typography>
 
                                                                         {showActions &&
-                                                                            <div key="actions"
-                                                                                 className={classes.actionsDiv}
-                                                                                 data-cm-role="table-content-list-cell-actions"
-                                                                            >
+                                                                            <div key="actions" className={classes.actionsDiv} data-cm-role="table-content-list-cell-actions">
                                                                                 <DisplayActions
                                                                                     target="contentActions"
                                                                                     filter={value => {

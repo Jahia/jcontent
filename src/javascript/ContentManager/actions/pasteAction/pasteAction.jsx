@@ -16,7 +16,12 @@ import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../Cont
 import {cmSetPreviewSelection} from '../../preview.redux-actions';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
-    state => ({...state.copyPaste, treePath: state.path, openedPaths: state.openPaths, previewSelection: state.previewSelection}),
+    state => ({
+        ...state.copyPaste,
+        treePath: state.path,
+        openedPaths: state.openPaths,
+        previewSelection: state.previewSelection
+    }),
     dispatch => ({
         clear: () => dispatch(clear()),
         setPath: (path, params) => dispatch(cmGoto({path, params})),
@@ -28,15 +33,9 @@ export default composeActions(requirementsAction, withNotificationContextAction,
 ), {
 
     init: context => {
-        let contentType;
-        if (context.items.length > 0) {
-            const nodeToPaste = context.items[0];
-            contentType = nodeToPaste.primaryNodeType.name;
-        }
         context.initRequirements({
-
             requiredPermission: 'jcr:addChildNodes',
-            contentType: contentType,
+            contentTypes: _.uniq(context.items.map(n => n.primaryNodeType.name)),
             getContributeTypesRestrictions: true,
 
             enabled: context => {
@@ -45,18 +44,17 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                         return of(false);
                     }
 
-                    let nodeToPaste = context.items[0];
-                    if (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) {
-                        return of(false);
-                    }
-                    if (isDescendantOrSelf(targetNode.path, nodeToPaste.path)) {
+                    let nodesToPaste = context.items;
+                    if (nodesToPaste.reduce((acc, nodeToPaste) => acc ||
+                        (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) ||
+                        (isDescendantOrSelf(targetNode.path, nodeToPaste.path)), false)) {
                         return of(false);
                     }
 
-                    const primaryNodeTypeToPaste = nodeToPaste.primaryNodeType;
+                    const primaryNodeTypesToPaste = _.uniq(nodesToPaste.map(n => n.primaryNodeType.name));
                     let contributeTypesProperty = targetNode.contributeTypes ||
-                        (targetNode.ancestors && !_.isEmpty(targetNode.ancestors) && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
-                    if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values)) {
+                        (targetNode.ancestors && targetNode.ancestors.length > 0 && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
+                    if (contributeTypesProperty && contributeTypesProperty.values.length > 0) {
                         // Contribute type is not empty so we need to execute a query to know the types that are allowed here
                         return from(context.client.watchQuery({
                             query: ContentTypesQuery,
@@ -66,15 +64,15 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                             map(res => {
                                 let allowedNodeTypes = [];
                                 let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
-                                _.each(contributionNodeTypes, entry => {
-                                    if (entry.supertypes && !_.isEmpty(entry.supertypes)) {
-                                        allowedNodeTypes = _.union(allowedNodeTypes, _.map(entry.supertypes, subEntry => {
+                                contributionNodeTypes.forEach(entry => {
+                                    if (entry.supertypes && entry.supertypes.length > 0) {
+                                        allowedNodeTypes = _.union(allowedNodeTypes, entry.supertypes.map(subEntry => {
                                             return subEntry.name;
                                         }));
                                     }
                                     allowedNodeTypes.push(entry.name);
                                 });
-                                return allowedNodeTypes.indexOf(primaryNodeTypeToPaste.name) !== -1;
+                                return _.difference(primaryNodeTypesToPaste, allowedNodeTypes).length === 0;
                             })
                         );
                     }
@@ -85,45 +83,45 @@ export default composeActions(requirementsAction, withNotificationContextAction,
     },
 
     onClick: context => {
-        const nodeToPaste = context.items[0];
-        const oldPath = nodeToPaste.path;
+        const nodesToPaste = context.items;
 
         // Execute paste
-        context.client.mutate({
+        Promise.all(nodesToPaste.map(nodeToPaste => context.client.mutate({
             variables: {
-                pathOrId: oldPath,
+                pathOrId: nodeToPaste.path,
                 destParentPathOrId: context.path,
                 destName: nodeToPaste.name
             },
             mutation: nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode
-        }).then(({data}) => {
+        }))).then(datas => {
             context.clear();
             context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
 
             // Let's make sure the content table will be refreshed when displayed
-            context.addPathsToRefetch([context.path, oldPath.substring(0, oldPath.lastIndexOf('/'))]);
+            context.addPathsToRefetch([context.path, ...nodesToPaste.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/')))]);
 
             // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the preview selection
-            if (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE) {
-                const newPath = data.jcr.pasteNode.node.path;
-                const pathsToClose = _.filter(context.openedPaths, openedPath => isDescendantOrSelf(openedPath, oldPath));
-                if (!_.isEmpty(pathsToClose)) {
-                    context.closePaths(pathsToClose);
-                    const pathsToReopen = _.map(pathsToClose, pathToReopen => getNewNodePath(pathToReopen, oldPath, newPath));
-                    if (pathsToReopen.indexOf(context.path) === -1) {
-                        pathsToReopen.push(context.path);
-                    }
-                    context.openPaths(pathsToReopen);
+            let pastedNodes = _.merge(nodesToPaste, datas.map(({data}) => ({newPath: data.jcr.pasteNode.node.path})));
+
+            const pathsToClose = context.openedPaths.filter(openedPath => pastedNodes.reduce((acc, pastedNode) => acc || (pastedNode.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE && isDescendantOrSelf(openedPath, pastedNode.path)), false));
+            if (pathsToClose.length > 0) {
+                context.closePaths(pathsToClose);
+                const pathsToReopen = pathsToClose.map(pathToReopen => pastedNodes.reduce((acc, pastedNode) => getNewNodePath(acc, pastedNode.path, pastedNode.newPath), pathToReopen));
+                if (pathsToReopen.indexOf(context.path) === -1) {
+                    pathsToReopen.push(context.path);
+                }
+                context.openPaths(pathsToReopen);
+            }
+
+            pastedNodes.forEach(pastedNode => {
+                if (pastedNode.path === context.treePath) {
+                    context.setPath(pastedNode.newPath);
                 }
 
-                if (context.treePath === oldPath) {
-                    context.setPath(newPath);
-                }
-
-                if (context.previewSelection === oldPath) {
+                if (pastedNode.path === context.previewSelection) {
                     context.setPreviewSelection(null);
                 }
-            }
+            });
 
             refetchContentTreeAndListData();
         }, error => {

@@ -18,7 +18,7 @@ function evaluateVisibilityPaths(visible, visibilityPaths, nodePath) {
 function checkNodeRequirement(context, options) {
     context = {...context};
     let req = {...context, ...options};
-    let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled, contentType, hideForPaths} = req;
+    let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled, contentType, contentTypes, hideForPaths} = req;
     let requirementQueryHandler = new ActionRequirementsQueryHandler(req);
     if (requirementQueryHandler.requirementsFragments.length > 0) {
         let watchQuery = context.client.watchQuery({
@@ -40,6 +40,7 @@ function checkNodeRequirement(context, options) {
                 (_.isEmpty(showOnNodeTypes) || node.isNodeType) &&
                 (_.isEmpty(hideOnNodeTypes) || !node.isNotNodeType) &&
                 (_.isEmpty(contentType) || node.allowedChildNodeTypes.length > 0) &&
+                (_.isEmpty(contentTypes) || node.allowedChildNodeTypes.length === contentTypes.length) &&
                 (_.isEmpty(requireModuleInstalledOnSite) || _.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite)) &&
                 (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, node.path))
             )));

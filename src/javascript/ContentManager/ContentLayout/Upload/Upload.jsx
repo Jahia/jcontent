@@ -1,7 +1,7 @@
 import React from 'react';
-import {CircularProgress, IconButton, Snackbar, Typography, withStyles} from '@material-ui/core';
+import {IconButton, Snackbar, withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {CheckCircle, Close, Info} from '@material-ui/icons';
+import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {setStatus, setUploads} from './Upload.redux-actions';
@@ -10,25 +10,9 @@ import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import {files, onFilesSelected} from './Upload.utils';
-import classNames from 'classnames';
+import UploadHeader from './UploadHeader';
 
 const styles = theme => ({
-    headerText: {
-        display: 'block',
-        color: theme.palette.text.contrastText
-    },
-    contentColor: {
-        color: theme.palette.text.contrastText,
-        display: 'inline-block',
-        marginLeft: theme.spacing.unit * 2,
-        marginBottom: theme.spacing.unit * 2
-    },
-    statusIcon: {
-        marginRight: theme.spacing.unit,
-        display: 'inline-block',
-        marginLeft: theme.spacing.unit * 4,
-        marginTop: theme.spacing.unit * 2
-    },
     closeButton: {
         marginBottom: theme.spacing.unit * 10,
         color: theme.palette.text.contrastText,
@@ -40,7 +24,8 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.dark,
         bottom: theme.spacing.unit * 4,
         display: 'block',
-        width: 800
+        width: 800,
+        padding: 24
     }
 });
 
@@ -80,13 +65,13 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {classes} = this.props;
+        let {classes, uploads} = this.props;
         return (
             <React.Fragment>
-                <Snackbar open={this.props.uploads.length > 0} classes={{root: classes.snackBar}}>
+                <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}}>
                     <React.Fragment>
-                        {this.headerText()}
-                        {this.props.uploads.map((upload, index) => (
+                        <UploadHeader status={this.uploadStatus()}/>
+                        {uploads.map((upload, index) => (
                             <UploadItem key={upload.id}
                                         index={index}
                                         file={files.acceptedFiles[index]}
@@ -161,61 +146,6 @@ export class Upload extends React.Component {
             return null;
         }
         return status;
-    }
-
-    headerText() {
-        const {classes, t} = this.props;
-        const status = this.uploadStatus();
-
-        if (!status) {
-            return null;
-        }
-
-        if (status.uploading !== 0) {
-            return (
-                <div className={classNames(classes.headerText)}>
-                    <CircularProgress size={40}
-                                      className={classes.statusIcon}/>
-                    <Typography gutterBottom
-                                className={classes.contentColor}
-                                color="textSecondary"
-                                data-cm-role="upload-status-uploading"
-                    >
-                        {t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}
-                    </Typography>
-                    { (status.error !== 0) &&
-                        <Typography gutterBottom className={classes.contentColor}>
-                            {t('label.contentManager.fileUpload.uploadingActionMessage')}
-                        </Typography>
-                    }
-                </div>
-            );
-        }
-        if (status.error !== 0) {
-            return (
-                <div className={classNames(classes.headerText)}>
-                    <Info className={classNames(classes.statusIcon)}/>
-                    <Typography gutterBottom
-                                className={classes.contentColor}
-                                data-cm-role="upload-status-error"
-                    >
-                        {t('label.contentManager.fileUpload.errorMessage')}
-                    </Typography>
-                </div>
-            );
-        }
-
-        return (
-            <div className={classNames(classes.headerText)}>
-                <CheckCircle className={classNames(classes.statusIcon)}/>
-                <Typography gutterBottom
-                            className={classes.contentColor}
-                            data-cm-role="upload-status-success"
-                >
-                    {t('label.contentManager.fileUpload.successfulUploadMessage', {count: status.total, number: status.total})}
-                </Typography>
-            </div>
-        );
     }
 
     generateOverlayStyle() {

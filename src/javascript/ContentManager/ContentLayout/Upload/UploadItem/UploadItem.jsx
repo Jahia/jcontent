@@ -1,48 +1,51 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core';
+import {
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+    Typography,
+    withStyles
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {withApollo, compose} from 'react-apollo';
-import {uploadFile, updateFileContent} from './UploadItem.gql-mutations';
-import {Button, CircularProgress, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
-import {CheckCircle, Info, FiberManualRecord} from '@material-ui/icons';
+import {compose, withApollo} from 'react-apollo';
+import {updateFileContent, uploadFile} from './UploadItem.gql-mutations';
+import {CheckCircle, FiberManualRecord, Info} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {uploadStatuses, NUMBER_OF_SIMULTANEOUS_UPLOADS} from '../Upload.constants';
-import {updateUpload, removeUpload, takeFromQueue} from '../Upload.redux-actions';
+import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadStatuses} from '../Upload.constants';
+import {removeUpload, takeFromQueue, updateUpload} from '../Upload.redux-actions';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
-import {ellipsizeText} from '../../../ContentManager.utils';
 
 const styles = theme => ({
-    progressText: {
-        display: 'inline-block',
-        width: 212,
-        padding: '16px 0px 0px 32px',
-        color: theme.palette.text.contrastText
+    listItem: {
+        color: theme.palette.text.contrastText,
+        display: 'flex',
+        alignItems: 'center',
+        height: 32
+    },
+    grow: {
+        flex: 1
     },
     fileNameText: {
-        display: 'inline-block',
-        width: 212,
-        padding: '16px 0px 0px 32px',
-        color: theme.palette.text.contrastText
+        width: 220,
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
     },
     statusIcon: {
         marginRight: theme.spacing.unit
     },
     actionButton: {
-        color: theme.palette.text.contrastText
+        color: theme.palette.text.contrastText,
+        margin: '8 0'
     },
-    secondaryList: {
-        display: 'inline-block'
-    },
-    listItem: {
-        display: 'block'
-    },
-    snackBarFiles: {
-        float: 'left',
-        minWidth: '60%'
-    },
-    snackBarStatus: {
-        float: 'right'
+    progressText: {
+        whiteSpace: 'nowrap'
     }
 });
 
@@ -80,15 +83,14 @@ export class UploadItem extends React.Component {
         const {classes, t, file} = this.props;
         return (
             <div className={classes.listItem}>
-                <div className={classes.snackBarFiles}>
-                    <Typography variant="subtitle2" className={classes.fileNameText}>{ellipsizeText(this.getFileName(), 20)}</Typography>
-                    <div className={classes.secondaryList}>
-                        { this.secondaryActionsList() }
-                    </div>
-                </div>
-                <div className={classes.snackBarStatus}>
-                    {this.statusText()}
-                </div>
+                <Typography variant="subtitle2"
+                            color="inherit"
+                            className={classes.fileNameText}
+                >{this.getFileName()}
+                </Typography>
+                {this.secondaryActionsList()}
+                <div className={classes.grow}/>
+                {this.statusText()}
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>{t('label.contentManager.fileUpload.dialogRenameTitle')}</DialogTitle>
                     <DialogContent>
@@ -207,45 +209,57 @@ export class UploadItem extends React.Component {
 
         if (status === uploadStatuses.QUEUED) {
             text = (
-                <Typography variant="subtitle2" className={classes.progressText}>
-                    <FiberManualRecord className={classes.statusIcon}/>
-                    {t('label.contentManager.fileUpload.queued')}
-                </Typography>
+                <React.Fragment>
+                    <FiberManualRecord className={classes.statusIcon} color="inherit"/>
+                    <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                        {t('label.contentManager.fileUpload.queued')}
+                    </Typography>
+                </React.Fragment>
             );
         } else if (status === uploadStatuses.UPLOADED) {
             text = (
-                <Typography variant="subtitle2" className={classes.progressText}>
-                    <CheckCircle className={classes.statusIcon}/>
-                    {t('label.contentManager.fileUpload.uploaded')}
-                </Typography>
+                <React.Fragment>
+                    <CheckCircle className={classes.statusIcon} color="inherit"/>
+                    <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                        {t('label.contentManager.fileUpload.uploaded')}
+                    </Typography>
+                </React.Fragment>
             );
         } else if (status === uploadStatuses.HAS_ERROR && error === 'FILE_EXISTS') {
             text = (
-                <Typography variant="subtitle2" className={classes.progressText}>
-                    <Info className={classes.statusIcon}/>
-                    {t('label.contentManager.fileUpload.exists')}
-                </Typography>
+                <React.Fragment>
+                    <Info className={classes.statusIcon} color="inherit"/>
+                    <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                        {t('label.contentManager.fileUpload.exists')}
+                    </Typography>
+                </React.Fragment>
             );
         } else if (status === uploadStatuses.HAS_ERROR && error === 'INCORRECT_SIZE') {
             text = (
-                <Typography variant="subtitle2" className={classes.progressText}>
-                    <Info className={classes.statusIcon}/>
-                    {t('label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize})}
-                </Typography>
+                <React.Fragment>
+                    <Info className={classes.statusIcon} color="inherit"/>
+                    <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                        {t('label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize})}
+                    </Typography>
+                </React.Fragment>
             );
         } else if (status === uploadStatuses.HAS_ERROR) {
             text = (
-                <Typography variant="subtitle2" className={classes.progressText}>
-                    <Info className={classes.statusIcon}/>
-                    {t('label.contentManager.fileUpload.failed')}
-                </Typography>
+                <React.Fragment>
+                    <Info className={classes.statusIcon} color="inherit"/>
+                    <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                        {t('label.contentManager.fileUpload.failed')}
+                    </Typography>
+                </React.Fragment>
             );
         } else if (status === uploadStatuses.UPLOADING) {
             text = (
-                <Typography variant="subtitle2" className={classes.progressText}>
-                    <CircularProgress size={20} className={classes.statusIcon}/>
-                    {t('label.contentManager.fileUpload.uploading')}
-                </Typography>
+                <React.Fragment>
+                    <CircularProgress size={20} className={classes.statusIcon} color="inherit"/>
+                    <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                        {t('label.contentManager.fileUpload.uploading')}
+                    </Typography>
+                </React.Fragment>
             );
         }
 
@@ -276,13 +290,13 @@ export class UploadItem extends React.Component {
             if (error === 'FILE_EXISTS') {
                 actions.push(
                     <Button
-                            key="rename"
-                            className={classes.actionButton}
-                            component="a"
-                            size="small"
-                            onClick={e => {
-                                this.showRenameDialog(e);
-                            }}
+                        key="rename"
+                        className={classes.actionButton}
+                        component="a"
+                        size="small"
+                        onClick={e => {
+                            this.showRenameDialog(e);
+                        }}
                     >
                         {t('label.contentManager.fileUpload.rename')}
                     </Button>

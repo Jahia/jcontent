@@ -3,10 +3,12 @@ import {menuAction} from '@jahia/react-material';
 import ContentIcon from './ContentIcon';
 import ManageIcon from './ManageIcon';
 import WorkflowIcon from './WorkflowIcon';
-import {Add, Delete, DeleteForever, Edit, Error, Lock, LockOpen, Publish, Visibility} from '@material-ui/icons';
+import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility} from '@material-ui/icons';
 import {
     Account,
     AccountGroup,
+    ContentCopy,
+    ContentCut,
     ContentPaste,
     DeleteRestore,
     DotsVertical,
@@ -173,9 +175,9 @@ function initActions(actionsRegistry) {
         target: []
     });
     actionsRegistry.add('copy', copyAction, {
-        buttonIcon: <Error/>,
+        buttonIcon: <ContentCopy/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
-        target: ['contentActions:3.8'],
+        target: ['contentActions:3.8', 'multipleContentActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -187,9 +189,9 @@ function initActions(actionsRegistry) {
         showForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS]
     });
     actionsRegistry.add('cut', cutAction, {
-        buttonIcon: <Error/>,
+        buttonIcon: <ContentCut/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
-        target: ['contentActions:3.9'],
+        target: ['contentActions:3.9', 'multipleContentActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });

@@ -44,7 +44,7 @@ export class ToolBar extends React.Component {
                             </Typography>
                             <div className={classes.spacer}/>
                             <DisplayActions
-                                target="multipleContentActions"
+                                target="selectedContentActions"
                                 context={{paths: selection}}
                                 render={iconButtonRenderer({color: 'secondary', size: 'small'})}
                             />

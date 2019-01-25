@@ -1,9 +1,3 @@
-export const panelStates = {
-    INVISIBLE: 'INVISIBLE',
-    VISIBLE: 'VISIBLE',
-    PARTIALLY_VISIBLE: 'PARTIALLY_VISIBLE'
-};
-
 export const uploadsStatuses = {
     NOT_STARTED: 'NOT_STARTED',
     UPLOADING: 'UPLOADING',

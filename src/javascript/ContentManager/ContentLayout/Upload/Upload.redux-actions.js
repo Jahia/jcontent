@@ -5,13 +5,6 @@ export const setPath = path => {
     };
 };
 
-export const setPanelState = state => {
-    return {
-        type: 'FILEUPLOAD_SET_PANEL_STATE',
-        state: state
-    };
-};
-
 export const setStatus = status => {
     return {
         type: 'FILEUPLOAD_SET_STATUS',

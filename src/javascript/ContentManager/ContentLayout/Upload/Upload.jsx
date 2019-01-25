@@ -3,8 +3,8 @@ import {CircularProgress, IconButton, Snackbar, Typography, withStyles} from '@m
 import PropTypes from 'prop-types';
 import {CheckCircle, Close, Info} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {panelStates, uploadsStatuses, uploadStatuses} from './Upload.constants';
-import {setPanelState, setStatus, setUploads} from './Upload.redux-actions';
+import {uploadsStatuses, uploadStatuses} from './Upload.constants';
+import {setStatus, setUploads} from './Upload.redux-actions';
 import UploadItem from './UploadItem';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
@@ -133,7 +133,7 @@ export class Upload extends React.Component {
 
     closePanelAndClearUploads() {
         files.acceptedFiles = [];
-        this.props.dispatchBatch([setPanelState(panelStates.INVISIBLE), setUploads([])]);
+        this.props.dispatch(setUploads([]));
     }
 
     uploadStatus() {
@@ -164,27 +164,26 @@ export class Upload extends React.Component {
     }
 
     headerText() {
-        const {panelState, classes, t} = this.props;
+        const {classes, t} = this.props;
         const status = this.uploadStatus();
 
         if (!status) {
             return null;
         }
 
-        let isPartiallyVisible = (panelState === panelStates.PARTIALLY_VISIBLE);
         if (status.uploading !== 0) {
             return (
                 <div className={classNames(classes.headerText)}>
-                    <CircularProgress size={isPartiallyVisible ? 20 : 40}
+                    <CircularProgress size={40}
                                       className={classes.statusIcon}/>
-                    <Typography gutterBottom={!isPartiallyVisible}
+                    <Typography gutterBottom
                                 className={classes.contentColor}
                                 color="textSecondary"
                                 data-cm-role="upload-status-uploading"
                     >
                         {t('label.contentManager.fileUpload.uploadingMessage', {uploaded: status.uploaded, total: status.total})}
                     </Typography>
-                    { (!isPartiallyVisible && status.error !== 0) &&
+                    { (status.error !== 0) &&
                         <Typography gutterBottom className={classes.contentColor}>
                             {t('label.contentManager.fileUpload.uploadingActionMessage')}
                         </Typography>
@@ -196,7 +195,7 @@ export class Upload extends React.Component {
             return (
                 <div className={classNames(classes.headerText)}>
                     <Info className={classNames(classes.statusIcon)}/>
-                    <Typography gutterBottom={!isPartiallyVisible}
+                    <Typography gutterBottom
                                 className={classes.contentColor}
                                 data-cm-role="upload-status-error"
                     >
@@ -209,7 +208,7 @@ export class Upload extends React.Component {
         return (
             <div className={classNames(classes.headerText)}>
                 <CheckCircle className={classNames(classes.statusIcon)}/>
-                <Typography gutterBottom={!isPartiallyVisible}
+                <Typography gutterBottom
                             className={classes.contentColor}
                             data-cm-role="upload-status-success"
                 >

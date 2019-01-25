@@ -1,8 +1,7 @@
-import {uploadStatuses, panelStates, uploadsStatuses} from './Upload.constants';
+import {uploadStatuses, uploadsStatuses} from './Upload.constants';
 
 const initialState = {
     path: null, // Folder that will get files
-    panelState: panelStates.INVISIBLE,
     status: uploadsStatuses.NOT_STARTED,
     uploads: [],
     overlayTarget: null
@@ -21,10 +20,6 @@ export const fileUpload = (state = initialState, action) => {
         case 'FILEUPLOAD_SET_PATH': return {
             ...state,
             path: action.path
-        };
-        case 'FILEUPLOAD_SET_PANEL_STATE': return {
-            ...state,
-            panelState: action.state
         };
         case 'FILEUPLOAD_SET_STATUS': return {
             ...state,

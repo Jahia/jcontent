@@ -177,7 +177,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <ContentCopy/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
-        target: ['contentActions:3.8', 'multipleContentActions:3.8'],
+        target: ['contentActions:3.8', 'selectedContentActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -191,28 +191,28 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <ContentCut/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
-        target: ['contentActions:3.9', 'multipleContentActions:3.9'],
+        target: ['contentActions:3.9', 'selectedContentActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
-        target: ['contentActions:4', 'multipleContentActions:4'],
+        target: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('deletePermanently', deletePermanentlyAction, {
         buttonIcon: <DeleteForever/>,
         buttonLabel: 'label.contentManager.contentPreview.deletePermanently',
-        target: ['contentActions:4', 'multipleContentActions:4'],
+        target: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('undelete', undeleteAction, {
         buttonIcon: <DeleteRestore/>,
         buttonLabel: 'label.contentManager.contentPreview.undelete',
-        target: ['contentActions:4.1', 'multipleContentActions:4.1'],
+        target: ['contentActions:4.1', 'selectedContentActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });

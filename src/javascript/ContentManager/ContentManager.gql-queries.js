@@ -58,11 +58,11 @@ const ActionRequirementsFragments = {
     },
     requiredChildNodeType: {
         variables: {
-            childNodeType: 'String!'
+            childNodeTypes: '[String!]'
         },
         applyFor: 'requirements',
         gql: gql`fragment AllowedChildNodeType on JCRNode {
-            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", value: $childNodeType}]}) {
+            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", evaluation:AMONG, values: $childNodeTypes}]}) {
                 name
             }
         }`
@@ -211,7 +211,11 @@ class ActionRequirementsQueryHandler {
         }
         if (!_.isEmpty(context.contentType)) {
             this.requirementsFragments.push(ActionRequirementsFragments.requiredChildNodeType);
-            this.variables.childNodeType = context.contentType;
+            this.variables.childNodeTypes = [context.contentType];
+        }
+        if (!_.isEmpty(context.contentTypes)) {
+            this.requirementsFragments.push(ActionRequirementsFragments.requiredChildNodeType);
+            this.variables.childNodeTypes = context.contentTypes;
         }
         if (!_.isEmpty(context.baseContentType)) {
             this.requirementsFragments.push(ActionRequirementsFragments.allowedChildNodeTypes);

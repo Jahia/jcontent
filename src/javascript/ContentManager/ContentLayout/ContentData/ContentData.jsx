@@ -1,21 +1,23 @@
 import React from 'react';
-import {Query, withApollo} from 'react-apollo';
+import {compose, Query, withApollo} from 'react-apollo';
 import {
     BrowsingQueryHandler,
+    FilesQueryHandler,
     SearchQueryHandler,
-    Sql2SearchQueryHandler,
-    FilesQueryHandler
+    Sql2SearchQueryHandler
 } from './ContentData.gql-queries';
 import * as _ from 'lodash';
-import {withNotifications, ProgressOverlay} from '@jahia/react-material';
-import {registerContentModificationEventHandler, unregisterContentModificationEventHandler} from '../../eventHandlerRegistry';
+import {ProgressOverlay, withNotifications} from '@jahia/react-material';
+import {
+    registerContentModificationEventHandler,
+    unregisterContentModificationEventHandler
+} from '../../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmOpenPaths, cmClosePaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
-import {extractPaths, isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
+import {extractPaths, getNewNodePath, isDescendantOrSelf} from '../../ContentManager.utils';
 import {setModificationHook} from './ContentData.utils';
-import {compose} from 'react-apollo';
 import {cmSetPreviewSelection} from '../../preview.redux-actions';
 
 const contentQueryHandlerByMode = mode => {
@@ -217,7 +219,7 @@ export class ContentData extends React.Component {
                     return (
                         <React.Fragment>
                             {loading &&
-                                <ProgressOverlay/>
+                            <ProgressOverlay/>
                             }
                             {children({
                                 rows: rows,

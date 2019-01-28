@@ -53,14 +53,18 @@ export class FilterSelect extends React.Component {
 
 FilterSelect.propTypes = {
     classes: PropTypes.object.isRequired,
+    handleChange: PropTypes.func,
+    handleIndicator: PropTypes.func,
+    open: PropTypes.bool,
     options: PropTypes.array.isRequired,
-    selectedOption: PropTypes.string,
-    handleChange: PropTypes.func
+    selectedOption: PropTypes.string
 };
 
 FilterSelect.defaultProps = {
     selectedOption: null,
-    handleChange: () => {}
+    handleChange: () => {},
+    handleIndicator: () => {},
+    open: false
 };
 
 export default compose(

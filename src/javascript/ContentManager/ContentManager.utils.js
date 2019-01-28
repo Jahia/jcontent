@@ -2,8 +2,11 @@ import * as _ from 'lodash';
 import ellipsize from 'ellipsize';
 
 function getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
-    let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
-    return (newAncestorPath + relativePath);
+    if (_.startsWith(oldPath, oldAncestorPath + '/') || oldPath === oldAncestorPath) {
+        let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
+        return (newAncestorPath + relativePath);
+    }
+    return oldPath;
 }
 
 function hasMixin(node, mixin) {

@@ -13,7 +13,7 @@ import {valueToSizeTransformation} from './FilesGrid.utils';
 import {connect} from 'react-redux';
 import {cmSetPage} from '../pagination.redux-actions';
 import {cmSetPageSize} from '../pagination.redux-actions';
-import {CloudUpload} from '@material-ui/icons';
+import EmptyDropZone from '../EmptyDropZone/EmptyDropZone';
 
 const styles = theme => ({
     grid: {
@@ -38,26 +38,6 @@ const styles = theme => ({
     empty: {
         textAlign: 'center',
         margin: theme.spacing.unit * 3
-    },
-    dragZoneRoot: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        padding: theme.spacing.unit * 4
-    },
-    dropZone: {
-        border: '2px dashed ' + theme.palette.border.main,
-        color: theme.palette.text.disabled,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 'inherit',
-        height: 'inherit',
-        boxSizing: 'border-box',
-        transitionDuration: '.1s'
     }
 });
 
@@ -102,16 +82,7 @@ export class FilesGrid extends Component {
             return (
                 <React.Fragment>
                     <ToolBar/>
-                    <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
-                        <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                            <div className={classes.dragZoneRoot}>
-                                <div className={classes.dropZone}>
-                                    <Typography variant="h6" color="inherit">{t('label.contentManager.fileUpload.dropMessage')}</Typography>
-                                    <CloudUpload/>
-                                </div>
-                            </div>
-                        </Grid>
-                    </UploadTransformComponent>
+                    <EmptyDropZone path={path} contentList={false}/>
                 </React.Fragment>
             );
         }

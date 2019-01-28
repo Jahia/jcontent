@@ -31,6 +31,7 @@ import {cmSetPreviewSelection} from '../../preview.redux-actions';
 import {cmSetSort} from '../sort.redux-actions';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux-actions';
+import EmptyDropZone from '../EmptyDropZone/EmptyDropZone';
 
 const allColumnData = [
     {
@@ -110,7 +111,8 @@ const styles = theme => ({
     tableWrapper: {
         minHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
-        overflow: 'auto'
+        overflow: 'auto',
+        position: 'relative'
     },
     row: {
         '&&:nth-of-type(odd)': {
@@ -260,7 +262,7 @@ export class ContentListTable extends React.Component {
                                     {contentNotFound ?
                                         <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> :
                                         _.isEmpty(rows) ?
-                                            <EmptyRow columnData={columnData} translate={t}/> :
+                                            <EmptyDropZone contentList path={path}/> :
                                             rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.icon);
@@ -444,7 +446,7 @@ export class ContentListTable extends React.Component {
     }
 }
 
-let EmptyRow = props => {
+/* Let EmptyRow = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
@@ -452,7 +454,7 @@ let EmptyRow = props => {
             </TableCell>
         </TableRow>
     );
-};
+}; */
 
 let ContentNotFound = props => {
     return (

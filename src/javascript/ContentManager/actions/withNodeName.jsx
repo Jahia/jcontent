@@ -26,10 +26,14 @@ let withNodeName = composeActions(withDxContextAction, withI18nAction, {
                     language: node.site ? _.escape(uppercaseFirst(getLanguageLabel(node.site.languages, context.dxContext.lang).displayName)) : null
                 })));
             } else if (context.nodes) {
-                context.buttonLabelParams = context.nodes.pipe(map(node => ({
-                    displayName: props.t('label.contentManager.selection.itemsSelected', {count: context.paths.length}),
-                    language: node.site ? _.escape(uppercaseFirst(getLanguageLabel(node.site.languages, context.dxContext.lang).displayName)) : null
-                })));
+                context.buttonLabelParams = context.nodes.pipe(map(nodes => {
+                    if (nodes.length > 0) {
+                        return {
+                            displayName: props.t('label.contentManager.selection.itemsSelected', {count: context.paths.length}),
+                            language: nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(nodes[0].site.languages, context.dxContext.lang).displayName)) : null
+                        };
+                    }
+                }));
             }
         };
     }

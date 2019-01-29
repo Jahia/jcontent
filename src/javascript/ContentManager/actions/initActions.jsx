@@ -112,10 +112,10 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
-    actionsRegistry.add('publishMenu', menuWithRequirementsAction, {
+    actionsRegistry.add('publishMenu', menuAction, {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
-        target: ['contentActions:6'],
+        target: ['contentActions:6', 'selectedContentActions:5'],
         menu: 'publishMenu'
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
@@ -177,7 +177,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <ContentCopy/>,
         buttonLabel: 'label.contentManager.contentPreview.copy',
-        target: ['contentActions:3.8', 'selectedContentActions:3.8'],
+        target: ['contentActions:3.8', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -198,7 +198,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'label.contentManager.contentPreview.delete',
-        target: ['contentActions:4', 'selectedContentActions:4'],
+        target: ['contentActions:4', 'selectedContentActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });

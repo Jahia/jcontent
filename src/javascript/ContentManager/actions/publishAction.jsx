@@ -18,5 +18,13 @@ export default composeActions(requirementsAction, withNodeName, {
         });
         context.initLabelParams(context);
     },
-    onClick: context => window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication)
+    onClick: context => {
+        if (context.node) {
+            window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
+        } else if (context.nodes) {
+            let uuids = [];
+            context.nodes.forEach(node => uuids.push(node.uuid));
+            window.parent.authoringApi.openPublicationWorkflow(uuids, context.allSubTree, context.allLanguages, context.checkForUnpublication);
+        }
+    }
 });

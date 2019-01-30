@@ -1,26 +1,21 @@
 import React from 'react';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
-import {Drawer, Grid, Paper, Typography, withStyles} from '@material-ui/core';
+import {Drawer, Paper, withStyles} from '@material-ui/core';
 import ContentListTable from './ContentListTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import ContentTrees from './ContentTrees';
-import {Trans, translate} from 'react-i18next';
+import {translate} from 'react-i18next';
 import Upload from './Upload';
 import {CM_DRAWER_STATES} from '../ContentManager.redux-actions';
 import FilesGrid from './FilesGrid';
 import ContentData from './ContentData';
-import TopBar from './TopBar';
 import {connect} from 'react-redux';
 import ContentManagerConstants from '../ContentManager.constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from '../ContentManager.refetches';
 
 const styles = theme => ({
-    topBar: {
-        paddingTop: theme.spacing.unit * 2,
-        color: theme.palette.primary.contrastText
-    },
     content: {
         height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
         flexGrow: 1,
@@ -79,24 +74,8 @@ const styles = theme => ({
         width: '100%',
         maxWidth: 'calc(100vw - 140px)',
         backgroundColor: theme.palette.background.paper
-    },
-    metaNav: {
-        position: 'absolute',
-        width: '50%',
-        height: theme.spacing.unit * 3,
-        top: 0,
-        right: 0,
-        paddingRight: theme.spacing.unit * 4,
-        textAlign: 'right',
-        color: theme.palette.text.contrastText + '!important',
-        background: 'linear-gradient(to right, rgba(78, 81, 86, 0) 0%, ' + theme.palette.layout.main + ' 100%) !important;',
-        '& a': {
-            color: 'inherit !important'
-        }
     }
 });
-
-const GRID_SIZE = 12;
 
 export class ContentLayout extends React.Component {
     setContentRefetcher(refetchingData) {
@@ -118,14 +97,6 @@ export class ContentLayout extends React.Component {
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
         return (
             <React.Fragment>
-                <div className={classes.metaNav}>
-                    <Typography variant="overline" color="inherit"><Trans i18nKey="label.contentManager.link.academy" components={[<a key="academyLink" href={contextJsParameters.config.academyLink} target="_blank" rel="noopener noreferrer">univers</a>]}/></Typography>
-                </div>
-                <Grid container spacing={0}>
-                    <Grid item xs={GRID_SIZE} className={classes.topBar}>
-                        <TopBar mode={mode}/>
-                    </Grid>
-                </Grid>
                 <ContentData setRefetch={this.setContentRefetcher}>
                     {({rows, contentNotFound, totalCount}) => (
                         <div className={classes.appFrame}>

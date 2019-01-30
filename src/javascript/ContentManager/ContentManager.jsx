@@ -1,6 +1,6 @@
 import React from 'react';
 import {MuiThemeProvider} from '@material-ui/core';
-import {ComponentRendererProvider, NotificationProvider, actionsRegistry} from '@jahia/react-material';
+import {actionsRegistry, ComponentRendererProvider, NotificationProvider} from '@jahia/react-material';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
@@ -8,18 +8,17 @@ import {I18n, I18nextProvider} from 'react-i18next';
 import {Route, Switch} from 'react-router';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
-import ManagerLayout from './ManagerLayout';
-import LeftNavigation from './LeftNavigation';
 import * as _ from 'lodash';
 import DxContext from './DxContext';
-import ContentLayout from './ContentLayout';
-import IFrameLayout from './IFrameLayout';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import initActions from './actions/initActions';
 import contentManagerStyleConstants from './ContentManager.style-constants';
+import {AppLayout} from '@jahia/layouts';
+import {registry} from '@jahia/registry';
+import initRoutes from './routes/initRoutes';
 
 export default class ContentManager extends React.Component {
     constructor(props) {
@@ -30,6 +29,7 @@ export default class ContentManager extends React.Component {
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
 
+        initRoutes(registry);
         initActions(actionsRegistry);
 
         _.each(dxContext.config.actions, callback => {
@@ -75,10 +75,18 @@ export default class ContentManager extends React.Component {
 
     render() {
         let {dxContext} = this.props;
+
+        let routes = registry.find({type: 'route', target: 'cmm'});
+
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
-                    <ApolloProvider client={client({contextPath: dxContext.contextPath, useBatch: true, httpOptions: {batchMax: 50}})}>
+                    <ApolloProvider client={client({
+                        contextPath: dxContext.contextPath,
+                        useBatch: true,
+                        httpOptions: {batchMax: 50}
+                    })}
+                    >
                         <I18nextProvider i18n={getI18n({
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,
@@ -94,23 +102,21 @@ export default class ContentManager extends React.Component {
                                             <PushEventHandler/>
                                             <ComponentRendererProvider>
                                                 <ConnectedRouter history={this.getHistory(dxContext, t)}>
-                                                    <Route path="/:siteKey/:lang"
-                                                           render={props => {
-                                                        dxContext.lang = props.match.params.lang;
-                                                        return (
-                                                            <ManagerLayout leftSide={<LeftNavigation contextPath={dxContext.contextPath}/>}>
-                                                                <Switch>
-                                                                    <Route path={`${props.match.url}/apps`}
-                                                                           render={() =>
-                                                                               <IFrameLayout contextPath={dxContext.contextPath} workspace={dxContext.workspace}/>
-                                                                    }/>
-                                                                    <Route render={() =>
-                                                                        <ContentLayout/>
-                                                                    }/>
-                                                                </Switch>
-                                                            </ManagerLayout>
-                                                        );
-                                                    }}/>
+                                                    <AppLayout
+                                                        leftNavigationProps={{
+                                                            context: {
+                                                                path: '/sites/digitall'
+                                                            },
+                                                            actionsTarget: 'leftMenuActions',
+                                                            secondaryActionsTarget: 'leftMenuBottomActions'
+                                                        }}
+                                                    >
+                                                        <Switch>
+                                                            { routes.map(r =>
+                                                                <Route key={r.key} path={r.path} render={props => r.render(props, {dxContext, t})}/>
+                                                            ) }
+                                                        </Switch>
+                                                    </AppLayout>
                                                 </ConnectedRouter>
                                             </ComponentRendererProvider>
                                         </DxContext.Provider>

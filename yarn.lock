@@ -716,6 +716,18 @@
     react "^16.4.1"
     recompose "^0.27.1"
 
+"@jahia/layouts@^1.0.0-beta.20190130110252":
+  version "1.0.0-beta.20190130110252"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2flayouts/-/layouts-1.0.0-beta.20190130110252.tgz#f9fe2787e97b0f0b404232cdcd81aab162b45da6"
+  integrity sha512-6RVs5Xqa6qfSmRhOzDHx35o6eZvSG5oL2x0TzEIvF1INpVQfV18dKn7+9cIOYh0pomRdyDgvx06goD4tTBDSUA==
+  dependencies:
+    "@material-ui/core" "^3.6.2"
+    classnames "^2.2.6"
+    lodash "^4.17.10"
+    prop-types "^15.6.2"
+    react-i18next "^7.6.1"
+    recompose "^0.30.0"
+
 "@jahia/react-apollo@^1.0.0-beta.20181113171845":
   version "1.0.0-beta.20181126100313"
   resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20181126100313.tgz#92ce6ffe32a88d13234199aa3d22f3649ac33bea"
@@ -742,6 +754,14 @@
     react-select "^2.0.0"
     recompose "^0.30.0"
     rxjs "^6.3.3"
+
+"@jahia/registry@^1.0.0-beta.20190130093649":
+  version "1.0.0-beta.20190130093649"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2fregistry/-/registry-1.0.0-beta.20190130093649.tgz#7fe27db3151be94a2ea117f689b108893b6bfa54"
+  integrity sha512-+XFU3sxmyH2zVTRiARzcKs1qJZzWy62iNs7ixvhKra8m+ky7zPW9CjUuK4FDV6fZjqn2VjhU6oMfLwt53EZmuQ==
+  dependencies:
+    lodash "^4.17.10"
+    prop-types "^15.6.1"
 
 "@material-ui/core@^3.6.2":
   version "3.6.2"
@@ -1669,7 +1689,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.5:
+classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 

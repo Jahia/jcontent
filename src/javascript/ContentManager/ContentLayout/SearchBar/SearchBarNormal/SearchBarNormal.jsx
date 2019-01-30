@@ -1,13 +1,13 @@
 import React from 'react';
 import {Input, withStyles} from '@material-ui/core';
-import DxContext from '../../../../DxContext';
-import ContentTypeSelect from './ContentTypeSelect';
-import {cmGoto} from '../../../../ContentManager.redux-actions';
+import DxContext from '../../../DxContext/index';
+import ContentTypeSelect from './ContentTypeSelect/index';
+import {cmGoto} from '../../../ContentManager.redux-actions';
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import SearchBarLayout from '../SearchBarLayout';
-import ActionButton from '../ActionButton';
+import SearchBarLayout from '../SearchBarLayout/index';
+import ActionButton from '../ActionButton/index';
 import {connect} from 'react-redux';
 
 const styles = () => ({

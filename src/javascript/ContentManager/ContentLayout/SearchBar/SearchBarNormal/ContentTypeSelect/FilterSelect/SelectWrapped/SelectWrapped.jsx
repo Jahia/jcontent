@@ -2,9 +2,9 @@ import React from 'react';
 import * as _ from 'lodash';
 import Select from 'react-select';
 import {withTheme} from '@material-ui/core';
-import Option from './Option';
-import ClearIndicator from './ClearIndicator';
-import DropdownIndicator from './DropdownIndicator';
+import Option from './Option/index';
+import ClearIndicator from './ClearIndicator/index';
+import DropdownIndicator from './DropdownIndicator/index';
 
 const ITEM_HEIGHT = 48;
 

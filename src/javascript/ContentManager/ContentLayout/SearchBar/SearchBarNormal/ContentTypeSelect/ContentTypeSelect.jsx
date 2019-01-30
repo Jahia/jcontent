@@ -5,7 +5,7 @@ import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
-import FilterSelect from './FilterSelect';
+import FilterSelect from './FilterSelect/index';
 import gql from 'graphql-tag';
 
 const SiteContentTypesQuery = gql`

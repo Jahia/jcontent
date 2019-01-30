@@ -1,13 +1,13 @@
 import React from 'react';
-import DxContext from '../../../../DxContext';
-import SearchBarLayout from '../SearchBarLayout';
-import ActionButton from '../ActionButton';
-import Sql2Input from './Sql2Input';
+import DxContext from '../../../DxContext/index';
+import SearchBarLayout from '../SearchBarLayout/index';
+import ActionButton from '../ActionButton/index';
+import Sql2Input from './Sql2Input/index';
 import {compose} from 'react-apollo';
 import {Grid, withStyles} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {Trans, translate} from 'react-i18next';
-import {cmGoto} from '../../../../ContentManager.redux-actions';
+import {cmGoto} from '../../../ContentManager.redux-actions';
 
 const styles = theme => ({
     sql2Form: {

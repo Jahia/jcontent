@@ -106,79 +106,82 @@ export class PickerViewMaterial extends React.Component {
                                 [classes.listItemSelected]: entry.selected
                             });
                             return (
-                                <UploadTransformComponent
-                                    key={entry.path}
-                                    data-jrm-role="picker-item"
-                                    data-cm-role={dataCmRole}
-                                    className={itemClass}
-                                    uploadPath={entry.path}
-                                    uploadTargetComponent={ListItem}
-                                    onClick={() => this.hoverOn(entry.path)}
-                                    onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
-                                    onMouseEnter={() => this.hoverOn(entry.path)}
-                                    onMouseLeave={this.hoverOff}
-                                >
-                                    <div
-                                        style={{
-                                            paddingLeft: ((entry.depth > 0) ? ((entry.depth) * 16) : 0),
-                                            opacity: (entry.openable && entry.hasChildren ? 1 : 0)
-                                        }}
+                                <React.Fragment key={entry.path}>
+                                    <ContextualMenu ref={contextualMenu}
+                                                    actionKey="contentMenu"
+                                                    context={{
+                                                        path: entry.node.path,
+                                                        menuFilter: value => {
+                                                            return !_.includes(['preview'], value.key);
+                                                        }
+                                                    }}/>
+                                    <UploadTransformComponent
+                                        data-jrm-role="picker-item"
+                                        data-cm-role={dataCmRole}
+                                        className={itemClass}
+                                        uploadPath={entry.path}
+                                        uploadTargetComponent={ListItem}
+                                        onClick={() => this.hoverOn(entry.path)}
+                                        onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
+                                        onMouseEnter={() => this.hoverOn(entry.path)}
+                                        onMouseLeave={this.hoverOff}
+                                        onContextMenu={event => contextualMenu.current.open(event)}
                                     >
-                                        <IconButton
-                                            color="inherit"
-                                            disabled={!(entry.openable && entry.hasChildren)}
-                                            data-jrm-role="picker-item-toggle"
-                                            data-jrm-state={entry.open ? 'open' : 'closed'}
-                                            onClick={event => {
-                                                onOpenItem(entry.path, !entry.open);
-                                                event.stopPropagation();
+
+                                        <div
+                                            style={{
+                                                paddingLeft: ((entry.depth > 0) ? ((entry.depth) * 16) : 0),
+                                                opacity: (entry.openable && entry.hasChildren ? 1 : 0)
                                             }}
                                         >
-                                            <KeyboardArrowRight
-                                                className={entry.open ? classes.openedTreeEl : null}/>
-                                        </IconButton>
-                                    </div>
-                                    <span className={classes.treeEntry}
-                                          onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
-                                    >
-                                        <ListItemIcon className={classes.listItemNodeTypeIcon}>
-                                            {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                            <IconButton
+                                                color="inherit"
+                                                disabled={!(entry.openable && entry.hasChildren)}
+                                                data-jrm-role="picker-item-toggle"
+                                                data-jrm-state={entry.open ? 'open' : 'closed'}
+                                                onClick={event => {
+                                                    onOpenItem(entry.path, !entry.open);
+                                                    event.stopPropagation();
+                                                }}
+                                            >
+                                                <KeyboardArrowRight
+                                                    className={entry.open ? classes.openedTreeEl : null}/>
+                                            </IconButton>
+                                        </div>
+                                        <span className={classes.treeEntry}
+                                              onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
+                                        >
+                                            <ListItemIcon className={classes.listItemNodeTypeIcon}>
+                                                {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                disableTypography
+                                                inset
+                                                className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
+                                                primary={
+                                                    <React.Fragment>
+                                                        <Typography color="inherit">
+                                                            {entry.depth > 0 ? entry.node.displayName : rootLabel}
+                                                        </Typography>
+                                                    </React.Fragment>
+                                                }
+                                                data-jrm-role="picker-item-text"
+                                            />
+                                        </span>
+                                        {this.state.hover === entry.path && entry.depth > 0 &&
+                                        <ListItemIcon className={classes.listItemActionIcon}
+                                                      style={container.current ? {left: (container.current.clientWidth - 48 + container.current.scrollLeft)} : {}}
+                                        >
+                                            <DisplayAction actionKey="contentMenu"
+                                                           context={{path: entry.node.path}}
+                                                           render={iconButtonRenderer({
+                                                               color: 'inherit',
+                                                               'data-cm-role': 'picker-item-menu'
+                                                           })}/>
                                         </ListItemIcon>
-                                        <ListItemText
-                                            disableTypography
-                                            inset
-                                            className={entry.node.primaryNodeType.name === 'jnt:page' && entry.node.publicationStatus && entry.node.publicationStatus.publicationStatus === 'UNPUBLISHED' ? classes.unpublishedEntryLabel : null}
-                                            primary={
-                                                <React.Fragment>
-                                                    <ContextualMenu ref={contextualMenu}
-                                                                    actionKey="contentMenu"
-                                                                    context={{
-                                                                        path: entry.node.path,
-                                                                        menuFilter: value => {
-                                                                            return !_.includes(['preview'], value.key);
-                                                                        }
-                                                                    }}/>
-                                                    <Typography color="inherit"
-                                                                onContextMenu={event => contextualMenu.current.open(event)}
-                                                    >
-                                                        {entry.depth > 0 ? entry.node.displayName : rootLabel}
-                                                    </Typography>
-                                                </React.Fragment>
-                                            }
-                                            data-jrm-role="picker-item-text"
-                                        />
-                                    </span>
-                                    {this.state.hover === entry.path && entry.depth > 0 &&
-                                    <ListItemIcon className={classes.listItemActionIcon} style={container.current ? {left: (container.current.clientWidth - 48 + container.current.scrollLeft)} : {}}>
-                                        <DisplayAction actionKey="contentMenu"
-                                                       context={{path: entry.node.path}}
-                                                       render={iconButtonRenderer({
-                                                           color: 'inherit',
-                                                           'data-cm-role': 'picker-item-menu'
-                                                       })}/>
-                                    </ListItemIcon>
-                                    }
-                                </UploadTransformComponent>
+                                        }
+                                    </UploadTransformComponent>
+                                </React.Fragment>
                             );
                         })
                     }

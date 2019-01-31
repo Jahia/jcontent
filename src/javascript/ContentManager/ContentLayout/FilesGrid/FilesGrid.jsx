@@ -19,7 +19,7 @@ const styles = theme => ({
     grid: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3
@@ -27,8 +27,8 @@ const styles = theme => ({
     gridEmpty: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
-        maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
+        height: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default
     },

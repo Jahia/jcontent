@@ -16,7 +16,7 @@ import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import initActions from './actions/initActions';
 import contentManagerStyleConstants from './ContentManager.style-constants';
-import {AppLayout} from '@jahia/layouts';
+import {AppLayout, styleConstants} from '@jahia/layouts';
 import {registry} from '@jahia/registry';
 import initRoutes from './routes/initRoutes';
 
@@ -43,6 +43,7 @@ export default class ContentManager extends React.Component {
             'content-media-manager': lang => require('../../main/resources/javascript/locales/' + lang + '.json')
         };
 
+        theme.layout = styleConstants;
         theme.contentManager = contentManagerStyleConstants;
     }
 

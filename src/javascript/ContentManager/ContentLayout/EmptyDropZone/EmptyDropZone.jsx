@@ -9,8 +9,8 @@ const styles = theme => ({
     gridEmpty: {
         overflowY: 'scroll',
         overflowX: 'scroll',
-        height: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
-        maxHeight: 'calc(100vh - ' + (theme.contentManager.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
+        height: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
+        maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default
     },

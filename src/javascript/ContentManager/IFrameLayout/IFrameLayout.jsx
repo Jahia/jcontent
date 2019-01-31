@@ -6,6 +6,7 @@ import {ProgressOverlay, actionsRegistry, withNotifications} from '@jahia/react-
 import {compose, Query} from 'react-apollo';
 import {ActionRequirementsQueryHandler} from '../ContentManager.gql-queries';
 import {translate} from 'react-i18next';
+import {styleConstants} from '@jahia/layouts';
 
 export class IFrameLayout extends React.Component {
     showError(errorKey, errorData) {
@@ -81,7 +82,7 @@ export class IFrameLayout extends React.Component {
                                 position="relative"
                                 width="100%"
                                 className="myClassname"
-                                height="100%"
+                                height={'calc( 100% - ' + styleConstants.topBarHeight + 'px )'}
                         />
                     );
                 }}

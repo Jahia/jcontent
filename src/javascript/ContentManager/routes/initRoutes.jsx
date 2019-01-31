@@ -9,11 +9,12 @@ import ContentLayout from '../ContentLayout';
 function initRoutes(registry) {
     registry.add('route1', {
         type: 'route',
-        target: ['cmm:1'],
-        path: '/:siteKey/:lang/apps',
-        render: (props, {dxContext}) => (
+        target: ['cmm:50'],
+        path: '/:siteKey/:lang/apps/:menu/:entry',
+        render: (props, {dxContext, t}) => (
             <FullWidthLayout topBarProps={{
-                title: 'Site settings',
+                path: t('label.contentManager.appTitle', {path: ''}),
+                title: t('label.contentManager.leftMenu.manage.' + props.match.params.entry + '.title', {path: ''}),
                 contextModifiers: <React.Fragment><LanguageSwitcher/><SiteSwitcher/></React.Fragment>,
                 actions: <React.Fragment></React.Fragment>
             }}
@@ -27,10 +28,11 @@ function initRoutes(registry) {
 
     registry.add('route2', {
         type: 'route',
-        target: ['cmm:2'],
+        target: ['cmm:100'],
         path: '/:siteKey/:lang/:mode',
         render: (props, {t}) => (
             <FullWidthLayout topBarProps={{
+                path: t('label.contentManager.appTitle', {path: ''}),
                 title: t('label.contentManager.title.' + props.match.params.mode),
                 contextModifiers: <React.Fragment><LanguageSwitcher/><SiteSwitcher/></React.Fragment>,
                 actions: <SearchBar/>

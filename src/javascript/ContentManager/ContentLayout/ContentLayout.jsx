@@ -17,7 +17,7 @@ import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher
 
 const styles = theme => ({
     content: {
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
+        height: 'calc( 100vh - ' + theme.layout.topBarHeight + 'px )',
         flexGrow: 1,
         transitionDuration: '.25s',
         backgroundColor: theme.palette.background.default,
@@ -34,7 +34,7 @@ const styles = theme => ({
         marginRight: 0
     },
     treeDrawer: {
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
+        height: 'calc( 100vh - ' + theme.layout.topBarHeight + 'px )',
         transitionDuration: '.15s'
     },
     treeDrawerPaper: {
@@ -43,7 +43,7 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     previewDrawer: {
-        height: 'calc( 100vh - ' + theme.contentManager.topBarHeight + 'px )',
+        height: 'calc( 100vh - ' + theme.layout.topBarHeight + 'px )',
         display: 'flex',
         overflow: 'hidden',
         transitionDuration: '.15s'

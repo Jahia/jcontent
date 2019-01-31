@@ -11,13 +11,18 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
             requiredPermission: 'jcr:addChildNodes',
             showOnNodeTypes: ['jnt:folder']
         });
+        let input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('multiple', 'true');
+        input.setAttribute('id', 'file-upload-input');
+        if (document.getElementById('file-upload-input') === null) {
+            document.body.appendChild(input);
+        }
     },
 
     onClick: context => {
-        let input = document.createElement('input');
+        let input = document.getElementById('file-upload-input');
         let files = [];
-        input.setAttribute('type', 'file');
-        input.setAttribute('multiple', 'true');
         input.click();
         input.addEventListener('change', () => {
             Array.from(input.files).forEach(file => {

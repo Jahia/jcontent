@@ -22,9 +22,7 @@ export default composeActions(requirementsAction, withNodeName, {
         if (context.node) {
             window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
         } else if (context.nodes) {
-            let uuids = [];
-            context.nodes.forEach(node => uuids.push(node.uuid));
-            window.parent.authoringApi.openPublicationWorkflow(uuids, context.allSubTree, context.allLanguages, context.checkForUnpublication);
+            window.parent.authoringApi.openPublicationWorkflow(context.nodes.map(n => n.uuid), context.allSubTree, context.allLanguages, context.checkForUnpublication);
         }
     }
 });

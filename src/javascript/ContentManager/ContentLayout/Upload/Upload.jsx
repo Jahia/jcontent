@@ -70,6 +70,7 @@ export class Upload extends React.Component {
 
     render() {
         let {classes, uploads} = this.props;
+
         return (
             <React.Fragment>
                 <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}}>
@@ -77,11 +78,13 @@ export class Upload extends React.Component {
                         <UploadHeader status={this.uploadStatus()}/>
                         <div className={classes.snackBarScroll}>
                             {uploads.map((upload, index) => (
-                                <UploadItem key={upload.id}
-                                            index={index}
-                                            file={files.acceptedFiles[index]}
-                                            removeFile={this.removeFile}
-                                            updateUploadsStatus={this.updateUploadsStatus}/>
+                                <UploadItem
+                                    key={upload.id}
+                                    index={index}
+                                    file={files.acceptedFiles[index]}
+                                    removeFile={this.removeFile}
+                                    updateUploadsStatus={this.updateUploadsStatus}
+                                />
                             ))}
                         </div>
                         <IconButton className={classes.closeButton} onClick={this.handleCloseSnackBar}>
@@ -195,4 +198,5 @@ const mapDispatchToProps = dispatch => {
 export default compose(
     withStyles(styles, {withTheme: true}),
     translate(),
-    connect(mapStateToProps, mapDispatchToProps))(Upload);
+    connect(mapStateToProps, mapDispatchToProps)
+)(Upload);

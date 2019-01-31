@@ -14,7 +14,7 @@ export default composeActions(requirementsAction, {
         if (context.node) {
             window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false);
         } else if (context.nodes) {
-            window.parent.authoringApi.openPublicationWorkflow(context.nodes.map(n => n.uuid), true, false, false);
+            window.parent.authoringApi.openPublicationWorkflow(context.nodes.map(node => node.uuid), true, false, false);
         }
     }
 });

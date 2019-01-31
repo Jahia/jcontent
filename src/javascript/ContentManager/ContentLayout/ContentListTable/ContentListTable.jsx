@@ -253,8 +253,8 @@ export class ContentListTable extends React.Component {
                             setSort={setSort}
                             anySelected={selection.length > 0 && rows.reduce((acc, node) => acc || selection.indexOf(node.path) !== -1, false)}
                             allSelected={selection.length > 0 && rows.reduce((acc, node) => acc && selection.indexOf(node.path) !== -1, true)}
-                            selectAll={() => addSelection(rows.map(n => n.path))}
-                            unselectAll={() => removeSelection(rows.map(n => n.path))}
+                            selectAll={() => addSelection(rows.map(node => node.path))}
+                            unselectAll={() => removeSelection(rows.map(node => node.path))}
                         />
                         <DxContext.Consumer>
                             {dxContext => (
@@ -290,9 +290,11 @@ export class ContentListTable extends React.Component {
                                                         }}
                                                         onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
                                                     >
-                                                        <ContextualMenu ref={contextualMenu}
-                                                                        actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                                                        context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}/>
+                                                        <ContextualMenu
+                                                            ref={contextualMenu}
+                                                            actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
+                                                            context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
+                                                        />
                                                         <TableCell
                                                             padding="none"
                                                             classes={{root: classes.publicationCell}}
@@ -450,8 +452,8 @@ export class ContentListTable extends React.Component {
     componentDidUpdate() {
         const {rows, selection, removeSelection} = this.props;
         if (selection.length > 0) {
-            const paths = rows.map(n => n.path);
-            const toRemove = selection.filter(p => paths.indexOf(p) === -1);
+            const paths = rows.map(node => node.path);
+            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
             if (toRemove.length > 0) {
                 removeSelection(toRemove);
             }
@@ -459,21 +461,13 @@ export class ContentListTable extends React.Component {
     }
 }
 
-/* Let EmptyRow = props => {
-    return (
-        <TableRow>
-            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
-                <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
-            </TableCell>
-        </TableRow>
-    );
-}; */
-
 let ContentNotFound = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                <Typography variant="subtitle1" className={props.class}>{props.translate('label.contentManager.contentNotFound')}</Typography>
+                <Typography variant="subtitle1" className={props.class}>
+                    {props.translate('label.contentManager.contentNotFound')}
+                </Typography>
             </TableCell>
         </TableRow>
     );

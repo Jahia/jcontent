@@ -149,9 +149,9 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: true
     });
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <DeleteForever/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['contentActions:4.2'],
+        target: ['contentActions:4.2', 'selectedContentActions:4.2'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {

@@ -54,10 +54,11 @@ function checkNodeRequirement(context, options) {
             }
         }
     } else {
-        context.enabled = ((_.isEmpty(showForPaths) || evaluateVisibilityPaths(true, showForPaths, context.path)) &&
+        context.enabled = of((_.isEmpty(showForPaths) || evaluateVisibilityPaths(true, showForPaths, context.path)) &&
             (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, context.path)) &&
             (!enabled || enabled(context))
         );
+        context.node = of(undefined);
     }
     return context;
 }

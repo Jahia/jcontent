@@ -26,6 +26,10 @@ const styles = theme => ({
         display: 'block',
         width: 800,
         padding: 24
+    },
+    snackBarScroll: {
+        maxHeight: '150px',
+        overflow: 'auto'
     }
 });
 
@@ -71,13 +75,15 @@ export class Upload extends React.Component {
                 <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}}>
                     <React.Fragment>
                         <UploadHeader status={this.uploadStatus()}/>
-                        {uploads.map((upload, index) => (
-                            <UploadItem key={upload.id}
-                                        index={index}
-                                        file={files.acceptedFiles[index]}
-                                        removeFile={this.removeFile}
-                                        updateUploadsStatus={this.updateUploadsStatus}/>
-                        ))}
+                        <div className={classes.snackBarScroll}>
+                            {uploads.map((upload, index) => (
+                                <UploadItem key={upload.id}
+                                            index={index}
+                                            file={files.acceptedFiles[index]}
+                                            removeFile={this.removeFile}
+                                            updateUploadsStatus={this.updateUploadsStatus}/>
+                            ))}
+                        </div>
                         <IconButton className={classes.closeButton} onClick={this.handleCloseSnackBar}>
                             <Close/>
                         </IconButton>

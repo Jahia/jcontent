@@ -60,7 +60,7 @@
                 "dialogRenameTitle": "Rename the imported file",
                 "dialogRenameText": "Which name would you want for the new imported file ?",
                 "dialogRenameExample": "ex: filename",
-                "dialogRenameCancel": "Resign",
+                "dialogRenameCancel": "Cancel",
                 "dialogRename" : "Rename"
             },
             "error": {

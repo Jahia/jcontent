@@ -28,7 +28,7 @@ function initRoutes(registry) {
 
     registry.add('route2', {
         type: 'route',
-        target: ['cmm:100'],
+        target: ['cmm:99'],
         path: '/:siteKey/:lang/:mode',
         render: (props, {t}) => (
             <FullWidthLayout topBarProps={{

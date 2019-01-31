@@ -10,5 +10,11 @@ export default composeActions(requirementsAction, {
             enabled: context => context.node.pipe(map(node => hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED'))
         });
     },
-    onClick: context => window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false)
+    onClick: context => {
+        if (context.node) {
+            window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false);
+        } else if (context.nodes) {
+            window.parent.authoringApi.openPublicationWorkflow(context.nodes.map(n => n.uuid), true, false, false);
+        }
+    }
 });

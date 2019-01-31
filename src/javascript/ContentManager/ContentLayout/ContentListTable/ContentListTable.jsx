@@ -446,6 +446,17 @@ export class ContentListTable extends React.Component {
             </Paper>
         );
     }
+
+    componentDidUpdate() {
+        const {rows, selection, removeSelection} = this.props;
+        if (selection.length > 0) {
+            const paths = rows.map(n => n.path);
+            const toRemove = selection.filter(p => paths.indexOf(p) === -1);
+            if (toRemove.length > 0) {
+                removeSelection(toRemove);
+            }
+        }
+    }
 }
 
 /* Let EmptyRow = props => {

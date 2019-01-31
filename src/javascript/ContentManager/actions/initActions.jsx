@@ -169,6 +169,11 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
         menu: 'contentActions'
     });
+    actionsRegistry.add('selectedContentMenu', menuAction, {
+        buttonIcon: <DotsVertical/>,
+        buttonLabel: 'label.contentManager.contentPreview.moreOptions',
+        menu: 'selectedContentActions'
+    });
     actionsRegistry.add('duplicate', {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.contentPreview.duplicate',

@@ -116,7 +116,8 @@ function initActions(actionsRegistry) {
         buttonIcon: <Publish/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
         target: ['contentActions:6', 'selectedContentActions:5'],
-        menu: 'publishMenu'
+        menu: 'publishMenu',
+        menuPreload: true
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
         buttonIcon: <Publish/>,

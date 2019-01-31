@@ -151,7 +151,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('publishDeletion', publishDeletionAction, {
         buttonIcon: <DeleteForever/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
-        target: ['contentActions:4.2', 'selectedContentActions:4.2'],
+        target: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {

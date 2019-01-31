@@ -7,7 +7,7 @@ export default composeActions(requirementsAction, {
     init: context => {
         context.initRequirements({
             retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
-            enabled: context => context.node.pipe(map(node => hasMixin(node, 'jmix:markedForDeletionRoot')))
+            enabled: context => context.node.pipe(map(node => hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED'))
         });
     },
     onClick: context => window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false)

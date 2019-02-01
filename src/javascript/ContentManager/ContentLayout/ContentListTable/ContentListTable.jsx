@@ -180,6 +180,7 @@ const styles = theme => ({
     },
     publicationStatusRoot: {
         top: 0,
+        width: 6,
         '&:hover': {
             width: 640
         }

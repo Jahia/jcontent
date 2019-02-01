@@ -263,8 +263,9 @@ export class ContentListTable extends React.Component {
                                 <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
                                     {contentNotFound ?
                                         <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> :
-                                        (_.isEmpty(rows) && !loading && mode === ContentManagerConstants.mode.BROWSE) ?
-                                            <EmptyDropZone contentList path={path}/> :
+                                        (_.isEmpty(rows) && !loading) ?
+                                            (mode === ContentManagerConstants.mode.SEARCH ? <EmptyRow columnData={columnData} translate={t}/> :
+                                            <EmptyDropZone contentList path={path}/>) :
                                             rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.icon);
@@ -470,6 +471,16 @@ let ContentNotFound = props => {
                 <Typography variant="subtitle1" className={props.class}>
                     {props.translate('label.contentManager.contentNotFound')}
                 </Typography>
+            </TableCell>
+        </TableRow>
+    );
+};
+
+let EmptyRow = props => {
+    return (
+        <TableRow>
+            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
+                <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
             </TableCell>
         </TableRow>
     );

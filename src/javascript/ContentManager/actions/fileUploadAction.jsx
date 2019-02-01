@@ -11,29 +11,29 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
             requiredPermission: 'jcr:addChildNodes',
             showOnNodeTypes: ['jnt:folder']
         });
-        let input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('multiple', 'true');
-        input.setAttribute('id', 'file-upload-input');
         if (document.getElementById('file-upload-input') === null) {
+            let input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('multiple', 'true');
+            input.setAttribute('id', 'file-upload-input');
             document.body.appendChild(input);
+            let files = [];
+            input.addEventListener('change', () => {
+                Array.from(input.files).forEach(file => {
+                    files.push(file);
+                });
+                setPath(context.path);
+                onFilesSelected(
+                    files,
+                    context.dispatchBatch,
+                    {path: context.path}
+                );
+            });
         }
     },
 
-    onClick: context => {
+    onClick: () => {
         let input = document.getElementById('file-upload-input');
-        let files = [];
         input.click();
-        input.addEventListener('change', () => {
-            Array.from(input.files).forEach(file => {
-                files.push(file);
-            });
-            setPath(context.path);
-            onFilesSelected(
-                files,
-                context.dispatchBatch,
-                {path: context.path}
-            );
-        });
     }
 });

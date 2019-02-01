@@ -62,7 +62,7 @@ export class FilesGrid extends Component {
     }
 
     render() {
-        const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage} = this.props;
+        const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage, rows, loading} = this.props;
         const {hoveredCard} = this.state;
 
         if (contentNotFound) {
@@ -78,7 +78,7 @@ export class FilesGrid extends Component {
             );
         }
 
-        if (!this.props.rows || this.props.rows.length === 0) {
+        if ((!rows || rows.length === 0) && !loading) {
             return (
                 <React.Fragment>
                     <ToolBar/>

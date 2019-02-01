@@ -98,7 +98,7 @@ export class ContentLayout extends React.Component {
         return (
             <React.Fragment>
                 <ContentData setRefetch={this.setContentRefetcher}>
-                    {({rows, contentNotFound, totalCount}) => (
+                    {({rows, contentNotFound, totalCount, loading}) => (
                         <div className={classes.appFrame}>
                             <Drawer
                                 variant="persistent"
@@ -121,8 +121,8 @@ export class ContentLayout extends React.Component {
                             >
                                 <Paper>
                                     {mode === ContentManagerConstants.mode.FILES && filesMode === 'grid' ?
-                                        <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/> :
-                                        <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound}/>
+                                        <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound} loading={loading}/> :
+                                        <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound} loading={loading}/>
                                     }
                                 </Paper>
                             </div>

@@ -223,6 +223,7 @@ export class ContentData extends React.Component {
                             }
                             {children({
                                 rows: rows,
+                                loading: loading,
                                 totalCount: totalCount,
                                 layoutQuery: layoutQuery,
                                 layoutQueryParams: layoutQueryParams

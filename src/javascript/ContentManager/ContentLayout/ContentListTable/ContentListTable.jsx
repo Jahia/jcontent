@@ -32,6 +32,7 @@ import {cmSetSort} from '../sort.redux-actions';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux-actions';
 import EmptyDropZone from '../EmptyDropZone/EmptyDropZone';
+import ContentManagerConstants from '../../ContentManager.constants';
 
 const allColumnData = [
     {
@@ -236,7 +237,7 @@ export class ContentListTable extends React.Component {
         const {
             rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
             onPreviewSelect, previewSelection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
-            siteKey, mode, lang, switchSelection, addSelection, removeSelection, selection
+            siteKey, mode, lang, switchSelection, addSelection, removeSelection, selection, loading
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
@@ -262,7 +263,7 @@ export class ContentListTable extends React.Component {
                                 <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
                                     {contentNotFound ?
                                         <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/> :
-                                        _.isEmpty(rows) ?
+                                        (_.isEmpty(rows) && !loading && mode === ContentManagerConstants.mode.BROWSE) ?
                                             <EmptyDropZone contentList path={path}/> :
                                             rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;

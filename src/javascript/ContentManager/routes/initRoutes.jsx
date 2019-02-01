@@ -1,5 +1,5 @@
 import React from 'react';
-import {FullWidthLayout} from '@jahia/layouts';
+import {MainLayout, FullWidthLayout} from '@jahia/layouts';
 import LanguageSwitcher from '../LanguageSwitcher';
 import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from '../IFrameLayout';
@@ -12,17 +12,19 @@ function initRoutes(registry) {
         target: ['cmm:50'],
         path: '/:siteKey/:lang/apps/:menu/:entry',
         render: (props, {dxContext, t}) => (
-            <FullWidthLayout topBarProps={{
+            <MainLayout topBarProps={{
                 path: t('label.contentManager.appTitle', {path: ''}),
                 title: t('label.contentManager.leftMenu.manage.' + props.match.params.entry + '.title', {path: ''}),
                 contextModifiers: <React.Fragment><LanguageSwitcher/><SiteSwitcher/></React.Fragment>,
                 actions: <React.Fragment></React.Fragment>
             }}
             >
-                <IFrameLayout
-                    contextPath={dxContext.contextPath}
-                    workspace={dxContext.workspace}/>
-            </FullWidthLayout>
+                <FullWidthLayout>
+                    <IFrameLayout
+                        contextPath={dxContext.contextPath}
+                        workspace={dxContext.workspace}/>
+                </FullWidthLayout>
+            </MainLayout>
         )
     });
 
@@ -31,15 +33,17 @@ function initRoutes(registry) {
         target: ['cmm:99'],
         path: '/:siteKey/:lang/:mode',
         render: (props, {t}) => (
-            <FullWidthLayout topBarProps={{
+            <MainLayout topBarProps={{
                 path: t('label.contentManager.appTitle', {path: ''}),
                 title: t('label.contentManager.title.' + props.match.params.mode),
                 contextModifiers: <React.Fragment><LanguageSwitcher/><SiteSwitcher/></React.Fragment>,
                 actions: <SearchBar/>
             }}
             >
-                <ContentLayout/>
-            </FullWidthLayout>
+                <FullWidthLayout>
+                    <ContentLayout/>
+                </FullWidthLayout>
+            </MainLayout>
         )
     });
 }

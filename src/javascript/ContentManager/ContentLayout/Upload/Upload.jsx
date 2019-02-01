@@ -87,7 +87,7 @@ export class Upload extends React.Component {
                                 />
                             ))}
                         </div>
-                        <IconButton className={classes.closeButton} onClick={this.handleCloseSnackBar}>
+                        <IconButton data-cm-role="upload-close-button" className={classes.closeButton} onClick={this.handleCloseSnackBar}>
                             <Close/>
                         </IconButton>
                     </React.Fragment>

@@ -110,7 +110,7 @@ export class UploadItem extends React.Component {
                         <Button variant="contained" color="default" onClick={this.hideRenameDialog}>
                             {t('label.contentManager.fileUpload.dialogRenameCancel')}
                         </Button>
-                        <Button variant="contained" color="primary" onClick={this.rename}>
+                        <Button variant="contained" color="primary" data-cm-role="upload-rename-button" onClick={this.rename}>
                             {t('label.contentManager.fileUpload.dialogRename')}
                         </Button>
                     </DialogActions>

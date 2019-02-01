@@ -211,7 +211,12 @@
                     "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
                 }
             },
-            "browseFolders": "Parcourir les répertoires"
+            "browseFolders": "Parcourir les répertoires",
+            "selection": {
+                "itemsSelected": "{{count}} élément sélectionné",
+                "itemsSelected_plural": "{{count}} éléments sélectionnés",
+                "clearMultipleSelection": "Vider la sélection"
+            }
         }
     }
 }

@@ -211,7 +211,12 @@
                     "loading": "Fehler beim Abrufen der Aktionsdaten: {{details}}"
                 }
             },
-            "browseFolders": "Ordner durchsuchen"
+            "browseFolders": "Ordner durchsuchen",
+            "selection": {
+                "itemsSelected": "{{count}} Element ausgewählt",
+                "itemsSelected_plural": "{{count}} Elemente ausgewählt",
+                "clearMultipleSelection": "Auswahl aufheben"
+            }
         }
     }
 }

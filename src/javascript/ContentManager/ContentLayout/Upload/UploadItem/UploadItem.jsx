@@ -66,6 +66,15 @@ export class UploadItem extends React.Component {
         this.onChangeName = this.onChangeName.bind(this);
     }
 
+    // Dependent on timing conditions, sometimes the component is mounted when the upload item has entered the UPLOADING state already.
+    componentDidMount() {
+        if (this.props.status === uploadStatuses.UPLOADING) {
+            this.doUploadAndStatusUpdate(false);
+            this.props.updateUploadsStatus();
+        }
+    }
+
+    // And sometimes the upload item enters the UPLOADING state when the component has already been mounted.
     componentDidUpdate(prevProps) {
         if (this.props.status === uploadStatuses.UPLOADING && prevProps.status !== uploadStatuses.UPLOADING) {
             this.doUploadAndStatusUpdate(false);
@@ -83,16 +92,16 @@ export class UploadItem extends React.Component {
         const {classes, t, file} = this.props;
         return (
             <div className={classes.listItem}>
-                <Typography variant="subtitle2"
-                            color="inherit"
-                            className={classes.fileNameText}
-                >{this.getFileName()}
+                <Typography variant="subtitle2" color="inherit" className={classes.fileNameText}>
+                    {this.getFileName()}
                 </Typography>
                 {this.secondaryActionsList()}
                 <div className={classes.grow}/>
                 {this.statusText()}
                 <Dialog open={this.state.anchorEl !== null}>
-                    <DialogTitle>{t('label.contentManager.fileUpload.dialogRenameTitle')}</DialogTitle>
+                    <DialogTitle>
+                        {t('label.contentManager.fileUpload.dialogRenameTitle')}
+                    </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             {t('label.contentManager.fileUpload.dialogRenameText')}

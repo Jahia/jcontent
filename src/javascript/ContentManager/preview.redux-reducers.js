@@ -9,10 +9,14 @@ let previewSelectionReducer = (state = null, action) => {
 };
 
 let previewModeReducer = (state = CM_PREVIEW_MODES.EDIT, action) => {
-    if (action.previewMode && action.type === CM_SET_PREVIEW_MODE) {
-        return action.previewMode;
+    switch (action.type) {
+        case CM_SET_PREVIEW_MODE:
+            return action.previewMode;
+        case CM_SET_PREVIEW:
+            return CM_PREVIEW_MODES.EDIT;
+        default:
+            return state;
     }
-    return state;
 };
 
 let previewStateReducer = (state = CM_DRAWER_STATES.HIDE, action) => {

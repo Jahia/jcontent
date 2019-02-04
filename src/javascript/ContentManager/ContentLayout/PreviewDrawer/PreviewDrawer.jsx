@@ -35,8 +35,9 @@ const styles = theme => ({
 });
 
 export class PreviewDrawer extends React.Component {
-    componentDidUpdate(prevProps) {
-        if (!prevProps.previewSelection || (this.props.previewSelection && prevProps.previewSelection.path !== this.props.previewSelection.path)) {
+    componentDidUpdate() {
+        // Set preview mode to 'edit' when content is never published/unpublished
+        if (this.props.previewMode !== 'edit' && (this.props.previewSelection.publicationStatus === 'NOT_PUBLISHED' || this.props.previewSelection.publicationStatus === 'UNPUBLISHED')) {
             this.props.setPreviewMode('edit');
         }
     }

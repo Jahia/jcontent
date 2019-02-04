@@ -15,7 +15,7 @@ function initRoutes(registry) {
             <MainLayout topBarProps={{
                 path: t('label.contentManager.appTitle', {path: ''}),
                 title: t('label.contentManager.leftMenu.manage.' + props.match.params.entry + '.title', {path: ''}),
-                contextModifiers: <React.Fragment><LanguageSwitcher/><SiteSwitcher/></React.Fragment>,
+                contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
                 actions: <React.Fragment></React.Fragment>
             }}
             >
@@ -36,7 +36,7 @@ function initRoutes(registry) {
             <MainLayout topBarProps={{
                 path: t('label.contentManager.appTitle', {path: ''}),
                 title: t('label.contentManager.title.' + props.match.params.mode),
-                contextModifiers: <React.Fragment><LanguageSwitcher/><SiteSwitcher/></React.Fragment>,
+                contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
                 actions: <SearchBar/>
             }}
             >

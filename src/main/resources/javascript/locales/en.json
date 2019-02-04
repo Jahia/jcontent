@@ -63,6 +63,9 @@
                 "dialogRenameCancel": "Cancel",
                 "dialogRename" : "Rename"
             },
+            "import": {
+                "dropMessage": "Drag and drop an import file (TBD)"
+            },
             "error": {
                 "contentUnavailable": "The requested content is unavailable",
                 "queryingContent": "Error querying content: {{details}}"

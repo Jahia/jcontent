@@ -4,29 +4,25 @@ import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import FileCard from './FileCard';
-import {Grid} from '@material-ui/core';
+import {Grid, Typography, withStyles} from '@material-ui/core';
 import {Pagination} from '@jahia/react-material';
 import DxContext from '../../DxContext';
-import {Typography, withStyles} from '@material-ui/core';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {valueToSizeTransformation} from './FilesGrid.utils';
 import {connect} from 'react-redux';
-import {cmSetPage} from '../pagination.redux-actions';
-import {cmSetPageSize} from '../pagination.redux-actions';
-import EmptyDropZone from '../EmptyDropZone/EmptyDropZone';
+import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
+import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 
 const styles = theme => ({
     grid: {
-        overflowY: 'scroll',
-        overflowX: 'scroll',
+        overflowY: 'auto',
+        overflowX: 'hidden',
         maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3
     },
     gridEmpty: {
-        overflowY: 'scroll',
-        overflowX: 'scroll',
         height: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         margin: '0!important',
@@ -65,6 +61,10 @@ export class FilesGrid extends Component {
         const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage, rows, loading} = this.props;
         const {hoveredCard} = this.state;
 
+        if ((!rows || rows.length === 0) && loading) {
+            return null;
+        }
+
         if (contentNotFound) {
             return (
                 <React.Fragment>
@@ -82,7 +82,7 @@ export class FilesGrid extends Component {
             return (
                 <React.Fragment>
                     <ToolBar/>
-                    <EmptyDropZone path={path} contentList={false}/>
+                    <FilesGridEmptyDropZone mode="browse-files" path={path}/>
                 </React.Fragment>
             );
         }

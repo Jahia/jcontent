@@ -215,7 +215,8 @@
             "selection": {
                 "itemsSelected": "{{count}} élément sélectionné",
                 "itemsSelected_plural": "{{count}} éléments sélectionnés",
-                "clearMultipleSelection": "Vider la sélection"
+                "clearMultipleSelection": "Vider la sélection",
+                "emptyContextMenu": "Aucune action n'est disponible pour ces éléments"
             }
         }
     }

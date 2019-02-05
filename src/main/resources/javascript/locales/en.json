@@ -220,7 +220,8 @@
             "selection": {
                 "itemsSelected": "{{count}} item selected",
                 "itemsSelected_plural": "{{count}} items selected",
-                "clearMultipleSelection": "Clear selection"
+                "clearMultipleSelection": "Clear selection",
+                "emptyContextMenu": "No actions available for those items"
             }
         }
     }

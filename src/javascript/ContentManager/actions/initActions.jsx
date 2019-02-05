@@ -174,7 +174,7 @@ function initActions(actionsRegistry) {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
         menu: 'selectedContentActions',
-        menuEmptyMessage: 'label.contentManager.contentPreview.moreOptions'
+        menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu'
     });
     actionsRegistry.add('duplicate', {
         buttonIcon: <Edit/>,

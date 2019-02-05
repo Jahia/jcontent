@@ -26,9 +26,9 @@ const ContentManagerConstants = {
     contentTreeConfigs: {
         contents: {
             rootPath: '/contents',
-            selectableTypes: ['jmix:list'],
+            selectableTypes: ['jnt:contentList', 'jnt:contentFolder'],
             type: 'contents',
-            openableTypes: ['jmix:list', 'jnt:contentFolder'],
+            openableTypes: ['jnt:contentList', 'jnt:contentFolder'],
             rootLabel: 'label.contentManager.browseFolders',
             key: 'browse-tree-content'
         },

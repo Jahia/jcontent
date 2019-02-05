@@ -716,10 +716,10 @@
     react "^16.4.1"
     recompose "^0.27.1"
 
-"@jahia/layouts@^1.0.0-beta.20190201165954":
-  version "1.0.0-beta.20190201165954"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2flayouts/-/layouts-1.0.0-beta.20190201165954.tgz#4c5d326ee10933457e67604da71e95541d0d6a47"
-  integrity sha512-CeOuUP23Rg/gYEq4p/MyD/+X1cL12MSqK4PUOzuxoUZoczutwlw79tbaH5wtIuGRRX3Y5KiZCo5WKVq95yEX9Q==
+"@jahia/layouts@^1.0.0-beta.20190205085738":
+  version "1.0.0-beta.20190205085738"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2flayouts/-/layouts-1.0.0-beta.20190205085738.tgz#dd0ec70a27588f4036756d7aed69405d6656e4b5"
+  integrity sha512-YPfgBjWDyI6P/u90MRZrdrjwuwMS8aB6cU3selUpWhCMCj0Nf9xKW5Fcke5qTbbaWGak34eoFeWk2FmUVv73pQ==
   dependencies:
     "@material-ui/core" "^3.6.2"
     classnames "^2.2.6"

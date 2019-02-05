@@ -51,6 +51,11 @@ const nodeFields = gql`
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
         }
+        subNodes: children {
+            pageInfo {
+                totalCount
+            }
+        }
         ancestors(fieldFilter: {filters: {fieldName: "deletionDate", evaluation: NOT_EMPTY}}) {
             deletionDate:property(name: "j:deletionDate") {
                 value

@@ -202,6 +202,7 @@ export class ContentData extends React.Component {
                                 deleted: (contentNode.deleted ? contentNode.deleted.value : ''),
                                 wipStatus: (contentNode.wipStatus ? contentNode.wipStatus.value : ''),
                                 wipLangs: (contentNode.wipLangs ? contentNode.wipLangs.values : []),
+                                subNodesCount: contentNode.subNodes.pageInfo.totalCount,
                                 parentDeletionDate: _.map(contentNode.ancestors, ancestor => {
                                     return ancestor.deletionDate ? ancestor.deletionDate.value : '';
                                 }),

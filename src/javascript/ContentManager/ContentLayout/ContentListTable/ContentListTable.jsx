@@ -282,6 +282,7 @@ export class ContentListTable extends React.Component {
                                                 let icon = this.addIconSuffix(node.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
+                                                let subElements = node.subNodesCount > 0 ? t('label.contentManager.subContent', {count: node.subNodesCount}) : '';
                                                 return (
                                                     <TableRow
                                                         key={node.uuid}
@@ -349,7 +350,8 @@ export class ContentListTable extends React.Component {
                                                                                     color="inherit"
                                                                         >
                                                                             <img src={icon}/>
-                                                                            {node[column.id]}
+                                                                            {node[column.id]}&nbsp;
+                                                                            <span style={{textDecoration: 'underline'}}>{subElements}</span>
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );

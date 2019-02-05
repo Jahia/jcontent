@@ -282,7 +282,7 @@ export class ContentListTable extends React.Component {
                                                 let icon = this.addIconSuffix(node.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
-                                                let subElements = node.subNodesCount > 0 ? t('label.contentManager.subContent', {count: node.subNodesCount}) : '';
+                                                let subElements = node.subNodesCount > 0 && node.type !== 'Page' ? t('label.contentManager.subContent', {count: node.subNodesCount}) : '';
                                                 return (
                                                     <TableRow
                                                         key={node.uuid}

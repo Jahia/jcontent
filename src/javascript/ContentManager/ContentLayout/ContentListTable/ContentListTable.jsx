@@ -162,7 +162,8 @@ const styles = theme => ({
         }
     },
     lastModifiedCell: {
-        paddingRight: '8px'
+        paddingRight: '8px',
+        width: '200px'
     },
     lastModifiedTypography: {
         textAlign: 'right',

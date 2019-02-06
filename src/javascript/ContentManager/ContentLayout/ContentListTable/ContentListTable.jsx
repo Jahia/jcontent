@@ -8,6 +8,7 @@ import {
     TableRow,
     Tooltip,
     Typography,
+    Button,
     withStyles
 } from '@material-ui/core';
 import {Lock} from '@material-ui/icons';
@@ -199,6 +200,10 @@ const styles = theme => ({
     },
     disabledSort: {
         cursor: 'initial'
+    },
+    subContentButton: {
+        textDecoration: 'underline',
+        margin: 0
     }
 });
 
@@ -283,7 +288,7 @@ export class ContentListTable extends React.Component {
                                                 let icon = this.addIconSuffix(node.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
-                                                let subElements = node.subNodesCount > 0 && node.type !== 'Page' ? t('label.contentManager.subContent', {count: node.subNodesCount}) : '';
+                                                let showSubElements = node.subNodesCount > 0 && node.type !== 'Page';
                                                 return (
                                                     <TableRow
                                                         key={node.uuid}
@@ -352,7 +357,13 @@ export class ContentListTable extends React.Component {
                                                                         >
                                                                             <img src={icon}/>
                                                                             {node[column.id]}&nbsp;
-                                                                            <span style={{textDecoration: 'underline'}}>{subElements}</span>
+                                                                            {showSubElements &&
+                                                                            <DisplayAction
+                                                                                actionKey="subContents"
+                                                                                context={{path: node.path}}
+                                                                                render={subContentButtonRenderer(node.subNodesCount, classes.subContentButton,
+                                                                                    t('label.contentManager.subContent', {count: node.subNodesCount}), true)}
+                                                                            />}
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
@@ -528,6 +539,20 @@ let EmptyRow = props => {
         </TableRow>
     );
 };
+
+let subContentButtonRenderer = (count, subContentClass, label, propagateEvent) => ({context}) => (
+    <Button data-sel-role={context.key}
+            className={subContentClass}
+            onClick={e => {
+        if (!propagateEvent) {
+            e.stopPropagation();
+        }
+        context.onClick(context, e);
+}}
+    >
+        <span>{label}</span>
+    </Button>
+);
 
 const mapStateToProps = state => ({
     mode: state.mode,

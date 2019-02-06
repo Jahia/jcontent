@@ -312,7 +312,9 @@ export class ContentListTable extends React.Component {
                                                         <ContextualMenu
                                                             ref={contextualMenu}
                                                             actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                                            context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
+                                                            context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path, menuFilter: value => {
+                                                                    return !_.includes(['subContents'], value.key);
+                                                                }} : {paths: selection}}
                                                         />
                                                         <TableCell
                                                             padding="none"

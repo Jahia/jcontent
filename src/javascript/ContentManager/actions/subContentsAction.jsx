@@ -2,7 +2,7 @@ import {composeActions} from '@jahia/react-material';
 import {map} from 'rxjs/operators';
 import {routerAction} from './routerAction';
 
-let subContentsAction = composeActions(routerAction, {
+export default composeActions(routerAction, {
     init: context => {
         context.initRequirements({
             retrieveSubNodes: true,
@@ -10,5 +10,3 @@ let subContentsAction = composeActions(routerAction, {
         });
     }
 });
-
-export {subContentsAction};

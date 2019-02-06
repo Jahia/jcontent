@@ -21,26 +21,22 @@ const ActionRequirementsQuery = gql`
 const ActionRequirementsFragments = {
     displayName: {
         applyFor: 'requirements',
-        gql: gql`
-            fragment DisplayName on JCRNode {
-                displayName(language: $language)
-            }
-        `
+        gql: gql`fragment DisplayName on JCRNode {
+            displayName(language: $language)
+        }`
     },
     primaryNodeType: {
         variables: {
             displayLanguage: 'String!'
         },
         applyFor: 'requirements',
-        gql: gql`
-            fragment PrimaryNodeType on JCRNode {
-                primaryNodeType {
-                    name
-                    displayName(language: $displayLanguage)
-                    icon
-                }
+        gql: gql`fragment PrimaryNodeType on JCRNode {
+            primaryNodeType {
+                name
+                displayName(language: $displayLanguage)
+                icon
             }
-        `
+        }`
     },
     allowedChildNodeTypes: {
         variables: {
@@ -147,7 +143,7 @@ const ActionRequirementsFragments = {
     },
     retrieveLockInfo: {
         applyFor: 'requirements',
-        gql: gql` fragment LockInfo on JCRNode {
+        gql: gql`fragment LockInfo on JCRNode {
             lockOwner: property(name: "jcr:lockOwner") {
                 value
             }

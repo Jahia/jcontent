@@ -43,7 +43,7 @@ import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 import translateAction from './translateAction';
 import translateMenuAction from './translateMenuAction';
-import {subContentsAction} from './subContentsAction';
+import subContentsAction from './subContentsAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';

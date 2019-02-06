@@ -268,10 +268,7 @@ export class ContentListTable extends React.Component {
                             {dxContext => {
                                 if (contentNotFound) {
                                     return (
-                                        <ContentNotFound columnData={columnData}
-                                                         translate={t}
-                                                         class={classes.empty}
-                                        />
+                                        <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/>
                                     );
                                 }
                                 if (_.isEmpty(rows) && !loading) {
@@ -324,12 +321,14 @@ export class ContentListTable extends React.Component {
                                                             classes={{root: classes.publicationCell}}
                                                             data-cm-role="table-content-list-cell-publication"
                                                         >
-                                                            <PublicationStatus node={node}
-                                                                               classes={{
-                                                                root: classes.publicationStatusRoot,
-                                                                border: classes.publicationStatusBorder,
-                                                                publicationInfoWrapper: classes.publicationInfoWrapper
-                                                            }}/>
+                                                            <PublicationStatus
+                                                                node={node}
+                                                                classes={{
+                                                                    root: classes.publicationStatusRoot,
+                                                                    border: classes.publicationStatusBorder,
+                                                                    publicationInfoWrapper: classes.publicationInfoWrapper
+                                                                }}
+                                                            />
                                                         </TableCell>
                                                         <TableCell
                                                             padding="checkbox"
@@ -351,19 +350,21 @@ export class ContentListTable extends React.Component {
                                                                         classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         data-cm-role="table-content-list-cell-name"
                                                                     >
-                                                                        <Typography noWrap
-                                                                                    variant="body2"
-                                                                                    color="inherit"
-                                                                        >
+                                                                        <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
                                                                             {node[column.id]}&nbsp;
                                                                             {showSubElements &&
-                                                                            <DisplayAction
-                                                                                actionKey="subContents"
-                                                                                context={{path: node.path}}
-                                                                                render={subContentButtonRenderer(node.subNodesCount, classes.subContentButton,
-                                                                                    t('label.contentManager.subContent', {count: node.subNodesCount}), true)}
-                                                                            />}
+                                                                                <DisplayAction
+                                                                                    actionKey="subContents"
+                                                                                    context={{path: node.path}}
+                                                                                    render={subContentButtonRenderer(
+                                                                                        node.subNodesCount,
+                                                                                        classes.subContentButton,
+                                                                                        t('label.contentManager.subContent', {count: node.subNodesCount}),
+                                                                                        true
+                                                                                    )}
+                                                                                />
+                                                                            }
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
@@ -376,12 +377,9 @@ export class ContentListTable extends React.Component {
                                                                         padding="none"
                                                                     >
                                                                         {this.isWip(node, lang) &&
-                                                                        <Tooltip
-                                                                            title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}
-                                                                        >
-                                                                            <Wrench fontSize="small"
-                                                                                    color="inherit"/>
-                                                                        </Tooltip>
+                                                                            <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
+                                                                                <Wrench fontSize="small" color="inherit"/>
+                                                                            </Tooltip>
                                                                         }
                                                                     </TableCell>
                                                                 );
@@ -394,11 +392,9 @@ export class ContentListTable extends React.Component {
                                                                         padding="none"
                                                                     >
                                                                         {node.isLocked &&
-                                                                        <Tooltip
-                                                                            title={t('label.contentManager.locked')}
-                                                                        >
-                                                                            <Lock fontSize="small" color="inherit"/>
-                                                                        </Tooltip>
+                                                                            <Tooltip title={t('label.contentManager.locked')}>
+                                                                                <Lock fontSize="small" color="inherit"/>
+                                                                            </Tooltip>
                                                                         }
                                                                     </TableCell>
                                                                 );
@@ -410,10 +406,7 @@ export class ContentListTable extends React.Component {
                                                                         classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         data-cm-role="table-content-list-cell-type"
                                                                     >
-                                                                        <Typography noWrap
-                                                                                    variant="body2"
-                                                                                    color="inherit"
-                                                                        >
+                                                                        <Typography noWrap variant="body2" color="inherit">
                                                                             {node[column.id]}
                                                                         </Typography>
                                                                     </TableCell>
@@ -427,46 +420,39 @@ export class ContentListTable extends React.Component {
                                                                         data-cm-role={'table-content-list-cell-' + column.id}
                                                                         padding={showActions ? 'checkbox' : 'default'}
                                                                     >
-                                                                        <Typography noWrap
-                                                                                    variant="body2"
-                                                                                    color="inherit"
-                                                                                    className={classes.lastModifiedTypography}
-                                                                        >
+                                                                        <Typography noWrap variant="body2" color="inherit" className={classes.lastModifiedTypography}>
                                                                             <Moment format="ll" locale={uiLang}>
                                                                                 {node[column.id]}
                                                                             </Moment>
                                                                         </Typography>
 
                                                                         {showActions &&
-                                                                        <div key="actions"
-                                                                             className={classes.actionsDiv}
-                                                                             data-cm-role="table-content-list-cell-actions"
-                                                                        >
-                                                                            <DisplayActions
-                                                                                target="contentActions"
-                                                                                filter={value => {
-                                                                                    return _.includes(['edit', 'preview', 'subContents'], value.key);
-                                                                                }}
-                                                                                context={{path: node.path}}
-                                                                                render={iconButtonRenderer({
-                                                                                    color: 'inherit',
-                                                                                    disableRipple: true
-                                                                                }, true)}
-                                                                            />
-                                                                            <DisplayAction
-                                                                                actionKey="contentMenu"
-                                                                                context={{
-                                                                                    path: node.path,
-                                                                                    menuFilter: value => {
-                                                                                        return !_.includes(['edit', 'preview', 'subContents'], value.key);
-                                                                                    }
-                                                                                }}
-                                                                                render={iconButtonRenderer({
-                                                                                    color: 'inherit',
-                                                                                    disableRipple: true
-                                                                                }, true)}
-                                                                            />
-                                                                        </div>
+                                                                            <div key="actions" className={classes.actionsDiv} data-cm-role="table-content-list-cell-actions">
+                                                                                <DisplayActions
+                                                                                    target="contentActions"
+                                                                                    filter={value => {
+                                                                                        return _.includes(['edit', 'preview', 'subContents'], value.key);
+                                                                                    }}
+                                                                                    context={{path: node.path}}
+                                                                                    render={iconButtonRenderer({
+                                                                                        color: 'inherit',
+                                                                                        disableRipple: true
+                                                                                    }, true)}
+                                                                                />
+                                                                                <DisplayAction
+                                                                                    actionKey="contentMenu"
+                                                                                    context={{
+                                                                                        path: node.path,
+                                                                                        menuFilter: value => {
+                                                                                            return !_.includes(['edit', 'preview', 'subContents'], value.key);
+                                                                                        }
+                                                                                    }}
+                                                                                    render={iconButtonRenderer({
+                                                                                        color: 'inherit',
+                                                                                        disableRipple: true
+                                                                                    }, true)}
+                                                                                />
+                                                                            </div>
                                                                         }
                                                                     </TableCell>
                                                                 );
@@ -477,10 +463,7 @@ export class ContentListTable extends React.Component {
                                                                     classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                     data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
-                                                                    <Typography noWrap
-                                                                                variant="body2"
-                                                                                color="inherit"
-                                                                    >
+                                                                    <Typography noWrap variant="body2" color="inherit">
                                                                         {node[column.id]}
                                                                     </Typography>
                                                                 </TableCell>
@@ -488,7 +471,8 @@ export class ContentListTable extends React.Component {
                                                         })}
                                                     </TableRow>
                                                 );
-                                            })}
+                                            })
+                                        }
                                     </UploadTransformComponent>
                                 );
                             }}
@@ -541,14 +525,15 @@ let EmptyRow = props => {
 };
 
 let subContentButtonRenderer = (count, subContentClass, label, propagateEvent) => ({context}) => (
-    <Button data-sel-role={context.key}
-            className={subContentClass}
-            onClick={e => {
-        if (!propagateEvent) {
-            e.stopPropagation();
-        }
-        context.onClick(context, e);
-}}
+    <Button
+        data-sel-role={context.key}
+        className={subContentClass}
+        onClick={e => {
+            if (!propagateEvent) {
+                e.stopPropagation();
+            }
+            context.onClick(context, e);
+        }}
     >
         <span>{label}</span>
     </Button>

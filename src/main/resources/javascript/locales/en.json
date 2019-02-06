@@ -103,6 +103,7 @@
             "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
             "unpublish": "Unpublish",
             "editAction": "Edit",
+            "subContentsAction": "Go on sub contents",
             "translateAction": "{{source}} -> {{dest}}",
             "noResults": "No Results",
             "create": {

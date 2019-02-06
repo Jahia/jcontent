@@ -3,7 +3,7 @@ import {menuAction} from '@jahia/react-material';
 import ContentIcon from './ContentIcon';
 import ManageIcon from './ManageIcon';
 import WorkflowIcon from './WorkflowIcon';
-import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility} from '@material-ui/icons';
+import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility, SubdirectoryArrowRight} from '@material-ui/icons';
 import {
     Account,
     AccountGroup,
@@ -43,6 +43,7 @@ import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 import translateAction from './translateAction';
 import translateMenuAction from './translateMenuAction';
+import {subContentsAction} from './subContentsAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -324,6 +325,12 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.actions.locate',
         target: ['contentActions:0.5'],
         hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']
+    });
+    actionsRegistry.add('subContents', subContentsAction, {
+        buttonIcon: <SubdirectoryArrowRight/>,
+        buttonLabel: 'label.contentManager.subContentsAction',
+        target: ['contentActions:0.1'],
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
     });
 }
 

@@ -433,7 +433,7 @@ export class ContentListTable extends React.Component {
                                                                             <DisplayActions
                                                                                 target="contentActions"
                                                                                 filter={value => {
-                                                                                    return _.includes(['edit', 'preview'], value.key);
+                                                                                    return _.includes(['edit', 'preview', 'subContents'], value.key);
                                                                                 }}
                                                                                 context={{path: node.path}}
                                                                                 render={iconButtonRenderer({
@@ -446,7 +446,7 @@ export class ContentListTable extends React.Component {
                                                                                 context={{
                                                                                     path: node.path,
                                                                                     menuFilter: value => {
-                                                                                        return !_.includes(['edit', 'preview'], value.key);
+                                                                                        return !_.includes(['edit', 'preview', 'subContents'], value.key);
                                                                                     }
                                                                                 }}
                                                                                 render={iconButtonRenderer({

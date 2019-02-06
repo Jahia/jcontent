@@ -168,6 +168,16 @@ const ActionRequirementsFragments = {
                 }
             }
         }`
+    },
+    retrieveSubNodes: {
+        applyFor: 'requirements',
+        gql: gql`fragment subNodes on JCRNode {
+            subNodes: children {
+                pageInfo {
+                    totalCount
+                }
+            }
+        }`
     }
 };
 
@@ -232,6 +242,9 @@ class ActionRequirementsQueryHandler {
         }
         if (context.getContributeTypesRestrictions) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveContentRestriction);
+        }
+        if (context.retrieveSubNodes) {
+            this.requirementsFragments.push(ActionRequirementsFragments.retrieveSubNodes);
         }
     }
 

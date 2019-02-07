@@ -82,7 +82,7 @@ export class IFrameLayout extends React.Component {
                                 position="relative"
                                 width="100%"
                                 className="myClassname"
-                                height={'calc( 100% - ' + styleConstants.topBarHeight + 'px )'}
+                                height={'calc( 100vh - ' + styleConstants.topBarHeight + 'px )'}
                         />
                     );
                 }}

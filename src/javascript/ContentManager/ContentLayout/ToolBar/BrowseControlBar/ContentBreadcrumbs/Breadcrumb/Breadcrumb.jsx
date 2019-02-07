@@ -118,6 +118,7 @@ export class Breadcrumb extends React.Component {
 
         for (let i in entries) {
             if (Object.prototype.hasOwnProperty.call(entries, i)) {
+                let index = parseInt(i, 10);
                 let entry = entries[i];
                 let entryPathParts = this.splitPath(entry.path, rootType);
 
@@ -157,7 +158,7 @@ export class Breadcrumb extends React.Component {
                 };
 
                 // Handle root siblings
-                if (i === 0) {
+                if (index === 0) {
                     // @TODO update using gql query to retrieve root nodes when component is loaded
                     const siblingsToBeAdded = [];
                     if (mode === ContentManagerConstants.mode.FILES) {

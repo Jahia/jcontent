@@ -1,14 +1,10 @@
-import {CM_DRAWER_STATES, cmGoto} from '../ContentManager.redux-actions';
+import {cmGoto} from '../ContentManager.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from './reduxAction';
 import requirementsAction from './requirementsAction';
-import {cmSetPreviewState} from '../preview.redux-actions';
 
 const mapDispatchToProps = dispatch => ({
-    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params})),
-    setPreviewState: state => {
-        dispatch(cmSetPreviewState(state));
-    }
+    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
 });
 
 const mapStateToProps = state => ({

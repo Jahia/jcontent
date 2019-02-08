@@ -70,8 +70,8 @@ export class BreadcrumbDisplay extends React.Component {
                         buttonRef={this.anchorButton}
                         aria-haspopup="true"
                         aria-owns={'breadcrumbMenu_' + node.uuid}
-                        onMouseOver={() => node.siblings.length > 1 && this.onMenuButtonMouseOver()}
-                        onClick={ev => node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
+                        onMouseOver={() => node.siblings && node.siblings.length > 1 && this.onMenuButtonMouseOver()}
+                        onClick={ev => node.siblings && node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
                 >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
@@ -104,7 +104,7 @@ export class BreadcrumbDisplay extends React.Component {
                     >
                         {this.renderIcon(node, classes)}{node.name}
                     </MenuItem>
-                    {node.siblings.map(siblingNode => {
+                    {node.siblings && node.siblings.length !== 0 && node.siblings.map(siblingNode => {
                         if (siblingNode.name === node.name) {
                             return null;
                         }

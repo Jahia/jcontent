@@ -26,6 +26,7 @@ export class Breadcrumb extends React.Component {
         let {pickerEntries, path, rootLabel, t, rootPath, mode, classes} = this.props;
 
         let breadcrumbs = Breadcrumb.parseEntries(pickerEntries, path, rootLabel, t, rootPath, mode);
+        let pathParts = path.split('/');
 
         if (_.isEmpty(breadcrumbs)) {
             return null;
@@ -40,6 +41,17 @@ export class Breadcrumb extends React.Component {
         let firstVisibleIndex = 1;
         if (breadcrumbs.length > MAX_TOTAL_ITEMS_ON_CUT_DISPLAY) {
             firstVisibleIndex += (breadcrumbs.length - MAX_TOTAL_ITEMS_ON_CUT_DISPLAY);
+        }
+        // If we're browsing on sub contents of a table content, then we add the table content in the breadcrumb to give feedback to the
+        // user about its location
+        if (breadcrumbs[breadcrumbs.length - 1].name.toLowerCase() !== pathParts[pathParts.length - 1]) {
+            let uuid = breadcrumbs[breadcrumbs.length - 1].uuid;
+            let breadcrumbToAdd = {};
+            breadcrumbToAdd.uuid = uuid;
+            breadcrumbToAdd.name = pathParts[pathParts.length - 1];
+            breadcrumbToAdd.path = path;
+            breadcrumbToAdd.siblings = [];
+            breadcrumbs[breadcrumbs.length - 1] = breadcrumbToAdd;
         }
 
         return (
@@ -87,17 +99,9 @@ export class Breadcrumb extends React.Component {
         );
     }
 
-    static splitPath(path, type) {
-        switch (type) {
-            case 'pages': {
-                let [, ...pathElements] = path.split('/');
-                return pathElements;
-            }
-            default: {
-                let [, , ...pathElements] = path.split('/');
-                return pathElements;
-            }
-        }
+    static splitPath(path) {
+        let [, , ...pathElements] = path.split('/');
+        return pathElements;
     }
 
     static parseTypeFromPath(rootPath, path) {
@@ -114,13 +118,13 @@ export class Breadcrumb extends React.Component {
         // Process these nodes
         let breadcrumbs = [];
         let rootType = this.parseTypeFromPath(rootPath, selectedPath);
-        let selectedPathParts = this.splitPath(selectedPath, rootType);
+        let selectedPathParts = this.splitPath(selectedPath);
 
         for (let i in entries) {
             if (Object.prototype.hasOwnProperty.call(entries, i)) {
                 let index = parseInt(i, 10);
                 let entry = entries[i];
-                let entryPathParts = this.splitPath(entry.path, rootType);
+                let entryPathParts = this.splitPath(entry.path);
 
                 if (entryPathParts.length > selectedPathParts.length) {
                     // Skip, our selections does not go this deep.

@@ -355,13 +355,13 @@ export class ContentListTable extends React.Component {
                                                                             <img src={icon}/>
                                                                             {node[column.id]}&nbsp;
                                                                             <DisplayAction
-                                                                                    actionKey="subContents"
-                                                                                    context={{path: node.path}}
-                                                                                    render={subContentButtonRenderer(
-                                                                                        classes.subContentButton,
-                                                                                        t('label.contentManager.subContent', {count: node.subNodesCount})
-                                                                                    )}
-                                                                                />
+                                                                                actionKey="subContents"
+                                                                                context={{path: node.path}}
+                                                                                render={subContentButtonRenderer(
+                                                                                    classes.subContentButton,
+                                                                                    t('label.contentManager.subContent', {count: node.subNodesCount})
+                                                                                )}
+                                                                            />
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );

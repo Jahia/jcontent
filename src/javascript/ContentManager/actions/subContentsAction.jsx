@@ -5,9 +5,9 @@ import {routerAction} from './routerAction';
 export default composeActions(routerAction, {
     init: context => {
         context.initRequirements({
-            retrievePrimaryNodeType: true,
+            hideOnNodeTypes: ['jnt:page', 'jnt:file'],
             retrieveSubNodes: true,
-            enabled: context => context.node.pipe(map(node => node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:file' && node.subNodes.pageInfo.totalCount > 0))
+            enabled: context => context.node.pipe(map(node => node.subNodes.pageInfo.totalCount > 0))
         });
     }
 });

@@ -3,17 +3,14 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {Tooltip} from '@material-ui/core';
 import {isMarkedForDeletion} from '../ContentManager.utils';
+import * as _ from 'lodash';
 
 class PublicationStatusUnpublished {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.unPublished', {userName: node.lastPublishedBy, timestamp: node.lastPublished});
-    }
-
     geti18nDetailsMessage(node, t, locale = 'en') {
         return (
             <React.Fragment>
-                { t('label.contentManager.publicationStatus.unPublished', {userName: node.lastModifiedBy, timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{node.lastModified}</Moment>
+                { t('label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
+                <Moment format="LLL" locale={locale}>{_.get(node, 'lastModified.value', '')}</Moment>
             </React.Fragment>
         );
     }
@@ -24,10 +21,6 @@ class PublicationStatusUnpublished {
 }
 
 class PublicationStatusNotPublished {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.notPublished');
-    }
-
     geti18nDetailsMessage(node, t) {
         return t('label.contentManager.publicationStatus.notPublished');
     }
@@ -38,15 +31,11 @@ class PublicationStatusNotPublished {
 }
 
 class PublicationStatusPublished {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.published', {userName: node.lastPublishedBy, timestamp: node.lastPublished});
-    }
-
     geti18nDetailsMessage(node, t, locale = 'en') {
         return (
             <React.Fragment>
-                { t('label.contentManager.publicationStatus.published', {userName: node.lastPublishedBy, timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{node.lastPublished}</Moment>
+                { t('label.contentManager.publicationStatus.published', {userName: _.get(node, 'lastPublishedBy.value', ''), timestamp: ''}) }
+                <Moment format="LLL" locale={locale}>{_.get(node, 'lastPublished.value', '')}</Moment>
             </React.Fragment>
         );
     }
@@ -57,15 +46,11 @@ class PublicationStatusPublished {
 }
 
 class PublicationStatusModified {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.modified', {userName: node.lastModifiedBy, timestamp: node.lastModified});
-    }
-
     geti18nDetailsMessage(node, t, locale = 'en') {
         return (
             <React.Fragment>
-                { t('label.contentManager.publicationStatus.modified', {userName: node.lastModifiedBy, timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{node.lastModified}</Moment>
+                { t('label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
+                <Moment format="LLL" locale={locale}>{_.get(node, 'lastModified.value', '')}</Moment>
             </React.Fragment>
         );
     }
@@ -76,15 +61,14 @@ class PublicationStatusModified {
 }
 
 class PublicationStatusMarkedForDeletion {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.markedForDeletion', {userName: node.deletedBy !== '' ? node.deletedBy : node.parentDeletionUser[0], timestamp: node.deleted !== '' ? node.deleted : node.parentDeletionDate[0]});
-    }
-
     geti18nDetailsMessage(node, t, locale = 'en') {
+        let parentDeletionUser = _.get(_.head(node.ancestors), 'deletionUser.value', '');
+        let parentDeletionDate = _.get(_.head(node.ancestors), 'deletionDate.value', '');
+
         return (
             <React.Fragment>
-                { t('label.contentManager.publicationStatus.markedForDeletion', {userName: node.deletedBy !== '' ? node.deletedBy : node.parentDeletionUser[0], timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{node.deleted !== '' ? node.deleted : node.parentDeletionDate[0]}</Moment>
+                { t('label.contentManager.publicationStatus.markedForDeletion', {userName: _.get(node, 'deletedBy.value', parentDeletionUser), timestamp: ''}) }
+                <Moment format="LLL" locale={locale}>{ _.get(node, 'deleted.value', parentDeletionDate)}</Moment>
             </React.Fragment>
         );
     }
@@ -95,10 +79,6 @@ class PublicationStatusMarkedForDeletion {
 }
 
 class PublicationStatusMandatoryLanguageUnpublishable {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label');
-    }
-
     geti18nDetailsMessage(node, t) {
         return (
             <Tooltip title={t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}>
@@ -115,10 +95,6 @@ class PublicationStatusMandatoryLanguageUnpublishable {
 }
 
 class PublicationStatusMandatoryLanguageValid {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.mandatoryLanguageValid.label');
-    }
-
     geti18nDetailsMessage(node, t) {
         return (
             <Tooltip title={t('label.contentManager.publicationStatus.mandatoryLanguageValid.description')}>
@@ -135,10 +111,6 @@ class PublicationStatusMandatoryLanguageValid {
 }
 
 class PublicationStatusConflict {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.conflict.label');
-    }
-
     geti18nDetailsMessage(node, t) {
         return (
             <Tooltip title={t('label.contentManager.publicationStatus.conflict.description')}>
@@ -155,10 +127,6 @@ class PublicationStatusConflict {
 }
 
 class PublicationStatusUnknown {
-    getDetailsMessage(node, t) {
-        return t('label.contentManager.publicationStatus.unknown');
-    }
-
     geti18nDetailsMessage(node, t) {
         return t('label.contentManager.publicationStatus.unknown');
     }
@@ -182,6 +150,6 @@ export const publicationStatusByName = {
         if (isMarkedForDeletion(node)) {
             return this.MARKED_FOR_DELETION;
         }
-        return this[node.publicationStatus] || this.UNKNOWN;
+        return this[node.aggregatedPublicationInfo.publicationStatus] || this.UNKNOWN;
     }
 };

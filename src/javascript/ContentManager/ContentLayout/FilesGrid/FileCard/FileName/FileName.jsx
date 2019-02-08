@@ -12,7 +12,7 @@ const styles = () => ({
 });
 
 export const FileName = ({maxLength, classes, node}) => {
-    const name = node.name;
+    const name = node.displayName;
     const shortenName = name.length > maxLength;
 
     let typography = (

@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose, Query, withApollo} from 'react-apollo';
 import {
-    BrowsingQueryHandler,
+    ContentQueryHandler,
     FilesQueryHandler,
     SearchQueryHandler,
     Sql2SearchQueryHandler
@@ -29,7 +29,7 @@ const contentQueryHandlerByMode = mode => {
         case ContentManagerConstants.mode.SQL2SEARCH:
             return new Sql2SearchQueryHandler();
         default:
-            return new BrowsingQueryHandler();
+            return new ContentQueryHandler();
     }
 };
 
@@ -122,7 +122,7 @@ export class ContentData extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, searchContentType, searchTerms, sql2SearchFrom, sql2SearchWhere, pagination, sort, pathsToRefetch, removePathsToRefetch} = this.props;
+        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, params, pagination, sort, pathsToRefetch, removePathsToRefetch} = this.props;
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
         // If the path to display is part of the paths to refetch then refetch
         if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
@@ -133,12 +133,6 @@ export class ContentData extends React.Component {
         let queryHandler = contentQueryHandlerByMode(mode);
         const layoutQuery = queryHandler.getQuery();
         const rootPath = `/sites/${siteKey}`;
-        const params = {
-            searchContentType: searchContentType,
-            searchTerms: searchTerms,
-            sql2SearchFrom: sql2SearchFrom,
-            sql2SearchWhere: sql2SearchWhere
-        };
 
         const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort);
 
@@ -180,41 +174,7 @@ export class ContentData extends React.Component {
 
                     if (this.currentResult) {
                         totalCount = this.currentResult.pageInfo.totalCount;
-                        rows = _.map(this.currentResult.nodes, contentNode => {
-                            return {
-                                uuid: contentNode.uuid,
-                                name: contentNode.displayName,
-                                nodeName: contentNode.name,
-                                primaryNodeType: contentNode.primaryNodeType.name,
-                                mixinTypes: contentNode.mixinTypes,
-                                type: contentNode.primaryNodeType.displayName,
-                                created: contentNode.created.value,
-                                createdBy: contentNode.createdBy.value,
-                                path: contentNode.path,
-                                publicationStatus: contentNode.aggregatedPublicationInfo.publicationStatus,
-                                isLocked: contentNode.lockOwner !== null,
-                                lockOwner: contentNode.lockOwner ? contentNode.lockOwner.value : '',
-                                lastPublishedBy: (contentNode.lastPublishedBy ? contentNode.lastPublishedBy.value : ''),
-                                lastPublished: (contentNode.lastPublished ? contentNode.lastPublished.value : ''),
-                                lastModifiedBy: (contentNode.lastModifiedBy ? contentNode.lastModifiedBy.value : ''),
-                                lastModified: (contentNode.lastModified ? contentNode.lastModified.value : ''),
-                                deletedBy: (contentNode.deletedBy ? contentNode.deletedBy.value : ''),
-                                deleted: (contentNode.deleted ? contentNode.deleted.value : ''),
-                                wipStatus: (contentNode.wipStatus ? contentNode.wipStatus.value : ''),
-                                wipLangs: (contentNode.wipLangs ? contentNode.wipLangs.values : []),
-                                subNodesCount: contentNode.subNodes.pageInfo.totalCount,
-                                parentDeletionDate: _.map(contentNode.ancestors, ancestor => {
-                                    return ancestor.deletionDate ? ancestor.deletionDate.value : '';
-                                }),
-                                parentDeletionUser: _.map(contentNode.ancestors, ancestor => {
-                                    return ancestor.deletionUser ? ancestor.deletionUser.value : '';
-                                }),
-                                icon: contentNode.primaryNodeType.icon,
-                                width: (contentNode.width ? contentNode.width.value : ''),
-                                height: (contentNode.width ? contentNode.height.value : ''),
-                                notSelectableForPreview: contentNode.notSelectableForPreview
-                            };
-                        });
+                        rows = this.currentResult.nodes;
                     }
 
                     return (
@@ -245,10 +205,7 @@ const mapStateToProps = state => ({
     previewSelection: state.previewSelection,
     previewState: state.previewState,
     uiLang: state.uiLang,
-    searchTerms: state.params.searchTerms,
-    searchContentType: state.params.searchContentType,
-    sql2SearchFrom: state.params.sql2SearchFrom,
-    sql2SearchWhere: state.params.sql2SearchWhere,
+    params: state.params,
     filesMode: state.filesGrid.mode,
     pagination: state.pagination,
     sort: state.sort,

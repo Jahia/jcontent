@@ -38,9 +38,9 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
                 resolvedPath = path;
         }
         if (context.subContentBrowsing) {
-            setUrl(siteKey, language, 'browse', resolvedPath, {});
+            setUrl(siteKey, language, 'browse', resolvedPath, context.urlParams ? context.urlParams : {});
         } else {
-            setUrl(siteKey, language, mode, resolvedPath, {});
+            setUrl(siteKey, language, mode, resolvedPath, context.urlParams ? context.urlParams : {});
         }
         return null;
     }

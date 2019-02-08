@@ -107,7 +107,7 @@ export class PublicationStatus extends Component {
                 <div className={classNames(classes.publicationInfoWrapper, publicationStatusClass)}>
                     <div className={classes.publicationInfo}
                          data-cm-role="publication-info"
-                         data-cm-value={node.publicationStatus}
+                         data-cm-value={node.aggregatedPublicationInfo.publicationStatus}
                     >
                         <InfoOutlined className={classes.spacing} fontSize="small"/>
 

@@ -51,30 +51,29 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
     if (_.isEmpty(previewSelection)) {
         return null;
     }
-    const selectedItem = previewSelection;
     // Special handling for marked for deletion content
-    if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === selectedItem.publicationStatus || isMarkedForDeletion(selectedItem)) {
+    if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
             <Typography color="textSecondary"
                         component="span"
                         className={classes.publicationInfoMarkedForDeletion}
             >
-                {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: selectedItem.deletedBy})}
+                {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
             &nbsp;
-                <Moment format="LLL" locale={uiLang}>{selectedItem.deleted}</Moment>
+                <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'deleted.value', '')}</Moment>
             </Typography>
         );
     }
-    switch (selectedItem.publicationStatus) {
+    switch (previewSelection.aggregatedPublicationInfo.publicationStatus) {
         case ContentManagerConstants.availablePublicationStatuses.MODIFIED:
             return (
                 <Typography color="textSecondary"
                             component="p"
                             className={classes.publicationInfoModified}
                 >
-                    {t('label.contentManager.contentPreview.modifiedBy', {userName: selectedItem.lastModifiedBy})}
+                    {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
-                    <Moment format="LLL" locale={uiLang}>{selectedItem.lastModified}</Moment>
+                    <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'lastModified.value', '')}</Moment>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.PUBLISHED:
@@ -83,9 +82,9 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                             component="p"
                             className={classes.publicationInfoPublished}
                 >
-                    {t('label.contentManager.contentPreview.publishedBy', {userName: selectedItem.lastPublishedBy})}
+                    {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                 &nbsp;
-                    <Moment format="LLL" locale={uiLang}>{selectedItem.lastPublished}</Moment>
+                    <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'lastPublished.value', '')}</Moment>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED:
@@ -103,9 +102,9 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                             component="p"
                             className={classes.publicationInfoUnpublished}
                 >
-                    {t('label.contentManager.contentPreview.unPublishedBy', {userName: selectedItem.lastModifiedBy})}
+                    {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
-                    <Moment format="LLL" locale={uiLang}>{selectedItem.lastModified}</Moment>
+                    <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'lastModified.value', '')}</Moment>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:

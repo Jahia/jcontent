@@ -107,7 +107,7 @@ export class FilesGrid extends Component {
                                             cardType={size}
                                             index={index}
                                             isHovered={node.path === hoveredCard}
-                                            node={{...node, displayName: node.name}}
+                                            node={node}
                                             dxContext={dxContext}
                                         />
                                     )}

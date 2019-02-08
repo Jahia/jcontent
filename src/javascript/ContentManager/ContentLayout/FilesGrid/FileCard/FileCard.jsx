@@ -206,7 +206,7 @@ export class FileCard extends Component {
                             onPreviewSelect(node.path);
                         }
                     }}
-                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
+                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, () => setPath(siteKey, node.path, mode))}
                     onMouseEnter={event => this.onHoverEnter(event)}
                     onMouseLeave={event => this.onHoverExit(event)}
                 >
@@ -223,11 +223,11 @@ export class FileCard extends Component {
                                 isLargeCard && classes.largeCover,
                                 isVerticalCard && classes.verticalCover
                             )}
-                            image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified}&t=thumbnail2`}
+                            image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified.value}&t=thumbnail2`}
                             title={node.name}
                         /> :
                         <div className={classes.defaultFileCover}>
-                            {node.primaryNodeType === 'jnt:folder' ?
+                            {node.primaryNodeType.name === 'jnt:folder' ?
                                 <Folder color="action" classes={fileIconClasses}/> :
                                 <FileIcon filename={node.path} color="disabled" classes={fileIconClasses}/>
                             }
@@ -254,10 +254,10 @@ export class FileCard extends Component {
                                         {t('label.contentManager.filesGrid.createdBy')}
                                     </Typography>
                                     <Typography color="textSecondary" variant="body2" component="p">
-                                        {t('label.contentManager.filesGrid.author', {author: node.createdBy})}
+                                        {t('label.contentManager.filesGrid.author', {author: node.createdBy.value})}
                                         &nbsp;
                                         <Moment format="LLL" locale={uiLang}>
-                                            {node.created}
+                                            {node.created.value}
                                         </Moment>
                                     </Typography>
                                 </div>
@@ -268,7 +268,7 @@ export class FileCard extends Component {
                                         {t('label.contentManager.filesGrid.fileInfo')}
                                     </Typography>
                                     <Typography color="textSecondary" variant="body2" component="p">
-                                        {`${node.width} x ${node.height}`}
+                                        {`${node.width.value} x ${node.height.value}`}
                                     </Typography>
                                 </div>
                             }

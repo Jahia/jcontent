@@ -284,7 +284,7 @@ export class ContentListTable extends React.Component {
                                         {
                                             rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
-                                                let icon = this.addIconSuffix(node.icon);
+                                                let icon = this.addIconSuffix(node.primaryNodeType.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
                                                 return (
@@ -310,7 +310,7 @@ export class ContentListTable extends React.Component {
                                                             event.stopPropagation();
                                                             contextualMenu.current.open(event);
                                                         }}
-                                                        onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType, () => setPath(siteKey, node.path, mode))}
+                                                        onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, () => setPath(siteKey, node.path, mode))}
                                                     >
                                                         <ContextualMenu
                                                             ref={contextualMenu}
@@ -353,13 +353,13 @@ export class ContentListTable extends React.Component {
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
-                                                                            {node[column.id]}&nbsp;
+                                                                            {_.get(node, column.property)}&nbsp;
                                                                             <DisplayAction
                                                                                 actionKey="subContents"
                                                                                 context={{path: node.path}}
                                                                                 render={subContentButtonRenderer(
                                                                                     classes.subContentButton,
-                                                                                    t('label.contentManager.subContent', {count: node.subNodesCount})
+                                                                                    t('label.contentManager.subContent', {count: node.subNodes.pageInfo.totalCount})
                                                                                 )}
                                                                             />
                                                                         </Typography>
@@ -388,24 +388,11 @@ export class ContentListTable extends React.Component {
                                                                         classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         padding="none"
                                                                     >
-                                                                        {node.isLocked &&
+                                                                        {node.lockOwner !== null &&
                                                                             <Tooltip title={t('label.contentManager.locked')}>
                                                                                 <Lock fontSize="small" color="inherit"/>
                                                                             </Tooltip>
                                                                         }
-                                                                    </TableCell>
-                                                                );
-                                                            }
-                                                            if (column.id === 'type') {
-                                                                return (
-                                                                    <TableCell
-                                                                        key={column.id}
-                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
-                                                                        data-cm-role="table-content-list-cell-type"
-                                                                    >
-                                                                        <Typography noWrap variant="body2" color="inherit">
-                                                                            {node[column.id]}
-                                                                        </Typography>
                                                                     </TableCell>
                                                                 );
                                                             }
@@ -419,7 +406,7 @@ export class ContentListTable extends React.Component {
                                                                     >
                                                                         <Typography noWrap variant="body2" color="inherit" className={classes.lastModifiedTypography}>
                                                                             <Moment format="ll" locale={uiLang}>
-                                                                                {node[column.id]}
+                                                                                {_.get(node, column.property)}
                                                                             </Moment>
                                                                         </Typography>
 
@@ -461,7 +448,7 @@ export class ContentListTable extends React.Component {
                                                                     data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
                                                                     <Typography noWrap variant="body2" color="inherit">
-                                                                        {node[column.id]}
+                                                                        {_.get(node, column.property)}
                                                                     </Typography>
                                                                 </TableCell>
                                                             );

@@ -42,7 +42,6 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
                 resolvedPath = path;
         }
 
-        setPreviewState(CM_DRAWER_STATES.HIDE);
         setUrl(siteKey, language, mode, resolvedPath, {});
         return null;
     }

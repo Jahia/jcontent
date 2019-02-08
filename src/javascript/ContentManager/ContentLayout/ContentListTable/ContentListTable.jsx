@@ -287,7 +287,6 @@ export class ContentListTable extends React.Component {
                                                 let icon = this.addIconSuffix(node.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
-                                                let showSubElements = node.subNodesCount > 0 && node.type !== 'Page' && node.type !== 'File';
                                                 return (
                                                     <TableRow
                                                         key={node.uuid}
@@ -355,18 +354,14 @@ export class ContentListTable extends React.Component {
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
                                                                             {node[column.id]}&nbsp;
-                                                                            {showSubElements &&
-                                                                                <DisplayAction
+                                                                            <DisplayAction
                                                                                     actionKey="subContents"
                                                                                     context={{path: node.path}}
                                                                                     render={subContentButtonRenderer(
-                                                                                        node.subNodesCount,
                                                                                         classes.subContentButton,
-                                                                                        t('label.contentManager.subContent', {count: node.subNodesCount}),
-                                                                                        true
+                                                                                        t('label.contentManager.subContent', {count: node.subNodesCount})
                                                                                     )}
                                                                                 />
-                                                                            }
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );
@@ -526,15 +521,12 @@ let EmptyRow = props => {
     );
 };
 
-let subContentButtonRenderer = (count, subContentClass, label, propagateEvent) => ({context}) => (
+let subContentButtonRenderer = (subContentClass, label) => ({context}) => (
     <Button
         size="small"
         data-sel-role={context.key}
         className={subContentClass}
         onClick={e => {
-            if (!propagateEvent) {
-                e.stopPropagation();
-            }
             context.onClick(context, e);
         }}
     >

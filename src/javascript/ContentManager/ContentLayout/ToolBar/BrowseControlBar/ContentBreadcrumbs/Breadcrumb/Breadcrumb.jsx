@@ -62,7 +62,7 @@ export class Breadcrumb extends React.Component {
 
                 {/* Render an ellipsis in case we are about to cut any intermediate breadcrumb items. */}
                 {firstVisibleIndex > 1 &&
-                <MoreHoriz className={classes.chevronSvg}/>
+                    <MoreHoriz className={classes.chevronSvg}/>
                 }
 
                 {breadcrumbs.map((breadcrumb, i) => {
@@ -93,7 +93,7 @@ export class Breadcrumb extends React.Component {
                     trimLabel={(items.length > MAX_ITEMS_APPROPRIATE_FOR_UNCUT_DISPLAY) && (itemIndex < items.length - MAX_UNCUT_ITEMS_ON_CUT_DISPLAY)}
                 />
                 {itemIndex < items.length - 1 &&
-                <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
+                    <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
                 }
             </span>
         );
@@ -194,7 +194,7 @@ export class Breadcrumb extends React.Component {
                     }
                     for (let j in siblingsToBeAdded) {
                         if (Object.prototype.hasOwnProperty.call(siblingsToBeAdded, j)) {
-                            breadcrumb.siblings.push(siblingsToBeAdded[j].type !== breadcrumb.type ? siblingsToBeAdded[j] : sibling);
+                            breadcrumb.siblings.push(siblingsToBeAdded[j].type === breadcrumb.type ? sibling : siblingsToBeAdded[j]);
                         }
                     }
                 } else {

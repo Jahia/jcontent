@@ -66,12 +66,13 @@ export class BreadcrumbDisplay extends React.Component {
         let {node, maxLabelLength, trimLabel, classes} = this.props;
         return (
             <span ref={this.menu}>
-                <Button disableRipple
-                        buttonRef={this.anchorButton}
-                        aria-haspopup="true"
-                        aria-owns={'breadcrumbMenu_' + node.uuid}
-                        onMouseOver={() => node.siblings && node.siblings.length > 1 && this.onMenuButtonMouseOver()}
-                        onClick={ev => node.siblings && node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
+                <Button
+                    disableRipple
+                    buttonRef={this.anchorButton}
+                    aria-haspopup="true"
+                    aria-owns={'breadcrumbMenu_' + node.uuid}
+                    onMouseOver={() => node.siblings && node.siblings.length > 1 && this.onMenuButtonMouseOver()}
+                    onClick={ev => node.siblings && node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
                 >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
@@ -80,43 +81,51 @@ export class BreadcrumbDisplay extends React.Component {
                     </Typography>
                     }
                 </Button>
-                <Menu key={node.uuid}
-                      disableAutoFocusItem
-                      anchorPosition={anchorPosition}
-                      anchorReference="anchorPosition"
-                      container={this.menu.current}
-                      open={menuActive}
-                      BackdropProps={{
-                          style: {
-                              opacity: 0
-                          },
-                          onMouseOver: () => {
-                            this.setState({menuActive: false});
-                        }
-                      }}
-                      onClose={() => this.setState({menuActive: false})}
+                <Menu
+                    key={node.uuid}
+                    disableAutoFocusItem
+                    anchorPosition={anchorPosition}
+                    anchorReference="anchorPosition"
+                    container={this.menu.current}
+                    open={menuActive}
+                    BackdropProps={{
+                        style: {
+                            opacity: 0
+                        },
+                        onMouseOver: () => {
+                          this.setState({menuActive: false});
+                      }
+                    }}
+                    onClose={() => this.setState({menuActive: false})}
                 >
-                    <MenuItem key={'dropdown_' + node.uuid}
-                              disableRipple
-                              selected
-                              disableGutters
-                              onClick={event => this.onMenuItemSelected(event, node)}
+                    <MenuItem
+                        key={'dropdown_' + node.uuid}
+                        disableRipple
+                        selected
+                        disableGutters
+                        onClick={event => this.onMenuItemSelected(event, node)}
                     >
                         {this.renderIcon(node, classes)}{node.name}
                     </MenuItem>
-                    {node.siblings && node.siblings.length !== 0 && node.siblings.map(siblingNode => {
-                        if (siblingNode.name === node.name) {
-                            return null;
-                        }
-                        return (
-                            <MenuItem key={siblingNode.uuid}
-                                      disableRipple
-                                      onClick={event => this.onMenuItemSelected(event, siblingNode)}
-                            >
-                                {this.renderIcon(siblingNode, classes)}<Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>{siblingNode.name}</Typography>
-                            </MenuItem>
-                        );
-                    })}
+                    {node.siblings && node.siblings.length !== 0 &&
+                        node.siblings.map(siblingNode => {
+                            if (siblingNode.name === node.name) {
+                                return null;
+                            }
+                            return (
+                                <MenuItem
+                                    key={siblingNode.uuid}
+                                    disableRipple
+                                    onClick={event => this.onMenuItemSelected(event, siblingNode)}
+                                >
+                                    {this.renderIcon(siblingNode, classes)}
+                                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                                        {siblingNode.name}
+                                    </Typography>
+                                </MenuItem>
+                            );
+                        })
+                    }
                 </Menu>
             </span>
         );

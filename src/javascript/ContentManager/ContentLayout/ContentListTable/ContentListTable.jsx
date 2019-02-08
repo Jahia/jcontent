@@ -501,23 +501,27 @@ export class ContentListTable extends React.Component {
 
 let ContentNotFound = props => {
     return (
-        <TableRow>
-            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                <Typography variant="subtitle1" className={props.class}>
-                    {props.translate('label.contentManager.contentNotFound')}
-                </Typography>
-            </TableCell>
-        </TableRow>
+        <TableBody>
+            <TableRow>
+                <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
+                    <Typography variant="subtitle1" className={props.class}>
+                        {props.translate('label.contentManager.contentNotFound')}
+                    </Typography>
+                </TableCell>
+            </TableRow>
+        </TableBody>
     );
 };
 
 let EmptyRow = props => {
     return (
-        <TableRow>
-            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
-                <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
-            </TableCell>
-        </TableRow>
+        <TableBody>
+            <TableRow>
+                <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
+                    <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
+                </TableCell>
+            </TableRow>
+        </TableBody>
     );
 };
 

@@ -9,5 +9,6 @@ export default composeActions(routerAction, {
             retrieveSubNodes: true,
             enabled: context => context.node.pipe(map(node => node.subNodes.pageInfo.totalCount > 0))
         });
+        context.subContentBrowsing = true;
     }
 });

@@ -9,6 +9,55 @@ import {translate} from 'react-i18next';
 import {styleConstants} from '@jahia/layouts';
 
 export class IFrameLayout extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            iframe: null
+        };
+    }
+
+    static getActionKey(actionPath) {
+        let actionPathParts = actionPath.split('/');
+        return actionPathParts[actionPathParts.length - 1];
+    }
+
+    onIframeLoaded(iframe) {
+        this.setState({iframe});
+        iframe.current.refs.iframe.contentWindow.addEventListener('hashchange', event => {
+            if (sessionStorage) {
+                sessionStorage.setItem('cmmIFrameLayoutUrl', event.target.location.pathname + event.target.location.search + event.target.location.hash);
+            }
+        });
+    }
+
+    shouldComponentUpdate(nextProps) {
+        // Unfortunately I need to test each of them as it seems that there are not all initialized when you arrive here the first time
+        if (this.state.iframe &&
+            this.state.iframe.current &&
+            this.state.iframe.current.refs &&
+            this.state.iframe.current.refs.iframe &&
+            this.state.iframe.current.refs.iframe.contentWindow &&
+            this.state.iframe.current.refs.iframe.contentWindow.location) {
+            // This is a hack to be able to listen if the URL of the iframe has changed, has when it happens the IFrameLayout try to update
+
+            let iframeLocation = this.state.iframe.current.refs.iframe.contentWindow.location;
+            if (sessionStorage &&
+                sessionStorage.getItem('cmmIFrameLayoutPathname') &&
+                sessionStorage.getItem('cmmIFrameLayoutPathname') !== iframeLocation.pathname) {
+                sessionStorage.setItem('cmmIFrameLayoutUrl', iframeLocation.pathname + iframeLocation.search + iframeLocation.hash);
+                sessionStorage.setItem('cmmIFrameLayoutPathname', iframeLocation.pathname);
+            }
+        }
+
+        // We want to update only if the action key is different
+        // otherwise it will update the component and we won't know if it's a reload or just an useless update
+        const currentActionKey = IFrameLayout.getActionKey(this.props.actionPath);
+        const nextActionKey = IFrameLayout.getActionKey(nextProps.actionPath);
+
+        return currentActionKey !== nextActionKey;
+    }
+
     showError(errorKey, errorData) {
         let {notificationContext, t} = this.props;
         let message = errorData !== null ? t(errorKey, errorData) : t(errorKey);
@@ -18,8 +67,7 @@ export class IFrameLayout extends React.Component {
     render() {
         const {actionPath, workspace, siteKey, lang, contextPath} = this.props;
 
-        let actionPathParts = actionPath.split('/');
-        let actionKey = actionPathParts[actionPathParts.length - 1];
+        const actionKey = IFrameLayout.getActionKey(actionPath);
         const action = actionsRegistry.get(actionKey);
 
         if (!action || !action.iframeUrl) {
@@ -76,13 +124,27 @@ export class IFrameLayout extends React.Component {
                     // System site uses another frame than others
                     iframeUrl = iframeUrl.replace(/:frame/g, (siteKey === 'systemsite' ? 'adminframe' : 'editframe'));
 
+                    // Check session storage to see if we already have an URL for this action key, otherwise update session storage
+                    if (sessionStorage) {
+                        if (sessionStorage.getItem('cmmIFrameLayoutActionKey') && sessionStorage.getItem('cmmIFrameLayoutActionKey') === actionKey && sessionStorage.getItem('cmmIFrameLayoutUrl')) {
+                            iframeUrl = sessionStorage.getItem('cmmIFrameLayoutUrl');
+                        } else {
+                            sessionStorage.setItem('cmmIFrameLayoutActionKey', actionKey);
+                            sessionStorage.setItem('cmmIFrameLayoutUrl', iframeUrl);
+                            sessionStorage.setItem('cmmIFrameLayoutPathname', iframeUrl);
+                        }
+                    }
+
+                    let iframe = React.createRef();
                     return (
-                        <Iframe allowFullScreen
+                        <Iframe ref={iframe}
+                                allowFullScreen
                                 url={iframeUrl}
                                 position="relative"
                                 width="100%"
                                 className="myClassname"
                                 height={'calc( 100vh - ' + styleConstants.topBarHeight + 'px )'}
+                                onLoad={() => this.onIframeLoaded(iframe)}
                         />
                     );
                 }}

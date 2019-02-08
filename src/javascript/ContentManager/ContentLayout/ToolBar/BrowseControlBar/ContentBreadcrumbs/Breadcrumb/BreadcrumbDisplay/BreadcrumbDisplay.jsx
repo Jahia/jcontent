@@ -76,9 +76,9 @@ export class BreadcrumbDisplay extends React.Component {
                 >
                     {this.renderIcon(node, classes)}
                     {!trimLabel &&
-                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
-                        {ellipsizeText(node.name, maxLabelLength)}
-                    </Typography>
+                        <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                            {ellipsizeText(node.name, maxLabelLength)}
+                        </Typography>
                     }
                 </Button>
                 <Menu
@@ -93,8 +93,8 @@ export class BreadcrumbDisplay extends React.Component {
                             opacity: 0
                         },
                         onMouseOver: () => {
-                          this.setState({menuActive: false});
-                      }
+                            this.setState({menuActive: false});
+                        }
                     }}
                     onClose={() => this.setState({menuActive: false})}
                 >

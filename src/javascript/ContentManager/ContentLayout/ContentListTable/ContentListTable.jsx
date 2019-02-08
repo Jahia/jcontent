@@ -156,7 +156,8 @@ const styles = theme => ({
         position: 'relative'
     },
     nameCell: {
-        maxWidth: '15vw',
+        padding: '4px 8px 4px 24px',
+        maxWidth: '16vw',
         '& img': {
             marginRight: '6px',
             verticalAlign: 'sub'
@@ -203,7 +204,8 @@ const styles = theme => ({
     },
     subContentButton: {
         textDecoration: 'underline',
-        margin: 0
+        margin: 0,
+        padding: 0
     }
 });
 
@@ -285,7 +287,7 @@ export class ContentListTable extends React.Component {
                                                 let icon = this.addIconSuffix(node.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
-                                                let showSubElements = node.subNodesCount > 0 && node.type !== 'Page';
+                                                let showSubElements = node.subNodesCount > 0 && node.type !== 'Page' && node.type !== 'File';
                                                 return (
                                                     <TableRow
                                                         key={node.uuid}
@@ -526,6 +528,7 @@ let EmptyRow = props => {
 
 let subContentButtonRenderer = (count, subContentClass, label, propagateEvent) => ({context}) => (
     <Button
+        size="small"
         data-sel-role={context.key}
         className={subContentClass}
         onClick={e => {

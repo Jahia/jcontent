@@ -5,6 +5,7 @@ import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from '../IFrameLayout';
 import SearchBar from '../ContentLayout/SearchBar';
 import ContentLayout from '../ContentLayout';
+import {actionsRegistry} from '@jahia/react-material';
 
 function initRoutes(registry) {
     registry.add('route1', {
@@ -14,7 +15,7 @@ function initRoutes(registry) {
         render: (props, {dxContext, t}) => (
             <MainLayout topBarProps={{
                 path: t('label.contentManager.appTitle', {path: ''}),
-                title: t('label.contentManager.leftMenu.manage.' + props.match.params.entry + '.title', {path: ''}),
+                title: t([actionsRegistry.get(props.match.params.menu).buttonLabel, 'label.contentManager.leftMenu.manage.title']),
                 contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
                 actions: <React.Fragment></React.Fragment>
             }}

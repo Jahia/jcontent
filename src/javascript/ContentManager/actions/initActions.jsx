@@ -82,7 +82,7 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('createContent', createContentAction, {
         buttonLabel: 'label.contentManager.create.content',
         target: ['createMenuActions:3.1', 'contentActions:3'],
-        showOnNodeTypes: ['jnt:contentFolder'],
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
         baseContentType: ContentManagerConstants.contentType
     });
     actionsRegistry.add('createFolder', createContentOfTypeAction, {

@@ -26,7 +26,6 @@ export class Breadcrumb extends React.Component {
         let {pickerEntries, path, rootLabel, t, rootPath, mode, classes} = this.props;
 
         let breadcrumbs = Breadcrumb.parseEntries(pickerEntries, path, rootLabel, t, rootPath, mode);
-        let pathParts = path.split('/');
 
         if (_.isEmpty(breadcrumbs)) {
             return null;
@@ -38,20 +37,26 @@ export class Breadcrumb extends React.Component {
             breadcrumbs = _.tail(breadcrumbs);
         }
 
+        // When browsing pages and navigating to sub-content:
+        // * avoid displaying any intermediate content items in the breadcrumb
+        // * avoid displaying any sibling content items in page breadcrumb menus
+        // * avoid displaying content breadcrumb menus entirely
+        if (breadcrumbs[0].pathType === 'pages') {
+            breadcrumbs = _.filter(breadcrumbs, (breadcrumb, index) => (index === 0 || index === breadcrumbs.length - 1 || breadcrumb.type === 'jnt:page'));
+            _.forEach(breadcrumbs, (breadcrumb, index) => {
+                if (index !== 0) {
+                    if (breadcrumb.type === 'jnt:page') {
+                        breadcrumb.siblings = _.filter(breadcrumb.siblings, sibling => (sibling.type === 'jnt:page'));
+                    } else {
+                        breadcrumb.siblings = [];
+                    }
+                }
+            });
+        }
+
         let firstVisibleIndex = 1;
         if (breadcrumbs.length > MAX_TOTAL_ITEMS_ON_CUT_DISPLAY) {
             firstVisibleIndex += (breadcrumbs.length - MAX_TOTAL_ITEMS_ON_CUT_DISPLAY);
-        }
-        // If we're browsing on sub contents of a table content, then we add the table content in the breadcrumb to give feedback to the
-        // user about its location
-        if (breadcrumbs[breadcrumbs.length - 1].name.toLowerCase() !== pathParts[pathParts.length - 1]) {
-            let uuid = breadcrumbs[breadcrumbs.length - 1].uuid;
-            let breadcrumbToAdd = {};
-            breadcrumbToAdd.uuid = uuid;
-            breadcrumbToAdd.name = pathParts[pathParts.length - 1];
-            breadcrumbToAdd.path = path;
-            breadcrumbToAdd.siblings = [];
-            breadcrumbs[breadcrumbs.length - 1] = breadcrumbToAdd;
         }
 
         return (
@@ -111,7 +116,7 @@ export class Breadcrumb extends React.Component {
         if (path.indexOf(rootPath + '/files') !== -1) {
             return 'files';
         }
-        return 'files';
+        return 'pages';
     }
 
     static parseEntries(entries, selectedPath, rootLabel, t, rootPath, mode) {

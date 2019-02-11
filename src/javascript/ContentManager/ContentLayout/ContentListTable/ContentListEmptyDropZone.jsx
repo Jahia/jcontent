@@ -8,6 +8,7 @@ const styles = theme => ({
         position: 'absolute',
         height: '57vh',
         width: '100%',
+        display: 'flex',
         padding: theme.spacing.unit * 4
     }
 });

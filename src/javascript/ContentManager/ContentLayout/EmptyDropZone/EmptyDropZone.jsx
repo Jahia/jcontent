@@ -11,6 +11,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        textAlign: 'center', // This one is for Safari rendering
         justifyContent: 'center',
         width: 'inherit',
         height: 'inherit',

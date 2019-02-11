@@ -13,11 +13,12 @@ module.exports = (env, argv) => {
             filename: 'cmm.bundle.js',
             chunkFilename: '[name].cmm.[chunkhash:6].js'
         },
-        optimization: {
-            splitChunks: {
-                maxSize: 4000000
-            }
-        },
+        // BACKLOG-9616 : fix chunks
+        // optimization: {
+        //     splitChunks: {
+        //         maxSize: 4000000
+        //     }
+        // },
         resolve: {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', 'json']

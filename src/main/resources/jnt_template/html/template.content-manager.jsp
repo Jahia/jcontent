@@ -49,7 +49,7 @@
         nodeIdentifier: '${currentNode.identifier}'
     };
 
-    bootstrap(['/modules/content-media-manager/javascript/apps/cmm.bundle.js']);
+    bootstrap(['/modules/content-editor/javascript/apps/content-editor-ext.bundle.js', '/modules/content-media-manager/javascript/apps/cmm.bundle.js']);
 </script>
 
 ${cmFunctions:generateActionLists(renderContext)}

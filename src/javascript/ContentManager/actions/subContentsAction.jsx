@@ -7,6 +7,7 @@ export default composeActions(routerAction, {
         context.initRequirements({
             hideOnNodeTypes: ['jnt:page', 'jnt:file'],
             retrieveSubNodes: true,
+            retrievePrimaryNodeType: true,
             enabled: context => context.node.pipe(map(node => node.subNodes.pageInfo.totalCount > 0))
         });
         context.subContentBrowsing = true;

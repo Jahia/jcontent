@@ -37,8 +37,12 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
             default:
                 resolvedPath = path;
         }
+        // When we're on search and we're browsing subnodes of a content item
+        let nodeType = context.node ? context.node.primaryNodeType.name : '';
+        let subBrowsingMode = nodeType === 'jnt:folder' ? 'browse-files' : 'browse';
+
         if (context.subContentBrowsing) {
-            setUrl(siteKey, language, 'browse', resolvedPath, context.urlParams ? context.urlParams : {});
+            setUrl(siteKey, language, subBrowsingMode, resolvedPath, context.urlParams ? context.urlParams : {});
         } else {
             setUrl(siteKey, language, mode, resolvedPath, context.urlParams ? context.urlParams : {});
         }

@@ -51,7 +51,7 @@ const nodeFields = gql`
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
         }
-        subNodes: children(typesFilter:{types:["jnt:content"]}) {
+        subNodes: children(typesFilter:{types:["jnt:content", "jnt:contentFolder", "jnt:folder", "jnt:file"]}) {
             pageInfo {
                 totalCount
             }

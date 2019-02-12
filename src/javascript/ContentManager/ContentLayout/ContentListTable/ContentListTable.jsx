@@ -266,22 +266,28 @@ export class ContentListTable extends React.Component {
                             selectAll={() => addSelection(rows.map(node => node.path))}
                             unselectAll={() => removeSelection(rows.map(node => node.path))}
                         />
-                        <TableBody>
-                            <DxContext.Consumer>
-                                {dxContext => {
+                        <DxContext.Consumer>
+                            {
+                                dxContext => {
                                     if (contentNotFound) {
                                         return (
-                                            <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/>
+                                            <TableBody>
+                                                <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/>
+                                            </TableBody>
                                         );
                                     }
                                     if (_.isEmpty(rows) && !loading) {
                                         if (mode === ContentManagerConstants.mode.SEARCH) {
-                                            return <EmptyRow columnData={columnData} translate={t}/>;
+                                            return (
+                                                <TableBody>
+                                                    <EmptyRow columnData={columnData} translate={t}/>
+                                                </TableBody>
+                                            );
                                         }
                                         return <ContentListEmptyDropZone mode={mode} path={path}/>;
                                     }
                                     return (
-                                        <UploadTransformComponent uploadTargetComponent={React.Fragment} uploadPath={path}>
+                                        <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
                                             {rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.primaryNodeType.icon);
@@ -457,9 +463,9 @@ export class ContentListTable extends React.Component {
                                             })}
                                         </UploadTransformComponent>
                                     );
-                                }}
-                            </DxContext.Consumer>
-                        </TableBody>
+                                }
+                            }
+                        </DxContext.Consumer>
                     </Table>
                 </div>
                 <Pagination

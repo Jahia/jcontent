@@ -8,6 +8,7 @@
 <%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions" %>
 <%@ taglib prefix="cmFunctions" uri="http://www.jahia.org/tags/contentmanager/functions" %>
 <%@ page import="org.jahia.settings.SettingsBean" %>
+<%@ taglib prefix="js" uri="http://www.jahia.org/tags/dxwebpack" %>
 
 <c:set var="mainResourceLocale" value="${renderContext.mainResourceLocale}"/>
 
@@ -21,9 +22,7 @@
 <body style="overflow: hidden; ">
 <template:addResources type="javascript" resources="polyfills.js"/>
 
-<template:addResources type="javascript" resources="js-load.js"/>
-
-<%--<js:loader baseExt="cmm"/>--%>
+<js:loader target="cmm-extends"/>
 
 <c:set var="targetId" value="reactComponent${fn:replace(currentNode.identifier,'-','_')}"/>
 <div id="${targetId}">loading..</div>
@@ -48,8 +47,8 @@
         targetId: '${targetId}',
         nodeIdentifier: '${currentNode.identifier}'
     };
-
-    bootstrap(['/modules/content-editor/javascript/apps/content-editor-ext.bundle.js', '/modules/content-media-manager/javascript/apps/cmm.bundle.js']);
+    window['cmm-extends'].push('/modules/content-media-manager/javascript/apps/cmm.bundle.js');
+    bootstrap(window['cmm-extends']);
 </script>
 
 ${cmFunctions:generateActionLists(renderContext)}

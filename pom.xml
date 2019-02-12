@@ -110,6 +110,12 @@
             <type>json</type>
             <classifier>manifest</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.jahia.modules</groupId>
+            <artifactId>dx-commons-webpack</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -177,6 +183,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <jahia-depends>dx-commons-webpack</jahia-depends>
                         <Import-Package>org.jahia.modules.graphql.provider.dxm;version="1.0.6",${jahia.plugin.projectPackageImport},*</Import-Package>
                     </instructions>
                 </configuration>

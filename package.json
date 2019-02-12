@@ -2,7 +2,7 @@
   "name": "@jahia/content-manager",
   "version": "1.2.0",
   "scripts": {
-    "build": "yarn test && yarn webpack",
+    "build": "yarn webpack",
     "webpack": "npx --node-arg=--max_old_space_size=2048 webpack",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build -p",
@@ -36,6 +36,7 @@
     "classnames": "^2.2.5",
     "connected-react-router": "^4.4.1",
     "copy-to-clipboard": "^3.0.8",
+    "copy-webpack-plugin": "^4.6.0",
     "ellipsize": "^0.1.0",
     "graphql": "0.12.3",
     "graphql-tag": "^2.9.1",

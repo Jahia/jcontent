@@ -38,7 +38,7 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
                 resolvedPath = path;
         }
         // When we're on search and we're browsing subnodes of a content item
-        let nodeType = context.node ? context.node.primaryNodeType.name : '';
+        let nodeType = context.node && context.node.primaryNodeType ? context.node.primaryNodeType.name : '';
         let subBrowsingMode = nodeType === 'jnt:folder' ? 'browse-files' : 'browse';
 
         if (context.subContentBrowsing) {

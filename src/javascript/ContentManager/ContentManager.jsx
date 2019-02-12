@@ -106,7 +106,7 @@ export default class ContentManager extends React.Component {
                                                     <AppLayout
                                                         leftNavigationProps={{
                                                             context: {
-                                                                path: '/sites/digitall'
+                                                                path: '/sites/' + dxContext.siteKey
                                                             },
                                                             actionsTarget: 'leftMenuActions',
                                                             secondaryActionsTarget: 'leftMenuBottomActions'

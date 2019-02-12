@@ -266,23 +266,23 @@ export class ContentListTable extends React.Component {
                             selectAll={() => addSelection(rows.map(node => node.path))}
                             unselectAll={() => removeSelection(rows.map(node => node.path))}
                         />
-                        <DxContext.Consumer>
-                            {dxContext => {
-                                if (contentNotFound) {
-                                    return (
-                                        <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/>
-                                    );
-                                }
-                                if (_.isEmpty(rows) && !loading) {
-                                    if (mode === ContentManagerConstants.mode.SEARCH) {
-                                        return <EmptyRow columnData={columnData} translate={t}/>;
+                        <TableBody>
+                            <DxContext.Consumer>
+                                {dxContext => {
+                                    if (contentNotFound) {
+                                        return (
+                                            <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/>
+                                        );
                                     }
-                                    return <ContentListEmptyDropZone mode={mode} path={path}/>;
-                                }
-                                return (
-                                    <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
-                                        {
-                                            rows.map(node => {
+                                    if (_.isEmpty(rows) && !loading) {
+                                        if (mode === ContentManagerConstants.mode.SEARCH) {
+                                            return <EmptyRow columnData={columnData} translate={t}/>;
+                                        }
+                                        return <ContentListEmptyDropZone mode={mode} path={path}/>;
+                                    }
+                                    return (
+                                        <UploadTransformComponent uploadTargetComponent={React.Fragment} uploadPath={path}>
+                                            {rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.primaryNodeType.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
@@ -409,7 +409,6 @@ export class ContentListTable extends React.Component {
                                                                                 {_.get(node, column.property)}
                                                                             </Moment>
                                                                         </Typography>
-
                                                                         {showActions &&
                                                                             <div key="actions" className={classes.actionsDiv} data-cm-role="table-content-list-cell-actions">
                                                                                 <DisplayActions
@@ -455,12 +454,12 @@ export class ContentListTable extends React.Component {
                                                         })}
                                                     </TableRow>
                                                 );
-                                            })
-                                        }
-                                    </UploadTransformComponent>
-                                );
-                            }}
-                        </DxContext.Consumer>
+                                            })}
+                                        </UploadTransformComponent>
+                                    );
+                                }}
+                            </DxContext.Consumer>
+                        </TableBody>
                     </Table>
                 </div>
                 <Pagination
@@ -488,27 +487,23 @@ export class ContentListTable extends React.Component {
 
 let ContentNotFound = props => {
     return (
-        <TableBody>
-            <TableRow>
-                <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                    <Typography variant="subtitle1" className={props.class}>
-                        {props.translate('label.contentManager.contentNotFound')}
-                    </Typography>
-                </TableCell>
-            </TableRow>
-        </TableBody>
+        <TableRow>
+            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
+                <Typography variant="subtitle1" className={props.class}>
+                    {props.translate('label.contentManager.contentNotFound')}
+                </Typography>
+            </TableCell>
+        </TableRow>
     );
 };
 
 let EmptyRow = props => {
     return (
-        <TableBody>
-            <TableRow>
-                <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
-                    <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
-                </TableCell>
-            </TableRow>
-        </TableBody>
+        <TableRow>
+            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
+                <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
+            </TableCell>
+        </TableRow>
     );
 };
 

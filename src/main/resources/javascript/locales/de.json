@@ -217,7 +217,9 @@
                 "itemsSelected_plural": "{{count}} Elemente ausgewählt",
                 "clearMultipleSelection": "Auswahl aufheben",
                 "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
-            }
+            },
+            "subContent": "({{count}} sub-Inhalt)",
+            "subContent_plural": "({{count}} sub-Inhalte)"
         }
     }
 }

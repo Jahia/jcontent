@@ -224,8 +224,8 @@
                 "clearMultipleSelection": "Clear selection",
                 "emptyContextMenu": "No actions available for those items"
             },
-            "subContent": "({{count}} sub content)",
-            "subContent_plural": "({{count}} sub contents)"
+            "subContent": "({{count}} sub-content)",
+            "subContent_plural": "({{count}} sub-contents)"
         }
     }
 }

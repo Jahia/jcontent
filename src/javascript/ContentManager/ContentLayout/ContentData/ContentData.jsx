@@ -149,6 +149,10 @@ export class ContentData extends React.Component {
                         });
                     }
 
+                    if (data.jcr && data.jcr.nodeByPath) {
+                        console.log(data.jcr.nodeByPath.primaryNodeType.name);
+                    }
+
                     if (error) {
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         console.error(message);
@@ -165,7 +169,7 @@ export class ContentData extends React.Component {
                         // While loading new results, render current ones loaded during previous render invocation (if any).
                     } else {
                         // When new results have been loaded, use them for rendering.
-                        this.currentResult = queryHandler.getResultsPath(data.jcr.results);
+                        this.currentResult = queryHandler.getResultsPath(data);
                     }
 
                     let rows = [];

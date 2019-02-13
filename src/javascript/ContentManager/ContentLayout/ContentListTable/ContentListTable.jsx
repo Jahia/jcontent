@@ -360,14 +360,14 @@ export class ContentListTable extends React.Component {
                                                                         <Typography noWrap variant="body2" color="inherit">
                                                                             <img src={icon}/>
                                                                             {_.get(node, column.property)}&nbsp;
-                                                                            <DisplayAction
+                                                                            {node.subNodes && <DisplayAction
                                                                                 actionKey="subContents"
                                                                                 context={{path: node.path}}
                                                                                 render={subContentButtonRenderer(
                                                                                     classes.subContentButton,
                                                                                     t('label.contentManager.subContent', {count: node.subNodes.pageInfo.totalCount})
                                                                                 )}
-                                                                            />
+                                                                            />}
                                                                         </Typography>
                                                                     </TableCell>
                                                                 );

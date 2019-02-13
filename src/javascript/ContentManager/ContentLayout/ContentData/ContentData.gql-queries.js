@@ -3,6 +3,16 @@ import {PredefinedFragments} from '@jahia/apollo-dx';
 import * as _ from 'lodash';
 import ContentManagerConstants from '../../ContentManager.constants';
 
+const childNodesCount = gql`
+    fragment ChildNodesCount on JCRNode {
+        subNodes: children(typesFilter: {types: ["jnt:file", "jnt:folder", "jnt:content", "jnt:contentFolder"], multi: ANY}) {
+            pageInfo {
+                totalCount
+            }
+        }
+    }
+`;
+
 const nodeFields = gql`
     fragment NodeFields on JCRNode {
         aggregatedPublicationInfo(language: $language) {
@@ -51,11 +61,6 @@ const nodeFields = gql`
         wipLangs: property(name: "j:workInProgressLanguages") {
             values
         }
-        subNodes: descendants(typesFilter:{types:["jnt:content", "jnt:folder", "jnt:file"]}) {
-            pageInfo {
-                totalCount
-            }
-        }
         ancestors(fieldFilter: {filters: {fieldName: "deletionDate", evaluation: NOT_EMPTY}}) {
             deletionDate:property(name: "j:deletionDate") {
                 value
@@ -78,35 +83,39 @@ class ContentQueryHandler {
         return gql`
             query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
                 jcr {
-                    results: nodeByPath(path: $path) {
+                    nodeByPath(path: $path) {
+                        ...NodeFields
                         descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                             pageInfo {
                                 totalCount
                             }
                             nodes {
                                 ...NodeFields
+                                ...ChildNodesCount
                             }
                         }
-                        ...NodeCacheRequiredFields
                     }
                 }
             }
             ${nodeFields}
+            ${childNodesCount}
         `;
     }
 
     getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
-        const type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
-        let baseTypeFilter = urlParams.sub ? 'jnt:content' : ContentManagerConstants.contentType;
+        let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
+        if (urlParams.sub) {
+            type = 'contents';
+        }
 
         const paramsByBrowseType = {
             pages: {
-                recursionTypesFilter: ['jnt:page'],
-                typeFilter: [baseTypeFilter, 'jnt:page']
+                typeFilter: [ContentManagerConstants.contentType, 'jnt:page'],
+                recursionTypesFilter: ['jnt:page', 'jnt:contentFolder']
             },
             contents: {
-                recursionTypesFilter: ['nt:base'],
-                typeFilter: [baseTypeFilter, 'jnt:content', 'jnt:contentFolder']
+                typeFilter: ['jnt:content', 'jnt:contentFolder'],
+                recursionTypesFilter: ['nt:base']
             }
         };
 
@@ -131,8 +140,8 @@ class ContentQueryHandler {
         };
     }
 
-    getResultsPath(results) {
-        return results.descendants;
+    getResultsPath(data) {
+        return data.jcr.nodeByPath.descendants;
     }
 }
 
@@ -141,15 +150,15 @@ class FilesQueryHandler {
         return gql`
             query getFiles($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
                 jcr {
-                    results: nodeByPath(path: $path) {
-                        uuid
-                        workspace
+                    nodeByPath(path: $path) {
+                        ...NodeFields
                         children(offset: $offset, limit: $limit, typesFilter: {types: $typeFilter, multi: ANY}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                             pageInfo {
                                 totalCount
                             }
                             nodes {
                                 ...NodeFields
+                                ...ChildNodesCount
                                 width: property(name: "j:width") {
                                     value
                                 }
@@ -158,11 +167,11 @@ class FilesQueryHandler {
                                 }
                             }
                         }
-                        ...NodeCacheRequiredFields
                     }
                 }
             }
             ${nodeFields}
+            ${childNodesCount}
         `;
     }
 
@@ -187,8 +196,8 @@ class FilesQueryHandler {
         };
     }
 
-    getResultsPath(results) {
-        return results.children;
+    getResultsPath(data) {
+        return data.jcr.nodeByPath.children;
     }
 }
 
@@ -197,7 +206,7 @@ class SearchQueryHandler {
         return gql`
             query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
                 jcr {
-                    results: nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
+                    nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
                         pageInfo {
                             totalCount
                         }
@@ -228,8 +237,8 @@ class SearchQueryHandler {
         };
     }
 
-    getResultsPath(results) {
-        return results;
+    getResultsPath(data) {
+        return data.jcr.nodesByCriteria;
     }
 }
 
@@ -238,7 +247,7 @@ class Sql2SearchQueryHandler {
         return gql`
             query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
                 jcr {
-                    results: nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
+                    nodesByQuery(query: $query, queryLanguage: SQL2, language: $language, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
                         pageInfo {
                             totalCount
                         }
@@ -273,8 +282,8 @@ class Sql2SearchQueryHandler {
         };
     }
 
-    getResultsPath(results) {
-        return results;
+    getResultsPath(data) {
+        return data.jcr.nodesByCriteria;
     }
 }
 

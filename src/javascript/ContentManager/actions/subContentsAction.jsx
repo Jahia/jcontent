@@ -14,7 +14,7 @@ export default composeActions(
         setOpenPaths: state => dispatch(cmOpenPaths(state)),
         setPreviewSelection: state => dispatch(cmSetPreviewSelection(state)),
         navigateToPath: (mode, path, params) => {
-            params = _.clone(params);
+            params = params ? _.clone(params) : {sub: true};
             _.unset(params, 'searchContentType');
             _.unset(params, 'searchTerms');
             _.unset(params, 'sql2SearchFrom');

@@ -6,6 +6,11 @@ import requirementsAction from './requirementsAction';
 import {from, of} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {withDxContextAction} from './withDxContextAction';
+import {reduxAction} from './reduxAction';
+
+const mapStateToProps = state => ({
+    params: state.params
+});
 
 function filterByBaseType(types, baseTypeName) {
     return _.filter(types, type => {
@@ -14,11 +19,11 @@ function filterByBaseType(types, baseTypeName) {
     });
 }
 
-export default composeActions(requirementsAction, withDxContextAction, {
+export default composeActions(requirementsAction, withDxContextAction, reduxAction(mapStateToProps, null), {
 
     init: context => {
-        let {baseContentType} = context;
-        if (!baseContentType) {
+        let {baseContentType, params} = context;
+        if (!baseContentType || params.sub || params.sub === true) {
             baseContentType = 'nt:base';
         }
 

@@ -102,7 +102,7 @@ class ContentQueryHandler {
         const paramsByBrowseType = {
             pages: {
                 recursionTypesFilter: ['jnt:page'],
-                typeFilter: [baseTypeFilter, 'jnt:content', 'jnt:page']
+                typeFilter: [baseTypeFilter, 'jnt:page']
             },
             contents: {
                 recursionTypesFilter: ['nt:base'],

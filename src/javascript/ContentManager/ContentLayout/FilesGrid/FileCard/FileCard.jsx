@@ -254,7 +254,7 @@ export class FileCard extends Component {
                                         {t('label.contentManager.filesGrid.createdBy')}
                                     </Typography>
                                     <Typography color="textSecondary" variant="body2" component="p">
-                                        {t('label.contentManager.filesGrid.author', {author: node.createdBy.value})}
+                                        {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
                                         <Moment format="LLL" locale={uiLang}>
                                             {node.created.value}

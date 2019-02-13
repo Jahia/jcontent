@@ -100,6 +100,7 @@
             "workInProgressAll": "In Arbeit: Gesamter Inhalt (gemeinsame und sprachabhängige Eigenschaften)",
             "unpublish": "Veröffentlichung rückgängig machen",
             "editAction": "Bearbeiten",
+            "subContentsAction": "Sub-Inhalte anzeigen",
             "noResults": "Kein Ergebnis",
             "create": {
                 "contentFolder": "Neues Content Verzeichnis",

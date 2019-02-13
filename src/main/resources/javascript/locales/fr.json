@@ -100,6 +100,7 @@
             "workInProgressAll": "Travail en cours: Tout le contenu (propriétés communes et internationalisées)",
             "unpublish": "Dépublier",
             "editAction": "Editer",
+            "subContentsAction": "Voir les sous-contenus",
             "noResults": "Aucun résultat",
             "create": {
                 "contentFolder": "Nouveau répertoire de contenu",

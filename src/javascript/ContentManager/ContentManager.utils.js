@@ -56,7 +56,7 @@ function ellipsizeText(text, maxLength) {
 }
 
 function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
-    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || subNodes > 0) {
+    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
         return fcn;
     }
     return function () {};

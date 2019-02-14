@@ -115,7 +115,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
 
             pastedNodes.forEach(pastedNode => {
                 if (pastedNode.path === context.treePath) {
-                    context.setPath(pastedNode.newPath);
+                    context.setPath(pastedNode.newPath, {sub: false});
                 }
 
                 if (pastedNode.path === context.previewSelection) {

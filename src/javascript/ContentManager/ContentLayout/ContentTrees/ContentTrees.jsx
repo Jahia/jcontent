@@ -73,7 +73,7 @@ export class ContentTrees extends React.Component {
                                                  user={user}
                                                  dataCmRole={contentTreeConfig.key}
                                                  handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                 handleSelect={path => setPath(path)}
+                                                 handleSelect={path => setPath(path, {sub: false})}
                                                  openableTypes={contentTreeConfig.openableTypes}
                                                  rootLabel={t(contentTreeConfig.rootLabel)}
                                                  setRefetch={setRefetch(contentTreeConfig.key)}

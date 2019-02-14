@@ -323,7 +323,8 @@ export class ContentListTable extends React.Component {
                                                             event.stopPropagation();
                                                             contextualMenu.current.open(event);
                                                         }}
-                                                        onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, () => setPath(siteKey, node.path, mode))}
+                                                        onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, node.subNodes.pageInfo.totalCount,
+                                                            () => setPath(siteKey, node.path, mode))}
                                                     >
                                                         <ContextualMenu
                                                             ref={contextualMenu}

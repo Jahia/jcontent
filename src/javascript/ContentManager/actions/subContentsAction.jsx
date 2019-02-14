@@ -33,11 +33,11 @@ export default composeActions(
     {
         init: context => {
             context.initRequirements({
-                hideOnNodeTypes: ['jnt:file'],
                 retrieveSubNodes: true,
                 retrievePrimaryNodeType: true,
-                enabled: context => context.node.pipe(map(node => (node.subNodes.pageInfo.totalCount > 0 || node.primaryNodeType.name === 'jnt:page') &&
-                    (context.mode !== 'search' && context.mode !== 'sql2Search')))
+                enabled: context => context.node.pipe(map(node => ((node.primaryNodeType.name === 'jnt:page' || node.primaryNodeType.name === 'jnt:folder' || node.primaryNodeType.name === 'jnt:contentFolder') ||
+                    (node.subNodes.pageInfo.totalCount > 0)) &&
+                    context.mode !== 'search' && context.mode !== 'sql2Search'))
             });
             context.urlParams = {sub: true};
         }

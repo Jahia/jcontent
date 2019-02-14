@@ -331,7 +331,7 @@ function initActions(actionsRegistry) {
         buttonIcon: <SubdirectoryArrowRight/>,
         buttonLabel: 'label.contentManager.subContentsAction',
         target: ['contentActions:0.1'],
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
+        hideOnNodeTypes: ['jnt:virtualsite']
     });
 }
 

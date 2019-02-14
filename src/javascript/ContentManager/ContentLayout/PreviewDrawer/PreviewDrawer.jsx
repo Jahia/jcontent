@@ -50,7 +50,7 @@ export class PreviewDrawer extends React.Component {
             <React.Fragment>
                 <AppBar position="relative" color="default">
                     <Toolbar variant="dense">
-                        <IconButton color="inherit" onClick={closePreview} data-cm-role="preview-drawer-close">
+                        <IconButton color="inherit" data-cm-role="preview-drawer-close" onClick={closePreview}>
                             <ChevronRightIcon fontSize="small"/>
                         </IconButton>
                         <Typography variant="subtitle2" color="inherit">

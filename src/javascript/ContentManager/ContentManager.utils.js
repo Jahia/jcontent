@@ -55,8 +55,8 @@ function ellipsizeText(text, maxLength) {
     return ellipsize(text, maxLength || 100, {chars: [' ', '&']});
 }
 
-function allowDoubleClickNavigation(nodeType, fcn) {
-    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1) {
+function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
+    if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || subNodes > 0) {
         return fcn;
     }
     return function () {};

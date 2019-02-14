@@ -7,6 +7,7 @@ import {compose, Query} from 'react-apollo';
 import {ActionRequirementsQueryHandler} from '../ContentManager.gql-queries';
 import {translate} from 'react-i18next';
 import {styleConstants} from '@jahia/layouts';
+import PropTypes from 'prop-types';
 
 export class IFrameLayout extends React.Component {
     constructor(props) {
@@ -55,12 +56,15 @@ export class IFrameLayout extends React.Component {
         const currentActionKey = IFrameLayout.getActionKey(this.props.actionPath);
         const nextActionKey = IFrameLayout.getActionKey(nextProps.actionPath);
 
-        return currentActionKey !== nextActionKey;
+        return currentActionKey !== nextActionKey ||
+            this.props.lang !== nextProps.lang ||
+            this.props.siteKey !== nextProps.siteKey ||
+            this.props.workspace !== nextProps.workspace;
     }
 
     showError(errorKey, errorData) {
         let {notificationContext, t} = this.props;
-        let message = errorData !== null ? t(errorKey, errorData) : t(errorKey);
+        let message = errorData === null ? t(errorKey) : t(errorKey, errorData);
         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
     }
 
@@ -126,12 +130,20 @@ export class IFrameLayout extends React.Component {
 
                     // Check session storage to see if we already have an URL for this action key, otherwise update session storage
                     if (sessionStorage) {
-                        if (sessionStorage.getItem('cmmIFrameLayoutActionKey') && sessionStorage.getItem('cmmIFrameLayoutActionKey') === actionKey && sessionStorage.getItem('cmmIFrameLayoutUrl')) {
+                        if (sessionStorage.getItem('cmmIFrameLayoutActionKey') &&
+                            sessionStorage.getItem('cmmIFrameLayoutActionKey') === actionKey &&
+                            sessionStorage.getItem('cmmIFrameLayoutSiteKey') === siteKey &&
+                            sessionStorage.getItem('cmmIFrameLayoutWorkspace') === workspace &&
+                            sessionStorage.getItem('cmmIFrameLayoutLang') === lang &&
+                            sessionStorage.getItem('cmmIFrameLayoutUrl')) {
                             iframeUrl = sessionStorage.getItem('cmmIFrameLayoutUrl');
                         } else {
                             sessionStorage.setItem('cmmIFrameLayoutActionKey', actionKey);
                             sessionStorage.setItem('cmmIFrameLayoutUrl', iframeUrl);
                             sessionStorage.setItem('cmmIFrameLayoutPathname', iframeUrl);
+                            sessionStorage.setItem('cmmIFrameLayoutSiteKey', siteKey);
+                            sessionStorage.setItem('cmmIFrameLayoutWorkspace', workspace);
+                            sessionStorage.setItem('cmmIFrameLayoutLang', lang);
                         }
                     }
 
@@ -152,6 +164,14 @@ export class IFrameLayout extends React.Component {
         );
     }
 }
+
+IFrameLayout.propTypes = {
+    actionPath: PropTypes.string.isRequired,
+    contextPath: PropTypes.string.isRequired,
+    lang: PropTypes.string.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    workspace: PropTypes.string.isRequired
+};
 
 const mapStateToProps = state => ({
     lang: state.language,

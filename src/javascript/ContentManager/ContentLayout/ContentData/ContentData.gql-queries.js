@@ -283,7 +283,7 @@ class Sql2SearchQueryHandler {
     }
 
     getResultsPath(data) {
-        return data.jcr.nodesByCriteria;
+        return data.jcr.nodesByQuery;
     }
 }
 

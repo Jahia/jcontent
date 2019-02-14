@@ -122,7 +122,7 @@ export class ContentData extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, params, pagination, sort, pathsToRefetch, removePathsToRefetch} = this.props;
+        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, params, pagination, sort, pathsToRefetch, removePathsToRefetch, setPath} = this.props;
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
         // If the path to display is part of the paths to refetch then refetch
         if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
@@ -149,10 +149,6 @@ export class ContentData extends React.Component {
                         });
                     }
 
-                    if (data.jcr && data.jcr.nodeByPath) {
-                        console.log(data.jcr.nodeByPath.primaryNodeType.name);
-                    }
-
                     if (error) {
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         console.error(message);
@@ -167,8 +163,17 @@ export class ContentData extends React.Component {
 
                     if (loading) {
                         // While loading new results, render current ones loaded during previous render invocation (if any).
-                    } else {
+                    } else if (data.jcr && data.jcr.nodeByPath) {
                         // When new results have been loaded, use them for rendering.
+                        let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+                        if (nodeTypeName === 'jnt:page' && params.sub && params.sub === true) {
+                            setPath(path, {sub: false});
+                        } else if (nodeTypeName !== 'jnt:page' && (!params.sub || params.sub === false)) {
+                            setPath(path, {sub: true});
+                        } else {
+                            this.currentResult = queryHandler.getResultsPath(data);
+                        }
+                    } else {
                         this.currentResult = queryHandler.getResultsPath(data);
                     }
 

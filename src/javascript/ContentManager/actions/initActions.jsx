@@ -3,7 +3,7 @@ import {menuAction} from '@jahia/react-material';
 import ContentIcon from './ContentIcon';
 import ManageIcon from './ManageIcon';
 import WorkflowIcon from './WorkflowIcon';
-import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility, SubdirectoryArrowRight} from '@material-ui/icons';
+import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility, SubdirectoryArrowRight, FindInPage} from '@material-ui/icons';
 import {
     Account,
     AccountGroup,
@@ -323,6 +323,7 @@ function initActions(actionsRegistry) {
     });
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',
+        buttonIcon: <FindInPage/>,
         target: ['contentActions:0.5'],
         hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']
     });

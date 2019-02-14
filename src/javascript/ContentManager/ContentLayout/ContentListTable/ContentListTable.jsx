@@ -8,7 +8,7 @@ import {
     TableRow,
     Tooltip,
     Typography,
-    Button,
+    Badge,
     withStyles
 } from '@material-ui/core';
 import {Lock} from '@material-ui/icons';
@@ -161,6 +161,9 @@ const styles = theme => ({
         '& img': {
             marginRight: '6px',
             verticalAlign: 'sub'
+        },
+        '& > span': {
+            width: '100%'
         }
     },
     lastModifiedCell: {
@@ -206,6 +209,9 @@ const styles = theme => ({
         textDecoration: 'underline',
         margin: 0,
         padding: 0
+    },
+    badgeMargin: {
+        marginTop: '8px'
     }
 });
 
@@ -293,6 +299,7 @@ export class ContentListTable extends React.Component {
                                                 let icon = this.addIconSuffix(node.primaryNodeType.icon);
                                                 let showActions = !isPreviewOpened && selection.length === 0;
                                                 let contextualMenu = React.createRef();
+                                                let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
                                                 return (
                                                     <TableRow
                                                         key={node.uuid}
@@ -357,18 +364,22 @@ export class ContentListTable extends React.Component {
                                                                         classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         data-cm-role="table-content-list-cell-name"
                                                                     >
-                                                                        <Typography noWrap variant="body2" color="inherit">
-                                                                            <img src={icon}/>
-                                                                            {_.get(node, column.property)}&nbsp;
-                                                                            {node.subNodes && <DisplayAction
-                                                                                actionKey="subContents"
-                                                                                context={{path: node.path}}
-                                                                                render={subContentButtonRenderer(
-                                                                                    classes.subContentButton,
-                                                                                    t('label.contentManager.subContent', {count: node.subNodes.pageInfo.totalCount})
-                                                                                )}
-                                                                            />}
-                                                                        </Typography>
+                                                                        {showSubNodes ?
+                                                                            <Badge color="primary"
+                                                                                   badgeContent={node.subNodes.pageInfo.totalCount}
+                                                                                   invisible={node.subNodes.pageInfo.totalCount === 0}
+                                                                                   classes={{badge: classes.badgeMargin}}
+                                                                            >
+                                                                                <Typography noWrap variant="body2" color="inherit">
+                                                                                    <img src={icon}/>
+                                                                                    {_.get(node, column.property)}
+                                                                                </Typography>
+                                                                            </Badge> :
+                                                                            <Typography noWrap variant="body2" color="inherit">
+                                                                                <img src={icon}/>
+                                                                                {_.get(node, column.property)}
+                                                                            </Typography>
+                                                                        }
                                                                     </TableCell>
                                                                 );
                                                             }
@@ -420,7 +431,7 @@ export class ContentListTable extends React.Component {
                                                                                 <DisplayActions
                                                                                     target="contentActions"
                                                                                     filter={value => {
-                                                                                        return _.includes(['edit', 'preview', 'subContents'], value.key);
+                                                                                        return _.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
                                                                                     }}
                                                                                     context={{path: node.path}}
                                                                                     render={iconButtonRenderer({
@@ -433,7 +444,7 @@ export class ContentListTable extends React.Component {
                                                                                     context={{
                                                                                         path: node.path,
                                                                                         menuFilter: value => {
-                                                                                            return !_.includes(['edit', 'preview', 'subContents'], value.key);
+                                                                                            return !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
                                                                                         }
                                                                                     }}
                                                                                     render={iconButtonRenderer({
@@ -512,19 +523,6 @@ let EmptyRow = props => {
         </TableRow>
     );
 };
-
-let subContentButtonRenderer = (subContentClass, label) => ({context}) => (
-    <Button
-        size="small"
-        data-sel-role={context.key}
-        className={subContentClass}
-        onClick={e => {
-            context.onClick(context, e);
-        }}
-    >
-        <span>{label}</span>
-    </Button>
-);
 
 const mapStateToProps = state => ({
     mode: state.mode,

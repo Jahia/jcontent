@@ -168,7 +168,7 @@ const ActionRequirementsFragments = {
     retrieveSubNodes: {
         applyFor: 'requirements',
         gql: gql`fragment subNodes on JCRNode {
-            subNodes: children {
+            subNodes: children(typesFilter: {types: ["jnt:file", "jnt:folder", "jnt:content", "jnt:contentFolder"], multi: ANY}) {
                 pageInfo {
                     totalCount
                 }

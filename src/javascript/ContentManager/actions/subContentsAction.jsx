@@ -10,7 +10,7 @@ import {cmSetPreviewSelection} from '../preview.redux-actions';
 export default composeActions(
     requirementsAction,
 
-    reduxAction(null, dispatch => ({
+    reduxAction(state => ({mode: state.mode}), dispatch => ({
         setOpenPaths: state => dispatch(cmOpenPaths(state)),
         setPreviewSelection: state => dispatch(cmSetPreviewSelection(state)),
         navigateToPath: (mode, path, params) => {
@@ -33,10 +33,11 @@ export default composeActions(
     {
         init: context => {
             context.initRequirements({
-                hideOnNodeTypes: ['jnt:page', 'jnt:file'],
+                hideOnNodeTypes: ['jnt:file'],
                 retrieveSubNodes: true,
                 retrievePrimaryNodeType: true,
-                enabled: context => context.node.pipe(map(node => node.subNodes.pageInfo.totalCount > 0))
+                enabled: context => context.node.pipe(map(node => (node.subNodes.pageInfo.totalCount > 0 || node.primaryNodeType.name === 'jnt:page') &&
+                    (context.mode !== 'search' && context.mode !== 'sql2Search')))
             });
             context.urlParams = {sub: true};
         }

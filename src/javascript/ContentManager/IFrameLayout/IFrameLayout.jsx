@@ -97,22 +97,16 @@ export class IFrameLayout extends React.Component {
                         return null;
                     }
 
-                    if (loading) {
+                    // For some reason loading sometime returns true even if have the right data,
+                    // so to avoid this issue we combined loading with a check on the data.
+                    // Also a wrong (likely previously cached) site node might be supplied while loading new data.
+                    // Associated tickets https://jira.jahia.org/browse/QA-11271 and https://jira.jahia.org/browse/BACKLOG-8649
+                    if (loading &&
+                        (!data || !data.jcr || !data.jcr.nodeByPath || !data.jcr.nodeByPath.site || data.jcr.nodeByPath.site.path !== sitePath)) {
                         return <ProgressOverlay/>;
                     }
 
-                    if (!data || !data.jcr) {
-                        return <ProgressOverlay/>;
-                    }
-
-                    // The data check above related to the BACKLOG-8649 is not fully reliable,
-                    // so a wrong (likely previously cached) site node might be supplied while loading new data.
-                    // Return null in this case as data are still loading so it is too early to render anything.
                     const site = data.jcr.nodeByPath;
-                    if (!site || site.path !== sitePath) {
-                        return <ProgressOverlay/>;
-                    }
-
                     // Check display of the action
                     if ((!_.isEmpty(requiredPermission) && !site.hasPermission) ||
                         (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(site.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {

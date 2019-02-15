@@ -42,8 +42,8 @@ export class ContentBreadcrumbs extends React.Component {
             pickerConfiguration.rootLabel = t('label.contentManager.browseFolders');
             pickerConfiguration.rootPath = rootPath + '/contents';
         } else {
-            pickerConfiguration.selectableTypes = ['jnt:page', 'jnt:content'];
-            pickerConfiguration.openableTypes = ['jnt:page', 'jnt:content', 'jnt:virtualsite', 'jnt:navMenuText'];
+            pickerConfiguration.selectableTypes = ['jnt:page'];
+            pickerConfiguration.openableTypes = ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'];
             pickerConfiguration.rootLabel = t('label.contentManager.browsePages');
             pickerConfiguration.rootPath = rootPath;
         }

@@ -370,6 +370,7 @@ export class ContentListTable extends React.Component {
                                                                                    badgeContent={node.subNodes.pageInfo.totalCount}
                                                                                    invisible={node.subNodes.pageInfo.totalCount === 0}
                                                                                    classes={{badge: classes.badgeMargin}}
+                                                                                   data-cm-role="sub-contents-count"
                                                                             >
                                                                                 <Typography noWrap variant="body2" color="inherit">
                                                                                     <img src={icon}/>

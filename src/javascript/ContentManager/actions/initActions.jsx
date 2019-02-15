@@ -39,7 +39,6 @@ import sideMenuListAction from './sideMenuListAction';
 import openInEditModeAction from './openInEditModeAction';
 import unlockAction from './unlockAction';
 import clearAllLocksAction from './clearAllLocksAction';
-import menuWithRequirementsAction from './menuWithRequirementsAction';
 import locateAction from './locateAction';
 import translateAction from './translateAction';
 import translateMenuAction from './translateMenuAction';
@@ -224,12 +223,11 @@ function initActions(actionsRegistry) {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
-    actionsRegistry.add('createMenu', menuWithRequirementsAction, {
+    actionsRegistry.add('createMenu', menuAction, {
         buttonIcon: <Add/>,
         buttonLabel: 'label.contentManager.create.create',
         target: ['tableHeaderActions:10'],
-        hideOnNodeTypes: ['jnt:page'],
-        requiredPermission: 'jcr:addChildNodes',
+        menuPreload: true,
         menu: 'createMenuActions'
     });
     actionsRegistry.add('lock', lockAction, {

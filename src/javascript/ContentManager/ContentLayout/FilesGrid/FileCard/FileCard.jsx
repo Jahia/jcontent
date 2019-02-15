@@ -206,7 +206,7 @@ export class FileCard extends Component {
                             onPreviewSelect(node.path);
                         }
                     }}
-                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, () => setPath(siteKey, node.path, mode))}
+                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
                     onMouseEnter={event => this.onHoverEnter(event)}
                     onMouseLeave={event => this.onHoverExit(event)}
                 >

@@ -15,7 +15,7 @@ require('fs').readdirSync(normalizedPath).forEach(function (file) {
 module.exports = (env, argv) => {
     let config = {
         entry: {
-            main: ['@babel/polyfill', 'whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.loader')]
+            main: ['whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.loader')]
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),

@@ -163,7 +163,10 @@ const styles = theme => ({
             verticalAlign: 'sub'
         },
         '& > span': {
-            width: '100%'
+            width: '100%',
+            '& > p': {
+                marginRight: theme.spacing.unit * 2
+            }
         }
     },
     lastModifiedCell: {
@@ -211,7 +214,16 @@ const styles = theme => ({
         padding: 0
     },
     badgeMargin: {
-        marginTop: '8px'
+        marginTop: theme.spacing.unit,
+        marginLeft: theme.spacing.unit,
+        backgroundColor: theme.palette.brand.alpha,
+        color: theme.palette.invert.beta
+    },
+    badgeMarginSelected: {
+        marginTop: theme.spacing.unit,
+        marginLeft: theme.spacing.unit,
+        color: theme.palette.brand.alpha,
+        backgroundColor: theme.palette.invert.beta
     }
 });
 
@@ -366,10 +378,9 @@ export class ContentListTable extends React.Component {
                                                                         data-cm-role="table-content-list-cell-name"
                                                                     >
                                                                         {showSubNodes ?
-                                                                            <Badge color="primary"
-                                                                                   badgeContent={node.subNodes.pageInfo.totalCount}
+                                                                            <Badge badgeContent={node.subNodes.pageInfo.totalCount}
                                                                                    invisible={node.subNodes.pageInfo.totalCount === 0}
-                                                                                   classes={{badge: classes.badgeMargin}}
+                                                                                   classes={{badge: isSelected ? classes.badgeMarginSelected : classes.badgeMargin}}
                                                                                    data-cm-role="sub-contents-count"
                                                                             >
                                                                                 <Typography noWrap variant="body2" color="inherit">

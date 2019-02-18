@@ -45,15 +45,17 @@ export class Breadcrumb extends React.Component {
         // If we're browsing on sub contents of a table content, then we add the table content in the breadcrumb to give feedback to the
         // user about its location
         let nodename = breadcrumbs[breadcrumbs.length - 1].path.split('/');
+        // If last element is the element we browse in
         if (nodename[nodename.length - 1] !== pathParts[pathParts.length - 1]) {
             let parent = path.split('/');
             let uuid = breadcrumbs[breadcrumbs.length - 1].uuid;
             let breadcrumbToAdd = {};
+            // Key in the list has to be unique and at this point we can't retrieve real uuid so I took its parent's and add nodename to it
             breadcrumbToAdd.uuid = uuid + parent[length - 1];
             breadcrumbToAdd.name = pathParts[pathParts.length - 1];
             breadcrumbToAdd.path = path;
             breadcrumbToAdd.siblings = [];
-            // If last item is an ancestor of current element than we add element at the end
+            // If last item is an ancestor of current element than we add element at the end, else we replace last element
             if (_.includes(parent, nodename[nodename.length - 1])) {
                 breadcrumbs[breadcrumbs.length] = breadcrumbToAdd;
             } else {

@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 export class IFrameLayout extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             iframe: null
         };
@@ -39,13 +38,15 @@ export class IFrameLayout extends React.Component {
             this.state.iframe.current.refs &&
             this.state.iframe.current.refs.iframe &&
             this.state.iframe.current.refs.iframe.contentWindow &&
-            this.state.iframe.current.refs.iframe.contentWindow.location) {
-            // This is a hack to be able to listen if the URL of the iframe has changed, has when it happens the IFrameLayout try to update
+            this.state.iframe.current.refs.iframe.contentWindow.location
+        ) {
 
+            // This is a hack to be able to listen if the URL of the iframe has changed, has when it happens the IFrameLayout try to update
             let iframeLocation = this.state.iframe.current.refs.iframe.contentWindow.location;
             if (sessionStorage &&
                 sessionStorage.getItem('cmmIFrameLayoutPathname') &&
-                sessionStorage.getItem('cmmIFrameLayoutPathname') !== iframeLocation.pathname) {
+                sessionStorage.getItem('cmmIFrameLayoutPathname') !== iframeLocation.pathname
+            ) {
                 sessionStorage.setItem('cmmIFrameLayoutUrl', iframeLocation.pathname + iframeLocation.search + iframeLocation.hash);
                 sessionStorage.setItem('cmmIFrameLayoutPathname', iframeLocation.pathname);
             }
@@ -87,9 +88,10 @@ export class IFrameLayout extends React.Component {
         let {requiredPermission, requireModuleInstalledOnSite} = action;
 
         return (
-            <Query key={actionKey}
-                   query={requirementQueryHandler.getQuery()}
-                   variables={requirementQueryHandler.getVariables()}
+            <Query
+                key={actionKey}
+                query={requirementQueryHandler.getQuery()}
+                variables={requirementQueryHandler.getVariables()}
             >
                 {({error, data, loading}) => {
                     if (error) {
@@ -102,14 +104,16 @@ export class IFrameLayout extends React.Component {
                     // Also a wrong (likely previously cached) site node might be supplied while loading new data.
                     // Associated tickets https://jira.jahia.org/browse/QA-11271 and https://jira.jahia.org/browse/BACKLOG-8649
                     if (loading &&
-                        (!data || !data.jcr || !data.jcr.nodeByPath || !data.jcr.nodeByPath.site || data.jcr.nodeByPath.site.path !== sitePath)) {
+                        (!data || !data.jcr || !data.jcr.nodeByPath || !data.jcr.nodeByPath.site || data.jcr.nodeByPath.site.path !== sitePath)
+                    ) {
                         return <ProgressOverlay/>;
                     }
 
                     const site = data.jcr.nodeByPath;
                     // Check display of the action
                     if ((!_.isEmpty(requiredPermission) && !site.hasPermission) ||
-                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(site.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))) {
+                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(site.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
+                    ) {
                         this.showError('label.contentManager.error.contentUnavailable');
                         return null;
                     }
@@ -129,7 +133,8 @@ export class IFrameLayout extends React.Component {
                             sessionStorage.getItem('cmmIFrameLayoutSiteKey') === siteKey &&
                             sessionStorage.getItem('cmmIFrameLayoutWorkspace') === workspace &&
                             sessionStorage.getItem('cmmIFrameLayoutLang') === lang &&
-                            sessionStorage.getItem('cmmIFrameLayoutUrl')) {
+                            sessionStorage.getItem('cmmIFrameLayoutUrl')
+                        ) {
                             iframeUrl = sessionStorage.getItem('cmmIFrameLayoutUrl');
                         } else {
                             sessionStorage.setItem('cmmIFrameLayoutActionKey', actionKey);
@@ -143,14 +148,15 @@ export class IFrameLayout extends React.Component {
 
                     let iframe = React.createRef();
                     return (
-                        <Iframe ref={iframe}
-                                allowFullScreen
-                                url={iframeUrl}
-                                position="relative"
-                                width="100%"
-                                className="myClassname"
-                                height={'calc( 100vh - ' + styleConstants.topBarHeight + 'px )'}
-                                onLoad={() => this.onIframeLoaded(iframe)}
+                        <Iframe
+                            ref={iframe}
+                            allowFullScreen
+                            url={iframeUrl}
+                            position="relative"
+                            width="100%"
+                            className="myClassname"
+                            height={'calc( 100vh - ' + styleConstants.topBarHeight + 'px )'}
+                            onLoad={() => this.onIframeLoaded(iframe)}
                         />
                     );
                 }}

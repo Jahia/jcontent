@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Menu, MenuItem} from '@material-ui/core';
-import {Folder, Public} from '@material-ui/icons';
-import {PageIcon} from '@jahia/icons';
+import iconRenderer from './iconRenderer';
 import {Typography, withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {ellipsizeText} from '../../../../../../ContentManager.utils';
@@ -48,19 +47,6 @@ export class BreadcrumbDisplay extends React.Component {
         this.props.handleSelect(node.mode, node.path);
     }
 
-    renderIcon(node) {
-        switch (node.type) {
-            case 'jnt:virtualsite':
-                return <Public fontSize="small"/>;
-            case 'jnt:folder':
-            case 'jnt:contentFolder':
-                return <Folder fontSize="small"/>;
-            case 'jnt:page':
-            default:
-                return <PageIcon fontSize="small"/>;
-        }
-    }
-
     render() {
         let {menuActive, anchorPosition} = this.state;
         let {node, maxLabelLength, trimLabel, classes} = this.props;
@@ -74,7 +60,7 @@ export class BreadcrumbDisplay extends React.Component {
                     onMouseOver={() => node.siblings && node.siblings.length > 1 && this.onMenuButtonMouseOver()}
                     onClick={ev => node.siblings && node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
                 >
-                    {this.renderIcon(node, classes)}
+                    {iconRenderer(node, classes)}
                     {!trimLabel &&
                         <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                             {ellipsizeText(node.name, maxLabelLength)}
@@ -105,7 +91,7 @@ export class BreadcrumbDisplay extends React.Component {
                         disableGutters
                         onClick={event => this.onMenuItemSelected(event, node)}
                     >
-                        {this.renderIcon(node, classes)}{node.name}
+                        {iconRenderer(node)}{node.name}
                     </MenuItem>
                     {node.siblings && node.siblings.length !== 0 &&
                         node.siblings.map(siblingNode => {
@@ -118,7 +104,7 @@ export class BreadcrumbDisplay extends React.Component {
                                     disableRipple
                                     onClick={event => this.onMenuItemSelected(event, siblingNode)}
                                 >
-                                    {this.renderIcon(siblingNode, classes)}
+                                    {iconRenderer(siblingNode)}
                                     <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                                         {siblingNode.name}
                                     </Typography>

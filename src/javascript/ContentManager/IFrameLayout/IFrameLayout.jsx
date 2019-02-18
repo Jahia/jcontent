@@ -40,7 +40,6 @@ export class IFrameLayout extends React.Component {
             this.state.iframe.current.refs.iframe.contentWindow &&
             this.state.iframe.current.refs.iframe.contentWindow.location
         ) {
-
             // This is a hack to be able to listen if the URL of the iframe has changed, has when it happens the IFrameLayout try to update
             let iframeLocation = this.state.iframe.current.refs.iframe.contentWindow.location;
             if (sessionStorage &&

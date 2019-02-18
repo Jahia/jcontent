@@ -37,8 +37,8 @@ export class ContentBreadcrumbs extends React.Component {
             pickerConfiguration.rootLabel = t('label.contentManager.browseFiles');
             pickerConfiguration.rootPath = rootPath + '/files';
         } else if (path.indexOf(rootPath + '/contents') !== -1) {
-            pickerConfiguration.selectableTypes = ['jmix:list'];
-            pickerConfiguration.openableTypes = ['jmix:list', 'jnt:contentFolder', 'jnt:content'];
+            pickerConfiguration.selectableTypes = [];
+            pickerConfiguration.openableTypes = ['jnt:contentFolder'];
             pickerConfiguration.rootLabel = t('label.contentManager.browseFolders');
             pickerConfiguration.rootPath = rootPath + '/contents';
         } else {

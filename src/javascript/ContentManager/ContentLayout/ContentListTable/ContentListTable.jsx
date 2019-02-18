@@ -141,6 +141,10 @@ const styles = theme => ({
         '&&&': {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.common.white
+        },
+        '& $badge': {
+            color: theme.palette.brand.alpha,
+            backgroundColor: theme.palette.invert.beta
         }
     },
     cell: {
@@ -213,17 +217,11 @@ const styles = theme => ({
         margin: 0,
         padding: 0
     },
-    badgeMargin: {
+    badge: {
         marginTop: theme.spacing.unit,
         marginLeft: theme.spacing.unit,
         backgroundColor: theme.palette.brand.alpha,
         color: theme.palette.invert.beta
-    },
-    badgeMarginSelected: {
-        marginTop: theme.spacing.unit,
-        marginLeft: theme.spacing.unit,
-        color: theme.palette.brand.alpha,
-        backgroundColor: theme.palette.invert.beta
     }
 });
 
@@ -380,7 +378,7 @@ export class ContentListTable extends React.Component {
                                                                         {showSubNodes ?
                                                                             <Badge badgeContent={node.subNodes.pageInfo.totalCount}
                                                                                    invisible={node.subNodes.pageInfo.totalCount === 0}
-                                                                                   classes={{badge: isSelected ? classes.badgeMarginSelected : classes.badgeMargin}}
+                                                                                   classes={{badge: classes.badge}}
                                                                                    data-cm-role="sub-contents-count"
                                                                             >
                                                                                 <Typography noWrap variant="body2" color="inherit">

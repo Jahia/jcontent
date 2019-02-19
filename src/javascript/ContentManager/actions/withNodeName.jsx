@@ -23,14 +23,14 @@ let withNodeName = composeActions(withDxContextAction, withI18nAction, {
             if (context.node) {
                 context.buttonLabelParams = context.node.pipe(map(node => ({
                     displayName: _.escape(ellipsizeText(node.displayName, 40)),
-                    language: node.site ? _.escape(uppercaseFirst(getLanguageLabel(node.site.languages, context.dxContext.lang).displayName)) : null
+                    language: node.site ? _.escape(uppercaseFirst(getLanguageLabel(node.site.languages, context.language).displayName)) : null
                 })));
             } else if (context.nodes) {
                 context.buttonLabelParams = context.nodes.pipe(map(nodes => {
                     if (nodes.length > 0) {
                         return {
                             displayName: props.t('label.contentManager.selection.itemsSelected', {count: context.paths.length}),
-                            language: nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(nodes[0].site.languages, context.dxContext.lang).displayName)) : null
+                            language: nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(nodes[0].site.languages, context.language).displayName)) : null
                         };
                     }
                 }));

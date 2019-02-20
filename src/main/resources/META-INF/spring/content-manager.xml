@@ -20,8 +20,7 @@
         </property>
         <property name="javascriptResources">
             <list>
-                <value>/modules/content-media-manager/javascript/polyfills.js</value>
-                <value>/modules/content-media-manager/javascript/loader.js</value>
+                <value>/modules/content-media-manager/javascript/activate-loader.js</value>
             </list>
         </property>
     </bean>

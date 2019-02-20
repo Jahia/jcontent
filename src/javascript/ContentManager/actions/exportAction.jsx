@@ -12,6 +12,7 @@ export default composeActions(requirementsAction, componentRendererAction, {
     onClick: context => {
         let handler = context.renderComponent(
             <Export open
+                    path={context.node.path}
                     onClose={() => {
                         handler.setProps({open: false});
                     }}

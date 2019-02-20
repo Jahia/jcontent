@@ -10,8 +10,9 @@ import {Dialog,
     Select,
     MenuItem,
     Checkbox,
-    Typography,
+    FormHelperText,
     withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 
 const styles = theme => ({
     margins: {
@@ -23,7 +24,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 2
     },
     typo: {
-        padding: theme.spacing.unit
+        padding: '10px'
     }
 });
 
@@ -31,7 +32,7 @@ export class Export extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            select: '',
+            select: 'default',
             zipCheckbox: false
         };
         this.onChangeSelection = this.onChangeSelection.bind(this);
@@ -50,11 +51,16 @@ export class Export extends React.Component {
         });
     }
 
+    triggerExport(path, format, live) {
+        window.open(`/cms/export/default${path}.${format}?exportformat=${format}&live=${live}`);
+    }
+
     render() {
-        let {t, classes, onClose, onExited} = this.props;
-        let disabledChecked = this.state.select === 'live';
+        let {t, classes, onClose, onExited, path} = this.props;
+        let format = this.state.zipCheckbox ? 'xml' : 'zip';
+        let live = this.state.select === 'live';
         return (
-            <Dialog fullWidth open={this.props.open} onExited={onExited} onClose={onClose}>
+            <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
                     {t('label.contentManager.export.dialogTitle')}
                 </DialogTitle>
@@ -63,7 +69,6 @@ export class Export extends React.Component {
                         {t('label.contentManager.export.dialogText')}
                     </DialogContentText>
                     <Select
-                        displayEmpty
                         className={classes.margins}
                         value={this.state.select}
                         name="exportType"
@@ -72,15 +77,15 @@ export class Export extends React.Component {
                         <MenuItem value="default">{t('label.contentManager.export.stagingSelectItem')}</MenuItem>
                         <MenuItem value="live">{t('label.contentManager.export.stagingLiveSelectItem')}</MenuItem>
                     </Select>
+                    <FormHelperText>{t('label.contentManager.export.textHelper')}</FormHelperText>
                     <div className={classes.checkbox}>
                         <Checkbox
                         value="zip"
                         color="primary"
-                        disabled={disabledChecked}
-                        checked={disabledChecked || this.state.zipCheckbox}
+                        disabled={live}
                         onChange={e => this.handleZipCheckbox(e)}
                     />
-                        <Typography variant="subtitle2" color="textPrimary" className={classes.typo}>
+                        <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.typo}>
                             {t('label.contentManager.export.checkboxLabel')}
                         </Typography>
                     </div>
@@ -89,7 +94,15 @@ export class Export extends React.Component {
                     <Button variant="contained" color="default" onClick={onClose}>
                         {t('label.contentManager.fileUpload.dialogRenameCancel')}
                     </Button>
-                    <Button variant="contained" color="primary" data-cm-role="upload-rename-button">
+                    <Button variant="contained"
+                            color="primary"
+                            data-cm-role="upload-rename-button"
+                            type="submit"
+                            onClick={() => {
+                                this.triggerExport(path, format, live);
+                                onClose();
+                            }}
+                    >
                         {t('label.contentManager.export.actionLabel')}
                     </Button>
                 </DialogActions>

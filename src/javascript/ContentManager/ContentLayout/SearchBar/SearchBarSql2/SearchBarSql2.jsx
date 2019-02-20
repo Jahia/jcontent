@@ -4,28 +4,23 @@ import SearchBarLayout from '../SearchBarLayout/index';
 import ActionButton from '../ActionButton/index';
 import Sql2Input from './Sql2Input/index';
 import {compose} from 'react-apollo';
-import {Grid, withStyles} from '@material-ui/core';
+import {Paper, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {connect} from 'react-redux';
 import {Trans, translate} from 'react-i18next';
 import {cmGoto} from '../../../ContentManager.redux-actions';
 
 const styles = theme => ({
     sql2Form: {
-        height: 48,
-        padding: theme.spacing.unit,
-        paddingLeft: theme.spacing.unit * 2,
-        color: theme.palette.text.secondary,
-        fontFamily: 'monospace',
-        backgroundColor: theme.palette.background.default
+        lineHeight: '19px',
+        padding: 12,
+        fontFamily: 'sans-serif',
+        boxSizing: 'border-box'
     },
     link: {
-        color: 'inherit'
+        color: theme.palette.brand.beta
     },
-    replaceButtonStyle: {
-        minHeight: 43,
-        maxHeight: 43,
-        height: 43
-    }
+    replaceButtonStyle: {}
 });
 
 export class SearchBarSql2 extends React.Component {
@@ -33,14 +28,6 @@ export class SearchBarSql2 extends React.Component {
         super(props);
 
         this.state = {};
-    }
-
-    onSearch(sql2SearchFrom, sql2SearchWhere) {
-        let {path, search} = this.props;
-
-        let params = {sql2SearchFrom, sql2SearchWhere};
-
-        search('sql2Search', path, params);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -60,6 +47,14 @@ export class SearchBarSql2 extends React.Component {
         };
     }
 
+    onSearch(sql2SearchFrom, sql2SearchWhere) {
+        let {path, search} = this.props;
+
+        let params = {sql2SearchFrom, sql2SearchWhere};
+
+        search('sql2Search', path, params);
+    }
+
     render() {
         let {onNormalClick, path, classes, t} = this.props;
         let {sql2SearchFrom, sql2SearchWhere, ongoingSearch} = this.state;
@@ -68,18 +63,20 @@ export class SearchBarSql2 extends React.Component {
             <SearchBarLayout t={t}
                              leftFooter={
                                  <DxContext.Consumer>{dxContext => (
-                                     <Trans i18nKey="label.contentManager.search.sql2Prompt"
-                                            components={[
-                                                <a key="sql2Prompt"
-                                                   href={dxContext.config.sql2CheatSheetUrl}
-                                                   target="_blank"
-                                                   rel="noopener noreferrer"
-                                                   className={classes.link}
-                                                >
-                                                    univers
-                                                </a>
-                                            ]}
-                                     />
+                                     <Typography align="right" color="invert">
+                                         <Trans i18nKey="label.contentManager.search.sql2Prompt"
+                                                components={[
+                                                    <a key="sql2Prompt"
+                                                       href={dxContext.config.sql2CheatSheetUrl}
+                                                       target="_blank"
+                                                       rel="noopener noreferrer"
+                                                       className={classes.link}
+                                                    >
+                                                        univers
+                                                    </a>
+                                                ]}
+                                         />
+                                     </Typography>
                                  )}
                                  </DxContext.Consumer>}
                              rightFooter={
@@ -95,31 +92,33 @@ export class SearchBarSql2 extends React.Component {
                                  </React.Fragment>}
                              onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
             >
-                <Grid container alignItems="center" classes={{container: classes.sql2Form}}>
-                    SELECT * FROM [
-                    <Sql2Input
-                        maxLength={100}
-                        size={15}
-                        value={sql2SearchFrom}
-                        cmRole="sql2search-input-from"
-                        onChange={event => {
-                            this.setState({sql2SearchFrom: event.target.value});
-                        }}
-                        onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
-                    />
-                    ] WHERE ISDESCENDANTNODE(&rsquo;{path}&rsquo;) AND (
-                    <Sql2Input
-                        maxLength={2000}
-                        className={classes.inInput}
-                        value={sql2SearchWhere}
-                        cmRole="sql2search-input-where"
-                        onChange={event => {
-                            this.setState({sql2SearchWhere: event.target.value});
-                        }}
-                        onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
-                    />
-                    )
-                </Grid>
+                <Paper>
+                    <Typography variant="iota" color="alpha" className={classes.sql2Form}>
+                        SELECT * FROM [
+                        <Sql2Input
+                            maxLength={100}
+                            size={15}
+                            value={sql2SearchFrom}
+                            cmRole="sql2search-input-from"
+                            onChange={event => {
+                                this.setState({sql2SearchFrom: event.target.value});
+                            }}
+                            onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
+                        />
+                        ] WHERE ISDESCENDANTNODE(&rsquo;{path}&rsquo;) AND (
+                        <Sql2Input
+                            maxLength={2000}
+                            className={classes.inInput}
+                            value={sql2SearchWhere}
+                            cmRole="sql2search-input-where"
+                            onChange={event => {
+                                this.setState({sql2SearchWhere: event.target.value});
+                            }}
+                            onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
+                        />
+                        )
+                    </Typography>
+                </Paper>
             </SearchBarLayout>
         );
     }

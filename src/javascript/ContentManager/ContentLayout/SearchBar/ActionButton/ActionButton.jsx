@@ -3,10 +3,9 @@ import {withStyles, Button} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 
-const styles = theme => ({
+const styles = () => ({
     actionButton: {
-        marginTop: 0,
-        marginBottom: theme.spacing.unit,
+        margin: 0,
         float: 'right'
     }
 });

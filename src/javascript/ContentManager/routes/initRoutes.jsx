@@ -38,7 +38,7 @@ function initRoutes(registry) {
                 path: t('label.contentManager.appTitle', {path: ''}),
                 title: t('label.contentManager.title.' + props.match.params.mode),
                 contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
-                actions: <SearchBar/>
+                actions: <React.Fragment><SearchBar/></React.Fragment>
             }}
             >
                 <FullWidthLayout>

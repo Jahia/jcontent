@@ -9,7 +9,7 @@ const styles = () => ({
     root: {
         width: 'auto',
         minWidth: '100px',
-        height: 48
+        height: 44
     },
     inputPadding: {
         padding: 0
@@ -21,7 +21,7 @@ const styles = () => ({
         border: 'none!important'
     },
     inputSize: {
-        height: 48,
+        height: 44,
         padding: '0!important'
     },
     colorText: {

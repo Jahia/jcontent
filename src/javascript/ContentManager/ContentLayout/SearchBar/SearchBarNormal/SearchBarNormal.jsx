@@ -12,18 +12,14 @@ import {connect} from 'react-redux';
 
 const styles = () => ({
     searchSize: {
-        flexGrow: 10,
-        boxShadow: 'none!important',
-        height: 48,
-        border: 0
+        height: 44,
+        width: 'calc(100% - 200px)'
     },
-    inputShadow: {
-        height: 34
+    input: {
+        height: 44,
+        boxSizing: 'border-box'
     },
     replaceButtonStyle: {
-        minHeight: 43,
-        maxHeight: 43,
-        height: 43
     }
 });
 
@@ -120,7 +116,7 @@ export class SearchBarNormal extends React.Component {
                                 cmRole="search-type-sql2search"
                                 onClick={onSql2Click}
                             /> :
-                            <div className={classes.replaceButtonStyle}/>
+                            <div/>
                         }
                     </React.Fragment>
                 }
@@ -139,7 +135,7 @@ export class SearchBarNormal extends React.Component {
                     inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
                     className={classes.searchSize}
                     value={searchTerms}
-                    classes={{input: classes.inputShadow}}
+                    classes={{input: classes.input}}
                     placeholder={t('label.contentManager.search.normalPrompt')}
                     onChange={this.onSearchInputChange}
                     onKeyDown={this.onSearchInputKeyDown}

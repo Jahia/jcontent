@@ -17,7 +17,7 @@ const customStyles = theme => ({
         color: theme.palette.text.contrastText,
         border: 'none',
         alignItems: 'center',
-        height: 48,
+        height: 44,
         width: '155px',
         background: theme.palette.primary.main,
         '&:hover': {

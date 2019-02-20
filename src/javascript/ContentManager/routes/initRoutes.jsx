@@ -14,9 +14,9 @@ function initRoutes(registry) {
         path: '/:siteKey/:lang/apps/:menu/:entry',
         render: (props, {dxContext, t}) => (
             <MainLayout topBarProps={{
-                path: t('label.contentManager.appTitle', {path: ''}),
+                path: t('label.contentManager.appTitle', {path: ''}).substring(3),
                 title: t([actionsRegistry.get(props.match.params.menu).buttonLabel, 'label.contentManager.leftMenu.manage.title']),
-                contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
+                contextModifiers: <React.Fragment><SiteSwitcher/> <LanguageSwitcher/></React.Fragment>,
                 actions: <React.Fragment></React.Fragment>
             }}
             >
@@ -35,7 +35,7 @@ function initRoutes(registry) {
         path: '/:siteKey/:lang/:mode',
         render: (props, {t}) => (
             <MainLayout topBarProps={{
-                path: t('label.contentManager.appTitle', {path: ''}),
+                path: t('label.contentManager.appTitle', {path: ''}).substring(3),
                 title: t('label.contentManager.title.' + props.match.params.mode),
                 contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
                 actions: <React.Fragment><SearchBar/></React.Fragment>

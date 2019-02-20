@@ -1,7 +1,14 @@
 import React from 'react';
-import {Button, Menu, MenuItem, Typography} from '@material-ui/core';
+import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
 import {ChevronDown} from 'mdi-material-ui';
 import {lodash as _} from 'lodash';
+import {compose} from 'react-apollo';
+
+const styles = () => ({
+    siteSwitcher: {
+        marginRight: '8px!important'
+    }
+});
 
 class SiteSwitcherDisplay extends React.Component {
     constructor(props) {
@@ -22,7 +29,7 @@ class SiteSwitcherDisplay extends React.Component {
     }
 
     render() {
-        let {siteKey, siteNodes, loading, onSelectSite, currentLang} = this.props;
+        let {siteKey, siteNodes, loading, onSelectSite, classes, currentLang} = this.props;
         let {anchorEl} = this.state;
 
         if (loading) {
@@ -35,6 +42,7 @@ class SiteSwitcherDisplay extends React.Component {
                         color="inherit"
                         aria-haspopup="true"
                         data-cm-role="site-switcher"
+                        className={classes.siteSwitcher}
                         onClick={this.handleClick}
                 >
                     <Typography noWrap variant="body1" color="inherit">
@@ -62,5 +70,6 @@ class SiteSwitcherDisplay extends React.Component {
         );
     }
 }
-
-export default SiteSwitcherDisplay;
+export default compose(
+    withStyles(styles),
+)(SiteSwitcherDisplay);

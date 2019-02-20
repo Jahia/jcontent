@@ -73,7 +73,7 @@
                 "sql2Search": "Suche",
                 "browse": "Content"
             },
-            "appTitle": "DX Content and Media Manager {{path}}",
+            "appTitle": "Content and Media Manager {{path}}",
             "showCurrentPath": "Zeige aktuellen Pfad",
             "filesGrid": {
                 "emptyMessage": "Dieser Ordner enthält keine Dateien",

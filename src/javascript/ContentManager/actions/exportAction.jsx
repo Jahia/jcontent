@@ -11,17 +11,19 @@ export default composeActions(requirementsAction, componentRendererAction, {
 
     onClick: context => {
         let handler = context.renderComponent(
-            <Export open
-                    path={context.node.path}
-                    onClose={() => {
-                        handler.setProps({open: false});
-                    }}
-                    onExited={() => {
-                        handler.destroy();
-                        if (context.onExited) {
-                            context.onExited();
-                        }
-                    }}
-            />);
+            <Export
+                open
+                path={context.node.path}
+                onClose={() => {
+                    handler.setProps({open: false});
+                }}
+                onExited={() => {
+                    handler.destroy();
+                    if (context.onExited) {
+                        context.onExited();
+                    }
+                }}
+            />
+        );
     }
 });

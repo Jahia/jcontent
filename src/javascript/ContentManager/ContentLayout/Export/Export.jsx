@@ -74,17 +74,23 @@ export class Export extends React.Component {
                         name="exportType"
                         onChange={e => this.onChangeSelection(e)}
                     >
-                        <MenuItem value="default">{t('label.contentManager.export.stagingSelectItem')}</MenuItem>
-                        <MenuItem value="live">{t('label.contentManager.export.stagingLiveSelectItem')}</MenuItem>
+                        <MenuItem value="default">
+                            {t('label.contentManager.export.stagingSelectItem')}
+                        </MenuItem>
+                        <MenuItem value="live">
+                            {t('label.contentManager.export.stagingLiveSelectItem')}
+                        </MenuItem>
                     </Select>
-                    <FormHelperText>{t('label.contentManager.export.textHelper')}</FormHelperText>
+                    <FormHelperText>
+                        {t('label.contentManager.export.textHelper')}
+                    </FormHelperText>
                     <div className={classes.checkbox}>
                         <Checkbox
-                        value="zip"
-                        color="primary"
-                        disabled={live}
-                        onChange={e => this.handleZipCheckbox(e)}
-                    />
+                            value="zip"
+                            color="primary"
+                            disabled={live}
+                            onChange={e => this.handleZipCheckbox(e)}
+                        />
                         <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.typo}>
                             {t('label.contentManager.export.checkboxLabel')}
                         </Typography>
@@ -94,14 +100,15 @@ export class Export extends React.Component {
                     <Button variant="contained" color="default" onClick={onClose}>
                         {t('label.contentManager.fileUpload.dialogRenameCancel')}
                     </Button>
-                    <Button variant="contained"
-                            color="primary"
-                            data-cm-role="upload-rename-button"
-                            type="submit"
-                            onClick={() => {
-                                this.triggerExport(path, format, live);
-                                onClose();
-                            }}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        data-cm-role="upload-rename-button"
+                        type="submit"
+                        onClick={() => {
+                            this.triggerExport(path, format, live);
+                            onClose();
+                        }}
                     >
                         {t('label.contentManager.export.actionLabel')}
                     </Button>

@@ -103,15 +103,15 @@ export class IFrameLayout extends React.Component {
                     // Also a wrong (likely previously cached) site node might be supplied while loading new data.
                     // Associated tickets https://jira.jahia.org/browse/QA-11271 and https://jira.jahia.org/browse/BACKLOG-8649
                     if (loading &&
-                        (!data || !data.jcr || !data.jcr.nodeByPath || !data.jcr.nodeByPath || data.jcr.nodeByPath.path !== sitePath)
+                        (!data || !data.jcr || !data.jcr.nodeByPath || data.jcr.nodeByPath.path !== sitePath)
                     ) {
                         return <ProgressOverlay/>;
                     }
 
-                    const node = data.jcr.nodeByPath;
+                    const siteNode = data.jcr.nodeByPath;
                     // Check display of the action
-                    if ((!_.isEmpty(requiredPermission) && !node.hasPermission) ||
-                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
+                    if ((!_.isEmpty(requiredPermission) && !siteNode.hasPermission) ||
+                        (!_.isEmpty(requireModuleInstalledOnSite) && !_.includes(siteNode.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite))
                     ) {
                         this.showError('label.contentManager.error.contentUnavailable');
                         return null;

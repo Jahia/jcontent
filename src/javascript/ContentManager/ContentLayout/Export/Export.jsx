@@ -32,22 +32,22 @@ export class Export extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            select: 'default',
-            zipCheckbox: false
+            workspace: 'default',
+            xml: false
         };
-        this.onChangeSelection = this.onChangeSelection.bind(this);
-        this.handleZipCheckbox = this.handleZipCheckbox.bind(this);
+        this.onWorkspaceChange = this.onWorkspaceChange.bind(this);
+        this.onXmlChange = this.onXmlChange.bind(this);
     }
 
-    onChangeSelection(event) {
+    onWorkspaceChange(event) {
         this.setState({
-            select: event.target.value
+            workspace: event.target.value
         });
     }
 
-    handleZipCheckbox(event) {
+    onXmlChange(event) {
         this.setState({
-            zipCheckbox: event.target.checked
+            xml: event.target.checked
         });
     }
 
@@ -57,8 +57,8 @@ export class Export extends React.Component {
 
     render() {
         let {t, classes, onClose, onExited, path} = this.props;
-        let format = this.state.zipCheckbox ? 'xml' : 'zip';
-        let live = this.state.select === 'live';
+        let format = (this.state.xml ? 'xml' : 'zip');
+        let live = (this.state.workspace === 'live');
         return (
             <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
@@ -70,9 +70,9 @@ export class Export extends React.Component {
                     </DialogContentText>
                     <Select
                         className={classes.margins}
-                        value={this.state.select}
+                        value={this.state.workspace}
                         name="exportType"
-                        onChange={e => this.onChangeSelection(e)}
+                        onChange={e => this.onWorkspaceChange(e)}
                     >
                         <MenuItem value="default">
                             {t('label.contentManager.export.stagingSelectItem')}
@@ -86,10 +86,10 @@ export class Export extends React.Component {
                     </FormHelperText>
                     <div className={classes.checkbox}>
                         <Checkbox
-                            value="zip"
+                            value="xml"
                             color="primary"
                             disabled={live}
-                            onChange={e => this.handleZipCheckbox(e)}
+                            onChange={e => this.onXmlChange(e)}
                         />
                         <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.typo}>
                             {t('label.contentManager.export.checkboxLabel')}

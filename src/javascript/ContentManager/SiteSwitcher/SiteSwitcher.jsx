@@ -1,4 +1,5 @@
 import React from 'react';
+import * as _ from 'lodash';
 import {compose, Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import gql from 'graphql-tag';
@@ -14,17 +15,14 @@ class SiteSwitcher extends React.Component {
     constructor(props) {
         super(props);
 
-        this.variables = {
-            query: 'select * from [jnt:virtualsite] where ischildnode(\'/sites\')'
-        };
         this.query = gql`
-            query SiteNodes($query: String!) {
+            query SiteNodes($query: String!, $displayLanguage:String!) {
                 jcr {
                     result:nodesByQuery(query: $query) {
                         siteNodes:nodes {
                             name
                             hasPermission(permissionName: "contentManager")
-                            displayName
+                            displayName(language: $displayLanguage)
                             site {
                                 defaultLanguage
                                 languages {
@@ -54,7 +52,7 @@ class SiteSwitcher extends React.Component {
                 }
             }
         }
-        return siteNodes;
+        return _.sortBy(siteNodes, ['displayName']);
     }
 
     getTargetSiteLanguageForSwitch(siteNode, currentLang) {
@@ -81,7 +79,7 @@ class SiteSwitcher extends React.Component {
     render() {
         const {siteKey, currentLang, notificationContext, t} = this.props;
         return (
-            <Query query={this.query} variables={this.variables}>
+            <Query query={this.query} variables={{query: 'select * from [jnt:virtualsite] where ischildnode(\'/sites\')', displayLanguage: currentLang}}>
                 {
                 ({error, loading, data}) => {
                     if (error) {

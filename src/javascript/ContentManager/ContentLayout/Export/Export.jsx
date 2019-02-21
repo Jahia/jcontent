@@ -11,7 +11,8 @@ import {Dialog,
     MenuItem,
     Checkbox,
     FormHelperText,
-    withStyles} from '@material-ui/core';
+    withStyles
+} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 
 const styles = theme => ({

@@ -19,9 +19,6 @@ export default composeActions(requirementsAction, componentRendererAction, {
                 }}
                 onExited={() => {
                     handler.destroy();
-                    if (context.onExited) {
-                        context.onExited();
-                    }
                 }}
             />
         );

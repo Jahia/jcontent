@@ -133,11 +133,11 @@
             "export": {
                 "actionLabel": "Export",
                 "dialogTitle": "Export options",
-                "dialogText": "Select the content you want to export",
-                "stagingSelectItem": "Staging content only",
-                "stagingLiveSelectItem": "Staging and live content",
-                "checkboxLabel": "Export as an xml file",
-                "textHelper": "Exported as a zip file by default"
+                "selectWorkspace": "Select the content you want to export",
+                "stagingOnlyOption": "Staging content only",
+                "stagingAndLiveOption": "Staging and live content",
+                "asXml": "Export as an xml file",
+                "exportDetails": "Exported as a zip file by default"
             },
             "leftMenu": {
                 "savedSearches": "Saved searches",

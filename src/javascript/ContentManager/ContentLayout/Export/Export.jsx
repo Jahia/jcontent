@@ -13,18 +13,21 @@ import {Dialog,
     FormHelperText,
     withStyles
 } from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {FormControlLabel, Typography} from '@jahia/ds-mui-theme';
 
 const styles = theme => ({
     margins: {
         marginTop: theme.spacing.unit * 2,
         width: '100%'
     },
-    checkbox: {
+    checkboxContainer: {
         display: 'inline-flex',
         marginTop: theme.spacing.unit * 2
     },
-    typo: {
+    checkboxLabel: {
+        marginLeft: 0
+    },
+    checkboxTypo: {
         padding: '10px'
     }
 });
@@ -67,34 +70,37 @@ export class Export extends React.Component {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText className={classes.margins}>
-                        {t('label.contentManager.export.dialogText')}
+                        {t('label.contentManager.export.selectWorkspace')}
                     </DialogContentText>
                     <Select
                         className={classes.margins}
                         value={this.state.workspace}
-                        name="exportType"
                         onChange={e => this.onWorkspaceChange(e)}
                     >
                         <MenuItem value="default">
-                            {t('label.contentManager.export.stagingSelectItem')}
+                            {t('label.contentManager.export.stagingOnlyOption')}
                         </MenuItem>
                         <MenuItem value="live">
-                            {t('label.contentManager.export.stagingLiveSelectItem')}
+                            {t('label.contentManager.export.stagingAndLiveOption')}
                         </MenuItem>
                     </Select>
                     <FormHelperText>
-                        {t('label.contentManager.export.textHelper')}
+                        {t('label.contentManager.export.exportDetails')}
                     </FormHelperText>
-                    <div className={classes.checkbox}>
-                        <Checkbox
+                    <div className={classes.checkboxContainer}>
+                        <FormControlLabel
+                            classes={{root: classes.checkboxLabel}}
                             value="xml"
-                            color="primary"
+                            label={
+                                <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.checkboxTypo}>
+                                    {t('label.contentManager.export.asXml')}
+                                </Typography>
+                            }
+                            checked={this.state.xml && !live}
                             disabled={live}
+                            control={<Checkbox color="primary"/>}
                             onChange={e => this.onXmlChange(e)}
                         />
-                        <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.typo}>
-                            {t('label.contentManager.export.checkboxLabel')}
-                        </Typography>
                     </div>
                 </DialogContent>
                 <DialogActions>
@@ -104,8 +110,7 @@ export class Export extends React.Component {
                     <Button
                         variant="contained"
                         color="primary"
-                        data-cm-role="upload-rename-button"
-                        type="submit"
+                        data-cm-role="export-button"
                         onClick={() => {
                             this.triggerExport(path, format, live);
                             onClose();

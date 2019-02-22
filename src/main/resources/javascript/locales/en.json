@@ -64,7 +64,8 @@
                 "dialogRename" : "Rename"
             },
             "import": {
-                "dropMessage": "Drag and drop an import file (TBD)"
+                "dropMessage": "Drag and drop an import file (TBD)",
+                "action": "Import content"
             },
             "error": {
                 "contentUnavailable": "The requested content is unavailable",

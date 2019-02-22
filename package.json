@@ -37,7 +37,7 @@
     "connected-react-router": "^4.4.1",
     "copy-to-clipboard": "^3.0.8",
     "ellipsize": "^0.1.0",
-    "graphql": "0.12.3",
+    "graphql": "14.0.2",
     "graphql-tag": "^2.9.1",
     "history": "^4.7.2",
     "image-extensions": "^1.1.0",

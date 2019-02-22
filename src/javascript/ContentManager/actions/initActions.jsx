@@ -44,6 +44,7 @@ import translateAction from './translateAction';
 import translateMenuAction from './translateMenuAction';
 import subContentsAction from './subContentsAction';
 import exportAction from './exportAction';
+import importAction from './importAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -337,6 +338,12 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.export.actionLabel',
         target: ['contentActions:4.2'],
         showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content']
+    });
+    actionsRegistry.add('import', importAction, {
+        buttonIcon: <ImportExport/>,
+        buttonLabel: 'label.contentManager.import.action',
+        target: ['contentActions:4.3', 'createMenuActions:3.5'],
+        showOnNodeTypes: ['jnt:contentFolder']
     });
 }
 

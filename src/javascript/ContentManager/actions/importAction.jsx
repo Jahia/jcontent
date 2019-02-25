@@ -3,9 +3,9 @@ import requirementsAction from './requirementsAction';
 import {withApolloAction} from './withApolloAction';
 import gql from 'graphql-tag';
 
-const importMutation = gql`mutation importContent($path: String!, $name: String!, $file: String!, $type: FileType!){
+const importMutation = gql`mutation importContent($path: String!, $file: String!){
           jcr {
-            importNode(parentPathOrId: $path, name: $name, file: $file, type: $type)
+            importNode(parentPathOrId: $path, file: $file)
           }
         }`;
 
@@ -27,14 +27,11 @@ export default composeActions(requirementsAction, withApolloAction, {
         input.addEventListener('change', e => {
             e.stopPropagation();
             let files = Array.from(input.files);
-            let type = files[0].type === 'application/zip' ? 'ZIP' : 'XML';
             context.client.mutate({
                 mutation: importMutation,
                 variables: {
                     path: context.path,
-                    file: files[0],
-                    name: files[0].name,
-                    type: type
+                    file: files[0]
                 }
             });
         });

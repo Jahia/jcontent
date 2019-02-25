@@ -8,7 +8,7 @@ import {setOverlayTarget} from '../Upload/Upload.redux-actions';
 import {withApollo, compose} from 'react-apollo';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 
-const ACCEPTING_NODE_TYPES = ['jnt:folder'];
+const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
 export class UploadTransformComponent extends React.Component {
     constructor(props) {
@@ -92,7 +92,7 @@ export class UploadTransformComponent extends React.Component {
     }
 
     onDrop(evt) {
-        const {uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath} = this.props;
+        const {uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath, mode} = this.props;
         const accept = getMimeTypes(uploadAcceptedFileTypes);
 
         evt.preventDefault();
@@ -102,24 +102,17 @@ export class UploadTransformComponent extends React.Component {
         this.props.uploadSetOverlayTarget(null);
         if (isDragDataWithFiles(evt)) {
             Promise.resolve(getDataTransferItems(evt)).then(fileList => {
-                const acceptedFiles = [];
-
                 if (evt.isPropagationStopped()) {
                     return;
                 }
 
-                fileList.forEach(file => {
-                    if (
-                        fileAccepted(file, accept) &&
-                        fileMatchSize(file, uploadMaxSize, uploadMinSize)
-                    ) {
-                        acceptedFiles.push(file);
-                    }
-                });
+                let acceptedFiles = fileList.filter(file => fileAccepted(file, accept) && fileMatchSize(file, uploadMaxSize, uploadMinSize));
+
                 onFilesSelected(
                     acceptedFiles,
                     this.props.uploadDispatchBatch,
-                    {path: uploadPath}
+                    {path: uploadPath},
+                    mode === 'browse-files' ? 'upload' : 'import'
                 );
             });
         }

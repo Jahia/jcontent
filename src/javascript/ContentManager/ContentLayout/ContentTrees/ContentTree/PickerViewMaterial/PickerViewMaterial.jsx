@@ -89,7 +89,7 @@ export class PickerViewMaterial extends React.Component {
     }
 
     render() {
-        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, dataCmRole, container} = this.props;
+        let {classes, pickerEntries, onOpenItem, onSelectItem, rootLabel, iconRenderer, loading, dataCmRole, container, mode} = this.props;
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
@@ -120,6 +120,7 @@ export class PickerViewMaterial extends React.Component {
                                         data-cm-role={dataCmRole}
                                         className={itemClass}
                                         uploadPath={entry.path}
+                                        mode={mode}
                                         uploadTargetComponent={ListItem}
                                         onClick={() => this.hoverOn(entry.path)}
                                         onDoubleClick={() => onOpenItem(entry.path, !entry.open)}

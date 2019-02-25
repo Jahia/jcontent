@@ -303,7 +303,7 @@ export class ContentListTable extends React.Component {
                                         return <ContentListEmptyDropZone mode={mode} path={path}/>;
                                     }
                                     return (
-                                        <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path}>
+                                        <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path} mode={mode}>
                                             {rows.map(node => {
                                                 let isSelected = node.path === previewSelection && isPreviewOpened;
                                                 let icon = this.addIconSuffix(node.primaryNodeType.icon);

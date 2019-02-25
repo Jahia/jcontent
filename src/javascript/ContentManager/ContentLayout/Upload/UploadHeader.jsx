@@ -31,7 +31,7 @@ export function UploadHeader({classes, t, status}) {
                 <Typography color="inherit"
                             data-cm-role="upload-status-uploading"
                 >
-                    {t('label.contentManager.fileUpload.uploadingMessage', {
+                    {t(status.type === 'import' ? 'label.contentManager.fileUpload.importingMessage' : 'label.contentManager.fileUpload.uploadingMessage', {
                         uploaded: status.uploaded,
                         total: status.total
                     })}
@@ -52,7 +52,7 @@ export function UploadHeader({classes, t, status}) {
                 <Typography color="inherit"
                             data-cm-role="upload-status-error"
                 >
-                    {t('label.contentManager.fileUpload.errorMessage')}
+                    {t(status.type === 'import' ? 'label.contentManager.fileUpload.importErrorMessage' : 'label.contentManager.fileUpload.errorMessage')}
                 </Typography>
             </div>
         );
@@ -64,7 +64,7 @@ export function UploadHeader({classes, t, status}) {
             <Typography color="inherit"
                         data-cm-role="upload-status-success"
             >
-                {t('label.contentManager.fileUpload.successfulUploadMessage', {
+                {t(status.type === 'import' ? 'label.contentManager.fileUpload.successfulImportMessage' : 'label.contentManager.fileUpload.successfulUploadMessage', {
                     count: status.total,
                     number: status.total
                 })}

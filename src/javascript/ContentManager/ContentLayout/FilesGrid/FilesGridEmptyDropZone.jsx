@@ -21,7 +21,7 @@ const styles = theme => ({
 });
 
 export const FilesGridEmptyDropZone = ({classes, path, mode}) => (
-    <UploadTransformComponent uploadTargetComponent={Grid} uploadPath={path}>
+    <UploadTransformComponent uploadTargetComponent={Grid} uploadPath={path} mode={mode}>
         <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
             <div className={classes.dragZoneRoot}>
                 <EmptyDropZone component="div" mode={mode}/>

@@ -44,7 +44,7 @@ export default class ContentTree extends React.Component {
     }
 
     render() {
-        let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, setRefetch, dataCmRole, container} = this.props;
+        let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, setRefetch, dataCmRole, container, mode} = this.props;
         return (
             <Picker
                 ref={this.picker}
@@ -61,7 +61,7 @@ export default class ContentTree extends React.Component {
                 onSelectItem={path => handleSelect(path)}
             >
                 {({handleSelect, ...others}) => (
-                    <PickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container}/>
+                    <PickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container} mode={mode}/>
                 )}
             </Picker>
         );

@@ -22,6 +22,7 @@ export const ContentListEmptyDropZone = ({classes, path, mode}) => (
         <UploadTransformComponent uploadTargetComponent={TableRow}
                                   uploadPath={path}
                                   className={classes.dragZoneContentList}
+                                  mode={mode}
         >
             <TableCell className={classes.dragZone}>
                 <EmptyDropZone component="div" mode={mode}/>

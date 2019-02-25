@@ -8,17 +8,15 @@ import {setPath} from '../ContentLayout/Upload/Upload.redux-actions';
 export default composeActions(requirementsAction, reduxAction(null, dispatch => ({dispatchBatch: actions => dispatch(batchActions(actions))})), {
     init: context => {
         context.initRequirements({
-            requiredPermission: 'jcr:addChildNodes',
-            showOnNodeTypes: ['jnt:folder']
         });
-        let element = document.getElementById('file-upload-input');
+        let element = document.getElementById('file-upload-input-' + context.key);
         if (element !== null) {
             element.remove();
         }
         let input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('multiple', 'true');
-        input.setAttribute('id', 'file-upload-input');
+        input.setAttribute('id', 'file-upload-input-' + context.key);
         document.body.appendChild(input);
         let files = [];
         input.addEventListener('change', () => {
@@ -29,13 +27,14 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
             onFilesSelected(
                 files,
                 context.dispatchBatch,
-                {path: context.path}
+                {path: context.path},
+                context.uploadType
             );
         });
     },
 
-    onClick: () => {
-        let input = document.getElementById('file-upload-input');
+    onClick: context => {
+        let input = document.getElementById('file-upload-input-' + context.key);
         input.click();
     }
 });

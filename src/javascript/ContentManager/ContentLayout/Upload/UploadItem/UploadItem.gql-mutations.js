@@ -30,4 +30,10 @@ const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeTy
     }
 }`;
 
-export {uploadFile, updateFileContent};
+const importContent = gql`mutation importContent($path: String!, $fileHandle: String!){
+    jcr {
+        importNode(parentPathOrId: $path, file: $fileHandle)
+    }
+}`;
+
+export {uploadFile, updateFileContent, importContent};

@@ -9,7 +9,7 @@ import UploadItem from './UploadItem';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import {files, onFilesSelected} from './Upload.utils';
+import {files} from './Upload.utils';
 import UploadHeader from './UploadHeader';
 
 const styles = theme => ({
@@ -37,7 +37,6 @@ export class Upload extends React.Component {
     constructor(props) {
         super(props);
         this.client = null;
-        this.onFilesSelected = this.onFilesSelected.bind(this);
         this.removeFile = this.removeFile.bind(this);
         this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
         this.handleCloseSnackBar = this.handleCloseSnackBar.bind(this);
@@ -80,6 +79,7 @@ export class Upload extends React.Component {
                             {uploads.map((upload, index) => (
                                 <UploadItem
                                     key={upload.id}
+                                    type={upload.type}
                                     index={index}
                                     file={files.acceptedFiles[index]}
                                     removeFile={this.removeFile}
@@ -95,10 +95,6 @@ export class Upload extends React.Component {
                 <div style={this.generateOverlayStyle()}/>
             </React.Fragment>
         );
-    }
-
-    onFilesSelected(acceptedFiles) {
-        onFilesSelected(acceptedFiles, this.props.dispatchBatch, {path: this.props.path});
     }
 
     removeFile(index) {
@@ -149,6 +145,9 @@ export class Upload extends React.Component {
                         break;
                     default:
                         status.uploading += 1;
+                }
+                if (upload.type === 'import') {
+                    status.type = 'import';
                 }
             });
         } else {

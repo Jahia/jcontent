@@ -91,7 +91,7 @@ export class FilesGrid extends Component {
             <React.Fragment>
                 <ToolBar/>
                 <div className={classes.grid} data-cm-role="grid-content-list">
-                    <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path}>
+                    <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path} mode="browse-files">
                         {this.props.rows.map((node, index) => (
                             <Grid
                                 key={node.uuid}

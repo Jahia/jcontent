@@ -42,7 +42,6 @@ import translateAction from './translateAction';
 import translateMenuAction from './translateMenuAction';
 import subContentsAction from './subContentsAction';
 import exportAction from './exportAction';
-import importAction from './importAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -92,7 +91,9 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('fileUpload', fileUploadAction, {
         buttonLabel: 'label.contentManager.fileUpload.uploadButtonLabel',
         target: ['createMenuActions:4', 'contentActions:4'],
-        contentType: 'jnt:file'
+        contentType: 'jnt:file',
+        showOnNodeTypes: ['jnt:folder'],
+        requiredPermission: 'jcr:addChildNodes'
     });
     actionsRegistry.add('translateMenu', translateMenuAction, {
         buttonLabel: 'label.contentManager.contentPreview.translate',
@@ -337,11 +338,13 @@ function initActions(actionsRegistry) {
         target: ['contentActions:4.2'],
         showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content']
     });
-    actionsRegistry.add('import', importAction, {
+    actionsRegistry.add('import', fileUploadAction, {
         buttonIcon: <ImportExport/>,
         buttonLabel: 'label.contentManager.import.action',
         target: ['contentActions:4.3', 'createMenuActions:3.5'],
-        showOnNodeTypes: ['jnt:contentFolder']
+        showOnNodeTypes: ['jnt:contentFolder'],
+        requiredPermission: 'jcr:addChildNodes',
+        uploadType: 'import'
     });
 }
 

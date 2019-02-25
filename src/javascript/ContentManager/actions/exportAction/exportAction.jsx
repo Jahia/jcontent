@@ -1,7 +1,7 @@
 import React from 'react';
 import {composeActions, componentRendererAction} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
-import Export from '../ContentLayout/Export';
+import requirementsAction from '../requirementsAction';
+import Export from './Export';
 
 export default composeActions(requirementsAction, componentRendererAction, {
 

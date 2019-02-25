@@ -1,8 +1,6 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
-import ContentIcon from './ContentIcon';
-import ManageIcon from './ManageIcon';
-import WorkflowIcon from './WorkflowIcon';
+import {ContentIcon, ManageIcon, WorkflowIcon} from './icons';
 import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility, SubdirectoryArrowRight, FindInPage, ImportExport} from '@material-ui/icons';
 import {
     Account,

@@ -95,7 +95,9 @@ export class PickerViewMaterial extends React.Component {
 
         return (
             <div className={classes.root}>
-                {loading && <div className={classes.loadingContainer}/>}
+                {loading &&
+                    <div className={classes.loadingContainer}/>
+                }
                 <List disablePadding classes={{root: classNames(classes.root, {[classes.loading]: loading})}}>
                     {
                         sortedEntries.map(entry => {

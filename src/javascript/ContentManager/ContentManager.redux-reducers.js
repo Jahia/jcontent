@@ -3,6 +3,7 @@ import {
     CM_DRAWER_STATES,
     CM_NAVIGATE,
     CM_SET_AVAILABLE_LANGUAGES,
+    CM_SET_SITE_DISPLAYABLE_NAME,
     CM_SET_OPEN_PATHS,
     CM_SET_SEARCH_MODE,
     CM_SET_TREE,
@@ -27,7 +28,7 @@ let siteReducer = siteKey => (state = siteKey, action) => {
 };
 
 let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayableName, action) => {
-    if (action.siteDisplayableName && action.type === CM_NAVIGATE) {
+    if (action.siteDisplayableName && (action.type === CM_NAVIGATE || action.type === CM_SET_SITE_DISPLAYABLE_NAME)) {
         return action.siteDisplayableName;
     }
     return state;

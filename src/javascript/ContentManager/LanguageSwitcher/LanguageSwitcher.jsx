@@ -5,17 +5,18 @@ import gql from 'graphql-tag';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {cmSetAvailableLanguages, cmSetLanguage} from '../ContentManager.redux-actions';
+import {cmSetAvailableLanguages, cmSetLanguage, cmSetSiteDisplayableName} from '../ContentManager.redux-actions';
 import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
 export class LanguageSwitcher extends React.Component {
     constructor(props) {
         super(props);
         this.query = gql`
-            query siteLanguages($path: String!) {
+            query siteLanguages($path: String!, $displayLanguage:String!) {
                 jcr(workspace: LIVE) {
                     result:nodeByPath(path: $path) {
                         site {
+                            displayName(language: $displayLanguage)
                             defaultLanguage
                             languages {
                                 displayName
@@ -30,6 +31,7 @@ export class LanguageSwitcher extends React.Component {
                 wsDefault:jcr {
                     result:nodeByPath(path: $path) {
                         site {
+                            displayName(language: $displayLanguage)
                             defaultLanguage
                             languages {
                                 displayName
@@ -56,8 +58,11 @@ export class LanguageSwitcher extends React.Component {
 
     parseSiteLanguages(data) {
         let parsedSiteLanguages = [];
+        let siteDisplayableName = null;
         if (data && (data.jcr || data.wsDefault)) {
-            let siteLanguages = data.jcr ? data.jcr.result.site.languages : data.wsDefault.result.site.languages;
+            let siteData = data.jcr ? data.jcr.result.site : data.wsDefault.result.site;
+            siteDisplayableName = siteData.displayName;
+            let siteLanguages = siteData.languages;
             for (let i in siteLanguages) {
                 if (siteLanguages[i].activeInEdit) {
                     parsedSiteLanguages.push(siteLanguages[i]);
@@ -65,13 +70,17 @@ export class LanguageSwitcher extends React.Component {
             }
         }
         this.props.setAvailableLanguages(parsedSiteLanguages);
+        if (siteDisplayableName) {
+            this.props.setSiteDisplayableName(siteDisplayableName);
+        }
         return parsedSiteLanguages;
     }
 
     render() {
         const {t, notificationContext, siteKey, lang, dark} = this.props;
         const variables = {
-            path: '/sites/' + siteKey
+            path: '/sites/' + siteKey,
+            displayLanguage: lang
         };
 
         return (
@@ -116,6 +125,9 @@ const mapDispatchToProps = dispatch => ({
     },
     setAvailableLanguages: availableLanguages => {
         dispatch(cmSetAvailableLanguages(availableLanguages));
+    },
+    setSiteDisplayableName: siteDisplayableName => {
+        dispatch(cmSetSiteDisplayableName(siteDisplayableName));
     }
 });
 

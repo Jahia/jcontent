@@ -6,6 +6,7 @@ const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
 const CM_ADD_PATHS_TO_REFETCH = 'CM_ADD_PATHS_TO_REFETCH';
 const CM_REMOVE_PATHS_TO_REFETCH = 'CM_REMOVE_PATHS_TO_REFETCH';
 const CM_SET_AVAILABLE_LANGUAGES = 'CM_SET_AVAILABLE_LANGUAGES';
+const CM_SET_SITE_DISPLAYABLE_NAME = 'CM_SET_SITE_DISPLAYABLE_NAME';
 
 const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
@@ -64,6 +65,13 @@ function cmSetAvailableLanguages(availableLanguages) {
     };
 }
 
+function cmSetSiteDisplayableName(siteDisplayableName) {
+    return {
+        type: CM_SET_SITE_DISPLAYABLE_NAME,
+        siteDisplayableName: siteDisplayableName
+    };
+}
+
 function cmSetMode(mode) {
     return cmGoto({mode});
 }
@@ -101,9 +109,11 @@ export {
     CM_ADD_PATHS_TO_REFETCH,
     CM_REMOVE_PATHS_TO_REFETCH,
     CM_SET_AVAILABLE_LANGUAGES,
+    CM_SET_SITE_DISPLAYABLE_NAME,
     cmGoto,
     cmSetLanguage,
     cmSetAvailableLanguages,
+    cmSetSiteDisplayableName,
     setUiLang,
     cmSetSite,
     cmSetMode,

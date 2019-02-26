@@ -19,7 +19,7 @@ import {takeFromQueue, updateUpload} from '../Upload.redux-actions';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';
-import StatusText from './StatusText';
+import Status from './Status';
 
 const styles = theme => ({
     listItem: {
@@ -94,7 +94,7 @@ export class UploadItem extends React.Component {
                     doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}
                 />
                 <div className={classes.grow}/>
-                <StatusText {...this.props}/>
+                <Status {...this.props}/>
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>
                         {t('label.contentManager.fileUpload.dialogRenameTitle')}

@@ -3,7 +3,7 @@ import React from 'react';
 import {CheckCircle, FiberManualRecord, Info} from '@material-ui/icons';
 import {CircularProgress, Typography} from '@material-ui/core';
 
-const StatusText = ({classes, status, error, t, type}) => {
+const Status = ({classes, status, error, t, type}) => {
     let content;
 
     if (status === uploadStatuses.QUEUED) {
@@ -56,4 +56,4 @@ const StatusText = ({classes, status, error, t, type}) => {
     return content;
 };
 
-export default StatusText;
+export default Status;

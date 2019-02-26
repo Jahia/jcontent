@@ -4,9 +4,10 @@ import {CheckCircle, FiberManualRecord, Info} from '@material-ui/icons';
 import {CircularProgress, Typography} from '@material-ui/core';
 
 const StatusText = ({classes, status, error, t, type}) => {
+    let content;
 
     if (status === uploadStatuses.QUEUED) {
-        return (
+        content = (
             <React.Fragment>
                 <FiberManualRecord className={classes.statusIcon} color="inherit"/>
                 <Typography variant="subtitle2" className={classes.progressText} color="inherit">
@@ -15,7 +16,7 @@ const StatusText = ({classes, status, error, t, type}) => {
             </React.Fragment>
         );
     } else if (status === uploadStatuses.UPLOADED) {
-        return (
+        content = (
             <React.Fragment>
                 <CheckCircle className={classes.statusIcon} color="inherit"/>
                 <Typography variant="subtitle2" className={classes.progressText} color="inherit">
@@ -33,7 +34,7 @@ const StatusText = ({classes, status, error, t, type}) => {
             }
         });
 
-        return (
+        content = (
             <React.Fragment>
                 <Info className={classes.statusIcon} color="inherit"/>
                 <Typography variant="subtitle2" className={classes.progressText} color="inherit">
@@ -42,7 +43,7 @@ const StatusText = ({classes, status, error, t, type}) => {
             </React.Fragment>
         );
     } else if (status === uploadStatuses.UPLOADING) {
-        return (
+        content = (
             <React.Fragment>
                 <CircularProgress size={20} className={classes.statusIcon} color="inherit"/>
                 <Typography variant="subtitle2" className={classes.progressText} color="inherit">
@@ -51,6 +52,8 @@ const StatusText = ({classes, status, error, t, type}) => {
             </React.Fragment>
         );
     }
+
+    return content;
 };
 
 export default StatusText;

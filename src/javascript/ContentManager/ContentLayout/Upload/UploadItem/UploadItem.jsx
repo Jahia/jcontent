@@ -91,7 +91,8 @@ export class UploadItem extends React.Component {
                     showRenameDialog={e => this.setState({
                         anchorEl: e.currentTarget
                     })}
-                    doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}/>
+                    doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}
+                />
                 <div className={classes.grow}/>
                 <StatusText {...this.props}/>
                 <Dialog open={this.state.anchorEl !== null}>

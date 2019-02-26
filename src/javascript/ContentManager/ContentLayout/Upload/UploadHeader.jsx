@@ -25,21 +25,17 @@ export function UploadHeader({classes, t, status}) {
     if (status.uploading !== 0) {
         return (
             <div className={classNames(classes.headerText)}>
-                <CircularProgress size={20}
-                                  color="inherit"
-                                  className={classes.statusIcon}/>
-                <Typography color="inherit"
-                            data-cm-role="upload-status-uploading"
-                >
+                <CircularProgress size={20} color="inherit" className={classes.statusIcon}/>
+                <Typography color="inherit" data-cm-role="upload-status-uploading">
                     {t(status.type === 'import' ? 'label.contentManager.fileUpload.importingMessage' : 'label.contentManager.fileUpload.uploadingMessage', {
                         uploaded: status.uploaded,
                         total: status.total
                     })}
                 </Typography>
                 {(status.error !== 0) &&
-                <Typography color="inherit">
-                    {t('label.contentManager.fileUpload.uploadingActionMessage')}
-                </Typography>
+                    <Typography color="inherit">
+                        {t('label.contentManager.fileUpload.uploadingActionMessage')}
+                    </Typography>
                 }
             </div>
         );
@@ -49,9 +45,7 @@ export function UploadHeader({classes, t, status}) {
         return (
             <div className={classNames(classes.headerText)}>
                 <Info className={classNames(classes.statusIcon)}/>
-                <Typography color="inherit"
-                            data-cm-role="upload-status-error"
-                >
+                <Typography color="inherit" data-cm-role="upload-status-error">
                     {t(status.type === 'import' ? 'label.contentManager.fileUpload.importErrorMessage' : 'label.contentManager.fileUpload.errorMessage')}
                 </Typography>
             </div>
@@ -61,9 +55,7 @@ export function UploadHeader({classes, t, status}) {
     return (
         <div className={classNames(classes.headerText)}>
             <CheckCircle className={classNames(classes.statusIcon)}/>
-            <Typography color="inherit"
-                        data-cm-role="upload-status-success"
-            >
+            <Typography color="inherit" data-cm-role="upload-status-success">
                 {t(status.type === 'import' ? 'label.contentManager.fileUpload.successfulImportMessage' : 'label.contentManager.fileUpload.successfulUploadMessage', {
                     count: status.total,
                     number: status.total

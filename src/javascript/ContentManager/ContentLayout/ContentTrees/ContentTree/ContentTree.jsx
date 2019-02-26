@@ -10,30 +10,30 @@ const PickerItemsFragment = {
         variables: {
             lang: 'String!'
         },
-        gql: gql`
-            fragment MixinTypes on JCRNode {
-                mixinTypes {
-                    name
-                }
-            }`
-
+        gql: gql`fragment MixinTypes on JCRNode {
+            mixinTypes {
+                name
+            }
+        }`
     },
     isPublished: {
         applyFor: 'node',
         variables: {
             lang: 'String!'
         },
-        gql: gql`
-            fragment PublicationStatus on JCRNode {
-                publicationStatus: aggregatedPublicationInfo(language: $lang) {
-                    publicationStatus
-                }
+        gql: gql`fragment PublicationStatus on JCRNode {
+            publicationStatus: aggregatedPublicationInfo(language: $lang) {
+                publicationStatus
             }
-        `
+        }`
     },
     primaryNodeType: {
         applyFor: 'node',
-        gql: gql`fragment PrimaryNodeTypeName on JCRNode { primaryNodeType { name } }`
+        gql: gql`fragment PrimaryNodeTypeName on JCRNode {
+            primaryNodeType {
+                name
+            }
+        }`
     }
 };
 

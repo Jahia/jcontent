@@ -2,8 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {batchActions} from 'redux-batched-actions/lib/index';
-import {fileAccepted, fileMatchSize, getDataTransferItems,
-    isDragDataWithFiles, getMimeTypes, onFilesSelected} from '../Upload/Upload.utils';
+import {
+    fileAccepted,
+    fileMatchSize,
+    getDataTransferItems,
+    isDragDataWithFiles,
+    getMimeTypes,
+    onFilesSelected
+} from '../Upload/Upload.utils';
 import {setOverlayTarget} from '../Upload/Upload.redux-actions';
 import {withApollo, compose} from 'react-apollo';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';

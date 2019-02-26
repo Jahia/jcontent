@@ -333,8 +333,11 @@ export class ContentListTable extends React.Component {
                                                             event.stopPropagation();
                                                             contextualMenu.current.open(event);
                                                         }}
-                                                        onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                                            () => setPath(siteKey, node.path, mode))}
+                                                        onDoubleClick={allowDoubleClickNavigation(
+                                                            node.primaryNodeType.name,
+                                                            node.subNodes ? node.subNodes.pageInfo.totalCount : null,
+                                                            () => setPath(siteKey, node.path, mode)
+                                                        )}
                                                     >
                                                         <ContextualMenu
                                                             ref={contextualMenu}
@@ -376,10 +379,11 @@ export class ContentListTable extends React.Component {
                                                                         data-cm-role="table-content-list-cell-name"
                                                                     >
                                                                         {showSubNodes ?
-                                                                            <Badge badgeContent={node.subNodes.pageInfo.totalCount}
-                                                                                   invisible={node.subNodes.pageInfo.totalCount === 0}
-                                                                                   classes={{badge: classes.badge}}
-                                                                                   data-cm-role="sub-contents-count"
+                                                                            <Badge
+                                                                                badgeContent={node.subNodes.pageInfo.totalCount}
+                                                                                invisible={node.subNodes.pageInfo.totalCount === 0}
+                                                                                classes={{badge: classes.badge}}
+                                                                                data-cm-role="sub-contents-count"
                                                                             >
                                                                                 <Typography noWrap variant="body2" color="inherit">
                                                                                     <img src={icon}/>

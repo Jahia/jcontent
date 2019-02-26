@@ -11,6 +11,7 @@ const SecondaryActionsList = props => {
     if (status === uploadStatuses.QUEUED) {
         return <DontUploadButton {...props}/>;
     }
+
     if (status === uploadStatuses.HAS_ERROR) {
         if (error === 'WRONG_INPUT') {
             return <DontUploadButton {...props}/>;
@@ -24,7 +25,6 @@ const SecondaryActionsList = props => {
                 </>
             );
         }
-
         return (
             <>
                 <DontUploadButton {...props}/>

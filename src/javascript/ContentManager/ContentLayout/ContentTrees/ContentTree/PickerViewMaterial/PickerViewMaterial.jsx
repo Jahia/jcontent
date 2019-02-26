@@ -107,14 +107,16 @@ export class PickerViewMaterial extends React.Component {
                             });
                             return (
                                 <React.Fragment key={entry.path}>
-                                    <ContextualMenu ref={contextualMenu}
-                                                    actionKey="contentMenu"
-                                                    context={{
-                                                        path: entry.node.path,
-                                                        menuFilter: value => {
-                                                            return !_.includes(['preview'], value.key);
-                                                        }
-                                                    }}/>
+                                    <ContextualMenu
+                                        ref={contextualMenu}
+                                        actionKey="contentMenu"
+                                        context={{
+                                            path: entry.node.path,
+                                            menuFilter: value => {
+                                                return !_.includes(['preview'], value.key);
+                                            }
+                                        }}
+                                    />
                                     <UploadTransformComponent
                                         data-jrm-role="picker-item"
                                         data-cm-role={dataCmRole}
@@ -128,7 +130,6 @@ export class PickerViewMaterial extends React.Component {
                                         onMouseLeave={this.hoverOff}
                                         onContextMenu={event => contextualMenu.current.open(event)}
                                     >
-
                                         <div
                                             style={{
                                                 paddingLeft: ((entry.depth > 0) ? ((entry.depth) * 16) : 0),
@@ -145,12 +146,12 @@ export class PickerViewMaterial extends React.Component {
                                                     event.stopPropagation();
                                                 }}
                                             >
-                                                <KeyboardArrowRight
-                                                    className={entry.open ? classes.openedTreeEl : null}/>
+                                                <KeyboardArrowRight className={entry.open ? classes.openedTreeEl : null}/>
                                             </IconButton>
                                         </div>
-                                        <span className={classes.treeEntry}
-                                              onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
+                                        <span
+                                            className={classes.treeEntry}
+                                            onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
                                         >
                                             <ListItemIcon className={classes.listItemNodeTypeIcon}>
                                                 {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
@@ -170,16 +171,19 @@ export class PickerViewMaterial extends React.Component {
                                             />
                                         </span>
                                         {this.state.hover === entry.path && entry.depth > 0 &&
-                                        <ListItemIcon className={classes.listItemActionIcon}
-                                                      style={container.current ? {left: (container.current.clientWidth - 48 + container.current.scrollLeft)} : {}}
-                                        >
-                                            <DisplayAction actionKey="contentMenu"
-                                                           context={{path: entry.node.path}}
-                                                           render={iconButtonRenderer({
-                                                               color: 'inherit',
-                                                               'data-cm-role': 'picker-item-menu'
-                                                           })}/>
-                                        </ListItemIcon>
+                                            <ListItemIcon
+                                                className={classes.listItemActionIcon}
+                                                style={container.current ? {left: (container.current.clientWidth - 48 + container.current.scrollLeft)} : {}}
+                                            >
+                                                <DisplayAction
+                                                    actionKey="contentMenu"
+                                                    context={{path: entry.node.path}}
+                                                    render={iconButtonRenderer({
+                                                        color: 'inherit',
+                                                        'data-cm-role': 'picker-item-menu'
+                                                    })}
+                                                />
+                                            </ListItemIcon>
                                         }
                                     </UploadTransformComponent>
                                 </React.Fragment>
@@ -196,12 +200,12 @@ export class PickerViewMaterial extends React.Component {
             const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
             return this.sortAndFlatten(rootNode);
         }
-
         return pickerEntries;
     }
 
     reconstructNodeHierarchy(pickerEntriesSortedByPath) {
         const hierarchyStack = [];
+
         // Add root node to stack
         hierarchyStack.push(pickerEntriesSortedByPath.splice(0, 1)[0]);
 
@@ -221,6 +225,7 @@ export class PickerViewMaterial extends React.Component {
                 hierarchyStack.pop();
             }
         }
+
         return hierarchyStack[0];
     }
 
@@ -258,7 +263,6 @@ PickerViewMaterial.propTypes = {
     pickerEntries: PropTypes.array.isRequired,
     onSelectItem: PropTypes.func,
     onOpenItem: PropTypes.func
-
 };
 
 PickerViewMaterial.defaultProps = {
@@ -268,4 +272,7 @@ PickerViewMaterial.defaultProps = {
     }
 };
 
-export default compose(withTheme(), withStyles(styles, {name: 'DxPickerViewMaterial'}))(PickerViewMaterial);
+export default compose(
+    withTheme(),
+    withStyles(styles, {name: 'DxPickerViewMaterial'})
+)(PickerViewMaterial);

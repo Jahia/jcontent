@@ -177,6 +177,7 @@
                 "staging": "Staging",
                 "live": "Live",
                 "publishInAllLanguages": "Veröffentlichen <em>{{displayName}}</em> in allen Sprachen",
+                "unpublishInAllLanguages": "Veröffentlichung rückgängig machen <em>{{displayName}}</em> in allen Sprachen",
                 "publishTableMenu": "Veröffentlichen...",
                 "edit": "Bearbeiten",
                 "notPublished": "Der Content wurde nie veröffentlicht",

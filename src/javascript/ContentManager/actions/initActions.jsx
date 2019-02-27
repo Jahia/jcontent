@@ -166,6 +166,16 @@ function initActions(actionsRegistry) {
         checkForUnpublication: true,
         checkIfLanguagesMoreThanOne: false
     });
+    actionsRegistry.add('unpublishInAllLanguages', publishAction, {
+        buttonIcon: <Publish/>,
+        buttonLabel: 'label.contentManager.contentPreview.unpublishInAllLanguages',
+        target: ['publishMenu'],
+        hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
+        allSubTree: false,
+        allLanguages: true,
+        checkForUnpublication: true,
+        checkIfLanguagesMoreThanOne: true
+    });
     actionsRegistry.add('contentMenu', menuAction, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',

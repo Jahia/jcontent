@@ -177,6 +177,7 @@
                 "staging": "En édition",
                 "live": "En ligne",
                 "publishInAllLanguages": "Publier <em>{{displayName}}</em> dans toutes les langues",
+                "unpublishInAllLanguages": "Dépublier <em>{{displayName}}</em> dans toutes les langues",
                 "publishTableMenu": "Publier...",
                 "edit": "Editer",
                 "notPublished": "Contenu jamais publié",

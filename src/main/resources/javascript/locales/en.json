@@ -200,6 +200,7 @@
                 "staging": "Staging",
                 "live": "Live",
                 "publishInAllLanguages": "Publish <em>{{displayName}}</em> in all languages",
+                "unpublishInAllLanguages": "Unpublish <em>{{displayName}}</em> in all languages",
                 "publishTableMenu": "Publish...",
                 "edit": "Edit",
                 "notPublished": "Content has never been published",

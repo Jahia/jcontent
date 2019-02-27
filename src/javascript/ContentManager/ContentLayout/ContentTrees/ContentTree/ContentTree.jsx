@@ -73,7 +73,7 @@ export default class ContentTree extends React.Component {
             case 'browse-files':
                 return 'contextualMenuFiles';
             default:
-                return path.indexOf(`/sites/${siteKey}/contents`) !== -1 ? 'contextualMenuFolders' : 'contextualMenuPages';
+                return path.indexOf(`/sites/${siteKey}/contents`) >= 0 ? 'contextualMenuFolders' : 'contextualMenuPages';
         }
     }
 }

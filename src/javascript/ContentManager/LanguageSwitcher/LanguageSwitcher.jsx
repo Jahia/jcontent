@@ -85,8 +85,7 @@ export class LanguageSwitcher extends React.Component {
 
         return (
             <Query query={this.query} variables={variables}>
-                {
-                ({error, loading, data}) => {
+                {({error, loading, data}) => {
                     if (error) {
                         console.log('Error when fetching data: ' + error);
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
@@ -105,10 +104,9 @@ export class LanguageSwitcher extends React.Component {
                             dark={dark}
                             languages={displayableLanguages}
                             onSelectLanguage={lang => this.onSelectLanguage(lang)}
-                            />
-);
-                }
-            }
+                        />
+                    );
+                }}
             </Query>
         );
     }

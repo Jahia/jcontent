@@ -44,26 +44,37 @@
         "errorMessage": "Es gab Probleme beim Hochladen einiger Dateien",
         "importErrorMessage": "Während des Imports ist ein Fehler aufgetreten. <0>Erfahren Sie mehr zu Export und Import hier</0>",
         "replace": "Ersetzen",
-        "failed": "Datei konnte nicht hochgeladen werden",
+        "failedUpload": "Datei kann nicht hochgeladen werden",
         "dontUpload": "Nicht hochladen",
+        "dontImport": "Nicht importieren",
         "uploadButtonLabel": "Datei(en) hochladen",
         "successfulUploadMessage": "Die Datei wurde erfolgreich hochgeladen",
+        "successfulUploadMessage_plural": "{{number}} Dateien erfolgreich hochgeladen",
+        "successfulImportMessage": "Datei erfolgreich hochgeladen",
+        "successfulImportMessage_plural": "{{number}} Dateien erfolgreich hochgeladen",
         "newName": "Neuer Name",
         "uploadingMessage": "Hochladen ({{uploaded}} von {{total}} abgeschlossen)",
+        "importingMessage": "Import ({{uploaded}} von {{total}} vollständig)",
         "rename": "Umbenennen",
-        "successfulUploadMessage_plural": "{{number}} Dateien erfolgreich hochgeladen",
         "uploaded": "Hochgeladen",
         "wrongInput": "Ungültiges Format",
-        "cannotStore": "Datei konnte nicht hochgeladen werden: Datei überschreitet die Größe von {{maxUploadSize}}MB",
         "exists": "Die Datei existiert bereits",
+        "cannotStore": "Datei konnte nicht hochgeladen werden: Datei überschreitet die Größe von {{maxUploadSize}}MB",
         "uploading": "Hochladen...",
         "retry": "Wiederholen",
+        "imported": "Importiert",
+        "importing": "Importieren...",
+        "failedImport": "Datei kann nicht importiert werden",
         "errorActionMessage": "Bitte lösen Sie die folgenden Probleme",
         "dialogRenameTitle": "Importierte Datei umbenennen",
         "dialogRenameText": "Wie soll die importierte Datei benannt werden?",
         "dialogRenameExample": "ex: Dateiname",
         "dialogRenameCancel": "Abbrechen",
         "dialogRename": "Umbenennen"
+      },
+      "import": {
+        "dropMessage": "Drag und Drop zu importierende Datei",
+        "action": "Content importieren"
       },
       "error": {
         "contentUnavailable": "Der angeforderte Inhalt ist nicht verfügbar",
@@ -126,6 +137,15 @@
         "name": "Name",
         "lastModified": "Geändert am",
         "type": "Typ"
+      },
+      "export": {
+        "actionLabel": "Exportieren",
+        "dialogTitle": "Exportoptionen",
+        "selectWorkspace": "Wählen Sie den Content den Sie exportieren wollen",
+        "stagingOnlyOption": "Nur Staging Content",
+        "stagingAndLiveOption": "Staging und Live Content",
+        "asXml": "Exportieren als XML Datei",
+        "exportDetails": "Standardmäßig als ZIP Datei exportieren"
       },
       "leftMenu": {
         "savedSearches": "Gespeicherte Suchen",
@@ -213,7 +233,8 @@
         "openInEditMode": "Im Bearbeitungsmodus öffnen",
         "error": {
           "loading": "Fehler beim Abrufen der Aktionsdaten: {{details}}"
-        }
+        },
+        "locate": "Finden"
       },
       "browseFolders": "Ordner durchsuchen",
       "selection": {

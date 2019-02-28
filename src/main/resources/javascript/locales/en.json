@@ -44,7 +44,7 @@
         "errorMessage": "There were problems uploading some files",
         "importErrorMessage": "There were problems importing some files. <0>Read more about export and import</0>",
         "replace": "Replace",
-        "failedUpload": "Could not upload file",
+        "failedUpload": "Can't upload this file",
         "dontUpload": "Don't upload",
         "dontImport": "Don't import",
         "uploadButtonLabel": "Upload file(s)",
@@ -64,7 +64,7 @@
         "retry": "Retry",
         "imported": "Imported",
         "importing": "Importing...",
-        "failedImport": "Could not import file",
+        "failedImport": "Can't import this file",
         "errorActionMessage": "Please resolve the issue(s)",
         "dialogRenameTitle": "Rename the imported file",
         "dialogRenameText": "Which name would you want for the new imported file ?",
@@ -73,7 +73,7 @@
         "dialogRename": "Rename"
       },
       "import": {
-        "dropMessage": "Drag and drop an import file",
+        "dropMessage": "Drag and drop a file to import",
         "action": "Import content"
       },
       "error": {
@@ -145,7 +145,7 @@
         "selectWorkspace": "Select the content you want to export",
         "stagingOnlyOption": "Staging content only",
         "stagingAndLiveOption": "Staging and live content",
-        "asXml": "Export as an xml file",
+        "asXml": "Export as an XML file",
         "exportDetails": "Exported as a zip file by default"
       },
       "leftMenu": {

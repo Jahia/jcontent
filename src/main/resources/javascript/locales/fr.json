@@ -44,27 +44,37 @@
         "errorMessage": "Il y a eu des problèmes lors du téléchargement de certains fichiers",
         "importErrorMessage": "Un problème s'est produit durant l'import. <0>En savoir plus sur l'export/import</0>",
         "replace": "Remplacer",
-        "failed": "Impossible de télécharger le fichier",
-        "dontUpload": "Ne téléchargez pas",
+        "failedUpload": "Impossible de télécharger ce fichier",
+        "dontUpload": "Ne pas télécharger",
+        "dontImport": "Ne pas importer",
         "uploadButtonLabel": "Importer des fichiers",
         "successfulUploadMessage": "Fichier téléchargé avec succès",
+        "successfulUploadMessage_plural": "{{number}} Fichiers téléchargés avec succès",
+        "successfulImportMessage": "Fichier importé avec succès",
+        "successfulImportMessage_plural": "{{number}} fichiers importés avec succès",
         "newName": "Nouveau nom",
         "uploadingMessage": "Téléchargement ({{uploaded}} sur {{total}} terminé)",
+        "importingMessage": "Importation ({{uploaded}} sur {{total}} terminé)",
         "rename": "Renommer",
-        "successfulUploadMessage_plural": "{{number}} Fichiers téléchargés avec succès",
-        "cannotStore": "L'import du fichier a échoué : La taille du fichier dépasse la limite de {{maxUploadSize}}Mo",
         "uploaded": "Téléchargé",
         "wrongInput": "Format de fichier invalide",
-        "readMoreLink": "En savoir plus sur l'export/import",
         "exists": "Le fichier existe déjà",
+        "cannotStore": "L'import du fichier a échoué : La taille du fichier dépasse la limite de {{maxUploadSize}}Mo",
         "uploading": "Téléchargement ...",
         "retry": "Réessayer",
+        "imported": "Importé",
+        "importing": "Import en cours...",
+        "failedImport": "Impossible d'importer ce fichier",
         "errorActionMessage": "Veuillez résoudre le(s) problème(s)",
         "dialogRenameTitle": "Renommer le fichier importé",
         "dialogRenameText": "Quel nom voulez vous pour le fichier importé ?",
         "dialogRenameExample": "ex: filename",
         "dialogRenameCancel": "Anuuler",
         "dialogRename": "Renommer"
+      },
+      "import": {
+        "dropMessage": "Glisser-déposer un fichier à importer",
+        "action": "Importer un contenu"
       },
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
@@ -127,6 +137,15 @@
         "name": "Nom",
         "lastModified": "Modifié le",
         "type": "Type"
+      },
+      "export": {
+        "actionLabel": "Exporter",
+        "dialogTitle": "Options d'export",
+        "selectWorkspace": "Sélectionnez le contenu que vous souhaitez exporter",
+        "stagingOnlyOption": "Contenu d'édition uniquement",
+        "stagingAndLiveOption": "Contenu d'édition et en ligne",
+        "asXml": "Exporter sous forme de fichier XML",
+        "exportDetails": "Exporté sous forme de fichier zip par défaut"
       },
       "leftMenu": {
         "savedSearches": "Recherches sauvegardées",
@@ -214,7 +233,8 @@
         "openInEditMode": "Ouvrir en mode édition",
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
-        }
+        },
+        "locate": "Localiser"
       },
       "browseFolders": "Parcourir les répertoires",
       "selection": {

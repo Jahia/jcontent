@@ -13,11 +13,6 @@
     </bean>
 
     <bean class="org.jahia.ajax.gwt.helper.ModuleGWTResources">
-        <property name="CSSResources">
-            <list>
-                <value>/modules/content-media-manager/css/content-media-manager.css</value>
-            </list>
-        </property>
         <property name="javascriptResources">
             <list>
                 <value>/modules/content-media-manager/javascript/activate-loader.js</value>

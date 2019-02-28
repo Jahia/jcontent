@@ -3,7 +3,7 @@ import {CircularProgress, Typography, withStyles} from '@material-ui/core';
 import {CheckCircle, Info} from '@material-ui/icons';
 import React from 'react';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {translate, Trans} from 'react-i18next';
 
 let styles = theme => ({
     headerText: {
@@ -14,6 +14,9 @@ let styles = theme => ({
     },
     statusIcon: {
         marginRight: theme.spacing.unit
+    },
+    link: {
+        color: 'inherit'
     }
 });
 
@@ -46,7 +49,17 @@ export function UploadHeader({classes, t, status}) {
             <div className={classNames(classes.headerText)}>
                 <Info className={classNames(classes.statusIcon)}/>
                 <Typography color="inherit" data-cm-role="upload-status-error">
-                    {t(status.type === 'import' ? 'label.contentManager.fileUpload.importErrorMessage' : 'label.contentManager.fileUpload.errorMessage')}
+                    {status.type === 'import' ?
+                        <Trans i18nKey="label.contentManager.fileUpload.importErrorMessage"
+                               components={[
+                                   <a key="importAcademyLink"
+                                      href={contextJsParameters.config.importAcademyLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={classes.link}
+                                   >.
+                                   </a>
+                               ]}/> : t('label.contentManager.fileUpload.errorMessage')}
                 </Typography>
             </div>
         );

@@ -61,8 +61,8 @@ export class Export extends React.Component {
 
     render() {
         let {t, classes, onClose, onExited, path} = this.props;
-        let format = (this.state.xml ? 'xml' : 'zip');
         let live = (this.state.workspace === 'live');
+        let format = (this.state.xml && !live ? 'xml' : 'zip');
         return (
             <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>

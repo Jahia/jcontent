@@ -66,14 +66,4 @@ export default class ContentTree extends React.Component {
             </Picker>
         );
     }
-
-    resolveMenu(path) {
-        let {mode, siteKey} = this.props;
-        switch (mode) {
-            case 'browse-files':
-                return 'contextualMenuFiles';
-            default:
-                return path.indexOf(`/sites/${siteKey}/contents`) >= 0 ? 'contextualMenuFolders' : 'contextualMenuPages';
-        }
-    }
 }

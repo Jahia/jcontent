@@ -45,9 +45,8 @@ export class Export extends React.Component {
     }
 
     onWorkspaceChange(event) {
-        this.setState({
-            workspace: event.target.value
-        });
+        let wsp = event.target.value;
+        this.setState(Object.assign({workspace: wsp}, (wsp === 'live') ? {xml: false} : {}));
     }
 
     onXmlChange(event) {
@@ -56,14 +55,16 @@ export class Export extends React.Component {
         });
     }
 
-    triggerExport(path, format, live) {
-        window.open(this.contextPath + `/cms/export/default${path}.${format}?exportformat=${format}&live=${live}`);
+    triggerExport(path) {
+        let contextPath = this.contextPath;
+        let format = (this.state.xml ? 'xml' : 'zip');
+        let live = (this.state.workspace === 'live');
+        window.open(`${contextPath}/cms/export/default${path}.${format}?exportformat=${format}&live=${live}`);
     }
 
     render() {
         let {t, classes, onClose, onExited, path} = this.props;
         let live = (this.state.workspace === 'live');
-        let format = (this.state.xml && !live ? 'xml' : 'zip');
         return (
             <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
@@ -98,7 +99,7 @@ export class Export extends React.Component {
                                     {t('label.contentManager.export.asXml')}
                                 </Typography>
                             }
-                            checked={this.state.xml && !live}
+                            checked={this.state.xml}
                             disabled={live}
                             control={<Checkbox color="primary"/>}
                             data-cm-role="export-as-xml"
@@ -115,7 +116,7 @@ export class Export extends React.Component {
                         color="primary"
                         data-cm-role="export-button"
                         onClick={() => {
-                            this.triggerExport(path, format, live);
+                            this.triggerExport(path);
                             onClose();
                         }}
                     >

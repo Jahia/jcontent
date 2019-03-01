@@ -64,7 +64,7 @@ export class Export extends React.Component {
         let format = (this.state.xml ? 'xml' : 'zip');
         let live = (this.state.workspace === 'live');
         return (
-            <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" onExited={onExited} onClose={onClose}>
+            <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
                     {t('label.contentManager.export.dialogTitle')}
                 </DialogTitle>
@@ -75,12 +75,13 @@ export class Export extends React.Component {
                     <Select
                         className={classes.margins}
                         value={this.state.workspace}
+                        data-cm-role="select-workspace"
                         onChange={e => this.onWorkspaceChange(e)}
                     >
-                        <MenuItem value="default">
+                        <MenuItem value="default" data-cm-role="default-workspace">
                             {t('label.contentManager.export.stagingOnlyOption')}
                         </MenuItem>
-                        <MenuItem value="live">
+                        <MenuItem value="live" data-cm-role="live-workspace">
                             {t('label.contentManager.export.stagingAndLiveOption')}
                         </MenuItem>
                     </Select>
@@ -99,6 +100,7 @@ export class Export extends React.Component {
                             checked={this.state.xml && !live}
                             disabled={live}
                             control={<Checkbox color="primary"/>}
+                            data-cm-role="export-as-xml"
                             onChange={e => this.onXmlChange(e)}
                         />
                     </div>

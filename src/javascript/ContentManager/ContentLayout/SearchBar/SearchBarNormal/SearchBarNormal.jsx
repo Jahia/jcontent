@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 const styles = () => ({
     searchSize: {
         height: 44,
-        width: 'calc(100% - 200px)'
+        flexGrow: 4
     },
     input: {
         height: 44,

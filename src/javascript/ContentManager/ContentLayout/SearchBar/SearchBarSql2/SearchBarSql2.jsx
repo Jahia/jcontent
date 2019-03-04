@@ -11,6 +11,9 @@ import {Trans, translate} from 'react-i18next';
 import {cmGoto} from '../../../ContentManager.redux-actions';
 
 const styles = theme => ({
+    input: {
+        flexGrow: 4
+    },
     sql2Form: {
         lineHeight: '19px',
         padding: 12,
@@ -60,7 +63,8 @@ export class SearchBarSql2 extends React.Component {
         let {sql2SearchFrom, sql2SearchWhere, ongoingSearch} = this.state;
 
         return (
-            <SearchBarLayout t={t}
+            <SearchBarLayout
+                             t={t}
                              leftFooter={
                                  <DxContext.Consumer>{dxContext => (
                                      <Typography align="right" color="invert">
@@ -92,7 +96,7 @@ export class SearchBarSql2 extends React.Component {
                                  </React.Fragment>}
                              onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
             >
-                <Paper>
+                <Paper className={classes.input}>
                     <Typography variant="iota" color="alpha" className={classes.sql2Form}>
                         SELECT * FROM [
                         <Sql2Input

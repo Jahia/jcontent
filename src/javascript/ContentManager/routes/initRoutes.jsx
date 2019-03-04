@@ -5,10 +5,11 @@ import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from '../IFrameLayout';
 import SearchBar from '../ContentLayout/SearchBar';
 import ContentLayout from '../ContentLayout';
+import ImageEdition from '../ImageEdition';
 import {actionsRegistry} from '@jahia/react-material';
 
 function initRoutes(registry) {
-    registry.add('route1', {
+    registry.add('app-route', {
         type: 'route',
         target: ['cmm:50'],
         path: '/:siteKey/:lang/apps/:menu/:entry',
@@ -29,7 +30,16 @@ function initRoutes(registry) {
         )
     });
 
-    registry.add('route2', {
+    registry.add('edit-route', {
+        target: ['cmm:60'],
+        type: 'route',
+        path: '/:siteKey/:lang/image-edit',
+        render: props => (
+            <ImageEdition {...props}/>
+        )
+    });
+
+    registry.add('cmm-default-route', {
         type: 'route',
         target: ['cmm:99'],
         path: '/:siteKey/:lang/:mode',

@@ -356,6 +356,13 @@ function initActions(actionsRegistry) {
         requiredPermission: 'jcr:addChildNodes',
         uploadType: 'import'
     });
+    actionsRegistry.add('editImage', routerAction, {
+        buttonIcon: <Edit/>,
+        buttonLabel: 'label.contentManager.editImage.action',
+        target: ['contentActions:2.5'],
+        hideOnNodeTypes: ['jnt:virtualsite'],
+        mode: 'image-edit'
+    });
 }
 
 export default initActions;

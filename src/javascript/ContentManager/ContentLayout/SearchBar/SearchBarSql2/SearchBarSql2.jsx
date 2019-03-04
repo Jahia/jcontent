@@ -14,6 +14,9 @@ const styles = theme => ({
     input: {
         flexGrow: 4
     },
+    academy: {
+        textAlign: 'left'
+    },
     sql2Form: {
         lineHeight: '19px',
         padding: 12,
@@ -64,37 +67,38 @@ export class SearchBarSql2 extends React.Component {
 
         return (
             <SearchBarLayout
-                             t={t}
-                             leftFooter={
-                                 <DxContext.Consumer>{dxContext => (
-                                     <Typography align="right" color="invert">
-                                         <Trans i18nKey="label.contentManager.search.sql2Prompt"
-                                                components={[
-                                                    <a key="sql2Prompt"
-                                                       href={dxContext.config.sql2CheatSheetUrl}
-                                                       target="_blank"
-                                                       rel="noopener noreferrer"
-                                                       className={classes.link}
-                                                    >
-                                                        univers
-                                                    </a>
-                                                ]}
-                                         />
-                                     </Typography>
-                                 )}
-                                 </DxContext.Consumer>}
-                             rightFooter={
-                                 <React.Fragment>
-                                     {!ongoingSearch.sql2SearchFrom ?
-                                         <ActionButton
-                                             label="label.contentManager.search.normal"
-                                             cmRole="search-type-normal"
-                                             onClick={onNormalClick}
-                                         /> :
-                                         <div className={classes.replaceButtonStyle}/>
-                                     }
-                                 </React.Fragment>}
-                             onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
+                t={t}
+                leftFooter={
+                    <DxContext.Consumer>{dxContext => (
+                        <Typography align="left" color="invert">
+                            <Trans i18nKey="label.contentManager.search.sql2Prompt"
+                                   className={classes.academy}
+                                   components={[
+                                       <a key="sql2Prompt"
+                                          href={dxContext.config.sql2CheatSheetUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className={classes.link}
+                                       >
+                                           univers
+                                       </a>
+                                   ]}
+                            />
+                        </Typography>
+                    )}
+                    </DxContext.Consumer>}
+                rightFooter={
+                    <React.Fragment>
+                        {!ongoingSearch.sql2SearchFrom ?
+                            <ActionButton
+                                label="label.contentManager.search.normal"
+                                cmRole="search-type-normal"
+                                onClick={onNormalClick}
+                            /> :
+                            <div className={classes.replaceButtonStyle}/>
+                        }
+                    </React.Fragment>}
+                onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
             >
                 <Paper className={classes.input}>
                     <Typography variant="iota" color="alpha" className={classes.sql2Form}>

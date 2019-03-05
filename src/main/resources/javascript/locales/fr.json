@@ -204,7 +204,6 @@
         "edit": "Editer",
         "notPublished": "Contenu jamais publié",
         "copyUUIDToClipboard": "Copier l'UUID dans le presse-papier",
-        "duplicate": "Dupliquer",
         "expand": "Agrandir",
         "publish": "Publier <em>{{displayName}}</em> - {{language}}",
         "undelete": "Annuler la suppresion",

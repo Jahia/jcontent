@@ -1,8 +1,26 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
 import {ContentIcon, ManageIcon, WorkflowIcon} from './icons';
-import {Add, Delete, DeleteForever, Edit, Lock, LockOpen, Publish, Visibility, SubdirectoryArrowRight, FindInPage, ImportExport} from '@material-ui/icons';
 import {
+    Add,
+    Delete,
+    DeleteForever,
+    Edit,
+    Lock,
+    LockOpen,
+    CloudUpload,
+    CloudDownload,
+    Visibility,
+    SubdirectoryArrowRight,
+    FindInPage,
+    Translate,
+    CreateNewFolder,
+    LibraryAdd
+} from '@material-ui/icons';
+import {
+    ApplicationImport,
+    ApplicationExport,
+    FileUpload,
     Account,
     AccountGroup,
     ContentCopy,
@@ -72,23 +90,27 @@ function initActions(actionsRegistry) {
         target: ['contentActions:1']
     });
     actionsRegistry.add('createContentFolder', createContentOfTypeAction, {
+        buttonIcon: <CreateNewFolder/>,
         buttonLabel: 'label.contentManager.create.contentFolder',
         target: ['createMenuActions:3', 'contentActions:2'],
         contentType: 'jnt:contentFolder',
         showOnNodeTypes: ['jnt:contentFolder']
     });
     actionsRegistry.add('createContent', createContentAction, {
+        buttonIcon: <LibraryAdd/>,
         buttonLabel: 'label.contentManager.create.content',
         target: ['createMenuActions:3.1', 'contentActions:3'],
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
         baseContentType: ContentManagerConstants.contentType
     });
     actionsRegistry.add('createFolder', createContentOfTypeAction, {
+        buttonIcon: <CreateNewFolder/>,
         buttonLabel: 'label.contentManager.create.folder',
         target: ['createMenuActions:3', 'contentActions:3'],
         contentType: 'jnt:folder'
     });
     actionsRegistry.add('fileUpload', fileUploadAction, {
+        buttonIcon: <FileUpload/>,
         buttonLabel: 'label.contentManager.fileUpload.uploadButtonLabel',
         target: ['createMenuActions:4', 'contentActions:4'],
         contentType: 'jnt:file',
@@ -96,15 +118,17 @@ function initActions(actionsRegistry) {
         requiredPermission: 'jcr:addChildNodes'
     });
     actionsRegistry.add('translateMenu', translateMenuAction, {
+        buttonIcon: <Translate/>,
         buttonLabel: 'label.contentManager.contentPreview.translate',
         target: ['contentActions:4.5'],
         menu: 'translateMenu'
     });
     actionsRegistry.add('translateAction', translateAction, {
+        buttonIcon: <Translate/>,
         target: ['translateMenu']
     });
     actionsRegistry.add('publish', publishAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudUpload/>,
         buttonLabel: 'label.contentManager.contentPreview.publish',
         target: ['publishMenu:1'],
         allSubtree: false,
@@ -114,14 +138,14 @@ function initActions(actionsRegistry) {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
     actionsRegistry.add('publishMenu', menuAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudUpload/>,
         buttonLabel: 'label.contentManager.contentPreview.publishMenu',
         target: ['contentActions:6', 'selectedContentActions:5'],
         menu: 'publishMenu',
         menuPreload: true
     });
     actionsRegistry.add('publishInAllLanguages', publishAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudUpload/>,
         buttonLabel: 'label.contentManager.contentPreview.publishInAllLanguages',
         target: ['publishMenu'],
         hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
@@ -131,7 +155,7 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: true
     });
     actionsRegistry.add('publishAll', publishAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudUpload/>,
         buttonLabel: 'label.contentManager.contentPreview.publishAll',
         target: ['publishMenu'],
         showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
@@ -141,7 +165,7 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: false
     });
     actionsRegistry.add('publishAllInAllLanguages', publishAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudUpload/>,
         buttonLabel: 'label.contentManager.contentPreview.publishAllInAllLanguages',
         target: ['publishMenu'],
         showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
@@ -157,7 +181,7 @@ function initActions(actionsRegistry) {
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('unpublish', publishAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudDownload/>,
         buttonLabel: 'label.contentManager.contentPreview.unpublish',
         target: ['publishMenu'],
         hideOnNodeTypes: ['jnt:virtualsite'],
@@ -167,7 +191,7 @@ function initActions(actionsRegistry) {
         checkIfLanguagesMoreThanOne: false
     });
     actionsRegistry.add('unpublishInAllLanguages', publishAction, {
-        buttonIcon: <Publish/>,
+        buttonIcon: <CloudDownload/>,
         buttonLabel: 'label.contentManager.contentPreview.unpublishInAllLanguages',
         target: ['publishMenu'],
         hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
@@ -179,18 +203,15 @@ function initActions(actionsRegistry) {
     actionsRegistry.add('contentMenu', menuAction, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
-        menu: 'contentActions'
+        menu: 'contentActions',
+        showIcons: true
     });
     actionsRegistry.add('selectedContentMenu', menuAction, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'label.contentManager.contentPreview.moreOptions',
         menu: 'selectedContentActions',
-        menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu'
-    });
-    actionsRegistry.add('duplicate', {
-        buttonIcon: <Edit/>,
-        buttonLabel: 'label.contentManager.contentPreview.duplicate',
-        target: []
+        menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',
+        showIcons: true
     });
     actionsRegistry.add('copy', copyAction, {
         buttonIcon: <ContentCopy/>,
@@ -239,7 +260,8 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.create.create',
         target: ['tableHeaderActions:10'],
         menuPreload: true,
-        menu: 'createMenuActions'
+        menu: 'createMenuActions',
+        showIcons: true
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
@@ -254,6 +276,7 @@ function initActions(actionsRegistry) {
         buttonIcon: <Lock/>
     });
     actionsRegistry.add('clearAllLocks', clearAllLocksAction, {
+        buttonIcons: <Lock/>,
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
         target: ['contentActions:5.5'],
         hideOnNodeTypes: ['jnt:page']
@@ -343,13 +366,13 @@ function initActions(actionsRegistry) {
         hideOnNodeTypes: ['jnt:virtualsite']
     });
     actionsRegistry.add('export', exportAction, {
-        buttonIcon: <ImportExport/>,
+        buttonIcon: <ApplicationExport/>,
         buttonLabel: 'label.contentManager.export.actionLabel',
         target: ['contentActions:4.2'],
         showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content']
     });
     actionsRegistry.add('import', fileUploadAction, {
-        buttonIcon: <ImportExport/>,
+        buttonIcon: <ApplicationImport/>,
         buttonLabel: 'label.contentManager.import.action',
         target: ['contentActions:4.3', 'createMenuActions:3.5'],
         showOnNodeTypes: ['jnt:contentFolder'],

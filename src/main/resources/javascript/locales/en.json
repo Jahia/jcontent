@@ -205,7 +205,6 @@
         "edit": "Edit",
         "notPublished": "Content has never been published",
         "copyUUIDToClipboard": "Copy UUID to clipboard",
-        "duplicate": "Duplicate",
         "expand": "Expand",
         "publish": "Publish <em>{{displayName}}</em> - {{language}}",
         "undelete": "Undelete",

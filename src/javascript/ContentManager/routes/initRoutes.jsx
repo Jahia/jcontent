@@ -1,5 +1,5 @@
 import React from 'react';
-import {MainLayout, FullWidthLayout} from '@jahia/layouts';
+import {MainLayout, FullWidthContent} from '@jahia/layouts';
 import LanguageSwitcher from '../LanguageSwitcher';
 import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from '../IFrameLayout';
@@ -21,16 +21,16 @@ function initRoutes(registry) {
                 actions: <React.Fragment></React.Fragment>
             }}
             >
-                <FullWidthLayout>
+                <FullWidthContent>
                     <IFrameLayout
                         contextPath={dxContext.contextPath}
                         workspace={dxContext.workspace}/>
-                </FullWidthLayout>
+                </FullWidthContent>
             </MainLayout>
         )
     });
 
-    registry.add('edit-route', {
+    registry.add('image-edit-route', {
         target: ['cmm:60'],
         type: 'route',
         path: '/:siteKey/:lang/image-edit',
@@ -51,9 +51,9 @@ function initRoutes(registry) {
                 actions: <React.Fragment><SearchBar/></React.Fragment>
             }}
             >
-                <FullWidthLayout>
+                <FullWidthContent>
                     <ContentLayout/>
-                </FullWidthLayout>
+                </FullWidthContent>
             </MainLayout>
         )
     });

@@ -16,7 +16,6 @@ import classNames from 'classnames';
 
 const styles = theme => ({
     pdfContainer: {
-        height: 'calc(100% - ' + (theme.spacing.unit * 6) + 'px)',
         maxWidth: '550px',
         margin: '0 auto',
         '& canvas': {

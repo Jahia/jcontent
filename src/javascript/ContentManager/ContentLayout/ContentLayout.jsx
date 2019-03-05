@@ -16,34 +16,46 @@ import ContentManagerConstants from '../ContentManager.constants';
 import {refetchContentTreeAndListData, setContentListDataRefetcher, setRefetcher} from '../ContentManager.refetches';
 
 const styles = theme => ({
+    root: {
+        flex: '1 1 0%',
+        display: 'flex',
+        flexDirection: 'row',
+        position: 'relative',
+        overflow: 'hidden',
+        // MaxWidth: 'calc(100vw - 140px)',
+        backgroundColor: theme.palette.background.paper
+    },
     content: {
-        height: 'calc( 100vh - ' + theme.layout.topBarHeight + 'px )',
-        flexGrow: 1,
+        flex: '1 1 auto',
+        order: 2,
         transitionDuration: '.25s',
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
-        marginRight: -theme.contentManager.previewDrawerWidth,
-        width: '100%'
+        marginRight: -theme.contentManager.previewDrawerWidth
+        // Width: '100%'
     },
     contentLeftShift: {
-        width: 'calc(100% - ' + theme.contentManager.treeDrawerWidth + 'px)',
+        // Width: 'calc(100% - ' + theme.contentManager.treeDrawerWidth + 'px)',
         marginLeft: 0
     },
     contentRightShift: {
-        width: 'calc(100% - ' + theme.contentManager.previewDrawerWidth + 'px)',
+        // Width: 'calc(100% - ' + theme.contentManager.previewDrawerWidth + 'px)',
         marginRight: 0
     },
     treeDrawer: {
-        height: 'calc( 100vh - ' + theme.layout.topBarHeight + 'px )',
+        display: 'flex',
+        order: 1,
         transitionDuration: '.15s'
     },
     treeDrawerPaper: {
-        width: theme.contentManager.treeDrawerWidth,
         position: 'inherit',
+        display: 'flex',
+        height: 'unset',
+        width: theme.contentManager.treeDrawerWidth,
         overflow: 'hidden'
     },
     previewDrawer: {
-        height: 'calc( 100vh - ' + theme.layout.topBarHeight + 'px )',
+        order: 3,
         display: 'flex',
         overflow: 'hidden',
         transitionDuration: '.15s'
@@ -52,10 +64,11 @@ const styles = theme => ({
         transform: 'translate(600px)'
     },
     previewDrawerPaper: {
+        position: 'inherit',
+        display: 'flex',
+        height: 'unset',
         transition: '.15s !important',
         width: theme.contentManager.previewDrawerWidth,
-        height: 'calc(100vh - 130px)',
-        position: 'inherit',
         overflow: 'hidden',
         top: '150px',
         right: '600px'
@@ -66,14 +79,6 @@ const styles = theme => ({
         height: '100vh',
         top: 0,
         right: 0
-    },
-    appFrame: {
-        overflow: 'hidden',
-        position: 'relative',
-        display: 'flex',
-        width: '100%',
-        maxWidth: 'calc(100vw - 140px)',
-        backgroundColor: theme.palette.background.paper
     }
 });
 
@@ -99,7 +104,7 @@ export class ContentLayout extends React.Component {
             <React.Fragment>
                 <ContentData setRefetch={this.setContentRefetcher}>
                     {({rows, contentNotFound, totalCount, loading}) => (
-                        <div className={classes.appFrame}>
+                        <div className={classes.root}>
                             <Drawer
                                 variant="persistent"
                                 anchor="left"
@@ -110,6 +115,23 @@ export class ContentLayout extends React.Component {
                                 }}
                             >
                                 <ContentTrees isOpen={treeOpen} setRefetch={this.setTreeRefetcher}/>
+                            </Drawer>
+                            <Drawer
+                                data-cm-role="preview-drawer"
+                                variant="persistent"
+                                anchor="right"
+                                open={previewOpen}
+                                classes={{
+                                    root: classNames(classes.previewDrawer, {[classes.previewDrawerHidden]: !previewOpen}),
+                                    paper: classNames({
+                                        [classes.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
+                                        [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
+                                    })
+                                }}
+                            >
+                                {previewOpen &&
+                                <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
+                                }
                             </Drawer>
                             <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: path}}/>
                             <div
@@ -126,23 +148,6 @@ export class ContentLayout extends React.Component {
                                     }
                                 </Paper>
                             </div>
-                            <Drawer
-                                data-cm-role="preview-drawer"
-                                variant="persistent"
-                                anchor="right"
-                                open={previewOpen}
-                                classes={{
-                                    root: classNames(classes.previewDrawer, {[classes.previewDrawerHidden]: !previewOpen}),
-                                    paper: classNames({
-                                        [classes.previewDrawerPaper]: previewState !== CM_DRAWER_STATES.FULL_SCREEN,
-                                        [classes.previewDrawerPaperFullScreen]: previewState === CM_DRAWER_STATES.FULL_SCREEN
-                                    })
-                                }}
-                            >
-                                {previewOpen &&
-                                    <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
-                                }
-                            </Drawer>
                         </div>
                     )}
                 </ContentData>

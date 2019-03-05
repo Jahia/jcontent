@@ -10,6 +10,9 @@ import ContentManagerConstants from '../../ContentManager.constants';
 import ContentTree from './ContentTree';
 
 const styles = theme => ({
+    tree: {
+        flex: '1 0 0%'
+    },
     listContainer: {
         overflow: 'auto',
         width: theme.contentManager.treeDrawerWidth + 'px'
@@ -56,31 +59,33 @@ export class ContentTrees extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <div ref={setContainer} className={classes.listContainer}>
-                    <div className={classes.list}>
-                        {isOpen ?
-                            _.map(contentTreeConfigs, contentTreeConfig => {
-                                return (
-                                    <ContentTree key={contentTreeConfig.key}
-                                                 container={this.container}
-                                                 mode={mode}
-                                                 siteKey={siteKey}
-                                                 path={usedPath}
-                                                 rootPath={rootPath + contentTreeConfig.rootPath}
-                                                 openPaths={openPaths}
-                                                 selectableTypes={contentTreeConfig.selectableTypes}
-                                                 lang={lang}
-                                                 user={user}
-                                                 dataCmRole={contentTreeConfig.key}
-                                                 handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                 handleSelect={path => setPath(path, {sub: false})}
-                                                 openableTypes={contentTreeConfig.openableTypes}
-                                                 rootLabel={t(contentTreeConfig.rootLabel)}
-                                                 setRefetch={setRefetch(contentTreeConfig.key)}
-                                    />
-                                );
-                            }) : null
-                        }
+                <div className={classes.tree}>
+                    <div ref={setContainer} className={classes.listContainer}>
+                        <div className={classes.list}>
+                            {isOpen ?
+                                _.map(contentTreeConfigs, contentTreeConfig => {
+                                    return (
+                                        <ContentTree key={contentTreeConfig.key}
+                                                     container={this.container}
+                                                     mode={mode}
+                                                     siteKey={siteKey}
+                                                     path={usedPath}
+                                                     rootPath={rootPath + contentTreeConfig.rootPath}
+                                                     openPaths={openPaths}
+                                                     selectableTypes={contentTreeConfig.selectableTypes}
+                                                     lang={lang}
+                                                     user={user}
+                                                     dataCmRole={contentTreeConfig.key}
+                                                     handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                     handleSelect={path => setPath(path, {sub: false})}
+                                                     openableTypes={contentTreeConfig.openableTypes}
+                                                     rootLabel={t(contentTreeConfig.rootLabel)}
+                                                     setRefetch={setRefetch(contentTreeConfig.key)}
+                                        />
+                                    );
+                                }) : null
+                            }
+                        </div>
                     </div>
                 </div>
             </React.Fragment>

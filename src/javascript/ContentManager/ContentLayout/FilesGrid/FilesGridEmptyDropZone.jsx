@@ -5,7 +5,6 @@ import UploadTransformComponent from '../UploadTransformComponent';
 
 const styles = theme => ({
     gridEmpty: {
-        height: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default

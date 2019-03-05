@@ -1,16 +1,18 @@
 import React from 'react';
 import {TwoColumnsContent, MainLayout} from '@jahia/layouts';
+import {Typography} from '@jahia/ds-mui-theme';
 import ImageEditionPreview from './ImageEditionPreview';
-import {ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, withStyles} from '@material-ui/core';
+import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {ExpandMore} from '@material-ui/icons';
+import RotatePanel from './RotatePanel';
 
-let styles = () => {
+let styles = () => ({
 
-};
+});
 
-const ImageEdition = ({t, classes}) => (
+const ImageEdition = ({t}) => (
     <MainLayout topBarProps={{
         path: t('label.contentManager.appTitle', {path: ''}),
         title: t('label.contentManager.editImage.title'),
@@ -19,23 +21,14 @@ const ImageEdition = ({t, classes}) => (
     }}
     >
         <TwoColumnsContent rightCol={<ImageEditionPreview/>}>
+            <RotatePanel/>
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography className={classes.heading}>Resize</Typography>
+                    <Typography variant="zeta" color="alpha">Resize</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <Typography>
+                    <Typography variant="zeta" color="beta">
                         Resize
-                    </Typography>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography className={classes.heading}>Rotate</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <Typography>
-                        Rotate
                     </Typography>
                 </ExpansionPanelDetails>
             </ExpansionPanel>

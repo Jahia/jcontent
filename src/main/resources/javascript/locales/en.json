@@ -246,7 +246,12 @@
       },
       "editImage":{
         "action": "Image edition",
-        "title": "Image edition"
+        "title": "Image edition",
+        "rotate": "Rotate",
+        "rotateImage": "Rotate the image",
+        "undo": "Undo changes",
+        "saveAs": "Save as ...",
+        "save": "Save"
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)"

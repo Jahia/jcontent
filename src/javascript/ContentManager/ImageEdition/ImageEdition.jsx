@@ -60,14 +60,16 @@ export class ImageEdition extends React.Component {
         let changesFeedback = this.state.rotate !== 0 ? t('label.contentManager.editImage.unsavedChanges') : '';
         return (
             <MainLayout topBarProps={{
-            path: t('label.contentManager.appTitle', {path: ''}),
-            title: t('label.contentManager.editImage.title'),
-            contextModifiers: <React.Fragment></React.Fragment>,
-            actions: <React.Fragment>
-                <Typography variant="omega" color="invert">
-                    {changesFeedback}
-                </Typography>
-            </React.Fragment>
+                path: t('label.contentManager.appTitle', {path: ''}),
+                title: t('label.contentManager.editImage.title'),
+                contextModifiers: <React.Fragment></React.Fragment>,
+                actions: (
+                    <React.Fragment>
+                        <Typography variant="omega" color="invert">
+                            {changesFeedback}
+                        </Typography>
+                    </React.Fragment>
+                )
             }}
             >
                 <TwoColumnsContent rightCol={<ImageEditionPreview rotate={this.state.rotate}/>}>
@@ -81,7 +83,7 @@ export class ImageEdition extends React.Component {
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <Typography variant="zeta" color="beta">
-                            Resize
+                                Resize
                             </Typography>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>

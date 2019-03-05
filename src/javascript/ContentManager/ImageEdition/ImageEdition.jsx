@@ -16,30 +16,40 @@ export class ImageEdition extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rotateLeft: 0,
-            rotateRight: 0
+            rotate: 0
         };
         this.rotateLeft = this.rotateLeft.bind(this);
         this.rotateRight = this.rotateRight.bind(this);
     }
 
     rotateLeft() {
-        let {rotateLeft} = this.state;
-        this.setState({
-            rotateLeft: rotateLeft + 1
-        });
+        let {rotate} = this.state;
+        if (rotate === 0) {
+            this.setState({
+                rotate: 3
+            });
+        } else {
+            this.setState({
+                rotate: rotate - 1
+            });
+        }
     }
 
     rotateRight() {
-        let {rotateRight} = this.state;
-        this.setState({
-            rotateRight: rotateRight + 1
-        });
+        let {rotate} = this.state;
+        if (rotate === 3) {
+            this.setState({
+                rotate: 0
+            });
+        } else {
+            this.setState({
+                rotate: rotate + 1
+            });
+        }
     }
 
     render() {
         let {t} = this.props;
-        let rotations = (this.state.rotateRight - this.state.rotateLeft) % 4;
         return (
             <MainLayout topBarProps={{
             path: t('label.contentManager.appTitle', {path: ''}),
@@ -48,7 +58,7 @@ export class ImageEdition extends React.Component {
             actions: <React.Fragment></React.Fragment>
         }}
             >
-                <TwoColumnsContent rightCol={<ImageEditionPreview rotations={rotations}/>}>
+                <TwoColumnsContent rightCol={<ImageEditionPreview rotate={this.state.rotate}/>}>
                     <RotatePanel rotateLeft={this.rotateLeft} rotateRight={this.rotateRight}/>
                     <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMore/>}>

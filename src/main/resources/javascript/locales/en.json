@@ -251,7 +251,8 @@
         "rotateImage": "Rotate the image",
         "undo": "Undo changes",
         "saveAs": "Save as ...",
-        "save": "Save"
+        "save": "Save",
+        "unsavedChanges": "Unsaved changes"
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)"

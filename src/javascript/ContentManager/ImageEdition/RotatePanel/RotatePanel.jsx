@@ -1,7 +1,7 @@
-import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, withStyles} from '@material-ui/core';
+import React from 'react';
+import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, withStyles} from '@material-ui/core';
 import {ExpandMore, RotateLeft, RotateRight} from '@material-ui/icons';
 import {Typography, Button} from '@jahia/ds-mui-theme';
-import React from 'react';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 
@@ -11,12 +11,7 @@ let styles = theme => ({
         flexDirection: 'column'
     },
     icons: {
-        display: 'flex',
-        paddingTop: theme.spacing.unit * 2,
-        width: '6em'
-    },
-    iconSpacing: {
-        flex: 1
+        paddingTop: theme.spacing.unit * 2
     },
     buttons: {
         display: 'flex',
@@ -32,7 +27,7 @@ let styles = theme => ({
 
 export class RotatePanel extends React.Component {
     render() {
-        let {classes, t} = this.props;
+        let {classes, t, rotateLeft, rotateRight} = this.props;
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
@@ -43,8 +38,12 @@ export class RotatePanel extends React.Component {
                         {t('label.contentManager.editImage.rotateImage')}
                     </Typography>
                     <div className={classes.icons}>
-                        <RotateLeft color="primary" fontSize="large" className={classes.iconSpacing}/>
-                        <RotateRight color="primary" fontSize="large" className={classes.iconSpacing}/>
+                        <IconButton onClick={() => rotateLeft()}>
+                            <RotateLeft color="primary" fontSize="large"/>
+                        </IconButton>
+                        <IconButton onClick={() => rotateRight()}>
+                            <RotateRight color="primary" fontSize="large"/>
+                        </IconButton>
                     </div>
                     <div className={classes.buttons}>
                         <Button variant="ghost" color="primary">

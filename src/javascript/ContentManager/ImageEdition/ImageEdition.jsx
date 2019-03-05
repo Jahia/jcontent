@@ -20,6 +20,7 @@ export class ImageEdition extends React.Component {
         };
         this.rotateLeft = this.rotateLeft.bind(this);
         this.rotateRight = this.rotateRight.bind(this);
+        this.undoRotationChanges = this.undoRotationChanges.bind(this);
     }
 
     rotateLeft() {
@@ -48,6 +49,12 @@ export class ImageEdition extends React.Component {
         }
     }
 
+    undoRotationChanges() {
+        this.setState({
+            rotate: 0
+        });
+    }
+
     render() {
         let {t} = this.props;
         return (
@@ -59,7 +66,10 @@ export class ImageEdition extends React.Component {
         }}
             >
                 <TwoColumnsContent rightCol={<ImageEditionPreview rotate={this.state.rotate}/>}>
-                    <RotatePanel rotateLeft={this.rotateLeft} rotateRight={this.rotateRight}/>
+                    <RotatePanel rotateLeft={this.rotateLeft}
+                                 rotateRight={this.rotateRight}
+                                 undoChanges={this.undoRotationChanges}
+                    />
                     <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                             <Typography variant="zeta" color="alpha">Resize</Typography>

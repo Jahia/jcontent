@@ -27,7 +27,7 @@ let styles = theme => ({
 
 export class RotatePanel extends React.Component {
     render() {
-        let {classes, t, rotateLeft, rotateRight} = this.props;
+        let {classes, t, rotateLeft, rotateRight, undoChanges} = this.props;
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
@@ -46,7 +46,7 @@ export class RotatePanel extends React.Component {
                         </IconButton>
                     </div>
                     <div className={classes.buttons}>
-                        <Button variant="ghost" color="primary">
+                        <Button variant="ghost" color="primary" onClick={() => undoChanges()}>
                             {t('label.contentManager.editImage.undo')}
                         </Button>
                         <div className={classes.spacer}/>

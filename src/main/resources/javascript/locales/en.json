@@ -246,6 +246,7 @@
       "editImage":{
         "action": "Image edition",
         "title": "Image edition",
+        "resize": "Resize",
         "rotate": "Rotate",
         "rotateImage": "Rotate the image",
         "undo": "Undo changes",

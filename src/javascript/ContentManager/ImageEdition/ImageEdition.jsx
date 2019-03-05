@@ -2,25 +2,30 @@ import React from 'react';
 import {TwoColumnsContent, MainLayout} from '@jahia/layouts';
 import {Typography} from '@jahia/ds-mui-theme';
 import ImageEditionPreview from './ImageEditionPreview';
-import {ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
-import {ExpandMore} from '@material-ui/icons';
 import RotatePanel from './RotatePanel';
+import ResizePanel from './ResizePanel';
 
 let styles = () => ({
-
+    root: {
+        overflow: 'auto'
+    }
 });
 
 export class ImageEdition extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rotate: 0
+            rotate: 0,
+            width: 800,
+            height: 600
         };
         this.rotateLeft = this.rotateLeft.bind(this);
         this.rotateRight = this.rotateRight.bind(this);
         this.undoRotationChanges = this.undoRotationChanges.bind(this);
+        this.resize = this.resize.bind(this);
     }
 
     rotateLeft() {
@@ -55,9 +60,21 @@ export class ImageEdition extends React.Component {
         });
     }
 
+    resize({width, height}) {
+        this.setState({width, height});
+    }
+
     render() {
-        let {t} = this.props;
-        let changesFeedback = this.state.rotate !== 0 ? t('label.contentManager.editImage.unsavedChanges') : '';
+        const {t, classes} = this.props;
+        const {rotate, height, width} = this.state;
+
+        let originalWidth = 800;
+        let originalHeight = 600;
+
+        let dirty = (rotate !== 0) || (originalWidth !== width) || (originalHeight !== height);
+
+        let changesFeedback = dirty ? t('label.contentManager.editImage.unsavedChanges') : '';
+
         return (
             <MainLayout topBarProps={{
                 path: t('label.contentManager.appTitle', {path: ''}),
@@ -72,21 +89,17 @@ export class ImageEdition extends React.Component {
                 )
             }}
             >
-                <TwoColumnsContent rightCol={<ImageEditionPreview rotate={this.state.rotate}/>}>
+                <TwoColumnsContent classes={{left: classes.root}} rightCol={<ImageEditionPreview rotate={rotate}/>}>
                     <RotatePanel rotateLeft={this.rotateLeft}
                                  rotateRight={this.rotateRight}
                                  undoChanges={this.undoRotationChanges}
                     />
-                    <ExpansionPanel>
-                        <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                            <Typography variant="zeta" color="alpha">Resize</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <Typography variant="zeta" color="beta">
-                                Resize
-                            </Typography>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                    <ResizePanel originalWidth={800}
+                                 originalHeight={600}
+                                 width={width}
+                                 height={height}
+                                 resize={this.resize}
+                    />
                 </TwoColumnsContent>
             </MainLayout>
         );

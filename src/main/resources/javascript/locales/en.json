@@ -252,7 +252,8 @@
         "undo": "Undo changes",
         "saveAs": "Save as ...",
         "save": "Save",
-        "unsavedChanges": "Unsaved changes"
+        "unsavedChanges": "Unsaved changes",
+        "resizeInfo": "You can select a predefined size or provide your own values"
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)"

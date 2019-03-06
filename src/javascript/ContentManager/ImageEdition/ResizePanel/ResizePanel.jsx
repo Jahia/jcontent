@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     ExpansionPanel,
     ExpansionPanelDetails,
@@ -40,7 +41,7 @@ let styles = () => ({
     }
 });
 
-class RotatePanel extends React.Component {
+export class RotatePanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,7 +50,6 @@ class RotatePanel extends React.Component {
 
         this.setWidth = this.setWidth.bind(this);
         this.setHeight = this.setHeight.bind(this);
-        this.undoChanges = this.undoChanges.bind(this);
         this.switchRatio = this.switchRatio.bind(this);
     }
 
@@ -91,14 +91,6 @@ class RotatePanel extends React.Component {
         }
     }
 
-    undoChanges() {
-        const {originalWidth, originalHeight, resize} = this.props;
-        resize({
-            width: originalWidth,
-            height: originalHeight
-        });
-    }
-
     onChange(event, expanded) {
         let {onChangePanel} = this.props;
         if (expanded) {
@@ -109,7 +101,7 @@ class RotatePanel extends React.Component {
     }
 
     render() {
-        const {t, classes, originalWidth, originalHeight, width, height, resize, expanded} = this.props;
+        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded} = this.props;
         const {keepRatio} = this.state;
 
         let predefinedSizes = [
@@ -124,7 +116,7 @@ class RotatePanel extends React.Component {
                     <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.panel}>
-                    <Typography variant="iota">You can select a predefined size or provide your own values</Typography>
+                    <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
 
                     <div className={classes.grid}>
                         <div>
@@ -168,12 +160,25 @@ class RotatePanel extends React.Component {
                             </IconButton>
                         </div>
                     </div>
-                    <ImageActions undoChanges={this.undoChanges}/>
+                    <ImageActions undoChanges={undoChanges}/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
         );
     }
 }
+
+RotatePanel.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    originalWidth: PropTypes.number.isRequired,
+    originalHeight: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    undoChanges: PropTypes.func.isRequired,
+    resize: PropTypes.func.isRequired,
+    onChangePanel: PropTypes.func.isRequired,
+    expanded: PropTypes.bool.isRequired
+};
 
 export default compose(
     translate(),

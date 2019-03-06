@@ -28,11 +28,13 @@ export class ImageEdition extends React.Component {
             rotate: 0,
             width: 800,
             height: 600,
-            transforms: []
+            transforms: [],
+            expanded: 0
         };
         this.rotate = this.rotate.bind(this);
         this.undoChanges = this.undoChanges.bind(this);
         this.resize = this.resize.bind(this);
+        this.onChangePanel = this.onChangePanel.bind(this);
     }
 
     rotate(val) {
@@ -63,9 +65,15 @@ export class ImageEdition extends React.Component {
         }));
     }
 
+    onChangePanel(panel) {
+        this.setState({
+            expanded: panel
+        });
+    }
+
     render() {
         const {t, classes, path} = this.props;
-        const {rotate, height, width} = this.state;
+        const {rotate, height, width, expanded} = this.state;
         let originalWidth = 800;
         let originalHeight = 600;
 
@@ -88,8 +96,11 @@ export class ImageEdition extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}} rightCol={<ImageEditionPreview rotate={rotate} path={path}/>}>
-                    <RotatePanel rotate={this.rotate}
+                    <RotatePanel defaultExpanded
+                                 expanded={expanded === 0}
+                                 rotate={this.rotate}
                                  undoChanges={this.undoChanges}
+                                 onChangePanel={this.onChangePanel}
                     />
                     <ResizePanel originalWidth={800}
                                  originalHeight={600}
@@ -97,6 +108,8 @@ export class ImageEdition extends React.Component {
                                  height={height}
                                  undoChanges={this.undoChanges}
                                  resize={this.resize}
+                                 expanded={expanded === 1}
+                                 onChangePanel={this.onChangePanel}
                     />
                 </TwoColumnsContent>
             </MainLayout>

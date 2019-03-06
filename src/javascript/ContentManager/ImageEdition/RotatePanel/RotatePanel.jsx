@@ -18,10 +18,19 @@ let styles = theme => ({
 });
 
 export class RotatePanel extends React.Component {
+    onChange(event, expanded) {
+        let {onChangePanel} = this.props;
+        if (expanded) {
+            onChangePanel(0);
+        } else {
+            onChangePanel(false);
+        }
+    }
+
     render() {
-        let {classes, t, rotate, undoChanges} = this.props;
+        let {classes, t, rotate, undoChanges, expanded, defaultExpanded} = this.props;
         return (
-            <ExpansionPanel>
+            <ExpansionPanel defaultExpanded={defaultExpanded} expanded={expanded} onChange={(event, expanded) => this.onChange(event, expanded)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                     <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.rotate')}</Typography>
                 </ExpansionPanelSummary>

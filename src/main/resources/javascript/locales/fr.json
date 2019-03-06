@@ -242,6 +242,9 @@
         "clearMultipleSelection": "Vider la sélection",
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments"
       },
+      "editImage": {
+        "tooltip": "Sauvegardez ou annulez les modifications avant de faire une autre opération."
+      },
       "subContent": "({{count}} sous-contenu)",
       "subContent_plural": "({{count}} sous-contenus)"
     }

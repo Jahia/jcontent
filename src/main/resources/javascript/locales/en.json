@@ -243,7 +243,7 @@
         "clearMultipleSelection": "Clear selection",
         "emptyContextMenu": "No actions available for those items"
       },
-      "editImage":{
+      "editImage": {
         "action": "Image edition",
         "title": "Image edition",
         "resize": "Resize",
@@ -253,7 +253,8 @@
         "saveAs": "Save as ...",
         "save": "Save",
         "unsavedChanges": "Unsaved changes",
-        "resizeInfo": "You can select a predefined size or provide your own values"
+        "resizeInfo": "You can select a predefined size or provide your own values",
+        "tooltip": "Save or cancel changes before doing another operation."
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)"

@@ -9,6 +9,7 @@ import {
     Input,
     MenuItem,
     Select,
+    Tooltip,
     withStyles
 } from '@material-ui/core';
 import {compose} from 'react-apollo';
@@ -112,17 +113,18 @@ export class RotatePanel extends React.Component {
         ];
 
         return (
-            <ExpansionPanel expanded={expanded} disabled={disabled} onChange={(event, expanded) => this.onChange(event, expanded)}>
-                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.panel}>
-                    <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
+            <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
+                <ExpansionPanel expanded={expanded} disabled={disabled} onChange={(event, expanded) => this.onChange(event, expanded)}>
+                    <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                        <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails className={classes.panel}>
+                        <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
 
-                    <div className={classes.grid}>
-                        <div>
-                            <FormControl className={classes.formControl}>
-                                <Select
+                        <div className={classes.grid}>
+                            <div>
+                                <FormControl className={classes.formControl}>
+                                    <Select
                                     displayEmpty
                                     value={0}
                                     inputProps={{
@@ -130,40 +132,41 @@ export class RotatePanel extends React.Component {
                                         id: 'predefined-field'
                                     }}
                                     onChange={event => resize(predefinedSizes[event.target.value])}
-                                >
-                                    {predefinedSizes.map((s, index) => <MenuItem key={s.key} value={index}>{s.width} x {s.height}</MenuItem>)}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div/>
-                        <div className={classes.inputs}>
-                            <FormControl className={classes.formControl}>
-                                <Input
+                                    >
+                                        {predefinedSizes.map((s, index) => <MenuItem key={s.key} value={index}>{s.width} x {s.height}</MenuItem>)}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div/>
+                            <div className={classes.inputs}>
+                                <FormControl className={classes.formControl}>
+                                    <Input
                                     id="width-field"
                                     value={width}
                                     type="number"
                                     margin="none"
                                     onChange={this.setWidth}
                                 />
-                            </FormControl>
-                            <FormControl className={classes.formControl}>
-                                <Input
+                                </FormControl>
+                                <FormControl className={classes.formControl}>
+                                    <Input
                                     id="height-field"
                                     value={height}
                                     type="number"
                                     margin="none"
                                     onChange={this.setHeight}
                                 />
-                            </FormControl>
+                                </FormControl>
+                            </div>
+                            <div className={classes.secondCol}>
+                                <IconButton onClick={this.switchRatio}><Link color={keepRatio ? 'action' : 'default'}/>
+                                </IconButton>
+                            </div>
                         </div>
-                        <div className={classes.secondCol}>
-                            <IconButton onClick={this.switchRatio}><Link color={keepRatio ? 'action' : 'default'}/>
-                            </IconButton>
-                        </div>
-                    </div>
-                    <ImageActions undoChanges={undoChanges}/>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
+                        <ImageActions undoChanges={undoChanges}/>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+            </Tooltip>
         );
     }
 }

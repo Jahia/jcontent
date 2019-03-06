@@ -242,6 +242,9 @@
         "clearMultipleSelection": "Auswahl aufheben",
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
       },
+      "editImage": {
+        "tooltip": "Bitte speichern Sie oder setzen Sie die Änderungen zurück, bevor Sie eine andere Aktion durchführen."
+      },
       "subContent": "({{count}} sub-Inhalt)",
       "subContent_plural": "({{count}} sub-Inhalte)"
     }

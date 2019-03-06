@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TwoColumnsContent, MainLayout} from '@jahia/layouts';
+import {MainLayout, TwoColumnsContent} from '@jahia/layouts';
 import {Typography} from '@jahia/ds-mui-theme';
 import ImageEditionPreview from './ImageEditionPreview';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
-import {connect} from 'react-redux';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 
@@ -29,10 +28,11 @@ export const PANELS = {
 export class ImageEdition extends React.Component {
     constructor(props) {
         super(props);
+        const {node} = this.props;
         this.state = {
             rotate: 0,
-            width: 800,
-            height: 600,
+            width: parseInt(node.width.value, 10),
+            height: parseInt(node.height.value, 10),
             transforms: [],
             expanded: PANELS.ROTATE
         };
@@ -52,10 +52,12 @@ export class ImageEdition extends React.Component {
     }
 
     undoChanges() {
+        const {node} = this.props;
+
         this.setState(() => ({
             rotate: 0,
-            width: 800,
-            height: 600,
+            width: parseInt(node.width.value, 10),
+            height: parseInt(node.height.value, 10),
             transforms: []
         }));
     }
@@ -77,10 +79,10 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, path} = this.props;
+        const {t, classes, node, client} = this.props;
         const {rotate, height, width, expanded} = this.state;
-        let originalWidth = 800;
-        let originalHeight = 600;
+        const originalWidth = parseInt(node.width.value, 10);
+        const originalHeight = parseInt(node.height.value, 10);
 
         let dirty = (rotate !== 0) || (originalWidth !== width) || (originalHeight !== height);
 
@@ -100,15 +102,17 @@ export class ImageEdition extends React.Component {
                 )
             }}
             >
-                <TwoColumnsContent classes={{left: classes.left, right: classes.right}} rightCol={<ImageEditionPreview rotate={rotate} path={path}/>}>
+                <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
+                                   rightCol={<ImageEditionPreview rotate={rotate} path={node.path}/>}
+                >
                     <RotatePanel defaultExpanded
                                  expanded={expanded === PANELS.ROTATE}
                                  rotate={this.rotate}
                                  undoChanges={this.undoChanges}
                                  onChangePanel={this.onChangePanel}
                     />
-                    <ResizePanel originalWidth={800}
-                                 originalHeight={600}
+                    <ResizePanel originalWidth={originalWidth}
+                                 originalHeight={originalHeight}
                                  width={width}
                                  height={height}
                                  undoChanges={this.undoChanges}
@@ -125,15 +129,10 @@ export class ImageEdition extends React.Component {
 ImageEdition.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
-    path: PropTypes.string.isRequired
+    node: PropTypes.object.isRequired
 };
 
-let mapStateToProps = state => ({
-    path: state.path
-});
-
 export default compose(
-    connect(mapStateToProps, null),
     translate(),
     withStyles(styles)
 )(ImageEdition);

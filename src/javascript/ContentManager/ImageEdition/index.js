@@ -1,3 +1,3 @@
-import ImageEdition from './ImageEdition';
+import ImageEdition from './ImageEdition.container';
 
 export default ImageEdition;

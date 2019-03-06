@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Query, withApollo, compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import ImageEdition from './ImageEdition';
@@ -16,6 +17,11 @@ const ImageEditionContainer = ({path, client}) => (
         }
     </Query>
 );
+
+ImageEditionContainer.propTypes = {
+    client: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired
+};
 
 let mapStateToProps = state => ({
     path: state.path

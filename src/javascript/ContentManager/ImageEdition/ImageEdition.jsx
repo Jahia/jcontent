@@ -79,7 +79,7 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node, client} = this.props;
+        const {t, classes, node} = this.props;
         const {rotate, height, width, expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);

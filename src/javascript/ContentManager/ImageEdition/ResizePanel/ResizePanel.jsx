@@ -103,7 +103,7 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, disabled} = this.props;
+        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, saveChanges, disabled} = this.props;
         const {keepRatio} = this.state;
 
         let predefinedSizes = [
@@ -142,7 +142,7 @@ export class RotatePanel extends React.Component {
                                 <FormControl className={classes.formControl}>
                                     <Input
                                     id="width-field"
-                                    value={width}
+                                    value={width ? width : originalWidth}
                                     type="number"
                                     margin="none"
                                     onChange={this.setWidth}
@@ -151,7 +151,7 @@ export class RotatePanel extends React.Component {
                                 <FormControl className={classes.formControl}>
                                     <Input
                                     id="height-field"
-                                    value={height}
+                                    value={height ? height : originalHeight}
                                     type="number"
                                     margin="none"
                                     onChange={this.setHeight}
@@ -163,7 +163,7 @@ export class RotatePanel extends React.Component {
                                 </IconButton>
                             </div>
                         </div>
-                        <ImageActions undoChanges={undoChanges}/>
+                        <ImageActions undoChanges={undoChanges} saveChanges={saveChanges}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Tooltip>

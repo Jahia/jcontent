@@ -28,48 +28,10 @@ export const PANELS = {
 export class ImageEdition extends React.Component {
     constructor(props) {
         super(props);
-        const {node} = this.props;
         this.state = {
-            rotate: 0,
-            width: parseInt(node.width.value, 10),
-            height: parseInt(node.height.value, 10),
-            transforms: [],
             expanded: PANELS.ROTATE
         };
-        this.rotate = this.rotate.bind(this);
-        this.undoChanges = this.undoChanges.bind(this);
-        this.resize = this.resize.bind(this);
         this.onChangePanel = this.onChangePanel.bind(this);
-    }
-
-    rotate(val) {
-        this.setState(state => ({
-            rotate: (state.rotate + val + 4) % 4,
-            transforms: ([...state.transforms, {
-                op: 'rotate', value: val
-            }])
-        }));
-    }
-
-    undoChanges() {
-        const {node} = this.props;
-
-        this.setState(() => ({
-            rotate: 0,
-            width: parseInt(node.width.value, 10),
-            height: parseInt(node.height.value, 10),
-            transforms: []
-        }));
-    }
-
-    resize({width, height}) {
-        this.setState(state => ({
-            width,
-            height,
-            transforms: ([...state.transforms, {
-                op: 'resize', width, height
-            }])
-        }));
     }
 
     onChangePanel(panel) {
@@ -79,15 +41,15 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node} = this.props;
-        const {rotate, height, width, expanded} = this.state;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges} = this.props;
+        const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
 
-        let disabledRotation = (originalWidth !== width) || (originalHeight !== height);
-        let disabledResize = (rotate !== 0);
+        let resizeDirty = (width && originalWidth !== width) || (height && originalHeight !== height);
+        let rotationsDirty = (rotations !== 0);
 
-        let dirty = (rotate !== 0) || (originalWidth !== width) || (originalHeight !== height);
+        let dirty = resizeDirty || rotationsDirty;
 
         let changesFeedback = dirty ? t('label.contentManager.editImage.unsavedChanges') : '';
 
@@ -106,23 +68,25 @@ export class ImageEdition extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
-                                   rightCol={<ImageEditionPreview rotate={rotate} path={node.path}/>}
+                                   rightCol={<ImageEditionPreview rotations={rotations} path={node.path}/>}
                 >
                     <RotatePanel defaultExpanded
-                                 disabled={disabledRotation}
                                  expanded={expanded === PANELS.ROTATE}
-                                 rotate={this.rotate}
-                                 undoChanges={this.undoChanges}
+                                 disabled={resizeDirty}
+                                 rotate={rotate}
+                                 undoChanges={undoChanges}
+                                 saveChanges={saveChanges}
                                  onChangePanel={this.onChangePanel}
                     />
-                    <ResizePanel originalWidth={originalWidth}
+                    <ResizePanel expanded={expanded === PANELS.RESIZE}
+                                 originalWidth={originalWidth}
                                  originalHeight={originalHeight}
                                  width={width}
                                  height={height}
-                                 disabled={disabledResize}
-                                 undoChanges={this.undoChanges}
-                                 resize={this.resize}
-                                 expanded={expanded === PANELS.RESIZE}
+                                 disabled={rotationsDirty}
+                                 resize={resize}
+                                 undoChanges={undoChanges}
+                                 saveChanges={saveChanges}
                                  onChangePanel={this.onChangePanel}
                     />
                 </TwoColumnsContent>

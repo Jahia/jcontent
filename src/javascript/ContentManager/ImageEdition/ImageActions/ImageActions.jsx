@@ -18,7 +18,7 @@ let styles = {
     }
 };
 
-const ImageActions = ({classes, t, undoChanges}) => (
+const ImageActions = ({classes, t, undoChanges, saveChanges}) => (
     <div className={classes.buttons}>
         <Button variant="ghost" color="primary" onClick={undoChanges}>
             {t('label.contentManager.editImage.undo')}
@@ -27,7 +27,7 @@ const ImageActions = ({classes, t, undoChanges}) => (
         <Button variant="secondary">
             {t('label.contentManager.editImage.saveAs')}
         </Button>
-        <Button variant="normal">
+        <Button variant="normal" onClick={saveChanges}>
             {t('label.contentManager.editImage.save')}
         </Button>
     </div>

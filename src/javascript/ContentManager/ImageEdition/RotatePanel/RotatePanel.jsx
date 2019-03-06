@@ -29,7 +29,7 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        let {classes, t, rotate, undoChanges, expanded, defaultExpanded, disabled} = this.props;
+        let {classes, t, rotate, undoChanges, expanded, defaultExpanded, saveChanges, disabled} = this.props;
         return (
             <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
                 <ExpansionPanel defaultExpanded={defaultExpanded}
@@ -52,7 +52,7 @@ export class RotatePanel extends React.Component {
                                 <RotateRight color="primary" fontSize="large"/>
                             </IconButton>
                         </div>
-                        <ImageActions undoChanges={undoChanges}/>
+                        <ImageActions undoChanges={undoChanges} saveChanges={saveChanges}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Tooltip>
@@ -63,7 +63,7 @@ export class RotatePanel extends React.Component {
 RotatePanel.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
-    rotate: PropTypes.number.isRequired,
+    rotate: PropTypes.func.isRequired,
     undoChanges: PropTypes.func.isRequired,
     expanded: PropTypes.bool.isRequired,
     defaultExpanded: PropTypes.bool.isRequired,

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, withStyles} from '@material-ui/core';
 import {ExpandMore, RotateLeft, RotateRight} from '@material-ui/icons';
 import {Typography} from '@jahia/ds-mui-theme';
@@ -43,8 +44,14 @@ export class RotatePanel extends React.Component {
     }
 }
 
+RotatePanel.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    rotate: PropTypes.number.isRequired,
+    undoChanges: PropTypes.func.isRequired
+};
+
 export default compose(
     translate(),
     withStyles(styles)
 )(RotatePanel);
-

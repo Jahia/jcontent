@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {TwoColumnsContent, MainLayout} from '@jahia/layouts';
 import {Typography} from '@jahia/ds-mui-theme';
 import ImageEditionPreview from './ImageEditionPreview';
@@ -102,6 +103,12 @@ export class ImageEdition extends React.Component {
         );
     }
 }
+
+ImageEdition.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired
+};
 
 let mapStateToProps = state => ({
     path: state.path

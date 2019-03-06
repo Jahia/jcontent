@@ -1,9 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 import {withStyles} from '@material-ui/core';
 import ImageViewer from '../../ContentLayout/PreviewDrawer/ContentPreview/PreviewComponent/ImageViewer/ImageViewer';
 
 let styles = () => ({
+    rotate0: {
+        transform: 'rotate(0deg)'
+    },
     rotate1: {
         transform: 'rotate(90deg)'
     },
@@ -12,9 +16,6 @@ let styles = () => ({
     },
     rotate3: {
         transform: 'rotate(270deg)'
-    },
-    rotate0: {
-        transform: 'rotate(0deg)'
     }
 });
 
@@ -47,7 +48,9 @@ export class ImageEditionPreview extends React.Component {
 }
 
 ImageEditionPreview.propTypes = {
-
+    path: PropTypes.string.isRequired,
+    rotate: PropTypes.number.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
 export default compose(

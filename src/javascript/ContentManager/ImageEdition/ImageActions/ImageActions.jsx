@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Button} from '@jahia/ds-mui-theme';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
@@ -31,6 +32,12 @@ const ImageActions = ({classes, t, undoChanges}) => (
         </Button>
     </div>
 );
+
+ImageActions.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    undoChanges: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

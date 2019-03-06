@@ -9,12 +9,14 @@ import {connect} from 'react-redux';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 
-let styles = () => ({
+let styles = theme => ({
     left: {
         overflow: 'auto'
     },
     right: {
-        justifyContent: 'center'
+        justifyContent: 'center',
+        background: theme.palette.ui.omega,
+        paddingRight: theme.spacing.unit * 2
     }
 });
 

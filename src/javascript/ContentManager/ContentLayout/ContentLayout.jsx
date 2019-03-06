@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {compose, withApollo} from 'react-apollo';
 import {ContextualMenu, withNotifications} from '@jahia/react-material';
 import {Drawer, Paper, withStyles} from '@material-ui/core';
@@ -22,7 +23,6 @@ const styles = theme => ({
         flexDirection: 'row',
         position: 'relative',
         overflow: 'hidden',
-        // MaxWidth: 'calc(100vw - 140px)',
         backgroundColor: theme.palette.background.paper
     },
     content: {
@@ -32,14 +32,11 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
         marginRight: -theme.contentManager.previewDrawerWidth
-        // Width: '100%'
     },
     contentLeftShift: {
-        // Width: 'calc(100% - ' + theme.contentManager.treeDrawerWidth + 'px)',
         marginLeft: 0
     },
     contentRightShift: {
-        // Width: 'calc(100% - ' + theme.contentManager.previewDrawerWidth + 'px)',
         marginRight: 0
     },
     treeDrawer: {
@@ -161,6 +158,17 @@ export class ContentLayout extends React.Component {
         );
     }
 }
+
+ContentLayout.propTypes = {
+    mode: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
+    filesMode: PropTypes.string.isRequired,
+    treeState: PropTypes.number.isRequired,
+    previewState: PropTypes.number.isRequired,
+    previewSelection: PropTypes.object.isRequired,
+    contentTreeConfigs: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => {
     return {

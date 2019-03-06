@@ -29,24 +29,25 @@ export class ImageEdition extends React.Component {
             height: 600,
             transforms: []
         };
-        this.rotateLeft = this.rotateLeft.bind(this);
-        this.rotateRight = this.rotateRight.bind(this);
-        this.undoRotationChanges = this.undoRotationChanges.bind(this);
+        this.rotate = this.rotate.bind(this);
+        this.undoChanges = this.undoChanges.bind(this);
         this.resize = this.resize.bind(this);
     }
 
     rotate(val) {
         this.setState(state => ({
-            rotate: (state.rotate + val) % 4,
+            rotate: (state.rotate + val + 4) % 4,
             transforms: ([...state.transforms, {
                 op: 'rotate', value: val
             }])
         }));
     }
 
-    undoRotatChanges() {
+    undoChanges() {
         this.setState(() => ({
             rotate: 0,
+            width: 800,
+            height: 600,
             transforms: []
         }));
     }
@@ -87,12 +88,13 @@ export class ImageEdition extends React.Component {
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}} rightCol={<ImageEditionPreview rotate={rotate} path={path}/>}>
                     <RotatePanel rotate={this.rotate}
-                                 undoChanges={this.undoRotationChanges}
+                                 undoChanges={this.undoChanges}
                     />
                     <ResizePanel originalWidth={800}
                                  originalHeight={600}
                                  width={width}
                                  height={height}
+                                 undoChanges={this.undoChanges}
                                  resize={this.resize}
                     />
                 </TwoColumnsContent>

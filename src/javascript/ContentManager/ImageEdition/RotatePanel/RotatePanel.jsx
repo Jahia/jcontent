@@ -29,9 +29,9 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        let {classes, t, rotate, undoChanges, expanded, defaultExpanded} = this.props;
+        let {classes, t, rotate, undoChanges, expanded, defaultExpanded, disabled} = this.props;
         return (
-            <ExpansionPanel defaultExpanded={defaultExpanded} expanded={expanded} onChange={(event, expanded) => this.onChange(event, expanded)}>
+            <ExpansionPanel defaultExpanded={defaultExpanded} disabled={disabled} expanded={expanded} onChange={(event, expanded) => this.onChange(event, expanded)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                     <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.rotate')}</Typography>
                 </ExpansionPanelSummary>

@@ -102,7 +102,7 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded} = this.props;
+        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, disabled} = this.props;
         const {keepRatio} = this.state;
 
         let predefinedSizes = [
@@ -112,7 +112,7 @@ export class RotatePanel extends React.Component {
         ];
 
         return (
-            <ExpansionPanel expanded={expanded} onChange={(event, expanded) => this.onChange(event, expanded)}>
+            <ExpansionPanel expanded={expanded} disabled={disabled} onChange={(event, expanded) => this.onChange(event, expanded)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                     <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
                 </ExpansionPanelSummary>

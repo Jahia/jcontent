@@ -84,6 +84,9 @@ export class ImageEdition extends React.Component {
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
 
+        let rotationDisabled = (originalWidth !== width) || (originalHeight !== height);
+        let resizeDisabled = (rotate !== 0);
+
         let dirty = (rotate !== 0) || (originalWidth !== width) || (originalHeight !== height);
 
         let changesFeedback = dirty ? t('label.contentManager.editImage.unsavedChanges') : '';
@@ -106,6 +109,7 @@ export class ImageEdition extends React.Component {
                                    rightCol={<ImageEditionPreview rotate={rotate} path={node.path}/>}
                 >
                     <RotatePanel defaultExpanded
+                                 disabled={rotationDisabled}
                                  expanded={expanded === PANELS.ROTATE}
                                  rotate={this.rotate}
                                  undoChanges={this.undoChanges}
@@ -115,6 +119,7 @@ export class ImageEdition extends React.Component {
                                  originalHeight={originalHeight}
                                  width={width}
                                  height={height}
+                                 disabled={resizeDisabled}
                                  undoChanges={this.undoChanges}
                                  resize={this.resize}
                                  expanded={expanded === PANELS.RESIZE}

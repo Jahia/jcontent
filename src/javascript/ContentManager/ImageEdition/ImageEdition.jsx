@@ -26,7 +26,8 @@ export class ImageEdition extends React.Component {
         this.state = {
             rotate: 0,
             width: 800,
-            height: 600
+            height: 600,
+            transforms: []
         };
         this.rotateLeft = this.rotateLeft.bind(this);
         this.rotateRight = this.rotateRight.bind(this);
@@ -34,40 +35,30 @@ export class ImageEdition extends React.Component {
         this.resize = this.resize.bind(this);
     }
 
-    rotateLeft() {
-        let {rotate} = this.state;
-        if (rotate === 0) {
-            this.setState({
-                rotate: 3
-            });
-        } else {
-            this.setState({
-                rotate: rotate - 1
-            });
-        }
+    rotate(val) {
+        this.setState(state => ({
+            rotate: (state.rotate + val) % 4,
+            transforms: ([...state.transforms, {
+                op: 'rotate', value: val
+            }])
+        }));
     }
 
-    rotateRight() {
-        let {rotate} = this.state;
-        if (rotate === 3) {
-            this.setState({
-                rotate: 0
-            });
-        } else {
-            this.setState({
-                rotate: rotate + 1
-            });
-        }
-    }
-
-    undoRotationChanges() {
-        this.setState({
-            rotate: 0
-        });
+    undoRotatChanges() {
+        this.setState(() => ({
+            rotate: 0,
+            transforms: []
+        }));
     }
 
     resize({width, height}) {
-        this.setState({width, height});
+        this.setState(state => ({
+            width,
+            height,
+            transforms: ([...state.transforms, {
+                op: 'resize', width, height
+            }])
+        }));
     }
 
     render() {
@@ -95,8 +86,7 @@ export class ImageEdition extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}} rightCol={<ImageEditionPreview rotate={rotate} path={path}/>}>
-                    <RotatePanel rotateLeft={this.rotateLeft}
-                                 rotateRight={this.rotateRight}
+                    <RotatePanel rotate={this.rotate}
                                  undoChanges={this.undoRotationChanges}
                     />
                     <ResizePanel originalWidth={800}

@@ -18,7 +18,7 @@ let styles = theme => ({
 
 export class RotatePanel extends React.Component {
     render() {
-        let {classes, t, rotateLeft, rotateRight, undoChanges} = this.props;
+        let {classes, t, rotate, undoChanges} = this.props;
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
@@ -29,10 +29,10 @@ export class RotatePanel extends React.Component {
                         {t('label.contentManager.editImage.rotateImage')}
                     </Typography>
                     <div className={classes.icons}>
-                        <IconButton onClick={() => rotateLeft()}>
+                        <IconButton onClick={() => rotate(-1)}>
                             <RotateLeft color="primary" fontSize="large"/>
                         </IconButton>
-                        <IconButton onClick={() => rotateRight()}>
+                        <IconButton onClick={() => rotate(1)}>
                             <RotateRight color="primary" fontSize="large"/>
                         </IconButton>
                     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import {compose} from 'react-apollo';
 import {withStyles} from '@material-ui/core';
+import ImageViewer from '../../ContentLayout/PreviewDrawer/ContentPreview/PreviewComponent/ImageViewer/ImageViewer';
 
 let styles = () => ({
     rotate1: {
@@ -13,7 +14,7 @@ let styles = () => ({
         transform: 'rotate(270deg)'
     },
     rotate0: {
-        transform: 'rotate(360deg)'
+        transform: 'rotate(0deg)'
     }
 });
 
@@ -35,7 +36,13 @@ export class ImageEditionPreview extends React.Component {
     }
 
     render() {
-        return <div className={this.getRotationClass()}>preview</div>;
+        let {path} = this.props;
+        let filepath = '/files/default' + path;
+        return (
+            <div className={this.getRotationClass()}>
+                <ImageViewer file={filepath} fullScreen={false}/>
+            </div>
+        );
     }
 }
 

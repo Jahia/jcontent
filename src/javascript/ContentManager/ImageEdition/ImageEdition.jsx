@@ -5,12 +5,16 @@ import ImageEditionPreview from './ImageEditionPreview';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
+import {connect} from 'react-redux';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 
 let styles = () => ({
-    root: {
+    left: {
         overflow: 'auto'
+    },
+    right: {
+        justifyContent: 'center'
     }
 });
 
@@ -65,9 +69,8 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes} = this.props;
+        const {t, classes, path} = this.props;
         const {rotate, height, width} = this.state;
-
         let originalWidth = 800;
         let originalHeight = 600;
 
@@ -89,7 +92,7 @@ export class ImageEdition extends React.Component {
                 )
             }}
             >
-                <TwoColumnsContent classes={{left: classes.root}} rightCol={<ImageEditionPreview rotate={rotate}/>}>
+                <TwoColumnsContent classes={{left: classes.left, right: classes.right}} rightCol={<ImageEditionPreview rotate={rotate} path={path}/>}>
                     <RotatePanel rotateLeft={this.rotateLeft}
                                  rotateRight={this.rotateRight}
                                  undoChanges={this.undoRotationChanges}
@@ -106,7 +109,12 @@ export class ImageEdition extends React.Component {
     }
 }
 
+let mapStateToProps = state => ({
+    path: state.path
+});
+
 export default compose(
+    connect(mapStateToProps, null),
     translate(),
     withStyles(styles)
 )(ImageEdition);

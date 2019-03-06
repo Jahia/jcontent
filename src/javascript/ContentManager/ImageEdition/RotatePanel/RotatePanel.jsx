@@ -58,7 +58,10 @@ RotatePanel.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     rotate: PropTypes.number.isRequired,
-    undoChanges: PropTypes.func.isRequired
+    undoChanges: PropTypes.func.isRequired,
+    expanded: PropTypes.bool.isRequired,
+    defaultExpanded: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired
 };
 
 export default compose(

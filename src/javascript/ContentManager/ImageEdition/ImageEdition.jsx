@@ -21,6 +21,11 @@ let styles = theme => ({
     }
 });
 
+export const PANELS = {
+    ROTATE: 0,
+    RESIZE: 1
+};
+
 export class ImageEdition extends React.Component {
     constructor(props) {
         super(props);
@@ -29,7 +34,7 @@ export class ImageEdition extends React.Component {
             width: 800,
             height: 600,
             transforms: [],
-            expanded: 0
+            expanded: PANELS.ROTATE
         };
         this.rotate = this.rotate.bind(this);
         this.undoChanges = this.undoChanges.bind(this);
@@ -97,7 +102,7 @@ export class ImageEdition extends React.Component {
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}} rightCol={<ImageEditionPreview rotate={rotate} path={path}/>}>
                     <RotatePanel defaultExpanded
-                                 expanded={expanded === 0}
+                                 expanded={expanded === PANELS.ROTATE}
                                  rotate={this.rotate}
                                  undoChanges={this.undoChanges}
                                  onChangePanel={this.onChangePanel}
@@ -108,7 +113,7 @@ export class ImageEdition extends React.Component {
                                  height={height}
                                  undoChanges={this.undoChanges}
                                  resize={this.resize}
-                                 expanded={expanded === 1}
+                                 expanded={expanded === PANELS.RESIZE}
                                  onChangePanel={this.onChangePanel}
                     />
                 </TwoColumnsContent>

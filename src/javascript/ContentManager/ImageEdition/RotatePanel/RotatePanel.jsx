@@ -6,6 +6,7 @@ import {Typography} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import ImageActions from '../ImageActions';
+import {PANELS} from '../ImageEdition';
 
 let styles = theme => ({
     rotatePanel: {
@@ -21,7 +22,7 @@ export class RotatePanel extends React.Component {
     onChange(event, expanded) {
         let {onChangePanel} = this.props;
         if (expanded) {
-            onChangePanel(0);
+            onChangePanel(PANELS.ROTATE);
         } else {
             onChangePanel(false);
         }

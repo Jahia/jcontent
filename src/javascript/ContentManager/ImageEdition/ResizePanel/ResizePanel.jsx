@@ -17,6 +17,7 @@ import {Link} from 'mdi-material-ui';
 import {Typography} from '@jahia/ds-mui-theme';
 import {ExpandMore} from '@material-ui/icons';
 import ImageActions from '../ImageActions';
+import {PANELS} from '../ImageEdition';
 
 let styles = () => ({
     panel: {
@@ -94,7 +95,7 @@ export class RotatePanel extends React.Component {
     onChange(event, expanded) {
         let {onChangePanel} = this.props;
         if (expanded) {
-            onChangePanel(1);
+            onChangePanel(PANELS.RESIZE);
         } else {
             onChangePanel(false);
         }

@@ -27,7 +27,7 @@
     "@jahia/icons": "^1.0.0-beta.20190218105956",
     "@jahia/layouts": "^1.0.0-beta.20190305115616",
     "@jahia/react-apollo": "^1.0.0-beta.20181113171845",
-    "@jahia/react-material": "^1.0.0-beta.20190305172049",
+    "@jahia/react-material": "^1.0.0-beta.20190306104307",
     "@jahia/registry": "^1.0.0-beta.20190130093649",
     "@material-ui/core": "^3.6.2",
     "@material-ui/icons": "^3.0.2",

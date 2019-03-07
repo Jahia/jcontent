@@ -253,7 +253,7 @@
         "saveAs": "Save as ...",
         "save": "Save",
         "unsavedChanges": "Unsaved changes",
-        "resizeInfo": "You can select a predefined size or provide your own values",
+        "resizeInfo": "You can provide your own values",
         "tooltip": "Save or cancel changes before doing another operation.",
         "goBack": "Back",
         "exitConfirmation": "You have unsaved changes. Are you sure you want to exit",

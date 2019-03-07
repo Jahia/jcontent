@@ -15,15 +15,15 @@ import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 
 const styles = theme => ({
     grid: {
+        flex: '1 1 0%',
         overflowY: 'auto',
         overflowX: 'hidden',
-        maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
         margin: '0!important',
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3
     },
     gridEmpty: {
-        maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight) + 'px)',
+        flex: '1 1 0%',
         margin: '0!important',
         backgroundColor: theme.palette.background.default
     },

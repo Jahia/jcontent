@@ -111,8 +111,7 @@ const APP_TABLE_CELLS = 2;
 
 const styles = theme => ({
     tableWrapper: {
-        minHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
-        maxHeight: 'calc(100vh - ' + (theme.layout.topBarHeight + theme.contentManager.toolbarHeight + theme.contentManager.paginationHeight) + 'px)',
+        flex: '1 1 0%',
         overflow: 'auto',
         position: 'relative'
     },
@@ -267,7 +266,7 @@ export class ContentListTable extends React.Component {
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
         return (
-            <Paper>
+            <>
                 <ToolBar/>
                 <div className={classes.tableWrapper}>
                     <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
@@ -501,7 +500,7 @@ export class ContentListTable extends React.Component {
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}
                 />
-            </Paper>
+            </>
         );
     }
 

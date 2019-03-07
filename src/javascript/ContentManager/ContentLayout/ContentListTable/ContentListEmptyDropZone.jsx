@@ -12,8 +12,9 @@ const styles = theme => ({
         padding: theme.spacing.unit * 4
     },
     dragZone: {
-        width: '100%',
-        height: '57vh'
+        display: 'flex',
+        padding: 0,
+        width: '100%'
     }
 });
 

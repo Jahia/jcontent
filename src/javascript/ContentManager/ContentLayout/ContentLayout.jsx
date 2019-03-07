@@ -28,10 +28,16 @@ const styles = theme => ({
     content: {
         flex: '1 1 auto',
         order: 2,
+        display: 'flex',
         transitionDuration: '.25s',
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
         marginRight: -theme.contentManager.previewDrawerWidth
+    },
+    contentPaper: {
+        flex: '1 1 auto',
+        flexDirection: 'column',
+        display: 'flex'
     },
     contentLeftShift: {
         marginLeft: 0
@@ -138,7 +144,7 @@ export class ContentLayout extends React.Component {
                                 })}
                                 onContextMenu={event => contextualMenu.current.open(event)}
                             >
-                                <Paper>
+                                <Paper className={classes.contentPaper}>
                                     {mode === ContentManagerConstants.mode.FILES && filesMode === 'grid' ?
                                         <FilesGrid totalCount={totalCount} rows={rows} contentNotFound={contentNotFound} loading={loading}/> :
                                         <ContentListTable totalCount={totalCount} rows={rows} contentNotFound={contentNotFound} loading={loading}/>

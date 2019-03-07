@@ -10,10 +10,8 @@ import ContentManagerConstants from '../../ContentManager.constants';
 import ContentTree from './ContentTree';
 
 const styles = theme => ({
-    tree: {
-        flex: '1 0 0%'
-    },
     listContainer: {
+        flex: '1 0 0%',
         overflow: 'auto',
         width: theme.contentManager.treeDrawerWidth + 'px'
     },
@@ -30,8 +28,10 @@ export class ContentTrees extends React.Component {
     }
 
     render() {
-        const {lang, siteKey, path, openPaths, t, user, setPath, openPath,
-            closePath, classes, setRefetch, mode, isOpen, closeTree} = this.props;
+        const {
+            lang, siteKey, path, openPaths, t, user, setPath, openPath,
+            closePath, classes, setRefetch, mode, isOpen, closeTree
+        } = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
@@ -59,33 +59,31 @@ export class ContentTrees extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <div className={classes.tree}>
-                    <div ref={setContainer} className={classes.listContainer}>
-                        <div className={classes.list}>
-                            {isOpen ?
-                                _.map(contentTreeConfigs, contentTreeConfig => {
-                                    return (
-                                        <ContentTree key={contentTreeConfig.key}
-                                                     container={this.container}
-                                                     mode={mode}
-                                                     siteKey={siteKey}
-                                                     path={usedPath}
-                                                     rootPath={rootPath + contentTreeConfig.rootPath}
-                                                     openPaths={openPaths}
-                                                     selectableTypes={contentTreeConfig.selectableTypes}
-                                                     lang={lang}
-                                                     user={user}
-                                                     dataCmRole={contentTreeConfig.key}
-                                                     handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
-                                                     handleSelect={path => setPath(path, {sub: false})}
-                                                     openableTypes={contentTreeConfig.openableTypes}
-                                                     rootLabel={t(contentTreeConfig.rootLabel)}
-                                                     setRefetch={setRefetch(contentTreeConfig.key)}
-                                        />
-                                    );
-                                }) : null
-                            }
-                        </div>
+                <div ref={setContainer} className={classes.listContainer}>
+                    <div className={classes.list}>
+                        {isOpen ?
+                            _.map(contentTreeConfigs, contentTreeConfig => {
+                                return (
+                                    <ContentTree key={contentTreeConfig.key}
+                                                 container={this.container}
+                                                 mode={mode}
+                                                 siteKey={siteKey}
+                                                 path={usedPath}
+                                                 rootPath={rootPath + contentTreeConfig.rootPath}
+                                                 openPaths={openPaths}
+                                                 selectableTypes={contentTreeConfig.selectableTypes}
+                                                 lang={lang}
+                                                 user={user}
+                                                 dataCmRole={contentTreeConfig.key}
+                                                 handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
+                                                 handleSelect={path => setPath(path, {sub: false})}
+                                                 openableTypes={contentTreeConfig.openableTypes}
+                                                 rootLabel={t(contentTreeConfig.rootLabel)}
+                                                 setRefetch={setRefetch(contentTreeConfig.key)}
+                                    />
+                                );
+                            }) : null
+                        }
                     </div>
                 </div>
             </React.Fragment>

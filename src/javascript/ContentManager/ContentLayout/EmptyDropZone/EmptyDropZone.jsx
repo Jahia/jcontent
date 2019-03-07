@@ -6,6 +6,7 @@ import {translate} from 'react-i18next';
 
 const styles = theme => ({
     dropZone: {
+        flex: '1 1 0%',
         border: '2px dashed ' + theme.palette.border.main,
         color: theme.palette.text.disabled,
         display: 'flex',
@@ -14,7 +15,6 @@ const styles = theme => ({
         textAlign: 'center', // This one is for Safari rendering
         justifyContent: 'center',
         width: 'inherit',
-        height: 'inherit',
         boxSizing: 'border-box',
         transitionDuration: '.1s'
     }

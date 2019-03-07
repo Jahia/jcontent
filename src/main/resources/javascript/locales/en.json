@@ -258,7 +258,7 @@
         "goBack": "Back",
         "exitConfirmation": "You have unsaved changes. Are you sure you want to exit",
         "continueEditing": "Continue editing",
-        "discardChanges": "Discard changes"
+        "discardChanges": "Discard changes",
         "saveAsDialog": {
           "title": "Save as",
           "text": "Enter a file name",

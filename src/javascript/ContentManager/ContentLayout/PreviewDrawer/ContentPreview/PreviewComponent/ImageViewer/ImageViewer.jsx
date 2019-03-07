@@ -22,10 +22,10 @@ const styles = theme => ({
 
 export class ImageViewer extends React.Component {
     render() {
-        let {classes, file, fullScreen} = this.props;
+        let {classes, file, fullScreen, className} = this.props;
 
         return (
-            <CardMedia className={classNames(classes.container, fullScreen && classes.fullScreen)}
+            <CardMedia className={classNames(classes.container, className, fullScreen && classes.fullScreen)}
                        data-cm-role="preview-image"
                        image={file}
             />

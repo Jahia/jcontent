@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
-import {withStyles} from '@material-ui/core';
+import {Card, withStyles} from '@material-ui/core';
 import ImageViewer from '../../ContentLayout/PreviewDrawer/ContentPreview/PreviewComponent/ImageViewer/ImageViewer';
+import classNames from 'classnames';
 
 let styles = () => ({
     rotate0: {
@@ -16,6 +17,15 @@ let styles = () => ({
     },
     rotate3: {
         transform: 'rotate(270deg)'
+    },
+    card: {
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: 'inherit'
+    },
+    imageViewer: {
+        flex: '1 1 0%',
+        maxWidth: '100%'
     }
 });
 
@@ -37,12 +47,12 @@ export class ImageEditionPreview extends React.Component {
     }
 
     render() {
-        let {path, ts} = this.props;
+        let {path, ts, classes} = this.props;
         let filepath = '/files/default' + path + '?ts=' + ts;
         return (
-            <div className={this.getRotationClass()}>
-                <ImageViewer file={filepath} fullScreen={false}/>
-            </div>
+            <Card className={classes.card}>
+                <ImageViewer file={filepath} fullScreen={false} className={classNames(classes.imageViewer, this.getRotationClass())}/>
+            </Card>
         );
     }
 }

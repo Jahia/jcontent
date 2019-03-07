@@ -254,7 +254,11 @@
         "save": "Save",
         "unsavedChanges": "Unsaved changes",
         "resizeInfo": "You can select a predefined size or provide your own values",
-        "tooltip": "Save or cancel changes before doing another operation."
+        "tooltip": "Save or cancel changes before doing another operation.",
+        "goBack": "Back",
+        "exitConfirmation": "You have unsaved changes. Are you sure you want to exit",
+        "continueEditing": "Continue editing",
+        "discardChanges": "Discard changes"
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)"

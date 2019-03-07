@@ -27,7 +27,7 @@ const ImageActions = ({classes, t, undoChanges, saveChanges}) => (
         <Button variant="secondary">
             {t('label.contentManager.editImage.saveAs')}
         </Button>
-        <Button variant="normal" onClick={saveChanges}>
+        <Button variant="primary" onClick={saveChanges}>
             {t('label.contentManager.editImage.save')}
         </Button>
     </div>

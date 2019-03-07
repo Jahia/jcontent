@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {MainLayout, TwoColumnsContent} from '@jahia/layouts';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import ImageEditionPreview from './ImageEditionPreview';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
+import {ChevronLeft} from '@material-ui/icons';
+import UnsavedChangesDialog from './UnsavedChangesDialog';
 
 let styles = theme => ({
     left: {
@@ -41,7 +43,7 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges} = this.props;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, openConfirmDialog, onBackNavigation, onCloseDialog} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -55,7 +57,14 @@ export class ImageEdition extends React.Component {
 
         return (
             <MainLayout topBarProps={{
-                path: t('label.contentManager.appTitle', {path: ''}),
+                path: (
+                    <React.Fragment>
+                        <Typography variant="omega" color="invert">
+                            <IconButton color="inverted" size="compact" icon={<ChevronLeft/>} onClick={() => onBackNavigation(dirty)}/>
+                            {t('label.contentManager.editImage.goBack')}
+                        </Typography>
+                    </React.Fragment>
+                ),
                 title: t('label.contentManager.editImage.title'),
                 contextModifiers: <React.Fragment></React.Fragment>,
                 actions: (
@@ -90,6 +99,7 @@ export class ImageEdition extends React.Component {
                                  onChangePanel={this.onChangePanel}
                     />
                 </TwoColumnsContent>
+                <UnsavedChangesDialog open={openConfirmDialog} onClose={onCloseDialog}/>
             </MainLayout>
         );
     }

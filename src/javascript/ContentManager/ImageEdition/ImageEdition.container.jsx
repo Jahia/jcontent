@@ -13,12 +13,31 @@ class ImageEditionContainer extends React.Component {
             rotations: 0,
             width: null,
             height: null,
-            transforms: []
+            transforms: [],
+            openConfirmDialog: false
         };
 
         this.rotate = this.rotate.bind(this);
         this.undoChanges = this.undoChanges.bind(this);
         this.resize = this.resize.bind(this);
+        this.onBackNavigation = this.onBackNavigation.bind(this);
+        this.onCloseDialog = this.onCloseDialog.bind(this);
+    }
+
+    onBackNavigation(dirty) {
+        if (dirty) {
+            this.setState({
+                openConfirmDialog: true
+            });
+        } else {
+            window.history.back();
+        }
+    }
+
+    onCloseDialog() {
+        this.setState({
+            openConfirmDialog: false
+        });
     }
 
     rotate(val) {
@@ -58,7 +77,7 @@ class ImageEditionContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms} = this.state;
+        const {rotations, width, height, transforms, openConfirmDialog} = this.state;
         return (
             <Mutation mutation={getImageMutation(transforms)}>
                 {mutation => {
@@ -71,10 +90,13 @@ class ImageEditionContainer extends React.Component {
                                                       rotations={rotations}
                                                       width={width}
                                                       height={height}
+                                                      openConfirmDialog={openConfirmDialog}
                                                       rotate={this.rotate}
                                                       resize={this.resize}
                                                       undoChanges={this.undoChanges}
                                                       saveChanges={() => mutation({variables: {path}})}
+                                                      onBackNavigation={this.onBackNavigation}
+                                                      onCloseDialog={this.onCloseDialog}
                                         />
                                     );
                                 }

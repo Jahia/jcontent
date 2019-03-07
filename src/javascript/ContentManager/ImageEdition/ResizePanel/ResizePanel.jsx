@@ -63,7 +63,7 @@ export class RotatePanel extends React.Component {
         if (/\d+/.test(value)) {
             resize({
                 width: Math.round(value),
-                height: Math.round(keepRatio ? value * originalHeight / originalWidth : height)
+                height: Math.round(keepRatio ? value * originalHeight / originalWidth : (height || originalHeight))
             });
         }
     }
@@ -75,7 +75,7 @@ export class RotatePanel extends React.Component {
 
         if (/\d+/.test(value)) {
             resize({
-                width: Math.round(keepRatio ? value * originalWidth / originalHeight : width),
+                width: Math.round(keepRatio ? value * originalWidth / originalHeight : (width || originalWidth)),
                 height: Math.round(value)
             });
         }
@@ -183,6 +183,11 @@ RotatePanel.propTypes = {
     onChangePanel: PropTypes.func.isRequired,
     expanded: PropTypes.bool.isRequired,
     disabled: PropTypes.bool.isRequired
+};
+
+RotatePanel.defaultProps = {
+    width: null,
+    height: null
 };
 
 export default compose(

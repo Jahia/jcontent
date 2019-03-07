@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button, ExpansionPanelActions} from '@jahia/ds-mui-theme';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
@@ -19,7 +19,7 @@ let styles = {
 };
 
 const ImageActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
-    <div className={classes.buttons}>
+    <ExpansionPanelActions className={classes.buttons}>
         <Button variant="ghost" color="primary" disabled={!dirty} onClick={undoChanges}>
             {t('label.contentManager.editImage.undo')}
         </Button>
@@ -30,7 +30,7 @@ const ImageActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
         <Button variant="primary" disabled={!dirty} onClick={() => saveChanges(false)}>
             {t('label.contentManager.editImage.save')}
         </Button>
-    </div>
+    </ExpansionPanelActions>
 );
 
 ImageActions.propTypes = {

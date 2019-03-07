@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {IconButton, Tooltip, withStyles} from '@material-ui/core';
+import {ExpandMore, RotateLeft, RotateRight} from '@material-ui/icons';
 import {
+    Typography,
     ExpansionPanel,
     ExpansionPanelDetails,
-    ExpansionPanelSummary,
-    IconButton,
-    Tooltip,
-    withStyles
-} from '@material-ui/core';
-import {ExpandMore, RotateLeft, RotateRight} from '@material-ui/icons';
-import {Typography} from '@jahia/ds-mui-theme';
+    ExpansionPanelSummary} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import ImageActions from '../ImageActions';
@@ -59,8 +56,8 @@ export class RotatePanel extends React.Component {
                                 <RotateRight color="primary" fontSize="large"/>
                             </IconButton>
                         </div>
-                        <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                     </ExpansionPanelDetails>
+                    <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                 </ExpansionPanel>
             </Tooltip>
         );

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -9,6 +8,7 @@ import {
     DialogTitle,
     withStyles
 } from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 
@@ -31,10 +31,10 @@ export const ConfirmSaveDialog = ({open, handleClose, handleSave, classes, t}) =
             </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button color="default" onClick={handleClose}>
+            <Button variant="secondary" onClick={handleClose}>
                 {t('label.contentManager.editImage.confirmSaveDialog.no')}
             </Button>
-            <Button color="primary" onClick={() => handleSave()}>
+            <Button variant="primary" onClick={() => handleSave()}>
                 {t('label.contentManager.editImage.confirmSaveDialog.yes')}
             </Button>
         </DialogActions>

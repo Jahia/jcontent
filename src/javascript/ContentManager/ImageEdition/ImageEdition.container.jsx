@@ -124,7 +124,7 @@ class ImageEditionContainer extends React.Component {
         }
 
         return (
-            <Mutation mutation={getImageMutation(transforms)} onCompleted={this.onCompleted}>
+            <Mutation mutation={getImageMutation(transforms)} refetchQueries={() => ['ImageQuery']} onCompleted={this.onCompleted}>
                 {mutation => {
                     return (
                         <Query query={ImageQuery} variables={{path: path}}>

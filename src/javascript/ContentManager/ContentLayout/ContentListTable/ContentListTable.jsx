@@ -1,14 +1,13 @@
 import React from 'react';
 import {
+    Badge,
     Checkbox,
-    Paper,
     Table,
     TableBody,
     TableCell,
     TableRow,
     Tooltip,
     Typography,
-    Badge,
     withStyles
 } from '@material-ui/core';
 import {Lock} from '@material-ui/icons';

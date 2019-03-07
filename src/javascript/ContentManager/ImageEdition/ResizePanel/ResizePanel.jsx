@@ -24,15 +24,17 @@ let styles = () => ({
     panel: {
         flexDirection: 'column'
     },
-    grid: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr'
+    form: {
+        display: 'flex',
+        flexDirection: 'row'
     },
-    inputs: {
+    firstCol: {
+        flex: '1 1 0%',
         display: 'flex',
         flexDirection: 'column'
     },
     secondCol: {
+        flex: '1 1 0%',
         alignSelf: 'center',
         justifySelf: 'start',
         padding: '16px'
@@ -106,12 +108,6 @@ export class RotatePanel extends React.Component {
         const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, saveAsChanges, saveChanges, dirty, disabled} = this.props;
         const {keepRatio} = this.state;
 
-        let predefinedSizes = [
-            {key: 1, width: originalWidth, height: originalHeight},
-            {key: 2, width: 50, height: 12},
-            {key: 3, width: 100, height: 43}
-        ];
-
         return (
             <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
                 <ExpansionPanel expanded={expanded} disabled={disabled} onChange={(event, expanded) => this.onChange(event, expanded)}>
@@ -121,24 +117,8 @@ export class RotatePanel extends React.Component {
                     <ExpansionPanelDetails className={classes.panel}>
                         <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
 
-                        <div className={classes.grid}>
-                            <div>
-                                <FormControl className={classes.formControl}>
-                                    <Select
-                                    displayEmpty
-                                    value={0}
-                                    inputProps={{
-                                        name: 'predefined',
-                                        id: 'predefined-field'
-                                    }}
-                                    onChange={event => resize(predefinedSizes[event.target.value])}
-                                    >
-                                        {predefinedSizes.map((s, index) => <MenuItem key={s.key} value={index}>{s.width} x {s.height}</MenuItem>)}
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div/>
-                            <div className={classes.inputs}>
+                        <div className={classes.form}>
+                            <div className={classes.firstCol}>
                                 <FormControl className={classes.formControl}>
                                     <Input
                                     id="width-field"

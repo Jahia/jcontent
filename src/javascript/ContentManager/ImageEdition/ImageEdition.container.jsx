@@ -7,18 +7,19 @@ import {ImageQuery} from './ImageEdition.gql-queries';
 import {getImageMutation} from './ImageEdition.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
+import UnsavedChangesDialog from './UnsavedChangesDialog';
 
 class ImageEditionContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            confirmOpen: false,
+            confirmSaveOpen: false,
             saveAsOpen: false,
+            confirmCloseOpen: false,
             rotations: 0,
             width: null,
             height: null,
             transforms: [],
-            openConfirmDialog: false,
             name: null,
             ts: new Date().getTime()
         };
@@ -29,24 +30,17 @@ class ImageEditionContainer extends React.Component {
         this.handleChangeName = this.handleChangeName.bind(this);
         this.resize = this.resize.bind(this);
         this.onBackNavigation = this.onBackNavigation.bind(this);
-        this.onCloseDialog = this.onCloseDialog.bind(this);
         this.onCompleted = this.onCompleted.bind(this);
     }
 
     onBackNavigation(dirty) {
         if (dirty) {
             this.setState({
-                openConfirmDialog: true
+                confirmCloseOpen: true
             });
         } else {
             window.history.back();
         }
-    }
-
-    onCloseDialog() {
-        this.setState({
-            openConfirmDialog: false
-        });
     }
 
     rotate(val) {
@@ -90,8 +84,9 @@ class ImageEditionContainer extends React.Component {
 
     handleClose() {
         this.setState({
-            confirmOpen: false,
-            saveAsOpen: false
+            confirmSaveOpen: false,
+            saveAsOpen: false,
+            confirmCloseOpen: false
         });
     }
 
@@ -115,7 +110,7 @@ class ImageEditionContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms, openConfirmDialog, confirmOpen, saveAsOpen, ts, name} = this.state;
+        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name} = this.state;
 
         let newName = name;
         if (!newName) {
@@ -124,7 +119,10 @@ class ImageEditionContainer extends React.Component {
         }
 
         return (
-            <Mutation mutation={getImageMutation(transforms)} refetchQueries={() => ['ImageQuery']} onCompleted={this.onCompleted}>
+            <Mutation mutation={getImageMutation(transforms)}
+                      refetchQueries={() => ['ImageQuery']}
+                      onCompleted={this.onCompleted}
+            >
                 {mutation => {
                     return (
                         <Query query={ImageQuery} variables={{path: path}}>
@@ -138,17 +136,18 @@ class ImageEditionContainer extends React.Component {
                                                 rotations={rotations}
                                                 width={width}
                                                 height={height}
-                                                openConfirmDialog={openConfirmDialog}
                                                 rotate={this.rotate}
                                                 resize={this.resize}
                                                 undoChanges={this.undoChanges}
-                                                saveAsChanges={() => this.setState({saveAsOpen: true})}
-                                                saveChanges={() => this.setState({confirmOpen: true})}
+                                                saveChanges={withName => this.setState({
+                                                    confirmSaveOpen: !withName,
+                                                    saveAsOpen: withName
+                                                })}
                                                 onBackNavigation={this.onBackNavigation}
                                                 onCloseDialog={this.onCloseDialog}
                                             />
                                             <ConfirmSaveDialog
-                                                open={confirmOpen}
+                                                open={confirmSaveOpen}
                                                 handleSave={() => mutation({variables: {path}})}
                                                 handleClose={this.handleClose}
                                             />
@@ -159,6 +158,11 @@ class ImageEditionContainer extends React.Component {
                                                 handleClose={this.handleClose}
                                                 onChangeName={this.handleChangeName}
                                             />
+                                            <UnsavedChangesDialog
+                                                open={confirmCloseOpen}
+                                                onClose={this.handleClose}
+                                            />
+
                                         </>
                                     );
                                 }

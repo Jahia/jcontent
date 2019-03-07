@@ -18,16 +18,16 @@ let styles = {
     }
 };
 
-const ImageActions = ({classes, t, undoChanges, saveAsChanges, saveChanges, dirty}) => (
+const ImageActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
     <div className={classes.buttons}>
         <Button variant="ghost" color="primary" disabled={!dirty} onClick={undoChanges}>
             {t('label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>
-        <Button variant="secondary" disabled={!dirty} onClick={saveAsChanges}>
+        <Button variant="secondary" disabled={!dirty} onClick={() => saveChanges(true)}>
             {t('label.contentManager.editImage.saveAs')}
         </Button>
-        <Button variant="primary" disabled={!dirty} onClick={saveChanges}>
+        <Button variant="primary" disabled={!dirty} onClick={() => saveChanges(false)}>
             {t('label.contentManager.editImage.save')}
         </Button>
     </div>
@@ -36,6 +36,8 @@ const ImageActions = ({classes, t, undoChanges, saveAsChanges, saveChanges, dirt
 ImageActions.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
+    dirty: PropTypes.bool.isRequired,
+    saveChanges: PropTypes.func.isRequired,
     undoChanges: PropTypes.func.isRequired
 };
 

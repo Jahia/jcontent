@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {MainLayout, TwoColumnsContent} from '@jahia/layouts';
-import {Typography, IconButton} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/ds-mui-theme';
 import ImageEditionPreview from './ImageEditionPreview';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
@@ -9,7 +9,6 @@ import {translate} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 import {ChevronLeft} from '@material-ui/icons';
-import UnsavedChangesDialog from './UnsavedChangesDialog';
 
 let styles = theme => ({
     left: {
@@ -43,7 +42,7 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveAsChanges, saveChanges, openConfirmDialog, onBackNavigation, onCloseDialog, ts} = this.props;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, onBackNavigation, ts} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -86,7 +85,6 @@ export class ImageEdition extends React.Component {
                                      disabled={resizeDirty}
                                      rotate={rotate}
                                      undoChanges={undoChanges}
-                                     saveAsChanges={saveAsChanges}
                                      saveChanges={saveChanges}
                                      onChangePanel={this.onChangePanel}
                         />
@@ -99,13 +97,11 @@ export class ImageEdition extends React.Component {
                                      disabled={rotationsDirty}
                                      resize={resize}
                                      undoChanges={undoChanges}
-                                     saveAsChanges={saveAsChanges}
                                      saveChanges={saveChanges}
                                      onChangePanel={this.onChangePanel}
                         />
                     </>
                 </TwoColumnsContent>
-                <UnsavedChangesDialog open={openConfirmDialog} onClose={onCloseDialog}/>
             </MainLayout>
         );
     }
@@ -114,10 +110,20 @@ export class ImageEdition extends React.Component {
 ImageEdition.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
-    node: PropTypes.object.isRequired
+    node: PropTypes.object.isRequired,
+    height: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+    rotations: PropTypes.number.isRequired,
+    resize: PropTypes.func.isRequired,
+    rotate: PropTypes.func.isRequired,
+    onBackNavigation: PropTypes.func.isRequired,
+    saveChanges: PropTypes.func.isRequired,
+    ts: PropTypes.number.isRequired,
+    undoChanges: PropTypes.func.isRequired
 };
 
 export default compose(
     translate(),
     withStyles(styles)
 )(ImageEdition);
+

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
     Button,
@@ -52,6 +53,16 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
             </DialogActions>
         </Dialog>
     );
+};
+
+SaveAsDialog.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    handleSave: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+    onChangeName: PropTypes.func.isRequired
 };
 
 export default compose(

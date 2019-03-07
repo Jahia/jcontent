@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import {
     Button,
@@ -39,6 +40,14 @@ export const ConfirmSaveDialog = ({open, handleClose, handleSave, classes, t}) =
         </DialogActions>
     </Dialog>
 );
+
+ConfirmSaveDialog.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    handleSave: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
+};
 
 export default compose(
     translate(),

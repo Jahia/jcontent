@@ -7,8 +7,6 @@ import {
     FormControl,
     IconButton,
     Input,
-    MenuItem,
-    Select,
     Tooltip,
     withStyles
 } from '@material-ui/core';
@@ -105,7 +103,7 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, saveAsChanges, saveChanges, dirty, disabled} = this.props;
+        const {t, classes, originalWidth, originalHeight, width, height, undoChanges, expanded, saveChanges, dirty, disabled} = this.props;
         const {keepRatio} = this.state;
 
         return (
@@ -143,7 +141,7 @@ export class RotatePanel extends React.Component {
                                 </IconButton>
                             </div>
                         </div>
-                        <ImageActions dirty={dirty} undoChanges={undoChanges} saveAsChanges={saveAsChanges} saveChanges={saveChanges}/>
+                        <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Tooltip>
@@ -154,6 +152,8 @@ export class RotatePanel extends React.Component {
 RotatePanel.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
+    dirty: PropTypes.bool.isRequired,
+    saveChanges: PropTypes.func.isRequired,
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
     width: PropTypes.number,

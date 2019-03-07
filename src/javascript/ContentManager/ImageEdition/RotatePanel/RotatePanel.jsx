@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, Tooltip, withStyles} from '@material-ui/core';
+import {
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    IconButton,
+    Tooltip,
+    withStyles
+} from '@material-ui/core';
 import {ExpandMore, RotateLeft, RotateRight} from '@material-ui/icons';
 import {Typography} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
@@ -29,7 +36,7 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        let {classes, t, rotate, undoChanges, expanded, defaultExpanded, saveAsChanges, saveChanges, dirty, disabled} = this.props;
+        let {classes, t, rotate, undoChanges, expanded, defaultExpanded, saveChanges, dirty, disabled} = this.props;
         return (
             <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
                 <ExpansionPanel defaultExpanded={defaultExpanded}
@@ -52,7 +59,7 @@ export class RotatePanel extends React.Component {
                                 <RotateRight color="primary" fontSize="large"/>
                             </IconButton>
                         </div>
-                        <ImageActions dirty={dirty} undoChanges={undoChanges} saveAsChanges={saveAsChanges} saveChanges={saveChanges}/>
+                        <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Tooltip>
@@ -63,6 +70,8 @@ export class RotatePanel extends React.Component {
 RotatePanel.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
+    dirty: PropTypes.bool.isRequired,
+    saveChanges: PropTypes.func.isRequired,
     rotate: PropTypes.func.isRequired,
     undoChanges: PropTypes.func.isRequired,
     expanded: PropTypes.bool.isRequired,

@@ -103,7 +103,7 @@ export class RotatePanel extends React.Component {
     }
 
     render() {
-        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, saveChanges, disabled} = this.props;
+        const {t, classes, originalWidth, originalHeight, width, height, resize, undoChanges, expanded, saveAsChanges, saveChanges, dirty, disabled} = this.props;
         const {keepRatio} = this.state;
 
         let predefinedSizes = [
@@ -163,7 +163,7 @@ export class RotatePanel extends React.Component {
                                 </IconButton>
                             </div>
                         </div>
-                        <ImageActions undoChanges={undoChanges} saveChanges={saveChanges}/>
+                        <ImageActions dirty={dirty} undoChanges={undoChanges} saveAsChanges={saveAsChanges} saveChanges={saveChanges}/>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Tooltip>
@@ -176,8 +176,8 @@ RotatePanel.propTypes = {
     classes: PropTypes.object.isRequired,
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+    width: PropTypes.number,
+    height: PropTypes.number,
     undoChanges: PropTypes.func.isRequired,
     resize: PropTypes.func.isRequired,
     onChangePanel: PropTypes.func.isRequired,

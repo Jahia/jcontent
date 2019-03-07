@@ -18,16 +18,16 @@ let styles = {
     }
 };
 
-const ImageActions = ({classes, t, undoChanges, saveChanges}) => (
+const ImageActions = ({classes, t, undoChanges, saveAsChanges, saveChanges, dirty}) => (
     <div className={classes.buttons}>
-        <Button variant="ghost" color="primary" onClick={undoChanges}>
+        <Button variant="ghost" color="primary" disabled={!dirty} onClick={undoChanges}>
             {t('label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>
-        <Button variant="secondary">
+        <Button variant="secondary" disabled={!dirty} onClick={saveAsChanges}>
             {t('label.contentManager.editImage.saveAs')}
         </Button>
-        <Button variant="primary" onClick={saveChanges}>
+        <Button variant="primary" disabled={!dirty} onClick={saveChanges}>
             {t('label.contentManager.editImage.save')}
         </Button>
     </div>

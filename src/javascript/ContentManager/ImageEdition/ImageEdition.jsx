@@ -43,12 +43,12 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, openConfirmDialog, onBackNavigation, onCloseDialog} = this.props;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveAsChanges, saveChanges, openConfirmDialog, onBackNavigation, onCloseDialog, ts} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
 
-        let resizeDirty = (width && originalWidth !== width) || (height && originalHeight !== height);
+        let resizeDirty = Boolean((width && originalWidth !== width) || (height && originalHeight !== height));
         let rotationsDirty = (rotations !== 0);
 
         let dirty = resizeDirty || rotationsDirty;
@@ -77,27 +77,33 @@ export class ImageEdition extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
-                                   rightCol={<ImageEditionPreview rotations={rotations} path={node.path}/>}
+                                   rightCol={<ImageEditionPreview rotations={rotations} path={node.path} ts={ts}/>}
                 >
-                    <RotatePanel defaultExpanded
-                                 expanded={expanded === PANELS.ROTATE}
-                                 disabled={resizeDirty}
-                                 rotate={rotate}
-                                 undoChanges={undoChanges}
-                                 saveChanges={saveChanges}
-                                 onChangePanel={this.onChangePanel}
-                    />
-                    <ResizePanel expanded={expanded === PANELS.RESIZE}
-                                 originalWidth={originalWidth}
-                                 originalHeight={originalHeight}
-                                 width={width}
-                                 height={height}
-                                 disabled={rotationsDirty}
-                                 resize={resize}
-                                 undoChanges={undoChanges}
-                                 saveChanges={saveChanges}
-                                 onChangePanel={this.onChangePanel}
-                    />
+                    <>
+                        <RotatePanel defaultExpanded
+                                     dirty={rotationsDirty}
+                                     expanded={expanded === PANELS.ROTATE}
+                                     disabled={resizeDirty}
+                                     rotate={rotate}
+                                     undoChanges={undoChanges}
+                                     saveAsChanges={saveAsChanges}
+                                     saveChanges={saveChanges}
+                                     onChangePanel={this.onChangePanel}
+                        />
+                        <ResizePanel expanded={expanded === PANELS.RESIZE}
+                                     dirty={resizeDirty}
+                                     originalWidth={originalWidth}
+                                     originalHeight={originalHeight}
+                                     width={width}
+                                     height={height}
+                                     disabled={rotationsDirty}
+                                     resize={resize}
+                                     undoChanges={undoChanges}
+                                     saveAsChanges={saveAsChanges}
+                                     saveChanges={saveChanges}
+                                     onChangePanel={this.onChangePanel}
+                        />
+                    </>
                 </TwoColumnsContent>
                 <UnsavedChangesDialog open={openConfirmDialog} onClose={onCloseDialog}/>
             </MainLayout>

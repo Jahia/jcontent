@@ -1,18 +1,21 @@
 import gql from 'graphql-tag';
+import {PredefinedFragments} from '@jahia/apollo-dx';
 
 const getImageMutation = transforms => gql`
-    mutation ImageMutation($path:String!) {
+    mutation ImageMutation($path:String!, $name: String) {
         jcr {
             mutateNode(pathOrId: $path) {
-                transformImage {
+                transformImage(name: $name) {
                     ${transforms.map((t, idx) => 'op' + idx + ':' + t.op + '(' + Object.keys(t.args).map(k => k + ':' + JSON.stringify(t.args[k])) + ')')}
                     node {
-                        uuid
+                        ...NodeCacheRequiredFields
                     }
                 }
             }
         }
     }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+
 `;
 
 export {getImageMutation};

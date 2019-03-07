@@ -259,6 +259,19 @@
         "exitConfirmation": "You have unsaved changes. Are you sure you want to exit",
         "continueEditing": "Continue editing",
         "discardChanges": "Discard changes"
+        "saveAsDialog": {
+          "title": "Save as",
+          "text": "Enter a file name",
+          "filename": "File name",
+          "cancel": "Cancel",
+          "save": "Save"
+        },
+        "confirmSaveDialog": {
+          "title": "Replace existing file",
+          "text": "A file with this name already exists. Are you sure want to continue ?",
+          "no": "No",
+          "yes": "Yes"
+        }
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)"

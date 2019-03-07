@@ -29,7 +29,7 @@ export class ImageEditionPreview extends React.Component {
                 return classes.rotate1;
             case 2:
                 return classes.rotate2;
-            case 3:
+            case -1:
                 return classes.rotate3;
             default:
                 return classes.rotate0;
@@ -37,8 +37,8 @@ export class ImageEditionPreview extends React.Component {
     }
 
     render() {
-        let {path} = this.props;
-        let filepath = '/files/default' + path;
+        let {path, ts} = this.props;
+        let filepath = '/files/default' + path + '?ts=' + ts;
         return (
             <div className={this.getRotationClass()}>
                 <ImageViewer file={filepath} fullScreen={false}/>

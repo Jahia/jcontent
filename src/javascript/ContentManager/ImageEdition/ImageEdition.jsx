@@ -79,8 +79,7 @@ export class ImageEdition extends React.Component {
                                    rightCol={<ImageEditionPreview rotations={rotations} path={node.path} ts={ts}/>}
                 >
                     <>
-                        <RotatePanel defaultExpanded
-                                     dirty={rotationsDirty}
+                        <RotatePanel dirty={rotationsDirty}
                                      expanded={expanded === PANELS.ROTATE}
                                      disabled={resizeDirty}
                                      rotate={rotate}

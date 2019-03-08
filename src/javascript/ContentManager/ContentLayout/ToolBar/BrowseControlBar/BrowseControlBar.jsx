@@ -1,5 +1,6 @@
 import React from 'react';
-import {IconButton, withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
+import {IconButton} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import ContentBreadcrumbs from './ContentBreadcrumbs';
 import ContentManagerConstants from '../../../ContentManager.constants';
@@ -47,9 +48,7 @@ export class BrowseControlBar extends React.Component {
                     </React.Fragment>
                 }
                 {showActions &&
-                    <IconButton color="inherit" data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}>
-                        <Refresh/>
-                    </IconButton>
+                    <IconButton icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}/>
                 }
                 {showActions && !this.isRootNode() &&
                     <DisplayActions

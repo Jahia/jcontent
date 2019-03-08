@@ -2,7 +2,8 @@ import React from 'react';
 import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetPath} from '../../../ContentManager.redux-actions';
-import {Button, Typography, withStyles} from '@material-ui/core';
+import {Typography, withStyles} from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
@@ -40,8 +41,7 @@ export class SearchControlBar extends React.Component {
                 {showActions && (path !== siteRootPath) &&
                     <Button
                         data-cm-role="search-all"
-                        variant="contained"
-                        size="small"
+                        variant="secondary"
                         onClick={() => setPath(siteRootPath)}
                     >
                         <VirtualsiteIcon/>
@@ -51,9 +51,7 @@ export class SearchControlBar extends React.Component {
                 {showActions &&
                     <Button
                         data-cm-role="search-clear"
-                        color="primary"
-                        variant="contained"
-                        size="small"
+                        variant="primary"
                         onClick={() => clearSearch(params)}
                     >
                         <Close/>

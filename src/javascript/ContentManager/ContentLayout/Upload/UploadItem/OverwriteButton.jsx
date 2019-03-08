@@ -1,4 +1,4 @@
-import {Button} from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import React from 'react';
 
 const OverwriteButton = ({t, classes, doUploadAndStatusUpdate}) => (
@@ -6,7 +6,8 @@ const OverwriteButton = ({t, classes, doUploadAndStatusUpdate}) => (
         key="overwrite"
         className={classes.actionButton}
         component="a"
-        size="small"
+        variant="ghost"
+        color="inverted"
         onClick={() => {
             doUploadAndStatusUpdate('replace');
         }}

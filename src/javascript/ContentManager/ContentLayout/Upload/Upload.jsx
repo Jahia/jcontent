@@ -1,5 +1,6 @@
 import React from 'react';
-import {IconButton, Snackbar, withStyles} from '@material-ui/core';
+import {Snackbar, withStyles} from '@material-ui/core';
+import {IconButton} from '@jahia/ds-mui-theme';
 import PropTypes from 'prop-types';
 import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
@@ -14,8 +15,6 @@ import UploadHeader from './UploadHeader';
 
 const styles = theme => ({
     closeButton: {
-        marginBottom: theme.spacing.unit * 10,
-        color: theme.palette.text.contrastText,
         position: 'absolute',
         top: 0,
         right: 0
@@ -87,9 +86,7 @@ export class Upload extends React.Component {
                                 />
                             ))}
                         </div>
-                        <IconButton data-cm-role="upload-close-button" className={classes.closeButton} onClick={this.handleCloseSnackBar}>
-                            <Close/>
-                        </IconButton>
+                        <IconButton color="inverted" size="compact" data-cm-role="upload-close-button" icon={<Close/>} className={classes.closeButton} onClick={this.handleCloseSnackBar}/>
                     </React.Fragment>
                 </Snackbar>
                 <div style={this.generateOverlayStyle()}/>

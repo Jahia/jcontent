@@ -6,14 +6,13 @@ import {Dialog,
     DialogContent,
     DialogActions,
     DialogContentText,
-    Button,
     Select,
     MenuItem,
     Checkbox,
     FormHelperText,
     withStyles
 } from '@material-ui/core';
-import {FormControlLabel, Typography} from '@jahia/ds-mui-theme';
+import {FormControlLabel, Typography, Button} from '@jahia/ds-mui-theme';
 
 const styles = theme => ({
     margins: {
@@ -108,12 +107,11 @@ export class Export extends React.Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="contained" color="default" onClick={onClose}>
+                    <Button variant="secondary" onClick={onClose}>
                         {t('label.contentManager.fileUpload.dialogRenameCancel')}
                     </Button>
                     <Button
-                        variant="contained"
-                        color="primary"
+                        variant="primary"
                         data-cm-role="export-button"
                         onClick={() => {
                             this.triggerExport(path);

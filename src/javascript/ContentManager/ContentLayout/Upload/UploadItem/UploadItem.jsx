@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -10,6 +9,7 @@ import {
     Typography,
     withStyles
 } from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import PropTypes from 'prop-types';
 import {compose, withApollo} from 'react-apollo';
 import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
@@ -41,7 +41,6 @@ const styles = theme => ({
         marginRight: theme.spacing.unit
     },
     actionButton: {
-        color: theme.palette.text.contrastText,
         margin: '8 0'
     },
     progressText: {
@@ -113,10 +112,10 @@ export class UploadItem extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="contained" color="default" onClick={() => this.setState({anchorEl: null})}>
+                        <Button variant="secondary" onClick={() => this.setState({anchorEl: null})}>
                             {t('label.contentManager.fileUpload.dialogRenameCancel')}
                         </Button>
-                        <Button variant="contained" color="primary" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}>
+                        <Button variant="primary" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}>
                             {t('label.contentManager.fileUpload.dialogRename')}
                         </Button>
                     </DialogActions>

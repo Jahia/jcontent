@@ -1,4 +1,4 @@
-import {Button} from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import {removeUpload} from '../Upload.redux-actions';
 import React from 'react';
 
@@ -7,7 +7,8 @@ const DontUploadButton = ({removeFile, index, dispatch, t, classes, updateUpload
         key="dontupload"
         className={classes.actionButton}
         component="a"
-        size="small"
+        variant="ghost"
+        color="inverted"
         onClick={() => {
             removeFile(index);
             dispatch(removeUpload(index));

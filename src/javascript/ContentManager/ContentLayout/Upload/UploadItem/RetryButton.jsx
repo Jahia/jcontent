@@ -1,4 +1,4 @@
-import {Button} from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import React from 'react';
 
 const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
@@ -6,7 +6,8 @@ const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
         key="retry"
         className={classes.actionButton}
         component="a"
-        size="small"
+        variant="ghost"
+        color="inverted"
         onClick={() => doUploadAndStatusUpdate()}
     >
         {t('label.contentManager.fileUpload.retry')}

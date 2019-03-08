@@ -1,5 +1,6 @@
 import React from 'react';
-import {withStyles, Button} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
+import {Button} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 
@@ -15,7 +16,7 @@ export class ActionButton extends React.Component {
         let {label, onClick, classes, t, cmRole} = this.props;
 
         return (
-            <Button variant="contained" size="small" classes={{root: classes.actionButton}} data-cm-role={cmRole} onClick={onClick}>
+            <Button variant="ghost" color="inverted" classes={{root: classes.actionButton}} data-cm-role={cmRole} onClick={onClick}>
                 {t(label)}
             </Button>
         );

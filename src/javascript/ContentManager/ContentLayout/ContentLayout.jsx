@@ -26,10 +26,10 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper
     },
     content: {
-        flex: '1 1 auto',
+        flex: '1 2 0%',
         order: 2,
         display: 'flex',
-        transitionDuration: '.25s',
+        transition: 'margin-left .25s,margin-right .25s',
         backgroundColor: theme.palette.background.default,
         marginLeft: -theme.contentManager.treeDrawerWidth,
         marginRight: -theme.contentManager.previewDrawerWidth
@@ -46,35 +46,33 @@ const styles = theme => ({
         marginRight: 0
     },
     treeDrawer: {
+        flex: '0 1 ' + theme.contentManager.treeDrawerWidth + 'px',
         display: 'flex',
         order: 1,
-        transitionDuration: '.15s'
+        transition: 'transform .15s'
     },
     treeDrawerPaper: {
-        position: 'inherit',
+        position: 'relative',
         display: 'flex',
         height: 'unset',
-        width: theme.contentManager.treeDrawerWidth,
         overflow: 'hidden'
     },
     previewDrawer: {
+        flex: '0 1 ' + theme.contentManager.previewDrawerWidth + 'px',
         order: 3,
         display: 'flex',
         overflow: 'hidden',
-        transitionDuration: '.15s'
+        transition: 'transform .15s'
     },
     previewDrawerHidden: {
         transform: 'translate(600px)'
     },
     previewDrawerPaper: {
-        position: 'inherit',
+        position: 'relative',
         display: 'flex',
         height: 'unset',
         transition: '.15s !important',
-        width: theme.contentManager.previewDrawerWidth,
-        overflow: 'hidden',
-        top: '150px',
-        right: '600px'
+        overflow: 'hidden'
     },
     previewDrawerPaperFullScreen: {
         transition: '.15s !important',

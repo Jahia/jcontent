@@ -1,5 +1,6 @@
 import React from 'react';
-import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Typography} from '@material-ui/core';
+import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
@@ -30,7 +31,7 @@ export class ContentListHeader extends React.Component {
                                         className={anySelected ? classes.disabledSort : ''}
                                         onClick={() => noneSelected && setSort({order: direction, orderBy: column.property})}
                                     >
-                                        <Typography noWrap variant="subtitle2" color="textPrimary">{t(column.label)}</Typography>
+                                        <Typography noWrap variant="zeta">{t(column.label)}</Typography>
                                     </TableSortLabel>
                                 </TableCell>
                             );
@@ -41,7 +42,7 @@ export class ContentListHeader extends React.Component {
                                 className={classes[column.id + 'Cell']}
                                 sortDirection={orderBy === column.property ? order.toLowerCase() : false}
                             >
-                                <Typography noWrap variant="subtitle2" color="textPrimary">{t(column.label)}</Typography>
+                                <Typography noWrap variant="zeta">{t(column.label)}</Typography>
                             </TableCell>
                         );
                     }, this)}

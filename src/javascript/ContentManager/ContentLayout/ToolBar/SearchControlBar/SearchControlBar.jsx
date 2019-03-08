@@ -2,8 +2,8 @@ import React from 'react';
 import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetPath} from '../../../ContentManager.redux-actions';
-import {Typography, withStyles} from '@material-ui/core';
-import {Button} from '@jahia/ds-mui-theme';
+import {withStyles} from '@material-ui/core';
+import {Button, Typography} from '@jahia/ds-mui-theme';
 import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
@@ -35,7 +35,7 @@ export class SearchControlBar extends React.Component {
             <React.Fragment>
                 <Search fontSize="small"/>
                 <Trans i18nKey="label.contentManager.search.searchPath" values={{path: path}}>
-                    <Typography key="searchPath" color="textSecondary">Searching under: </Typography><Typography key="searchPath" color="textPrimary">path</Typography>
+                    <Typography key="searchPath" variant="zeta">Searching under: </Typography><Typography key="searchPath" variant="zeta">path</Typography>
                 </Trans>
                 <div className={classes.grow}/>
                 {showActions && (path !== siteRootPath) &&

@@ -6,10 +6,9 @@ import {
     DialogContentText,
     DialogTitle,
     TextField,
-    Typography,
     withStyles
 } from '@material-ui/core';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button, Typography} from '@jahia/ds-mui-theme';
 import PropTypes from 'prop-types';
 import {compose, withApollo} from 'react-apollo';
 import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
@@ -82,7 +81,7 @@ export class UploadItem extends React.Component {
         const {classes, t, file} = this.props;
         return (
             <div className={classes.listItem}>
-                <Typography variant="subtitle2" color="inherit" className={classes.fileNameText}>
+                <Typography variant="zeta" color="inherit" className={classes.fileNameText}>
                     {this.getFileName()}
                 </Typography>
                 <SecondaryActionsList

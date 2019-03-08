@@ -1,4 +1,5 @@
-import {Typography, withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {CloudUpload} from '@material-ui/icons';
 import React from 'react';
 import {compose} from 'react-apollo';
@@ -22,7 +23,7 @@ const styles = theme => ({
 
 const EmptyDropZone = ({component: Component, t, classes, mode}) => (
     <Component className={classes.dropZone}>
-        <Typography variant="h6" color="inherit">{t(mode === 'browse-files' ? 'label.contentManager.fileUpload.dropMessage' : 'label.contentManager.import.dropMessage')}</Typography>
+        <Typography variant="gamma" color="inherit">{t(mode === 'browse-files' ? 'label.contentManager.fileUpload.dropMessage' : 'label.contentManager.import.dropMessage')}</Typography>
         <CloudUpload/>
     </Component>
 );

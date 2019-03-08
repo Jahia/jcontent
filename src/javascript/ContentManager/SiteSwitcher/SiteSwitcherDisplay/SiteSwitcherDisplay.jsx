@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Menu, MenuItem, Typography, withStyles} from '@material-ui/core';
+import {Button, Menu, MenuItem, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {ChevronDown} from 'mdi-material-ui';
 import {lodash as _} from 'lodash';
 import {compose} from 'react-apollo';
@@ -45,7 +46,7 @@ class SiteSwitcherDisplay extends React.Component {
                         className={classes.siteSwitcher}
                         onClick={this.handleClick}
                 >
-                    <Typography noWrap variant="body1" color="inherit">
+                    <Typography noWrap variant="zeta" color="inherit">
                         {siteNode.displayName}
                     </Typography>
                     &nbsp;

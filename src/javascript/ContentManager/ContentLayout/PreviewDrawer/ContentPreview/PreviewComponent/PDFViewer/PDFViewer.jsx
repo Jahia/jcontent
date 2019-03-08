@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pdf from 'react-pdf-js';
 import {translate} from 'react-i18next';
-import {IconButton, Tooltip, Typography, withStyles} from '@material-ui/core';
+import {IconButton, Tooltip, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {
     ChevronLeft,
     ChevronRight,

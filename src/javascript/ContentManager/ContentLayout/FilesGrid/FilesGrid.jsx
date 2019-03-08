@@ -4,7 +4,8 @@ import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import FileCard from './FileCard';
-import {Grid, Typography, withStyles} from '@material-ui/core';
+import {Grid, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {Pagination} from '@jahia/react-material';
 import DxContext from '../../DxContext';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -69,7 +70,7 @@ export class FilesGrid extends Component {
                 <React.Fragment>
                     <ToolBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                        <Typography variant="subtitle1" className={classes.empty}>
+                        <Typography variant="epsilon" className={classes.empty}>
                             {t('label.contentManager.contentNotFound')}
                         </Typography>
                     </Grid>

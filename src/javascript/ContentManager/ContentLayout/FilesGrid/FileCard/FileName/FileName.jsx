@@ -1,6 +1,7 @@
 import React from 'react';
 import {isMarkedForDeletion} from '../../../../ContentManager.utils';
-import {Tooltip, Typography, withStyles} from '@material-ui/core';
+import {Tooltip, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 
 const styles = () => ({
     isDeleted: {
@@ -18,9 +19,8 @@ export const FileName = ({maxLength, classes, node}) => {
     let typography = (
         <Typography noWrap
                     component="p"
-                    color="textSecondary"
                     className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
-                    variant="body2"
+                    variant="iota"
                     data-cm-role="grid-content-list-card-name"
         >
             {name}

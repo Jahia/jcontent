@@ -1,6 +1,7 @@
 import React from 'react';
 import {translate} from 'react-i18next';
-import {Typography, withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import ContentManagerConstants from '../../../ContentManager.constants';
@@ -54,8 +55,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
-            <Typography color="textSecondary"
-                        component="span"
+            <Typography component="span"
                         className={classes.publicationInfoMarkedForDeletion}
             >
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
@@ -67,8 +67,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
     switch (previewSelection.aggregatedPublicationInfo.publicationStatus) {
         case ContentManagerConstants.availablePublicationStatuses.MODIFIED:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoModified}
                 >
                     {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
@@ -78,8 +77,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             );
         case ContentManagerConstants.availablePublicationStatuses.PUBLISHED:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoPublished}
                 >
                     {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
@@ -89,8 +87,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             );
         case ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoNotPublished}
                 >
                     {t('label.contentManager.contentPreview.notPublished')}
@@ -98,8 +95,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             );
         case ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoUnpublished}
                 >
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
@@ -109,8 +105,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoMandatoryLanguageUnpublishable}
                             title={t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
                 >
@@ -119,8 +114,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoMandatoryLanguageValid}
                             title={t('label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
                 >
@@ -129,8 +123,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             );
         case ContentManagerConstants.availablePublicationStatuses.CONFLICT:
             return (
-                <Typography color="textSecondary"
-                            component="p"
+                <Typography component="p"
                             className={classes.publicationInfoConflict}
                             title={t('label.contentManager.publicationStatus.conflict.description')}
                 >

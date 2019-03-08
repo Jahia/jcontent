@@ -7,9 +7,9 @@ import {
     TableCell,
     TableRow,
     Tooltip,
-    Typography,
     withStyles
 } from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {Lock} from '@material-ui/icons';
 import {Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
@@ -383,12 +383,12 @@ export class ContentListTable extends React.Component {
                                                                                 classes={{badge: classes.badge}}
                                                                                 data-cm-role="sub-contents-count"
                                                                             >
-                                                                                <Typography noWrap variant="body2" color="inherit">
+                                                                                <Typography noWrap variant="iota" color="inherit">
                                                                                     <img src={icon}/>
                                                                                     {_.get(node, column.property)}
                                                                                 </Typography>
                                                                             </Badge> :
-                                                                            <Typography noWrap variant="body2" color="inherit">
+                                                                            <Typography noWrap variant="iota" color="inherit">
                                                                                 <img src={icon}/>
                                                                                 {_.get(node, column.property)}
                                                                             </Typography>
@@ -434,7 +434,7 @@ export class ContentListTable extends React.Component {
                                                                         data-cm-role={'table-content-list-cell-' + column.id}
                                                                         padding={showActions ? 'checkbox' : 'default'}
                                                                     >
-                                                                        <Typography noWrap variant="body2" color="inherit" className={classes.lastModifiedTypography}>
+                                                                        <Typography noWrap variant="iota" color="inherit" className={classes.lastModifiedTypography}>
                                                                             <Moment format="ll" locale={uiLang}>
                                                                                 {_.get(node, column.property)}
                                                                             </Moment>
@@ -476,7 +476,7 @@ export class ContentListTable extends React.Component {
                                                                     classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                     data-cm-role={'table-content-list-cell-' + column.id}
                                                                 >
-                                                                    <Typography noWrap variant="body2" color="inherit">
+                                                                    <Typography noWrap variant="iota" color="inherit">
                                                                         {_.get(node, column.property)}
                                                                     </Typography>
                                                                 </TableCell>
@@ -519,7 +519,7 @@ let ContentNotFound = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                <Typography variant="subtitle1" className={props.class}>
+                <Typography variant="p" className={props.class}>
                     {props.translate('label.contentManager.contentNotFound')}
                 </Typography>
             </TableCell>
@@ -531,7 +531,7 @@ let EmptyRow = props => {
     return (
         <TableRow>
             <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
-                <Typography variant="subtitle1">{props.translate('label.contentManager.noResults')}</Typography>
+                <Typography variant="p">{props.translate('label.contentManager.noResults')}</Typography>
             </TableCell>
         </TableRow>
     );

@@ -5,10 +5,10 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    Typography,
     withStyles,
     withTheme
 } from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';

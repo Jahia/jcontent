@@ -1,7 +1,8 @@
 import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
 import {CheckCircle, FiberManualRecord, Info} from '@material-ui/icons';
-import {CircularProgress, Typography} from '@material-ui/core';
+import {CircularProgress} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 
 const Status = ({classes, status, error, t, type}) => {
     let content;
@@ -10,7 +11,7 @@ const Status = ({classes, status, error, t, type}) => {
         content = (
             <React.Fragment>
                 <FiberManualRecord className={classes.statusIcon} color="inherit"/>
-                <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                <Typography variant="zeta" className={classes.progressText} color="inherit">
                     {t('label.contentManager.fileUpload.queued')}
                 </Typography>
             </React.Fragment>
@@ -19,7 +20,7 @@ const Status = ({classes, status, error, t, type}) => {
         content = (
             <React.Fragment>
                 <CheckCircle className={classes.statusIcon} color="inherit"/>
-                <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                <Typography variant="zeta" className={classes.progressText} color="inherit">
                     {type === 'import' ? t('label.contentManager.fileUpload.imported') : t('label.contentManager.fileUpload.uploaded')}
                 </Typography>
             </React.Fragment>
@@ -37,7 +38,7 @@ const Status = ({classes, status, error, t, type}) => {
         content = (
             <React.Fragment>
                 <Info className={classes.statusIcon} color="inherit"/>
-                <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                <Typography variant="zeta" className={classes.progressText} color="inherit">
                     {getErrorMessage(error)}
                 </Typography>
             </React.Fragment>
@@ -46,7 +47,7 @@ const Status = ({classes, status, error, t, type}) => {
         content = (
             <React.Fragment>
                 <CircularProgress size={20} className={classes.statusIcon} color="inherit"/>
-                <Typography variant="subtitle2" className={classes.progressText} color="inherit">
+                <Typography variant="zeta" className={classes.progressText} color="inherit">
                     {type === 'import' ? t('label.contentManager.fileUpload.importing') : t('label.contentManager.fileUpload.uploading')}
                 </Typography>
             </React.Fragment>

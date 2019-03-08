@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardContent, CardMedia, Typography, withStyles} from '@material-ui/core';
+import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {ContextualMenu} from '@jahia/react-material';
 import {translate} from 'react-i18next';
@@ -243,17 +244,17 @@ export class FileCard extends Component {
 
                         <CardContent classes={{root: classes.cardContent}}>
                             <div>
-                                <Typography color="textSecondary" variant="caption" component="p">
+                                <Typography variant="caption" component="p">
                                     {t('label.contentManager.filesGrid.name')}
                                 </Typography>
                                 <FileName maxLength={maxLengthLabels} node={node}/>
                             </div>
                             {!isVerticalCard &&
                                 <div>
-                                    <Typography color="textSecondary" variant="caption" component="p">
+                                    <Typography variant="caption" component="p">
                                         {t('label.contentManager.filesGrid.createdBy')}
                                     </Typography>
-                                    <Typography color="textSecondary" variant="body2" component="p">
+                                    <Typography variant="iota" component="p">
                                         {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
                                         <Moment format="LLL" locale={uiLang}>
@@ -264,10 +265,10 @@ export class FileCard extends Component {
                             }
                             {(isDefaultCard || isLargeCard) && node.width && node.height &&
                                 <div>
-                                    <Typography color="textSecondary" variant="caption" component="p">
+                                    <Typography variant="caption" component="p">
                                         {t('label.contentManager.filesGrid.fileInfo')}
                                     </Typography>
-                                    <Typography color="textSecondary" variant="body2" component="p">
+                                    <Typography variant="iota" component="p">
                                         {`${node.width.value} x ${node.height.value}`}
                                     </Typography>
                                 </div>

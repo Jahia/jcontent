@@ -9,9 +9,9 @@ import {
     IconButton,
     Toolbar,
     Tooltip,
-    Typography,
     withStyles
 } from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import ContentPreview from './ContentPreview';
 import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
@@ -53,7 +53,7 @@ export class PreviewDrawer extends React.Component {
                         <IconButton color="inherit" data-cm-role="preview-drawer-close" onClick={closePreview}>
                             <ChevronRightIcon fontSize="small"/>
                         </IconButton>
-                        <Typography variant="subtitle2" color="inherit">
+                        <Typography variant="zeta" color="inherit">
                             {t('label.contentManager.contentPreview.preview')}
                         </Typography>
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
@@ -91,7 +91,7 @@ export class PreviewDrawer extends React.Component {
                 {previewSelection &&
                     <Card>
                         <CardContent data-cm-role="preview-name">
-                            <Typography gutterBottom noWrap variant="h5" component="h2" color="textPrimary">
+                            <Typography gutterBottom noWrap variant="gamma">
                                 {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                             </Typography>
                             <PublicationStatus previewSelection={previewSelection}/>

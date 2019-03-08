@@ -1,7 +1,8 @@
 import React from 'react';
-import {Button, Menu, MenuItem} from '@material-ui/core';
+import {Menu, MenuItem} from '@material-ui/core';
 import iconRenderer from './iconRenderer';
-import {Typography, withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
+import {Typography, Button} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import {ellipsizeText} from '../../../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
@@ -54,6 +55,9 @@ export class BreadcrumbDisplay extends React.Component {
             <span ref={this.menu}>
                 <Button
                     disableRipple
+                    variant="ghost"
+                    size="compact"
+                    color="inherit"
                     buttonRef={this.anchorButton}
                     aria-haspopup="true"
                     aria-owns={'breadcrumbMenu_' + node.uuid}
@@ -62,7 +66,7 @@ export class BreadcrumbDisplay extends React.Component {
                 >
                     {iconRenderer(node, classes)}
                     {!trimLabel &&
-                        <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                        <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                             {ellipsizeText(node.name, maxLabelLength)}
                         </Typography>
                     }
@@ -105,7 +109,7 @@ export class BreadcrumbDisplay extends React.Component {
                                     onClick={event => this.onMenuItemSelected(event, siblingNode)}
                                 >
                                     {iconRenderer(siblingNode)}
-                                    <Typography variant="body1" color="textPrimary" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                                    <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                                         {siblingNode.name}
                                     </Typography>
                                 </MenuItem>

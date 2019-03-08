@@ -1,5 +1,6 @@
 import React from 'react';
-import {AppBar, Grid, IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
+import {AppBar, Grid, IconButton, Toolbar, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
@@ -47,7 +48,7 @@ export class ContentTrees extends React.Component {
                     <Toolbar variant="dense">
                         <Grid container alignItems="center" spacing={8} justify="space-between">
                             <Grid item>
-                                <Typography variant="subtitle2" color="inherit">
+                                <Typography variant="zeta" color="inherit">
                                     {t('label.contentManager.tree.title')}
                                 </Typography>
                             </Grid>

@@ -266,6 +266,8 @@
           "cancel": "Cancel",
           "save": "Save"
         },
+        "editingMessage": "You are now editing {{imageName}}",
+        "savedMessage": "Saved",
         "confirmSaveDialog": {
           "title": "Replace existing file",
           "text": "A file with this name already exists. Are you sure want to continue ?",

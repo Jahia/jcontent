@@ -8,7 +8,8 @@ import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
-import {ChevronLeft} from '@material-ui/icons';
+import {Check, ChevronLeft} from '@material-ui/icons';
+import Feedback from './Feedback';
 
 let styles = theme => ({
     left: {
@@ -18,6 +19,12 @@ let styles = theme => ({
         justifyContent: 'center',
         background: theme.palette.ui.omega,
         paddingRight: theme.spacing.unit * 2
+    },
+    feedbackContent: {
+        display: 'flex'
+    },
+    feedbackIcon: {
+        marginRight: theme.spacing.unit
     }
 });
 
@@ -42,7 +49,7 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, onBackNavigation, ts, dxContext} = this.props;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -101,6 +108,28 @@ export class ImageEdition extends React.Component {
                         />
                     </>
                 </TwoColumnsContent>
+                <Feedback
+                    open={dirty}
+                    message={
+                        <div className={classes.feedbackContent}>
+                            <Check className={classes.feedbackIcon}/>
+                            <Typography variant="zeta" color="invert">
+                                {t('label.contentManager.editImage.editingMessage', {imageName: node.name})}
+                            </Typography>
+                        </div>}
+                />
+                <Feedback
+                    open={confirmSaved}
+                    duration={2000}
+                    message={
+                        <div className={classes.feedbackContent}>
+                            <Check className={classes.feedbackIcon}/>
+                            <Typography variant="zeta" color="invert">
+                                {t('label.contentManager.editImage.savedMessage')}
+                            </Typography>
+                        </div>}
+                    onClose={closeFeedback}
+                />
             </MainLayout>
         );
     }

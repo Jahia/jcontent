@@ -22,7 +22,8 @@ export class ImageEditionContainer extends React.Component {
             height: null,
             transforms: [],
             name: null,
-            ts: new Date().getTime()
+            ts: new Date().getTime(),
+            confirmSaved: false
         };
 
         this.rotate = this.rotate.bind(this);
@@ -32,6 +33,13 @@ export class ImageEditionContainer extends React.Component {
         this.resize = this.resize.bind(this);
         this.onBackNavigation = this.onBackNavigation.bind(this);
         this.onCompleted = this.onCompleted.bind(this);
+        this.closeFeedback = this.closeFeedback.bind(this);
+    }
+
+    closeFeedback() {
+        this.setState({
+            confirmSaved: false
+        });
     }
 
     onBackNavigation(dirty) {
@@ -103,7 +111,8 @@ export class ImageEditionContainer extends React.Component {
         if (result.jcr.mutateNode.transformImage.node.path === this.props.path) {
             this.undoChanges();
             this.setState(() => ({
-                ts: new Date().getTime()
+                ts: new Date().getTime(),
+                confirmSaved: true
             }));
         }
         this.handleClose();
@@ -111,7 +120,7 @@ export class ImageEditionContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name} = this.state;
+        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name, confirmSaved} = this.state;
 
         let newName = name;
         if (!newName) {
@@ -140,9 +149,11 @@ export class ImageEditionContainer extends React.Component {
                                                         rotations={rotations}
                                                         width={width}
                                                         height={height}
+                                                        confirmSaved={confirmSaved}
                                                         rotate={this.rotate}
                                                         resize={this.resize}
                                                         undoChanges={this.undoChanges}
+                                                        closeFeedback={this.closeFeedback}
                                                         saveChanges={withName => this.setState({
                                                             confirmSaveOpen: !withName,
                                                             saveAsOpen: withName

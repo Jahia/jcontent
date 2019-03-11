@@ -83,6 +83,8 @@ describe('Image Edition', () => {
 
     beforeEach(() => {
         try {
+            global.contextJsParameters = dxContext;
+
             props = {
                 path: '/toto.jpg'
             };
@@ -103,11 +105,8 @@ describe('Image Edition', () => {
 
     it('render', async () => {
         await (wait(0));
-
-        console.log(wrapper.debug());
         wrapper.update();
-
-        console.log(wrapper.debug());
+        expect(wrapper.find(ImageEdition).length).toBe(1);
     });
 
 });

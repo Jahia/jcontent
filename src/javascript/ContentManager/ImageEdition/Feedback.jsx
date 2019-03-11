@@ -1,6 +1,7 @@
 import React from 'react';
 import {Snackbar, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
+import PropTypes from 'prop-types';
 
 let styles = theme => ({
     feedback: {
@@ -20,6 +21,18 @@ export const Feedback = ({open, message, classes, duration, onClose}) => (
               onClose={onClose}
             />
 );
+
+Feedback.propTypes = {
+    open: PropTypes.bool.isRequired,
+    message: PropTypes.object.isRequired,
+    duration: PropTypes.number,
+    onClose: PropTypes.func
+};
+
+Feedback.defaultProps = {
+    onClose: null,
+    duration: null
+};
 
 export default compose(
     withStyles(styles)

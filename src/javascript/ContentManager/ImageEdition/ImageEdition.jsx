@@ -64,7 +64,7 @@ export class ImageEdition extends React.Component {
                         </Typography>
                     </React.Fragment>
                 ),
-                title: node.nodeName.value,
+                title: node.name,
                 contextModifiers: <React.Fragment></React.Fragment>,
                 actions: (
                     <React.Fragment>

@@ -5,13 +5,11 @@ const ImageQuery = gql`
     query ImageQuery($path:String!) {
         jcr {
             nodeByPath(path:$path) {
+                name
                 width: property(name:"j:width") {
                     value
                 }
                 height: property(name:"j:height") {
-                    value
-                }
-                nodeName: property(name:"j:nodename") {
                     value
                 }
                 ...NodeCacheRequiredFields

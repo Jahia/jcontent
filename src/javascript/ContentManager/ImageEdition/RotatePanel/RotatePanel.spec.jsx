@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {IconButton} from '@material-ui/core';
+import {IconButton} from '@jahia/ds-mui-theme';
 
 import RotatePanel from './RotatePanel';
 

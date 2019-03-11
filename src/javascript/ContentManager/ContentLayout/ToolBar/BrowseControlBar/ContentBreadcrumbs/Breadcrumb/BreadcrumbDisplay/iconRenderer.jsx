@@ -1,7 +1,7 @@
 import React from 'react';
 import {ContentIcon, getIcon} from '@jahia/icons';
 
-function iconRenderer(node) {
+function iconRenderer(node, style) {
     let Icon = null;
     switch (node.name) {
         case 'digitall':
@@ -16,7 +16,7 @@ function iconRenderer(node) {
         default:
             Icon = getIcon(node.type) || ContentIcon;
     }
-    return <Icon/>;
+    return <Icon className={style}/>;
 }
 
 export default iconRenderer;

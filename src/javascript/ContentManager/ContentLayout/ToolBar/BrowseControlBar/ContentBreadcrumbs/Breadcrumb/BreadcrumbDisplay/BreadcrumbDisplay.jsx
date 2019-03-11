@@ -10,6 +10,9 @@ import {compose} from 'react-apollo';
 const styles = theme => ({
     contentLabel: {
         paddingLeft: theme.spacing.unit
+    },
+    icon: {
+        color: theme.palette.alpha
     }
 });
 
@@ -57,14 +60,13 @@ export class BreadcrumbDisplay extends React.Component {
                     disableRipple
                     variant="ghost"
                     size="compact"
-                    color="inherit"
                     buttonRef={this.anchorButton}
                     aria-haspopup="true"
                     aria-owns={'breadcrumbMenu_' + node.uuid}
                     onMouseOver={() => node.siblings && node.siblings.length > 1 && this.onMenuButtonMouseOver()}
                     onClick={ev => node.siblings && node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
                 >
-                    {iconRenderer(node, classes)}
+                    {iconRenderer(node, classes.icon)}
                     {!trimLabel &&
                         <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                             {ellipsizeText(node.name, maxLabelLength)}

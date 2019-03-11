@@ -1,6 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {Input, IconButton} from '@material-ui/core';
+import {Input} from '@material-ui/core';
+import {IconButton} from '@jahia/ds-mui-theme';
 import ResizePanel from './ResizePanel';
 
 describe('Resize panel', () => {

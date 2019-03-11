@@ -42,7 +42,7 @@ export class ImageEdition extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, onBackNavigation, ts} = this.props;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, onBackNavigation, ts, dxContext} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -76,7 +76,7 @@ export class ImageEdition extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
-                                   rightCol={<ImageEditionPreview rotations={rotations} path={node.path} ts={ts}/>}
+                                   rightCol={<ImageEditionPreview rotations={rotations} dxContext={dxContext} path={node.path} ts={ts}/>}
                 >
                     <>
                         <RotatePanel dirty={rotationsDirty}

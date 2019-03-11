@@ -8,6 +8,7 @@ import {getImageMutation} from './ImageEdition.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
+import DxContext from '../DxContext';
 
 class ImageEditionContainer extends React.Component {
     constructor(props) {
@@ -119,59 +120,64 @@ class ImageEditionContainer extends React.Component {
         }
 
         return (
-            <Mutation mutation={getImageMutation(transforms)}
-                      refetchQueries={() => ['ImageQuery']}
-                      onCompleted={this.onCompleted}
-            >
-                {mutation => {
-                    return (
-                        <Query query={ImageQuery} variables={{path: path}}>
-                            {({data, loading}) => {
-                                if (!loading && data.jcr) {
-                                    return (
-                                        <>
-                                            <ImageEdition
-                                                node={data.jcr.nodeByPath}
-                                                ts={ts}
-                                                rotations={rotations}
-                                                width={width}
-                                                height={height}
-                                                rotate={this.rotate}
-                                                resize={this.resize}
-                                                undoChanges={this.undoChanges}
-                                                saveChanges={withName => this.setState({
-                                                    confirmSaveOpen: !withName,
-                                                    saveAsOpen: withName
-                                                })}
-                                                onBackNavigation={this.onBackNavigation}
-                                                onCloseDialog={this.onCloseDialog}
-                                            />
-                                            <ConfirmSaveDialog
-                                                open={confirmSaveOpen}
-                                                handleSave={() => mutation({variables: {path}})}
-                                                handleClose={this.handleClose}
-                                            />
-                                            <SaveAsDialog
-                                                open={saveAsOpen}
-                                                name={newName}
-                                                handleSave={() => mutation({variables: {path, name: newName.trim()}})}
-                                                handleClose={this.handleClose}
-                                                onChangeName={this.handleChangeName}
-                                            />
-                                            <UnsavedChangesDialog
-                                                open={confirmCloseOpen}
-                                                onClose={this.handleClose}
-                                            />
+            <DxContext.Consumer>
+                {dxContext => (
+                    <Mutation mutation={getImageMutation(transforms)}
+                              refetchQueries={() => ['ImageQuery']}
+                              onCompleted={this.onCompleted}
+                    >
+                        {mutation => {
+                            return (
+                                <Query query={ImageQuery} variables={{path: path}}>
+                                    {({data, loading}) => {
+                                        if (!loading && data.jcr) {
+                                            return (
+                                                <>
+                                                    <ImageEdition
+                                                        node={data.jcr.nodeByPath}
+                                                        dxContext={dxContext}
+                                                        ts={ts}
+                                                        rotations={rotations}
+                                                        width={width}
+                                                        height={height}
+                                                        rotate={this.rotate}
+                                                        resize={this.resize}
+                                                        undoChanges={this.undoChanges}
+                                                        saveChanges={withName => this.setState({
+                                                            confirmSaveOpen: !withName,
+                                                            saveAsOpen: withName
+                                                        })}
+                                                        onBackNavigation={this.onBackNavigation}
+                                                        onCloseDialog={this.onCloseDialog}
+                                                    />
+                                                    <ConfirmSaveDialog
+                                                        open={confirmSaveOpen}
+                                                        handleSave={() => mutation({variables: {path}})}
+                                                        handleClose={this.handleClose}
+                                                    />
+                                                    <SaveAsDialog
+                                                        open={saveAsOpen}
+                                                        name={newName}
+                                                        handleSave={() => mutation({variables: {path, name: newName.trim()}})}
+                                                        handleClose={this.handleClose}
+                                                        onChangeName={this.handleChangeName}
+                                                    />
+                                                    <UnsavedChangesDialog
+                                                        open={confirmCloseOpen}
+                                                        onClose={this.handleClose}
+                                                    />
 
-                                        </>
-                                    );
-                                }
-                                return false;
-                            }}
-                        </Query>
-                    );
-                }}
-            </Mutation>
+                                                </>
+                                            );
+                                        }
+                                        return false;
+                                    }}
+                                </Query>
+                            );
+                        }}
+                    </Mutation>
+                )}
+            </DxContext.Consumer>
         );
     }
 }

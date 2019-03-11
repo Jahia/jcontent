@@ -47,8 +47,8 @@ export class ImageEditionPreview extends React.Component {
     }
 
     render() {
-        let {path, ts, classes} = this.props;
-        let filepath = '/files/default' + path + '?ts=' + ts;
+        let {path, ts, classes, dxContext} = this.props;
+        let filepath = dxContext.contextPath + '/files/default' + path + '?ts=' + ts;
         return (
             <Card className={classes.card}>
                 <ImageViewer file={filepath} fullScreen={false} className={classNames(classes.imageViewer, this.getRotationClass())}/>

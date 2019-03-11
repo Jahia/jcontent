@@ -139,8 +139,8 @@ ImageEdition.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     node: PropTypes.object.isRequired,
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
+    height: PropTypes.number,
+    width: PropTypes.number,
     rotations: PropTypes.number.isRequired,
     resize: PropTypes.func.isRequired,
     rotate: PropTypes.func.isRequired,
@@ -148,6 +148,11 @@ ImageEdition.propTypes = {
     saveChanges: PropTypes.func.isRequired,
     ts: PropTypes.number.isRequired,
     undoChanges: PropTypes.func.isRequired
+};
+
+ImageEdition.defaultProps = {
+    height: null,
+    width: null
 };
 
 export default compose(

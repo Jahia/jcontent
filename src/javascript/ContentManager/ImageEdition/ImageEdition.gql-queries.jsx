@@ -11,6 +11,9 @@ const ImageQuery = gql`
                 height: property(name:"j:height") {
                     value
                 }
+                nodeName: property(name:"j:nodename") {
+                    value
+                }
                 ...NodeCacheRequiredFields
             }
         }

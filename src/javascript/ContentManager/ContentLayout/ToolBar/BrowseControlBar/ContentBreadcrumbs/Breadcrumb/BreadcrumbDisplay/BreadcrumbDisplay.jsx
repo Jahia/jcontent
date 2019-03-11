@@ -12,7 +12,7 @@ const styles = theme => ({
         paddingLeft: theme.spacing.unit
     },
     icon: {
-        color: theme.palette.alpha
+        color: theme.palette.font.alpha
     }
 });
 

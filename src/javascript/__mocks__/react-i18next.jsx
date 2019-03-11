@@ -8,7 +8,8 @@ const hasChildren = node => node && (node.children || (node.props && node.props.
 const getChildren = node =>
     node && node.children ? node.children : node.props && node.props.children;
 
-const renderNodes = reactNodes => {
+const renderNodes = (children, components) => {
+    let reactNodes = children || components;
     if (typeof reactNodes === 'string') {
         return reactNodes;
     }
@@ -38,7 +39,7 @@ module.exports = {
     // This mock makes sure any components using the translate HoC receive the t function as a prop
     withNamespaces: () => Component => props => <Component t={k => k} {...props} />,
     translate: () => Component => props => <Component t={k => k} {...props} />,
-    Trans: ({ children }) => renderNodes(children),
+    Trans: ({ children, components }) => renderNodes(children, components),
     NamespacesConsumer: ({ children }) => children(k => k, { i18n: {} }),
 
     // Mock if needed

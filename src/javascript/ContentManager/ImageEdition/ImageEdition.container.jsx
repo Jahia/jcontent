@@ -10,7 +10,7 @@ import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import DxContext from '../DxContext';
 
-class ImageEditionContainer extends React.Component {
+export class ImageEditionContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -129,8 +129,8 @@ class ImageEditionContainer extends React.Component {
                         {mutation => {
                             return (
                                 <Query query={ImageQuery} variables={{path: path}}>
-                                    {({data, loading}) => {
-                                        if (!loading && data.jcr) {
+                                    {({data, loading, error}) => {
+                                        if (!loading && !error && data.jcr) {
                                             return (
                                                 <>
                                                     <ImageEdition

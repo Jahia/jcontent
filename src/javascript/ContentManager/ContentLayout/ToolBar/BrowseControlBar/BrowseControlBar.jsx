@@ -54,7 +54,7 @@ export class BrowseControlBar extends React.Component {
                     <DisplayActions
                         target="tableHeaderActions"
                         context={{path: path}}
-                        render={buttonRenderer({variant: 'contained', color: 'primary', size: 'small', classes: {root: classes.buttons}}, true)}
+                        render={buttonRenderer({variant: 'secondary'}, true)}
                     />
                 }
             </React.Fragment>

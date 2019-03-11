@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    IconButton,
     List,
     ListItem,
     ListItemIcon,
@@ -8,7 +7,7 @@ import {
     withStyles,
     withTheme
 } from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/ds-mui-theme';
 import {KeyboardArrowRight} from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
@@ -58,7 +57,11 @@ let styles = theme => ({
         zIndex: 999
     },
     openedTreeEl: {
-        transform: 'rotate(90deg)'
+        transform: 'rotate(90deg)',
+        color: 'inherit'
+    },
+    closedTreeEl: {
+        color: 'inherit'
     },
     treeEntry: {
         display: 'flex',
@@ -139,7 +142,8 @@ export class PickerViewMaterial extends React.Component {
                                             }}
                                         >
                                             <IconButton
-                                                color="inherit"
+                                                icon={<KeyboardArrowRight/>}
+                                                className={entry.open ? classes.openedTreeEl : classes.closedTreeEl}
                                                 disabled={!(entry.openable && entry.hasChildren)}
                                                 data-jrm-role="picker-item-toggle"
                                                 data-jrm-state={entry.open ? 'open' : 'closed'}
@@ -147,9 +151,7 @@ export class PickerViewMaterial extends React.Component {
                                                     onOpenItem(entry.path, !entry.open);
                                                     event.stopPropagation();
                                                 }}
-                                            >
-                                                <KeyboardArrowRight className={entry.open ? classes.openedTreeEl : null}/>
-                                            </IconButton>
+                                            />
                                         </div>
                                         <span
                                             className={classes.treeEntry}

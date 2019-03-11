@@ -1,5 +1,6 @@
 import React from 'react';
-import {AppBar, IconButton, Toolbar, Typography, withStyles} from '@material-ui/core';
+import {AppBar, Toolbar, withStyles} from '@material-ui/core';
+import {IconButton, Typography} from '@jahia/ds-mui-theme';
 import {ChevronRight} from '@material-ui/icons';
 import {CM_DRAWER_STATES, cmSetTreeState} from '../../ContentManager.redux-actions';
 import {connect} from 'react-redux';
@@ -30,16 +31,14 @@ export class ToolBar extends React.Component {
                         <SearchControlBar showActions={selection.length === 0}/> :
                         <React.Fragment>
                             {treeState !== CM_DRAWER_STATES.SHOW &&
-                                <IconButton color="inherit" variant="text" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}>
-                                    <ChevronRight/>
-                                </IconButton>
+                                <IconButton icon={<ChevronRight/>} color="inherit" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}/>
                             }
                             <BrowseControlBar showActions={selection.length === 0}/>
                         </React.Fragment>
                     }
                     {selection.length > 0 &&
                         <React.Fragment>
-                            <Typography variant="caption" color="textSecondary" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
+                            <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
                                 {t('label.contentManager.selection.itemsSelected', {count: selection.length})}
                             </Typography>
                             <div className={classes.spacer}/>

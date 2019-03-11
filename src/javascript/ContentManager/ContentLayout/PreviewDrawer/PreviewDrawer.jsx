@@ -6,12 +6,11 @@ import {
     CardActions,
     CardContent,
     Grid,
-    IconButton,
     Toolbar,
     Tooltip,
     withStyles
 } from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import ContentPreview from './ContentPreview';
 import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
@@ -50,9 +49,7 @@ export class PreviewDrawer extends React.Component {
             <React.Fragment>
                 <AppBar position="relative" color="default">
                     <Toolbar variant="dense">
-                        <IconButton color="inherit" data-cm-role="preview-drawer-close" onClick={closePreview}>
-                            <ChevronRightIcon fontSize="small"/>
-                        </IconButton>
+                        <IconButton data-cm-role="preview-drawer-close" icon={<ChevronRightIcon fontSize="small"/>} onClick={closePreview}/>
                         <Typography variant="zeta" color="inherit">
                             {t('label.contentManager.contentPreview.preview')}
                         </Typography>
@@ -74,14 +71,10 @@ export class PreviewDrawer extends React.Component {
                             </ToggleButtonGroup>
                             {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
                                 <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
-                                    <IconButton color="primary" onClick={closeFullScreen}>
-                                        <FullscreenExit/>
-                                    </IconButton>
+                                    <IconButton variant="ghost" color="alpha" icon={<FullscreenExit/>} onClick={closeFullScreen}/>
                                 </Tooltip> :
                                 <Tooltip title={t('label.contentManager.contentPreview.expand')}>
-                                    <IconButton color="primary" onClick={openFullScreen}>
-                                        <Fullscreen/>
-                                    </IconButton>
+                                    <IconButton variant="ghost" color="alpha" icon={<Fullscreen/>} onClick={openFullScreen}/>
                                 </Tooltip>
                             }
                         </Grid>

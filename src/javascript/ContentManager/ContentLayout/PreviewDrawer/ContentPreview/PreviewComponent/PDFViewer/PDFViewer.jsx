@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Pdf from 'react-pdf-js';
 import {translate} from 'react-i18next';
-import {IconButton, Tooltip, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Tooltip, withStyles} from '@material-ui/core';
+import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import {
     ChevronLeft,
     ChevronRight,
@@ -147,50 +147,50 @@ export class PDFViewer extends React.Component {
                     <div className={classes.controlLeft}/>
                     <Typography className={classes.controlCenter} variant="caption" component="div">
                         <IconButton disabled={page === 1}
+                                    variant="ghost"
+                                    icon={<StepBackward/>}
                                     onClick={event => {
                                         this.handleNavigation(event, 'first');
                                     }}
-                        >
-                            <StepBackward/>
-                        </IconButton>
+                        />
                         <IconButton disabled={page === 1}
+                                    variant="ghost"
+                                    icon={<ChevronLeft/>}
                                     onClick={event => {
                                         this.handleNavigation(event, 'previous');
                                     }}
-                        >
-                            <ChevronLeft/>
-                        </IconButton>
+                        />
                         {page}/{pages}
                         <IconButton disabled={page === pages}
+                                    variant="ghost"
+                                    icon={<ChevronRight/>}
                                     onClick={event => {
                                         this.handleNavigation(event, 'next');
                                     }}
-                        >
-                            <ChevronRight/>
-                        </IconButton>
+                        />
                         <IconButton disabled={page === pages}
+                                    variant="ghost"
+                                    icon={<StepForward/>}
                                     onClick={event => {
                                         this.handleNavigation(event, 'last');
                                     }}
-                        >
-                            <StepForward/>
-                        </IconButton>
+                        />
                     </Typography>
                     <div className={classes.controlRight}>
                         <IconButton disabled={scaleSize === 0}
+                                    variant="ghost"
+                                    icon={<MagnifyMinusOutline/>}
                                     onClick={event => {
                                         this.handleZoom(event, 'out');
                                     }}
-                        >
-                            <MagnifyMinusOutline/>
-                        </IconButton>
+                        />
                         <IconButton disabled={scaleSize === scaleSizes.length - 1}
+                                    variant="ghost"
+                                    icon={<MagnifyPlusOutline/>}
                                     onClick={event => {
                                         this.handleZoom(event, 'in');
                                     }}
-                        >
-                            <MagnifyPlusOutline/>
-                        </IconButton>
+                        />
                     </div>
                 </div>
             </React.Fragment>

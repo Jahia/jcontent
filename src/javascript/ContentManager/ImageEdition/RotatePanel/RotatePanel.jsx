@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {IconButton, Tooltip, withStyles} from '@material-ui/core';
+import {Tooltip, withStyles} from '@material-ui/core';
 import {ExpandMore, RotateLeft, RotateRight} from '@material-ui/icons';
 import {
     Typography,
+    IconButton,
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary} from '@jahia/ds-mui-theme';
@@ -48,12 +49,8 @@ export class RotatePanel extends React.Component {
                             {t('label.contentManager.editImage.rotateImage')}
                         </Typography>
                         <div className={classes.icons}>
-                            <IconButton onClick={() => rotate(-1)}>
-                                <RotateLeft color="primary" fontSize="large"/>
-                            </IconButton>
-                            <IconButton onClick={() => rotate(1)}>
-                                <RotateRight color="primary" fontSize="large"/>
-                            </IconButton>
+                            <IconButton icon={<RotateLeft color="primary" fontSize="large"/>} onClick={() => rotate(-1)}/>
+                            <IconButton icon={<RotateRight color="primary" fontSize="large"/>} onClick={() => rotate(1)}/>
                         </div>
                     </ExpansionPanelDetails>
                     <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>

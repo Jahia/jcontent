@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
     FormControl,
-    IconButton,
     Input,
     Tooltip,
     withStyles
@@ -10,7 +9,7 @@ import {
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {Link} from 'mdi-material-ui';
-import {Typography, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary} from '@jahia/ds-mui-theme';
+import {Typography, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton} from '@jahia/ds-mui-theme';
 import {ExpandMore} from '@material-ui/icons';
 import ImageActions from '../ImageActions';
 import {PANELS} from '../ImageEdition';
@@ -134,8 +133,7 @@ export class RotatePanel extends React.Component {
                                 </FormControl>
                             </div>
                             <div className={classes.secondCol}>
-                                <IconButton onClick={this.switchRatio}><Link color={keepRatio ? 'action' : 'default'}/>
-                                </IconButton>
+                                <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} onClick={this.switchRatio}/>
                             </div>
                         </div>
                     </ExpansionPanelDetails>

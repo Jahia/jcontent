@@ -1,5 +1,6 @@
 import React from 'react';
-import {Grid, IconButton, Tooltip, Typography, Paper} from '@material-ui/core';
+import {Grid, IconButton, Tooltip, Paper} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {Search} from '@material-ui/icons';
 
 export class SearchBarLayout extends React.Component {

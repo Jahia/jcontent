@@ -1,6 +1,7 @@
 import React from 'react';
 import {Menu as ListIcon, ViewModule} from '@material-ui/icons';
-import {IconButton, Tooltip} from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
+import {IconButton} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
@@ -14,9 +15,7 @@ export class FilesGridModeSelector extends React.Component {
                 title={t(mode === 'list' ? 'label.contentManager.filesGrid.toggleGridDisplay' : 'label.contentManager.filesGrid.toggleListDisplay')}
                 leaveDelay={200}
             >
-                <IconButton data-cm-role={mode === 'list' ? 'view-mode-grid' : 'view-mode-list'} color="inherit" onClick={() => onChange(mode === 'list' ? 'grid' : 'list')}>
-                    {mode === 'list' ? <ViewModule/> : <ListIcon/>}
-                </IconButton>
+                <IconButton icon={mode === 'list' ? <ViewModule/> : <ListIcon/>} data-cm-role={mode === 'list' ? 'view-mode-grid' : 'view-mode-list'} color="inherit" onClick={() => onChange(mode === 'list' ? 'grid' : 'list')}/>
             </Tooltip>
         );
     }

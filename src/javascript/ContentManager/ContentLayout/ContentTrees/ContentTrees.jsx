@@ -1,6 +1,6 @@
 import React from 'react';
-import {AppBar, Grid, IconButton, Toolbar, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {AppBar, Grid, Toolbar, withStyles} from '@material-ui/core';
+import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
@@ -53,9 +53,7 @@ export class ContentTrees extends React.Component {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <IconButton color="inherit" data-cm-role="hide-tree" onClick={closeTree}>
-                                    <ChevronLeft fontSize="small"/>
-                                </IconButton>
+                                <IconButton icon={<ChevronLeft fontSize="small"/>} color="inherit" data-cm-role="hide-tree" onClick={closeTree}/>
                             </Grid>
                         </Grid>
                     </Toolbar>

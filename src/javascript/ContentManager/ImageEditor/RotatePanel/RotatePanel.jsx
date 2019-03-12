@@ -11,8 +11,8 @@ import {
 } from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
-import ImageActions from '../ImageActions';
-import {PANELS} from '../ImageEdition';
+import ImageEditorActions from '../ImageEditorActions';
+import {PANELS} from '../ImageEditor';
 
 let styles = theme => ({
     rotatePanel: {
@@ -57,7 +57,7 @@ export const RotatePanel = ({classes, t, rotate, undoChanges, expanded, saveChan
                         </Tooltip>
                     </div>
                 </ExpansionPanelDetails>
-                <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
             </ExpansionPanel>
         </Tooltip>
     );

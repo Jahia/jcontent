@@ -11,8 +11,8 @@ import {translate} from 'react-i18next';
 import {Link} from 'mdi-material-ui';
 import {Typography, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton} from '@jahia/ds-mui-theme';
 import {ExpandMore} from '@material-ui/icons';
-import ImageActions from '../ImageActions';
-import {PANELS} from '../ImageEdition';
+import ImageEditorActions from '../ImageEditorActions';
+import {PANELS} from '../ImageEditor';
 
 let styles = () => ({
     panel: {
@@ -117,7 +117,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
                         </div>
                     </div>
                 </ExpansionPanelDetails>
-                <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
             </ExpansionPanel>
         </Tooltip>
     );

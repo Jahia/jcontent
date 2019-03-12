@@ -5,7 +5,7 @@ import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from '../IFrameLayout';
 import SearchBar from '../ContentLayout/SearchBar';
 import ContentLayout from '../ContentLayout';
-import ImageEdition from '../ImageEdition';
+import ImageEditor from '../ImageEditor';
 import {actionsRegistry} from '@jahia/react-material';
 
 function initRoutes(registry) {
@@ -35,7 +35,7 @@ function initRoutes(registry) {
         type: 'route',
         path: '/:siteKey/:lang/image-edit',
         render: props => (
-            <ImageEdition {...props}/>
+            <ImageEditor {...props}/>
         )
     });
 

@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose, Mutation, Query} from 'react-apollo';
 import {connect} from 'react-redux';
-import ImageEdition from './ImageEdition';
-import {ImageQuery} from './ImageEdition.gql-queries';
-import {getImageMutation} from './ImageEdition.gql-mutations';
+import ImageEditor from './ImageEditor';
+import {ImageQuery} from './ImageEditor.gql-queries';
+import {getImageMutation} from './ImageEditor.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import DxContext from '../DxContext';
 
-export class ImageEditionContainer extends React.Component {
+export class ImageEditorContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -142,7 +142,7 @@ export class ImageEditionContainer extends React.Component {
                                         if (!loading && !error && data.jcr) {
                                             return (
                                                 <>
-                                                    <ImageEdition
+                                                    <ImageEditor
                                                         node={data.jcr.nodeByPath}
                                                         dxContext={dxContext}
                                                         ts={ts}
@@ -193,7 +193,7 @@ export class ImageEditionContainer extends React.Component {
     }
 }
 
-ImageEditionContainer.propTypes = {
+ImageEditorContainer.propTypes = {
     path: PropTypes.string.isRequired
 };
 
@@ -203,4 +203,4 @@ let mapStateToProps = state => ({
 
 export default compose(
     connect(mapStateToProps, null),
-)(ImageEditionContainer);
+)(ImageEditorContainer);

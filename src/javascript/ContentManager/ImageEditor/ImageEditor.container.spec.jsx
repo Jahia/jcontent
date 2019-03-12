@@ -1,14 +1,13 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {ImageEditionContainer} from './ImageEdition.container';
+import {ImageEditorContainer} from './ImageEditor.container';
 import {MockedProvider} from 'react-apollo/test-utils';
-import {ImageQuery} from './ImageEdition.gql-queries';
-import {getImageMutation} from './ImageEdition.gql-mutations';
+import {ImageQuery} from './ImageEditor.gql-queries';
+import {getImageMutation} from './ImageEditor.gql-mutations';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {fragmentMatcher} from '@jahia/apollo-dx';
-import {IconButton, MuiThemeProvider} from "@material-ui/core";
-import ImageEdition from './ImageEdition';
-import waitForExpect from 'wait-for-expect';
+import {MuiThemeProvider} from "@material-ui/core";
+import ImageEditor from './ImageEditor';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
 import wait from 'waait';
 import DxContext from '../DxContext';
@@ -93,7 +92,7 @@ describe('Image Edition', () => {
                 <DxContext.Provider value={dxContext}>
                     <MuiThemeProvider theme={theme}>
                         <MockedProvider mocks={mocks} cache={new InMemoryCache({fragmentMatcher})}>
-                            <ImageEditionContainer {...props}/>
+                            <ImageEditorContainer {...props}/>
                         </MockedProvider>
                     </MuiThemeProvider>
                 </DxContext.Provider>
@@ -106,11 +105,11 @@ describe('Image Edition', () => {
     it('render', async () => {
         await (wait(0));
         wrapper.update();
-        expect(wrapper.find(ImageEdition).length).toBe(1);
+        expect(wrapper.find(ImageEditor).length).toBe(1);
     });
 
     it('rotates 1', () => {
-        wrapper = wrapper.find('ImageEditionContainer');
+        wrapper = wrapper.find('ImageEditorContainer');
         wrapper.instance().rotate(1);
         expect(wrapper.state().rotations).toBe(1);
         expect(wrapper.state().transforms.length).toBe(1);
@@ -119,7 +118,7 @@ describe('Image Edition', () => {
     });
 
     it('rotates full turn', () => {
-        wrapper = wrapper.find('ImageEditionContainer');
+        wrapper = wrapper.find('ImageEditorContainer');
         wrapper.instance().rotate(1);
         wrapper.instance().rotate(1);
         wrapper.instance().rotate(1);
@@ -129,7 +128,7 @@ describe('Image Edition', () => {
     });
 
     it('resizes', () => {
-        wrapper = wrapper.find('ImageEditionContainer');
+        wrapper = wrapper.find('ImageEditorContainer');
         wrapper.instance().resize({width:50, height:100});
         expect(wrapper.state().width).toBe(50);
         expect(wrapper.state().height).toBe(100);

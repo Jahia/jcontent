@@ -1,9 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {Input} from '@material-ui/core';
-import {IconButton} from '@jahia/ds-mui-theme';
 import ResizePanel from './ResizePanel';
-import wait from "waait";
 
 describe('Resize panel', () => {
     let props;

@@ -18,7 +18,7 @@ let styles = {
     }
 };
 
-const ImageActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
+const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
     <ExpansionPanelActions className={classes.buttons}>
         <Button variant="ghost" color="primary" disabled={!dirty} onClick={undoChanges}>
             {t('label.contentManager.editImage.undo')}
@@ -33,7 +33,7 @@ const ImageActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
     </ExpansionPanelActions>
 );
 
-ImageActions.propTypes = {
+ImageEditorActions.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     dirty: PropTypes.bool.isRequired,
@@ -44,4 +44,4 @@ ImageActions.propTypes = {
 export default compose(
     translate(),
     withStyles(styles)
-)(ImageActions);
+)(ImageEditorActions);

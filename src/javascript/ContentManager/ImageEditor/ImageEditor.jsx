@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {MainLayout, TwoColumnsContent} from '@jahia/layouts';
 import {IconButton, Typography} from '@jahia/ds-mui-theme';
-import ImageEditionPreview from './ImageEditionPreview';
+import ImageEditorPreview from './ImageEditorPreview';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
@@ -33,7 +33,7 @@ export const PANELS = {
     RESIZE: 1
 };
 
-export class ImageEdition extends React.Component {
+export class ImageEditor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -83,7 +83,7 @@ export class ImageEdition extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
-                                   rightCol={<ImageEditionPreview rotations={rotations} dxContext={dxContext} path={node.path} ts={ts}/>}
+                                   rightCol={<ImageEditorPreview rotations={rotations} dxContext={dxContext} path={node.path} ts={ts}/>}
                 >
                     <>
                         <RotatePanel dirty={rotationsDirty}
@@ -135,7 +135,7 @@ export class ImageEdition extends React.Component {
     }
 }
 
-ImageEdition.propTypes = {
+ImageEditor.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     node: PropTypes.object.isRequired,
@@ -150,7 +150,7 @@ ImageEdition.propTypes = {
     undoChanges: PropTypes.func.isRequired
 };
 
-ImageEdition.defaultProps = {
+ImageEditor.defaultProps = {
     height: null,
     width: null
 };
@@ -158,5 +158,5 @@ ImageEdition.defaultProps = {
 export default compose(
     translate(),
     withStyles(styles)
-)(ImageEdition);
+)(ImageEditor);
 

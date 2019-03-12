@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import ImageActions from './ImageActions';
+import ImageEditorActions from './ImageEditorActions';
 import {Button} from '@jahia/ds-mui-theme';
 
 describe('Image actions', () => {
@@ -16,7 +16,7 @@ describe('Image actions', () => {
                 saveChanges: jest.fn()
             };
 
-            wrapper = shallow(<ImageActions {...props}/>);
+            wrapper = shallow(<ImageEditorActions {...props}/>);
             wrapper = wrapper.dive().dive();
         } catch (e) {
             console.log(e);

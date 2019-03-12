@@ -29,7 +29,7 @@ let styles = () => ({
     }
 });
 
-export class ImageEditionPreview extends React.Component {
+export class ImageEditorPreview extends React.Component {
     getRotationClass() {
         let {rotations, classes} = this.props;
         switch (rotations) {
@@ -57,7 +57,7 @@ export class ImageEditionPreview extends React.Component {
     }
 }
 
-ImageEditionPreview.propTypes = {
+ImageEditorPreview.propTypes = {
     path: PropTypes.string.isRequired,
     rotations: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired
@@ -65,4 +65,4 @@ ImageEditionPreview.propTypes = {
 
 export default compose(
     withStyles(styles)
-)(ImageEditionPreview);
+)(ImageEditorPreview);

@@ -267,16 +267,16 @@ function initActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',
         target: ['contentActions:5'],
         hideOnNodeTypes: ['jnt:page'],
-        buttonIcon: <LockOpen/>
+        buttonIcon: <Lock/>
     });
     actionsRegistry.add('unlock', unlockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.unlock',
         target: ['contentActions:5'],
         hideOnNodeTypes: ['jnt:page'],
-        buttonIcon: <Lock/>
+        buttonIcon: <LockOpen/>
     });
     actionsRegistry.add('clearAllLocks', clearAllLocksAction, {
-        buttonIcons: <Lock/>,
+        buttonIcon: <Lock/>,
         buttonLabel: 'label.contentManager.contextMenu.lockActions.clearAllLocks',
         target: ['contentActions:5.5'],
         hideOnNodeTypes: ['jnt:page']

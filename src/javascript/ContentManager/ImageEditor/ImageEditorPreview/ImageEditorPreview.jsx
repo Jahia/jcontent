@@ -20,7 +20,8 @@ let styles = theme => ({
     card: {
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: 'inherit'
+        backgroundColor: 'inherit',
+        height: '100%'
     },
     imageViewer: {
         flex: '1 1 0%',

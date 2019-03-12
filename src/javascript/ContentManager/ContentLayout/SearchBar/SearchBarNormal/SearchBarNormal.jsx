@@ -18,8 +18,6 @@ const styles = () => ({
     input: {
         height: 44,
         boxSizing: 'border-box'
-    },
-    replaceButtonStyle: {
     }
 });
 

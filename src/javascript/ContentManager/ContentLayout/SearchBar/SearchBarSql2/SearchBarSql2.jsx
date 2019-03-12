@@ -25,8 +25,7 @@ const styles = theme => ({
     },
     link: {
         color: theme.palette.brand.beta
-    },
-    replaceButtonStyle: {}
+    }
 });
 
 export class SearchBarSql2 extends React.Component {
@@ -95,7 +94,7 @@ export class SearchBarSql2 extends React.Component {
                                 cmRole="search-type-normal"
                                 onClick={onNormalClick}
                             /> :
-                            <div className={classes.replaceButtonStyle}/>
+                            <div/>
                         }
                     </React.Fragment>}
                 onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}

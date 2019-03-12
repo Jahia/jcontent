@@ -147,7 +147,10 @@ ImageEditor.propTypes = {
     onBackNavigation: PropTypes.func.isRequired,
     saveChanges: PropTypes.func.isRequired,
     ts: PropTypes.number.isRequired,
-    undoChanges: PropTypes.func.isRequired
+    undoChanges: PropTypes.func.isRequired,
+    dxContext: PropTypes.object.isRequired,
+    confirmSaved: PropTypes.bool.isRequired,
+    closeFeedback: PropTypes.func.isRequired
 };
 
 ImageEditor.defaultProps = {

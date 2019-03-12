@@ -25,6 +25,7 @@ export const Feedback = ({open, message, classes, duration, onClose}) => (
 Feedback.propTypes = {
     open: PropTypes.bool.isRequired,
     message: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
     duration: PropTypes.number,
     onClose: PropTypes.func
 };

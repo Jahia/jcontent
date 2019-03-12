@@ -58,12 +58,12 @@ export class ImageEditionContainer extends React.Component {
             let rotations = ((state.rotations + val + 5) % 4) - 1;
             return {
                 rotations: rotations,
-                transforms: ([{
+                transforms: (rotations !== 0 ? [{
                     op: 'rotateImage',
                     args: {
                         angle: rotations * 90
                     }
-                }])
+                }] : [])
             };
         });
     }

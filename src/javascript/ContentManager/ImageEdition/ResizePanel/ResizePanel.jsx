@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     FormControl,
@@ -39,21 +39,10 @@ let styles = () => ({
     }
 });
 
-export class RotatePanel extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            keepRatio: true
-        };
+export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, height, undoChanges, expanded, saveChanges, dirty, disabled, resize, onChangePanel}) => {
+    const [keepRatio, setKeepRatio] = useState(true);
 
-        this.setWidth = this.setWidth.bind(this);
-        this.setHeight = this.setHeight.bind(this);
-        this.switchRatio = this.switchRatio.bind(this);
-    }
-
-    setWidth(event) {
-        const {originalWidth, originalHeight, height, resize} = this.props;
-        const {keepRatio} = this.state;
+    const setWidth = event => {
         let value = event.target.value;
 
         if (/\d+/.test(value)) {
@@ -62,11 +51,9 @@ export class RotatePanel extends React.Component {
                 height: Math.round(keepRatio ? value * originalHeight / originalWidth : (height || originalHeight))
             });
         }
-    }
+    };
 
-    setHeight(event) {
-        const {originalWidth, originalHeight, width, resize} = this.props;
-        const {keepRatio} = this.state;
+    const setHeight = event => {
         let value = event.target.value;
 
         if (/\d+/.test(value)) {
@@ -75,76 +62,68 @@ export class RotatePanel extends React.Component {
                 height: Math.round(value)
             });
         }
-    }
+    };
 
-    switchRatio() {
-        const {originalWidth, originalHeight, width, resize} = this.props;
-        const {keepRatio} = this.state;
-        this.setState({keepRatio: !keepRatio});
+    const switchRatio = () => {
+        setKeepRatio(!keepRatio);
         if (!keepRatio) {
             resize({
                 width,
                 height: Math.round(width * originalHeight / originalWidth)
             });
         }
-    }
+    };
 
-    onChange(event, expanded) {
-        let {onChangePanel} = this.props;
+    const onChange = (event, expanded) => {
         if (expanded) {
             onChangePanel(PANELS.RESIZE);
         } else {
             onChangePanel(false);
         }
-    }
+    };
 
-    render() {
-        const {t, classes, originalWidth, originalHeight, width, height, undoChanges, expanded, saveChanges, dirty, disabled} = this.props;
-        const {keepRatio} = this.state;
+    return (
+        <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
+            <ExpansionPanel expanded={expanded} disabled={disabled} onChange={onChange}>
+                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                    <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.panel}>
+                    <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
 
-        return (
-            <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
-                <ExpansionPanel expanded={expanded} disabled={disabled} onChange={(event, expanded) => this.onChange(event, expanded)}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                        <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className={classes.panel}>
-                        <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
-
-                        <div className={classes.form}>
-                            <div className={classes.firstCol}>
-                                <FormControl className={classes.formControl}>
-                                    <Input
+                    <div className={classes.form}>
+                        <div className={classes.firstCol}>
+                            <FormControl className={classes.formControl}>
+                                <Input
                                     id="width-field"
                                     value={width ? width : originalWidth}
                                     type="number"
                                     margin="none"
-                                    onChange={this.setWidth}
+                                    onChange={setWidth}
                                 />
-                                </FormControl>
-                                <FormControl className={classes.formControl}>
-                                    <Input
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <Input
                                     id="height-field"
                                     value={height ? height : originalHeight}
                                     type="number"
                                     margin="none"
-                                    onChange={this.setHeight}
+                                    onChange={setHeight}
                                 />
-                                </FormControl>
-                            </div>
-                            <div className={classes.secondCol}>
-                                <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} onClick={this.switchRatio}/>
-                            </div>
+                            </FormControl>
                         </div>
-                    </ExpansionPanelDetails>
-                    <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
-                </ExpansionPanel>
-            </Tooltip>
-        );
-    }
-}
+                        <div className={classes.secondCol}>
+                            <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} onClick={switchRatio}/>
+                        </div>
+                    </div>
+                </ExpansionPanelDetails>
+                <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+            </ExpansionPanel>
+        </Tooltip>
+    );
+};
 
-RotatePanel.propTypes = {
+ResizePanel.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     dirty: PropTypes.bool.isRequired,
@@ -160,7 +139,7 @@ RotatePanel.propTypes = {
     disabled: PropTypes.bool.isRequired
 };
 
-RotatePanel.defaultProps = {
+ResizePanel.defaultProps = {
     width: null,
     height: null
 };
@@ -168,4 +147,4 @@ RotatePanel.defaultProps = {
 export default compose(
     translate(),
     withStyles(styles)
-)(RotatePanel);
+)(ResizePanel);

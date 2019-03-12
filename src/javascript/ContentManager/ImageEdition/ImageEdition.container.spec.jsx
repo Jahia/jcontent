@@ -109,4 +109,33 @@ describe('Image Edition', () => {
         expect(wrapper.find(ImageEdition).length).toBe(1);
     });
 
+    it('rotates 1', () => {
+        wrapper = wrapper.find('ImageEditionContainer');
+        wrapper.instance().rotate(1);
+        expect(wrapper.state().rotations).toBe(1);
+        expect(wrapper.state().transforms.length).toBe(1);
+        expect(wrapper.state().transforms[0].op).toBe('rotateImage');
+        expect(wrapper.state().transforms[0].args.angle).toBe(90);
+    });
+
+    it('rotates full turn', () => {
+        wrapper = wrapper.find('ImageEditionContainer');
+        wrapper.instance().rotate(1);
+        wrapper.instance().rotate(1);
+        wrapper.instance().rotate(1);
+        wrapper.instance().rotate(1);
+        expect(wrapper.state().rotations).toBe(0);
+        expect(wrapper.state().transforms.length).toBe(0);
+    });
+
+    it('resizes', () => {
+        wrapper = wrapper.find('ImageEditionContainer');
+        wrapper.instance().resize({width:50, height:100});
+        expect(wrapper.state().width).toBe(50);
+        expect(wrapper.state().height).toBe(100);
+        expect(wrapper.state().transforms[0].op).toBe('resizeImage');
+        expect(wrapper.state().transforms[0].args.width).toBe(50);
+        expect(wrapper.state().transforms[0].args.height).toBe(100);
+    });
+
 });

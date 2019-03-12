@@ -7,7 +7,8 @@ import {
     IconButton,
     ExpansionPanel,
     ExpansionPanelDetails,
-    ExpansionPanelSummary} from '@jahia/ds-mui-theme';
+    ExpansionPanelSummary
+} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import ImageActions from '../ImageActions';
@@ -23,46 +24,44 @@ let styles = theme => ({
     }
 });
 
-export class RotatePanel extends React.Component {
-    onChange(event, expanded) {
-        let {onChangePanel} = this.props;
+export const RotatePanel = ({classes, t, rotate, undoChanges, expanded, saveChanges, dirty, disabled, onChangePanel}) => {
+    const onChange = (event, expanded) => {
         if (expanded) {
             onChangePanel(PANELS.ROTATE);
         } else {
             onChangePanel(false);
         }
-    }
+    };
 
-    render() {
-        let {classes, t, rotate, undoChanges, expanded, saveChanges, dirty, disabled} = this.props;
-        return (
-            <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
-                <ExpansionPanel disabled={disabled}
-                                expanded={expanded}
-                                onChange={(event, expanded) => this.onChange(event, expanded)}
-                >
-                    <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                        <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.rotate')}</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className={classes.rotatePanel}>
-                        <Typography variant="zeta" color="beta">
-                            {t('label.contentManager.editImage.rotateInfo')}
-                        </Typography>
-                        <div className={classes.icons}>
-                            <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
-                                <IconButton icon={<RotateLeft color="primary" fontSize="large"/>} onClick={() => rotate(-1)}/>
-                            </Tooltip>
-                            <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
-                                <IconButton icon={<RotateRight color="primary" fontSize="large"/>} onClick={() => rotate(1)}/>
-                            </Tooltip>
-                        </div>
-                    </ExpansionPanelDetails>
-                    <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
-                </ExpansionPanel>
-            </Tooltip>
-        );
-    }
-}
+    return (
+        <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
+            <ExpansionPanel disabled={disabled}
+                            expanded={expanded}
+                            onChange={(event, expanded) => onChange(event, expanded)}
+            >
+                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                    <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.rotate')}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.rotatePanel}>
+                    <Typography variant="zeta" color="beta">
+                        {t('label.contentManager.editImage.rotateInfo')}
+                    </Typography>
+                    <div className={classes.icons}>
+                        <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
+                            <IconButton icon={<RotateLeft color="primary" fontSize="large"/>}
+                                        onClick={() => rotate(-1)}/>
+                        </Tooltip>
+                        <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
+                            <IconButton icon={<RotateRight color="primary" fontSize="large"/>}
+                                        onClick={() => rotate(1)}/>
+                        </Tooltip>
+                    </div>
+                </ExpansionPanelDetails>
+                <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+            </ExpansionPanel>
+        </Tooltip>
+    );
+};
 
 RotatePanel.propTypes = {
     t: PropTypes.func.isRequired,

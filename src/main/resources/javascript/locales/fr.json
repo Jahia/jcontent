@@ -243,7 +243,7 @@
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments"
       },
       "editImage": {
-        "action": "Edition d'image",
+        "action": "Ouvrir avec l'éditeur d'images",
         "title": "Edition d'image",
         "resize": "Redimensionner",
         "rotate": "Pivoter",

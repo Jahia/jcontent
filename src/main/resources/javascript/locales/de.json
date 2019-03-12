@@ -243,8 +243,8 @@
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
       },
       "editImage": {
-        "action": "afbeelding editie",
-        "title": "afbeelding editie",
+        "action": "Im Bild-Editor öffnen",
+        "title": "Bildausgabe",
         "resize": "Größe anpassen",
         "rotate": "Drehen",
         "rotateInfo": "Drehen Sie das Bild und überschreiben die existierende Datei, oder speichern Sie es als neue Datei",

@@ -20,7 +20,7 @@ let styles = {
 
 const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
     <ExpansionPanelActions className={classes.buttons}>
-        <Button variant="ghost" color="primary" disabled={!dirty} onClick={undoChanges}>
+        <Button data-cm-role="undo-changes" variant="ghost" color="primary" disabled={!dirty} onClick={undoChanges}>
             {t('label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>

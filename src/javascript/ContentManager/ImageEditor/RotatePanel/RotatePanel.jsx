@@ -37,6 +37,7 @@ export const RotatePanel = ({classes, t, rotate, undoChanges, expanded, saveChan
         <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
             <ExpansionPanel disabled={disabled}
                             expanded={expanded}
+                            data-cm-role="rotate-panel"
                             onChange={(event, expanded) => onChange(event, expanded)}
             >
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
@@ -48,11 +49,13 @@ export const RotatePanel = ({classes, t, rotate, undoChanges, expanded, saveChan
                     </Typography>
                     <div className={classes.icons}>
                         <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
-                            <IconButton icon={<RotateLeft color="primary" fontSize="large"/>}
+                            <IconButton data-cm-role="rotate-left"
+                                        icon={<RotateLeft color="primary" fontSize="large"/>}
                                         onClick={() => rotate(-1)}/>
                         </Tooltip>
                         <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
-                            <IconButton icon={<RotateRight color="primary" fontSize="large"/>}
+                            <IconButton data-cm-role="rotate-right"
+                                        icon={<RotateRight color="primary" fontSize="large"/>}
                                         onClick={() => rotate(1)}/>
                         </Tooltip>
                     </div>

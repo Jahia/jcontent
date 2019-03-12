@@ -84,7 +84,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
 
     return (
         <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
-            <ExpansionPanel expanded={expanded} disabled={disabled} onChange={onChange}>
+            <ExpansionPanel expanded={expanded} disabled={disabled} data-cm-role="resize-panel" onChange={onChange}>
                 <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                     <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
                 </ExpansionPanelSummary>
@@ -113,7 +113,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
                             </FormControl>
                         </div>
                         <div className={classes.secondCol}>
-                            <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} onClick={switchRatio}/>
+                            <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} data-cm-role="keep-ratio-button" onClick={switchRatio}/>
                         </div>
                     </div>
                 </ExpansionPanelDetails>

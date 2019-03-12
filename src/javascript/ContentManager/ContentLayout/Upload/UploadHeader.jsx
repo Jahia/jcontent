@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import {CircularProgress, Typography, withStyles} from '@material-ui/core';
+import {CircularProgress, withStyles} from '@material-ui/core';
+import {Typography} from '@jahia/ds-mui-theme';
 import {CheckCircle, Info} from '@material-ui/icons';
 import React from 'react';
 import {compose} from 'react-apollo';

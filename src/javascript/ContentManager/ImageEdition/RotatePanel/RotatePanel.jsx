@@ -46,11 +46,15 @@ export class RotatePanel extends React.Component {
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className={classes.rotatePanel}>
                         <Typography variant="zeta" color="beta">
-                            {t('label.contentManager.editImage.rotateImage')}
+                            {t('label.contentManager.editImage.rotateInfo')}
                         </Typography>
                         <div className={classes.icons}>
-                            <IconButton icon={<RotateLeft color="primary" fontSize="large"/>} onClick={() => rotate(-1)}/>
-                            <IconButton icon={<RotateRight color="primary" fontSize="large"/>} onClick={() => rotate(1)}/>
+                            <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
+                                <IconButton icon={<RotateLeft color="primary" fontSize="large"/>} onClick={() => rotate(-1)}/>
+                            </Tooltip>
+                            <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
+                                <IconButton icon={<RotateRight color="primary" fontSize="large"/>} onClick={() => rotate(1)}/>
+                            </Tooltip>
                         </div>
                     </ExpansionPanelDetails>
                     <ImageActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>

@@ -243,7 +243,39 @@
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
       },
       "editImage": {
-        "tooltip": "Bitte speichern Sie oder setzen Sie die Änderungen zurück, bevor Sie eine andere Aktion durchführen."
+        "action": "afbeelding editie",
+        "title": "afbeelding editie",
+        "resize": "Größe anpassen",
+        "rotate": "Drehen",
+        "rotateInfo": "Drehen Sie das Bild und überschreiben die existierende Datei, oder speichern Sie es als neue Datei",
+        "rotateLeft": "Nach links drehen",
+        "rotateRight": "Nach rechts drehen",
+        "undo": "Änderungen zurücksetzen",
+        "saveAs": "Speichern als...",
+        "save": "Speichern",
+        "unsavedChanges": "Nicht gespeicherte Änderungen",
+        "resizeInfo": "Sie können oder individuelle Werte eingeben",
+        "tooltip": "Speichern oder verwerfen Sie Ihre Änderungen, bevor Sie weitere Bearbeitungen starten",
+        "goBack": "Zurück",
+        "exitConfirmation": "Sie haben nicht gespeicherte Änderungen. Sind Sie sicher, dass Sie abbrechen und die Änderungen verwerfen möchten?",
+        "continueEditing": "Bearbeitung fortsetzen",
+        "discardChangesTitle": "Änderungen verwerfen?",
+        "discardChangesButton": "Änderungen verwerfen",
+        "saveAsDialog": {
+          "title": "Speichern als",
+          "text": "Geben Sie einen Datei-Namen ein",
+          "filename": "Bestandsnaam",
+          "cancel": "Abbrechen",
+          "save": "Speichern"
+        },
+        "editingMessage": "Sie editieren nun {{imageName}}",
+        "savedMessage": "Gespeichert",
+        "confirmSaveDialog": {
+          "title": "Datei ersetzen",
+          "text": "Eine Datei mit diesem Namen existiert bereits. Möchten Sie fortfahren?",
+          "no": "Nein",
+          "yes": "Ja"
+        }
       },
       "subContent": "({{count}} sub-Inhalt)",
       "subContent_plural": "({{count}} sub-Inhalte)"

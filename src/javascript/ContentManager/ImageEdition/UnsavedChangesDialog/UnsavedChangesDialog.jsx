@@ -11,7 +11,7 @@ export class UnsavedChangesDialog extends React.Component {
         return (
             <Dialog fullWidth open={open} aria-labelledby="form-dialog-title" onClose={onClose}>
                 <DialogTitle>
-                    {t('label.contentManager.editImage.unsavedChanges')}
+                    {t('label.contentManager.editImage.discardChangesTitle')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -22,7 +22,7 @@ export class UnsavedChangesDialog extends React.Component {
                             {t('label.contentManager.editImage.continueEditing')}
                         </Button>
                         <Button variant="primary" onClick={() => window.history.back()}>
-                            {t('label.contentManager.editImage.discardChanges')}
+                            {t('label.contentManager.editImage.discardChangesButton')}
                         </Button>
                     </DialogActions>
                 </DialogContent>

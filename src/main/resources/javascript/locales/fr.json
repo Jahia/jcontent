@@ -243,7 +243,39 @@
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments"
       },
       "editImage": {
-        "tooltip": "Sauvegardez ou annulez les modifications avant de faire une autre opération."
+        "action": "Edition d'image",
+        "title": "Edition d'image",
+        "resize": "Redimensionner",
+        "rotate": "Pivoter",
+        "rotateInfo": "Pivotez l'image et sauvegardez la, ou sauvegardez la en tant que nouveau fichier",
+        "rotateLeft": "Pivoter à gauche",
+        "rotateRight": "Pivoter à droite",
+        "undo": "Annuler les modifications",
+        "saveAs": "Enregistrer sous ...",
+        "save": "Enregistrer",
+        "unsavedChanges": "Modifications non sauvegardées",
+        "resizeInfo": "Vous pouvez saisir vos propres valeurs",
+        "tooltip": "Enregistrez ou annulez vos modifications avant d'effectuer d'autres opérations",
+        "goBack": "Retour",
+        "exitConfirmation": "Vous avez des modifications non enregistrées. Etes-vous sûr de vouloir quitter sans enregistrer ?",
+        "continueEditing": "Continuer d'éditer",
+        "discardChangesTitle": "Annulez les modifications ?",
+        "discardChangesButton": "Annulez les modifications",
+        "saveAsDialog": {
+          "title": "Enregistrer sous",
+          "text": "Entrez un nom de fichier",
+          "filename": "Nom du fichier",
+          "cancel": "Annuler",
+          "save": "Enregistrer"
+        },
+        "editingMessage": "Vous éditez maintenant {{imageName}}",
+        "savedMessage": "Saved",
+        "confirmSaveDialog": {
+          "title": "Remplacer le fichier existant",
+          "text": "Un fichier avec ce nom existe déjà. Etes-vous sûr de vouloir continuer ?",
+          "no": "Non",
+          "yes": "Oui"
+        }
       },
       "subContent": "({{count}} sous-contenu)",
       "subContent_plural": "({{count}} sous-contenus)"

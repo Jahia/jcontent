@@ -97,9 +97,8 @@ class SiteSwitcher extends React.Component {
                     return (
                         <SiteSwitcherDisplay
                             siteKey={siteKey}
-                            currentLang={currentLang}
                             siteNodes={sites}
-                            onSelectSite={(siteNode, currentLang) => {
+                            onSelectSite={siteNode => {
                                 this.onSelectSite(siteNode, currentLang);
                                 this.props.dispatchBatch([
                                     cmSetPreviewMode(CM_PREVIEW_MODES.EDIT),

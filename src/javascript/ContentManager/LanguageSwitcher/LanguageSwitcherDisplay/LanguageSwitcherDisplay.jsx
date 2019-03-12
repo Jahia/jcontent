@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {lodash as _} from 'lodash';
 import {Menu, MenuItem} from '@material-ui/core';
@@ -76,4 +77,11 @@ export const LanguageSwitcherDisplay = ({lang, languages, onSelectLanguage}) => 
     );
 };
 
+LanguageSwitcherDisplay.propTypes = {
+    lang: PropTypes.string.isRequired,
+    languages: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onSelectLanguage: PropTypes.func.isRequired
+};
+
 export default LanguageSwitcherDisplay;
+

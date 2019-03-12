@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {Menu, MenuItem, withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/ds-mui-theme';
@@ -11,7 +12,7 @@ const styles = () => ({
     }
 });
 
-export const SiteSwitcherDisplay = ({siteKey, siteNodes, loading, onSelectSite, classes, currentLang}) => {
+export const SiteSwitcherDisplay = ({siteKey, siteNodes, onSelectSite, classes}) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = event => {
@@ -22,9 +23,6 @@ export const SiteSwitcherDisplay = ({siteKey, siteNodes, loading, onSelectSite, 
         setAnchorEl(null);
     };
 
-    if (loading) {
-        return <span>Loading...</span>;
-    }
     const siteNode = _.find(siteNodes, siteNode => siteNode.name === siteKey);
     return (
         <React.Fragment>
@@ -48,7 +46,7 @@ export const SiteSwitcherDisplay = ({siteKey, siteNodes, loading, onSelectSite, 
                         <MenuItem
                             key={siteNode.uuid}
                             onClick={() => {
-                                onSelectSite(siteNode, currentLang);
+                                onSelectSite(siteNode);
                                 handleClose();
                             }}
                         >
@@ -61,6 +59,14 @@ export const SiteSwitcherDisplay = ({siteKey, siteNodes, loading, onSelectSite, 
     );
 };
 
+SiteSwitcherDisplay.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onSelectSite: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    siteNodes: PropTypes.arrayOf(PropTypes.object).isRequired
+};
+
 export default compose(
     withStyles(styles),
 )(SiteSwitcherDisplay);
+

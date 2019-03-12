@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
-import {Card, withStyles} from '@material-ui/core';
-import ImageViewer from '../../ContentLayout/PreviewDrawer/ContentPreview/PreviewComponent/ImageViewer/ImageViewer';
+import {Card, CardMedia, withStyles} from '@material-ui/core';
 import classNames from 'classnames';
 
-let styles = () => ({
+let styles = theme => ({
     rotate0: {
         transform: 'rotate(0deg)'
     },
@@ -25,7 +24,12 @@ let styles = () => ({
     },
     imageViewer: {
         flex: '1 1 0%',
-        maxWidth: '100%'
+        height: '100%',
+        maxWidth: '100%',
+        paddingTop: (theme.spacing.unit * 3) + 'px',
+        paddingBottom: (theme.spacing.unit * 3) + 'px',
+        margin: '0 auto',
+        backgroundSize: 'contain'
     }
 });
 
@@ -51,7 +55,10 @@ export class ImageEditorPreview extends React.Component {
         let filepath = dxContext.contextPath + '/files/default' + path + '?ts=' + ts;
         return (
             <Card className={classes.card}>
-                <ImageViewer file={filepath} fullScreen={false} className={classNames(classes.imageViewer, this.getRotationClass())}/>
+                <CardMedia className={classNames(classes.imageViewer, this.getRotationClass())}
+                           data-cm-role="preview-image"
+                           image={filepath}
+                />
             </Card>
         );
     }
@@ -60,7 +67,9 @@ export class ImageEditorPreview extends React.Component {
 ImageEditorPreview.propTypes = {
     path: PropTypes.string.isRequired,
     rotations: PropTypes.number.isRequired,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    ts: PropTypes.number.isRequired,
+    dxContext: PropTypes.object.isRequired
 };
 
 export default compose(

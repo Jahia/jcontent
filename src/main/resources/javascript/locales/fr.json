@@ -269,7 +269,7 @@
           "save": "Enregistrer"
         },
         "editingMessage": "Vous éditez maintenant {{imageName}}",
-        "savedMessage": "Saved",
+        "savedMessage": "Enregistré",
         "confirmSaveDialog": {
           "title": "Remplacer le fichier existant",
           "text": "Un fichier avec ce nom existe déjà. Etes-vous sûr de vouloir continuer ?",

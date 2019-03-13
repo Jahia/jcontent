@@ -14,13 +14,7 @@ describe('Resize panel', () => {
                 originalHeight: 100,
                 width: 400,
                 height: 200,
-                dirty: false,
-                expanded: true,
-                disabled: false,
                 resize: jest.fn(),
-                undoChanges: jest.fn(),
-                saveChanges: jest.fn(),
-                onChangePanel: jest.fn()
             };
 
             wrapper = shallow(<ResizePanel {...props}/>);

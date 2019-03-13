@@ -1,19 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {MainLayout, TwoColumnsContent} from '@jahia/layouts';
-import {IconButton, Typography} from '@jahia/ds-mui-theme';
+import {
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    IconButton,
+    Typography
+} from '@jahia/ds-mui-theme';
 import ImageEditorPreview from './ImageEditorPreview';
-import {withStyles} from '@material-ui/core';
+import {Tooltip, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
-import {Check, ChevronLeft} from '@material-ui/icons';
+import {Check, ChevronLeft, ExpandMore} from '@material-ui/icons';
 import Feedback from './Feedback';
+import ImageEditorActions from './ImageEditorActions';
 
 let styles = theme => ({
     left: {
         overflow: 'auto'
+    },
+    panel: {
+        display: 'flex',
+        flexDirection: 'column'
     },
     right: {
         justifyContent: 'center',
@@ -28,7 +39,7 @@ let styles = theme => ({
     }
 });
 
-export const PANELS = {
+const PANELS = {
     ROTATE: 0,
     RESIZE: 1
 };
@@ -49,8 +60,10 @@ export class ImageEditor extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges,
-            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast} = this.props;
+        const {
+            t, classes, node, rotations, width, height, rotate, resize, undoChanges,
+            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast
+        } = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -67,7 +80,10 @@ export class ImageEditor extends React.Component {
                 path: (
                     <React.Fragment>
                         <Typography variant="omega" color="invert">
-                            <IconButton color="inverted" size="compact" icon={<ChevronLeft/>} onClick={() => onBackNavigation(dirty)}/>
+                            <IconButton color="inverted"
+                                        size="compact"
+                                        icon={<ChevronLeft/>}
+                                        onClick={() => onBackNavigation(dirty)}/>
                             {t('label.contentManager.editImage.goBack')}
                         </Typography>
                     </React.Fragment>
@@ -84,29 +100,53 @@ export class ImageEditor extends React.Component {
             }}
             >
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
-                                   rightCol={<ImageEditorPreview rotations={rotations} dxContext={dxContext} path={node.path} ts={ts}/>}
+                                   rightCol={<ImageEditorPreview rotations={rotations}
+                                                                 dxContext={dxContext}
+                                                                 path={node.path}
+                                                                 ts={ts}/>}
                 >
                     <>
-                        <RotatePanel dirty={rotationsDirty}
-                                     expanded={expanded === PANELS.ROTATE}
-                                     disabled={resizeDirty}
-                                     rotate={rotate}
-                                     undoChanges={undoChanges}
-                                     saveChanges={saveChanges}
-                                     onChangePanel={this.onChangePanel}
-                        />
-                        <ResizePanel expanded={expanded === PANELS.RESIZE}
-                                     dirty={resizeDirty}
-                                     originalWidth={originalWidth}
-                                     originalHeight={originalHeight}
-                                     width={width}
-                                     height={height}
-                                     disabled={rotationsDirty}
-                                     resize={resize}
-                                     undoChanges={undoChanges}
-                                     saveChanges={saveChanges}
-                                     onChangePanel={this.onChangePanel}
-                        />
+                        <Tooltip title={resizeDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                            <ExpansionPanel disabled={resizeDirty}
+                                            expanded={expanded === PANELS.ROTATE}
+                                            data-cm-role="rotate-panel"
+                                            onChange={(event, expanded) => expanded && !resizeDirty && this.onChangePanel(PANELS.ROTATE)}
+                            >
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.ROTATE && <ExpandMore/>}>
+                                    <Typography variant="zeta"
+                                                color="alpha"
+                                    >{t('label.contentManager.editImage.rotate')}
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails className={classes.panel}>
+                                    <RotatePanel rotate={rotate}/>
+                                </ExpansionPanelDetails>
+                                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                            </ExpansionPanel>
+                        </Tooltip>
+                        <Tooltip title={rotationsDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                            <ExpansionPanel disabled={rotationsDirty}
+                                            expanded={expanded === PANELS.RESIZE}
+                                            data-cm-role="resize-panel"
+                                            onChange={(event, expanded) => expanded && !rotationsDirty && this.onChangePanel(PANELS.RESIZE)}
+                            >
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.RESIZE && <ExpandMore/>}>
+                                    <Typography variant="zeta"
+                                                color="alpha"
+                                    >{t('label.contentManager.editImage.resize')}
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails className={classes.panel}>
+                                    <ResizePanel originalWidth={originalWidth}
+                                                 originalHeight={originalHeight}
+                                                 width={width}
+                                                 height={height}
+                                                 resize={resize}
+                                    />
+                                </ExpansionPanelDetails>
+                                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                            </ExpansionPanel>
+                        </Tooltip>
                     </>
                 </TwoColumnsContent>
                 <Feedback

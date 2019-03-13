@@ -11,13 +11,7 @@ describe('Rotate panel', () => {
     beforeEach(() => {
         try {
             props = {
-                dirty: false,
-                expanded: true,
-                disabled: false,
-                undoChanges: jest.fn(),
-                saveChanges: jest.fn(),
                 rotate: jest.fn(),
-                onChangePanel: jest.fn()
             };
 
             wrapper = shallow(<RotatePanel {...props}/>);

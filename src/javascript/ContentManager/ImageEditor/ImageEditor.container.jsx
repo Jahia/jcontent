@@ -24,7 +24,8 @@ export class ImageEditorContainer extends React.Component {
             transforms: [],
             name: null,
             ts: new Date().getTime(),
-            confirmSaved: false
+            confirmSaved: false,
+            editing: false
         };
 
         this.rotate = this.rotate.bind(this);
@@ -125,7 +126,7 @@ export class ImageEditorContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name, confirmSaved} = this.state;
+        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name, confirmSaved, editing} = this.state;
 
         let newName = name;
         if (!newName) {
@@ -155,6 +156,7 @@ export class ImageEditorContainer extends React.Component {
                                                         width={width}
                                                         height={height}
                                                         confirmSaved={confirmSaved}
+                                                        editing={editing}
                                                         rotate={this.rotate}
                                                         resize={this.resize}
                                                         undoChanges={this.undoChanges}
@@ -174,7 +176,12 @@ export class ImageEditorContainer extends React.Component {
                                                     <SaveAsDialog
                                                         open={saveAsOpen}
                                                         name={newName}
-                                                        handleSave={() => mutation({variables: {path, name: newName.trim()}})}
+                                                        handleSave={() => {
+                                                            mutation({variables: {path, name: newName.trim()}});
+                                                            this.setState({
+                                                                editing: true
+                                                            });
+                                                        }}
                                                         handleClose={this.handleClose}
                                                         onChangeName={this.handleChangeName}
                                                     />

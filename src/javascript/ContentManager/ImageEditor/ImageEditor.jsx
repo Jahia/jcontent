@@ -49,7 +49,8 @@ export class ImageEditor extends React.Component {
     }
 
     render() {
-        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges, saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback} = this.props;
+        const {t, classes, node, rotations, width, height, rotate, resize, undoChanges,
+            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -109,7 +110,8 @@ export class ImageEditor extends React.Component {
                     </>
                 </TwoColumnsContent>
                 <Feedback
-                    open={dirty}
+                    open={editing}
+                    duration={2000}
                     message={
                         <div className={classes.feedbackContent}>
                             <Check className={classes.feedbackIcon}/>

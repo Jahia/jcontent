@@ -25,7 +25,7 @@ export class ImageEditorContainer extends React.Component {
             name: null,
             ts: new Date().getTime(),
             confirmSaved: false,
-            editing: false
+            editing: true
         };
 
         this.rotate = this.rotate.bind(this);

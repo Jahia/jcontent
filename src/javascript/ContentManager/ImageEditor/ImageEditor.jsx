@@ -50,7 +50,7 @@ export class ImageEditor extends React.Component {
 
     render() {
         const {t, classes, node, rotations, width, height, rotate, resize, undoChanges,
-            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing} = this.props;
+            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast} = this.props;
         const {expanded} = this.state;
         const originalWidth = parseInt(node.width.value, 10);
         const originalHeight = parseInt(node.height.value, 10);
@@ -119,6 +119,7 @@ export class ImageEditor extends React.Component {
                                 {t('label.contentManager.editImage.editingMessage', {imageName: node.name})}
                             </Typography>
                         </div>}
+                    onClose={closeEditingToast}
                 />
                 <Feedback
                     open={confirmSaved}
@@ -152,7 +153,8 @@ ImageEditor.propTypes = {
     undoChanges: PropTypes.func.isRequired,
     dxContext: PropTypes.object.isRequired,
     confirmSaved: PropTypes.bool.isRequired,
-    closeFeedback: PropTypes.func.isRequired
+    closeFeedback: PropTypes.func.isRequired,
+    closeEditingToast: PropTypes.func.isRequired
 };
 
 ImageEditor.defaultProps = {

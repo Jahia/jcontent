@@ -35,13 +35,6 @@ export class ImageEditorContainer extends React.Component {
         this.resize = this.resize.bind(this);
         this.onBackNavigation = this.onBackNavigation.bind(this);
         this.onCompleted = this.onCompleted.bind(this);
-        this.closeFeedback = this.closeFeedback.bind(this);
-    }
-
-    closeFeedback() {
-        this.setState({
-            confirmSaved: false
-        });
     }
 
     onBackNavigation(dirty) {
@@ -160,13 +153,17 @@ export class ImageEditorContainer extends React.Component {
                                                         rotate={this.rotate}
                                                         resize={this.resize}
                                                         undoChanges={this.undoChanges}
-                                                        closeFeedback={this.closeFeedback}
+                                                        closeFeedback={() => this.setState({
+                                                            confirmSaved: false
+                                                        })}
                                                         saveChanges={withName => this.setState({
                                                             confirmSaveOpen: !withName,
                                                             saveAsOpen: withName
                                                         })}
+                                                        closeEditingToast={() => this.setState({
+                                                            editing: false
+                                                        })}
                                                         onBackNavigation={this.onBackNavigation}
-                                                        onCloseDialog={this.onCloseDialog}
                                                     />
                                                     <ConfirmSaveDialog
                                                         open={confirmSaveOpen}

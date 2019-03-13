@@ -1,8 +1,8 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {IconButton} from '@jahia/ds-mui-theme';
-
-import RotatePanel from './RotatePanel';
+import {RotatePanel} from './RotatePanel';
+import defaultProps from '../../../testDefaultProps';
 
 describe('Rotate panel', () => {
     let props;
@@ -14,8 +14,7 @@ describe('Rotate panel', () => {
                 rotate: jest.fn(),
             };
 
-            wrapper = shallow(<RotatePanel {...props}/>);
-            wrapper = wrapper.dive().dive();
+            wrapper = shallow(<RotatePanel {...defaultProps} {...props}/>);
         } catch (e) {
             console.log(e);
         }

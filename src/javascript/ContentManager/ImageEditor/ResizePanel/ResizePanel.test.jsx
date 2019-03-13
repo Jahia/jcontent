@@ -1,7 +1,8 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {Input} from '@material-ui/core';
-import ResizePanel from './ResizePanel';
+import {ResizePanel} from './ResizePanel';
+import defaultProps from '../../../testDefaultProps';
 
 describe('Resize panel', () => {
     let props;
@@ -17,8 +18,7 @@ describe('Resize panel', () => {
                 resize: jest.fn(),
             };
 
-            wrapper = shallow(<ResizePanel {...props}/>);
-            wrapper = wrapper.dive().dive();
+            wrapper = shallow(<ResizePanel {...defaultProps} {...props}/>);
         } catch (e) {
             console.log(e);
         }

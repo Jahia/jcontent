@@ -35,33 +35,35 @@ export const RotatePanel = ({classes, t, rotate, undoChanges, expanded, saveChan
 
     return (
         <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
-            <ExpansionPanel disabled={disabled}
-                            expanded={expanded}
-                            data-cm-role="rotate-panel"
-                            onChange={(event, expanded) => onChange(event, expanded)}
-            >
-                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.rotate')}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.rotatePanel}>
-                    <Typography variant="zeta" color="beta">
-                        {t('label.contentManager.editImage.rotateInfo')}
-                    </Typography>
-                    <div className={classes.icons}>
-                        <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
-                            <IconButton data-cm-role="rotate-left"
-                                        icon={<RotateLeft color="primary" fontSize="large"/>}
-                                        onClick={() => rotate(-1)}/>
-                        </Tooltip>
-                        <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
-                            <IconButton data-cm-role="rotate-right"
-                                        icon={<RotateRight color="primary" fontSize="large"/>}
-                                        onClick={() => rotate(1)}/>
-                        </Tooltip>
-                    </div>
-                </ExpansionPanelDetails>
-                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
-            </ExpansionPanel>
+            <div>
+                <ExpansionPanel disabled={disabled}
+                                expanded={expanded}
+                                data-cm-role="rotate-panel"
+                                onChange={(event, expanded) => onChange(event, expanded)}
+                >
+                    <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                        <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.rotate')}</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails className={classes.rotatePanel}>
+                        <Typography variant="zeta" color="beta">
+                            {t('label.contentManager.editImage.rotateInfo')}
+                        </Typography>
+                        <div className={classes.icons}>
+                            <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
+                                <IconButton data-cm-role="rotate-left"
+                                            icon={<RotateLeft color="primary" fontSize="large"/>}
+                                            onClick={() => rotate(-1)}/>
+                            </Tooltip>
+                            <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
+                                <IconButton data-cm-role="rotate-right"
+                                            icon={<RotateRight color="primary" fontSize="large"/>}
+                                            onClick={() => rotate(1)}/>
+                            </Tooltip>
+                        </div>
+                    </ExpansionPanelDetails>
+                    <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                </ExpansionPanel>
+            </div>
         </Tooltip>
     );
 };

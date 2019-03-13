@@ -84,41 +84,43 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
 
     return (
         <Tooltip title={disabled ? t('label.contentManager.editImage.tooltip') : ''}>
-            <ExpansionPanel expanded={expanded} disabled={disabled} data-cm-role="resize-panel" onChange={onChange}>
-                <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
-                    <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.panel}>
-                    <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
+            <div>
+                <ExpansionPanel expanded={expanded} disabled={disabled} data-cm-role="resize-panel" onChange={onChange}>
+                    <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+                        <Typography variant="zeta" color="alpha">{t('label.contentManager.editImage.resize')}</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails className={classes.panel}>
+                        <Typography variant="iota">{t('label.contentManager.editImage.resizeInfo')}</Typography>
 
-                    <div className={classes.form}>
-                        <div className={classes.firstCol}>
-                            <FormControl className={classes.formControl}>
-                                <Input
+                        <div className={classes.form}>
+                            <div className={classes.firstCol}>
+                                <FormControl className={classes.formControl}>
+                                    <Input
                                     id="width-field"
                                     value={width ? width : originalWidth}
                                     type="number"
                                     margin="none"
                                     onChange={setWidth}
                                 />
-                            </FormControl>
-                            <FormControl className={classes.formControl}>
-                                <Input
+                                </FormControl>
+                                <FormControl className={classes.formControl}>
+                                    <Input
                                     id="height-field"
                                     value={height ? height : originalHeight}
                                     type="number"
                                     margin="none"
                                     onChange={setHeight}
                                 />
-                            </FormControl>
+                                </FormControl>
+                            </div>
+                            <div className={classes.secondCol}>
+                                <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} data-cm-role="keep-ratio-button" onClick={switchRatio}/>
+                            </div>
                         </div>
-                        <div className={classes.secondCol}>
-                            <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>} data-cm-role="keep-ratio-button" onClick={switchRatio}/>
-                        </div>
-                    </div>
-                </ExpansionPanelDetails>
-                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
-            </ExpansionPanel>
+                    </ExpansionPanelDetails>
+                    <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                </ExpansionPanel>
+            </div>
         </Tooltip>
     );
 };

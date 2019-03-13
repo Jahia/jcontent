@@ -170,12 +170,13 @@ ContentLayout.propTypes = {
     filesMode: PropTypes.string.isRequired,
     treeState: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
-    contentTreeConfigs: PropTypes.object.isRequired,
+    contentTreeConfigs: PropTypes.object,
     previewSelection: PropTypes.object
 };
 
 ContentLayout.defaultProps = {
-    previewSelection: null
+    previewSelection: null,
+    contentTreeConfigs: null
 };
 
 const mapStateToProps = state => {

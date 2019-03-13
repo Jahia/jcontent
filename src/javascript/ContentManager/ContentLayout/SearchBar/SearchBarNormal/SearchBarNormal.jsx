@@ -120,24 +120,26 @@ export class SearchBarNormal extends React.Component {
                 }
                 onSearch={() => this.onSearch(searchTerms, searchContentType)}
             >
-                <DxContext.Consumer className={classes.searchSize}>{dxContext => (
-                    <ContentTypeSelect
-                        siteKey={siteKey}
-                        displayLanguage={dxContext.uilang}
-                        contentType={searchContentType}
-                        onSelectionChange={this.onContentTypeChange}
+                <React.Fragment>
+                    <DxContext.Consumer className={classes.searchSize}>{dxContext => (
+                        <ContentTypeSelect
+                            siteKey={siteKey}
+                            displayLanguage={dxContext.uilang}
+                            contentType={searchContentType}
+                            onSelectionChange={this.onContentTypeChange}
+                        />
+                    )}
+                    </DxContext.Consumer>
+                    <Input
+                        inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
+                        className={classes.searchSize}
+                        value={searchTerms}
+                        classes={{input: classes.input}}
+                        placeholder={t('label.contentManager.search.normalPrompt')}
+                        onChange={this.onSearchInputChange}
+                        onKeyDown={this.onSearchInputKeyDown}
                     />
-                )}
-                </DxContext.Consumer>
-                <Input
-                    inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
-                    className={classes.searchSize}
-                    value={searchTerms}
-                    classes={{input: classes.input}}
-                    placeholder={t('label.contentManager.search.normalPrompt')}
-                    onChange={this.onSearchInputChange}
-                    onKeyDown={this.onSearchInputKeyDown}
-                />
+                </React.Fragment>
             </SearchBarLayout>
         );
     }

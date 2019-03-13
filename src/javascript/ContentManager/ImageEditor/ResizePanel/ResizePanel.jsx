@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {FormControl, Input, withStyles} from '@material-ui/core';
+import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {Link} from 'mdi-material-ui';
 import {IconButton, Typography} from '@jahia/ds-mui-theme';
 
-let styles = () => ({
+let styles = theme => ({
+    panel: {
+        flexDirection: 'column'
+    },
     form: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingTop: theme.spacing.unit * 3
     },
     firstCol: {
         flex: '1 1 0%',
@@ -25,6 +29,9 @@ let styles = () => ({
     formControl: {
         width: '100%',
         padding: '16px 0'
+    },
+    inputLabel: {
+        color: theme.palette.font.alpha
     }
 });
 
@@ -71,6 +78,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
             <div className={classes.form}>
                 <div className={classes.firstCol}>
                     <FormControl className={classes.formControl}>
+                        <InputLabel className={classes.inputLabel}>{t('label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
                             value={width ? width : originalWidth}
@@ -80,6 +88,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
                         />
                     </FormControl>
                     <FormControl className={classes.formControl}>
+                        <InputLabel className={classes.inputLabel}>{t('label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
                             value={height ? height : originalHeight}

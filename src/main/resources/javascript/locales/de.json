@@ -250,6 +250,8 @@
         "rotateInfo": "Drehen Sie das Bild und überschreiben die existierende Datei, oder speichern Sie es als neue Datei",
         "rotateLeft": "Nach links drehen",
         "rotateRight": "Nach rechts drehen",
+        "width": "Breite",
+        "height": "Höhe",
         "undo": "Änderungen zurücksetzen",
         "saveAs": "Speichern als...",
         "save": "Speichern",

@@ -251,6 +251,8 @@
         "rotateInfo": "Rotate the image then save it, or save the rotated image as a new file",
         "rotateLeft": "Rotate left",
         "rotateRight": "Rotate right",
+        "width": "Width",
+        "height": "Height",
         "undo": "Undo changes",
         "saveAs": "Save as ...",
         "save": "Save",

@@ -383,7 +383,7 @@ function initActions(actionsRegistry) {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.editImage.action',
         target: ['contentActions:2.5'],
-        hideOnNodeTypes: ['jnt:virtualsite'],
+        showOnNodeTypes: ['jmix:image'],
         mode: 'image-edit'
     });
 }

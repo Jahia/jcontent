@@ -256,7 +256,7 @@
         "saveAs": "Speichern als...",
         "save": "Speichern",
         "unsavedChanges": "Nicht gespeicherte Änderungen",
-        "resizeInfo": "Sie können oder individuelle Werte eingeben",
+        "resizeInfo": "Sie können individuelle Werte eingeben",
         "tooltip": "Speichern oder verwerfen Sie Ihre Änderungen, bevor Sie weitere Bearbeitungen starten",
         "goBack": "Zurück",
         "exitConfirmation": "Sie haben nicht gespeicherte Änderungen. Sind Sie sicher, dass Sie abbrechen und die Änderungen verwerfen möchten?",

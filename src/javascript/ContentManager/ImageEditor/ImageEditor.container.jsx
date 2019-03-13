@@ -9,6 +9,7 @@ import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import DxContext from '../DxContext';
+import {cmGoto} from '../ContentManager.redux-actions';
 
 export class ImageEditorContainer extends React.Component {
     constructor(props) {
@@ -108,12 +109,16 @@ export class ImageEditorContainer extends React.Component {
     }
 
     onCompleted(result) {
-        if (result.jcr.mutateNode.transformImage.node.path === this.props.path) {
-            this.undoChanges();
+        let {path, site, language, editImage} = this.props;
+        let newPath = result.jcr.mutateNode.transformImage.node.path;
+        this.undoChanges();
+        if (newPath === path) {
             this.setState(() => ({
                 ts: new Date().getTime(),
                 confirmSaved: true
             }));
+        } else {
+            editImage(site, language, newPath);
         }
         this.handleClose();
     }
@@ -197,10 +202,16 @@ ImageEditorContainer.propTypes = {
     path: PropTypes.string.isRequired
 };
 
-let mapStateToProps = state => ({
-    path: state.path
+const mapStateToProps = state => ({
+    path: state.path,
+    site: state.site,
+    language: state.language
+});
+
+const mapDispatchToProps = dispatch => ({
+    editImage: (site, language, path) => dispatch(cmGoto({site, language, mode: 'image-edit', path}))
 });
 
 export default compose(
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
 )(ImageEditorContainer);

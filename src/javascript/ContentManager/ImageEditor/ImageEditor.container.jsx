@@ -10,6 +10,7 @@ import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import DxContext from '../DxContext';
 import {cmGoto} from '../ContentManager.redux-actions';
+import {refetchContentListData} from '../ContentManager.refetches';
 
 export class ImageEditorContainer extends React.Component {
     constructor(props) {
@@ -103,7 +104,7 @@ export class ImageEditorContainer extends React.Component {
     }
 
     onCompleted(result) {
-        let {path, site, language, editImage} = this.props;
+        let {path, site, language, editImage, refreshData} = this.props;
         let newPath = result.jcr.mutateNode.transformImage.node.path;
         this.undoChanges();
         if (newPath === path) {
@@ -115,6 +116,7 @@ export class ImageEditorContainer extends React.Component {
             editImage(site, language, newPath);
         }
         this.handleClose();
+        refreshData();
     }
 
     render() {
@@ -213,7 +215,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    editImage: (site, language, path) => dispatch(cmGoto({site, language, mode: 'image-edit', path}))
+    editImage: (site, language, path) => dispatch(cmGoto({site, language, mode: 'image-edit', path})),
+    refreshData: () => dispatch(refetchContentListData)
 });
 
 export default compose(

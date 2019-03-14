@@ -164,14 +164,6 @@ export class IFrameLayout extends React.Component {
     }
 }
 
-IFrameLayout.propTypes = {
-    actionPath: PropTypes.string.isRequired,
-    contextPath: PropTypes.string.isRequired,
-    lang: PropTypes.string.isRequired,
-    siteKey: PropTypes.string.isRequired,
-    workspace: PropTypes.string.isRequired
-};
-
 const mapStateToProps = state => ({
     lang: state.language,
     siteKey: state.site,
@@ -179,6 +171,16 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = () => ({});
+
+IFrameLayout.propTypes = {
+    actionPath: PropTypes.string.isRequired,
+    contextPath: PropTypes.string.isRequired,
+    lang: PropTypes.string.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    workspace: PropTypes.string.isRequired,
+    notificationContext: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

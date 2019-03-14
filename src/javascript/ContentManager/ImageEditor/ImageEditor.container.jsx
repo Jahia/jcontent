@@ -54,12 +54,12 @@ export class ImageEditorContainer extends React.Component {
             let rotations = ((state.rotations + val + 5) % 4) - 1;
             return {
                 rotations: rotations,
-                transforms: (rotations !== 0 ? [{
+                transforms: (rotations === 0 ? [] : [{
                     op: 'rotateImage',
                     args: {
                         angle: rotations * 90
                     }
-                }] : [])
+                }])
             };
         });
     }
@@ -204,10 +204,6 @@ export class ImageEditorContainer extends React.Component {
     }
 }
 
-ImageEditorContainer.propTypes = {
-    path: PropTypes.string.isRequired
-};
-
 const mapStateToProps = state => ({
     path: state.path,
     site: state.site,
@@ -218,6 +214,14 @@ const mapDispatchToProps = dispatch => ({
     editImage: (site, language, path) => dispatch(cmGoto({site, language, mode: 'image-edit', path})),
     refreshData: () => dispatch(refetchContentListData)
 });
+
+ImageEditorContainer.propTypes = {
+    path: PropTypes.string.isRequired,
+    site: PropTypes.string.isRequired,
+    language: PropTypes.string.isRequired,
+    editImage: PropTypes.func.isRequired,
+    refreshData: PropTypes.func.isRequired
+};
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
@@ -138,6 +139,13 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
 const mapStateToProps = state => ({
     uiLang: state.uiLang
 });
+
+PublicationStatus.propTypes = {
+    classes: PropTypes.object.isRequired,
+    previewSelection: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    uiLang: PropTypes.string.isRequired
+};
 
 export default compose(
     translate(),

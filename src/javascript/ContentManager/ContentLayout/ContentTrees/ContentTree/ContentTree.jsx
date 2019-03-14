@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Picker} from '@jahia/react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import PickerViewMaterial from './PickerViewMaterial';
@@ -37,7 +38,7 @@ const PickerItemsFragment = {
     }
 };
 
-export default class ContentTree extends React.Component {
+class ContentTree extends React.Component {
     constructor(props) {
         super(props);
         this.picker = React.createRef();
@@ -67,3 +68,21 @@ export default class ContentTree extends React.Component {
         );
     }
 }
+
+ContentTree.propTypes = {
+    container: PropTypes.object.isRequired,
+    dataCmRole: PropTypes.string.isRequired,
+    handleOpen: PropTypes.func.isRequired,
+    handleSelect: PropTypes.func.isRequired,
+    lang: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    openPaths: PropTypes.array.isRequired,
+    openableTypes: PropTypes.array.isRequired,
+    path: PropTypes.string.isRequired,
+    rootLabel: PropTypes.string.isRequired,
+    rootPath: PropTypes.string.isRequired,
+    selectableTypes: PropTypes.array.isRequired,
+    setRefetch: PropTypes.func.isRequired
+};
+
+export default ContentTree;

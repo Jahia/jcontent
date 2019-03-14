@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import SearchBarNormal from './SearchBarNormal';
@@ -30,6 +31,11 @@ const mapDispatchToProps = dispatch => {
     return {
         setSearchMode: searchMode => dispatch(cmSetSearchMode(searchMode))
     };
+};
+
+SearchBar.propTypes = {
+    searchMode: PropTypes.string.isRequired,
+    setSearchMode: PropTypes.func.isRequired
 };
 
 export default compose(

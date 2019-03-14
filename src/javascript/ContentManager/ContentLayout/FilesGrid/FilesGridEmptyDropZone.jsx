@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Grid, withStyles} from '@material-ui/core';
 import EmptyDropZone from '../EmptyDropZone';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -33,5 +34,11 @@ export const FilesGridEmptyDropZone = ({classes, path, mode}) => (
         </Grid>
     </UploadTransformComponent>
 );
+
+FilesGridEmptyDropZone.propTypes = {
+    classes: PropTypes.object.isRequired,
+    mode: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired
+};
 
 export default withStyles(styles)(FilesGridEmptyDropZone);

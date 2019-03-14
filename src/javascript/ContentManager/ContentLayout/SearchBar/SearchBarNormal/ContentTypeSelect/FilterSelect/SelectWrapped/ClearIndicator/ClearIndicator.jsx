@@ -1,17 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {components} from 'react-select';
 import {Close} from '@material-ui/icons';
 
-export default class ClearIndicator extends React.Component {
-    render() {
-        if (this.props.selectProps.open) {
-            return (
-                <components.ClearIndicator {...this.props}>
-                    <Close fontSize="small"/>
-                </components.ClearIndicator>
-            );
-        }
+const ClearIndicator = (props, {selectProps}) => (
+    (selectProps && selectProps.open) ?
+        <components.ClearIndicator {...props}>
+            <Close fontSize="small"/>
+        </components.ClearIndicator> :
+        <div/>
+);
 
-        return <div/>;
-    }
-}
+ClearIndicator.propTypes = {
+    selectProps: PropTypes.object
+};
+
+ClearIndicator.defaultProps = {
+    selectProps: {}
+};
+
+export default ClearIndicator;

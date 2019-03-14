@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {compose, Query, withApollo} from 'react-apollo';
 import {
     ContentQueryHandler,
@@ -229,6 +230,34 @@ const mapDispatchToProps = dispatch => ({
     closePaths: paths => dispatch(cmClosePaths(paths)),
     removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths))
 });
+
+ContentData.propTypes = {
+    children: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
+    closePaths: PropTypes.func.isRequired,
+    lang: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    notificationContext: PropTypes.object.isRequired,
+    openPaths: PropTypes.func.isRequired,
+    openedPaths: PropTypes.array.isRequired,
+    pagination: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired,
+    pathsToRefetch: PropTypes.array.isRequired,
+    previewSelection: PropTypes.string,
+    removePathsToRefetch: PropTypes.func.isRequired,
+    setPath: PropTypes.func.isRequired,
+    setPreviewSelection: PropTypes.func.isRequired,
+    setRefetch: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    sort: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    uiLang: PropTypes.string.isRequired
+};
+
+ContentData.defaultProps = {
+    previewSelection: null
+};
 
 export default compose(
     withNotifications(),

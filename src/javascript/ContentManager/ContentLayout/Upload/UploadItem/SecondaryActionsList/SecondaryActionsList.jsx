@@ -1,5 +1,6 @@
-import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
+import PropTypes from 'prop-types';
+import {uploadStatuses} from '../../Upload.constants';
 import DontUploadButton from './DontUploadButton';
 import OverwriteButton from './OverwriteButton';
 import RenameButton from './RenameButton';
@@ -34,6 +35,16 @@ const SecondaryActionsList = props => {
     }
 
     return null;
+};
+
+SecondaryActionsList.propTypes = {
+    status: PropTypes.string,
+    error: PropTypes.string
+};
+
+SecondaryActionsList.defaultProps = {
+    status: null,
+    error: null
 };
 
 export default SecondaryActionsList;

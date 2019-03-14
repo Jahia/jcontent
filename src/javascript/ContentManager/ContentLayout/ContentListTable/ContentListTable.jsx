@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     Badge,
     Checkbox,
@@ -14,7 +15,6 @@ import {Lock} from '@material-ui/icons';
 import {Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
-import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
 import DxContext from '../../DxContext';
@@ -33,6 +33,8 @@ import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import ContentListEmptyDropZone from './ContentListEmptyDropZone';
+import ContentNotFound from './ContentNotFound';
+import EmptyRow from './EmptyRow';
 
 const allColumnData = [
     {
@@ -105,8 +107,6 @@ const reducedColumnData = [
         property: 'lastModified.value'
     }
 ];
-
-const APP_TABLE_CELLS = 2;
 
 const styles = theme => ({
     tableWrapper: {
@@ -515,28 +515,6 @@ export class ContentListTable extends React.Component {
     }
 }
 
-let ContentNotFound = props => {
-    return (
-        <TableRow>
-            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS}>
-                <Typography variant="p" className={props.class}>
-                    {props.translate('label.contentManager.contentNotFound')}
-                </Typography>
-            </TableCell>
-        </TableRow>
-    );
-};
-
-let EmptyRow = props => {
-    return (
-        <TableRow>
-            <TableCell colSpan={props.columnData.length + APP_TABLE_CELLS + 2}>
-                <Typography variant="p">{props.translate('label.contentManager.noResults')}</Typography>
-            </TableCell>
-        </TableRow>
-    );
-};
-
 const mapStateToProps = state => ({
     mode: state.mode,
     previewSelection: state.previewSelection,
@@ -578,8 +556,36 @@ const mapDispatchToProps = dispatch => ({
 });
 
 ContentListTable.propTypes = {
+    addSelection: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    contentNotFound: PropTypes.bool,
+    lang: PropTypes.string.isRequired,
+    loading: PropTypes.bool,
+    mode: PropTypes.string.isRequired,
+    onPreviewSelect: PropTypes.func.isRequired,
+    pagination: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired,
+    previewSelection: PropTypes.string,
+    previewState: PropTypes.number.isRequired,
+    removeSelection: PropTypes.func.isRequired,
     rows: PropTypes.array.isRequired,
-    pagination: PropTypes.object.isRequired
+    selection: PropTypes.array.isRequired,
+    setCurrentPage: PropTypes.func.isRequired,
+    setPageSize: PropTypes.func.isRequired,
+    setPath: PropTypes.func.isRequired,
+    setSort: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    sort: PropTypes.object.isRequired,
+    switchSelection: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
+    totalCount: PropTypes.number.isRequired,
+    uiLang: PropTypes.string.isRequired
+};
+
+ContentListTable.defaultProps = {
+    contentNotFound: undefined,
+    previewSelection: null,
+    loading: undefined
 };
 
 export default compose(

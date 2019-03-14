@@ -1,13 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Input, withStyles} from '@material-ui/core';
-import DxContext from '../../../DxContext/index';
-import ContentTypeSelect from './ContentTypeSelect/index';
+import DxContext from '../../../DxContext';
+import ContentTypeSelect from './ContentTypeSelect';
 import {cmGoto} from '../../../ContentManager.redux-actions';
 import {withNotifications} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
-import SearchBarLayout from '../SearchBarLayout/index';
-import ActionButton from '../ActionButton/index';
+import SearchBarLayout from '../SearchBarLayout';
+import ActionButton from '../ActionButton';
 import {connect} from 'react-redux';
 
 const styles = () => ({
@@ -38,14 +39,14 @@ export class SearchBarNormal extends React.Component {
         if (state.ongoingSearch && (state.ongoingSearch.searchTerms !== params.searchTerms || state.ongoingSearch.searchContentType !== params.searchContentType)) {
             // Props have changed compared to previous search, override the current state
             return {
-                searchContentType: params.searchContentType !== undefined ? params.searchContentType : '',
-                searchTerms: params.searchTerms !== undefined ? params.searchTerms : '',
+                searchContentType: params.searchContentType ? params.searchContentType : '',
+                searchTerms: params.searchTerms ? params.searchTerms : '',
                 ongoingSearch: params
             };
         }
         return {
-            searchContentType: state.searchContentType !== undefined ? state.searchContentType : (params.searchContentType ? params.searchContentType : ''),
-            searchTerms: state.searchTerms !== undefined ? state.searchTerms : (params.searchTerms ? params.searchTerms : ''),
+            searchContentType: state.searchContentType ? state.searchContentType : (params.searchContentType ? params.searchContentType : ''),
+            searchTerms: state.searchTerms ? state.searchTerms : (params.searchTerms ? params.searchTerms : ''),
             ongoingSearch: params
         };
     }
@@ -156,6 +157,15 @@ const mapDispatchToProps = dispatch => {
     return {
         search: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
     };
+};
+
+SearchBarNormal.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onSql2Click: PropTypes.func.isRequired,
+    path: PropTypes.string.isRequired,
+    search: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired
 };
 
 export default compose(

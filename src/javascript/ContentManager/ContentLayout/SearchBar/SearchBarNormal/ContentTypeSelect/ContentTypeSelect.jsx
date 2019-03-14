@@ -5,7 +5,7 @@ import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
-import FilterSelect from './FilterSelect/index';
+import FilterSelect from './FilterSelect';
 import gql from 'graphql-tag';
 
 const SiteContentTypesQuery = gql`
@@ -86,7 +86,11 @@ export class ContentTypeSelect extends React.Component {
 
 ContentTypeSelect.propTypes = {
     contentType: PropTypes.string,
-    onSelectionChange: PropTypes.func
+    displayLanguage: PropTypes.string.isRequired,
+    notificationContext: PropTypes.object.isRequired,
+    onSelectionChange: PropTypes.func,
+    siteKey: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired
 };
 
 ContentTypeSelect.defaultProps = {

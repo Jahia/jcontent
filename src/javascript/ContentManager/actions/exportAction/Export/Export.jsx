@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {Dialog,
@@ -125,6 +126,16 @@ export class Export extends React.Component {
         );
     }
 }
+
+Export.propTypes = {
+    classes: PropTypes.object.isRequired,
+    contextPath: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onExited: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired
+};
 
 export default compose(
     withStyles(styles),

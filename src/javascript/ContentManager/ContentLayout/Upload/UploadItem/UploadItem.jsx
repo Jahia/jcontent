@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     Dialog,
     DialogActions,
@@ -9,7 +10,6 @@ import {
     withStyles
 } from '@material-ui/core';
 import {Button, Typography} from '@jahia/ds-mui-theme';
-import PropTypes from 'prop-types';
 import {compose, withApollo} from 'react-apollo';
 import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
 import {connect} from 'react-redux';
@@ -220,15 +220,6 @@ export class UploadItem extends React.Component {
     }
 }
 
-UploadItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    removeFile: PropTypes.func.isRequired,
-    updateUploadsStatus: PropTypes.func.isRequired,
-    file: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired
-};
-
 const mapStateToProps = (state, ownProps) => {
     return state.fileUpload.uploads[ownProps.index];
 };
@@ -243,6 +234,25 @@ const mapDispatchToProps = dispatch => {
             });
         }
     };
+};
+
+UploadItem.propTypes = {
+    classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    removeFile: PropTypes.func.isRequired,
+    updateUploadsStatus: PropTypes.func.isRequired,
+    file: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    dispatchBatch: PropTypes.func.isRequired,
+    status: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    client: PropTypes.object.isRequired
+};
+
+UploadItem.defaultProps = {
+    type: undefined
 };
 
 export default compose(

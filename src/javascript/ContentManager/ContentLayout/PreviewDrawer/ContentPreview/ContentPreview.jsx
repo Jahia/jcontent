@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {compose, Query} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
@@ -151,6 +152,18 @@ const mapDispatchToProps = dispatch => ({
     },
     clearSelection: () => dispatch(cmClearSelection())
 });
+
+ContentPreview.propTypes = {
+    classes: PropTypes.object.isRequired,
+    language: PropTypes.string.isRequired,
+    previewMode: PropTypes.string.isRequired,
+    previewSelection: PropTypes.object,
+    selection: PropTypes.array.isRequired
+};
+
+ContentPreview.defaultProps = {
+    previewSelection: undefined
+};
 
 export default compose(
     translate(),

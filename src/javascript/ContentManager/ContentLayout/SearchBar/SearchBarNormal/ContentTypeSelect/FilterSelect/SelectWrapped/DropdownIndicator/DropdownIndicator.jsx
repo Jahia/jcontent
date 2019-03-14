@@ -1,17 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {components} from 'react-select';
 import {ChevronDown} from 'mdi-material-ui';
 
-export default class DropdownIndicator extends React.Component {
-    render() {
-        if (!this.props.selectProps.open) {
-            return (
-                <components.DropdownIndicator {...this.props}>
-                    <ChevronDown fontSize="small"/>
-                </components.DropdownIndicator>
-            );
-        }
+const DropdownIndicator = (props, {selectProps}) => (
+    (selectProps && selectProps.open) ?
+        <div/> :
+        <components.DropdownIndicator {...props}>
+            <ChevronDown fontSize="small"/>
+        </components.DropdownIndicator>
+);
 
-        return <div/>;
-    }
-}
+DropdownIndicator.propTypes = {
+    selectProps: PropTypes.object
+};
+
+DropdownIndicator.defaultProps = {
+    selectProps: {}
+};
+
+export default DropdownIndicator;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {AppBar, Toolbar, withStyles} from '@material-ui/core';
 import {IconButton, Typography} from '@jahia/ds-mui-theme';
 import {ChevronRight} from '@material-ui/icons';
@@ -64,6 +65,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setTreeState: state => dispatch(cmSetTreeState(state))
 });
+
+ToolBar.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    mode: PropTypes.string.isRequired,
+    selection: PropTypes.array.isRequired,
+    setTreeState: PropTypes.func.isRequired,
+    treeState: PropTypes.number.isRequired
+};
 
 export default compose(
     translate(),

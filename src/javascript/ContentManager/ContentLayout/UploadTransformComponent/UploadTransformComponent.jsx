@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {batchActions} from 'redux-batched-actions/lib/index';
+import {batchActions} from 'redux-batched-actions';
 import {
     fileAccepted,
     fileMatchSize,
@@ -170,9 +170,20 @@ export class UploadTransformComponent extends React.Component {
     }
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        uploadDispatchBatch: actions => dispatch(batchActions(actions)),
+        uploadSetOverlayTarget: state => dispatch(setOverlayTarget(state))
+    };
+};
+
 UploadTransformComponent.propTypes = {
     uploadTargetComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
     uploadPath: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    uploadDispatchBatch: PropTypes.func.isRequired,
+    uploadSetOverlayTarget: PropTypes.func.isRequired,
+    client: PropTypes.object.isRequired,
     uploadAcceptedFileTypes: PropTypes.array,
     uploadMaxSize: PropTypes.number,
     uploadMinSize: PropTypes.number
@@ -182,13 +193,6 @@ UploadTransformComponent.defaultProps = {
     uploadAcceptedFileTypes: null,
     uploadMaxSize: Infinity,
     uploadMinSize: 0
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        uploadDispatchBatch: actions => dispatch(batchActions(actions)),
-        uploadSetOverlayTarget: state => dispatch(setOverlayTarget(state))
-    };
 };
 
 export default compose(

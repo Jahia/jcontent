@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import Select from 'react-select';
 import {withTheme} from '@material-ui/core';
-import Option from './Option/index';
-import ClearIndicator from './ClearIndicator/index';
-import DropdownIndicator from './DropdownIndicator/index';
+import Option from './Option';
+import ClearIndicator from './ClearIndicator';
+import DropdownIndicator from './DropdownIndicator';
 
 const ITEM_HEIGHT = 48;
 
@@ -111,5 +112,12 @@ export class SelectWrapped extends React.Component {
         );
     }
 }
+
+SelectWrapped.propTypes = {
+    open: PropTypes.bool.isRequired,
+    options: PropTypes.array.isRequired,
+    theme: PropTypes.object.isRequired,
+    value: PropTypes.string.isRequired
+};
 
 export default withTheme()(SelectWrapped);

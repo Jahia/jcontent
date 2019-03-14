@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetPath} from '../../../ContentManager.redux-actions';
@@ -86,6 +87,28 @@ const mapDispatchToProps = dispatch => ({
         dispatch(cmGoto({mode: 'browse', params: params}));
     }
 });
+
+SearchControlBar.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    clearSearch: PropTypes.func.isRequired,
+    path: PropTypes.string.isRequired,
+    searchContentType: PropTypes.string,
+    searchTerms: PropTypes.string,
+    setPath: PropTypes.func.isRequired,
+    showActions: PropTypes.bool.isRequired,
+    siteDisplayableName: PropTypes.string.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    sql2SearchFrom: PropTypes.string,
+    sql2SearchWhere: PropTypes.string
+};
+
+SearchControlBar.defaultProps = {
+    searchContentType: undefined,
+    searchTerms: undefined,
+    sql2SearchFrom: undefined,
+    sql2SearchWhere: undefined
+};
 
 export default compose(
     translate(),

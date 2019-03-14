@@ -1,8 +1,9 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {CircularProgress, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import {CheckCircle, Info} from '@material-ui/icons';
-import React from 'react';
 import {compose} from 'react-apollo';
 import {translate, Trans} from 'react-i18next';
 
@@ -78,6 +79,16 @@ export function UploadHeader({classes, t, status}) {
         </div>
     );
 }
+
+UploadHeader.propTypes = {
+    classes: PropTypes.object.isRequired,
+    status: PropTypes.object,
+    t: PropTypes.func.isRequired
+};
+
+UploadHeader.defaultProps = {
+    status: undefined
+};
 
 export default compose(
     withStyles(styles, {withTheme: true}),

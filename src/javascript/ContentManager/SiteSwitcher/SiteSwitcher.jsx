@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import {compose, Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
@@ -67,7 +68,7 @@ class SiteSwitcher extends React.Component {
                 }
             }
         }
-        return newLang !== null ? newLang : siteNode.site.defaultLanguage;
+        return newLang ? newLang : siteNode.site.defaultLanguage;
     }
 
     onSelectSite(siteNode, currentLang) {
@@ -126,6 +127,15 @@ const mapDispatchToProps = dispatch => ({
     },
     dispatchBatch: actions => dispatch(batchActions(actions))
 });
+
+SiteSwitcher.propTypes = {
+    selectSite: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    currentLang: PropTypes.string.isRequired,
+    notificationContext: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    dispatchBatch: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

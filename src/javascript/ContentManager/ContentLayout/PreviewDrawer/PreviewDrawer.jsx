@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {
     AppBar,
@@ -140,7 +141,21 @@ const mapDispatchToProps = dispatch => ({
     }
 });
 
-PreviewDrawer.propTypes = {};
+PreviewDrawer.propTypes = {
+    classes: PropTypes.object.isRequired,
+    closeFullScreen: PropTypes.func.isRequired,
+    closePreview: PropTypes.func.isRequired,
+    openFullScreen: PropTypes.func.isRequired,
+    previewMode: PropTypes.string.isRequired,
+    previewSelection: PropTypes.object,
+    previewState: PropTypes.number.isRequired,
+    setPreviewMode: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired
+};
+
+PreviewDrawer.defaultProps = {
+    previewSelection: undefined
+};
 
 export default compose(
     translate(),

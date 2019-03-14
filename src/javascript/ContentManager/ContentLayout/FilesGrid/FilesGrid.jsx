@@ -128,11 +128,6 @@ export class FilesGrid extends Component {
     }
 }
 
-FilesGrid.propTypes = {
-    size: PropTypes.number.isRequired,
-    rows: PropTypes.array.isRequired
-};
-
 let mapStateToProps = state => ({
     path: state.path,
     pagination: state.pagination,
@@ -143,6 +138,24 @@ let mapDispatchToProps = dispatch => ({
     setCurrentPage: page => dispatch(cmSetPage(page)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize))
 });
+
+FilesGrid.propTypes = {
+    classes: PropTypes.object.isRequired,
+    contentNotFound: PropTypes.bool,
+    loading: PropTypes.bool.isRequired,
+    pagination: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired,
+    rows: PropTypes.array.isRequired,
+    setCurrentPage: PropTypes.func.isRequired,
+    setPageSize: PropTypes.func.isRequired,
+    size: PropTypes.number.isRequired,
+    t: PropTypes.func.isRequired,
+    totalCount: PropTypes.number.isRequired
+};
+
+FilesGrid.defaultProps = {
+    contentNotFound: undefined
+};
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {withStyles, Input} from '@material-ui/core';
 
 const styles = theme => ({
@@ -41,5 +42,21 @@ export class Sql2Input extends React.Component {
         );
     }
 }
+
+Sql2Input.propTypes = {
+    classes: PropTypes.object.isRequired,
+    cmRole: PropTypes.string.isRequired,
+    maxLength: PropTypes.number.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onSearch: PropTypes.func.isRequired,
+    size: PropTypes.number,
+    style: PropTypes.object,
+    value: PropTypes.string.isRequired
+};
+
+Sql2Input.defaultProps = {
+    style: undefined,
+    size: undefined
+};
 
 export default withStyles(styles)(Sql2Input);

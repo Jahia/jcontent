@@ -1,8 +1,9 @@
 import React from 'react';
-import DxContext from '../../../DxContext/index';
-import SearchBarLayout from '../SearchBarLayout/index';
-import ActionButton from '../ActionButton/index';
-import Sql2Input from './Sql2Input/index';
+import PropTypes from 'prop-types';
+import DxContext from '../../../DxContext';
+import SearchBarLayout from '../SearchBarLayout';
+import ActionButton from '../ActionButton';
+import Sql2Input from './Sql2Input';
 import {compose} from 'react-apollo';
 import {Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
@@ -140,6 +141,14 @@ const mapDispatchToProps = dispatch => {
     return {
         search: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
     };
+};
+
+SearchBarSql2.propTypes = {
+    classes: PropTypes.object.isRequired,
+    onNormalClick: PropTypes.func.isRequired,
+    path: PropTypes.string.isRequired,
+    search: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired
 };
 
 export default compose(

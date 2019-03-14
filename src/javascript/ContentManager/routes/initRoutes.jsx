@@ -1,16 +1,11 @@
 import React from 'react';
-import {MainLayout, FullWidthContent} from '@jahia/layouts';
-import LanguageSwitcher from '../LanguageSwitcher';
-import SiteSwitcher from '../SiteSwitcher';
-import IFrameLayout from '../IFrameLayout';
-import SearchBar from '../ContentLayout/SearchBar';
-import ContentLayout from '../ContentLayout';
 import ImageEditor from '../ImageEditor';
-import {actionsRegistry} from '@jahia/react-material';
 import {Trans} from 'react-i18next';
+import AppRoute from './AppRoute';
+import DefaultRoute from './DefaultRoute';
 
 function initRoutes(registry) {
-    let help = (
+    const help = (
         <Trans i18nKey="label.contentManager.link.academy"
                components={[
                    <a key="academyLink"
@@ -27,21 +22,7 @@ function initRoutes(registry) {
         target: ['cmm:50'],
         path: '/:siteKey/:lang/apps/:menu/:entry',
         render: (props, {dxContext, t}) => (
-            <MainLayout
-                topBarProps={{
-                    path: t('label.contentManager.appTitle', {path: ''}),
-                    title: t([actionsRegistry.get(props.match.params.menu).buttonLabel, 'label.contentManager.leftMenu.manage.title']),
-                    contextModifiers: <React.Fragment><SiteSwitcher/> <LanguageSwitcher/></React.Fragment>,
-                    actions: <React.Fragment></React.Fragment>
-                }}
-                help={help}
-            >
-                <FullWidthContent>
-                    <IFrameLayout
-                        contextPath={dxContext.contextPath}
-                        workspace={dxContext.workspace}/>
-                </FullWidthContent>
-            </MainLayout>
+            <AppRoute dxContext={dxContext} t={t} help={help} {...props}/>
         )
     });
 
@@ -59,19 +40,7 @@ function initRoutes(registry) {
         target: ['cmm:99'],
         path: '/:siteKey/:lang/:mode',
         render: (props, {t}) => (
-            <MainLayout
-                topBarProps={{
-                    path: t('label.contentManager.appTitle', {path: ''}),
-                    title: t('label.contentManager.title.' + props.match.params.mode),
-                    contextModifiers: <React.Fragment><SiteSwitcher/><LanguageSwitcher/></React.Fragment>,
-                    actions: <React.Fragment><SearchBar/></React.Fragment>
-                }}
-                help={help}
-            >
-                <FullWidthContent>
-                    <ContentLayout/>
-                </FullWidthContent>
-            </MainLayout>
+            <DefaultRoute t={t} help={help} {...props}/>
         )
     });
 }

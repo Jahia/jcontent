@@ -1,7 +1,8 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import {CloudUpload} from '@material-ui/icons';
-import React from 'react';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 
@@ -27,6 +28,13 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => (
         <CloudUpload/>
     </Component>
 );
+
+EmptyDropZone.propTypes = {
+    classes: PropTypes.object.isRequired,
+    component: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

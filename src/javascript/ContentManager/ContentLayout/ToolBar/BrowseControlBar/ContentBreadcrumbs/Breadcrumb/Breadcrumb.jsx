@@ -231,7 +231,10 @@ Breadcrumb.propTypes = {
     handleSelect: PropTypes.func.isRequired,
     rootLabel: PropTypes.string,
     rootPath: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired
+    mode: PropTypes.string.isRequired,
+    pickerEntries: PropTypes.array.isRequired,
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
 Breadcrumb.defaultProps = {

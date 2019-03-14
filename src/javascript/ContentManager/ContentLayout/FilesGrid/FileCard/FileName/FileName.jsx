@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../../../../ContentManager.utils';
 import {Tooltip, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
@@ -32,6 +33,12 @@ export const FileName = ({maxLength, classes, node}) => {
             {typography}
         </Tooltip>
     ) : typography;
+};
+
+FileName.propTypes = {
+    classes: PropTypes.object.isRequired,
+    maxLength: PropTypes.number.isRequired,
+    node: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(FileName);

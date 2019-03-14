@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
     List,
     ListItem,
@@ -9,7 +10,6 @@ import {
 } from '@material-ui/core';
 import {IconButton, Typography} from '@jahia/ds-mui-theme';
 import {KeyboardArrowRight} from '@material-ui/icons';
-import PropTypes from 'prop-types';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
@@ -158,7 +158,7 @@ export class PickerViewMaterial extends React.Component {
                                             onClick={() => entry.selectable ? onSelectItem(entry.path, !entry.selected) : null}
                                         >
                                             <ListItemIcon className={classes.listItemNodeTypeIcon}>
-                                                {iconRenderer ? iconRenderer(entry) : defaultIconRenderer(entry)}
+                                                {iconRenderer(entry)}
                                             </ListItemIcon>
                                             <ListItemText
                                                 disableTypography
@@ -264,16 +264,22 @@ export class PickerViewMaterial extends React.Component {
 }
 
 PickerViewMaterial.propTypes = {
-    pickerEntries: PropTypes.array.isRequired,
+    classes: PropTypes.object.isRequired,
+    container: PropTypes.object.isRequired,
+    dataCmRole: PropTypes.string.isRequired,
+    iconRenderer: PropTypes.func,
+    loading: PropTypes.bool.isRequired,
+    mode: PropTypes.string.isRequired,
+    onOpenItem: PropTypes.func,
     onSelectItem: PropTypes.func,
-    onOpenItem: PropTypes.func
+    pickerEntries: PropTypes.array.isRequired,
+    rootLabel: PropTypes.string.isRequired
 };
 
 PickerViewMaterial.defaultProps = {
-    onSelectItem: () => {
-    },
-    onOpenItem: () => {
-    }
+    iconRenderer: defaultIconRenderer,
+    onSelectItem: () => {},
+    onOpenItem: () => {}
 };
 
 export default compose(

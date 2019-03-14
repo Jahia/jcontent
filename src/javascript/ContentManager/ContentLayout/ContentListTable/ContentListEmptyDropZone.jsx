@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {TableBody, TableRow, TableCell, withStyles} from '@material-ui/core';
 import EmptyDropZone from '../EmptyDropZone';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -32,5 +33,11 @@ export const ContentListEmptyDropZone = ({classes, path, mode}) => (
         </UploadTransformComponent>
     </TableBody>
 );
+
+ContentListEmptyDropZone.propTypes = {
+    classes: PropTypes.object.isRequired,
+    mode: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired
+};
 
 export default withStyles(styles)(ContentListEmptyDropZone);

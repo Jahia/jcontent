@@ -289,12 +289,6 @@ export class FileCard extends Component {
     }
 }
 
-FileCard.propTypes = {
-    cardType: PropTypes.number.isRequired,
-    node: PropTypes.object.isRequired,
-    onPreviewSelect: PropTypes.func.isRequired
-};
-
 const mapStateToProps = state => ({
     uiLang: state.uiLang,
     previewSelection: state.previewSelection,
@@ -310,6 +304,25 @@ const mapDispatchToProps = dispatch => ({
         dispatch(cmGoto({path: path}));
     }
 });
+
+FileCard.propTypes = {
+    cardType: PropTypes.number.isRequired,
+    classes: PropTypes.object.isRequired,
+    dxContext: PropTypes.object.isRequired,
+    mode: PropTypes.string.isRequired,
+    node: PropTypes.object.isRequired,
+    onPreviewSelect: PropTypes.func.isRequired,
+    previewSelection: PropTypes.string,
+    previewState: PropTypes.number.isRequired,
+    setPath: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired,
+    uiLang: PropTypes.string.isRequired
+};
+
+FileCard.defaultProps = {
+    previewSelection: null
+};
 
 export default compose(
     withStyles(styles),

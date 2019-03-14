@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {AppBar, Grid, Toolbar, withStyles} from '@material-ui/core';
 import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
@@ -30,7 +31,7 @@ export class ContentTrees extends React.Component {
 
     render() {
         const {
-            lang, siteKey, path, openPaths, t, user, setPath, openPath,
+            lang, siteKey, path, openPaths, t, setPath, openPath,
             closePath, classes, setRefetch, mode, isOpen, closeTree
         } = this.props;
         const rootPath = '/sites/' + siteKey;
@@ -72,7 +73,6 @@ export class ContentTrees extends React.Component {
                                                  openPaths={openPaths}
                                                  selectableTypes={contentTreeConfig.selectableTypes}
                                                  lang={lang}
-                                                 user={user}
                                                  dataCmRole={contentTreeConfig.key}
                                                  handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
                                                  handleSelect={path => setPath(path, {sub: false})}
@@ -105,6 +105,22 @@ const mapDispatchToProps = dispatch => ({
     closePath: path => dispatch(cmClosePaths([path])),
     closeTree: () => dispatch(cmSetTreeState(CM_DRAWER_STATES.HIDE))
 });
+
+ContentTrees.propTypes = {
+    classes: PropTypes.object.isRequired,
+    closePath: PropTypes.func.isRequired,
+    closeTree: PropTypes.func.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    lang: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    openPath: PropTypes.func.isRequired,
+    openPaths: PropTypes.array.isRequired,
+    path: PropTypes.string.isRequired,
+    setPath: PropTypes.func.isRequired,
+    setRefetch: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

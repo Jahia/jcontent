@@ -163,22 +163,6 @@ export class ContentLayout extends React.Component {
     }
 }
 
-ContentLayout.propTypes = {
-    mode: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-    classes: PropTypes.object.isRequired,
-    filesMode: PropTypes.string.isRequired,
-    treeState: PropTypes.number.isRequired,
-    previewState: PropTypes.number.isRequired,
-    contentTreeConfigs: PropTypes.object,
-    previewSelection: PropTypes.object
-};
-
-ContentLayout.defaultProps = {
-    previewSelection: null,
-    contentTreeConfigs: null
-};
-
 const mapStateToProps = state => {
     return {
         mode: state.mode,
@@ -189,6 +173,22 @@ const mapStateToProps = state => {
         filesMode: state.filesGrid.mode,
         previewSelection: state.previewSelection
     };
+};
+
+ContentLayout.propTypes = {
+    mode: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
+    filesMode: PropTypes.string.isRequired,
+    treeState: PropTypes.number.isRequired,
+    previewState: PropTypes.number.isRequired,
+    contentTreeConfigs: PropTypes.object,
+    previewSelection: PropTypes.string
+};
+
+ContentLayout.defaultProps = {
+    contentTreeConfigs: undefined,
+    previewSelection: null
 };
 
 export default compose(

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Grid, Tooltip, Paper, withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/ds-mui-theme';
 import {Search} from '@material-ui/icons';
@@ -54,7 +54,7 @@ export const SearchBarLayout = ({children, leftFooter, rightFooter, onSearch, t,
 );
 
 SearchBarLayout.propTypes = {
-    children: PropTypes.element.isRequired,
+    children: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     leftFooter: PropTypes.element,
     onSearch: PropTypes.func.isRequired,

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Tooltip, withStyles} from '@material-ui/core';
 import Slider from '@material-ui/lab/Slider';
 import {translate} from 'react-i18next';
@@ -38,6 +39,14 @@ export class FilesGridSizeSelector extends React.Component {
         );
     }
 }
+
+FilesGridSizeSelector.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    setSize: PropTypes.func.isRequired,
+    size: PropTypes.number.isRequired,
+    visible: PropTypes.bool.isRequired
+};
 
 export default compose(
     connect(state => ({size: state.filesGrid.size, visible: state.filesGrid.mode === 'grid'}), dispatch => ({setSize: size => dispatch(setSize(size))})),

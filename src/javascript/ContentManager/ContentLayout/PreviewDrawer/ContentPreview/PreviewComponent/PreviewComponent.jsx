@@ -1,5 +1,6 @@
-import loadable from 'react-loadable';
 import React from 'react';
+import PropTypes from 'prop-types';
+import loadable from 'react-loadable';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES} from '../../../../ContentManager.redux-actions';
 import {getFileType, isBrowserImage, isPDF} from '../../../FilesGrid/FilesGrid.utils';
 import classNames from 'classnames';
@@ -18,7 +19,7 @@ const ImageViewer = loadable({
     loading: () => <div/>
 });
 
-export default class PreviewComponent extends React.Component {
+class PreviewComponent extends React.Component {
     iframeLoadContent(assets, displayValue, element) {
         if (element) {
             let frameDoc = element.document;
@@ -89,3 +90,14 @@ export default class PreviewComponent extends React.Component {
         );
     }
 }
+
+PreviewComponent.propTypes = {
+    classes: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    dxContext: PropTypes.object.isRequired,
+    previewMode: PropTypes.string.isRequired,
+    previewState: PropTypes.number.isRequired,
+    t: PropTypes.func.isRequired
+};
+
+export default PreviewComponent;

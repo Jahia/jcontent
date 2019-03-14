@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
     File,
     FileDocument,
@@ -10,7 +12,6 @@ import {
     FileWord,
     Folder
 } from 'mdi-material-ui';
-import React from 'react';
 
 export const FileIcon = ({filename, ...props}) => {
     switch (filename.split('.').pop().toLowerCase()) {
@@ -84,6 +85,10 @@ export const FileIcon = ({filename, ...props}) => {
                 <File {...props}/>
             );
     }
+};
+
+FileIcon.propTypes = {
+    filename: PropTypes.string.isRequired
 };
 
 export default FileIcon;

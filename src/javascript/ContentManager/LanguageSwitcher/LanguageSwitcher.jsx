@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {compose, Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import gql from 'graphql-tag';
@@ -77,7 +78,7 @@ export class LanguageSwitcher extends React.Component {
     }
 
     render() {
-        const {t, notificationContext, siteKey, lang, dark} = this.props;
+        const {t, notificationContext, siteKey, lang} = this.props;
         const variables = {
             path: '/sites/' + siteKey,
             displayLanguage: lang
@@ -101,7 +102,6 @@ export class LanguageSwitcher extends React.Component {
                     return (
                         <LanguageSwitcherDisplay
                             lang={lang}
-                            dark={dark}
                             languages={displayableLanguages}
                             onSelectLanguage={lang => this.onSelectLanguage(lang)}
                         />
@@ -128,6 +128,16 @@ const mapDispatchToProps = dispatch => ({
         dispatch(cmSetSiteDisplayableName(siteDisplayableName));
     }
 });
+
+LanguageSwitcher.propTypes = {
+    onSelectLanguage: PropTypes.func.isRequired,
+    setAvailableLanguages: PropTypes.func.isRequired,
+    setSiteDisplayableName: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
+    notificationContext: PropTypes.object.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    lang: PropTypes.string.isRequired
+};
 
 export default compose(
     translate(),

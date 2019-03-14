@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {Button} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
@@ -22,6 +23,14 @@ export class ActionButton extends React.Component {
         );
     }
 }
+
+ActionButton.propTypes = {
+    classes: PropTypes.object.isRequired,
+    cmRole: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

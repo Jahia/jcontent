@@ -123,7 +123,10 @@ export class PublicationStatus extends Component {
 }
 
 PublicationStatus.propTypes = {
-    node: PropTypes.object.isRequired
+    node: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
 };
 
 export default translate()(withStyles(styles)(PublicationStatus));

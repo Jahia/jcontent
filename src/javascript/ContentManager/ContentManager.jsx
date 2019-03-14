@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {MuiThemeProvider} from '@material-ui/core';
 import {actionsRegistry, ComponentRendererProvider, NotificationProvider} from '@jahia/react-material';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
@@ -20,7 +21,7 @@ import {AppLayout, styleConstants} from '@jahia/layouts';
 import {registry} from '@jahia/registry';
 import initRoutes from './routes/initRoutes';
 
-export default class ContentManager extends React.Component {
+class ContentManager extends React.Component {
     constructor(props) {
         super(props);
         const {dxContext} = props;
@@ -132,3 +133,9 @@ export default class ContentManager extends React.Component {
         );
     }
 }
+
+ContentManager.propTypes = {
+    dxContext: PropTypes.object.isRequired
+};
+
+export default ContentManager;

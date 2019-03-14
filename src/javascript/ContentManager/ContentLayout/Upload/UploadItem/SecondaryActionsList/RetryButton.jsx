@@ -1,5 +1,6 @@
-import {Button} from '@jahia/ds-mui-theme';
 import React from 'react';
+import PropTypes from 'prop-types';
+import {Button} from '@jahia/ds-mui-theme';
 
 const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
     <Button
@@ -13,5 +14,11 @@ const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
         {t('label.contentManager.fileUpload.retry')}
     </Button>
 );
+
+RetryButton.propTypes = {
+    t: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
+    doUploadAndStatusUpdate: PropTypes.func.isRequired
+};
 
 export default RetryButton;

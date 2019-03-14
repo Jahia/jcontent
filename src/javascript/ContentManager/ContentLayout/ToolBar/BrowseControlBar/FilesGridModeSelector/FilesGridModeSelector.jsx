@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Menu as ListIcon, ViewModule} from '@material-ui/icons';
 import {Tooltip} from '@material-ui/core';
 import {IconButton} from '@jahia/ds-mui-theme';
@@ -20,6 +21,12 @@ export class FilesGridModeSelector extends React.Component {
         );
     }
 }
+
+FilesGridModeSelector.propTypes = {
+    t: PropTypes.func.isRequired,
+    mode: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
+};
 
 export default compose(
     connect(state => ({mode: state.filesGrid.mode}), dispatch => ({onChange: mode => dispatch(setMode(mode))})),

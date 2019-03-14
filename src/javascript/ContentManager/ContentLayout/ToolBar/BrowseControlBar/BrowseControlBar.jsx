@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {IconButton} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
@@ -67,6 +68,19 @@ const mapStateToProps = state => ({
     mode: state.mode,
     siteKey: state.site
 });
+
+BrowseControlBar.propTypes = {
+    classes: PropTypes.object.isRequired,
+    contentTreeConfigs: PropTypes.object,
+    mode: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    showActions: PropTypes.bool.isRequired,
+    siteKey: PropTypes.string.isRequired
+};
+
+BrowseControlBar.defaultProps = {
+    contentTreeConfigs: undefined
+};
 
 export default compose(
     connect(mapStateToProps),

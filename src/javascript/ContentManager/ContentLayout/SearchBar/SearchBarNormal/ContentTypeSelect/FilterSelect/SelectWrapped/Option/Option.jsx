@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ListItemIcon, ListItemText, MenuItem} from '@material-ui/core';
 
-export default class Option extends React.Component {
+class Option extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
@@ -46,3 +47,18 @@ export default class Option extends React.Component {
         );
     }
 }
+
+Option.propTypes = {
+    children: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired,
+    isFocused: PropTypes.bool.isRequired,
+    isSelected: PropTypes.bool.isRequired,
+    onFocus: PropTypes.func,
+    selectOption: PropTypes.func.isRequired
+};
+
+Option.defaultProps = {
+    onFocus: () => {}
+};
+
+export default Option;

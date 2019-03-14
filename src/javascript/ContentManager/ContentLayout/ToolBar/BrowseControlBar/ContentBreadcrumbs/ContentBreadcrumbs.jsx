@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Breadcrumb from './Breadcrumb/Breadcrumb';
 import gql from 'graphql-tag';
 import {Picker} from '@jahia/react-apollo';
@@ -36,7 +37,7 @@ export class ContentBreadcrumbs extends React.Component {
             pickerConfiguration.openableTypes = ['jnt:folder'];
             pickerConfiguration.rootLabel = t('label.contentManager.browseFiles');
             pickerConfiguration.rootPath = rootPath + '/files';
-        } else if (path.indexOf(rootPath + '/contents') !== -1) {
+        } else if (path.indexOf(rootPath + '/contents') >= 0) {
             pickerConfiguration.selectableTypes = [];
             pickerConfiguration.openableTypes = ['jnt:contentFolder'];
             pickerConfiguration.rootLabel = t('label.contentManager.browseFolders');
@@ -102,6 +103,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setUrl: (mode, path, params) => dispatch(cmGoto({mode, path, params}))
 });
+
+ContentBreadcrumbs.propTypes = {
+    lang: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    setUrl: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    t: PropTypes.func.isRequired
+};
 
 export default compose(
     translate(),

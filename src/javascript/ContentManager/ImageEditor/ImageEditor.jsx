@@ -194,7 +194,8 @@ ImageEditor.propTypes = {
     dxContext: PropTypes.object.isRequired,
     confirmSaved: PropTypes.bool.isRequired,
     closeFeedback: PropTypes.func.isRequired,
-    closeEditingToast: PropTypes.func.isRequired
+    closeEditingToast: PropTypes.func.isRequired,
+    editing: PropTypes.bool.isRequired
 };
 
 ImageEditor.defaultProps = {

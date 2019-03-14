@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Snackbar, withStyles} from '@material-ui/core';
 import {IconButton} from '@jahia/ds-mui-theme';
-import PropTypes from 'prop-types';
 import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
@@ -167,16 +167,6 @@ export class Upload extends React.Component {
     }
 }
 
-Upload.propTypes = {
-    classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    uploadUpdateCallback: PropTypes.func
-};
-
-Upload.defaultProps = {
-    uploadUpdateCallback: () => {}
-};
-
 const mapStateToProps = (state, ownProps) => {
     if (ownProps.statePartName) {
         return state[ownProps.statePartName];
@@ -189,6 +179,21 @@ const mapDispatchToProps = dispatch => {
         dispatch: dispatch,
         dispatchBatch: actions => dispatch(batchActions(actions))
     };
+};
+
+Upload.propTypes = {
+    theme: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    uploads: PropTypes.array.isRequired,
+    uploadPath: PropTypes.string,
+    overlayTarget: PropTypes.object,
+    uploadUpdateCallback: PropTypes.func.isRequired
+};
+
+Upload.defaultProps = {
+    overlayTarget: null,
+    uploadPath: undefined
 };
 
 export default compose(

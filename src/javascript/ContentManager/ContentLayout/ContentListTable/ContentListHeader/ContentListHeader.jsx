@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
-import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 
 export class ContentListHeader extends React.Component {
@@ -53,8 +53,16 @@ export class ContentListHeader extends React.Component {
 }
 
 ContentListHeader.propTypes = {
+    allSelected: PropTypes.bool.isRequired,
+    anySelected: PropTypes.bool.isRequired,
+    classes: PropTypes.object.isRequired,
+    columnData: PropTypes.array.isRequired,
     order: PropTypes.string.isRequired,
-    orderBy: PropTypes.string.isRequired
+    orderBy: PropTypes.string.isRequired,
+    selectAll: PropTypes.func.isRequired,
+    setSort: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
+    unselectAll: PropTypes.func.isRequired
 };
 
 export default compose(

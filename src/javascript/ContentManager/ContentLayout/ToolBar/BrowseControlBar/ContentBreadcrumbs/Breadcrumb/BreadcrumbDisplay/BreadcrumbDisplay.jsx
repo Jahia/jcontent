@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Menu, MenuItem} from '@material-ui/core';
 import iconRenderer from './iconRenderer';
 import {withStyles} from '@material-ui/core';
@@ -123,5 +124,13 @@ export class BreadcrumbDisplay extends React.Component {
         );
     }
 }
+
+BreadcrumbDisplay.propTypes = {
+    classes: PropTypes.object.isRequired,
+    handleSelect: PropTypes.func.isRequired,
+    maxLabelLength: PropTypes.number.isRequired,
+    node: PropTypes.object.isRequired,
+    trimLabel: PropTypes.bool.isRequired
+};
 
 export default compose(translate(), withStyles(styles))(BreadcrumbDisplay);

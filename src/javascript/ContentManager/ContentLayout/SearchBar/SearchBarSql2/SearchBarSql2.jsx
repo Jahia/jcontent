@@ -13,7 +13,7 @@ import {cmGoto} from '../../../ContentManager.redux-actions';
 
 const styles = theme => ({
     input: {
-        flexGrow: 4
+        flex: '1 1 auto'
     },
     academy: {
         textAlign: 'left'

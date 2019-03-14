@@ -141,7 +141,7 @@ class ContentQueryHandler {
     }
 
     getResultsPath(data) {
-        return data.jcr.nodeByPath.descendants;
+        return data && data.jcr && data.jcr.nodeByPath.descendants;
     }
 }
 
@@ -197,7 +197,7 @@ class FilesQueryHandler {
     }
 
     getResultsPath(data) {
-        return data.jcr.nodeByPath.children;
+        return data && data.jcr && data.jcr.nodeByPath.children;
     }
 }
 
@@ -238,7 +238,7 @@ class SearchQueryHandler {
     }
 
     getResultsPath(data) {
-        return data.jcr.nodesByCriteria;
+        return data && data.jcr && data.jcr.nodesByCriteria;
     }
 }
 
@@ -283,7 +283,7 @@ class Sql2SearchQueryHandler {
     }
 
     getResultsPath(data) {
-        return data.jcr.nodesByQuery;
+        return data && data.jcr && data.jcr.nodesByQuery;
     }
 }
 

@@ -164,17 +164,16 @@ export class ContentData extends React.Component {
 
                     if (loading) {
                         // While loading new results, render current ones loaded during previous render invocation (if any).
-                    } else if (data.jcr && data.jcr.nodeByPath) {
-                        // When new results have been loaded, use them for rendering.
-                        let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
-                        if (nodeTypeName === 'jnt:page' && params.sub && params.sub === true) {
-                            setPath(path, {sub: false});
-                        } else if (nodeTypeName !== 'jnt:page' && (!params.sub || params.sub === false)) {
-                            setPath(path, {sub: true});
-                        } else {
-                            this.currentResult = queryHandler.getResultsPath(data);
-                        }
                     } else {
+                        if (data.jcr && data.jcr.nodeByPath) {
+                            // When new results have been loaded, use them for rendering.
+                            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+                            if (nodeTypeName === 'jnt:page' && params.sub && params.sub === true) {
+                                setPath(path, {sub: false});
+                            } else if (nodeTypeName !== 'jnt:page' && (!params.sub || params.sub === false)) {
+                                setPath(path, {sub: true});
+                            }
+                        }
                         this.currentResult = queryHandler.getResultsPath(data);
                     }
 

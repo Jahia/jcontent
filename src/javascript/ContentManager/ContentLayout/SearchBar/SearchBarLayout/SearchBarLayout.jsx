@@ -1,56 +1,60 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Grid, Tooltip, Paper, withStyles} from '@material-ui/core';
+import {Paper, Tooltip, withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/ds-mui-theme';
 import {Search} from '@material-ui/icons';
 
 const styles = () => ({
-    input: {
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        width: '100%'
+    },
+    searchInput: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap'
+    },
+    searchBottom: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    button: {
         height: 44
     }
 });
 
 export const SearchBarLayout = ({children, leftFooter, rightFooter, onSearch, t, classes}) => (
-    <React.Fragment>
-        <Grid container
-              direction="column"
-              justify="flex-end"
-              alignItems="flex-end"
-        >
-            <Grid container
-                  direction="row"
-                  justify="flex-end"
-                  alignItems="center"
-            >
-                {children}
-                <Tooltip title={t('label.contentManager.search.search')}>
-                    <Paper>
-                        <Button variant="ghost"
-                                size="compact"
-                                icon={<Search/>}
-                                data-cm-role="search-submit"
-                                classes={{root: classes.input}}
-                                onClick={onSearch}
-                        />
-                    </Paper>
-                </Tooltip>
-            </Grid>
-            <Grid container
-                  direction="row"
-                  justify="flex-end"
-                  alignItems="flex-end"
-            >
-                <Grid item xs={8}>
-                    <Typography align="left">
-                        {leftFooter}
-                    </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                    {rightFooter}
-                </Grid>
-            </Grid>
-        </Grid>
-    </React.Fragment>
+    <div className={classes.root}>
+        <div className={classes.searchInput}>
+            {children}
+            <Tooltip title={t('label.contentManager.search.search')}>
+                <Paper>
+                    <Button variant="ghost"
+                            size="compact"
+                            icon={<Search/>}
+                            data-cm-role="search-submit"
+                            classes={{root: classes.button}}
+                            onClick={onSearch}
+                    />
+                </Paper>
+            </Tooltip>
+        </div>
+        <div className={classes.searchBottom}>
+            <div>
+                <Typography align="left">
+                    {leftFooter}
+                </Typography>
+            </div>
+            <div>
+                {rightFooter}
+            </div>
+        </div>
+    </div>
 );
 
 SearchBarLayout.propTypes = {

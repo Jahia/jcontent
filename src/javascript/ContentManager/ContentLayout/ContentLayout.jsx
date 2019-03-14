@@ -72,7 +72,8 @@ const styles = theme => ({
         display: 'flex',
         height: 'unset',
         transition: '.15s !important',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        maxWidth: theme.contentManager.previewDrawerWidth
     },
     previewDrawerPaperFullScreen: {
         transition: '.15s !important',

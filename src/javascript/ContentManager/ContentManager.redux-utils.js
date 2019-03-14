@@ -82,11 +82,11 @@ let getSyncListener = (store, history) => () => {
             ) {
                 let data = {};
                 Object.assign(data,
-                    currentValueFromUrl.site !== previousValue.site ? {site: currentValueFromUrl.site} : {},
-                    currentValueFromUrl.language !== previousValue.language ? {language: currentValueFromUrl.language} : {},
-                    currentValueFromUrl.mode !== previousValue.mode ? {mode: currentValueFromUrl.mode} : {},
-                    currentValueFromUrl.path !== previousValue.path ? {path: currentValueFromUrl.path} : {},
-                    !_.isEqual(currentValueFromUrl.params, previousValue.params) ? {params: currentValueFromUrl.params} : {}
+                    currentValueFromUrl.site === previousValue.site ? {} : {site: currentValueFromUrl.site},
+                    currentValueFromUrl.language === previousValue.language ? {} : {language: currentValueFromUrl.language},
+                    currentValueFromUrl.mode === previousValue.mode ? {} : {mode: currentValueFromUrl.mode},
+                    currentValueFromUrl.path === previousValue.path ? {} : {path: currentValueFromUrl.path},
+                    _.isEqual(currentValueFromUrl.params, previousValue.params) ? {} : {params: currentValueFromUrl.params}
                 );
                 store.dispatch(cmGoto(data));
             }

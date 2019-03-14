@@ -1,10 +1,10 @@
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import {batchDispatchMiddleware} from 'redux-batched-actions';
 import thunk from 'redux-thunk';
-import {selectionReducer} from './ContentLayout/contentSelection.redux-reducers';
-import {fileUpload} from './ContentLayout/Upload/Upload.redux-reducer';
+import {selectionReducer} from './ContentRoute/ContentLayout/contentSelection.redux-reducers';
+import {fileUpload} from './ContentRoute/ContentLayout/Upload/Upload.redux-reducer';
 import {copyPaste} from './actions/actions.redux-reducer';
-import {filesGrid} from './ContentLayout/FilesGrid/FilesGrid.redux-reducer';
+import {filesGrid} from './ContentRoute/ContentLayout/FilesGrid/FilesGrid.redux-reducer';
 import {
     languageReducer,
     siteReducer,
@@ -20,8 +20,8 @@ import {
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import {getSyncListener, extractParamsFromUrl} from './ContentManager.redux-utils';
 import {previewModeReducer, previewSelectionReducer, previewStateReducer} from './preview.redux-reducers';
-import {sortReducer} from './ContentLayout/sort.redux-reducers';
-import {paginationReducer} from './ContentLayout/pagination.redux-reducers';
+import {sortReducer} from './ContentRoute/ContentLayout/sort.redux-reducers';
+import {paginationReducer} from './ContentRoute/ContentLayout/pagination.redux-reducers';
 
 let contentManagerReduxStore = (dxContext, history) => {
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);

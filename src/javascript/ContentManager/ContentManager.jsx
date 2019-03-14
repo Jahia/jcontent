@@ -15,11 +15,11 @@ import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
-import initActions from './actions/initActions';
+import contentManagerActions from './ContentManager.actions';
 import contentManagerStyleConstants from './ContentManager.style-constants';
 import {AppLayout, styleConstants} from '@jahia/layouts';
 import {registry} from '@jahia/registry';
-import initRoutes from './routes/initRoutes';
+import contentManagerRoutes from './ContentManager.routes';
 
 class ContentManager extends React.Component {
     constructor(props) {
@@ -30,8 +30,8 @@ class ContentManager extends React.Component {
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
 
-        initRoutes(registry);
-        initActions(actionsRegistry);
+        contentManagerRoutes(registry);
+        contentManagerActions(actionsRegistry);
 
         _.each(dxContext.config.actions, callback => {
             if (typeof callback === 'function') {

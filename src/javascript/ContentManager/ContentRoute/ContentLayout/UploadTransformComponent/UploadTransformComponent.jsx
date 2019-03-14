@@ -19,6 +19,8 @@ const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 export class UploadTransformComponent extends React.Component {
     constructor(props) {
         super(props);
+        // This property avoid to call setState when the component is unmounted, which can happen in the checkPermission function
+        this._isMounted = false;
         this.state = {
             allowDrop: false
         };
@@ -30,7 +32,12 @@ export class UploadTransformComponent extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.checkPermission();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -135,13 +142,12 @@ export class UploadTransformComponent extends React.Component {
                 query: UploadRequirementsQuery
             });
 
-            if (result.data.jcr.results.hasPermission && result.data.jcr.results.acceptsFiles) {
+            if (result.data.jcr.results.hasPermission && result.data.jcr.results.acceptsFiles && this._isMounted) {
                 this.setState({
                     allowDrop: true
                 });
             }
         } catch (e) {
-            // Console.log(this.props.uploadPath);
             console.error(e);
         }
     }

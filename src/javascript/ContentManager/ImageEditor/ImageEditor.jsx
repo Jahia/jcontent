@@ -65,8 +65,8 @@ export class ImageEditor extends React.Component {
             saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast
         } = this.props;
         const {expanded} = this.state;
-        const originalWidth = parseInt(node.width.value, 10);
-        const originalHeight = parseInt(node.height.value, 10);
+        const originalWidth = node.width ? parseInt(node.width.value, 10) : 0;
+        const originalHeight = node.height ? parseInt(node.height.value, 10) : 0;
 
         let resizeDirty = Boolean((width && originalWidth !== width) || (height && originalHeight !== height));
         let rotationsDirty = (rotations !== 0);

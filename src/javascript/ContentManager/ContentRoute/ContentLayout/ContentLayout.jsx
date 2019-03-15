@@ -54,6 +54,7 @@ const styles = theme => ({
     treeDrawerPaper: {
         position: 'relative',
         display: 'flex',
+        zIndex: 'auto',
         height: 'unset',
         overflow: 'hidden'
     },
@@ -70,6 +71,7 @@ const styles = theme => ({
     previewDrawerPaper: {
         position: 'relative',
         display: 'flex',
+        zIndex: 'auto',
         height: 'unset',
         transition: '.15s !important',
         overflow: 'hidden',

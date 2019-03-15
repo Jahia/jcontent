@@ -320,10 +320,6 @@ FileCard.propTypes = {
     uiLang: PropTypes.string.isRequired
 };
 
-FileCard.defaultProps = {
-    previewSelection: null
-};
-
 export default compose(
     withStyles(styles),
     translate(),

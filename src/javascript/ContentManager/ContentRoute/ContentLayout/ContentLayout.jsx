@@ -187,11 +187,6 @@ ContentLayout.propTypes = {
     previewSelection: PropTypes.string
 };
 
-ContentLayout.defaultProps = {
-    contentTreeConfigs: undefined,
-    previewSelection: null
-};
-
 export default compose(
     withNotifications(),
     translate(),

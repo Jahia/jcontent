@@ -30,8 +30,4 @@ DontUploadButton.propTypes = {
     type: PropTypes.string
 };
 
-DontUploadButton.defaultProps = {
-    type: undefined
-};
-
 export default DontUploadButton;

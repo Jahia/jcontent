@@ -198,11 +198,6 @@ ImageEditor.propTypes = {
     editing: PropTypes.bool.isRequired
 };
 
-ImageEditor.defaultProps = {
-    height: null,
-    width: null
-};
-
 export default compose(
     translate(),
     withStyles(styles)

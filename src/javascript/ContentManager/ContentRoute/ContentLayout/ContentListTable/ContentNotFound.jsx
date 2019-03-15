@@ -4,20 +4,20 @@ import {TableCell, TableRow} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import ContentListTableConstants from './ContentListTable.constants';
 
-const ContentNotFound = props => (
+const ContentNotFound = ({columnData, t, className}) => (
     <TableRow>
-        <TableCell colSpan={props.columnData.length + ContentListTableConstants.appTableCells}>
-            <Typography variant="p" className={props.class}>
-                {props.translate('label.contentManager.contentNotFound')}
+        <TableCell colSpan={columnData.length + ContentListTableConstants.appTableCells}>
+            <Typography variant="p" className={className}>
+                {t('label.contentManager.contentNotFound')}
             </Typography>
         </TableCell>
     </TableRow>
 );
 
 ContentNotFound.propTypes = {
-    class: PropTypes.string.isRequired,
+    className: PropTypes.string,
     columnData: PropTypes.array.isRequired,
-    translate: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired
 };
 
 export default ContentNotFound;

@@ -118,11 +118,6 @@ ResizePanel.propTypes = {
     resize: PropTypes.func.isRequired
 };
 
-ResizePanel.defaultProps = {
-    width: null,
-    height: null
-};
-
 export default compose(
     translate(),
     withStyles(styles)

@@ -101,7 +101,7 @@ export class SearchBarSql2 extends React.Component {
                 onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
             >
                 <Paper className={classes.input}>
-                    <Typography variant="iota" color="alpha" className={classes.sql2Form}>
+                    <Typography component="div" variant="iota" color="alpha" className={classes.sql2Form}>
                         SELECT * FROM [
                         <Sql2Input
                             maxLength={100}

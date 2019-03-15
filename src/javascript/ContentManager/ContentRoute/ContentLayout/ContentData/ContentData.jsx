@@ -254,10 +254,6 @@ ContentData.propTypes = {
     uiLang: PropTypes.string.isRequired
 };
 
-ContentData.defaultProps = {
-    previewSelection: null
-};
-
 export default compose(
     withNotifications(),
     translate(),

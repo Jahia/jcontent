@@ -30,11 +30,6 @@ Feedback.propTypes = {
     onClose: PropTypes.func
 };
 
-Feedback.defaultProps = {
-    onClose: null,
-    duration: null
-};
-
 export default compose(
     withStyles(styles)
 )(Feedback);

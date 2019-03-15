@@ -46,9 +46,7 @@ export const SearchBarLayout = ({children, leftFooter, rightFooter, onSearch, t,
         </div>
         <div className={classes.searchBottom}>
             <div>
-                <Typography align="left">
-                    {leftFooter}
-                </Typography>
+                {leftFooter}
             </div>
             <div>
                 {rightFooter}

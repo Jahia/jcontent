@@ -26,7 +26,7 @@ const AppRoute = ({dxContext, help, match, t}) => (
 
 AppRoute.propTypes = {
     dxContext: PropTypes.object.isRequired,
-    help: PropTypes.element.isRequired,
+    help: PropTypes.element,
     match: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
 };

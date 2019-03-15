@@ -4,17 +4,17 @@ import {TableCell, TableRow} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import ContentListTableConstants from './ContentListTable.constants';
 
-const EmptyRow = props => (
+const EmptyRow = ({columnData, t}) => (
     <TableRow>
-        <TableCell colSpan={props.columnData.length + ContentListTableConstants.appTableCells + 2}>
-            <Typography variant="p">{props.translate('label.contentManager.noResults')}</Typography>
+        <TableCell colSpan={columnData.length + ContentListTableConstants.appTableCells + 2}>
+            <Typography variant="p">{t('label.contentManager.noResults')}</Typography>
         </TableCell>
     </TableRow>
 );
 
 EmptyRow.propTypes = {
     columnData: PropTypes.array.isRequired,
-    translate: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired
 };
 
 export default EmptyRow;

@@ -54,9 +54,4 @@ Sql2Input.propTypes = {
     value: PropTypes.string.isRequired
 };
 
-Sql2Input.defaultProps = {
-    style: undefined,
-    size: undefined
-};
-
 export default withStyles(styles)(Sql2Input);

@@ -196,7 +196,6 @@ UploadTransformComponent.propTypes = {
 };
 
 UploadTransformComponent.defaultProps = {
-    uploadAcceptedFileTypes: null,
     uploadMaxSize: Infinity,
     uploadMinSize: 0
 };

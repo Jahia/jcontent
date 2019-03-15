@@ -79,14 +79,14 @@ export class DocumentViewer extends React.Component {
 }
 
 DocumentViewer.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
     file: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    fullScreen: PropTypes.bool.isRequired
+    fullScreen: PropTypes.bool
 };
 
 DocumentViewer.defaultProps = {
-    classes: null
+    fullScreen: false
 };
 
 export default withStyles(styles)(DocumentViewer);

@@ -27,7 +27,9 @@
     "react/jsx-max-props-per-line": ["error", {
       "maximum": 1,
       "when": "multiline"
-    }]
+    }],
+
+    "react/require-default-props": ["ignore"]
   },
   "settings": {
     "react": {

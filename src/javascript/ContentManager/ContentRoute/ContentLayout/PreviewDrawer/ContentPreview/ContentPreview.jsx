@@ -161,10 +161,6 @@ ContentPreview.propTypes = {
     selection: PropTypes.array.isRequired
 };
 
-ContentPreview.defaultProps = {
-    previewSelection: undefined
-};
-
 export default compose(
     translate(),
     withStyles(styles),

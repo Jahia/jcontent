@@ -42,9 +42,4 @@ SecondaryActionsList.propTypes = {
     error: PropTypes.string
 };
 
-SecondaryActionsList.defaultProps = {
-    status: null,
-    error: null
-};
-
 export default SecondaryActionsList;

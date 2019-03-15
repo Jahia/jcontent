@@ -34,15 +34,14 @@ export class ImageViewer extends React.Component {
 }
 
 ImageViewer.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
     file: PropTypes.string.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
-    className: PropTypes.object
+    fullScreen: PropTypes.bool,
+    className: PropTypes.string
 };
 
 ImageViewer.defaultProps = {
-    classes: null,
-    className: null
+    fullScreen: false
 };
 
 export default compose(

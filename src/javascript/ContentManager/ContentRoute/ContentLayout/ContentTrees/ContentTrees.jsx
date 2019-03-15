@@ -114,7 +114,7 @@ ContentTrees.propTypes = {
     lang: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     openPath: PropTypes.func.isRequired,
-    openPaths: PropTypes.array.isRequired,
+    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
     path: PropTypes.string.isRequired,
     setPath: PropTypes.func.isRequired,
     setRefetch: PropTypes.func.isRequired,

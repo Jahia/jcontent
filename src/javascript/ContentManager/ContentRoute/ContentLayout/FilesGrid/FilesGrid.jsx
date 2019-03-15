@@ -153,10 +153,6 @@ FilesGrid.propTypes = {
     totalCount: PropTypes.number.isRequired
 };
 
-FilesGrid.defaultProps = {
-    contentNotFound: undefined
-};
-
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     translate(),

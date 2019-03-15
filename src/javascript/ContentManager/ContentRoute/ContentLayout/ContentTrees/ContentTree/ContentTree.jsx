@@ -76,7 +76,7 @@ ContentTree.propTypes = {
     handleSelect: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
-    openPaths: PropTypes.array.isRequired,
+    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
     openableTypes: PropTypes.array.isRequired,
     path: PropTypes.string.isRequired,
     rootLabel: PropTypes.string.isRequired,

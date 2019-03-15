@@ -153,10 +153,6 @@ PreviewDrawer.propTypes = {
     t: PropTypes.func.isRequired
 };
 
-PreviewDrawer.defaultProps = {
-    previewSelection: undefined
-};
-
 export default compose(
     translate(),
     withStyles(styles),

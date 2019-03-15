@@ -286,7 +286,7 @@ export class ContentListTable extends React.Component {
                                     if (contentNotFound) {
                                         return (
                                             <TableBody>
-                                                <ContentNotFound columnData={columnData} translate={t} class={classes.empty}/>
+                                                <ContentNotFound columnData={columnData} t={t} className={classes.empty}/>
                                             </TableBody>
                                         );
                                     }
@@ -294,7 +294,7 @@ export class ContentListTable extends React.Component {
                                         if (mode === ContentManagerConstants.mode.SEARCH) {
                                             return (
                                                 <TableBody>
-                                                    <EmptyRow columnData={columnData} translate={t}/>
+                                                    <EmptyRow columnData={columnData} t={t}/>
                                                 </TableBody>
                                             );
                                         }
@@ -580,12 +580,6 @@ ContentListTable.propTypes = {
     t: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
     uiLang: PropTypes.string.isRequired
-};
-
-ContentListTable.defaultProps = {
-    contentNotFound: undefined,
-    previewSelection: null,
-    loading: undefined
 };
 
 export default compose(

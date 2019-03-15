@@ -199,13 +199,9 @@ export class PDFViewer extends React.Component {
 }
 
 PDFViewer.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object.isRequired,
     file: PropTypes.string.isRequired,
     fullScreen: PropTypes.bool.isRequired
-};
-
-PDFViewer.defaultProps = {
-    classes: null
 };
 
 export default compose(

@@ -23,7 +23,7 @@ const ContentRoute = ({help, match, t}) => (
 );
 
 ContentRoute.propTypes = {
-    help: PropTypes.element.isRequired,
+    help: PropTypes.element,
     match: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
 };

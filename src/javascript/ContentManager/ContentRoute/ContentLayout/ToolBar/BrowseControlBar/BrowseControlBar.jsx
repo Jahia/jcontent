@@ -78,10 +78,6 @@ BrowseControlBar.propTypes = {
     siteKey: PropTypes.string.isRequired
 };
 
-BrowseControlBar.defaultProps = {
-    contentTreeConfigs: undefined
-};
-
 export default compose(
     connect(mapStateToProps),
     withStyles(styles),

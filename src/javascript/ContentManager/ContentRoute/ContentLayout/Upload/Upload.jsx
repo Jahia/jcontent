@@ -191,11 +191,6 @@ Upload.propTypes = {
     uploadUpdateCallback: PropTypes.func.isRequired
 };
 
-Upload.defaultProps = {
-    overlayTarget: null,
-    uploadPath: undefined
-};
-
 export default compose(
     withStyles(styles, {withTheme: true}),
     translate(),

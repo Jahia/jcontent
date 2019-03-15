@@ -61,7 +61,6 @@ FilterSelect.propTypes = {
 };
 
 FilterSelect.defaultProps = {
-    selectedOption: null,
     handleChange: () => {},
     handleIndicator: () => {},
     open: false

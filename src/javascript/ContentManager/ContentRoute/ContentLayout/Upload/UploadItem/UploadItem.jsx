@@ -251,10 +251,6 @@ UploadItem.propTypes = {
     client: PropTypes.object.isRequired
 };
 
-UploadItem.defaultProps = {
-    type: undefined
-};
-
 export default compose(
     withStyles(styles),
     translate(),

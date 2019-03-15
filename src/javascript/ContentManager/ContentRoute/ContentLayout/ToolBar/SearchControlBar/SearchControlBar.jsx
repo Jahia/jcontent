@@ -103,13 +103,6 @@ SearchControlBar.propTypes = {
     sql2SearchWhere: PropTypes.string
 };
 
-SearchControlBar.defaultProps = {
-    searchContentType: undefined,
-    searchTerms: undefined,
-    sql2SearchFrom: undefined,
-    sql2SearchWhere: undefined
-};
-
 export default compose(
     translate(),
     withStyles(styles),

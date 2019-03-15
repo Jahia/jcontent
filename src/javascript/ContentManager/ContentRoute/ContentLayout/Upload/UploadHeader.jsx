@@ -86,10 +86,6 @@ UploadHeader.propTypes = {
     t: PropTypes.func.isRequired
 };
 
-UploadHeader.defaultProps = {
-    status: undefined
-};
-
 export default compose(
     withStyles(styles, {withTheme: true}),
     translate(),

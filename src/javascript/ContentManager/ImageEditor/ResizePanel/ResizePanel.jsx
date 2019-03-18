@@ -44,7 +44,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
         if (/\d+/.test(value)) {
             resize({
                 width: Math.round(value),
-                height: Math.round(keepRatio ? value * originalHeight / originalWidth : (height || originalHeight))
+                height: Math.round(keepRatio && originalHeight && originalWidth ? value * originalHeight / originalWidth : (height || originalHeight))
             });
         }
     };
@@ -54,7 +54,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
 
         if (/\d+/.test(value)) {
             resize({
-                width: Math.round(keepRatio ? value * originalWidth / originalHeight : (width || originalWidth)),
+                width: Math.round(keepRatio && originalHeight && originalWidth ? value * originalWidth / originalHeight : (width || originalWidth)),
                 height: Math.round(value)
             });
         }
@@ -99,7 +99,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
                     </FormControl>
                 </div>
                 <div className={classes.secondCol}>
-                    <IconButton icon={<Link color={keepRatio ? 'action' : 'default'}/>}
+                    <IconButton icon={<Link color={keepRatio ? 'action' : 'inherit'}/>}
                                 data-cm-role="keep-ratio-button"
                                 onClick={switchRatio}/>
                 </div>

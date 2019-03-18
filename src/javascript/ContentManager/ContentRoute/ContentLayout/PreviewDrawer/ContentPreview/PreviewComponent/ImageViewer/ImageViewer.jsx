@@ -7,8 +7,9 @@ import classNames from 'classnames';
 
 const styles = theme => ({
     container: {
+        flex: '1 1 0%',
         backgroundSize: 'contain',
-        height: '100%',
+        width: '100%',
         maxWidth: '550px',
         paddingTop: (theme.spacing.unit * 3) + 'px',
         paddingBottom: (theme.spacing.unit * 3) + 'px',

@@ -7,11 +7,12 @@ import classNames from 'classnames';
 
 const styles = theme => ({
     container: {
-        height: '100%',
-        maxWidth: '550px',
         paddingTop: (theme.spacing.unit * 3) + 'px',
         paddingBottom: (theme.spacing.unit * 3) + 'px',
         margin: '0 auto',
+        '&&&& div': {
+            height: 'auto'
+        },
         '& video': {
             maxHeight: '100%',
             maxWidth: '550px'
@@ -36,9 +37,6 @@ const styles = theme => ({
     fullScreen: {},
     icon: {
         fontSize: '160px',
-        display: 'flex',
-        height: '100%',
-        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: theme.palette.common.white

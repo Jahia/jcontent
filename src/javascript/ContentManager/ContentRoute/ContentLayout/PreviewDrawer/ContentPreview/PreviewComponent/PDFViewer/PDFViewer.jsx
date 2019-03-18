@@ -17,8 +17,9 @@ import classNames from 'classnames';
 
 const styles = theme => ({
     pdfContainer: {
-        maxWidth: '550px',
+        flex: '1 1 0%',
         margin: '0 auto',
+        overflow: 'auto',
         '& canvas': {
             display: 'block',
             paddingTop: (theme.spacing.unit * 3) + 'px',
@@ -32,7 +33,6 @@ const styles = theme => ({
     },
     fullScreen: {},
     controlsContainer: {
-        position: 'fixed',
         height: (theme.spacing.unit * 6) + 'px',
         width: '100%',
         background: theme.palette.background.paper,

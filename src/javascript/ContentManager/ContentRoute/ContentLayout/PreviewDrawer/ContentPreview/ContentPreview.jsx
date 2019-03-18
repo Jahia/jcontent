@@ -17,25 +17,28 @@ import {cmClearSelection} from '../../contentSelection.redux-actions';
 
 const styles = theme => ({
     root: {
-        flex: 1,
-        position: 'relative'
+        flex: '1 1 0%',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0
     },
     previewContainer: {
-        backgroundColor: theme.palette.background.default,
-        overflow: 'auto',
-        position: 'absolute',
-        width: '100%',
-        height: '100%'
+        flex: '1 1 0%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 0,
+        backgroundColor: theme.palette.background.default
     },
     noPreviewContainer: {
+        flex: '1 1 0%',
         backgroundColor: theme.palette.background.default,
-        overflow: 'auto',
-        width: '100%',
-        height: '100%'
+        display: 'flex'
     },
     center: {
         width: '100%',
-        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -53,12 +56,12 @@ const styles = theme => ({
     },
     contentPaper: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        display: 'flex'
     },
     contentIframe: {
         border: 'none',
-        width: '100%',
-        height: '100%'
+        width: '100%'
     }
 });
 

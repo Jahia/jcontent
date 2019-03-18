@@ -7,7 +7,11 @@ const ActionRequirementsQuery = gql`
         jcr {
             nodeByPath(path:$path) {
                 name
-                supportsPublication
+                operationsSupport {
+                    lock
+                    markForDeletion
+                    publication
+                }
                 aggregatedPublicationInfo(language: $language) {
                     publicationStatus
                 }

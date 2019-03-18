@@ -101,7 +101,7 @@ export class PublicationStatus extends Component {
         const {classes, node, t, i18n} = this.props;
         const publicationStatus = publicationStatusByName.getStatus(node);
         const publicationStatusClass = publicationStatus.getContentClass(classes);
-        if (node.supportsPublication) {
+        if (node.operationsSupport.publication) {
             return (
                 <div className={classes.root}>
                     <div className={classNames(classes.border, publicationStatusClass)}/>

@@ -31,7 +31,11 @@ const nodeFields = gql`
         mixinTypes {
             name
         }
-        supportsPublication
+        operationsSupport {
+            lock
+            markForDeletion
+            publication
+        }
         aggregatedPublicationInfo(language: $language) {
             publicationStatus
         }

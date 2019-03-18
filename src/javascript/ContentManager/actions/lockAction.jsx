@@ -8,7 +8,7 @@ export default composeActions(requirementsAction, {
         context.initRequirements({
             getLockInfo: true,
             requiredPermission: 'jcr:lockManagement',
-            enabled: context => context.node.pipe(map(node => node.lockTypes === null))
+            enabled: context => context.node.pipe(map(node => node.operationsSupport.lock && node.lockTypes === null))
         });
     },
     onClick: context => {

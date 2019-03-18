@@ -9,7 +9,7 @@ export default composeActions(requirementsAction, {
             retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
             requiredPermission: 'jcr:removeNode',
             retrieveDisplayName: true,
-            enabled: context => context.node.pipe(map(node => hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED'))
+            enabled: context => context.node.pipe(map(node => !node.operationsSupport.markForDeletion || (hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED')))
         });
     },
     onClick: context => {

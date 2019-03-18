@@ -9,7 +9,7 @@ export default composeActions(requirementsAction, {
             retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
             retrieveDisplayName: true,
             requiredPermission: 'jcr:removeNode',
-            enabled: context => context.node.pipe(map(node => !isMarkedForDeletion(node)))
+            enabled: context => context.node.pipe(map(node => node.operationsSupport.markForDeletion && !isMarkedForDeletion(node)))
         });
     },
     onClick: context => {

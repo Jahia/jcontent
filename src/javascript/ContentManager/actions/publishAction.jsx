@@ -11,6 +11,7 @@ export default composeActions(requirementsAction, withNodeName, {
             retrieveDisplayName: true,
             retrieveSiteLanguages: true,
             enabled: context => context.node.pipe(map(node =>
+                (node.supportsPublication) &&
                 (context.checkForUnpublication ?
                     node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' :
                     !isMarkedForDeletion(node)) &&

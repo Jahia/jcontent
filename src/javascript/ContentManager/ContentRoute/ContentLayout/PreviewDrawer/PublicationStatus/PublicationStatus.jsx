@@ -50,7 +50,7 @@ const styles = theme => ({
 });
 
 export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
-    if (_.isEmpty(previewSelection)) {
+    if (_.isEmpty(previewSelection) || !previewSelection.supportsPublication) {
         return null;
     }
     // Special handling for marked for deletion content

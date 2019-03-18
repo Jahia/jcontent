@@ -7,6 +7,7 @@ const ActionRequirementsQuery = gql`
         jcr {
             nodeByPath(path:$path) {
                 name
+                supportsPublication
                 aggregatedPublicationInfo(language: $language) {
                     publicationStatus
                 }

@@ -15,9 +15,6 @@ const childNodesCount = gql`
 
 const nodeFields = gql`
     fragment NodeFields on JCRNode {
-        aggregatedPublicationInfo(language: $language) {
-            publicationStatus
-        }
         name
         displayName(language: $language)
         createdBy: property(name: "jcr:createdBy") {
@@ -33,6 +30,10 @@ const nodeFields = gql`
         }
         mixinTypes {
             name
+        }
+        supportsPublication
+        aggregatedPublicationInfo(language: $language) {
+            publicationStatus
         }
         lockOwner: property(name: "jcr:lockOwner") {
             value

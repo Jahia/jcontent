@@ -101,24 +101,26 @@ export class PublicationStatus extends Component {
         const {classes, node, t, i18n} = this.props;
         const publicationStatus = publicationStatusByName.getStatus(node);
         const publicationStatusClass = publicationStatus.getContentClass(classes);
+        if (node.supportsPublication) {
+            return (
+                <div className={classes.root}>
+                    <div className={classNames(classes.border, publicationStatusClass)}/>
+                    <div className={classNames(classes.publicationInfoWrapper, publicationStatusClass)}>
+                        <div className={classes.publicationInfo}
+                             data-cm-role="publication-info"
+                             data-cm-value={node.aggregatedPublicationInfo.publicationStatus}
+                        >
+                            <InfoOutlined className={classes.spacing} fontSize="small"/>
 
-        return (
-            <div className={classes.root}>
-                <div className={classNames(classes.border, publicationStatusClass)}/>
-                <div className={classNames(classes.publicationInfoWrapper, publicationStatusClass)}>
-                    <div className={classes.publicationInfo}
-                         data-cm-role="publication-info"
-                         data-cm-value={node.aggregatedPublicationInfo.publicationStatus}
-                    >
-                        <InfoOutlined className={classes.spacing} fontSize="small"/>
-
-                        <Typography color="inherit" variant="caption" classes={{root: classes.spacing}}>
-                            {publicationStatus.geti18nDetailsMessage(node, t, i18n.language)}
-                        </Typography>
+                            <Typography color="inherit" variant="caption" classes={{root: classes.spacing}}>
+                                {publicationStatus.geti18nDetailsMessage(node, t, i18n.language)}
+                            </Typography>
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        return false;
     }
 }
 

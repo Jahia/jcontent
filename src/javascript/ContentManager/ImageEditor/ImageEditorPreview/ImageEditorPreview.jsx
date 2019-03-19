@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 import {Card, CardMedia, withStyles} from '@material-ui/core';
 import classNames from 'classnames';
+import ReactCrop from 'react-image-crop';
+// We ignore this line to avoid breaking the build, as we need this css but we don't use it anywhere
+// eslint-disable-next-line
+import ReactCropCss from 'react-image-crop/dist/ReactCrop.css';
 
 let styles = theme => ({
     rotate0: {
@@ -52,15 +56,23 @@ export class ImageEditorPreview extends React.Component {
     }
 
     render() {
-        let {path, ts, classes, dxContext} = this.props;
+        let {path, cropParams, onCropChange, cropExpanded, dxContext, ts, classes, originalHeight, originalWidth, calculateCoordinate} = this.props;
         let filepath = dxContext.contextPath + '/files/default' + path + '?ts=' + ts;
         return (
-            <Card className={classes.card}>
-                <CardMedia className={classNames(classes.imageViewer, this.getRotationClass())}
-                           data-cm-role="preview-image"
-                           image={filepath}
-                />
-            </Card>
+            cropExpanded ?
+                <ReactCrop keepSelection
+                           useNaturalImageDimensions
+                           src={filepath}
+                           crop={cropParams}
+                           onChange={onCropChange}
+                           onComplete={() => calculateCoordinate(originalHeight, originalWidth)}
+                /> :
+                <Card className={classes.card}>
+                    <CardMedia className={classNames(classes.imageViewer, this.getRotationClass())}
+                               data-cm-role="preview-image"
+                               image={filepath}
+                    />
+                </Card>
         );
     }
 }
@@ -70,7 +82,13 @@ ImageEditorPreview.propTypes = {
     rotations: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,
     ts: PropTypes.number.isRequired,
-    dxContext: PropTypes.object.isRequired
+    dxContext: PropTypes.object.isRequired,
+    cropExpanded: PropTypes.bool.isRequired,
+    onCropChange: PropTypes.func.isRequired,
+    cropParams: PropTypes.object,
+    originalWidth: PropTypes.number.isRequired,
+    originalHeight: PropTypes.number.isRequired,
+    calculateCoordinate: PropTypes.func.isRequired
 };
 
 export default compose(

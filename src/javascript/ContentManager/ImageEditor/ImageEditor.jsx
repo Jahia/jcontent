@@ -14,6 +14,7 @@ import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
+import CropPanel from './CropPanel';
 import {Check, ChevronLeft, ExpandMore} from '@material-ui/icons';
 import Feedback from './Feedback';
 import ImageEditorActions from './ImageEditorActions';
@@ -41,7 +42,8 @@ let styles = theme => ({
 
 const PANELS = {
     ROTATE: 0,
-    RESIZE: 1
+    RESIZE: 1,
+    CROP: 2
 };
 
 export class ImageEditor extends React.Component {
@@ -61,8 +63,9 @@ export class ImageEditor extends React.Component {
 
     render() {
         const {
-            t, classes, node, rotations, width, height, rotate, resize, undoChanges,
-            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast
+            t, classes, node, rotations, width, height, rotate, resize, undoChanges, cropParams, onCropChange, crop,
+            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast,
+            calculateCoordinate
         } = this.props;
         const {expanded} = this.state;
         const originalWidth = node.width ? parseInt(node.width.value, 10) : 0;
@@ -102,8 +105,15 @@ export class ImageEditor extends React.Component {
                 <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
                                    rightCol={<ImageEditorPreview rotations={rotations}
                                                                  dxContext={dxContext}
+                                                                 cropParams={cropParams}
+                                                                 originalHeight={originalHeight}
+                                                                 originalWidth={originalWidth}
                                                                  path={node.path}
-                                                                 ts={ts}/>}
+                                                                 ts={ts}
+                                                                 cropExpanded={expanded === PANELS.CROP}
+                                                                 calculateCoordinate={calculateCoordinate}
+                                                                 onCropChange={onCropChange}
+                                   />}
                 >
                     <>
                         <Tooltip title={resizeDirty ? t('label.contentManager.editImage.tooltip') : ''}>
@@ -142,6 +152,31 @@ export class ImageEditor extends React.Component {
                                                  width={width}
                                                  height={height}
                                                  resize={resize}
+                                    />
+                                </ExpansionPanelDetails>
+                                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                            </ExpansionPanel>
+                        </Tooltip>
+                        <Tooltip title={rotationsDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                            <ExpansionPanel disabled={rotationsDirty}
+                                            expanded={expanded === PANELS.CROP}
+                                            data-cm-role="crop-panel"
+                                            onChange={(event, expanded) => expanded && !rotationsDirty && this.onChangePanel(PANELS.CROP)}
+                            >
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ExpandMore/>}>
+                                    <Typography variant="zeta"
+                                                color="alpha"
+                                    >{t('label.contentManager.editImage.cropParams')}
+                                    </Typography>
+                                </ExpansionPanelSummary>
+                                <ExpansionPanelDetails className={classes.panel}>
+                                    <CropPanel originalWidth={originalWidth}
+                                               originalHeight={originalHeight}
+                                               cropParams={cropParams}
+                                               width={width}
+                                               height={height}
+                                               crop={crop}
+                                               onCropChange={onCropChange}
                                     />
                                 </ExpansionPanelDetails>
                                 <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
@@ -195,7 +230,11 @@ ImageEditor.propTypes = {
     confirmSaved: PropTypes.bool.isRequired,
     closeFeedback: PropTypes.func.isRequired,
     closeEditingToast: PropTypes.func.isRequired,
-    editing: PropTypes.bool.isRequired
+    editing: PropTypes.bool.isRequired,
+    cropParams: PropTypes.object,
+    crop: PropTypes.func.isRequired,
+    onCropChange: PropTypes.func.isRequired,
+    calculateCoordinate: PropTypes.func.isRequired
 };
 
 export default compose(

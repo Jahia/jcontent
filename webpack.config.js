@@ -48,6 +48,10 @@ module.exports = (env, argv) => {
                             '@babel/plugin-syntax-dynamic-import'
                         ]
                     }
+                },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
                 }
             ]
         },

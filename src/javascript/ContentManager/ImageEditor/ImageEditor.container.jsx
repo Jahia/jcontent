@@ -26,7 +26,15 @@ export class ImageEditorContainer extends React.Component {
             name: null,
             ts: new Date().getTime(),
             confirmSaved: false,
-            editing: true
+            editing: true,
+            cropParams: {
+                x: 0,
+                y: 0,
+                height: 100,
+                width: 100
+            },
+            top: 0,
+            left: 0
         };
 
         this.rotate = this.rotate.bind(this);
@@ -36,6 +44,9 @@ export class ImageEditorContainer extends React.Component {
         this.resize = this.resize.bind(this);
         this.onBackNavigation = this.onBackNavigation.bind(this);
         this.onCompleted = this.onCompleted.bind(this);
+        this.onCropChange = this.onCropChange.bind(this);
+        this.crop = this.crop.bind(this);
+        this.calculateRealCoordiantes = this.calculateRealCoordiantes.bind(this);
     }
 
     onBackNavigation(dirty) {
@@ -46,6 +57,22 @@ export class ImageEditorContainer extends React.Component {
         } else {
             window.history.back();
         }
+    }
+
+    onCropChange(cropParams) {
+        this.setState({
+            cropParams: cropParams
+        });
+    }
+
+    calculateRealCoordiantes(originalHeight, originalWidth) {
+        let {cropParams} = this.state;
+        this.setState({
+            top: Math.round(cropParams.y * originalHeight / 100),
+            left: Math.round(cropParams.x * originalWidth / 100),
+            width: Math.round(cropParams.width * originalWidth / 100),
+            height: Math.round(cropParams.height * originalHeight / 100)
+        });
     }
 
     rotate(val) {
@@ -75,6 +102,15 @@ export class ImageEditorContainer extends React.Component {
                     width: width
                 }
             }])
+        }));
+    }
+
+    crop({width, height, top, left}) {
+        this.setState(() => ({
+            width,
+            height,
+            top,
+            left
         }));
     }
 
@@ -121,7 +157,8 @@ export class ImageEditorContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name, confirmSaved, editing} = this.state;
+        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen,
+            saveAsOpen, ts, name, confirmSaved, editing, cropParams, top, left} = this.state;
 
         let newName = name;
         if (!newName) {
@@ -150,8 +187,12 @@ export class ImageEditorContainer extends React.Component {
                                                         rotations={rotations}
                                                         width={width}
                                                         height={height}
+                                                        top={top}
+                                                        left={left}
                                                         confirmSaved={confirmSaved}
                                                         editing={editing}
+                                                        cropParams={cropParams}
+                                                        crop={this.crop}
                                                         rotate={this.rotate}
                                                         resize={this.resize}
                                                         undoChanges={this.undoChanges}
@@ -165,6 +206,8 @@ export class ImageEditorContainer extends React.Component {
                                                         closeEditingToast={() => this.setState({
                                                             editing: false
                                                         })}
+                                                        calculateCoordinate={this.calculateRealCoordiantes}
+                                                        onCropChange={this.onCropChange}
                                                         onBackNavigation={this.onBackNavigation}
                                                     />
                                                     <ConfirmSaveDialog

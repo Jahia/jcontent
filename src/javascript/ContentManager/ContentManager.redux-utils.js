@@ -96,7 +96,7 @@ let getSyncListener = (store, history) => () => {
                 (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
                 (!_.isEqual(currentValueFromUrl.params, currentValue.params))
         ) {
-            history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, pathResolver(currentValue, currentValueFromUrl), currentValue.params));
+            history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params));
         }
     }
 };

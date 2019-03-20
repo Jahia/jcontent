@@ -78,8 +78,8 @@ export class ImageEditorContainer extends React.Component {
                 y: 0,
                 aspect: image.naturalWidth / image.naturalHeight
             },
-            width: 0,
-            height: 0
+            width: image.naturalWidth,
+            height: image.naturalHeight
         });
     }
 

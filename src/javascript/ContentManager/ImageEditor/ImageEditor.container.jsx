@@ -69,7 +69,16 @@ export class ImageEditorContainer extends React.Component {
             width: Math.round(cropParams.width * originalWidth / 100),
             height: Math.round(cropParams.height * originalHeight / 100),
             ratioLocked: ratioLocked === undefined ? false : ratioLocked,
-            ratioUnlocked: ratioUnlocked === undefined ? false : ratioUnlocked
+            ratioUnlocked: ratioUnlocked === undefined ? false : ratioUnlocked,
+            transforms: ([{
+                op: 'cropImage',
+                args: {
+                    height: Math.round(cropParams.height * originalHeight / 100),
+                    width: Math.round(cropParams.width * originalWidth / 100),
+                    top: Math.round(cropParams.y * originalHeight / 100),
+                    left: Math.round(cropParams.x * originalWidth / 100)
+                }
+            }])
         });
     }
 

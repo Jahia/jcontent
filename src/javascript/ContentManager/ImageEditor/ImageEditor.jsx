@@ -117,7 +117,7 @@ export class ImageEditor extends React.Component {
                                    />}
                 >
                     <>
-                        <Tooltip title={resizeDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                        <Tooltip title={(resizeDirty || cropDirty) ? t('label.contentManager.editImage.tooltip') : ''}>
                             <ExpansionPanel disabled={resizeDirty || cropDirty}
                                             expanded={expanded === PANELS.ROTATE}
                                             data-cm-role="rotate-panel"
@@ -135,7 +135,7 @@ export class ImageEditor extends React.Component {
                                 <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
-                        <Tooltip title={rotationsDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                        <Tooltip title={(rotationsDirty || cropDirty) ? t('label.contentManager.editImage.tooltip') : ''}>
                             <ExpansionPanel disabled={rotationsDirty || cropDirty}
                                             expanded={expanded === PANELS.RESIZE}
                                             data-cm-role="resize-panel"
@@ -158,7 +158,7 @@ export class ImageEditor extends React.Component {
                                 <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
-                        <Tooltip title={cropDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                        <Tooltip title={(resizeDirty || rotationsDirty) ? t('label.contentManager.editImage.tooltip') : ''}>
                             <ExpansionPanel disabled={rotationsDirty || resizeDirty}
                                             expanded={expanded === PANELS.CROP}
                                             data-cm-role="crop-panel"

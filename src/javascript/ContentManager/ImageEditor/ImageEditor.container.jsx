@@ -27,6 +27,8 @@ export class ImageEditorContainer extends React.Component {
             ts: new Date().getTime(),
             confirmSaved: false,
             editing: true,
+            ratioLocked: false,
+            ratioUnlocked: false,
             cropParams: {
                 x: null,
                 y: null,
@@ -59,13 +61,15 @@ export class ImageEditorContainer extends React.Component {
         }
     }
 
-    onCropChange(cropParams, originalHeight, originalWidth) {
+    onCropChange(cropParams, originalHeight, originalWidth, ratioLocked, ratioUnlocked) {
         this.setState({
             cropParams: cropParams,
             top: Math.round(cropParams.y * originalHeight / 100),
             left: Math.round(cropParams.x * originalWidth / 100),
             width: Math.round(cropParams.width * originalWidth / 100),
-            height: Math.round(cropParams.height * originalHeight / 100)
+            height: Math.round(cropParams.height * originalHeight / 100),
+            ratioLocked: ratioLocked === undefined ? false : ratioLocked,
+            ratioUnlocked: ratioUnlocked === undefined ? false : ratioUnlocked
         });
     }
 
@@ -163,9 +167,8 @@ export class ImageEditorContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen,
-            saveAsOpen, ts, name, confirmSaved, editing, cropParams, top, left} = this.state;
-
+        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen,
+            ts, name, confirmSaved, editing, cropParams, top, left, ratioLocked, ratioUnlocked} = this.state;
         let newName = name;
         if (!newName) {
             newName = path.substring(path.lastIndexOf('/') + 1);
@@ -196,6 +199,8 @@ export class ImageEditorContainer extends React.Component {
                                                         top={top}
                                                         left={left}
                                                         confirmSaved={confirmSaved}
+                                                        ratioLocked={ratioLocked}
+                                                        ratioUnlocked={ratioUnlocked}
                                                         editing={editing}
                                                         cropParams={cropParams}
                                                         rotate={this.rotate}
@@ -204,12 +209,18 @@ export class ImageEditorContainer extends React.Component {
                                                         closeFeedback={() => this.setState({
                                                             confirmSaved: false
                                                         })}
+                                                        closeRatioToast={() => this.setState({
+                                                            ratioLocked: false
+                                                        })}
                                                         saveChanges={withName => this.setState({
                                                             confirmSaveOpen: !withName,
                                                             saveAsOpen: withName
                                                         })}
                                                         closeEditingToast={() => this.setState({
                                                             editing: false
+                                                        })}
+                                                        closeRatioUnlocked={() => this.setState({
+                                                            ratioUnlocked: false
                                                         })}
                                                         onImageLoaded={this.onImageLoaded}
                                                         onCropChange={this.onCropChange}

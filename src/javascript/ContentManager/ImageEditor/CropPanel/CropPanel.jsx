@@ -68,13 +68,15 @@ export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams
     };
 
     const switchRatio = () => {
+        const ratioLocked = width && height && cropParams.aspect === null;
+        const ratioUnlocked = cropParams.aspect !== null;
         onCropChange({
             width: cropParams.width,
             height: cropParams.height,
             x: cropParams.x,
             y: cropParams.y,
             aspect: cropParams.aspect === null ? ((width && height) ? width / height : originalWidth / originalHeight) : null
-        }, originalHeight, originalWidth);
+        }, originalHeight, originalWidth, ratioLocked, ratioUnlocked);
     };
 
     return (

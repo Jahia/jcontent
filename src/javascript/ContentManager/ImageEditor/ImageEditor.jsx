@@ -64,16 +64,18 @@ export class ImageEditor extends React.Component {
     render() {
         const {
             t, classes, node, rotations, width, height, rotate, resize, undoChanges, cropParams, onCropChange, onImageLoaded,
-            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast
+            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast, ratioLocked,
+            closeRatioToast, closeRatioUnlocked, ratioUnlocked
         } = this.props;
         const {expanded} = this.state;
         const originalWidth = node.width ? parseInt(node.width.value, 10) : 0;
         const originalHeight = node.height ? parseInt(node.height.value, 10) : 0;
 
-        let resizeDirty = Boolean((width && originalWidth !== width) || (height && originalHeight !== height));
+        let resizeDirty = Boolean(((width && originalWidth !== width) || (height && originalHeight !== height)) && (cropParams.height === null));
         let rotationsDirty = (rotations !== 0);
+        let cropDirty = Boolean(cropParams.height || cropParams.width || cropParams.y || cropParams.x);
 
-        let dirty = resizeDirty || rotationsDirty;
+        let dirty = resizeDirty || rotationsDirty || cropDirty;
 
         let changesFeedback = dirty ? t('label.contentManager.editImage.unsavedChanges') : '';
 
@@ -116,7 +118,7 @@ export class ImageEditor extends React.Component {
                 >
                     <>
                         <Tooltip title={resizeDirty ? t('label.contentManager.editImage.tooltip') : ''}>
-                            <ExpansionPanel disabled={resizeDirty}
+                            <ExpansionPanel disabled={resizeDirty || cropDirty}
                                             expanded={expanded === PANELS.ROTATE}
                                             data-cm-role="rotate-panel"
                                             onChange={(event, expanded) => expanded && !resizeDirty && this.onChangePanel(PANELS.ROTATE)}
@@ -134,7 +136,7 @@ export class ImageEditor extends React.Component {
                             </ExpansionPanel>
                         </Tooltip>
                         <Tooltip title={rotationsDirty ? t('label.contentManager.editImage.tooltip') : ''}>
-                            <ExpansionPanel disabled={rotationsDirty}
+                            <ExpansionPanel disabled={rotationsDirty || cropDirty}
                                             expanded={expanded === PANELS.RESIZE}
                                             data-cm-role="resize-panel"
                                             onChange={(event, expanded) => expanded && !rotationsDirty && this.onChangePanel(PANELS.RESIZE)}
@@ -156,8 +158,8 @@ export class ImageEditor extends React.Component {
                                 <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
-                        <Tooltip title={rotationsDirty ? t('label.contentManager.editImage.tooltip') : ''}>
-                            <ExpansionPanel disabled={rotationsDirty}
+                        <Tooltip title={cropDirty ? t('label.contentManager.editImage.tooltip') : ''}>
+                            <ExpansionPanel disabled={rotationsDirty || resizeDirty}
                                             expanded={expanded === PANELS.CROP}
                                             data-cm-role="crop-panel"
                                             onChange={(event, expanded) => expanded && !rotationsDirty && this.onChangePanel(PANELS.CROP)}
@@ -206,6 +208,30 @@ export class ImageEditor extends React.Component {
                         </div>}
                     onClose={closeFeedback}
                 />
+                <Feedback
+                    open={ratioLocked}
+                    duration={2000}
+                    message={
+                        <div className={classes.feedbackContent}>
+                            <Check className={classes.feedbackIcon}/>
+                            <Typography variant="zeta" color="invert">
+                                {t('label.contentManager.editImage.ratioLocked')}
+                            </Typography>
+                        </div>}
+                    onClose={closeRatioToast}
+                />
+                <Feedback
+                    open={ratioUnlocked}
+                    duration={2000}
+                    message={
+                        <div className={classes.feedbackContent}>
+                            <Check className={classes.feedbackIcon}/>
+                            <Typography variant="zeta" color="invert">
+                                {t('label.contentManager.editImage.ratioUnlocked')}
+                            </Typography>
+                        </div>}
+                    onClose={closeRatioUnlocked}
+                />
             </MainLayout>
         );
     }
@@ -226,12 +252,16 @@ ImageEditor.propTypes = {
     undoChanges: PropTypes.func.isRequired,
     dxContext: PropTypes.object.isRequired,
     confirmSaved: PropTypes.bool.isRequired,
+    ratioLocked: PropTypes.bool,
+    ratioUnlocked: PropTypes.bool,
     closeFeedback: PropTypes.func.isRequired,
     closeEditingToast: PropTypes.func.isRequired,
     editing: PropTypes.bool.isRequired,
     cropParams: PropTypes.object,
     onCropChange: PropTypes.func.isRequired,
-    onImageLoaded: PropTypes.func.isRequired
+    onImageLoaded: PropTypes.func.isRequired,
+    closeRatioToast: PropTypes.func.isRequired,
+    closeRatioUnlocked: PropTypes.func.isRequired
 };
 
 export default compose(

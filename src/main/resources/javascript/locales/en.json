@@ -275,6 +275,8 @@
         },
         "editingMessage": "You are now editing {{imageName}}",
         "savedMessage": "Saved",
+        "ratioLocked": "Ratio locked",
+        "ratioUnlocked": "Ratio unlocked",
         "confirmSaveDialog": {
           "title": "Replace existing file",
           "text": "A file with this name already exists. Are you sure you want to continue?",

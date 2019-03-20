@@ -63,9 +63,8 @@ export class ImageEditor extends React.Component {
 
     render() {
         const {
-            t, classes, node, rotations, width, height, rotate, resize, undoChanges, cropParams, onCropChange, crop,
-            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast,
-            calculateCoordinate
+            t, classes, node, rotations, width, height, rotate, resize, undoChanges, cropParams, onCropChange, onImageLoaded,
+            saveChanges, onBackNavigation, ts, dxContext, confirmSaved, closeFeedback, editing, closeEditingToast
         } = this.props;
         const {expanded} = this.state;
         const originalWidth = node.width ? parseInt(node.width.value, 10) : 0;
@@ -111,7 +110,7 @@ export class ImageEditor extends React.Component {
                                                                  path={node.path}
                                                                  ts={ts}
                                                                  cropExpanded={expanded === PANELS.CROP}
-                                                                 calculateCoordinate={calculateCoordinate}
+                                                                 onImageLoaded={onImageLoaded}
                                                                  onCropChange={onCropChange}
                                    />}
                 >
@@ -175,7 +174,6 @@ export class ImageEditor extends React.Component {
                                                cropParams={cropParams}
                                                width={width}
                                                height={height}
-                                               crop={crop}
                                                onCropChange={onCropChange}
                                     />
                                 </ExpansionPanelDetails>
@@ -232,9 +230,8 @@ ImageEditor.propTypes = {
     closeEditingToast: PropTypes.func.isRequired,
     editing: PropTypes.bool.isRequired,
     cropParams: PropTypes.object,
-    crop: PropTypes.func.isRequired,
     onCropChange: PropTypes.func.isRequired,
-    calculateCoordinate: PropTypes.func.isRequired
+    onImageLoaded: PropTypes.func.isRequired
 };
 
 export default compose(

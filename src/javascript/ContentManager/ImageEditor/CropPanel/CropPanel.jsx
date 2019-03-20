@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {IconButton, Typography} from '@jahia/ds-mui-theme';
@@ -32,25 +32,20 @@ let styles = theme => ({
     }
 });
 
-export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams, crop, width, height, onCropChange}) => {
-    const [keepRatio, setKeepRatio] = useState(true);
-
+export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams, width, height, onCropChange}) => {
     const setWidth = event => {
         let value = event.target.value;
 
         if (/\d+/.test(value)) {
             const widthValue = value > originalWidth ? originalWidth : Math.round(value);
-            const heightValue = Math.round(keepRatio && originalHeight && originalWidth ? value * originalHeight / originalWidth : (height || originalHeight));
-            crop({
-                width: widthValue,
-                height: heightValue,
-                top: Math.round(cropParams.y * originalHeight / 100),
-                left: Math.round(cropParams.x * originalWidth / 100)
-            });
+            const heightValue = Math.round(cropParams.aspect !== null && originalHeight && originalWidth ? value * originalHeight / originalWidth : (height || originalHeight));
             onCropChange({
                 width: widthValue * 100 / originalWidth,
-                height: heightValue * 100 / originalHeight
-            });
+                height: heightValue * 100 / originalHeight,
+                y: cropParams.y,
+                x: cropParams.x,
+                aspect: cropParams.aspect
+            }, originalHeight, originalWidth);
         }
     };
 
@@ -58,28 +53,26 @@ export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams
         let value = event.target.value;
 
         if (/\d+/.test(value)) {
-            const widthValue = Math.round(keepRatio && originalHeight && originalWidth ? value * originalWidth / originalHeight : (width || originalWidth));
+            const widthValue = Math.round(cropParams.aspect !== null && originalHeight && originalWidth ? value * originalWidth / originalHeight : (width || originalWidth));
             const heightValue = value > originalHeight ? originalHeight : Math.round(value);
-            crop({
-                width: widthValue,
-                height: heightValue,
-                top: Math.round(cropParams.y * originalHeight / 100),
-                left: Math.round(cropParams.x * originalWidth / 100)
-            });
             onCropChange({
                 width: widthValue * 100 / originalWidth,
-                height: heightValue * 100 / originalHeight
-            });
+                height: heightValue * 100 / originalHeight,
+                y: cropParams.y,
+                x: cropParams.x,
+                aspect: cropParams.aspect
+            }, originalHeight, originalWidth);
         }
     };
 
     const switchRatio = () => {
-        setKeepRatio(!keepRatio);
-        if (!keepRatio) {
-            crop({
-
-            });
-        }
+        onCropChange({
+            width: cropParams.width,
+            height: cropParams.height,
+            x: cropParams.x,
+            y: cropParams.y,
+            aspect: cropParams.aspect === null ? originalWidth / originalHeight : null
+        }, originalHeight, originalWidth);
     };
 
     return (
@@ -93,7 +86,7 @@ export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams
                         <InputLabel shrink className={classes.inputLabel}>{t('label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
-                            value={width ? width : originalWidth}
+                            value={width ? width : Math.round(cropParams.width * originalWidth / 100)}
                             type="number"
                             margin="none"
                             onChange={setWidth}
@@ -103,7 +96,7 @@ export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams
                         <InputLabel shrink className={classes.inputLabel}>{t('label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
-                            value={height ? height : originalHeight}
+                            value={height ? height : Math.round(cropParams.height * originalHeight / 100)}
                             type="number"
                             margin="none"
                             onChange={setHeight}
@@ -111,7 +104,7 @@ export const CropPanel = ({classes, t, originalWidth, originalHeight, cropParams
                     </FormControl>
                 </div>
                 <div className={classes.secondCol}>
-                    <IconButton icon={<Link color={keepRatio ? 'action' : 'inherit'}/>}
+                    <IconButton icon={<Link color={cropParams.aspect !== null ? 'action' : 'inherit'}/>}
                                 data-cm-role="keep-ratio-button"
                                 onClick={switchRatio}/>
                 </div>
@@ -126,7 +119,6 @@ CropPanel.propTypes = {
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
     cropParams: PropTypes.object,
-    crop: PropTypes.func.isRequired,
     width: PropTypes.number,
     height: PropTypes.number,
     onCropChange: PropTypes.func.isRequired

@@ -28,10 +28,11 @@ export class ImageEditorContainer extends React.Component {
             confirmSaved: false,
             editing: true,
             cropParams: {
-                x: 0,
-                y: 0,
-                height: 100,
-                width: 100
+                x: null,
+                y: null,
+                height: null,
+                width: null,
+                aspect: null
             },
             top: 0,
             left: 0
@@ -45,8 +46,7 @@ export class ImageEditorContainer extends React.Component {
         this.onBackNavigation = this.onBackNavigation.bind(this);
         this.onCompleted = this.onCompleted.bind(this);
         this.onCropChange = this.onCropChange.bind(this);
-        this.crop = this.crop.bind(this);
-        this.calculateRealCoordiantes = this.calculateRealCoordiantes.bind(this);
+        this.onImageLoaded = this.onImageLoaded.bind(this);
     }
 
     onBackNavigation(dirty) {
@@ -59,19 +59,27 @@ export class ImageEditorContainer extends React.Component {
         }
     }
 
-    onCropChange(cropParams) {
+    onCropChange(cropParams, originalHeight, originalWidth) {
         this.setState({
-            cropParams: cropParams
-        });
-    }
-
-    calculateRealCoordiantes(originalHeight, originalWidth) {
-        let {cropParams} = this.state;
-        this.setState({
+            cropParams: cropParams,
             top: Math.round(cropParams.y * originalHeight / 100),
             left: Math.round(cropParams.x * originalWidth / 100),
             width: Math.round(cropParams.width * originalWidth / 100),
             height: Math.round(cropParams.height * originalHeight / 100)
+        });
+    }
+
+    onImageLoaded(image) {
+        this.setState({
+            cropParams: {
+                width: 0,
+                height: 0,
+                x: 0,
+                y: 0,
+                aspect: image.naturalWidth / image.naturalHeight
+            },
+            width: 0,
+            height: 0
         });
     }
 
@@ -105,21 +113,19 @@ export class ImageEditorContainer extends React.Component {
         }));
     }
 
-    crop({width, height, top, left}) {
-        this.setState(() => ({
-            width,
-            height,
-            top,
-            left
-        }));
-    }
-
     undoChanges() {
         this.setState(() => ({
             rotations: 0,
             width: null,
             height: null,
-            transforms: []
+            transforms: [],
+            cropParams: {
+                x: null,
+                y: null,
+                height: null,
+                width: null,
+                aspect: null
+            }
         }));
     }
 
@@ -192,7 +198,6 @@ export class ImageEditorContainer extends React.Component {
                                                         confirmSaved={confirmSaved}
                                                         editing={editing}
                                                         cropParams={cropParams}
-                                                        crop={this.crop}
                                                         rotate={this.rotate}
                                                         resize={this.resize}
                                                         undoChanges={this.undoChanges}
@@ -206,7 +211,7 @@ export class ImageEditorContainer extends React.Component {
                                                         closeEditingToast={() => this.setState({
                                                             editing: false
                                                         })}
-                                                        calculateCoordinate={this.calculateRealCoordiantes}
+                                                        onImageLoaded={this.onImageLoaded}
                                                         onCropChange={this.onCropChange}
                                                         onBackNavigation={this.onBackNavigation}
                                                     />

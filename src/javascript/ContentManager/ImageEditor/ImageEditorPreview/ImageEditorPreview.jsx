@@ -56,16 +56,19 @@ export class ImageEditorPreview extends React.Component {
     }
 
     render() {
-        let {path, cropParams, onCropChange, cropExpanded, dxContext, ts, classes, originalHeight, originalWidth, calculateCoordinate} = this.props;
+        let {path, cropParams, onCropChange, cropExpanded, dxContext, ts,
+            classes, originalHeight, originalWidth, onImageLoaded} = this.props;
         let filepath = dxContext.contextPath + '/files/default' + path + '?ts=' + ts;
         return (
             cropExpanded ?
                 <ReactCrop keepSelection
                            useNaturalImageDimensions
+                           maxHeight={originalHeight}
+                           maxWidth={originalWidth}
                            src={filepath}
                            crop={cropParams}
-                           onChange={onCropChange}
-                           onComplete={() => calculateCoordinate(originalHeight, originalWidth)}
+                           onImageLoaded={onImageLoaded}
+                           onChange={crop => onCropChange(crop, originalHeight, originalWidth)}
                 /> :
                 <Card className={classes.card}>
                     <CardMedia className={classNames(classes.imageViewer, this.getRotationClass())}
@@ -88,7 +91,7 @@ ImageEditorPreview.propTypes = {
     cropParams: PropTypes.object,
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
-    calculateCoordinate: PropTypes.func.isRequired
+    onImageLoaded: PropTypes.func.isRequired
 };
 
 export default compose(

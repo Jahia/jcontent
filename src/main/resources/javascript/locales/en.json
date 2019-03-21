@@ -247,7 +247,7 @@
         "action": "Open in image editor",
         "title": "Image edition",
         "resize": "Resize",
-        "cropParams": "Crop",
+        "crop": "Crop",
         "rotate": "Rotate",
         "rotateInfo": "Rotate the image then save it, or save the rotated image as a new file",
         "rotateLeft": "Rotate left",

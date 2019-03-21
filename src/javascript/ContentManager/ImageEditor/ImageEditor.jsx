@@ -167,7 +167,7 @@ export class ImageEditor extends React.Component {
                                 <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ExpandMore/>}>
                                     <Typography variant="zeta"
                                                 color="alpha"
-                                    >{t('label.contentManager.editImage.cropParams')}
+                                    >{t('label.contentManager.editImage.crop')}
                                     </Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>

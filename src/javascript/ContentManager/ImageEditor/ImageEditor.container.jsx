@@ -11,6 +11,7 @@ import UnsavedChangesDialog from './UnsavedChangesDialog';
 import DxContext from '../DxContext';
 import {cmGoto} from '../ContentManager.redux-actions';
 import {refetchContentListData} from '../ContentManager.refetches';
+import {ProgressOverlay} from '@jahia/react-material';
 
 export class ImageEditorContainer extends React.Component {
     constructor(props) {
@@ -195,9 +196,11 @@ export class ImageEditorContainer extends React.Component {
                             return (
                                 <Query query={ImageQuery} variables={{path: path}}>
                                     {({data, loading, error}) => {
-                                        if (!loading && !error && data.jcr) {
+                                        if (!error && data.jcr) {
                                             return (
                                                 <>
+                                                    {loading &&
+                                                    <ProgressOverlay/>}
                                                     <ImageEditor
                                                         node={data.jcr.nodeByPath}
                                                         dxContext={dxContext}

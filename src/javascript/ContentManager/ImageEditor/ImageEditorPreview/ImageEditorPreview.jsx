@@ -35,6 +35,9 @@ let styles = theme => ({
         paddingBottom: (theme.spacing.unit * 3) + 'px',
         margin: '0 auto',
         backgroundSize: 'contain'
+    },
+    cropPreview: {
+        background: 'transparent'
     }
 });
 
@@ -63,8 +66,10 @@ export class ImageEditorPreview extends React.Component {
             cropExpanded ?
                 <ReactCrop keepSelection
                            useNaturalImageDimensions
+                           className={classes.cropPreview}
                            maxHeight={originalHeight}
                            maxWidth={originalWidth}
+                           imageStyle={{width: '100%', height: 'auto'}}
                            src={filepath}
                            crop={cropParams}
                            onImageLoaded={onImageLoaded}

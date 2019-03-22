@@ -6,20 +6,22 @@ import {
     FilesQueryHandler,
     SearchQueryHandler,
     Sql2SearchQueryHandler
-} from './ContentData.gql-queries';
+} from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
-} from '../../../eventHandlerRegistry';
+} from '../../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../../ContentManager.redux-actions';
-import ContentManagerConstants from '../../../ContentManager.constants';
-import {extractPaths, getNewNodePath, isDescendantOrSelf} from '../../../ContentManager.utils';
-import {setModificationHook} from './ContentData.utils';
-import {cmSetPreviewSelection} from '../../../preview.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
+import ContentManagerConstants from '../../ContentManager.constants';
+import {extractPaths, getNewNodePath, isDescendantOrSelf} from '../../ContentManager.utils';
+import {setModificationHook} from './ContentLayout.utils';
+import {cmSetPreviewSelection} from '../../preview.redux-actions';
+import ContentLayout from './ContentLayout';
+import {setContentListDataRefetcher} from '../../ContentManager.refetches';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -34,7 +36,7 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
-export class ContentData extends React.Component {
+export class ContentLayoutContainer extends React.Component {
     constructor(props) {
         super(props);
         this.onGwtContentModification = this.onGwtContentModification.bind(this);
@@ -123,7 +125,7 @@ export class ContentData extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, path, uiLang, lang, children, setRefetch, siteKey, params, pagination, sort, pathsToRefetch, removePathsToRefetch, setPath} = this.props;
+        const {notificationContext, t, mode, path, uiLang, lang, siteKey, params, pagination, sort, pathsToRefetch, removePathsToRefetch, setPath, treeState, filesMode, previewState, previewSelection} = this.props;
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
         // If the path to display is part of the paths to refetch then refetch
         if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
@@ -142,24 +144,18 @@ export class ContentData extends React.Component {
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
 
-                    if (setRefetch) {
-                        setRefetch({
-                            query: layoutQuery,
-                            queryParams: layoutQueryParams,
-                            refetch: refetch
-                        });
-                    }
+                    setContentListDataRefetcher({
+                        query: layoutQuery,
+                        queryParams: layoutQueryParams,
+                        refetch: refetch
+                    });
 
                     if (error) {
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         console.error(message);
-                        return children({
-                            rows: [],
-                            totalCount: 0,
-                            contentNotFound: true,
-                            layoutQuery: layoutQuery,
-                            layoutQueryParams: layoutQueryParams
-                        });
+                        return (
+                            <div>toto</div>
+                        );
                     }
 
                     if (loading) {
@@ -191,13 +187,17 @@ export class ContentData extends React.Component {
                             {loading &&
                             <ProgressOverlay/>
                             }
-                            {children({
-                                rows: rows,
-                                loading: loading,
-                                totalCount: totalCount,
-                                layoutQuery: layoutQuery,
-                                layoutQueryParams: layoutQueryParams
-                            })}
+                            <ContentLayout mode={mode}
+                                           path={path}
+                                           filesMode={filesMode}
+                                           treeState={treeState}
+                                           previewState={previewState}
+                                           previewSelection={previewSelection}
+                                           rows={rows}
+                                           loading={loading}
+                                           totalCount={totalCount}
+                                           layoutQuery={layoutQuery}
+                                           layoutQueryParams={layoutQueryParams}/>
                         </React.Fragment>
                     );
                 }}
@@ -219,7 +219,8 @@ const mapStateToProps = state => ({
     pagination: state.pagination,
     sort: state.sort,
     openedPaths: state.openPaths,
-    pathsToRefetch: state.pathsToRefetch
+    pathsToRefetch: state.pathsToRefetch,
+    treeState: state.treeState
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -230,8 +231,7 @@ const mapDispatchToProps = dispatch => ({
     removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths))
 });
 
-ContentData.propTypes = {
-    children: PropTypes.func.isRequired,
+ContentLayoutContainer.propTypes = {
     client: PropTypes.object.isRequired,
     closePaths: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
@@ -247,11 +247,13 @@ ContentData.propTypes = {
     removePathsToRefetch: PropTypes.func.isRequired,
     setPath: PropTypes.func.isRequired,
     setPreviewSelection: PropTypes.func.isRequired,
-    setRefetch: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     sort: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
-    uiLang: PropTypes.string.isRequired
+    uiLang: PropTypes.string.isRequired,
+    treeState: PropTypes.object.isRequired,
+    previewState: PropTypes.object.isRequired,
+    filesMode: PropTypes.object.isRequired
 };
 
 export default compose(
@@ -259,4 +261,4 @@ export default compose(
     translate(),
     withApollo,
     connect(mapStateToProps, mapDispatchToProps)
-)(ContentData);
+)(ContentLayoutContainer);

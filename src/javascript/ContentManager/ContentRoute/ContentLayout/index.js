@@ -1,3 +1,3 @@
-import ContentLayout from './ContentLayout';
+import ContentLayout from './ContentLayout.container';
 
 export default ContentLayout;

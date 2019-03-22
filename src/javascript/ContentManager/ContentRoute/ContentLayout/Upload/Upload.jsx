@@ -114,13 +114,14 @@ export class Upload extends React.Component {
         } else {
             us = uploadsStatuses.UPLOADED;
         }
-
-        this.props.dispatch(setStatus(us));
+        if (us !== this.props.status) {
+            this.props.setStatus(us);
+        }
     }
 
     closePanelAndClearUploads() {
         files.acceptedFiles = [];
-        this.props.dispatch(setUploads([]));
+        this.props.clearUploads();
     }
 
     uploadStatus() {
@@ -171,20 +172,26 @@ const mapStateToProps = (state, ownProps) => {
     if (ownProps.statePartName) {
         return state[ownProps.statePartName];
     }
-    return state.fileUpload;
+    return {
+        status: state.fileUpload.status,
+        uploads: state.fileUpload.uploads,
+        overlayTarget: state.fileUpload.overlayTarget
+    };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        dispatch: dispatch,
-        dispatchBatch: actions => dispatch(batchActions(actions))
+        setStatus: s => dispatch(setStatus(s)),
+        clearUploads: () => dispatch(setUploads([]))
     };
 };
 
 Upload.propTypes = {
     theme: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    setStatus: PropTypes.func.isRequired,
+    clearUploads: PropTypes.func.isRequired,
+    status: PropTypes.string,
     uploads: PropTypes.array.isRequired,
     uploadPath: PropTypes.string,
     overlayTarget: PropTypes.object,

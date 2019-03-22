@@ -10,6 +10,7 @@ import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} fro
 import {compose} from 'react-apollo';
 import ContentManagerConstants from '../../../ContentManager.constants';
 import ContentTree from './ContentTree';
+import {setRefetcher} from '../../../ContentManager.refetches';
 
 const styles = theme => ({
     listContainer: {
@@ -32,7 +33,7 @@ export class ContentTrees extends React.Component {
     render() {
         const {
             lang, siteKey, path, openPaths, t, setPath, openPath,
-            closePath, classes, setRefetch, mode, isOpen, closeTree
+            closePath, classes, mode, isOpen, closeTree
         } = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
@@ -78,7 +79,7 @@ export class ContentTrees extends React.Component {
                                                  handleSelect={path => setPath(path, {sub: false})}
                                                  openableTypes={contentTreeConfig.openableTypes}
                                                  rootLabel={t(contentTreeConfig.rootLabel)}
-                                                 setRefetch={setRefetch(contentTreeConfig.key)}
+                                                 setRefetch={refetchingData => setRefetcher(contentTreeConfig.key, refetchingData)}
                                     />
                                 );
                             }) : null
@@ -117,7 +118,6 @@ ContentTrees.propTypes = {
     openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
     path: PropTypes.string.isRequired,
     setPath: PropTypes.func.isRequired,
-    setRefetch: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired
 };

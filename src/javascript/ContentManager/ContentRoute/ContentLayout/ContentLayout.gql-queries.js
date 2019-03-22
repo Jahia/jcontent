@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import * as _ from 'lodash';
-import ContentManagerConstants from '../../../ContentManager.constants';
+import ContentManagerConstants from '../../ContentManager.constants';
 
 const childNodesCount = gql`
     fragment ChildNodesCount on JCRNode {

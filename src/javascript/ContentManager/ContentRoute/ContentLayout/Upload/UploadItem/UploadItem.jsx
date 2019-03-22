@@ -133,12 +133,8 @@ export class UploadItem extends React.Component {
                 type: this.props.type
             };
             setTimeout(() => {
-                this.props.dispatchBatch([
-                    updateUpload(upload),
-                    takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
-                ]).then(() => {
-                    this.props.updateUploadsStatus();
-                });
+                this.props.uploadFile(upload);
+                this.props.updateUploadsStatus();
             }, UPLOAD_DELAY);
         }).catch(e => {
             const upload = {
@@ -162,12 +158,8 @@ export class UploadItem extends React.Component {
             }
 
             setTimeout(() => {
-                this.props.dispatchBatch([
-                    updateUpload(upload),
-                    takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
-                ]).then(() => {
-                    this.props.updateUploadsStatus();
-                });
+                this.props.uploadFile(upload);
+                this.props.updateUploadsStatus();
             }, UPLOAD_DELAY);
         });
     }
@@ -216,7 +208,7 @@ export class UploadItem extends React.Component {
             error: null,
             path: this.props.path
         };
-        this.props.dispatch(updateUpload(upload));
+        this.props.updateUpload(upload);
     }
 }
 
@@ -226,29 +218,26 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        dispatch: dispatch,
-        dispatchBatch: actions => {
-            return new Promise(resolve => {
-                dispatch(batchActions(actions));
-                resolve();
-            });
+        updateUpload: upload => dispatch(updateUpload(upload)),
+        uploadFile: upload => {
+            dispatch(batchActions([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
         }
     };
 };
 
 UploadItem.propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     removeFile: PropTypes.func.isRequired,
     updateUploadsStatus: PropTypes.func.isRequired,
     file: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
-    dispatchBatch: PropTypes.func.isRequired,
     status: PropTypes.string.isRequired,
     type: PropTypes.string,
     id: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    client: PropTypes.object.isRequired
+    client: PropTypes.object.isRequired,
+    updateUpload: PropTypes.func.isRequired,
+    uploadFile: PropTypes.func.isRequired
 };
 
 export default compose(

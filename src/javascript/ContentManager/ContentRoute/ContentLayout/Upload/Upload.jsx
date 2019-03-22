@@ -7,7 +7,6 @@ import {connect} from 'react-redux';
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {setStatus, setUploads} from './Upload.redux-actions';
 import UploadItem from './UploadItem';
-import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import {files} from './Upload.utils';

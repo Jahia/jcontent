@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose, Mutation, Query} from 'react-apollo';
+import {compose, Mutation} from 'react-apollo';
 import {connect} from 'react-redux';
 import ImageEditor from './ImageEditor';
-import {ImageQuery} from './ImageEditor.gql-queries';
 import {getImageMutation} from './ImageEditor.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
@@ -11,7 +10,7 @@ import UnsavedChangesDialog from './UnsavedChangesDialog';
 import DxContext from '../DxContext';
 import {cmGoto} from '../ContentManager.redux-actions';
 import {refetchContentListData} from '../ContentManager.refetches';
-import {ProgressOverlay} from '@jahia/react-material';
+import Feedback from './Feedback';
 
 export class ImageEditorContainer extends React.Component {
     constructor(props) {
@@ -20,35 +19,36 @@ export class ImageEditorContainer extends React.Component {
             confirmSaveOpen: false,
             saveAsOpen: false,
             confirmCloseOpen: false,
-            rotations: 0,
-            width: null,
-            height: null,
             transforms: [],
             name: null,
             ts: new Date().getTime(),
-            confirmSaved: false,
-            editing: true,
-            ratioLocked: false,
-            ratioUnlocked: false,
-            cropParams: {
-                x: null,
-                y: null,
-                height: null,
-                width: null,
-                aspect: null
+            originalWidth: 0,
+            originalHeight: 0,
+            rotationParams: {
+                rotations: 0
             },
-            top: 0,
-            left: 0
+            resizeParams: {
+                keepRatio: true,
+                width: null,
+                height: null
+            },
+            cropParams: {
+                top: 0,
+                left: 0
+            },
+            snackBarMessage: null
         };
 
-        this.rotate = this.rotate.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.undoChanges = this.undoChanges.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
+
+        this.rotate = this.rotate.bind(this);
         this.resize = this.resize.bind(this);
+        this.crop = this.crop.bind(this);
+
         this.onBackNavigation = this.onBackNavigation.bind(this);
         this.onCompleted = this.onCompleted.bind(this);
-        this.onCropChange = this.onCropChange.bind(this);
         this.onImageLoaded = this.onImageLoaded.bind(this);
     }
 
@@ -62,47 +62,27 @@ export class ImageEditorContainer extends React.Component {
         }
     }
 
-    onCropChange(cropParams, originalHeight, originalWidth, ratioLocked, ratioUnlocked) {
-        this.setState({
-            cropParams: cropParams,
-            top: Math.round(cropParams.y * originalHeight / 100),
-            left: Math.round(cropParams.x * originalWidth / 100),
-            width: Math.round(cropParams.width * originalWidth / 100),
-            height: Math.round(cropParams.height * originalHeight / 100),
-            ratioLocked: ratioLocked === undefined ? false : ratioLocked,
-            ratioUnlocked: ratioUnlocked === undefined ? false : ratioUnlocked,
-            transforms: ([{
-                op: 'cropImage',
-                args: {
-                    height: Math.round(cropParams.height * originalHeight / 100),
-                    width: Math.round(cropParams.width * originalWidth / 100),
-                    top: Math.round(cropParams.y * originalHeight / 100),
-                    left: Math.round(cropParams.x * originalWidth / 100)
-                }
-            }])
-        });
-    }
-
     onImageLoaded(image) {
-        this.setState({
+        console.log(image);
+        this.setState(prevState => ({
+            originalWidth: image.naturalWidth,
+            originalHeight: image.naturalHeight,
             cropParams: {
-                width: 0,
-                height: 0,
-                x: 0,
-                y: 0,
-                aspect: image.naturalWidth / image.naturalHeight
-            },
-            width: image.naturalWidth,
-            height: image.naturalHeight
-        });
+                aspect: image.naturalWidth / image.naturalHeight,
+                ...prevState.cropParams
+            }
+        }));
     }
 
     rotate(val) {
-        this.setState(state => {
+        this.setState(previousState => {
             // Keep rotations with values between -1 and 2 (-90, 0, 90, 180)
-            let rotations = ((state.rotations + val + 5) % 4) - 1;
+            let rotations = ((previousState.rotationParams.rotations + val + 5) % 4) - 1;
             return {
-                rotations: rotations,
+                rotationParams: {
+                    dirty: rotations !== 0,
+                    rotations: rotations
+                },
                 transforms: (rotations === 0 ? [] : [{
                     op: 'rotateImage',
                     args: {
@@ -113,32 +93,121 @@ export class ImageEditorContainer extends React.Component {
         });
     }
 
-    resize({width, height}) {
-        this.setState(() => ({
-            width,
-            height,
-            transforms: ([{
-                op: 'resizeImage',
-                args: {
-                    height: height,
-                    width: width
-                }
-            }])
-        }));
+    resize({width, height, keepRatio}) {
+        this.setState(({resizeParams, originalHeight, originalWidth}) => {
+            let snackBarMessage = null;
+            if (keepRatio === false) {
+                snackBarMessage = 'label.contentManager.editImage.ratioUnlocked';
+            } else if (keepRatio === true) {
+                snackBarMessage = 'label.contentManager.editImage.ratioLocked';
+            } else {
+                keepRatio = resizeParams.keepRatio;
+            }
+            if (keepRatio && width) {
+                height = Math.round(keepRatio && originalHeight && originalWidth ? width * originalHeight / originalWidth : (resizeParams.height || originalHeight));
+            } else if (keepRatio && height) {
+                width = Math.round(keepRatio && originalHeight && originalWidth ? height * originalWidth / originalHeight : (resizeParams.width || originalWidth));
+            } else if (keepRatio) {
+                height = Math.round(resizeParams.width * originalHeight / originalWidth);
+            }
+            width = width || resizeParams.width;
+            height = height || resizeParams.height;
+
+            return ({
+                resizeParams: {
+                    dirty: (width && originalWidth !== width) || (height && originalHeight !== height),
+                    width,
+                    height,
+                    keepRatio: keepRatio
+                },
+                transforms: ([{
+                    op: 'resizeImage',
+                    args: {
+                        height: height,
+                        width: width
+                    }
+                }]),
+                snackBarMessage: snackBarMessage
+            });
+        });
+    }
+
+    crop({width, height, top, left, aspect}) {
+        this.setState(({cropParams, originalHeight, originalWidth}) => {
+            let snackBarMessage = null;
+            if (aspect === true) {
+                aspect = (cropParams.width || originalWidth) / (cropParams.height || originalHeight);
+                snackBarMessage = 'label.contentManager.editImage.ratioLocked';
+            } else if (aspect === false) {
+                aspect = null;
+                snackBarMessage = 'label.contentManager.editImage.ratioUnlocked';
+            } else {
+                aspect = cropParams.aspect;
+            }
+            if (aspect && width) {
+                height = width / aspect;
+            } else if (aspect && height) {
+                width = height * aspect;
+            }
+            width = width || cropParams.width;
+            height = height || cropParams.height;
+            top = top || cropParams.top;
+            left = left || cropParams.left;
+            if (width > originalWidth) {
+                width = originalWidth;
+            }
+            if (height > originalHeight) {
+                height = originalHeight;
+            }
+            if (width && left + width > originalWidth) {
+                left = originalWidth - width;
+            }
+            if (height && top + height > originalHeight) {
+                top = originalHeight - height;
+            }
+            return {
+                cropParams: {
+                    dirty: Boolean(height || width || top || left),
+                    width,
+                    height,
+                    top,
+                    left,
+                    aspect
+                },
+                transforms: ([{
+                    op: 'cropImage',
+                    args: {
+                        height: height && Math.round(height),
+                        width: width && Math.round(width),
+                        top: top && Math.round(top),
+                        left: left && Math.round(left)
+                    }
+                }]),
+                snackBarMessage: snackBarMessage
+            };
+        });
     }
 
     undoChanges() {
-        this.setState(() => ({
-            rotations: 0,
-            width: null,
-            height: null,
+        this.setState(previousState => ({
             transforms: [],
+            rotationParams: {
+                dirty: false,
+                rotations: 0
+            },
+            resizeParams: {
+                dirty: false,
+                width: previousState.originalWidth,
+                height: previousState.originalHeight,
+                keepRatio: true
+            },
             cropParams: {
-                x: null,
-                y: null,
+                dirty: false,
+                top: 0,
+                left: 0,
                 height: null,
                 width: null,
-                aspect: null
+                aspect: previousState.originalWidth / previousState.originalHeight
             }
         }));
     }
@@ -166,7 +235,7 @@ export class ImageEditorContainer extends React.Component {
         if (newPath === path) {
             this.setState(() => ({
                 ts: new Date().getTime(),
-                confirmSaved: true
+                snackBarMessage: 'label.contentManager.editImage.savedMessage'
             }));
         } else {
             editImage(site, language, newPath);
@@ -177,8 +246,10 @@ export class ImageEditorContainer extends React.Component {
 
     render() {
         const {path} = this.props;
-        const {rotations, width, height, transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen,
-            ts, name, confirmSaved, editing, cropParams, top, left, ratioLocked, ratioUnlocked} = this.state;
+        const {
+            transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name, snackBarMessage,
+            rotationParams, resizeParams, cropParams, originalWidth, originalHeight
+        } = this.state;
         let newName = name;
         if (!newName) {
             newName = path.substring(path.lastIndexOf('/') + 1);
@@ -192,82 +263,60 @@ export class ImageEditorContainer extends React.Component {
                               refetchQueries={() => ['ImageQuery']}
                               onCompleted={this.onCompleted}
                     >
-                        {mutation => {
-                            return (
-                                <Query query={ImageQuery} variables={{path: path}}>
-                                    {({data, loading, error}) => {
-                                        if (!error && data.jcr) {
-                                            return (
-                                                <>
-                                                    {loading &&
-                                                    <ProgressOverlay/>}
-                                                    <ImageEditor
-                                                        node={data.jcr.nodeByPath}
-                                                        dxContext={dxContext}
-                                                        ts={ts}
-                                                        rotations={rotations}
-                                                        width={width}
-                                                        height={height}
-                                                        top={top}
-                                                        left={left}
-                                                        confirmSaved={confirmSaved}
-                                                        ratioLocked={ratioLocked}
-                                                        ratioUnlocked={ratioUnlocked}
-                                                        editing={editing}
-                                                        cropParams={cropParams}
-                                                        rotate={this.rotate}
-                                                        resize={this.resize}
-                                                        undoChanges={this.undoChanges}
-                                                        closeFeedback={() => this.setState({
-                                                            confirmSaved: false
-                                                        })}
-                                                        closeRatioToast={() => this.setState({
-                                                            ratioLocked: false
-                                                        })}
-                                                        saveChanges={withName => this.setState({
-                                                            confirmSaveOpen: !withName,
-                                                            saveAsOpen: withName
-                                                        })}
-                                                        closeEditingToast={() => this.setState({
-                                                            editing: false
-                                                        })}
-                                                        closeRatioUnlocked={() => this.setState({
-                                                            ratioUnlocked: false
-                                                        })}
-                                                        onImageLoaded={this.onImageLoaded}
-                                                        onCropChange={this.onCropChange}
-                                                        onBackNavigation={this.onBackNavigation}
-                                                    />
-                                                    <ConfirmSaveDialog
-                                                        open={confirmSaveOpen}
-                                                        handleSave={() => mutation({variables: {path}})}
-                                                        handleClose={this.handleClose}
-                                                    />
-                                                    <SaveAsDialog
-                                                        open={saveAsOpen}
-                                                        name={newName}
-                                                        handleSave={() => {
-                                                            mutation({variables: {path, name: newName.trim()}});
-                                                            this.setState({
-                                                                editing: true
-                                                            });
-                                                        }}
-                                                        handleClose={this.handleClose}
-                                                        onChangeName={this.handleChangeName}
-                                                    />
-                                                    <UnsavedChangesDialog
-                                                        open={confirmCloseOpen}
-                                                        onClose={this.handleClose}
-                                                    />
-
-                                                </>
-                                            );
-                                        }
-                                        return false;
+                        {mutation => (
+                            <>
+                                <ImageEditor
+                                    dxContext={dxContext}
+                                    ts={ts}
+                                    path={path}
+                                    originalWidth={originalWidth}
+                                    originalHeight={originalHeight}
+                                    rotationParams={rotationParams}
+                                    resizeParams={resizeParams}
+                                    cropParams={cropParams}
+                                    undoChanges={this.undoChanges}
+                                    saveChanges={withName => this.setState({
+                                        confirmSaveOpen: !withName,
+                                        saveAsOpen: withName
+                                    })}
+                                    onImageLoaded={this.onImageLoaded}
+                                    onRotate={this.rotate}
+                                    onResize={this.resize}
+                                    onCrop={this.crop}
+                                    onBackNavigation={this.onBackNavigation}
+                                />
+                                <ConfirmSaveDialog
+                                    open={confirmSaveOpen}
+                                    handleSave={() => mutation({variables: {path}})}
+                                    handleClose={this.handleClose}
+                                />
+                                <SaveAsDialog
+                                    open={saveAsOpen}
+                                    name={newName}
+                                    handleSave={() => {
+                                        mutation({variables: {path, name: newName.trim()}});
+                                        this.setState({
+                                            snackBarMessage: {key: 'label.contentManager.editImage.editingMessage', params: {imageName: newName}}
+                                        });
                                     }}
-                                </Query>
-                            );
-                        }}
+                                    handleClose={this.handleClose}
+                                    onChangeName={this.handleChangeName}
+                                />
+                                <UnsavedChangesDialog
+                                    open={confirmCloseOpen}
+                                    onClose={this.handleClose}
+                                />
+
+                                <Feedback open={Boolean(snackBarMessage)}
+                                          messageKey={snackBarMessage}
+                                          anchorOrigin={{
+                                              vertical: 'bottom',
+                                              horizontal: 'center'
+                                          }}
+                                          onClose={() => this.setState({snackBarMessage: null})}
+                                />
+                            </>
+                        )}
                     </Mutation>
                 )}
             </DxContext.Consumer>

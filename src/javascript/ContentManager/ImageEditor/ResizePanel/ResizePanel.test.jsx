@@ -13,9 +13,11 @@ describe('Resize panel', () => {
             props = {
                 originalWidth: 200,
                 originalHeight: 100,
-                width: 400,
-                height: 200,
-                resize: jest.fn(),
+                resizeParams: {
+                    width: 400,
+                    height: 200
+                },
+                onResize: jest.fn(),
             };
 
             wrapper = shallow(<ResizePanel {...defaultProps} {...props}/>);
@@ -30,41 +32,17 @@ describe('Resize panel', () => {
                 value: '50'
             }
         });
-        expect(props.resize.mock.calls.length).toBe(1);
-        expect(props.resize.mock.calls[0][0].width).toBe(50);
-        expect(props.resize.mock.calls[0][0].height).toBe(25);
+        expect(props.onResize.mock.calls.length).toBe(1);
+        expect(props.onResize.mock.calls[0][0].width).toBe(50);
 
         wrapper.find(Input).at(1).prop('onChange').call(null, {
             target: {
                 value: '300'
             }
         });
-        expect(props.resize.mock.calls.length).toBe(2);
-        expect(props.resize.mock.calls[1][0].width).toBe(600);
-        expect(props.resize.mock.calls[1][0].height).toBe(300);
+        expect(props.onResize.mock.calls.length).toBe(2);
+        expect(props.onResize.mock.calls[1][0].height).toBe(300);
     });
-
-    // it('Should resize the image without keeping ratio', () => {
-    //     wrapper.find(IconButton).at(0).simulate('click');
-    //
-    //     wrapper.find(Input).at(0).prop('onChange').call(null, {
-    //         target: {
-    //             value: '50'
-    //         }
-    //     });
-    //     expect(props.resize.mock.calls.length).toBe(1);
-    //     expect(props.resize.mock.calls[0][0].width).toBe(50);
-    //     expect(props.resize.mock.calls[0][0].height).toBe(200);
-    //
-    //     wrapper.find(Input).at(1).prop('onChange').call(null, {
-    //         target: {
-    //             value: '300'
-    //         }
-    //     });
-    //     expect(props.resize.mock.calls.length).toBe(2);
-    //     expect(props.resize.mock.calls[1][0].width).toBe(400);
-    //     expect(props.resize.mock.calls[1][0].height).toBe(300);
-    // });
 
     it('Should not resize when typing garbage', () => {
         wrapper.find(Input).at(0).prop('onChange').call(null, {
@@ -72,7 +50,7 @@ describe('Resize panel', () => {
                 value: 'gzgzgz'
             }
         });
-        expect(props.resize.mock.calls.length).toBe(0);
+        expect(props.onResize.mock.calls.length).toBe(0);
     });
 
 });

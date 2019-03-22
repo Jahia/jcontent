@@ -14,10 +14,11 @@ describe('Crop panel', () => {
             props = {
                 originalWidth: 800,
                 originalHeight: 600,
-                onCropChange: jest.fn(),
+                onCrop: jest.fn(),
                 cropParams: {
                     top: 0,
-                    left: 0
+                    left: 0,
+                    aspect: 2.0
                 }
             };
             wrapper = shallow(<CropPanel {...defaultProps} {...props}/>);
@@ -32,18 +33,16 @@ describe('Crop panel', () => {
                 value: '400'
             }
         });
-        expect(props.onCropChange.mock.calls.length).toBe(1);
-        expect(props.onCropChange.mock.calls[0][0].width).toBe(50);
-        expect(props.onCropChange.mock.calls[0][0].height).toBe(50);
+        expect(props.onCrop.mock.calls.length).toBe(1);
+        expect(props.onCrop.mock.calls[0][0].width).toBe(400);
 
         wrapper.find(Input).at(1).prop('onChange').call(null, {
             target: {
                 value: '200'
             }
         });
-        expect(props.onCropChange.mock.calls.length).toBe(2);
-        expect(props.onCropChange.mock.calls[1][0].width).toBe(33.375);
-        expect(props.onCropChange.mock.calls[1][0].height).toBe(33.333333333333336);
+        expect(props.onCrop.mock.calls.length).toBe(2);
+        expect(props.onCrop.mock.calls[1][0].height).toBe(200);
     });
 
     it('Should crop the image without keeping ratio', () => {
@@ -54,18 +53,17 @@ describe('Crop panel', () => {
                 value: '200'
             }
         });
-        expect(props.onCropChange.mock.calls.length).toBe(2);
-        expect(props.onCropChange.mock.calls[1][0].width).toBe(25);
-        expect(props.onCropChange.mock.calls[1][0].height).toBe(25);
+        expect(props.onCrop.mock.calls.length).toBe(2);
+        expect(props.onCrop.mock.calls[0][0].aspect).toBe(false);
+        expect(props.onCrop.mock.calls[1][0].width).toBe(200);
 
         wrapper.find(Input).at(1).prop('onChange').call(null, {
             target: {
                 value: '200'
             }
         });
-        expect(props.onCropChange.mock.calls.length).toBe(3);
-        expect(props.onCropChange.mock.calls[2][0].width).toBe(33.375);
-        expect(props.onCropChange.mock.calls[2][0].height).toBe(33.333333333333336);
+        expect(props.onCrop.mock.calls.length).toBe(3);
+        expect(props.onCrop.mock.calls[2][0].height).toBe(200);
     });
 
     it('Should not crop when typing garbage', () => {
@@ -74,7 +72,7 @@ describe('Crop panel', () => {
                 value: 'gzgzgz'
             }
         });
-        expect(props.onCropChange.mock.calls.length).toBe(0);
+        expect(props.onCrop.mock.calls.length).toBe(0);
     });
 
 });

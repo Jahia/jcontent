@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
@@ -35,17 +35,12 @@ let styles = theme => ({
     }
 });
 
-export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, height, resize}) => {
-    const [keepRatio, setKeepRatio] = useState(true);
-
+export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizeParams, onResize}) => {
     const setWidth = event => {
         let value = event.target.value;
 
         if (/\d+/.test(value)) {
-            resize({
-                width: Math.round(value),
-                height: Math.round(keepRatio && originalHeight && originalWidth ? value * originalHeight / originalWidth : (height || originalHeight))
-            });
+            onResize({width: Math.round(value)});
         }
     };
 
@@ -53,21 +48,12 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
         let value = event.target.value;
 
         if (/\d+/.test(value)) {
-            resize({
-                width: Math.round(keepRatio && originalHeight && originalWidth ? value * originalWidth / originalHeight : (width || originalWidth)),
-                height: Math.round(value)
-            });
+            onResize({height: Math.round(value)});
         }
     };
 
     const switchRatio = () => {
-        setKeepRatio(!keepRatio);
-        if (!keepRatio) {
-            resize({
-                width,
-                height: Math.round(width * originalHeight / originalWidth)
-            });
-        }
+        onResize({keepRatio: !resizeParams.keepRatio});
     };
 
     return (
@@ -78,20 +64,20 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
             <div className={classes.form}>
                 <div className={classes.firstCol}>
                     <FormControl className={classes.formControl}>
-                        <InputLabel className={classes.inputLabel}>{t('label.contentManager.editImage.width')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
-                            value={width ? width : originalWidth}
+                            value={resizeParams.width ? resizeParams.width : originalWidth}
                             type="number"
                             margin="none"
                             onChange={setWidth}
                         />
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                        <InputLabel className={classes.inputLabel}>{t('label.contentManager.editImage.height')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
-                            value={height ? height : originalHeight}
+                            value={resizeParams.height ? resizeParams.height : originalHeight}
                             type="number"
                             margin="none"
                             onChange={setHeight}
@@ -99,7 +85,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, width, h
                     </FormControl>
                 </div>
                 <div className={classes.secondCol}>
-                    <IconButton icon={<Link color={keepRatio ? 'action' : 'inherit'}/>}
+                    <IconButton icon={<Link color={resizeParams.keepRatio ? 'action' : 'inherit'}/>}
                                 data-cm-role="keep-ratio-button"
                                 onClick={switchRatio}/>
                 </div>
@@ -113,9 +99,8 @@ ResizePanel.propTypes = {
     classes: PropTypes.object.isRequired,
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
-    width: PropTypes.number,
-    height: PropTypes.number,
-    resize: PropTypes.func.isRequired
+    resizeParams: PropTypes.object.isRequired,
+    onResize: PropTypes.func.isRequired
 };
 
 export default compose(

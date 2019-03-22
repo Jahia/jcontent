@@ -12,7 +12,7 @@ let styles = theme => ({
     }
 });
 
-export const RotatePanel = ({classes, t, rotate}) => {
+export const RotatePanel = ({classes, t, onRotate}) => {
     return (
         <>
             <Typography variant="zeta">
@@ -22,12 +22,12 @@ export const RotatePanel = ({classes, t, rotate}) => {
                 <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
                     <IconButton data-cm-role="rotate-left"
                                 icon={<RotateLeft color="primary" fontSize="large"/>}
-                                onClick={() => rotate(-1)}/>
+                                onClick={() => onRotate(-1)}/>
                 </Tooltip>
                 <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
                     <IconButton data-cm-role="rotate-right"
                                 icon={<RotateRight color="primary" fontSize="large"/>}
-                                onClick={() => rotate(1)}/>
+                                onClick={() => onRotate(1)}/>
                 </Tooltip>
             </div>
         </>
@@ -37,7 +37,7 @@ export const RotatePanel = ({classes, t, rotate}) => {
 RotatePanel.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
-    rotate: PropTypes.func.isRequired
+    onRotate: PropTypes.func.isRequired
 };
 
 export default compose(

@@ -11,7 +11,7 @@ describe('Rotate panel', () => {
     beforeEach(() => {
         try {
             props = {
-                rotate: jest.fn(),
+                onRotate: jest.fn(),
             };
 
             wrapper = shallow(<RotatePanel {...defaultProps} {...props}/>);
@@ -22,12 +22,12 @@ describe('Rotate panel', () => {
 
     it('Should rotate the image', () => {
         wrapper.find(IconButton).last().simulate('click');
-        expect(props.rotate.mock.calls.length).toBe(1);
-        expect(props.rotate.mock.calls[0][0]).toBe(1);
+        expect(props.onRotate.mock.calls.length).toBe(1);
+        expect(props.onRotate.mock.calls[0][0]).toBe(1);
 
         wrapper.find(IconButton).first().simulate('click');
-        expect(props.rotate.mock.calls.length).toBe(2);
-        expect(props.rotate.mock.calls[1][0]).toBe(-1);
+        expect(props.onRotate.mock.calls.length).toBe(2);
+        expect(props.onRotate.mock.calls[1][0]).toBe(-1);
     });
 
 });

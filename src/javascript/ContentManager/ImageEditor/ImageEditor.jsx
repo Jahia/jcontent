@@ -19,6 +19,9 @@ import {ChevronLeft, ExpandMore} from '@material-ui/icons';
 import ImageEditorActions from './ImageEditorActions';
 
 let styles = theme => ({
+    root: {
+        minHeight: 0
+    },
     left: {
         overflow: 'auto'
     },
@@ -102,7 +105,7 @@ export class ImageEditor extends React.Component {
                 )
             }}
             >
-                <TwoColumnsContent classes={{left: classes.left, right: classes.right}}
+                <TwoColumnsContent classes={{root: classes.root, left: classes.left, right: classes.right}}
                                    rightCol={<ImageEditorPreview cropExpanded={expanded === PANELS.CROP}
                                                                  {...this.props}/>}
                 >

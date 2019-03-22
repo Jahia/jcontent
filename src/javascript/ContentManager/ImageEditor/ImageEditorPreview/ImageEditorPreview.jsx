@@ -1,7 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {compose} from 'react-apollo';
+import {withStyles} from '@material-ui/core';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+
+let styles = () => ({
+    img: {
+        height: 'auto',
+        width: '100%'
+    },
+    cropPreview: {
+        background: 'transparent'
+    }
+});
 
 function getCropValue(cropParams, originalWidth, originalHeight) {
     return {
@@ -61,4 +73,6 @@ ImageEditorPreview.propTypes = {
     onImageLoaded: PropTypes.func.isRequired
 };
 
-export default ImageEditorPreview;
+export default compose(
+    withStyles(styles)
+)(ImageEditorPreview);

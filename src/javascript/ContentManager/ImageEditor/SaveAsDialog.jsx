@@ -44,10 +44,10 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button variant="secondary" data-cm-role="image-save-as-cancel" onClick={handleClose}>
                     {t('label.contentManager.editImage.saveAsDialog.cancel')}
                 </Button>
-                <Button variant="primary" onClick={handleSave}>
+                <Button variant="primary" data-cm-role="image-save-as-confirm" onClick={handleSave}>
                     {t('label.contentManager.editImage.saveAsDialog.save')}
                 </Button>
             </DialogActions>

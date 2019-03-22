@@ -31,10 +31,10 @@ export const ConfirmSaveDialog = ({open, handleClose, handleSave, classes, t}) =
             </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button variant="secondary" data-cm-role="image-save-no" onClick={handleClose}>
                 {t('label.contentManager.editImage.confirmSaveDialog.no')}
             </Button>
-            <Button variant="primary" onClick={() => handleSave()}>
+            <Button variant="primary" data-cm-role="image-save-yes" onClick={() => handleSave()}>
                 {t('label.contentManager.editImage.confirmSaveDialog.yes')}
             </Button>
         </DialogActions>

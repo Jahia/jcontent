@@ -24,10 +24,10 @@ const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
             {t('label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>
-        <Button variant="secondary" disabled={!dirty} onClick={() => saveChanges(true)}>
+        <Button variant="secondary" data-cm-role="image-save-as-button" disabled={!dirty} onClick={() => saveChanges(true)}>
             {t('label.contentManager.editImage.saveAs')}
         </Button>
-        <Button variant="primary" disabled={!dirty} onClick={() => saveChanges(false)}>
+        <Button variant="primary" data-cm-role="image-save-button" disabled={!dirty} onClick={() => saveChanges(false)}>
             {t('label.contentManager.editImage.save')}
         </Button>
     </ExpansionPanelActions>

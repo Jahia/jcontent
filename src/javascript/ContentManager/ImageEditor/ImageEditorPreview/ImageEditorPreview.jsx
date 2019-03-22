@@ -51,6 +51,7 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxCo
                            onImageLoaded={onImageLoaded}
                 /> :
                 <img className={classes.img}
+                     data-cm-role="preview-image"
                      style={{transform: 'rotate(' + (rotationParams.rotations * 90) + 'deg)'}}
                      src={filepath}
                      onLoad={e => onImageLoaded(e.target)}/>

@@ -75,7 +75,7 @@ export class ImageEditor extends React.Component {
         const {expanded} = this.state;
 
         let dirty = resizeParams.dirty || rotationParams.dirty || cropParams.dirty;
-        let name = path.substr(path.indexOf('n') + 1);
+        let name = path.substr(path.lastIndexOf('/') + 1);
         let changesFeedback = dirty ? t('label.contentManager.editImage.unsavedChanges') : '';
 
         return (

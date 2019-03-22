@@ -63,7 +63,6 @@ export class ImageEditorContainer extends React.Component {
     }
 
     onImageLoaded(image) {
-        console.log(image);
         this.setState(prevState => ({
             originalWidth: image.naturalWidth,
             originalHeight: image.naturalHeight,

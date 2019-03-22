@@ -196,8 +196,8 @@ export class ImageEditorContainer extends React.Component {
             },
             resizeParams: {
                 dirty: false,
-                width: previousState.originalWidth,
-                height: previousState.originalHeight,
+                width: null,
+                height: null,
                 keepRatio: true
             },
             cropParams: {
@@ -303,6 +303,11 @@ export class ImageEditorContainer extends React.Component {
                                 />
                                 <UnsavedChangesDialog
                                     open={confirmCloseOpen}
+                                    onBack={() => {
+                                        this.undoChanges();
+                                        this.handleClose();
+                                        window.history.back();
+                                    }}
                                     onClose={this.handleClose}
                                 />
 

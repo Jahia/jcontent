@@ -6,14 +6,12 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
 let styles = () => ({
-    img: {
-        height: 'auto',
-        width: '100%'
-    },
     cropPreview: {
         background: 'transparent'
     }
 });
+
+let containerRef = React.createRef();
 
 function getCropValue(cropParams, originalWidth, originalHeight) {
     return {
@@ -25,18 +23,29 @@ function getCropValue(cropParams, originalWidth, originalHeight) {
     };
 }
 
-export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxContext, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams}) => {
+export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxContext, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams, theme}) => {
     let filepath = dxContext.contextPath + '/files/default' + path + '?ts=' + ts;
-
+    let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - theme.spacing.unit * 4 : 0;
+    let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - theme.spacing.unit * 4 : 0;
+    let keepOrientation = rotationParams.rotations % 2 === 0;
+    let height = resizeParams.height || originalHeight;
+    let width = resizeParams.width || originalWidth;
+    let rotatedHeight = (keepOrientation ? height : width);
+    let rotatedWidth = (keepOrientation ? width : height);
+    let reduceFactor = Math.max(1, rotatedHeight / containerHeight, rotatedWidth / containerWidth);
+    let translate = (rotationParams.rotations % 2) * (width - height) / reduceFactor / 2;
     return (
-        <div>
+        <div ref={containerRef} style={{width: rotatedWidth / reduceFactor, height: rotatedHeight / reduceFactor}}>
             {cropExpanded ?
                 <ReactCrop keepSelection
                            useNaturalImageDimensions
                            className={classes.cropPreview}
                            maxHeight={originalHeight}
                            maxWidth={originalWidth}
-                           imageStyle={{width: '100%', height: 'auto'}}
+                           imageStyle={{
+                               width: width / reduceFactor,
+                               height: height / reduceFactor
+                           }}
                            src={filepath}
                            crop={getCropValue(cropParams, originalWidth, originalHeight)}
                            onChange={newValue => {
@@ -48,11 +57,15 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxCo
                                    aspect: newValue.aspect
                                });
                            }}
-                           onImageLoaded={onImageLoaded}
+                           onImageLoaded={img => onImageLoaded(img)}
                 /> :
                 <img className={classes.img}
                      data-cm-role="preview-image"
-                     style={{transform: 'rotate(' + (rotationParams.rotations * 90) + 'deg)'}}
+                     style={{
+                         width: width / reduceFactor,
+                         height: height / reduceFactor,
+                         transform: 'rotate(' + (rotationParams.rotations * 90) + 'deg)' + (keepOrientation ? '' : ' translateX(' + translate + 'px) translateY(' + translate + 'px)')
+                     }}
                      src={filepath}
                      onLoad={e => onImageLoaded(e.target)}/>
             }
@@ -63,17 +76,19 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxCo
 ImageEditorPreview.propTypes = {
     path: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
     ts: PropTypes.number.isRequired,
     dxContext: PropTypes.object.isRequired,
     cropExpanded: PropTypes.bool.isRequired,
     onCrop: PropTypes.func.isRequired,
     cropParams: PropTypes.object,
     rotationParams: PropTypes.object.isRequired,
+    resizeParams: PropTypes.object.isRequired,
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
     onImageLoaded: PropTypes.func.isRequired
 };
 
 export default compose(
-    withStyles(styles)
+    withStyles(styles, {withTheme: true})
 )(ImageEditorPreview);

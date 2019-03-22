@@ -32,6 +32,7 @@ let styles = theme => ({
     right: {
         justifyContent: 'center',
         alignItems: 'center',
+        maxWidth: '600px',
         background: theme.palette.ui.omega,
         paddingRight: theme.spacing.unit * 2
     }

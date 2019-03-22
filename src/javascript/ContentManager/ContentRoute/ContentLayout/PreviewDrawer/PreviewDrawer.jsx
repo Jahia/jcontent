@@ -14,7 +14,7 @@ import {
 import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import ContentPreview from './ContentPreview';
-import {ChevronRight as ChevronRightIcon, Fullscreen, FullscreenExit} from '@material-ui/icons';
+import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES} from '../../../ContentManager.redux-actions';
 import {compose} from 'react-apollo';
@@ -50,7 +50,7 @@ export class PreviewDrawer extends React.Component {
             <React.Fragment>
                 <AppBar position="relative" color="default">
                     <Toolbar variant="dense">
-                        <IconButton data-cm-role="preview-drawer-close" icon={<ChevronRightIcon fontSize="small"/>} onClick={closePreview}/>
+                        <IconButton data-cm-role="preview-drawer-close" icon={<Close fontSize="small"/>} onClick={closePreview}/>
                         <Typography variant="zeta" color="inherit">
                             {t('label.contentManager.contentPreview.preview')}
                         </Typography>

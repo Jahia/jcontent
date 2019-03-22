@@ -154,7 +154,18 @@ export class ContentLayoutContainer extends React.Component {
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         console.error(message);
                         return (
-                            <div>toto</div>
+                            <ContentLayout contentNotFound
+                                           mode={mode}
+                                           path={path}
+                                           filesMode={filesMode}
+                                           treeState={treeState}
+                                           previewState={previewState}
+                                           previewSelection={previewSelection}
+                                           rows={[]}
+                                           loading={loading}
+                                           totalCount={0}
+                                           layoutQuery={layoutQuery}
+                                           layoutQueryParams={layoutQueryParams}/>
                         );
                     }
 

@@ -95,7 +95,6 @@
     "file-loader": "^2.0.0",
     "jest": "^24.3.0",
     "jest-transform-stub": "^2.0.0",
-    "pom-parser": "^1.1.1",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
     "waait": "^1.0.4",

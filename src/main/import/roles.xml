@@ -4,7 +4,19 @@
        xmlns:j="http://www.jahia.org/jahia/1.0"
        xmlns:jnt="http://www.jahia.org/jahia/nt/1.0">
 
-    <editor jcr:primaryType="jnt:role" j:permissionNames="contentManager"/>
-    <reviewer jcr:primaryType="jnt:role" j:permissionNames="contentManager"/>
-    <translator jcr:primaryType="jnt:role" j:permissionNames="contentManager"/>
+    <contributor jcr:primaryType="jnt:role">
+        <currentSite-access jcr:primaryType="jnt:externalPermissions"
+                            j:permissionNames="contentManager"/>
+    </contributor>
+
+    <reviewer jcr:primaryType="jnt:role">
+        <currentSite-access jcr:primaryType="jnt:externalPermissions"
+                            j:permissionNames="contentManager"/>
+    </reviewer>
+
+    <translator jcr:primaryType="jnt:role">
+        <currentSite-access jcr:primaryType="jnt:externalPermissions"
+                            j:permissionNames="contentManager"/>
+    </translator>
+
 </roles>

@@ -60,6 +60,7 @@ import translateAction from './actions/translateAction';
 import translateMenuAction from './actions/translateMenuAction';
 import subContentsAction from './actions/subContentsAction';
 import exportAction from './actions/exportAction';
+import downloadFileAction from './actions/downloadFileAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -385,6 +386,12 @@ function contentManagerActions(actionsRegistry) {
         target: ['contentActions:2.5'],
         showOnNodeTypes: ['jmix:image'],
         mode: 'image-edit'
+    });
+    actionsRegistry.add('downloadFile', downloadFileAction, {
+        buttonIcon: <CloudDownload/>,
+        buttonLabel: 'label.contentManager.contentPreview.download',
+        showOnNodeTypes: ['jnt:file'],
+        target: ['contentActions:3.7']
     });
 }
 

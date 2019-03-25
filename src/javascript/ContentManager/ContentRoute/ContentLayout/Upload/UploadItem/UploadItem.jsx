@@ -14,7 +14,7 @@ import {compose, withApollo} from 'react-apollo';
 import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadStatuses} from '../Upload.constants';
-import {takeFromQueue, updateUpload} from '../Upload.redux-actions';
+import {takeFromQueue, updateUpload, removeUpload} from '../Upload.redux-actions';
 import {batchActions} from 'redux-batched-actions';
 import {translate} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';
@@ -221,7 +221,8 @@ const mapDispatchToProps = dispatch => {
         updateUpload: upload => dispatch(updateUpload(upload)),
         uploadFile: upload => {
             dispatch(batchActions([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
-        }
+        },
+        removeUploadFromQueue: index => dispatch(removeUpload(index))
     };
 };
 

@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from '@jahia/ds-mui-theme';
-import {removeUpload} from '../../Upload.redux-actions';
 
-const DontUploadButton = ({removeFile, index, dispatch, t, classes, updateUploadsStatus, type}) => (
+const DontUploadButton = ({removeFile, index, removeUploadFromQueue, t, classes, updateUploadsStatus, type}) => (
     <Button
         key="dontupload"
         className={classes.actionButton}
@@ -12,7 +11,7 @@ const DontUploadButton = ({removeFile, index, dispatch, t, classes, updateUpload
         color="inverted"
         onClick={() => {
             removeFile(index);
-            dispatch(removeUpload(index));
+            removeUploadFromQueue(index);
             updateUploadsStatus();
         }}
     >
@@ -26,7 +25,7 @@ DontUploadButton.propTypes = {
     updateUploadsStatus: PropTypes.func.isRequired,
     removeFile: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    removeUploadFromQueue: PropTypes.func.isRequired,
     type: PropTypes.string
 };
 

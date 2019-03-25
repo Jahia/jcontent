@@ -820,10 +820,10 @@
     react-i18next "^7.6.1"
     recompose "^0.30.0"
 
-"@jahia/react-apollo@^1.0.0-beta.20181113171845":
-  version "1.0.0-beta.20190314142059"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20190314142059.tgz#f5e19808481b9c703b453217513d7cc855415f4d"
-  integrity sha512-tW0RuVdSw7+pY/eC/0SRPJwNxge66Mt5v8n1euE/7hVMPWrM2mqIyOf2IfqpeTBoJn6VxUKMcGAuhO52cUMsOA==
+"@jahia/react-apollo@^1.0.0-beta.20190325151341":
+  version "1.0.0-beta.20190325151341"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20190325151341.tgz#42a9b799a11de72e340813fd805d8051982e08d9"
+  integrity sha512-VB5B2WN0lU1PbX8n5w6B/cPyr3b5u+m9ppeRGrPxZUauWNymw3YAcszDBE2wdkrXRbGVJ3ly9SpGt9tDvs5P5A==
   dependencies:
     "@jahia/apollo-dx" "^1.0.0-beta.1"
     apollo-client "^2.3.2"

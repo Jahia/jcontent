@@ -1,52 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose, Query} from 'react-apollo';
-import {PredefinedFragments} from '@jahia/apollo-dx';
-import gql from 'graphql-tag';
+import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
+import {SiteInfo} from '@jahia/react-apollo';
 import {cmSetAvailableLanguages, cmSetLanguage, cmSetSiteDisplayableName} from '../ContentManager.redux-actions';
 import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
 
 export class LanguageSwitcher extends React.Component {
     constructor(props) {
         super(props);
-        this.query = gql`
-            query siteLanguages($path: String!, $displayLanguage:String!) {
-                jcr(workspace: LIVE) {
-                    result:nodeByPath(path: $path) {
-                        site {
-                            displayName(language: $displayLanguage)
-                            defaultLanguage
-                            languages {
-                                displayName
-                                language
-                                activeInEdit
-                            }
-                            ...NodeCacheRequiredFields
-                        }
-                        ...NodeCacheRequiredFields
-                    }
-                }
-                wsDefault:jcr {
-                    result:nodeByPath(path: $path) {
-                        site {
-                            displayName(language: $displayLanguage)
-                            defaultLanguage
-                            languages {
-                                displayName
-                                language
-                                activeInEdit
-                            }
-                            ...NodeCacheRequiredFields
-                        }
-                        ...NodeCacheRequiredFields
-                    }
-                }
-            }
-            ${PredefinedFragments.nodeCacheRequiredFields.gql}
-        `;
+
         this.onSelectLanguage = this.onSelectLanguage.bind(this);
     }
 
@@ -57,36 +22,12 @@ export class LanguageSwitcher extends React.Component {
         window.parent.authoringApi.switchLanguage(lang);
     }
 
-    parseSiteLanguages(data) {
-        let parsedSiteLanguages = [];
-        let siteDisplayableName = null;
-        if (data && (data.jcr || data.wsDefault)) {
-            let siteData = data.jcr ? data.jcr.result.site : data.wsDefault.result.site;
-            siteDisplayableName = siteData.displayName;
-            let siteLanguages = siteData.languages;
-            for (let i in siteLanguages) {
-                if (siteLanguages[i].activeInEdit) {
-                    parsedSiteLanguages.push(siteLanguages[i]);
-                }
-            }
-        }
-        this.props.setAvailableLanguages(parsedSiteLanguages);
-        if (siteDisplayableName) {
-            this.props.setSiteDisplayableName(siteDisplayableName);
-        }
-        return parsedSiteLanguages;
-    }
-
     render() {
-        const {t, notificationContext, siteKey, lang} = this.props;
-        const variables = {
-            path: '/sites/' + siteKey,
-            displayLanguage: lang
-        };
+        const {t, notificationContext, siteKey, lang, setAvailableLanguages, setSiteDisplayableName} = this.props;
 
         return (
-            <Query query={this.query} variables={variables}>
-                {({error, loading, data}) => {
+            <SiteInfo siteKey={siteKey} displayLanguage={lang}>
+                {({siteInfo, error, loading}) => {
                     if (error) {
                         console.log('Error when fetching data: ' + error);
                         let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
@@ -98,16 +39,21 @@ export class LanguageSwitcher extends React.Component {
                         return <ProgressOverlay/>;
                     }
 
-                    let displayableLanguages = this.parseSiteLanguages(data);
+                    // update redux
+                    setAvailableLanguages(siteInfo.languages);
+                    if (siteInfo.displayName) {
+                        setSiteDisplayableName(siteInfo.displayName);
+                    }
+
                     return (
                         <LanguageSwitcherDisplay
                             lang={lang}
-                            languages={displayableLanguages}
+                            languages={siteInfo.languages}
                             onSelectLanguage={lang => this.onSelectLanguage(lang)}
                         />
                     );
                 }}
-            </Query>
+            </SiteInfo>
         );
     }
 }

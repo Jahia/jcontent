@@ -12,10 +12,7 @@ import {
 import {Button, Typography} from '@jahia/ds-mui-theme';
 import {compose, withApollo} from 'react-apollo';
 import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
-import {connect} from 'react-redux';
-import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadStatuses} from '../Upload.constants';
-import {takeFromQueue, updateUpload, removeUpload} from '../Upload.redux-actions';
-import {batchActions} from 'redux-batched-actions';
+import {uploadStatuses} from '../Upload.constants';
 import {translate} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
@@ -212,20 +209,6 @@ export class UploadItem extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return state.fileUpload.uploads[ownProps.index];
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        updateUpload: upload => dispatch(updateUpload(upload)),
-        uploadFile: upload => {
-            dispatch(batchActions([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
-        },
-        removeUploadFromQueue: index => dispatch(removeUpload(index))
-    };
-};
-
 UploadItem.propTypes = {
     classes: PropTypes.object.isRequired,
     removeFile: PropTypes.func.isRequired,
@@ -238,12 +221,12 @@ UploadItem.propTypes = {
     path: PropTypes.string.isRequired,
     client: PropTypes.object.isRequired,
     updateUpload: PropTypes.func.isRequired,
-    uploadFile: PropTypes.func.isRequired
+    uploadFile: PropTypes.func.isRequired,
+    removeUploadFromQueue: PropTypes.func.isRequired
 };
 
 export default compose(
     withStyles(styles),
     translate(),
     withApollo,
-    connect(mapStateToProps, mapDispatchToProps)
 )(UploadItem);

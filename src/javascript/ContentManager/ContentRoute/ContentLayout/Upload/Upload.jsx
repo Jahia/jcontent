@@ -4,13 +4,14 @@ import {Snackbar, withStyles} from '@material-ui/core';
 import {IconButton} from '@jahia/ds-mui-theme';
 import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {uploadsStatuses, uploadStatuses} from './Upload.constants';
-import {setStatus, setUploads} from './Upload.redux-actions';
+import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
+import {removeUpload, setStatus, setUploads, takeFromQueue, updateUpload} from './Upload.redux-actions';
 import UploadItem from './UploadItem';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import {files} from './Upload.utils';
 import UploadHeader from './UploadHeader';
+import {batchActions} from 'redux-batched-actions';
 
 const styles = theme => ({
     closeButton: {
@@ -66,7 +67,7 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {classes, uploads} = this.props;
+        let {classes, uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
 
         return (
             <React.Fragment>
@@ -77,11 +78,14 @@ export class Upload extends React.Component {
                             {uploads.map((upload, index) => (
                                 <UploadItem
                                     key={upload.id}
-                                    type={upload.type}
                                     index={index}
                                     file={files.acceptedFiles[index]}
                                     removeFile={this.removeFile}
                                     updateUploadsStatus={this.updateUploadsStatus}
+                                    updateUpload={updateUpload}
+                                    uploadFile={uploadFile}
+                                    removeUploadFromQueue={removeUploadFromQueue}
+                                    {...upload}
                                 />
                             ))}
                         </div>
@@ -181,7 +185,13 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     return {
         setStatus: s => dispatch(setStatus(s)),
-        clearUploads: () => dispatch(setUploads([]))
+        clearUploads: () => dispatch(setUploads([])),
+        updateUpload: upload => dispatch(updateUpload(upload)),
+        uploadFile: upload => {
+            dispatch(batchActions([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
+        },
+        removeUploadFromQueue: index => dispatch(removeUpload(index))
+
     };
 };
 
@@ -194,7 +204,10 @@ Upload.propTypes = {
     uploads: PropTypes.array.isRequired,
     uploadPath: PropTypes.string,
     overlayTarget: PropTypes.object,
-    uploadUpdateCallback: PropTypes.func.isRequired
+    uploadUpdateCallback: PropTypes.func.isRequired,
+    updateUpload: PropTypes.func.isRequired,
+    uploadFile: PropTypes.func.isRequired,
+    removeUploadFromQueue: PropTypes.func.isRequired
 };
 
 export default compose(

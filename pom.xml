@@ -148,7 +148,7 @@
                 <version>1.6</version>
                 <executions>
                     <execution>
-                        <id>npm install node and npm</id>
+                        <id>npm install node and yarn</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>install-node-and-yarn</goal>

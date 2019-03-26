@@ -286,7 +286,13 @@
         }
       },
       "subContent": "({{count}} sub-content)",
-      "subContent_plural": "({{count}} sub-contents)"
+      "subContent_plural": "({{count}} sub-contents)",
+      "createFolderAction": {
+        "title": "Create folder",
+        "text": "Enter folder name",
+        "create": "Create",
+        "cancel": "Cancel"
+      }
     }
   }
 }

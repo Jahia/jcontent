@@ -15,7 +15,8 @@ import {
     FindInPage,
     Translate,
     CreateNewFolder,
-    LibraryAdd
+    LibraryAdd,
+    Autorenew
 } from '@material-ui/icons';
 import {
     ApplicationImport,
@@ -61,6 +62,7 @@ import translateMenuAction from './actions/translateMenuAction';
 import subContentsAction from './actions/subContentsAction';
 import exportAction from './actions/exportAction';
 import downloadFileAction from './actions/downloadFileAction';
+import replaceWithAction from './actions/replaceWithAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -392,6 +394,13 @@ function contentManagerActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.contentPreview.download',
         showOnNodeTypes: ['jnt:file'],
         target: ['contentActions:3.7']
+    });
+    actionsRegistry.add('replaceFile', replaceWithAction, {
+        buttonIcon: <Autorenew/>,
+        buttonLabel: 'label.contentManager.fileUpload.replaceWith',
+        target: ['contentActions:0.2'],
+        showOnNodeTypes: ['jnt:file'],
+        uploadType: 'replaceWith'
     });
 }
 

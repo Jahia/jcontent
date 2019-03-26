@@ -70,7 +70,8 @@
         "dialogRenameText": "Wie soll die importierte Datei benannt werden?",
         "dialogRenameExample": "ex: Dateiname",
         "dialogRenameCancel": "Abbrechen",
-        "dialogRename": "Umbenennen"
+        "dialogRename": "Umbenennen",
+        "replaceWith": "Ersetzen mit"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",

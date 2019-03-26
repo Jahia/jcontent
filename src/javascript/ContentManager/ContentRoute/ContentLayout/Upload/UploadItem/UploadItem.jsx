@@ -183,6 +183,16 @@ export class UploadItem extends React.Component {
                 }
             });
         }
+        if (type === 'replaceWith') {
+            return client.mutate({
+                mutation: updateFileContent,
+                variables: {
+                    path: `${path}`,
+                    mimeType: file.type,
+                    fileHandle: file
+                }
+            });
+        }
         return client.mutate({
             mutation: uploadFile,
             variables: {

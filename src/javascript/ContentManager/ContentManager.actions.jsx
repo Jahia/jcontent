@@ -62,7 +62,6 @@ import translateMenuAction from './actions/translateMenuAction';
 import subContentsAction from './actions/subContentsAction';
 import exportAction from './actions/exportAction';
 import downloadFileAction from './actions/downloadFileAction';
-import replaceWithAction from './actions/replaceWithAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -395,7 +394,7 @@ function contentManagerActions(actionsRegistry) {
         showOnNodeTypes: ['jnt:file'],
         target: ['contentActions:3.7']
     });
-    actionsRegistry.add('replaceFile', replaceWithAction, {
+    actionsRegistry.add('replaceFile', fileUploadAction, {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'label.contentManager.fileUpload.replaceWith',
         target: ['contentActions:0.2'],

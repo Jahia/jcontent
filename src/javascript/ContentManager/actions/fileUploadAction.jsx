@@ -15,17 +15,15 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
         }
         let input = document.createElement('input');
         input.setAttribute('type', 'file');
-        input.setAttribute('multiple', 'true');
+        if (context.uploadType !== 'replaceWith') {
+            input.setAttribute('multiple', 'true');
+        }
         input.setAttribute('id', 'file-upload-input-' + context.key);
         document.body.appendChild(input);
-        let files = [];
-        input.addEventListener('change', () => {
-            Array.from(input.files).forEach(file => {
-                files.push(file);
-            });
+        input.addEventListener('change', e => {
             setPath(context.path);
             onFilesSelected(
-                files,
+                [...e.target.files],
                 context.dispatchBatch,
                 {path: context.path},
                 context.uploadType

@@ -285,7 +285,13 @@
         }
       },
       "subContent": "({{count}} sub-Inhalt)",
-      "subContent_plural": "({{count}} sub-Inhalte)"
+      "subContent_plural": "({{count}} sub-Inhalte)",
+      "createFolderAction": {
+        "title": "Neuer Ordner",
+        "text": "Geben Sie einen Ordner-Namen ein",
+        "ok": "OK",
+        "cancel": "Abbrechen"
+      }
     }
   }
 }

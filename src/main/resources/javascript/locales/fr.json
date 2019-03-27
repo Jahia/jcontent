@@ -285,7 +285,13 @@
         }
       },
       "subContent": "({{count}} sous-contenu)",
-      "subContent_plural": "({{count}} sous-contenus)"
+      "subContent_plural": "({{count}} sous-contenus)",
+      "createFolderAction": {
+        "title": "Nouveau dossier",
+        "text": "Entrez un nom de dossier",
+        "ok": "OK",
+        "cancel": "Annuler"
+      }
     }
   }
 }

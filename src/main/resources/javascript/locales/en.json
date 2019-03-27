@@ -288,9 +288,9 @@
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)",
       "createFolderAction": {
-        "title": "Create folder",
-        "text": "Enter folder name",
-        "create": "Create",
+        "title": "New folder",
+        "text": "Enter a folder name",
+        "ok": "OK",
         "cancel": "Cancel"
       }
     }

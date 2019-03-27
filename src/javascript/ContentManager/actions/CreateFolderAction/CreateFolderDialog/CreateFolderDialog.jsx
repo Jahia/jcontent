@@ -19,14 +19,14 @@ let styles = {
     }
 };
 
-const CreateFolderDialog = ({open, handleClose, handleCreate, classes, t, name, onChangeName}) => {
+const CreateFolderDialog = ({open, handleCancel, handleCreate, classes, t, name, onChangeName}) => {
     let textField = React.createRef();
 
     return (
         <Dialog open={open}
                 aria-labelledby="form-dialog-title"
                 classes={{paper: classes.root}}
-                onClose={handleClose}
+                onClose={handleCancel}
         >
             <DialogTitle id="form-dialog-title">{t('label.contentManager.createFolderAction.title')}</DialogTitle>
             <DialogContent>
@@ -44,11 +44,11 @@ const CreateFolderDialog = ({open, handleClose, handleCreate, classes, t, name, 
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleClose}>
+                <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>
                     {t('label.contentManager.createFolderAction.cancel')}
                 </Button>
                 <Button variant="primary" data-cm-role="create-folder-as-confirm" onClick={handleCreate}>
-                    {t('label.contentManager.createFolderAction.create')}
+                    {t('label.contentManager.createFolderAction.ok')}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -58,8 +58,8 @@ const CreateFolderDialog = ({open, handleClose, handleCreate, classes, t, name, 
 CreateFolderDialog.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
-    handleClose: PropTypes.func.isRequired,
-    handleSave: PropTypes.func.isRequired,
+    handleCancel: PropTypes.func.isRequired,
+    handleCreate: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     onChangeName: PropTypes.func.isRequired

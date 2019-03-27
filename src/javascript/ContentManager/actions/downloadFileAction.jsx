@@ -12,9 +12,9 @@ export default composeActions(requirementsAction, withDxContextAction, reduxActi
     onClick: context => {
         let a = document.createElement('a');
         a.setAttribute('title', 'download');
-        a.setAttribute('target', '_blank');
         a.setAttribute('href', context.dxContext.contextPath + '/files/' + (context.previewMode === 'edit' ? 'default' : 'live') + context.originalContext.path);
         a.setAttribute('download', context.originalContext.path.split('/').pop());
+        document.body.appendChild(a);
         a.click();
     }
 });

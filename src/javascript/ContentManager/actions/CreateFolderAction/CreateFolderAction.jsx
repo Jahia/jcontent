@@ -31,10 +31,15 @@ export default composeActions(requirementsAction, componentRendererAction, {
 
 const CreateFolderAction = ({onExit}) => {
     const [open, updateIsDialogOpen] = useState(true);
+    const [name, updateName] = useState(undefined);
+    const [isNameValid, updateIsNameValid] = useState(true);
+
+    const invalidRegex = /[\\/:*?"<>|]/g;
 
     const onChangeName = e => {
         // Handle validation for name change
-        // @TODO implement functionality
+        updateIsNameValid(e.target.value && e.target.value.match(invalidRegex) === null);
+        updateName(e.target.value);
     };
     const handleCancel = () => {
         // Close dialog
@@ -49,6 +54,8 @@ const CreateFolderAction = ({onExit}) => {
     };
     return (
         <CreateFolderDialog open={open}
+                            name={name}
+                            isNameValid={isNameValid}
                             onChangeName={onChangeName}
                             handleCancel={handleCancel}
                             handleCreate={handleCreate}/>

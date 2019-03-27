@@ -19,7 +19,7 @@ let styles = {
     }
 };
 
-const CreateFolderDialog = ({open, handleCancel, handleCreate, classes, t, name, onChangeName}) => {
+const CreateFolderDialog = ({classes, t, open, name, isNameValid, handleCancel, handleCreate, onChangeName}) => {
     let textField = React.createRef();
 
     return (
@@ -34,11 +34,12 @@ const CreateFolderDialog = ({open, handleCancel, handleCreate, classes, t, name,
                     {t('label.contentManager.createFolderAction.text')}
                 </DialogContentText>
                 <Input
+                    error={!isNameValid}
                     autoFocus
                     fullWidth
                     inputRef={textField}
                     value={name}
-                    id="fileName"
+                    id="folderName"
                     margin="dense"
                     onChange={onChangeName}
                 />
@@ -47,7 +48,11 @@ const CreateFolderDialog = ({open, handleCancel, handleCreate, classes, t, name,
                 <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>
                     {t('label.contentManager.createFolderAction.cancel')}
                 </Button>
-                <Button variant="primary" data-cm-role="create-folder-as-confirm" onClick={handleCreate}>
+                <Button variant="primary"
+                        data-cm-role="create-folder-as-confirm"
+                        disabled={!name || !isNameValid}
+                        onClick={handleCreate}
+                >
                     {t('label.contentManager.createFolderAction.ok')}
                 </Button>
             </DialogActions>

@@ -16,5 +16,6 @@ export default composeActions(requirementsAction, withDxContextAction, reduxActi
         a.setAttribute('download', context.originalContext.path.split('/').pop());
         document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
     }
 });

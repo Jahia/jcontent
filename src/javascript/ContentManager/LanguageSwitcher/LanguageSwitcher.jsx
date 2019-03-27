@@ -39,7 +39,7 @@ export class LanguageSwitcher extends React.Component {
                         return <ProgressOverlay/>;
                     }
 
-                    // update redux
+                    // Update redux
                     setAvailableLanguages(siteInfo.languages);
                     if (siteInfo.displayName) {
                         setSiteDisplayableName(siteInfo.displayName);

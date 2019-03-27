@@ -5,6 +5,8 @@ import {ContentTypeNamesQuery} from '../actions.gql-queries';
 import {from} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import CreateFolderDialog from './CreateFolderDialog';
+import {Mutation} from 'react-apollo';
+import {CreateFolderMutation} from './CreateFolderAction.gql-mutations';
 
 export default composeActions(requirementsAction, componentRendererAction, {
     init: context => {
@@ -25,16 +27,20 @@ export default composeActions(requirementsAction, componentRendererAction, {
         }
     },
     onClick: context => {
-        let handler = context.renderComponent(<CreateFolderAction onExit={() => handler.destroy()}/>);
+        let handler = context.renderComponent(<CreateFolderAction node={context.node} contentType={context.contentType} onExit={() => handler.destroy()}/>);
     }
 });
 
-const CreateFolderAction = ({onExit}) => {
+const CreateFolderAction = ({node, contentType, onExit}) => {
     const [open, updateIsDialogOpen] = useState(true);
     const [name, updateName] = useState(undefined);
     const [isNameValid, updateIsNameValid] = useState(true);
 
     const invalidRegex = /[\\/:*?"<>|]/g;
+    const variables = {
+        parentPath: node.path,
+        primaryNodeType: contentType
+    };
 
     const onChangeName = e => {
         // Handle validation for name change
@@ -46,18 +52,23 @@ const CreateFolderAction = ({onExit}) => {
         updateIsDialogOpen(false);
         onExit();
     };
-    const handleCreate = () => {
+    const handleCreate = mutation => {
         // Do mutation to create folder.
-        // @TODO implement functionality
+        variables.folderName = name;
+        mutation({variables: variables});
         updateIsDialogOpen(false);
         onExit();
     };
     return (
-        <CreateFolderDialog open={open}
-                            name={name}
-                            isNameValid={isNameValid}
-                            onChangeName={onChangeName}
-                            handleCancel={handleCancel}
-                            handleCreate={handleCreate}/>
+        <Mutation mutation={CreateFolderMutation} refetchQueries={() => ['PickerQuery', 'getNodeSubTree']}>
+            {mutation => (
+                <CreateFolderDialog open={open}
+                                    name={name}
+                                    isNameValid={isNameValid}
+                                    onChangeName={onChangeName}
+                                    handleCancel={handleCancel}
+                                    handleCreate={() => handleCreate(mutation)}/>
+        )}
+        </Mutation>
     );
 };

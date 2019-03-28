@@ -30,7 +30,7 @@ export default composeActions(requirementsAction, componentRendererAction, {
                                             loading={loading}
                                             node={context.node}
                                             onExit={() => handler.destroy()}/>
-);
+                    );
                 }}
             </Query>
         );
@@ -78,7 +78,7 @@ const CreateFolderAction = ({node, loading, children, contentType, onExit}) => {
                                     onChangeName={onChangeName}
                                     handleCancel={handleCancel}
                                     handleCreate={() => handleCreate(mutation)}/>
-        )}
+            )}
         </Mutation>
     );
 };

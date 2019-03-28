@@ -37,17 +37,17 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                     {t('label.contentManager.createFolderAction.text')}
                 </DialogContentText>
                 <TextField
-                        error={!isNameValid || !isNameAvailable}
-                        fullWidth
-                        autoFocus
-                        inputRef={textField}
-                        value={name}
-                        id="folder-name"
-                        aria-describedby="folder-name-error-text"
-                        margin="dense"
-                        helperText={!isNameAvailable ? t('label.contentManager.createFolderAction.exists') : ''}
-                        onChange={onChangeName}
-                    />
+                    error={!isNameValid || !isNameAvailable}
+                    fullWidth
+                    autoFocus
+                    inputRef={textField}
+                    value={name}
+                    id="folder-name"
+                    aria-describedby="folder-name-error-text"
+                    margin="dense"
+                    helperText={!isNameAvailable ? t('label.contentManager.createFolderAction.exists') : ''}
+                    onChange={onChangeName}
+                />
             </DialogContent>
             <DialogActions>
                 <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>

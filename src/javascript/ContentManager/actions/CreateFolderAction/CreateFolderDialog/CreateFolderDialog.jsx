@@ -6,20 +6,23 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Input,
+    TextField,
     withStyles
 } from '@material-ui/core';
 import {Button} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 
-let styles = {
+let styles = theme => ({
     root: {
         minWidth: '600px'
+    },
+    error: {
+        color: theme.palette.error.main
     }
-};
+});
 
-const CreateFolderDialog = ({classes, t, open, name, isNameValid, handleCancel, handleCreate, onChangeName}) => {
+const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNameAvailable, handleCancel, handleCreate, onChangeName}) => {
     let textField = React.createRef();
 
     return (
@@ -30,19 +33,21 @@ const CreateFolderDialog = ({classes, t, open, name, isNameValid, handleCancel, 
         >
             <DialogTitle id="form-dialog-title">{t('label.contentManager.createFolderAction.title')}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText className={!isNameValid || !isNameAvailable ? classes.error : null}>
                     {t('label.contentManager.createFolderAction.text')}
                 </DialogContentText>
-                <Input
-                    error={!isNameValid}
-                    autoFocus
-                    fullWidth
-                    inputRef={textField}
-                    value={name}
-                    id="folderName"
-                    margin="dense"
-                    onChange={onChangeName}
-                />
+                <TextField
+                        error={!isNameValid || !isNameAvailable}
+                        fullWidth
+                        autoFocus
+                        inputRef={textField}
+                        value={name}
+                        id="folder-name"
+                        aria-describedby="folder-name-error-text"
+                        margin="dense"
+                        helperText={!isNameAvailable ? t('label.contentManager.createFolderAction.exists') : ''}
+                        onChange={onChangeName}
+                    />
             </DialogContent>
             <DialogActions>
                 <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>
@@ -50,7 +55,7 @@ const CreateFolderDialog = ({classes, t, open, name, isNameValid, handleCancel, 
                 </Button>
                 <Button variant="primary"
                         data-cm-role="create-folder-as-confirm"
-                        disabled={!name || !isNameValid}
+                        disabled={loading || !name || !isNameValid || !isNameAvailable}
                         onClick={handleCreate}
                 >
                     {t('label.contentManager.createFolderAction.ok')}

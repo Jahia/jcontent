@@ -1,40 +1,47 @@
 import React, {useState} from 'react';
 import {composeActions, componentRendererAction} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
-import {ContentTypeNamesQuery} from '../actions.gql-queries';
-import {from} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
 import CreateFolderDialog from './CreateFolderDialog';
-import {Mutation} from 'react-apollo';
+import {Mutation, Query} from 'react-apollo';
 import {CreateFolderMutation} from './CreateFolderAction.gql-mutations';
+import {CreateFolderQuery} from './CreateFolderAction.gql-queries';
 
 export default composeActions(requirementsAction, componentRendererAction, {
     init: context => {
         context.initRequirements({requiredPermission: 'jcr:addChildNodes'});
-
-        if (!context.buttonLabel) {
-            // Label.contentManager.create.contentFolder
-            context.buttonLabel = 'label.contentManager.create.folder';
-            let watchQuery = context.client.watchQuery({
-                query: ContentTypeNamesQuery,
-                variables: {nodeTypes: [context.contentType], displayLanguage: context.dxContext.uilang}
-            });
-
-            context.buttonLabelParams = from(watchQuery).pipe(
-                filter(res => (res.data && res.data.jcr && res.data.jcr.nodeByPath)),
-                map(res => ({typeName: res.data.jcr.nodeTypesByNames[0].displayName}))
-            );
-        }
     },
     onClick: context => {
-        let handler = context.renderComponent(<CreateFolderAction node={context.node} contentType={context.contentType} onExit={() => handler.destroy()}/>);
+        const variables = {
+            path: context.node.path,
+            typesFilter: {
+                types: [context.contentType]
+            }
+        };
+        let handler = context.renderComponent(
+            <Query query={CreateFolderQuery} variables={variables} fetchPolicy="cache-first">
+                {({loading, error, data}) => {
+                    let childNodes = [];
+                    if (data && data.jcr && data.jcr.nodeByPath) {
+                        childNodes = data.jcr.nodeByPath.children.nodes;
+                    }
+                    return (
+                        <CreateFolderAction children={childNodes}
+                                            contentType={context.contentType}
+                                            loading={loading}
+                                            node={context.node}
+                                            onExit={() => handler.destroy()}/>
+);
+                }}
+            </Query>
+        );
     }
 });
 
-const CreateFolderAction = ({node, contentType, onExit}) => {
+const CreateFolderAction = ({node, loading, children, contentType, onExit}) => {
     const [open, updateIsDialogOpen] = useState(true);
     const [name, updateName] = useState(undefined);
     const [isNameValid, updateIsNameValid] = useState(true);
+    const [isNameAvailable, updateIsNameAvailable] = useState(true);
 
     const invalidRegex = /[\\/:*?"<>|]/g;
     const variables = {
@@ -45,6 +52,7 @@ const CreateFolderAction = ({node, contentType, onExit}) => {
     const onChangeName = e => {
         // Handle validation for name change
         updateIsNameValid(e.target.value && e.target.value.match(invalidRegex) === null);
+        updateIsNameAvailable(children.find(node => node.name === e.target.value) === undefined);
         updateName(e.target.value);
     };
     const handleCancel = () => {
@@ -64,7 +72,9 @@ const CreateFolderAction = ({node, contentType, onExit}) => {
             {mutation => (
                 <CreateFolderDialog open={open}
                                     name={name}
+                                    loading={loading}
                                     isNameValid={isNameValid}
+                                    isNameAvailable={isNameAvailable}
                                     onChangeName={onChangeName}
                                     handleCancel={handleCancel}
                                     handleCreate={() => handleCreate(mutation)}/>

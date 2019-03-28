@@ -291,7 +291,8 @@
         "title": "New folder",
         "text": "Enter a folder name",
         "ok": "OK",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "exists": "A folder with this name already exists"
       }
     }
   }

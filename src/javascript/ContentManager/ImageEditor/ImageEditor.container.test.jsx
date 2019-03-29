@@ -12,10 +12,6 @@ import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
 import wait from 'waait';
 import DxContext from '../DxContext';
 
-import {mock} from '@jahia/test-framework';
-
-jest.mock('react-i18next', () => require('@jahia/test-framework/__mocks__/react-i18next'));
-
 var contextJsParameters = {};
 
 let result = {

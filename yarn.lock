@@ -857,6 +857,11 @@
     lodash "^4.17.10"
     prop-types "^15.6.1"
 
+"@jahia/test-framework@^1.0.0-beta.20190329142705":
+  version "1.0.0-beta.20190329142705"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2ftest-framework/-/test-framework-1.0.0-beta.20190329142705.tgz#c983ebae58382aae39424db335a683e14dc247d3"
+  integrity sha512-2US/BjYJfqp3DqUKoqTxZkLIaFSZDqGE7/TdmEtAxmkaW8RVa7Q2S+K4rzM3Z/MwC29PJxTbW464sF9cirYunA==
+
 "@jest/console@^24.3.0":
   version "24.3.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.3.0.tgz#7bd920d250988ba0bf1352c4493a48e1cb97671e"

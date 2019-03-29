@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {shallow} from '@jahia/test-framework';
 
 import ImageEditorActions from './ImageEditorActions';
 import {Button} from '@jahia/ds-mui-theme';

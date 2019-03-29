@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount, shallow} from '@jahia/test-framework';
 import {ImageEditorContainer} from './ImageEditor.container';
 import {MockedProvider} from 'react-apollo/test-utils';
 import {ImageQuery} from './ImageEditor.gql-queries';
@@ -9,10 +9,7 @@ import {fragmentMatcher} from '@jahia/apollo-dx';
 import {MuiThemeProvider} from "@material-ui/core";
 import ImageEditor from './ImageEditor';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
-import wait from 'waait';
 import DxContext from '../DxContext';
-
-var contextJsParameters = {};
 
 let result = {
     data: {

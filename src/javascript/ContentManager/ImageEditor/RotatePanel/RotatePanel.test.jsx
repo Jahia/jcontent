@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {shallow} from '@jahia/test-framework';
 import {IconButton} from '@jahia/ds-mui-theme';
 import {RotatePanel} from './RotatePanel';
 import defaultProps from '../../../testDefaultProps';

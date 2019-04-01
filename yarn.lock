@@ -857,14 +857,20 @@
     lodash "^4.17.10"
     prop-types "^15.6.1"
 
-"@jahia/test-framework@^1.0.0-beta.20190329170857":
-  version "1.0.0-beta.20190329170857"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2ftest-framework/-/test-framework-1.0.0-beta.20190329170857.tgz#9d0e495617daf754e0ea090e6ad079fdf25408d4"
-  integrity sha512-HVIOXD4tnO+DR9i25PiagYD6/X8RGqAJQb+Ha9ZmkLurDZvlBQfZrItnNYbJmWpEWd9h16nvYUofRBwbNxX0EA==
+"@jahia/test-framework@^1.0.0-beta.20190401120854":
+  version "1.0.0-beta.20190401120854"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2ftest-framework/-/test-framework-1.0.0-beta.20190401120854.tgz#14146d31ba69fd59e426a7c30b344ea5f0424b7c"
+  integrity sha512-BhBjxSBdI7JwYLRNfwQRElVrTdgFe0iNHMvOKIDRwd9yjexXFm0GKqkHtXY4lKm9F9HEn9P813ELkeVVbbwXEw==
   dependencies:
     babel-jest "^24.5.0"
     enzyme "^3.9.0"
     enzyme-adapter-react-16 "^1.11.2"
+    eslint "^5.15.1"
+    eslint-config-xo "^0.25.0"
+    eslint-config-xo-react "^0.17.0"
+    eslint-loader "2.1.0"
+    eslint-plugin-jest "^22.3.0"
+    eslint-plugin-react "^7.11.1"
     jest "^24.5.0"
 
 "@jest/console@^24.3.0":

@@ -75,7 +75,7 @@
     "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
-    "@jahia/test-framework": "^1.0.0-beta.20190329170857",
+    "@jahia/test-framework": "^1.0.0-beta.20190401120854",
     "@types/jest": "^24.0.11",
     "apollo-cache-inmemory": "^1.5.1",
     "babel-eslint": "^10.0.1",

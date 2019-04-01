@@ -1,6 +1,6 @@
 const initialState = {
     mode: 'grid',
-    size: 4
+    size: 1
 };
 
 export const filesGrid = (state = initialState, action) => {

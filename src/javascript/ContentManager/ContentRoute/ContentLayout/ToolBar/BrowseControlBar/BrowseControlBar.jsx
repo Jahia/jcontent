@@ -5,6 +5,8 @@ import {IconButton} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import ContentBreadcrumbs from './ContentBreadcrumbs';
 import {buttonRenderer, DisplayActions} from '@jahia/react-material';
+import FileModeSelector from '../FileModeSelector';
+import ContentManagerConstants from '../../../../ContentManager.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
 import {refetchContentTreeAndListData} from '../../../../ContentManager.refetches';
@@ -39,6 +41,11 @@ export class BrowseControlBar extends React.Component {
             <React.Fragment>
                 <ContentBreadcrumbs mode={mode}/>
                 <div className={classes.grow}/>
+                {showActions && mode === ContentManagerConstants.mode.FILES &&
+                    <React.Fragment>
+                        <FileModeSelector/>
+                    </React.Fragment>
+                }
                 {showActions &&
                     <IconButton icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}/>
                 }

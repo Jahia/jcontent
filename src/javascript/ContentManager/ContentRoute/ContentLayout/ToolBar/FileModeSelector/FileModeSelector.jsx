@@ -5,7 +5,7 @@ import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
 import {setMode, setSize} from '../../FilesGrid/FilesGrid.redux-actions';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 export class FileModeSelector extends React.Component {
     constructor(props) {

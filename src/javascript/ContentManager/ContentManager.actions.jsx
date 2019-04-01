@@ -61,7 +61,7 @@ import translateMenuAction from './actions/translateMenuAction';
 import subContentsAction from './actions/subContentsAction';
 import exportAction from './actions/exportAction';
 import downloadFileAction from './actions/downloadFileAction';
-import CreateFolderAction from './actions/CreateFolderAction';
+import createFolderAction from './actions/createFolderAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -91,7 +91,7 @@ function contentManagerActions(actionsRegistry) {
         hideOnNodeTypes: ['jnt:page', 'jnt:virtualsite'],
         target: ['contentActions:1']
     });
-    actionsRegistry.add('createContentFolder', CreateFolderAction, {
+    actionsRegistry.add('createContentFolder', createFolderAction, {
         buttonIcon: <CreateNewFolder/>,
         buttonLabel: 'label.contentManager.create.contentFolder',
         target: ['createMenuActions:3', 'contentActions:2'],
@@ -105,7 +105,7 @@ function contentManagerActions(actionsRegistry) {
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
         baseContentType: ContentManagerConstants.contentType
     });
-    actionsRegistry.add('createFolder', CreateFolderAction, {
+    actionsRegistry.add('createFolder', createFolderAction, {
         buttonIcon: <CreateNewFolder/>,
         buttonLabel: 'label.contentManager.create.folder',
         target: ['createMenuActions:3', 'contentActions:3'],

@@ -37,9 +37,9 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                     {t('label.contentManager.createFolderAction.text')}
                 </DialogContentText>
                 <TextField
-                    error={!isNameValid || !isNameAvailable}
                     fullWidth
                     autoFocus
+                    error={!isNameValid || !isNameAvailable}
                     inputRef={textField}
                     value={name}
                     id="folder-name"
@@ -71,6 +71,9 @@ CreateFolderDialog.propTypes = {
     handleCancel: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    isNameValid: PropTypes.bool.isRequired,
+    isNameAvailable: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     onChangeName: PropTypes.func.isRequired
 };

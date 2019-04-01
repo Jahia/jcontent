@@ -180,7 +180,7 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <DeleteForever/>,
         buttonLabel: 'label.contentManager.contentPreview.publishDeletion',
         target: ['contentActions:4', 'selectedContentActions:4'],
-        hideOnNodeTypes: ['jnt:virtualsite']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
     });
     actionsRegistry.add('unpublish', publishAction, {
         buttonIcon: <CloudDownload/>,

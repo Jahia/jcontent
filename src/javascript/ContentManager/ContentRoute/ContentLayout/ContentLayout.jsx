@@ -167,7 +167,7 @@ ContentLayout.propTypes = {
     contentTreeConfigs: PropTypes.object,
     previewSelection: PropTypes.string,
     rows: PropTypes.array.isRequired,
-    contentNotFound: PropTypes.bool.isRequired,
+    contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
     loading: PropTypes.bool.isRequired
 };

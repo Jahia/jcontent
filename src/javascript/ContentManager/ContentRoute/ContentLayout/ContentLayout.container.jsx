@@ -262,9 +262,9 @@ ContentLayoutContainer.propTypes = {
     sort: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
     uiLang: PropTypes.string.isRequired,
-    treeState: PropTypes.object.isRequired,
-    previewState: PropTypes.object.isRequired,
-    filesMode: PropTypes.object.isRequired
+    treeState: PropTypes.number.isRequired,
+    previewState: PropTypes.number.isRequired,
+    filesMode: PropTypes.string.isRequired
 };
 
 export default compose(

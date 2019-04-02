@@ -38,6 +38,7 @@ export const FileModeSelector = ({t, mode, size, onChange, setSize}) => {
     return (
         <Select
             autoWidth
+            data-cm-role={'view-mode-' + select}
             value={select}
             variant="normal"
             onChange={e => handleChange(e)}

@@ -139,8 +139,13 @@ export class ContentLayoutContainer extends React.Component {
 
         const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort);
 
+        // Workaround to prevent QA-11390
+        // See https://github.com/apollographql/react-apollo/issues/2658
+        // FIXME To be removed once the issue has been resolved in react-apollo
+        const key = JSON.stringify(layoutQueryParams);
+
         return (
-            <Query query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy}>
+            <Query key={key} query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy} errorPolicy="all">
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
 

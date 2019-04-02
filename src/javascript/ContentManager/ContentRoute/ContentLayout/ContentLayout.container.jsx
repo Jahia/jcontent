@@ -145,7 +145,7 @@ export class ContentLayoutContainer extends React.Component {
         const key = JSON.stringify(layoutQueryParams);
 
         return (
-            <Query key={key} query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy} errorPolicy="all">
+            <Query key={key} query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy}>
                 {({loading, error, data, refetch}) => {
                     let queryHandler = contentQueryHandlerByMode(mode);
 

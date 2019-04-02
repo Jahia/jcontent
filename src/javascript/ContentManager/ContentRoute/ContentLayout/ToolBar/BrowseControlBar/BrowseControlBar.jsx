@@ -42,9 +42,7 @@ export class BrowseControlBar extends React.Component {
                 <ContentBreadcrumbs mode={mode}/>
                 <div className={classes.grow}/>
                 {showActions && mode === ContentManagerConstants.mode.FILES &&
-                    <React.Fragment>
-                        <FileModeSelector/>
-                    </React.Fragment>
+                    <FileModeSelector/>
                 }
                 {showActions &&
                     <IconButton icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}/>

@@ -7,21 +7,9 @@ import {translate} from 'react-i18next';
 import {setMode, setSize} from '../../FilesGrid/FilesGrid.redux-actions';
 import PropTypes from 'prop-types';
 
-export class FileModeSelector extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            select: 'thumbnail'
-        };
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(e) {
+export const FileModeSelector = ({t, mode, size, onChange, setSize}) => {
+    const handleChange = e => {
         let selectedMode = e.target.value;
-        let {onChange, setSize, mode, size} = this.props;
-        this.setState({
-            select: selectedMode
-        });
         switch (selectedMode) {
             case 'list-view':
                 onChange('list');
@@ -43,25 +31,23 @@ export class FileModeSelector extends React.Component {
                     onChange('grid');
                 }
         }
-    }
+    };
 
-    render() {
-        let {t} = this.props;
-        let {select} = this.state;
-        return (
-            <Select
-                autoWidth
-                value={select}
-                variant="normal"
-                onChange={this.handleChange}
-            >
-                <MenuItem value="thumbnail">{t('label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
-                <MenuItem value="list-view">{t('label.contentManager.filesGrid.selectListView')}</MenuItem>
-                <MenuItem value="detailed-view">{t('label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
-            </Select>
-        );
-    }
-}
+    let select = mode === 'grid' && size === 1 ? 'thumbnail' : (mode === 'grid' ? 'detailed-view' : 'list-view');
+
+    return (
+        <Select
+            autoWidth
+            value={select}
+            variant="normal"
+            onChange={e => handleChange(e)}
+        >
+            <MenuItem value="thumbnail">{t('label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
+            <MenuItem value="list-view">{t('label.contentManager.filesGrid.selectListView')}</MenuItem>
+            <MenuItem value="detailed-view">{t('label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
+        </Select>
+    );
+};
 
 FileModeSelector.propTypes = {
     t: PropTypes.func.isRequired,
@@ -71,11 +57,18 @@ FileModeSelector.propTypes = {
     size: PropTypes.number.isRequired
 };
 
+let mapStateToProps = state => ({
+    mode: state.filesGrid.mode,
+    size: state.filesGrid.size
+});
+
+let mapDispatchToProps = dispatch => ({
+    onChange: mode => dispatch(setMode(mode)),
+    setSize: size => dispatch(setSize(size))
+});
+
 export default compose(
-    connect(state => ({mode: state.filesGrid.mode, size: state.filesGrid.size}), dispatch => ({
-        onChange: mode => dispatch(setMode(mode)),
-        setSize: size => dispatch(setSize(size))
-    })),
+    connect(mapStateToProps, mapDispatchToProps),
     translate(),
 )(FileModeSelector);
 

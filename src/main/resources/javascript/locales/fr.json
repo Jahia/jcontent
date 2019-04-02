@@ -91,14 +91,14 @@
       "showCurrentPath": "Ouvrir le chemin courant",
       "filesGrid": {
         "emptyMessage": "Ce dossier ne contient aucun fichier",
-        "toggleListDisplay": "Liste",
         "createdBy": "Créé par:",
         "author": "{{author}} le",
         "publish": "Publier",
-        "toggleGridDisplay": "Vignettes",
         "name": "Nom:",
-        "fileSizeSelector": "Zoom",
-        "fileInfo": "Taille:"
+        "fileInfo": "Taille:",
+        "selectListView": "Liste",
+        "selectThumbnailView": "Vignettes",
+        "selectDetailedView": "Vue detaillée"
       },
       "search": {
         "sql2": "Recherche avancée",

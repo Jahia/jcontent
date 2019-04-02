@@ -91,14 +91,14 @@
       "showCurrentPath": "Zeige aktuellen Pfad",
       "filesGrid": {
         "emptyMessage": "Dieser Ordner enthält keine Dateien",
-        "toggleListDisplay": "Liste",
         "createdBy": "Erstellt von:",
         "author": "{{author}} am",
         "publish": "Veröffentlichen",
-        "toggleGridDisplay": "Vorschaubilder",
         "name": "Name:",
-        "fileSizeSelector": "Zoomen",
-        "fileInfo": "Größe:"
+        "fileInfo": "Größe:",
+        "selectListView": "Listenansicht",
+        "selectThumbnailView": "Miniaturansicht",
+        "selectDetailedView": "Detailansicht"
       },
       "search": {
         "sql2": "Erweiterte Suche",

@@ -26,6 +26,13 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
         }
     };
 
+    const refetchQueries = ['PickerQuery'];
+    if (contentType === 'jnt:folder') {
+        refetchQueries.push('getFiles');
+    } else if (contentType === 'jnt:contentFolder') {
+        refetchQueries.push('getNodeSubTree');
+    }
+
     const onChangeName = e => {
         // Handle validation for name change
         updateIsNameValid(e.target.value && e.target.value.match(invalidRegex) === null);
@@ -51,7 +58,7 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
                     updateChildNodes(data.jcr.nodeByPath.children.nodes);
                 }
                 return (
-                    <Mutation mutation={CreateFolderMutation} refetchQueries={() => ['PickerQuery', 'getNodeSubTree']}>
+                    <Mutation mutation={CreateFolderMutation} refetchQueries={() => refetchQueries}>
                         {mutation => (
                             <CreateFolderDialog open={open}
                                                 name={name}

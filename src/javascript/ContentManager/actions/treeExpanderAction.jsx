@@ -25,7 +25,7 @@ const GetAncestorsQuery = gql`
 let treeExpanderAction = onClick => {
     return {
         onClick: context => {
-            context.client.watchQuery({query: GetAncestorsQuery, variables: {path: context.path}}).subscribe(res => {
+            context.client.query({query: GetAncestorsQuery, variables: {path: context.path}}).then(res => {
                 let node = res.data.jcr.nodeByPath;
 
                 let ancestorPaths = _.map(node.ancestors, ancestor => ancestor.path);

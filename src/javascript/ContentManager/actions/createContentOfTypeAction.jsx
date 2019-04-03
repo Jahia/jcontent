@@ -10,7 +10,7 @@ export default composeActions(requirementsAction, {
 
         if (!context.buttonLabel) {
             context.buttonLabel = 'label.contentManager.create.contentOfType';
-            let watchQuery = context.client.watchQuery({
+            let watchQuery = context.client.query({
                 query: ContentTypeNamesQuery,
                 variables: {nodeTypes: [context.contentType], displayLanguage: context.dxContext.uilang}
             });

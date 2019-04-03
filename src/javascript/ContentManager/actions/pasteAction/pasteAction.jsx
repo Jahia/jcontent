@@ -56,7 +56,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                         (targetNode.ancestors && targetNode.ancestors.length > 0 && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
                     if (contributeTypesProperty && contributeTypesProperty.values.length > 0) {
                         // Contribute type is not empty so we need to execute a query to know the types that are allowed here
-                        return from(context.client.watchQuery({
+                        return from(context.client.query({
                             query: ContentTypesQuery,
                             variables: {nodeTypes: contributeTypesProperty.values}
                         })).pipe(

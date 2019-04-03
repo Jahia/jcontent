@@ -21,7 +21,7 @@ function checkNodeRequirement(context, options) {
     let {requiredPermission, showOnNodeTypes, hideOnNodeTypes, requireModuleInstalledOnSite, showForPaths, enabled, contentType, contentTypes, hideForPaths} = req;
     let requirementQueryHandler = new ActionRequirementsQueryHandler(req);
     if (requirementQueryHandler.requirementsFragments.length > 0) {
-        let watchQuery = context.client.watchQuery({
+        let watchQuery = context.client.query({
             query: requirementQueryHandler.getQuery(),
             variables: requirementQueryHandler.getVariables()
         });

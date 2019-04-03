@@ -39,7 +39,7 @@ export default composeActions(requirementsAction, withDxContextAction, reduxActi
             let contributeTypesProperty = node.contributeTypes ||
                 (node.ancestors && !_.isEmpty(node.ancestors) && node.ancestors[node.ancestors.length - 1].contributeTypes);
             if (contributeTypesProperty && !_.isEmpty(contributeTypesProperty.values) && !_.isEmpty(childNodeTypes)) {
-                return from(context.client.watchQuery({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
+                return from(context.client.query({query: ContentTypesQuery, variables: {nodeTypes: contributeTypesProperty.values}})).pipe(
                     filter(res => (res.data && res.data.jcr)),
                     map(res => {
                         let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
@@ -56,7 +56,7 @@ export default composeActions(requirementsAction, withDxContextAction, reduxActi
                     nodeTypes: nodeTypes
                 });
             }
-            return from(context.client.watchQuery({query: ContentTypeNamesQuery, variables: {nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
+            return from(context.client.query({query: ContentTypeNamesQuery, variables: {nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
                 filter(res => (res.data && res.data.jcr)),
                 map(res => ({
                     actions: res.data.jcr.nodeTypesByNames.map(nodeType => ({

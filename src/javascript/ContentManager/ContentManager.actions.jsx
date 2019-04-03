@@ -385,6 +385,7 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <Edit/>,
         buttonLabel: 'label.contentManager.editImage.action',
         target: ['contentActions:2.5'],
+        requiredPermission: 'jcr:write',
         showOnNodeTypes: ['jmix:image'],
         mode: 'image-edit'
     });

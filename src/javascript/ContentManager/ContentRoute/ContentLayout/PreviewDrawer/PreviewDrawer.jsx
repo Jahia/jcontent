@@ -72,10 +72,10 @@ export class PreviewDrawer extends React.Component {
                             </ToggleButtonGroup>
                             {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
                                 <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
-                                    <IconButton variant="ghost" color="alpha" icon={<FullscreenExit/>} onClick={closeFullScreen}/>
+                                    <IconButton variant="ghost" color="inherit" icon={<FullscreenExit/>} onClick={closeFullScreen}/>
                                 </Tooltip> :
                                 <Tooltip title={t('label.contentManager.contentPreview.expand')}>
-                                    <IconButton variant="ghost" color="alpha" icon={<Fullscreen/>} onClick={openFullScreen}/>
+                                    <IconButton variant="ghost" color="inherit" icon={<Fullscreen/>} onClick={openFullScreen}/>
                                 </Tooltip>
                             }
                         </Grid>

@@ -26,9 +26,7 @@ class PreviewComponent extends React.Component {
             if (element.contentWindow) {
                 frameDoc = element.contentWindow.document;
             }
-            frameDoc.open();
-            frameDoc.writeln(displayValue);
-            frameDoc.close();
+            frameDoc.body.innerHTML = displayValue;
             if (assets !== null) {
                 let iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
                 assets.forEach(asset => {

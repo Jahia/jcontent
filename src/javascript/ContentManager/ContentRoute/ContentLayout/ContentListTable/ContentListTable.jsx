@@ -291,7 +291,7 @@ export class ContentListTable extends React.Component {
                                         );
                                     }
                                     if (_.isEmpty(rows) && !loading) {
-                                        if (mode === ContentManagerConstants.mode.SEARCH) {
+                                        if ((mode === ContentManagerConstants.mode.SEARCH) || (mode === ContentManagerConstants.mode.SQL2SEARCH)) {
                                             return (
                                                 <TableBody>
                                                     <EmptyRow columnData={columnData} t={t}/>

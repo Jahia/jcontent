@@ -41,14 +41,14 @@ export class SearchBarSql2 extends React.Component {
         if (state.ongoingSearch && (state.ongoingSearch.sql2SearchWhere !== params.sql2SearchWhere || state.ongoingSearch.sql2SearchFrom !== params.sql2SearchFrom)) {
             // Props have changed compared to previous search, override the current state
             return {
-                sql2SearchWhere: params.sql2SearchWhere ? params.sql2SearchWhere : '',
-                sql2SearchFrom: params.sql2SearchFrom ? params.sql2SearchFrom : '',
+                sql2SearchWhere: params.sql2SearchWhere !== undefined ? params.sql2SearchWhere : '',
+                sql2SearchFrom: params.sql2SearchFrom !== undefined ? params.sql2SearchFrom : '',
                 ongoingSearch: params
             };
         }
         return {
-            sql2SearchWhere: state.sql2SearchWhere ? state.sql2SearchWhere : (params.sql2SearchWhere ? params.sql2SearchWhere : ''),
-            sql2SearchFrom: state.sql2SearchFrom ? state.sql2SearchFrom : (params.sql2SearchFrom ? params.sql2SearchFrom : ''),
+            sql2SearchWhere: state.sql2SearchWhere !== undefined ? state.sql2SearchWhere : (params.sql2SearchWhere ? params.sql2SearchWhere : ''),
+            sql2SearchFrom: state.sql2SearchFrom !== undefined ? state.sql2SearchFrom : (params.sql2SearchFrom ? params.sql2SearchFrom : ''),
             ongoingSearch: params
         };
     }

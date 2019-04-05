@@ -39,14 +39,14 @@ export class SearchBarNormal extends React.Component {
         if (state.ongoingSearch && (state.ongoingSearch.searchTerms !== params.searchTerms || state.ongoingSearch.searchContentType !== params.searchContentType)) {
             // Props have changed compared to previous search, override the current state
             return {
-                searchContentType: params.searchContentType ? params.searchContentType : '',
-                searchTerms: params.searchTerms ? params.searchTerms : '',
+                searchContentType: params.searchContentType !== undefined ? params.searchContentType : '',
+                searchTerms: params.searchTerms !== undefined ? params.searchTerms : '',
                 ongoingSearch: params
             };
         }
         return {
-            searchContentType: state.searchContentType ? state.searchContentType : (params.searchContentType ? params.searchContentType : ''),
-            searchTerms: state.searchTerms ? state.searchTerms : (params.searchTerms ? params.searchTerms : ''),
+            searchContentType: state.searchContentType !== undefined ? state.searchContentType : (params.searchContentType ? params.searchContentType : ''),
+            searchTerms: state.searchTerms !== undefined ? state.searchTerms : (params.searchTerms ? params.searchTerms : ''),
             ongoingSearch: params
         };
     }

@@ -17,7 +17,6 @@ import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
-import DxContext from '../../../DxContext';
 import PublicationStatus from '../PublicationStatus';
 import Moment from 'react-moment';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
@@ -34,7 +33,7 @@ import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSe
 import ContentManagerConstants from '../../../ContentManager.constants';
 import ContentListEmptyDropZone from './ContentListEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
-import EmptyRow from './EmptyRow';
+import EmptyTable from './EmptyTable';
 
 const allColumnData = [
     {
@@ -226,7 +225,7 @@ const styles = theme => ({
 export class ContentListTable extends React.Component {
     getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
         let selected = isSelected && isPreviewOpened;
-        let cellClasses = {
+        return {
             root: classNames(
                 classes.cell,
                 classes[column + 'Cell'],
@@ -237,18 +236,20 @@ export class ContentListTable extends React.Component {
                 }
             )
         };
-        return cellClasses;
     }
 
     isWip(node, lang) {
-        switch (node.wipStatus) {
-            case 'ALL_CONTENT':
-                return true;
-            case 'LANGUAGES':
-                return _.includes(node.wipLangs, lang);
-            default:
-                return false;
+        if (node.wipStatus) {
+            switch (node.wipStatus.value) {
+                case 'ALL_CONTENT':
+                    return true;
+                case 'LANGUAGES':
+                    return _.includes(node.wipLangs.values, lang);
+                default:
+                    return false;
+            }
         }
+        return false;
     }
 
     addIconSuffix(icon) {
@@ -280,216 +281,205 @@ export class ContentListTable extends React.Component {
                             selectAll={() => addSelection(rows.map(node => node.path))}
                             unselectAll={() => removeSelection(rows.map(node => node.path))}
                         />
-                        <DxContext.Consumer>
-                            {
-                                dxContext => {
-                                    if (contentNotFound) {
-                                        return (
-                                            <TableBody>
-                                                <ContentNotFound columnData={columnData} t={t} className={classes.empty}/>
-                                            </TableBody>
-                                        );
-                                    }
-                                    if (_.isEmpty(rows) && !loading) {
-                                        if ((mode === ContentManagerConstants.mode.SEARCH) || (mode === ContentManagerConstants.mode.SQL2SEARCH)) {
+                        {
+                            contentNotFound ? (
+                                <ContentNotFound columnData={columnData} t={t} className={classes.empty}/>
+                            ) :
+                            (
+                                (_.isEmpty(rows) && !loading) ? (
+                                    (mode === ContentManagerConstants.mode.SEARCH) ?
+                                        <EmptyTable columnData={columnData} t={t}/> :
+                                        <ContentListEmptyDropZone mode={mode} path={path}/>
+                                ) :
+                                (
+                                    <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path} mode={mode}>
+                                        {rows.map(node => {
+                                            let isSelected = node.path === previewSelection && isPreviewOpened;
+                                            let icon = this.addIconSuffix(node.primaryNodeType.icon);
+                                            let showActions = !isPreviewOpened && selection.length === 0;
+                                            let contextualMenu = React.createRef();
+                                            let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
                                             return (
-                                                <TableBody>
-                                                    <EmptyRow columnData={columnData} t={t}/>
-                                                </TableBody>
-                                            );
-                                        }
-                                        return <ContentListEmptyDropZone mode={mode} path={path}/>;
-                                    }
-                                    return (
-                                        <UploadTransformComponent uploadTargetComponent={TableBody} uploadPath={path} mode={mode}>
-                                            {rows.map(node => {
-                                                let isSelected = node.path === previewSelection && isPreviewOpened;
-                                                let icon = this.addIconSuffix(node.primaryNodeType.icon);
-                                                let showActions = !isPreviewOpened && selection.length === 0;
-                                                let contextualMenu = React.createRef();
-                                                let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
-                                                return (
-                                                    <TableRow
-                                                        key={node.uuid}
-                                                        hover
-                                                        classes={{
-                                                            root: classNames(classes.row, {
-                                                                [classes.rowCursor]: isPreviewOpened,
-                                                                [classes.rowShowActions]: showActions
-                                                            }),
-                                                            selected: classes.selectedRow
-                                                        }}
-                                                        data-cm-node-path={node.path}
-                                                        data-cm-role="table-content-list-row"
-                                                        selected={isSelected}
-                                                        onClick={() => {
-                                                            if (!node.notSelectableForPreview) {
-                                                                onPreviewSelect(node.path);
-                                                            }
-                                                        }}
-                                                        onContextMenu={event => {
-                                                            event.stopPropagation();
-                                                            contextualMenu.current.open(event);
-                                                        }}
-                                                        onDoubleClick={allowDoubleClickNavigation(
-                                                            node.primaryNodeType.name,
-                                                            node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                                            () => setPath(siteKey, node.path, mode)
-                                                        )}
+                                                <TableRow
+                                                    key={node.uuid}
+                                                    hover
+                                                    classes={{
+                                                        root: classNames(classes.row, {
+                                                            [classes.rowCursor]: isPreviewOpened,
+                                                            [classes.rowShowActions]: showActions
+                                                        }),
+                                                        selected: classes.selectedRow
+                                                    }}
+                                                    data-cm-node-path={node.path}
+                                                    data-cm-role="table-content-list-row"
+                                                    selected={isSelected}
+                                                    onClick={() => {
+                                                        if (!node.notSelectableForPreview) {
+                                                            onPreviewSelect(node.path);
+                                                        }
+                                                    }}
+                                                    onContextMenu={event => {
+                                                        event.stopPropagation();
+                                                        contextualMenu.current.open(event);
+                                                    }}
+                                                    onDoubleClick={allowDoubleClickNavigation(
+                                                        node.primaryNodeType.name,
+                                                        node.subNodes ? node.subNodes.pageInfo.totalCount : null,
+                                                        () => setPath(siteKey, node.path, mode)
+                                                    )}
+                                                >
+                                                    <ContextualMenu
+                                                        ref={contextualMenu}
+                                                        actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
+                                                        context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
+                                                    />
+                                                    <TableCell
+                                                        padding="none"
+                                                        classes={{root: classes.publicationCell}}
+                                                        data-cm-role="table-content-list-cell-publication"
                                                     >
-                                                        <ContextualMenu
-                                                            ref={contextualMenu}
-                                                            actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                                            context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
+                                                        <PublicationStatus
+                                                            node={node}
+                                                            classes={{
+                                                                root: classes.publicationStatusRoot,
+                                                                border: classes.publicationStatusBorder,
+                                                                publicationInfoWrapper: classes.publicationInfoWrapper
+                                                            }}
                                                         />
-                                                        <TableCell
-                                                            padding="none"
-                                                            classes={{root: classes.publicationCell}}
-                                                            data-cm-role="table-content-list-cell-publication"
-                                                        >
-                                                            <PublicationStatus
-                                                                node={node}
-                                                                classes={{
-                                                                    root: classes.publicationStatusRoot,
-                                                                    border: classes.publicationStatusBorder,
-                                                                    publicationInfoWrapper: classes.publicationInfoWrapper
-                                                                }}
-                                                            />
-                                                        </TableCell>
-                                                        <TableCell
-                                                            padding="checkbox"
-                                                            classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
-                                                        >
-                                                            <Checkbox
-                                                                checked={selection.indexOf(node.path) !== -1}
-                                                                onClick={event => {
-                                                                    switchSelection(node.path);
-                                                                    event.stopPropagation();
-                                                                }}
-                                                            />
-                                                        </TableCell>
-                                                        {columnData.map(column => {
-                                                            if (column.id === 'name') {
-                                                                return (
-                                                                    <TableCell
-                                                                        key={column.id}
-                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
-                                                                        data-cm-role="table-content-list-cell-name"
-                                                                    >
-                                                                        {showSubNodes ?
-                                                                            <Badge
-                                                                                badgeContent={node.subNodes.pageInfo.totalCount}
-                                                                                invisible={node.subNodes.pageInfo.totalCount === 0}
-                                                                                classes={{badge: classes.badge}}
-                                                                                data-cm-role="sub-contents-count"
-                                                                            >
-                                                                                <Typography noWrap variant="iota" color="inherit">
-                                                                                    <img src={icon}/>
-                                                                                    {_.get(node, column.property)}
-                                                                                </Typography>
-                                                                            </Badge> :
+                                                    </TableCell>
+                                                    <TableCell
+                                                        padding="checkbox"
+                                                        classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
+                                                    >
+                                                        <Checkbox
+                                                            checked={selection.indexOf(node.path) !== -1}
+                                                            onClick={event => {
+                                                                switchSelection(node.path);
+                                                                event.stopPropagation();
+                                                            }}
+                                                        />
+                                                    </TableCell>
+                                                    {columnData.map(column => {
+                                                        if (column.id === 'name') {
+                                                            return (
+                                                                <TableCell
+                                                                    key={column.id}
+                                                                    classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                    data-cm-role="table-content-list-cell-name"
+                                                                >
+                                                                    {showSubNodes ?
+                                                                        <Badge
+                                                                            badgeContent={node.subNodes.pageInfo.totalCount}
+                                                                            invisible={node.subNodes.pageInfo.totalCount === 0}
+                                                                            classes={{badge: classes.badge}}
+                                                                            data-cm-role="sub-contents-count"
+                                                                        >
                                                                             <Typography noWrap variant="iota" color="inherit">
                                                                                 <img src={icon}/>
                                                                                 {_.get(node, column.property)}
                                                                             </Typography>
-                                                                        }
-                                                                    </TableCell>
-                                                                );
-                                                            }
-                                                            if (column.id === 'wip') {
-                                                                return (
-                                                                    <TableCell
-                                                                        key={column.id}
-                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
-                                                                        padding="none"
-                                                                    >
-                                                                        {this.isWip(node, lang) &&
-                                                                            <Tooltip title={t('label.contentManager.workInProgress', {wipLang: dxContext.langName})}>
-                                                                                <Wrench fontSize="small" color="inherit"/>
-                                                                            </Tooltip>
-                                                                        }
-                                                                    </TableCell>
-                                                                );
-                                                            }
-                                                            if (column.id === 'lock') {
-                                                                return (
-                                                                    <TableCell
-                                                                        key={column.id}
-                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
-                                                                        padding="none"
-                                                                    >
-                                                                        {node.lockOwner !== null &&
-                                                                            <Tooltip title={t('label.contentManager.locked')}>
-                                                                                <Lock fontSize="small" color="inherit"/>
-                                                                            </Tooltip>
-                                                                        }
-                                                                    </TableCell>
-                                                                );
-                                                            }
-                                                            if (column.id === 'lastModified') {
-                                                                return (
-                                                                    <TableCell
-                                                                        key={column.id}
-                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
-                                                                        data-cm-role={'table-content-list-cell-' + column.id}
-                                                                        padding={showActions ? 'checkbox' : 'default'}
-                                                                    >
-                                                                        <Typography noWrap variant="iota" color="inherit" className={classes.lastModifiedTypography}>
-                                                                            <Moment format="ll" locale={uiLang}>
-                                                                                {_.get(node, column.property)}
-                                                                            </Moment>
+                                                                        </Badge> :
+                                                                        <Typography noWrap variant="iota" color="inherit">
+                                                                            <img src={icon}/>
+                                                                            {_.get(node, column.property)}
                                                                         </Typography>
-                                                                        {showActions &&
-                                                                            <div key="actions" className={classes.actionsDiv} data-cm-role="table-content-list-cell-actions">
-                                                                                <DisplayActions
-                                                                                    target="contentActions"
-                                                                                    filter={value => {
-                                                                                        return _.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
-                                                                                    }}
-                                                                                    context={{path: node.path}}
-                                                                                    render={iconButtonRenderer({
-                                                                                        color: 'inherit',
-                                                                                        disableRipple: true
-                                                                                    }, true)}
-                                                                                />
-                                                                                <DisplayAction
-                                                                                    actionKey="contentMenu"
-                                                                                    context={{
-                                                                                        path: node.path,
-                                                                                        menuFilter: value => {
-                                                                                            return !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
-                                                                                        }
-                                                                                    }}
-                                                                                    render={iconButtonRenderer({
-                                                                                        color: 'inherit',
-                                                                                        disableRipple: true
-                                                                                    }, true)}
-                                                                                />
-                                                                            </div>
-                                                                        }
-                                                                    </TableCell>
-                                                                );
-                                                            }
+                                                                    }
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                        if (column.id === 'wip') {
+                                                            return (
+                                                                <TableCell
+                                                                    key={column.id}
+                                                                    classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                    padding="none"
+                                                                >
+                                                                    {this.isWip(node, lang) &&
+                                                                        <Tooltip title={node.wipLangs ? t('label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('label.contentManager.workInProgressAll')}>
+                                                                            <Wrench fontSize="small" color="inherit"/>
+                                                                        </Tooltip>
+                                                                    }
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                        if (column.id === 'lock') {
+                                                            return (
+                                                                <TableCell
+                                                                    key={column.id}
+                                                                    classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                    padding="none"
+                                                                >
+                                                                    {node.lockOwner !== null &&
+                                                                    <Tooltip title={t('label.contentManager.locked')}>
+                                                                        <Lock fontSize="small" color="inherit"/>
+                                                                    </Tooltip>
+                                                                    }
+                                                                </TableCell>
+                                                            );
+                                                        }
+                                                        if (column.id === 'lastModified') {
                                                             return (
                                                                 <TableCell
                                                                     key={column.id}
                                                                     classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                     data-cm-role={'table-content-list-cell-' + column.id}
+                                                                    padding={showActions ? 'checkbox' : 'default'}
                                                                 >
-                                                                    <Typography noWrap variant="iota" color="inherit">
-                                                                        {_.get(node, column.property)}
+                                                                    <Typography noWrap variant="iota" color="inherit" className={classes.lastModifiedTypography}>
+                                                                        <Moment format="ll" locale={uiLang}>
+                                                                            {_.get(node, column.property)}
+                                                                        </Moment>
                                                                     </Typography>
+                                                                    {showActions &&
+                                                                    <div key="actions" className={classes.actionsDiv} data-cm-role="table-content-list-cell-actions">
+                                                                        <DisplayActions
+                                                                            target="contentActions"
+                                                                            filter={value => {
+                                                                                return _.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
+                                                                            }}
+                                                                            context={{path: node.path}}
+                                                                            render={iconButtonRenderer({
+                                                                                                           color: 'inherit',
+                                                                                                           disableRipple: true
+                                                                                                       }, true)}
+                                                                        />
+                                                                        <DisplayAction
+                                                                            actionKey="contentMenu"
+                                                                            context={{
+                                                                                path: node.path,
+                                                                                menuFilter: value => {
+                                                                                    return !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
+                                                                                }
+                                                                            }}
+                                                                            render={iconButtonRenderer({
+                                                                                                           color: 'inherit',
+                                                                                                           disableRipple: true
+                                                                                                       }, true)}
+                                                                        />
+                                                                    </div>
+                                                                    }
                                                                 </TableCell>
                                                             );
-                                                        })}
-                                                    </TableRow>
-                                                );
-                                            })}
-                                        </UploadTransformComponent>
-                                    );
-                                }
-                            }
-                        </DxContext.Consumer>
+                                                        }
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                data-cm-role={'table-content-list-cell-' + column.id}
+                                                            >
+                                                                <Typography noWrap variant="iota" color="inherit">
+                                                                    {_.get(node, column.property)}
+                                                                </Typography>
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </UploadTransformComponent>
+                                )
+                            )
+                        }
                     </Table>
                 </div>
                 <Pagination

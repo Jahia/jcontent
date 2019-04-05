@@ -298,7 +298,6 @@ function contentManagerActions(actionsRegistry) {
     });
     actionsRegistry.add('manageLeftMenu', sideMenuAction, {
         buttonLabel: 'label.contentManager.leftMenu.manage.title',
-        // ButtonIcon: <Error/>,
         target: ['leftMenuActions:5'],
         buttonIcon: <ManageIcon/>,
         menu: 'leftMenuManageActions',

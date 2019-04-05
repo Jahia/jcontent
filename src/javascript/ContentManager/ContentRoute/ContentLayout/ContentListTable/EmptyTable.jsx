@@ -4,22 +4,19 @@ import {TableBody, TableCell, TableRow} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import ContentListTableConstants from './ContentListTable.constants';
 
-const ContentNotFound = ({columnData, t, className}) => (
+const EmptyTable = ({columnData, t}) => (
     <TableBody>
         <TableRow>
-            <TableCell colSpan={columnData.length + ContentListTableConstants.appTableCells}>
-                <Typography variant="p" className={className}>
-                    {t('label.contentManager.contentNotFound')}
-                </Typography>
+            <TableCell colSpan={columnData.length + ContentListTableConstants.appTableCells + 2}>
+                <Typography variant="p">{t('label.contentManager.noResults')}</Typography>
             </TableCell>
         </TableRow>
     </TableBody>
 );
 
-ContentNotFound.propTypes = {
-    className: PropTypes.string,
+EmptyTable.propTypes = {
     columnData: PropTypes.array.isRequired,
     t: PropTypes.func.isRequired
 };
 
-export default ContentNotFound;
+export default EmptyTable;

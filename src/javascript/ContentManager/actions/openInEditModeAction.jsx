@@ -11,6 +11,6 @@ export default composeActions(requirementsAction, withDxContextAction, {
     },
     showOnNodeTypes: ['jnt:page', 'jmix:editorialContent', 'jnt:content'],
     onClick: context => {
-        window.open(context.dxContext.contextPath + '/cms/edit/default/' + context.dxContext.lang + context.node.displayableNode.path + '.html', '_blank');
+        window.open(context.dxContext.contextPath + '/cms/edit/default/' + context.language + context.node.displayableNode.path + '.html', '_blank');
     }
 });

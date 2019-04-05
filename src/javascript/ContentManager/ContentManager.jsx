@@ -6,7 +6,6 @@ import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
 import {I18n, I18nextProvider} from 'react-i18next';
-import {Route, Switch} from 'react-router';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
 import * as _ from 'lodash';
@@ -17,9 +16,10 @@ import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import contentManagerActions from './ContentManager.actions';
 import contentManagerStyleConstants from './ContentManager.style-constants';
-import {AppLayout, styleConstants} from '@jahia/layouts';
+import {styleConstants} from '@jahia/layouts';
 import {registry} from '@jahia/registry';
 import contentManagerRoutes from './ContentManager.routes';
+import AppLayout from './AppLayout';
 
 class ContentManager extends React.Component {
     constructor(props) {
@@ -78,8 +78,6 @@ class ContentManager extends React.Component {
     render() {
         let {dxContext} = this.props;
 
-        let routes = registry.find({type: 'route', target: 'cmm'});
-
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
@@ -104,21 +102,7 @@ class ContentManager extends React.Component {
                                             <PushEventHandler/>
                                             <ComponentRendererProvider>
                                                 <ConnectedRouter history={this.getHistory(dxContext, t)}>
-                                                    <AppLayout
-                                                        leftNavigationProps={{
-                                                            context: {
-                                                                path: '/sites/' + dxContext.siteKey
-                                                            },
-                                                            actionsTarget: 'leftMenuActions',
-                                                            secondaryActionsTarget: 'leftMenuBottomActions'
-                                                        }}
-                                                    >
-                                                        <Switch>
-                                                            { routes.map(r =>
-                                                                <Route key={r.key} path={r.path} render={props => r.render(props, {dxContext, t})}/>
-                                                            ) }
-                                                        </Switch>
-                                                    </AppLayout>
+                                                    <AppLayout dxContext={dxContext}/>
                                                 </ConnectedRouter>
                                             </ComponentRendererProvider>
                                         </DxContext.Provider>

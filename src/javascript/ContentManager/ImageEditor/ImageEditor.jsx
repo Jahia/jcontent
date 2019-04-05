@@ -193,4 +193,3 @@ export default compose(
     translate(),
     withStyles(styles)
 )(ImageEditor);
-

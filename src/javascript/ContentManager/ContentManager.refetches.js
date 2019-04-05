@@ -1,5 +1,8 @@
 import ContentManagerConstants from './ContentManager.constants';
 import _ from 'lodash';
+import {Subject} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
+
 /**
  * Apollo's Query component allows one to use refetch function to rerun a query bound to the component.
  * The purpose of this code is to be able to create hooks to refetch functions and call them outside of Query components.
@@ -7,6 +10,14 @@ import _ from 'lodash';
  * Note that calling refetch() will use the same query parameters as used for the last call, but you can also supply new
  * parameters if needed.
  */
+
+const debouncer = (fn, delay) => {
+    let s = new Subject();
+    s.pipe(debounceTime(delay)).subscribe(fn);
+    return () => {
+        s.next({});
+    };
+};
 
 const contentManagerRefetches = {};
 
@@ -39,9 +50,9 @@ let triggerRefetch = (name, queryParams) => {
     }
 };
 
-let refetchActiveWorkflowTasks = () => {
+let refetchActiveWorkflowTasks = debouncer(() => {
     triggerRefetch(refetchTypes.ACTIVE_WORKFLOW_TASKS);
-};
+}, 1000);
 
 let refetchContentListData = () => {
     triggerRefetch(refetchTypes.CONTENT_DATA);

@@ -111,10 +111,9 @@ export class FilesGrid extends Component {
                                               className={(!gridMode || gridMode === 'thumbnail') ? classes.centerGrid : classes.detailedGrid}
                     >
                         {this.props.rows.map((node, index) => (
-                            <DxContext.Consumer>
+                            <DxContext.Consumer key={node.uuid}>
                                 {dxContext => (
                                     <FileCard
-                                            key={node.uuid}
                                             gridMode={gridMode}
                                             mode={mode}
                                             uiLang={uiLang}

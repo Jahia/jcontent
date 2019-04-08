@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
-import {Route, Switch} from 'react-router';
+import {Route, Switch, withRouter} from 'react-router';
 import {AppLayout} from '@jahia/layouts';
 import {registry} from '@jahia/registry';
 
@@ -43,6 +43,7 @@ AppLayoutContainer.propTypes = {
 };
 
 export default compose(
+    withRouter,
     translate(),
     connect(mapStateToProps, null),
 )(AppLayoutContainer);

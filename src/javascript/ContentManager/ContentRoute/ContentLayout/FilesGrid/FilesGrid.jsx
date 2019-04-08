@@ -4,15 +4,17 @@ import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import FileCard from './FileCard';
-import {Grid, withStyles} from '@material-ui/core';
+import {Grid, Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
 import {Pagination} from '@jahia/react-material';
 import DxContext from '../../../DxContext';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {valueToSizeTransformation} from './FilesGrid.utils';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
+import {cmSetPreviewSelection} from '../../../preview.redux-actions';
+import {cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
+import {extractPaths} from '../../../ContentManager.utils';
 
 const styles = theme => ({
     grid: {
@@ -29,7 +31,18 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default
     },
     centerGrid: {
-        padding: theme.spacing.unit * 2
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        boxShadow: 'none',
+        justifyContent: 'center',
+        background: theme.palette.background.default
+    },
+    detailedGrid: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        boxShadow: 'none',
+        justifyContent: 'center',
+        background: theme.palette.background.default
     },
     empty: {
         textAlign: 'center',
@@ -58,7 +71,8 @@ export class FilesGrid extends Component {
     }
 
     render() {
-        const {size, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, setCurrentPage, rows, loading} = this.props;
+        const {gridMode, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, onPreviewSelect,
+            setCurrentPage, rows, loading, mode, uiLang, siteKey, previewSelection, previewState, setPath} = this.props;
         const {hoveredCard} = this.state;
 
         if ((!rows || rows.length === 0) && loading) {
@@ -91,28 +105,33 @@ export class FilesGrid extends Component {
             <React.Fragment>
                 <ToolBar/>
                 <div className={classes.grid} data-cm-role="grid-content-list">
-                    <UploadTransformComponent container uploadTargetComponent={Grid} uploadPath={path} mode="browse-files">
+                    <UploadTransformComponent uploadTargetComponent={Paper}
+                                              uploadPath={path}
+                                              mode="browse-files"
+                                              className={(!gridMode || gridMode === 'thumbnail') ? classes.centerGrid : classes.detailedGrid}
+                    >
                         {this.props.rows.map((node, index) => (
-                            <Grid
-                                key={node.uuid}
-                                item
-                                xs={size}
-                                className={classes.centerGrid}
-                                onMouseEnter={$event => this.onHoverEnter($event, node.path)}
-                                onMouseLeave={$event => this.onHoverExit($event)}
-                            >
-                                <DxContext.Consumer>
-                                    {dxContext => (
-                                        <FileCard
-                                            cardType={size}
+                            <DxContext.Consumer>
+                                {dxContext => (
+                                    <FileCard
+                                            key={node.uuid}
+                                            gridMode={gridMode}
+                                            mode={mode}
+                                            uiLang={uiLang}
+                                            siteKey={siteKey}
+                                            previewSelection={previewSelection}
+                                            previewState={previewState}
                                             index={index}
                                             isHovered={node.path === hoveredCard}
                                             node={node}
                                             dxContext={dxContext}
+                                            setPath={setPath}
+                                            onPreviewSelect={onPreviewSelect}
+                                            onMouseEnter={$event => this.onHoverEnter($event, node.path)}
+                                            onMouseLeave={$event => this.onHoverExit($event)}
                                         />
                                     )}
-                                </DxContext.Consumer>
-                            </Grid>
+                            </DxContext.Consumer>
                         ))}
                     </UploadTransformComponent>
                 </div>
@@ -131,12 +150,22 @@ export class FilesGrid extends Component {
 let mapStateToProps = state => ({
     path: state.path,
     pagination: state.pagination,
-    size: valueToSizeTransformation(state.filesGrid.size)
+    gridMode: state.filesGrid.gridMode,
+    mode: state.filesGrid.mode,
+    siteKey: state.site,
+    uiLang: state.uiLang,
+    previewSelection: state.previewSelection,
+    previewState: state.previewState
 });
 
 let mapDispatchToProps = dispatch => ({
     setCurrentPage: page => dispatch(cmSetPage(page)),
-    setPageSize: pageSize => dispatch(cmSetPageSize(pageSize))
+    onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
+    setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
+    setPath: (siteKey, path, mode) => {
+        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
+        dispatch(cmGoto({path: path}));
+    }
 });
 
 FilesGrid.propTypes = {
@@ -148,9 +177,16 @@ FilesGrid.propTypes = {
     rows: PropTypes.array.isRequired,
     setCurrentPage: PropTypes.func.isRequired,
     setPageSize: PropTypes.func.isRequired,
-    size: PropTypes.number.isRequired,
+    gridMode: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
-    totalCount: PropTypes.number.isRequired
+    uiLang: PropTypes.string.isRequired,
+    previewSelection: PropTypes.string,
+    previewState: PropTypes.number.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    mode: PropTypes.string.isRequired,
+    totalCount: PropTypes.number.isRequired,
+    onPreviewSelect: PropTypes.func.isRequired,
+    setPath: PropTypes.func.isRequired
 };
 
 export default compose(

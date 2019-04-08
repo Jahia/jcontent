@@ -4,10 +4,10 @@ import {Select} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
-import {setMode, setSize} from '../../FilesGrid/FilesGrid.redux-actions';
+import {setMode, setGridMode} from '../../FilesGrid/FilesGrid.redux-actions';
 import PropTypes from 'prop-types';
 
-export const FileModeSelector = ({t, mode, size, onChange, setSize}) => {
+export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
     const handleChange = e => {
         let selectedMode = e.target.value;
         switch (selectedMode) {
@@ -16,14 +16,14 @@ export const FileModeSelector = ({t, mode, size, onChange, setSize}) => {
                 break;
             case 'thumbnail':
                 onChange('grid');
-                if (size !== 1) {
-                    setSize(1);
+                if (gridMode !== 'thumbnail') {
+                    onGridMode('thumbnail');
                 }
                 break;
             case 'detailed-view':
                 onChange('grid');
-                if (size !== 5) {
-                    setSize(5);
+                if (gridMode !== 'detailed') {
+                    onGridMode('detailed');
                 }
                 break;
             default:
@@ -33,7 +33,7 @@ export const FileModeSelector = ({t, mode, size, onChange, setSize}) => {
         }
     };
 
-    let select = mode === 'grid' && size === 1 ? 'thumbnail' : (mode === 'grid' ? 'detailed-view' : 'list-view');
+    let select = mode === 'grid' && gridMode === 'thumbnail' ? 'thumbnail' : (mode === 'grid' ? 'detailed-view' : 'list-view');
 
     return (
         <Select
@@ -53,19 +53,19 @@ export const FileModeSelector = ({t, mode, size, onChange, setSize}) => {
 FileModeSelector.propTypes = {
     t: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    setSize: PropTypes.func.isRequired,
+    onGridMode: PropTypes.func.isRequired,
     mode: PropTypes.string.isRequired,
-    size: PropTypes.number.isRequired
+    gridMode: PropTypes.string.isRequired
 };
 
 let mapStateToProps = state => ({
     mode: state.filesGrid.mode,
-    size: state.filesGrid.size
+    gridMode: state.filesGrid.gridMode
 });
 
 let mapDispatchToProps = dispatch => ({
     onChange: mode => dispatch(setMode(mode)),
-    setSize: size => dispatch(setSize(size))
+    onGridMode: gridMode => dispatch(setGridMode(gridMode))
 });
 
 export default compose(

@@ -5,9 +5,9 @@ export const setMode = mode => {
     };
 };
 
-export const setSize = size => {
+export const setGridMode = gridMode => {
     return {
-        type: 'FILESGRID_SET_SIZE',
-        size
+        type: 'FILESGRID_SET_GRID_MODE',
+        gridMode
     };
 };

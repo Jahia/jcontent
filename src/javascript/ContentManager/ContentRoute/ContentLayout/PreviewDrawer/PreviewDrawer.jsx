@@ -31,6 +31,9 @@ const styles = theme => ({
         '& button': {
             margin: theme.spacing.unit
         }
+    },
+    leftGutter: {
+        marginLeft: theme.spacing.unit * 2
     }
 });
 
@@ -84,7 +87,7 @@ export class PreviewDrawer extends React.Component {
                 <ContentPreview previewSelection={previewSelection}/>
                 {previewSelection &&
                     <Card>
-                        <CardContent data-cm-role="preview-name">
+                        <CardContent data-cm-role="preview-name" className={classes.leftGutter}>
                             <Typography gutterBottom noWrap variant="gamma">
                                 {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                             </Typography>

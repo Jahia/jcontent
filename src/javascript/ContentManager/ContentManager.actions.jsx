@@ -261,7 +261,6 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <Add/>,
         buttonLabel: 'label.contentManager.create.create',
         target: ['tableHeaderActions:10'],
-        menuPreload: true,
         menu: 'createMenuActions',
         showIcons: true
     });

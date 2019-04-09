@@ -134,6 +134,8 @@ export class FilesGrid extends Component {
                                     )}
                             </DxContext.Consumer>
                         ))}
+                        {/* please keep this divs to handle the grid layout when there is less than 6 elements */}
+                        <div/><div/><div/><div/><div/><div/>
                     </UploadTransformComponent>
                 </div>
                 <Pagination

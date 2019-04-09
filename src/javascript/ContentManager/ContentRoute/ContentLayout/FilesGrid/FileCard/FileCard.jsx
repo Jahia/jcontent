@@ -23,7 +23,6 @@ const styles = theme => ({
         cursor: 'pointer',
         position: 'relative',
         minWidth: 200,
-        maxWidth: 500,
         minHeight: 200,
         maxHeight: 200,
         backgroundColor: theme.palette.background.paper,
@@ -36,7 +35,6 @@ const styles = theme => ({
         flex: '1 1 0%',
         minHeight: 252,
         minWidth: 150,
-        maxWidth: 150,
         maxHeight: 252,
         '& $defaultFileCover': {
             height: 150

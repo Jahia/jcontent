@@ -1,5 +1,7 @@
 import {cmGoto} from './ContentManager.redux-actions';
 import _ from 'lodash';
+import rison from 'rison';
+import queryString from 'query-string';
 
 const PARAMS_KEY = '?params=';
 const DEFAULT_MODE_PATHS = {browse: '/contents', 'browse-files': '/files'};
@@ -28,7 +30,7 @@ let buildUrl = (site, language, mode, path, params) => {
     } else {
         path = '';
     }
-    let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + encodeURIComponent(encodeURIComponent(JSON.stringify(params)));
+    let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + rison.encode_uri(params);
     return '/' + [site, language, mode].join('/') + path + queryString;
 };
 
@@ -55,7 +57,10 @@ let extractParamsFromUrl = (pathname, search) => {
 
 let deserializeQueryString = search => {
     if (search) {
-        return JSON.parse(decodeURIComponent(decodeURIComponent(search.substring(PARAMS_KEY.length).replace(/\+/g, '%20'))));
+        let params = queryString.parse(search).params;
+        if (params) {
+            return rison.decode(params);
+        }
     }
     return {};
 };

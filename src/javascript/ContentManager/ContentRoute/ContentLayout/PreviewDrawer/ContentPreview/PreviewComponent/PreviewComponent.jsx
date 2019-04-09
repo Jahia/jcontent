@@ -27,8 +27,13 @@ class PreviewComponent extends React.Component {
                 frameDoc = element.contentWindow.document;
             }
             frameDoc.body.innerHTML = displayValue;
+            frameDoc.body.style = '';
             if (assets !== null) {
                 let iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
+                if (!iframeHeadEl) {
+                    frameDoc.getElementsByTagName('html')[0].insertBefore(frameDoc.createElement('head'), frameDoc.body);
+                    iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
+                }
                 assets.forEach(asset => {
                     let linkEl = document.createElement('link');
                     linkEl.setAttribute('rel', 'stylesheet');

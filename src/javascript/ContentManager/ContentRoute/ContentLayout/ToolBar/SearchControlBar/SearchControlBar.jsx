@@ -42,7 +42,7 @@ export class SearchControlBar extends React.Component {
                 {showActions && (path !== siteRootPath) &&
                     <Button
                         data-cm-role="search-all"
-                        variant="secondary"
+                        variant="ghost"
                         onClick={() => setPath(siteRootPath)}
                     >
                         <VirtualsiteIcon/>
@@ -52,7 +52,7 @@ export class SearchControlBar extends React.Component {
                 {showActions &&
                     <Button
                         data-cm-role="search-clear"
-                        variant="primary"
+                        variant="ghost"
                         onClick={() => clearSearch(params)}
                     >
                         <Close/>

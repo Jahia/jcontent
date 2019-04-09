@@ -779,12 +779,11 @@
     lodash "^4.17.10"
     zen-observable "^0.8.8"
 
-"@jahia/ds-mui-theme@^1.0.0-beta.20190313104751", "@jahia/ds-mui-theme@^1.0.0-beta.20190314104248":
-  version "1.0.0-beta.20190314142056"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20190314142056.tgz#1e270eb7388ffb666943a20b3d3332f698e0f723"
-  integrity sha512-eZ6wUWNTtJ9hDQMSjrArXmDHOL2F4MRuNvlTsuCVpvCme07Vrp4rpix7CtiM2jjYLyxPwDMP475yN076J7cJmw==
+"@jahia/ds-mui-theme@^1.0.0-beta.20190405120314":
+  version "1.0.0-beta.20190405120314"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20190405120314.tgz#d98b65697e75de3c57a0f29ba63a03436ed5aaca"
+  integrity sha512-Zg3I4ABY73oS5J0gwdshDRV0/orOocSYYPF4siIQp45Tw5ZFPeLnA6xrT5iMhGBe/JvcGBb4KEYIoCbUAabJ7Q==
   dependencies:
-    "@material-ui/core" "^3.6.2"
     classnames "^2.2.6"
     lodash "^4.17.10"
     prop-types "^15.6.2"
@@ -798,7 +797,7 @@
     i18next-chained-backend "^0.1.2"
     i18next-xhr-backend "^1.5.1"
 
-"@jahia/icons@^1.0.0-beta.20181011112119", "@jahia/icons@^1.0.0-beta.20190218105956":
+"@jahia/icons@^1.0.0-beta.20190218105956":
   version "1.0.0-beta.20190314142056"
   resolved "http://npm.int.jahia.com:4873/@jahia%2ficons/-/icons-1.0.0-beta.20190314142056.tgz#579675bb428a2ef0573d8c294bd78ccd5496271f"
   integrity sha512-bRhbZ0+OOI/uCRGwQZfOxIx3dsAMV8ZBy7OdwBInLWdNtNFZ0z9bi4h0nMmQQqAa4r6fYDeyBTXLtG2vNN9SdA==
@@ -832,22 +831,16 @@
     react "^16.4.0"
     react-apollo "^2.1.4"
 
-"@jahia/react-material@^1.0.0-beta.20190308153704":
-  version "1.0.0-beta.20190314142059"
-  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20190314142059.tgz#cf0831d6d645cdc13b3ad935fb580b5199604884"
-  integrity sha512-D7SiD+sbIvp2IRPQq+Z46GfTGy36p3WYwu0+k6eVQHLXyYZaGybHeUSZzagzbc3F6gWdK0vSO6zPABi0BkDE/Q==
+"@jahia/react-material@^1.0.0-beta.20190405120311":
+  version "1.0.0-beta.20190405120311"
+  resolved "http://npm.int.jahia.com:4873/@jahia%2freact-material/-/react-material-1.0.0-beta.20190405120311.tgz#8281340d99dce7c318aba171f3d8e8326bfd449a"
+  integrity sha512-wx0gGoGbuIROnTNi0bVCniekED8bEOQDBdcCnVZnRYW5ycMb/WpsKZaeIk1SCWOmYFxgwwTTA1QgfaXej9r9GA==
   dependencies:
-    "@jahia/ds-mui-theme" "^1.0.0-beta.20190313104751"
-    "@jahia/icons" "^1.0.0-beta.20181011112119"
-    "@material-ui/core" "^3.6.2"
-    "@material-ui/icons" "^3.0.1"
     lodash "^4.17.10"
     prop-types "^15.6.1"
-    react-dom "^16.4.0"
     react-i18next "^7.6.1"
-    react-select "^2.0.0"
+    react-select "^2.4.2"
     recompose "^0.30.0"
-    rxjs "^6.3.3"
 
 "@jahia/registry@^1.0.0-beta.20190130093649":
   version "1.0.0-beta.20190314142058"
@@ -6663,7 +6656,7 @@ react-data-grid@^5.0.5:
   resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-5.0.5.tgz#529f5acd4750ae0461e9da66f9f30d6f597eed76"
   integrity sha512-OR4LDoOpN4yj3NexaxYFS2OEIYFUk2V5lascPTHgtTMwwkb163tEPqQSertkv2YAJu+YBzIm8epW8+UMip1LPw==
 
-react-dom@^16.4.0, react-dom@^16.8.4:
+react-dom@^16.8.4:
   version "16.8.4"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.4.tgz#1061a8e01a2b3b0c8160037441c3bf00a0e3bc48"
   integrity sha512-Ob2wK7XG2tUDt7ps7LtLzGYYB6DXMCLj0G5fO6WeEICtT4/HdpOi7W/xLzZnR6RCG1tYza60nMdqtxzA8FaPJQ==
@@ -6797,7 +6790,7 @@ react-router@^4.3.1:
     prop-types "^15.6.1"
     warning "^4.0.1"
 
-react-select@^2.0.0:
+react-select@^2.0.0, react-select@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-2.4.2.tgz#27da80e3880e92b081be607207bebdf63bcf4f3a"
   integrity sha512-5xFOQ6JJktkY5NTaHrc6x9mKwIjhNIiBkGic1j71uyY+ulFpRFra6f4WKLd9fuCylk4WjLpO5zDhdF4CAcwFzA==

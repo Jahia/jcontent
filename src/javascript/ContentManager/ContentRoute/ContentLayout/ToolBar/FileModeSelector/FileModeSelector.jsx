@@ -40,7 +40,7 @@ export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
             autoWidth
             data-cm-role={'view-mode-' + select}
             value={select}
-            variant="normal"
+            variant="ghost"
             onChange={e => handleChange(e)}
         >
             <MenuItem value="thumbnail">{t('label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>

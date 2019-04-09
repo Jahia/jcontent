@@ -46,7 +46,7 @@ export class ToolBar extends React.Component {
                             <DisplayActions
                                 target="selectedContentActions"
                                 context={{paths: selection}}
-                                render={iconButtonRenderer({color: 'secondary', size: 'small'})}
+                                render={iconButtonRenderer({color: 'inherit', size: 'compact'})}
                             />
                         </React.Fragment>
                     }

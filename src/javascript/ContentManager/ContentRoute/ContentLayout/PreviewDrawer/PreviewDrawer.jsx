@@ -101,7 +101,7 @@ export class PreviewDrawer extends React.Component {
                                         return _.includes(['edit', 'publishMenu'], value.key);
                                     }}
                                     context={{path: previewSelection.path}}
-                                    render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
+                                    render={iconButtonRenderer({disableRipple: true}, {}, true)}
                                 />
                                 <DisplayAction
                                     actionKey="contentMenu"
@@ -111,7 +111,7 @@ export class PreviewDrawer extends React.Component {
                                             return !_.includes(['edit', 'publishMenu', 'preview'], value.key);
                                         }
                                     }}
-                                    render={iconButtonRenderer({disableRipple: true, color: 'primary'}, {}, true)}
+                                    render={iconButtonRenderer({disableRipple: true}, {}, true)}
                                 />
                             </div>
                         </CardActions>

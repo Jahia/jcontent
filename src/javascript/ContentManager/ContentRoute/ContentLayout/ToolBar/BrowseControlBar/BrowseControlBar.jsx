@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
-import {IconButton} from '@jahia/ds-mui-theme';
+import {Button} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
 import ContentBreadcrumbs from './ContentBreadcrumbs';
 import {buttonRenderer, DisplayActions} from '@jahia/react-material';
@@ -34,7 +35,7 @@ export class BrowseControlBar extends React.Component {
 
     render() {
         let {
-            path, classes, mode, contentTreeConfigs, showActions
+            path, classes, mode, contentTreeConfigs, showActions, t
         } = this.props;
 
         return (
@@ -44,15 +45,15 @@ export class BrowseControlBar extends React.Component {
                 {showActions && mode === ContentManagerConstants.mode.FILES &&
                     <FileModeSelector/>
                 }
-                {showActions &&
-                    <IconButton icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}/>
-                }
                 {showActions && !this.isRootNode() &&
                     <DisplayActions
                         target="tableHeaderActions"
                         context={{path: path}}
-                        render={buttonRenderer({variant: 'primary'}, true)}
+                        render={buttonRenderer({variant: 'ghost'}, true)}
                     />
+                }
+                {showActions &&
+                <Button variant="ghost" icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}><span>{t('label.contentManager.refresh')}</span></Button>
                 }
             </React.Fragment>
         );
@@ -66,6 +67,7 @@ const mapStateToProps = state => ({
 });
 
 BrowseControlBar.propTypes = {
+    t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     contentTreeConfigs: PropTypes.object,
     mode: PropTypes.string.isRequired,
@@ -76,5 +78,6 @@ BrowseControlBar.propTypes = {
 
 export default compose(
     connect(mapStateToProps),
+    translate(),
     withStyles(styles),
 )(BrowseControlBar);

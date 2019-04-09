@@ -9,7 +9,8 @@ const styles = () => ({
         top: 8,
         right: 8,
         '& button': {
-            padding: '8px'
+            padding: '8px',
+            margin: '0px'
         }
     }
 });

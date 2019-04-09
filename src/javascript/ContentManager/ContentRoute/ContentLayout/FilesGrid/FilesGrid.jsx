@@ -14,6 +14,7 @@ import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 import {cmSetPreviewSelection} from '../../../preview.redux-actions';
 import {cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
+import classNames from 'classnames';
 import {extractPaths} from '../../../ContentManager.utils';
 
 const styles = theme => ({
@@ -30,19 +31,18 @@ const styles = theme => ({
         margin: '0!important',
         backgroundColor: theme.palette.background.default
     },
-    centerGrid: {
+    defaultGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: '16px 16px',
         boxShadow: 'none',
         justifyContent: 'center',
         background: theme.palette.background.default
     },
+    thumbGrid: {
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))'
+    },
     detailedGrid: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        boxShadow: 'none',
-        justifyContent: 'center',
-        background: theme.palette.background.default
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))'
     },
     empty: {
         textAlign: 'center',
@@ -108,7 +108,9 @@ export class FilesGrid extends Component {
                     <UploadTransformComponent uploadTargetComponent={Paper}
                                               uploadPath={path}
                                               mode="browse-files"
-                                              className={(!gridMode || gridMode === 'thumbnail') ? classes.centerGrid : classes.detailedGrid}
+                                              className={classNames(classes.defaultGrid,
+                                                  (!gridMode || gridMode === 'thumbnail') && classes.thumbGrid,
+                                                  gridMode === 'detailed' && classes.detailedGrid)}
                     >
                         {this.props.rows.map((node, index) => (
                             <DxContext.Consumer key={node.uuid}>

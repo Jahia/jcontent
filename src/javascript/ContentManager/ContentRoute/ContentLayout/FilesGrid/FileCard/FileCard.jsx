@@ -22,10 +22,10 @@ const styles = theme => ({
         display: 'flex',
         cursor: 'pointer',
         position: 'relative',
-        margin: theme.spacing.unit,
-        minWidth: '100%',
-        minHeight: 250,
-        maxHeight: 250,
+        minWidth: 200,
+        maxWidth: 500,
+        minHeight: 200,
+        maxHeight: 200,
         backgroundColor: theme.palette.background.paper,
         '& $fileCardContentContainer': {
             width: 'calc(100% - 160px)'
@@ -36,7 +36,7 @@ const styles = theme => ({
         flex: '1 1 0%',
         minHeight: 252,
         minWidth: 150,
-        margin: theme.spacing.unit,
+        maxWidth: 150,
         maxHeight: 252,
         '& $defaultFileCover': {
             height: 150
@@ -52,7 +52,7 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minWidth: 250,
+        minWidth: 200,
         '& svg': {
             fontSize: 160
         }
@@ -67,8 +67,8 @@ const styles = theme => ({
         }
     },
     detailedCover: {
-        minWidth: 250,
-        maxWidth: 250,
+        minWidth: 200,
+        maxWidth: 200,
         minHeight: 200
     },
     thumbCover: {

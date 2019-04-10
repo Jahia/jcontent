@@ -22,6 +22,7 @@ const styles = theme => ({
         display: 'flex',
         cursor: 'pointer',
         position: 'relative',
+        margin: '0 16px 16px 0',
         minWidth: 200,
         minHeight: 200,
         maxHeight: 200,
@@ -33,6 +34,7 @@ const styles = theme => ({
     thumbCard: {
         flexDirection: 'column',
         flex: '1 1 0%',
+        margin: '0 16px 16px 0',
         minHeight: 252,
         minWidth: 150,
         maxHeight: 252,
@@ -102,7 +104,7 @@ export class FileCard extends Component {
     }
 
     render() {
-        const {gridMode, classes, t, node, dxContext, uiLang, setPath, previewSelection, onPreviewSelect, previewState, siteKey, mode} = this.props;
+        const {gridMode, classes, t, node, dxContext, uiLang, setPath, previewSelection, onPreviewSelect, previewState, siteKey, mode, index} = this.props;
         const {isHovered} = this.state;
 
         let contextualMenu = React.createRef();
@@ -127,12 +129,15 @@ export class FileCard extends Component {
                 isThumbCard = true;
                 maxLengthLabels = 18;
         }
-
+        //this is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
+        let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
+        let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
 
                 <Card
+                    style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
                     className={classNames(
                         isThumbCard && classes.thumbCard,
                         isDetailedCard && classes.detailedCard,
@@ -235,6 +240,7 @@ FileCard.propTypes = {
     onPreviewSelect: PropTypes.func.isRequired,
     previewSelection: PropTypes.string,
     previewState: PropTypes.number.isRequired,
+    index: PropTypes.number.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,

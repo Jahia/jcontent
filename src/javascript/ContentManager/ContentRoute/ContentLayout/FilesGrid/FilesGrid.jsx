@@ -19,6 +19,7 @@ import {extractPaths} from '../../../ContentManager.utils';
 
 const styles = theme => ({
     grid: {
+        display: 'flex',
         flex: '1 1 0%',
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -32,17 +33,21 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.default
     },
     defaultGrid: {
+        flex: 1,
         display: 'grid',
-        gap: '16px 16px',
+        gap: '8px 8px',
         boxShadow: 'none',
         justifyContent: 'center',
         background: theme.palette.background.default
     },
+    //msGrid are css properties for IE, please don't remove them
     thumbGrid: {
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        msGridColumns: '( 1fr )[6]'
     },
     detailedGrid: {
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        msGridColumns: '( 1fr )[2]'
     },
     empty: {
         textAlign: 'center',
@@ -74,7 +79,6 @@ export class FilesGrid extends Component {
         const {gridMode, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, onPreviewSelect,
             setCurrentPage, rows, loading, mode, uiLang, siteKey, previewSelection, previewState, setPath} = this.props;
         const {hoveredCard} = this.state;
-
         if ((!rows || rows.length === 0) && loading) {
             return null;
         }

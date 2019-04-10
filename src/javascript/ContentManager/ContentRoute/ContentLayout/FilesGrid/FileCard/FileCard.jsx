@@ -129,7 +129,7 @@ export class FileCard extends Component {
                 isThumbCard = true;
                 maxLengthLabels = 18;
         }
-        //this is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
+        // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
         let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
         let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
         return (

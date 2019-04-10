@@ -40,7 +40,7 @@ const styles = theme => ({
         justifyContent: 'center',
         background: theme.palette.background.default
     },
-    //msGrid are css properties for IE, please don't remove them
+    // MsGrid are css properties for IE, please don't remove them
     thumbGrid: {
         gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
         msGridColumns: '( 1fr )[6]'

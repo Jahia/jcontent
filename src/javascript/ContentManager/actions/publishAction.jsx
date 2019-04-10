@@ -13,7 +13,7 @@ export default composeActions(requirementsAction, withNodeName, {
             enabled: context => context.node.pipe(map(node =>
                 (node.operationsSupport.publication) &&
                 (context.checkForUnpublication ?
-                    node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' :
+                    node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' && node.aggregatedPublicationInfo.publicationStatus !== 'MANDATORY_LANGUAGE_UNPUBLISHABLE' :
                     !isMarkedForDeletion(node)) &&
                 (!context.checkIfLanguagesMoreThanOne || node.site.languages.length > 1)))
         });

@@ -294,7 +294,7 @@ export class ContentListTable extends React.Component {
                                 ) :
                                 (
                                     (_.isEmpty(rows) && !loading) ? (
-                                            (mode === ContentManagerConstants.mode.SEARCH) ?
+                                            (mode === ContentManagerConstants.mode.SEARCH || mode === ContentManagerConstants.mode.SQL2SEARCH) ?
                                                 <EmptyTable columnData={columnData} t={t}/> :
                                                 <ContentListEmptyDropZone mode={mode} path={path}/>
                                         ) :

@@ -15,7 +15,7 @@ import {isMarkedForDeletion} from '../../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../../../UploadTransformComponent';
 import classNames from 'classnames';
-import {ContextualMenu, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
+import {ContextualMenu, DisplayAction, iconButtonRenderer, ProgressOverlay} from '@jahia/react-material';
 import * as _ from 'lodash';
 
 let styles = theme => ({
@@ -49,12 +49,6 @@ let styles = theme => ({
         top: 0,
         position: 'absolute',
         color: 'inherit'
-    },
-    loadingContainer: {
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        zIndex: 999
     },
     openedTreeEl: {
         transform: 'rotate(90deg)',
@@ -99,9 +93,9 @@ export class PickerViewMaterial extends React.Component {
         return (
             <div className={classes.root}>
                 {loading &&
-                    <div className={classes.loadingContainer}/>
+                    <ProgressOverlay/>
                 }
-                <List disablePadding classes={{root: classNames(classes.root, {[classes.loading]: loading})}}>
+                <List disablePadding classes={{root: classes.root}}>
                     {
                         sortedEntries.map(entry => {
                             let contextualMenu = React.createRef();

@@ -5,6 +5,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
+    CircularProgress,
     withStyles,
     withTheme
 } from '@material-ui/core';
@@ -15,7 +16,7 @@ import {isMarkedForDeletion} from '../../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../../../UploadTransformComponent';
 import classNames from 'classnames';
-import {ContextualMenu, DisplayAction, iconButtonRenderer, ProgressOverlay} from '@jahia/react-material';
+import {ContextualMenu, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
 import * as _ from 'lodash';
 
 let styles = theme => ({
@@ -25,7 +26,9 @@ let styles = theme => ({
         width: '100%'
     },
     loading: {
-        opacity: 0.8
+        left: '17%',
+        position: 'fixed',
+        top: '50%'
     },
     listItemSelected: {
         background: theme.palette.primary.main,
@@ -93,7 +96,7 @@ export class PickerViewMaterial extends React.Component {
         return (
             <div className={classes.root}>
                 {loading &&
-                    <ProgressOverlay/>
+                    <CircularProgress classes={{root: classes.loading}}/>
                 }
                 <List disablePadding classes={{root: classes.root}}>
                     {

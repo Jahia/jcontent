@@ -38,9 +38,6 @@ const styles = theme => ({
         minHeight: 252,
         minWidth: 150,
         maxHeight: 252,
-        '& $defaultFileCover': {
-            height: 150
-        },
         '& $mediaCardContentContainer': {
             width: '100%'
         },

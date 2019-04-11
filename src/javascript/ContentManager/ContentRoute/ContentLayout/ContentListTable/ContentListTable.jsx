@@ -170,6 +170,9 @@ const styles = theme => ({
             }
         }
     },
+    nameCellPreviewOpened: {
+        maxWidth: '11vw'
+    },
     lastModifiedCell: {
         paddingRight: '8px',
         width: '200px'
@@ -234,6 +237,7 @@ export class ContentListTable extends React.Component {
                 classes[column + 'Cell'],
                 {
                     [classes.selectedCell]: selected,
+                    [classes[column + 'CellPreviewOpened']]: isPreviewOpened,
                     [classes[column + 'CellSelected']]: selected,
                     [classes.isDeleted]: isMarkedForDeletion(node)
                 }

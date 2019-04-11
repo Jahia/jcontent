@@ -108,7 +108,16 @@ export class ImageEditor extends React.Component {
             >
                 <TwoColumnsContent classes={{root: classes.root, left: classes.left, right: classes.right}}
                                    rightCol={<ImageEditorPreview cropExpanded={expanded === PANELS.CROP}
-                                                                 {...this.props}/>}
+                                                                 path={this.props.path}
+                                                                 ts={this.props.ts}
+                                                                 dxContext={this.props.dxContext}
+                                                                 cropParams={this.props.cropParams}
+                                                                 rotationParams={this.props.rotationParams}
+                                                                 resizeParams={this.props.resizeParams}
+                                                                 originalWidth={this.props.originalWidth}
+                                                                 originalHeight={this.props.originalHeight}
+                                                                 onCrop={this.props.onCrop}
+                                                                 onImageLoaded={this.props.onImageLoaded}/>}
                 >
                     <>
                         <Tooltip title={(resizeParams.dirty || cropParams.dirty) ? t('label.contentManager.editImage.tooltip') : ''}>

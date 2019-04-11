@@ -22,17 +22,20 @@ export class ImageEditorContainer extends React.Component {
             transforms: [],
             name: null,
             ts: new Date().getTime(),
-            originalWidth: 0,
-            originalHeight: 0,
+            originalWidth: 1,
+            originalHeight: 1,
             rotationParams: {
+                dirty: false,
                 rotations: 0
             },
             resizeParams: {
+                dirty: false,
                 keepRatio: true,
                 width: null,
                 height: null
             },
             cropParams: {
+                dirty: false,
                 top: 0,
                 left: 0
             },

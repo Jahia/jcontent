@@ -36,7 +36,8 @@ export class ImageEditorContainer extends React.Component {
                 top: 0,
                 left: 0
             },
-            snackBarMessage: null
+            snackBarMessage: null,
+            isNameValid: true
         };
 
         this.handleClose = this.handleClose.bind(this);
@@ -220,8 +221,10 @@ export class ImageEditorContainer extends React.Component {
     }
 
     handleChangeName({target: {value}}) {
-        if (/^[^/\\*:]+$/.test(value)) {
+        if (value) {
+            const isNameValid = value.match(/[\\/:*?"<>|]/g) === null;
             this.setState({
+                isNameValid: isNameValid,
                 name: value
             });
         }
@@ -247,7 +250,7 @@ export class ImageEditorContainer extends React.Component {
         const {path} = this.props;
         const {
             transforms, confirmCloseOpen, confirmSaveOpen, saveAsOpen, ts, name, snackBarMessage,
-            rotationParams, resizeParams, cropParams, originalWidth, originalHeight
+            rotationParams, resizeParams, cropParams, originalWidth, originalHeight, isNameValid
         } = this.state;
         let newName = name;
         if (!newName) {
@@ -292,6 +295,7 @@ export class ImageEditorContainer extends React.Component {
                                 <SaveAsDialog
                                     open={saveAsOpen}
                                     name={newName}
+                                    isNameValid={isNameValid}
                                     handleSave={() => {
                                         mutation({variables: {path, name: newName.trim()}});
                                         this.setState({

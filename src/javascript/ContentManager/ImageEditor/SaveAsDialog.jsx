@@ -6,7 +6,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Input,
+    TextField,
     withStyles
 } from '@material-ui/core';
 import {Button} from '@jahia/ds-mui-theme';
@@ -19,7 +19,7 @@ let styles = {
     }
 };
 
-export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, onChangeName}) => {
+export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, onChangeName, isNameValid}) => {
     let textField = React.createRef();
 
     return (
@@ -33,9 +33,10 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
                 <DialogContentText>
                     {t('label.contentManager.editImage.saveAsDialog.text')}
                 </DialogContentText>
-                <Input
+                <TextField
                     autoFocus
                     fullWidth
+                    error={!isNameValid}
                     inputRef={textField}
                     value={name}
                     id="fileName"
@@ -47,7 +48,7 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
                 <Button variant="secondary" data-cm-role="image-save-as-cancel" onClick={handleClose}>
                     {t('label.contentManager.editImage.saveAsDialog.cancel')}
                 </Button>
-                <Button variant="primary" data-cm-role="image-save-as-confirm" onClick={handleSave}>
+                <Button variant="primary" data-cm-role="image-save-as-confirm" disabled={!isNameValid} onClick={handleSave}>
                     {t('label.contentManager.editImage.saveAsDialog.save')}
                 </Button>
             </DialogActions>
@@ -62,7 +63,8 @@ SaveAsDialog.propTypes = {
     handleSave: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-    onChangeName: PropTypes.func.isRequired
+    onChangeName: PropTypes.func.isRequired,
+    isNameValid: PropTypes.bool.isRequired
 };
 
 export default compose(

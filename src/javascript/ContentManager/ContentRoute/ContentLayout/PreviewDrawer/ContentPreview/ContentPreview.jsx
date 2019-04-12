@@ -7,7 +7,7 @@ import {lodash as _} from 'lodash';
 import {withStyles} from '@material-ui/core';
 import {previewQuery} from './ContentPreview.gql-queries';
 import ContentManagerConstants from '../../../../ContentManager.constants';
-import DxContext from '../../../../DxContext';
+import {DxContext} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
 import PreviewComponent from './PreviewComponent';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux-actions';

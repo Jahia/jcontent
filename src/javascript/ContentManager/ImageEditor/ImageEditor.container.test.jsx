@@ -9,7 +9,7 @@ import {fragmentMatcher} from '@jahia/apollo-dx';
 import {MuiThemeProvider} from "@material-ui/core";
 import ImageEditor from './ImageEditor';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
-import DxContext from '../DxContext';
+import {DxContext} from '@jahia/react-material';
 
 let result = {
     data: {

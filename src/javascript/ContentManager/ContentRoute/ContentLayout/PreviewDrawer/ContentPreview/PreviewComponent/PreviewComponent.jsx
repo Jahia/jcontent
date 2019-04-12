@@ -26,6 +26,8 @@ class PreviewComponent extends React.Component {
             if (element.contentWindow) {
                 frameDoc = element.contentWindow.document;
             }
+            frameDoc.open();
+            frameDoc.close();
             frameDoc.body.innerHTML = displayValue;
             frameDoc.body.style = '';
             if (assets !== null) {
@@ -86,7 +88,8 @@ class PreviewComponent extends React.Component {
         return (
             <div className={classNames(classes.previewContainer, classes.contentContainer)}>
                 <Paper elevation={1} classes={{root: classes.contentPaper}}>
-                    <iframe ref={element => this.iframeLoadContent(assets, displayValue, element)}
+                    <iframe key={data.nodeByPath.path}
+                            ref={element => this.iframeLoadContent(assets, displayValue, element)}
                             className={classes.contentIframe}/>
                 </Paper>
             </div>

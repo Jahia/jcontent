@@ -21,35 +21,26 @@ const styles = theme => ({
         width: 6,
         cursor: 'pointer',
         '&:hover ~ $publicationInfoWrapper': {
-            width: '100%'
-        },
-        '&:hover ~ $publicationInfoWrapper > $publicationInfo': {
-            visibility: 'visible',
             width: '100%',
-            opacity: 1
+            maxWidth: '100%'
         }
     },
     publicationInfoWrapper: {
         display: 'flex',
+        overflow: 'hidden',
         width: 0,
-        transitionDuration: '.2s',
+        minWidth: 0,
+        maxWidth: 0,
+        transition: 'width .2s, max-width .2s, min-width .2s',
         '&:hover': {
-            width: '100%'
-        },
-        '&:hover > $publicationInfo': {
-            visibility: 'visible',
             width: '100%',
-            opacity: 1
+            maxWidth: '100%'
         }
     },
     publicationInfo: {
         display: 'flex',
         alignItems: 'center',
-        opacity: 0,
-        width: 0,
-        margin: '0 ' + (theme.spacing.unit * 2) + 'px',
-        transition: 'width .3s ease 0s, visibility .3s ease 0s',
-        visibility: 'hidden'
+        margin: '0 ' + (theme.spacing.unit * 2) + 'px'
     },
     spacing: {
         marginRight: theme.spacing.unit

@@ -204,12 +204,19 @@ const styles = theme => ({
     },
     publicationStatusBorder: {
         '&:hover ~ $publicationInfoWrapper': {
-            width: 640
+            width: 640,
+            minWidth: 640,
+            maxWidth: 640
         }
+    },
+    publicationInfo: {
+        minWidth: 640 - (theme.spacing.unit * 4) - 6
     },
     publicationInfoWrapper: {
         '&:hover': {
-            width: 640
+            width: 640,
+            minWidth: 640,
+            maxWidth: 640
         }
     },
     disabledSort: {
@@ -353,6 +360,7 @@ export class ContentListTable extends React.Component {
                                                                     classes={{
                                                                         root: classes.publicationStatusRoot,
                                                                         border: classes.publicationStatusBorder,
+                                                                        publicationInfo: classes.publicationInfo,
                                                                         publicationInfoWrapper: classes.publicationInfoWrapper
                                                                     }}
                                                                 />

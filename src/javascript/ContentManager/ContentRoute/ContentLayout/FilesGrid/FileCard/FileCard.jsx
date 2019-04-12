@@ -89,6 +89,12 @@ const styles = theme => ({
     },
     selectedCard: {
         boxShadow: '1px 0px 15px 4px ' + theme.palette.primary.main
+    },
+    publicationInfoThumb: {
+        minWidth: 150 - (theme.spacing.unit * 4) - 6
+    },
+    publicationInfoDetailed: {
+        minWidth: 400 - (theme.spacing.unit * 4) - 6
     }
 });
 
@@ -155,7 +161,7 @@ export class FileCard extends Component {
                     onMouseLeave={event => this.onHoverExit(event)}
                 >
                     {!isThumbCard &&
-                        <PublicationStatus node={node}/>
+                        <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>
                     }
 
                     {isImage ?
@@ -177,7 +183,7 @@ export class FileCard extends Component {
 
                     <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
                         {isThumbCard &&
-                            <PublicationStatus node={node}/>
+                            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>
                         }
 
                         <Actions node={node} isHovered={isHovered}/>

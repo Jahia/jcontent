@@ -24,8 +24,8 @@ export default composeActions(
     })),
 
     treeExpanderAction((mode, ancestorPaths, context) => {
-        let {navigateToPath, setOpenPaths, setPreviewSelection, path, params} = context;
-        navigateToPath(mode, path, params);
+        let {node, navigateToPath, setOpenPaths, setPreviewSelection, path} = context;
+        navigateToPath(mode, path, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
         setOpenPaths(ancestorPaths);
         setPreviewSelection(null);
     }),
@@ -39,7 +39,6 @@ export default composeActions(
                     (node.subNodes.pageInfo.totalCount > 0)) &&
                     context.mode !== 'search' && context.mode !== 'sql2Search'))
             });
-            context.urlParams = {sub: true};
         }
     }
 );

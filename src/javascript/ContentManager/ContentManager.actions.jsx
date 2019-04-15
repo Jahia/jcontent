@@ -3,38 +3,37 @@ import {menuAction} from '@jahia/react-material';
 import {ContentIcon, ManageIcon, WorkflowIcon} from './actions/icons';
 import {
     Add,
+    Autorenew,
+    CloudDownload,
+    CloudUpload,
+    CreateNewFolder,
     Delete,
     DeleteForever,
     Edit,
+    FindInPage,
+    LibraryAdd,
     Lock,
     LockOpen,
-    CloudUpload,
-    CloudDownload,
-    Visibility,
     SubdirectoryArrowRight,
-    FindInPage,
     Translate,
-    CreateNewFolder,
-    LibraryAdd,
-    Autorenew
+    Visibility
 } from '@material-ui/icons';
 import {
-    ApplicationImport,
-    ApplicationExport,
-    FileUpload,
     Account,
     AccountGroup,
+    ApplicationExport,
+    ApplicationImport,
     ContentCopy,
     ContentCut,
     ContentPaste,
     DeleteRestore,
     DotsVertical,
+    FileUpload,
     FolderMultipleImage,
     ShieldKey,
     TagMultiple,
     Web
 } from 'mdi-material-ui';
-import ContentManagerConstants from './ContentManager.constants';
 import createContentAction from './actions/createContentAction';
 import fileUploadAction from './actions/fileUploadAction';
 import editAction from './actions/editAction';
@@ -102,8 +101,7 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <LibraryAdd/>,
         buttonLabel: 'label.contentManager.create.content',
         target: ['createMenuActions:3.1', 'contentActions:3'],
-        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
-        baseContentType: ContentManagerConstants.contentType
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content']
     });
     actionsRegistry.add('createFolder', createFolderAction, {
         buttonIcon: <CreateNewFolder/>,
@@ -262,7 +260,8 @@ function contentManagerActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.create.create',
         target: ['tableHeaderActions:10'],
         menu: 'createMenuActions',
-        showIcons: true
+        showIcons: true,
+        menuPreload: true
     });
     actionsRegistry.add('lock', lockAction, {
         buttonLabel: 'label.contentManager.contextMenu.lockActions.lock',

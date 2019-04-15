@@ -44,14 +44,17 @@ const ActionRequirementsFragments = {
         }`
     },
     allowedChildNodeTypes: {
-        variables: {
-            baseChildNodeType: 'String!'
-        },
         applyFor: 'requirements',
         gql: gql`fragment ProvideTypes on JCRNode {
-            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypes", evaluation: NOT_EMPTY}]}) {
+            allowedChildNodeTypesBase: allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypesBase", evaluation: NOT_EMPTY}]}) {
                 name
-                supertypes(fieldFilter: {filters: [{fieldName: "name", value: $baseChildNodeType}]}) {
+                supertypesBase: supertypes(fieldFilter: {filters: [{fieldName: "name", value: "nt:base"}]}) {
+                    name
+                }
+            }
+            allowedChildNodeTypesEditorialContent: allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "supertypesEditorialContent", evaluation: NOT_EMPTY}]}) {
+                name
+                supertypesEditorialContent: supertypes(fieldFilter: {filters: [{fieldName: "name", value: "jmix:editorialContent"}]}) {
                     name
                 }
             }
@@ -63,7 +66,7 @@ const ActionRequirementsFragments = {
         },
         applyFor: 'requirements',
         gql: gql`fragment AllowedChildNodeType on JCRNode {
-            allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", evaluation:AMONG, values: $childNodeTypes}]}) {
+            requiredChildNodeType: allowedChildNodeTypes(fieldFilter: {filters: [{fieldName: "name", evaluation:AMONG, values: $childNodeTypes}]}) {
                 name
             }
         }`
@@ -228,9 +231,8 @@ class ActionRequirementsQueryHandler {
             this.requirementsFragments.push(ActionRequirementsFragments.requiredChildNodeType);
             this.variables.childNodeTypes = context.contentTypes;
         }
-        if (!_.isEmpty(context.baseContentType)) {
+        if (context.baseContentType) {
             this.requirementsFragments.push(ActionRequirementsFragments.allowedChildNodeTypes);
-            this.variables.baseChildNodeType = context.baseContentType;
         }
         if (context.retrieveSiteLanguages) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteLanguages);

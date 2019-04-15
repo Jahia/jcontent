@@ -180,9 +180,10 @@ export class ContentLayoutContainer extends React.Component {
                         if (data.jcr && data.jcr.nodeByPath) {
                             // When new results have been loaded, use them for rendering.
                             let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
-                            if (nodeTypeName === 'jnt:page' && params.sub && params.sub === true) {
+                            let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
+                            if (!isSub && params.sub && params.sub === true) {
                                 setPath(path, {sub: false});
-                            } else if (nodeTypeName !== 'jnt:page' && (!params.sub || params.sub === false)) {
+                            } else if (isSub && (!params.sub || params.sub === false)) {
                                 setPath(path, {sub: true});
                             }
                         }

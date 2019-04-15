@@ -39,8 +39,8 @@ function checkNodeRequirement(context, options) {
                 (_.isEmpty(requiredPermission) || node.hasPermission) &&
                 (_.isEmpty(showOnNodeTypes) || node.isNodeType) &&
                 (_.isEmpty(hideOnNodeTypes) || !node.isNotNodeType) &&
-                (_.isEmpty(contentType) || node.allowedChildNodeTypes.length > 0) &&
-                (_.isEmpty(contentTypes) || node.allowedChildNodeTypes.length === contentTypes.length) &&
+                (_.isEmpty(contentType) || node.requiredChildNodeType.length > 0) &&
+                (_.isEmpty(contentTypes) || node.requiredChildNodeType.length === contentTypes.length) &&
                 (_.isEmpty(requireModuleInstalledOnSite) || _.includes(node.site.installedModulesWithAllDependencies, requireModuleInstalledOnSite)) &&
                 (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, node.path))
             )));

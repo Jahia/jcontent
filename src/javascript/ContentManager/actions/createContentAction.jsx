@@ -3,38 +3,31 @@ import {ContentTypeNamesQuery, ContentTypesQuery} from './actions.gql-queries';
 import * as _ from 'lodash';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {from, of} from 'rxjs';
-import {filter, map, switchMap} from 'rxjs/operators';
+import {from, of, ReplaySubject} from 'rxjs';
+import {filter, first, map, switchMap} from 'rxjs/operators';
 import {withDxContextAction} from './withDxContextAction';
-import {reduxAction} from './reduxAction';
 
-const mapStateToProps = state => ({
-    params: state.params
-});
-
-function filterByBaseType(types, baseTypeName) {
+function filterByBaseType(types, baseTypeName, supertypesProp) {
     return _.filter(types, type => {
-        let superTypes = _.map(type.supertypes, superType => superType.name);
+        let superTypes = _.map(type[supertypesProp], superType => superType.name);
         return _.includes(superTypes, baseTypeName);
     });
 }
 
-export default composeActions(requirementsAction, withDxContextAction, reduxAction(mapStateToProps, null), {
+export default composeActions(requirementsAction, withDxContextAction, {
 
     init: context => {
-        let {baseContentType, params} = context;
-        if (!baseContentType || params.sub || params.sub === true) {
-            baseContentType = 'nt:base';
-        }
-
         context.initRequirements({
             requiredPermission: 'jcr:addChildNodes',
-            baseContentType,
-            getContributeTypesRestrictions: true
+            baseContentType: true,
+            getContributeTypesRestrictions: true,
+            retrievePrimaryNodeType: true
         });
+
         let obs = context.node.pipe(switchMap(node => {
-            let childNodeTypes = _.union(filterByBaseType(node.allowedChildNodeTypes, baseContentType),
-                filterByBaseType(node.allowedChildNodeTypes, baseContentType));
+            let useEditorialContent = node.primaryNodeType.name === 'jnt:page' || node.primaryNodeType.name === 'jnt:contentFolder';
+            let childNodeTypes = useEditorialContent ? filterByBaseType(node.allowedChildNodeTypesEditorialContent, 'jmix:editorialContent', 'supertypesEditorialContent') :
+                filterByBaseType(node.allowedChildNodeTypesBase, 'nt:base', 'supertypesBase');
             let childNodeTypeNames = _.map(childNodeTypes, nodeType => nodeType.name);
             let contributeTypesProperty = node.contributeTypes ||
                 (node.ancestors && !_.isEmpty(node.ancestors) && node.ancestors[node.ancestors.length - 1].contributeTypes);
@@ -43,7 +36,7 @@ export default composeActions(requirementsAction, withDxContextAction, reduxActi
                     filter(res => (res.data && res.data.jcr)),
                     map(res => {
                         let contributionNodeTypes = res.data.jcr.nodeTypesByNames;
-                        contributionNodeTypes = filterByBaseType(contributionNodeTypes, baseContentType);
+                        contributionNodeTypes = filterByBaseType(contributionNodeTypes, useEditorialContent ? 'jmix:editorialContent' : 'nt:base', 'supertypes');
                         return _.map(contributionNodeTypes, nodeType => nodeType.name);
                     })
                 );
@@ -70,9 +63,11 @@ export default composeActions(requirementsAction, withDxContextAction, reduxActi
                 )
             );
         }));
-        context.nodeTypes = obs.pipe(map(r => r.nodeTypes));
-        context.includeSubTypes = obs.pipe(map(r => r.includeSubTypes));
-        context.actions = obs.pipe(map(r => r.actions));
+        let replay = new ReplaySubject(1).pipe(first());
+        obs.subscribe(replay);
+        context.nodeTypes = replay.pipe(map(r => r.nodeTypes));
+        context.includeSubTypes = replay.pipe(map(r => r.includeSubTypes));
+        context.actions = replay.pipe(map(r => r.actions));
     },
 
     onClick: context => {

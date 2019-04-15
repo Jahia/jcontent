@@ -342,7 +342,7 @@ export class ContentListTable extends React.Component {
                                                             onDoubleClick={allowDoubleClickNavigation(
                                                                 node.primaryNodeType.name,
                                                                 node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                                                () => setPath(siteKey, node.path, mode)
+                                                                () => setPath(siteKey, node.path, mode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'})
                                                             )}
                                                         >
                                                             <ContextualMenu
@@ -566,9 +566,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
-    setPath: (siteKey, path, mode) => {
+    setPath: (siteKey, path, mode, params) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
-        dispatch(cmGoto({path}));
+        dispatch(cmGoto({path, params}));
     },
     setCurrentPage: page => dispatch(cmSetPage(page)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),

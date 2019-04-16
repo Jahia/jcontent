@@ -30,6 +30,9 @@ let buildUrl = (site, language, mode, path, params) => {
     } else {
         path = '';
     }
+    // Special chars in folder naming
+    path = path.replace(/[:*?"<>|]/g, encodeURIComponent);
+
     let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + rison.encode_uri(params);
     return '/' + [site, language, mode].join('/') + path + queryString;
 };
@@ -50,7 +53,7 @@ let extractParamsFromUrl = (pathname, search) => {
             path += ('/' + pathElements.join('/'));
         }
     }
-
+    path = decodeURIComponent(path);
     let params = deserializeQueryString(search);
     return {site, language, mode, path, params};
 };

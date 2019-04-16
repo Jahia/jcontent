@@ -52,7 +52,7 @@ let triggerRefetch = (name, queryParams) => {
 
 let refetchActiveWorkflowTasks = debouncer(() => {
     triggerRefetch(refetchTypes.ACTIVE_WORKFLOW_TASKS);
-}, 1000);
+}, 5000);
 
 let refetchContentListData = () => {
     triggerRefetch(refetchTypes.CONTENT_DATA);

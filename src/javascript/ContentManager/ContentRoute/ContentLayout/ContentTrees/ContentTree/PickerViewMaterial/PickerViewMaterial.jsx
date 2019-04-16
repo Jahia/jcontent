@@ -49,9 +49,7 @@ let styles = theme => ({
         color: 'inherit'
     },
     listItemActionIcon: {
-        top: 0,
-        position: 'absolute',
-        color: 'inherit'
+        position: 'absolute'
     },
     openedTreeEl: {
         transform: 'rotate(90deg)',
@@ -180,7 +178,7 @@ export class PickerViewMaterial extends React.Component {
                                                     actionKey="contentMenu"
                                                     context={{path: entry.node.path}}
                                                     render={iconButtonRenderer({
-                                                        color: 'inherit',
+                                                        color: entry.selected ? 'inverted' : 'default',
                                                         'data-cm-role': 'picker-item-menu'
                                                     })}
                                                 />

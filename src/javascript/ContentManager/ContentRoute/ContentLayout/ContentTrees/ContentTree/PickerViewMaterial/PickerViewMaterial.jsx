@@ -49,7 +49,13 @@ let styles = theme => ({
         color: 'inherit'
     },
     listItemActionIcon: {
-        position: 'absolute'
+        position: 'absolute',
+        height: '48px',
+        width: '48px',
+        top: '0px',
+        '& button': {
+            width: '48px'
+        }
     },
     openedTreeEl: {
         transform: 'rotate(90deg)',

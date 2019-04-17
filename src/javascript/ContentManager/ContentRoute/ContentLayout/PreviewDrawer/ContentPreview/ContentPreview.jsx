@@ -73,7 +73,7 @@ export class ContentPreview extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.selection && prevProps.selection && prevProps.selection.lastPublished !== this.props.selection.lastPublished) {
+        if (this.props.previewSelection && prevProps.previewSelection && prevProps.previewSelection.lastPublished !== this.props.previewSelection.lastPublished) {
             this.refetchPreview();
         }
     }

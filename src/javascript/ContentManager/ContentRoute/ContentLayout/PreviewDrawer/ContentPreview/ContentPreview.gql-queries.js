@@ -4,7 +4,7 @@ import {PredefinedFragments} from '@jahia/apollo-dx';
 const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templateType: String!, $view: String!, $contextConfiguration: String!, $language: String!, $isPublished: Boolean!) {
     live:jcr(workspace: LIVE) @include(if: $isPublished) {
         nodeByPath(path:$path) {
-            id : uuid
+            id: uuid
             isFile:isNodeType(type: {types: ["jnt:file"]})
             path
             lastModified: property(name: "jcr:lastModified", language: $language) {
@@ -21,7 +21,7 @@ const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templat
     }
     edit:jcr(workspace: EDIT) {
         nodeByPath(path:$path) {
-            id : uuid
+            id: uuid
             isFile:isNodeType(type: {types: ["jnt:file"]})
             path
             isPublished:property(name:"j:published") {

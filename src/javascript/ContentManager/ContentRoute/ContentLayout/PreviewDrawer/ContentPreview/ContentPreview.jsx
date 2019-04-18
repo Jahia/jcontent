@@ -89,7 +89,8 @@ export class ContentPreview extends React.Component {
 
         const path = previewSelection.path;
         const isPublished = previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED &&
-                                        previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED;
+                                        previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED &&
+                                        previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE;
         const queryVariables = {
             path: path,
             templateType: 'html',

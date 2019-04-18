@@ -92,7 +92,11 @@ export class Preview extends React.Component {
                             contextConfiguration="preview"
                             fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
                             language={language}
-                            workspace={previewMode}/>
+                            workspace={previewMode}
+                            setRefetch={refetchingData => {
+                                this.refetchPreview = refetchingData.refetch;
+                                return null;
+                            }}/>
         );
     }
 }

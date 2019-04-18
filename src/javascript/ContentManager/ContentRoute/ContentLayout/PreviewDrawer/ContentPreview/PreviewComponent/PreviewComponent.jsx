@@ -50,18 +50,18 @@ class PreviewComponent extends React.Component {
     render() {
         let {data, dxContext, classes, t, previewMode, previewState} = this.props;
         const fullScreen = (previewState === CM_DRAWER_STATES.FULL_SCREEN);
-        let displayValue = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
+        let displayValue = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
         if (displayValue === '') {
             displayValue = t('label.contentManager.contentPreview.noViewAvailable');
         }
 
         // If node type is "jnt:file" use specific viewer
-        if (data && data.nodeByPath.isFile) {
+        if (data && data.nodeByPath && data.nodeByPath.isFile) {
             let file = dxContext.contextPath + '/files/' + (previewMode === CM_PREVIEW_MODES.EDIT ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
 
             if (isPDF(data.nodeByPath.path)) {
                 return (
-                    <div className={classes.previewContainer}>
+                    <div className={classes.previewContainer} data-cm-role="preview-type-pdf">
                         <PDFViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
@@ -69,7 +69,7 @@ class PreviewComponent extends React.Component {
 
             if (isBrowserImage(data.nodeByPath.path)) {
                 return (
-                    <div className={classNames(classes.previewContainer, classes.mediaContainer)}>
+                    <div className={classNames(classes.previewContainer, classes.mediaContainer)} data-cm-role="preview-type-image">
                         <ImageViewer file={file} fullScreen={fullScreen}/>
                     </div>
                 );
@@ -78,19 +78,20 @@ class PreviewComponent extends React.Component {
             const type = getFileType(data.nodeByPath.path);
             const isMedia = (type === 'avi' || type === 'mp4' || type === 'video');
             return (
-                <div className={classNames(classes.previewContainer, isMedia && classes.mediaContainer)}>
+                <div className={classNames(classes.previewContainer, isMedia && classes.mediaContainer)} data-cm-role="preview-type-video">
                     <DocumentViewer file={file} type={type} fullScreen={fullScreen}/>
                 </div>
             );
         }
 
-        const assets = data && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
+        const assets = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
         return (
-            <div className={classNames(classes.previewContainer, classes.contentContainer)}>
+            <div className={classNames(classes.previewContainer, classes.contentContainer)} data-cm-role="preview-type-content">
                 <Paper elevation={1} classes={{root: classes.contentPaper}}>
-                    <iframe key={data ? data.nodeByPath.path : 'NoPreviewAvailable'}
+                    <iframe key={data && data.nodeByPath ? data.nodeByPath.path : 'NoPreviewAvailable'}
                             ref={element => this.iframeLoadContent(assets, displayValue, element)}
-                            className={classes.contentIframe}/>
+                            className={classes.contentIframe}
+                            data-cm-role={previewMode + '-preview-frame'}/>
                 </Paper>
             </div>
         );

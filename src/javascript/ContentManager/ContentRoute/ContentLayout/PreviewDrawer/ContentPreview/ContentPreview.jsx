@@ -6,7 +6,6 @@ import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
 import {withStyles} from '@material-ui/core';
 import {previewQuery} from './ContentPreview.gql-queries';
-import {CM_PREVIEW_MODES} from '../../../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../../../ContentManager.constants';
 import DxContext from '../../../../DxContext';
 import NoPreviewComponent from './NoPreviewComponent';
@@ -89,14 +88,15 @@ export class ContentPreview extends React.Component {
         }
 
         const path = previewSelection.path;
-        const livePreviewAvailable = previewSelection.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED && previewSelection.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED;
+        const isPublished = previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED &&
+                                        previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED;
         const queryVariables = {
             path: path,
             templateType: 'html',
             view: 'cm',
             contextConfiguration: 'preview',
             language: this.props.language,
-            isPublished: livePreviewAvailable
+            isPublished: isPublished
         };
 
         return (
@@ -112,16 +112,8 @@ export class ContentPreview extends React.Component {
 
                                 if (!loading) {
                                     if (!_.isEmpty(data)) {
-                                        let modes = [CM_PREVIEW_MODES.EDIT];
-                                        // Check if the node is published in live.
-                                        if (livePreviewAvailable) {
-                                            modes.push(CM_PREVIEW_MODES.LIVE);
-                                        }
-                                        let selectedMode = _.find(modes, mode => {
-                                            return previewMode === mode;
-                                        }) === undefined ? CM_PREVIEW_MODES.EDIT : previewMode;
                                         return (
-                                            <PreviewComponent data={data[selectedMode]}
+                                            <PreviewComponent data={data[previewMode] ? data[previewMode] : {}}
                                                               dxContext={dxContext}
                                                               {...this.props}/>
                                         );

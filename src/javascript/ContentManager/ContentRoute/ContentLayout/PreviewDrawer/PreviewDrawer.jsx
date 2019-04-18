@@ -62,12 +62,12 @@ export class PreviewDrawer extends React.Component {
                                                value={disabledToggle ? '' : previewMode}
                                                onChange={(event, value) => setPreviewMode(value)}
                             >
-                                <ToggleButton value="edit" disabled={disabledToggle}>
+                                <ToggleButton value="edit" disabled={disabledToggle} data-cm-role="edit-preview-button">
                                     <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.staging')}
                                     </Typography>
                                 </ToggleButton>
-                                <ToggleButton value="live" disabled={disabledLive}>
+                                <ToggleButton value="live" disabled={disabledLive} data-cm-role="live-preview-button">
                                     <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.live')}
                                     </Typography>

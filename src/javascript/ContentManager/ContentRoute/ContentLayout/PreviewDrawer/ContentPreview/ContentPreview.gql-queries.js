@@ -2,10 +2,10 @@ import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 
 const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templateType: String!, $view: String!, $contextConfiguration: String!, $language: String!, $isPublished: Boolean!) {
-    live:jcr(workspace: LIVE) @include(if: $isPublished) {
+    live: jcr(workspace: LIVE) @include(if: $isPublished) {
         nodeByPath(path:$path) {
             id: uuid
-            isFile:isNodeType(type: {types: ["jnt:file"]})
+            isFile: isNodeType(type: {types: ["jnt:file"]})
             path
             lastModified: property(name: "jcr:lastModified", language: $language) {
                 value
@@ -19,15 +19,11 @@ const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templat
             ...NodeCacheRequiredFields
         }
     }
-    edit:jcr(workspace: EDIT) {
+    edit: jcr(workspace: EDIT) {
         nodeByPath(path:$path) {
             id: uuid
-            isFile:isNodeType(type: {types: ["jnt:file"]})
+            isFile: isNodeType(type: {types: ["jnt:file"]})
             path
-            isPublished:property(name:"j:published") {
-                name
-                value
-            }
             lastModified: property(name: "jcr:lastModified", language: $language) {
                 value
             }
@@ -36,6 +32,9 @@ const previewQuery = gql`query previewQueryAllWorkspaces($path:String!, $templat
                 staticAssets(type:"css") {
                     key
                 }
+            }
+            aggregatedPublicationInfo(language: $language) {
+                publicationStatus
             }
             ...NodeCacheRequiredFields
         }

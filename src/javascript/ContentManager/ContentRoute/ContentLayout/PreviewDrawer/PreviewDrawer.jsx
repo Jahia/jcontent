@@ -48,7 +48,7 @@ export class PreviewDrawer extends React.Component {
     render() {
         const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, classes} = this.props;
         const disabledToggle = !previewSelection;
-        const disabledLive = !previewSelection || previewSelection.publicationStatus === 'NOT_PUBLISHED' || previewSelection.publicationStatus === 'UNPUBLISHED';
+        const disabledLive = !previewSelection || previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE';
         return (
             <React.Fragment>
                 <AppBar position="relative" color="default">
@@ -62,12 +62,12 @@ export class PreviewDrawer extends React.Component {
                                                value={disabledToggle ? '' : previewMode}
                                                onChange={(event, value) => setPreviewMode(value)}
                             >
-                                <ToggleButton value="edit" disabled={disabledToggle} data-cm-role="edit-preview-button">
+                                <ToggleButton value="edit" disabled={previewMode === 'edit' || disabledToggle} data-cm-role="edit-preview-button">
                                     <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.staging')}
                                     </Typography>
                                 </ToggleButton>
-                                <ToggleButton value="live" disabled={disabledLive} data-cm-role="live-preview-button">
+                                <ToggleButton value="live" disabled={previewMode === 'live' || disabledLive} data-cm-role="live-preview-button">
                                     <Typography variant="caption" color="inherit">
                                         {t('label.contentManager.contentPreview.live')}
                                     </Typography>

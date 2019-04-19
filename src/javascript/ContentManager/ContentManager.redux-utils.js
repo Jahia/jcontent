@@ -31,7 +31,7 @@ let buildUrl = (site, language, mode, path, params) => {
         path = '';
     }
     // Special chars in folder naming
-    path = path.replace(/[:?"<>|]/g, encodeURIComponent);
+    path = path.replace(/[^/]/g, encodeURIComponent);
 
     let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + rison.encode_uri(params);
     return '/' + [site, language, mode].join('/') + path + queryString;

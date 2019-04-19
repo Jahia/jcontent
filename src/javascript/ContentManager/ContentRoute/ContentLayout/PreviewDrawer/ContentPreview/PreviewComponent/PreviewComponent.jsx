@@ -57,7 +57,7 @@ class PreviewComponent extends React.Component {
 
         // If node type is "jnt:file" use specific viewer
         if (data && data.nodeByPath && data.nodeByPath.isFile) {
-            let file = dxContext.contextPath + '/files/' + (previewMode === CM_PREVIEW_MODES.EDIT ? 'default' : 'live') + data.nodeByPath.path + '?lastModified=' + data.nodeByPath.lastModified.value;
+            let file = dxContext.contextPath + '/files/' + (previewMode === CM_PREVIEW_MODES.EDIT ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + '?lastModified=' + data.nodeByPath.lastModified.value;
 
             if (isPDF(data.nodeByPath.path)) {
                 return (

@@ -135,6 +135,7 @@ export class FileCard extends Component {
         // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
         let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
         let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
+        let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
@@ -170,7 +171,7 @@ export class FileCard extends Component {
                                 isDetailedCard && classes.detailedCover,
                                 isThumbCard && classes.thumbCover
                             )}
-                            image={`${dxContext.contextPath}/files/default/${node.path}?lastModified=${node.lastModified.value}&t=thumbnail2`}
+                            image={`${dxContext.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
                             title={node.name}
                         /> :
                         <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>

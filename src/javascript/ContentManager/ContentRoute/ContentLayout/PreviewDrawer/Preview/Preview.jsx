@@ -69,6 +69,10 @@ export class Preview extends React.Component {
         };
     }
 
+    componentDidUpdate() {
+        this.refetchPreview();
+    }
+
     render() {
         const {previewSelection, previewMode, previewState, selection, language} = this.props;
 

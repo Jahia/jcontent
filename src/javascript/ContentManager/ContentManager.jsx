@@ -7,6 +7,7 @@ import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
 import {I18n, I18nextProvider} from 'react-i18next';
 import {ApolloProvider} from 'react-apollo';
+import {ApolloProvider as ApolloHooksProvider} from 'react-apollo-hooks';
 import {createBrowserHistory} from 'history';
 import * as _ from 'lodash';
 import {ConnectedRouter} from 'connected-react-router';
@@ -77,24 +78,26 @@ class ContentManager extends React.Component {
     render() {
         let {dxContext} = this.props;
 
+        const apolloClient = client({
+            contextPath: dxContext.contextPath,
+            useBatch: true,
+            httpOptions: {batchMax: 50}
+        });
+
         return (
             <MuiThemeProvider theme={theme}>
                 <NotificationProvider notificationContext={{}}>
-                    <ApolloProvider client={client({
-                        contextPath: dxContext.contextPath,
-                        useBatch: true,
-                        httpOptions: {batchMax: 50}
-                    })}
-                    >
-                        <I18nextProvider i18n={getI18n({
-                            lng: dxContext.uilang,
-                            contextPath: dxContext.contextPath,
-                            ns: dxContext.i18nNamespaces,
-                            defaultNS: this.defaultNS,
-                            namespaceResolvers: this.namespaceResolvers
-                        })}
-                        >
-                            <I18n>{t => {
+                    <ApolloProvider client={apolloClient}>
+                        <ApolloHooksProvider client={apolloClient}>
+                            <I18nextProvider i18n={getI18n({
+                                lng: dxContext.uilang,
+                                contextPath: dxContext.contextPath,
+                                ns: dxContext.i18nNamespaces,
+                                defaultNS: this.defaultNS,
+                                namespaceResolvers: this.namespaceResolvers
+                            })}
+                            >
+                                <I18n>{t => {
                                 return (
                                     <Provider store={this.getStore(dxContext, t)}>
                                         <DxContext.Provider value={dxContext}>
@@ -108,8 +111,9 @@ class ContentManager extends React.Component {
                                     </Provider>
                                 );
                             }}
-                            </I18n>
-                        </I18nextProvider>
+                                </I18n>
+                            </I18nextProvider>
+                        </ApolloHooksProvider>
                     </ApolloProvider>
                 </NotificationProvider>
             </MuiThemeProvider>

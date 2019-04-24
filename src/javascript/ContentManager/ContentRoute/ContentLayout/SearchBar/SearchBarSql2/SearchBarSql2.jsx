@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DxContext from '../../../../DxContext';
+import {DxContext} from '@jahia/react-material';
 import SearchBarLayout from '../SearchBarLayout';
 import ActionButton from '../ActionButton';
 import Sql2Input from './Sql2Input';

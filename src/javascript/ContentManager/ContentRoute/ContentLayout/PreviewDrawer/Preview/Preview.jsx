@@ -1,18 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose, Query} from 'react-apollo';
+import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {withStyles} from '@material-ui/core';
-import {previewQuery} from './ContentPreview.gql-queries';
-import ContentManagerConstants from '../../../../ContentManager.constants';
-import DxContext from '../../../../DxContext';
+import {ContentPreview} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
-import PreviewComponent from './PreviewComponent';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux-actions';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
 import {cmClearSelection} from '../../contentSelection.redux-actions';
+import {CM_DRAWER_STATES} from '../../../../ContentManager.redux-actions';
+import {withStyles} from '@material-ui/core';
 
 const styles = theme => ({
     root: {
@@ -64,21 +62,19 @@ const styles = theme => ({
     }
 });
 
-export class ContentPreview extends React.Component {
+export class Preview extends React.Component {
     constructor(props) {
         super(props);
         this.refetchPreview = () => {
         };
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.previewSelection && prevProps.previewSelection && prevProps.previewSelection.lastPublished !== this.props.previewSelection.lastPublished) {
-            this.refetchPreview();
-        }
+    componentDidUpdate() {
+        this.refetchPreview();
     }
 
     render() {
-        const {previewSelection, classes, previewMode, selection} = this.props;
+        const {previewSelection, previewMode, previewState, selection, language} = this.props;
 
         if (selection.length > 0) {
             return <MultipleSelection {...this.props}/>;
@@ -87,45 +83,18 @@ export class ContentPreview extends React.Component {
             return <NoPreviewComponent {...this.props}/>;
         }
 
-        const path = previewSelection.path;
-        const isPublished = previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED &&
-                                        previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED &&
-                                        previewSelection.aggregatedPublicationInfo.publicationStatus !== ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE;
-        const queryVariables = {
-            path: path,
-            templateType: 'html',
-            view: 'cm',
-            contextConfiguration: 'preview',
-            language: this.props.language,
-            isPublished: isPublished
-        };
-
         return (
-            <DxContext.Consumer>
-                {dxContext => (
-                    <div className={classes.root}>
-                        <Query query={previewQuery}
-                               errorPolicy="all"
-                               variables={queryVariables}
-                        >
-                            {({loading, data, refetch}) => {
-                                this.refetchPreview = refetch;
-
-                                if (!loading) {
-                                    if (!_.isEmpty(data)) {
-                                        return (
-                                            <PreviewComponent data={data[previewMode] ? data[previewMode] : {}}
-                                                              dxContext={dxContext}
-                                                              {...this.props}/>
-                                        );
-                                    }
-                                }
+            <ContentPreview path={previewSelection.path}
+                            templateType="html"
+                            view="cm"
+                            contextConfiguration="preview"
+                            fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
+                            language={language}
+                            workspace={previewMode}
+                            setRefetch={refetchingData => {
+                                this.refetchPreview = refetchingData.refetch;
                                 return null;
-                            }}
-                        </Query>
-                    </div>
-                )}
-            </DxContext.Consumer>
+                            }}/>
         );
     }
 }
@@ -149,10 +118,10 @@ const mapDispatchToProps = dispatch => ({
     clearSelection: () => dispatch(cmClearSelection())
 });
 
-ContentPreview.propTypes = {
-    classes: PropTypes.object.isRequired,
+Preview.propTypes = {
     language: PropTypes.string.isRequired,
     previewMode: PropTypes.string.isRequired,
+    previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.object,
     selection: PropTypes.array.isRequired
 };
@@ -161,4 +130,4 @@ export default compose(
     translate(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
-)(ContentPreview);
+)(Preview);

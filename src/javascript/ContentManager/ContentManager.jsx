@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {MuiThemeProvider} from '@material-ui/core';
-import {actionsRegistry, ComponentRendererProvider, NotificationProvider} from '@jahia/react-material';
+import {actionsRegistry, ComponentRendererProvider, NotificationProvider, DxContext} from '@jahia/react-material';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
@@ -9,7 +9,6 @@ import {I18n, I18nextProvider} from 'react-i18next';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
 import * as _ from 'lodash';
-import DxContext from './DxContext';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import contentManagerReduxStore from './ContentManager.redux-store';

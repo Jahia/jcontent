@@ -106,14 +106,14 @@
         <dependency>
             <groupId>org.jahia.modules</groupId>
             <artifactId>dx-commons-webpack</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
             <type>json</type>
             <classifier>manifest</classifier>
         </dependency>
         <dependency>
             <groupId>org.jahia.modules</groupId>
             <artifactId>dx-commons-webpack</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Input, withStyles} from '@material-ui/core';
-import DxContext from '../../../../DxContext';
 import ContentTypeSelect from './ContentTypeSelect';
 import {cmGoto} from '../../../../ContentManager.redux-actions';
-import {withNotifications} from '@jahia/react-material';
+import {withNotifications, DxContext} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import SearchBarLayout from '../SearchBarLayout';

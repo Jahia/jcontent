@@ -7,7 +7,7 @@ import {getImageMutation} from './ImageEditor.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
-import DxContext from '../DxContext';
+import {DxContext} from '@jahia/react-material';
 import {cmGoto} from '../ContentManager.redux-actions';
 import {refetchContentListData} from '../ContentManager.refetches';
 import Feedback from './Feedback';

@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import {Typography, IconButton} from '@jahia/ds-mui-theme';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
-import ContentPreview from './ContentPreview';
+import Preview from './Preview';
 import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES} from '../../../ContentManager.redux-actions';
@@ -84,7 +84,7 @@ export class PreviewDrawer extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <ContentPreview previewSelection={previewSelection}/>
+                <Preview previewSelection={previewSelection}/>
                 {previewSelection &&
                     <Card>
                         <CardContent data-cm-role="preview-name" className={classes.leftGutter}>

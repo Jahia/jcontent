@@ -32,7 +32,7 @@ export class ToolBar extends React.Component {
                         <SearchControlBar showActions={selection.length === 0}/> :
                         <React.Fragment>
                             {treeState !== CM_DRAWER_STATES.SHOW &&
-                                <IconButton icon={<ChevronRight/>} color="inherit" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}/>
+                                <IconButton icon={<ChevronRight/>} color="inherit" data-sel-role="show-tree" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}/>
                             }
                             <BrowseControlBar showActions={selection.length === 0}/>
                         </React.Fragment>

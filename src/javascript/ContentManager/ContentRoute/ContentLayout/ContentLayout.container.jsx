@@ -18,6 +18,7 @@ import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import {extractPaths, getNewNodePath, isDescendantOrSelf} from '../../ContentManager.utils';
+import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux-actions';
 import {setModificationHook} from './ContentLayout.utils';
 import {cmSetPreviewSelection} from '../../preview.redux-actions';
 import ContentLayout from './ContentLayout';
@@ -52,7 +53,8 @@ export class ContentLayoutContainer extends React.Component {
     }
 
     onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {
-        let {client, siteKey, path, previewSelection, openedPaths, setPath, setPreviewSelection, openPaths, closePaths, mode} = this.props;
+        let {client, siteKey, path, previewSelection, openedPaths, setPath, setPreviewSelection,
+            openPaths, closePaths, mode, selection, removeSelection, switchSelection} = this.props;
 
         let stateModificationDone = false;
 
@@ -111,6 +113,15 @@ export class ContentLayoutContainer extends React.Component {
                     stateModificationDone = true;
                 }
             }
+
+            // Modification when using multiple selection actions
+            let selectedNodes = _.clone(selection);
+            setTimeout(function () {
+                if (_.includes(selectedNodes, nodePath)) {
+                    removeSelection(nodePath);
+                    switchSelection(nodePath);
+                }
+            }, 0);
         }
 
         if (stateModificationDone) {
@@ -237,7 +248,8 @@ const mapStateToProps = state => ({
     sort: state.sort,
     openedPaths: state.openPaths,
     pathsToRefetch: state.pathsToRefetch,
-    treeState: state.treeState
+    treeState: state.treeState,
+    selection: state.selection
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -245,7 +257,9 @@ const mapDispatchToProps = dispatch => ({
     setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     openPaths: paths => dispatch(cmOpenPaths(paths)),
     closePaths: paths => dispatch(cmClosePaths(paths)),
-    removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths))
+    removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths)),
+    removeSelection: path => dispatch(cmRemoveSelection(path)),
+    switchSelection: path => dispatch(cmSwitchSelection(path))
 });
 
 ContentLayoutContainer.propTypes = {
@@ -270,7 +284,10 @@ ContentLayoutContainer.propTypes = {
     uiLang: PropTypes.string.isRequired,
     treeState: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
-    filesMode: PropTypes.string.isRequired
+    filesMode: PropTypes.string.isRequired,
+    selection: PropTypes.array.isRequired,
+    removeSelection: PropTypes.func.isRequired,
+    switchSelection: PropTypes.func.isRequired
 };
 
 export default compose(

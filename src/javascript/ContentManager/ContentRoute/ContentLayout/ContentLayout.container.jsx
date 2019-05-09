@@ -17,7 +17,7 @@ import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
-import {extractPaths, getNewNodePath, isDescendantOrSelf} from '../../ContentManager.utils';
+import {getNewNodePath, isDescendantOrSelf} from '../../ContentManager.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux-actions';
 import {setModificationHook} from './ContentLayout.utils';
 import {cmSetPreviewSelection} from '../../preview.redux-actions';
@@ -52,87 +52,83 @@ export class ContentLayoutContainer extends React.Component {
         unregisterContentModificationEventHandler(this.onGwtContentModification);
     }
 
-    onGwtContentModification(nodeUuid, nodePath, nodeName, operation, nodeType) {
-        let {client, siteKey, path, previewSelection, openedPaths, setPath, setPreviewSelection,
-            openPaths, closePaths, mode, selection, removeSelection, switchSelection} = this.props;
+    onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
+        let {client, path, previewSelection, openedPaths, setPath, setPreviewSelection,
+            openPaths, closePaths, selection, removeSelection, switchSelection} = this.props;
 
-        let stateModificationDone = false;
+        if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
+            operation = 'rename';
+        }
 
         if (operation === 'create') {
             let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-            if (nodeType === 'jnt:folder' || nodeType === 'jnt:contentFolder') {
-                // Make sure the created folder is visible in the tree.
-                if (!_.includes(openedPaths, parentPath)) {
-                    openPaths(extractPaths(siteKey, parentPath, mode));
-                    stateModificationDone = true;
-                }
-            } else if (path !== parentPath) {
+            client.cache.flushNodeEntryByPath(parentPath);
+            if (path !== parentPath) {
                 // Make sure the created content is visible in the main panel.
                 setPath(parentPath);
-                stateModificationDone = true;
             }
         } else if (operation === 'delete') {
+            // Clear cache entries for subnodes
+            Object.keys(client.cache.idByPath)
+                .filter(p => isDescendantOrSelf(p, nodePath))
+                .forEach(p => client.cache.flushNodeEntryByPath(p));
+
             // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
             if (isDescendantOrSelf(path, nodePath)) {
                 setPath(nodePath.substring(0, nodePath.lastIndexOf('/')));
-                stateModificationDone = true;
             }
 
             // Close any expanded nodes that have been just removed.
             let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
             if (!_.isEmpty(pathsToClose)) {
                 closePaths(pathsToClose);
-                stateModificationDone = true;
             }
 
             // De-select any removed nodes.
-            if (previewSelection === nodePath) {
+            if (isDescendantOrSelf(previewSelection, nodePath)) {
                 setPreviewSelection(null);
-                stateModificationDone = true;
+            }
+        } else if (operation === 'rename') {
+            let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
+            let newPath = parentPath + '/' + nodeName;
+
+            // Clear cache entries for subnodes
+            Object.keys(client.cache.idByPath)
+                .filter(p => isDescendantOrSelf(p, nodePath))
+                .forEach(p => client.cache.flushNodeEntryByPath(p));
+
+            // Switch to the new renamed node
+            if (isDescendantOrSelf(path, nodePath)) {
+                setPath(getNewNodePath(path, nodePath, newPath));
+            }
+
+            let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
+            if (!_.isEmpty(pathsToReopen)) {
+                closePaths(pathsToReopen);
+                pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, nodePath, newPath));
+                openPaths(pathsToReopen);
+            }
+
+            // De-select any removed nodes.
+            if (isDescendantOrSelf(previewSelection, nodePath)) {
+                setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
             }
         } else if (operation === 'update') {
-            if (isDescendantOrSelf(path, nodePath)) {
-                // This is an update of either the element currently selected in the tree or one of its ancestors.
+            client.cache.flushNodeEntryById(nodeUuid);
 
-                let name = nodePath.substring(nodePath.lastIndexOf('/') + 1, nodePath.length);
-                if (nodeName && name !== nodeName) {
-                    // This is a node name change: update current CM path to reflect the changed path of the node.
-
-                    let ancestorPath = nodePath;
-                    let ancestorParentPath = ancestorPath.substring(0, ancestorPath.lastIndexOf('/'));
-                    let newAncestorPath = ancestorParentPath + '/' + nodeName;
-                    setPath(getNewNodePath(path, ancestorPath, newAncestorPath));
-
-                    let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, ancestorPath));
-                    if (!_.isEmpty(pathsToReopen)) {
-                        closePaths(pathsToReopen);
-                        pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, ancestorPath, newAncestorPath));
-                        openPaths(pathsToReopen);
+            if (selection.length > 0) {
+                // Modification when using multiple selection actions
+                let selectedNodes = _.clone(selection);
+                setTimeout(function () {
+                    if (_.includes(selectedNodes, nodePath)) {
+                        removeSelection(nodePath);
+                        switchSelection(nodePath);
                     }
-
-                    stateModificationDone = true;
-                }
+                });
             }
-
-            // Modification when using multiple selection actions
-            let selectedNodes = _.clone(selection);
-            setTimeout(function () {
-                if (_.includes(selectedNodes, nodePath)) {
-                    removeSelection(nodePath);
-                    switchSelection(nodePath);
-                }
-            }, 0);
         }
 
-        if (stateModificationDone) {
-            // In case of any state modifications, wait a second to let components re-render and perform GrpaphQL requests asynchronously,
-            // and avoid store reset done at the same time: Apollo is usually unhappy with this and throws errors.
-            setTimeout(function () {
-                client.resetStore();
-            }, 1000);
-        } else {
-            client.resetStore();
-        }
+        client.reFetchObservableQueries();
     }
 
     render() {

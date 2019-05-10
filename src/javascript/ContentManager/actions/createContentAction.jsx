@@ -43,6 +43,9 @@ export default composeActions(requirementsAction, withDxContextAction, {
             }
             return of(childNodeTypeNames);
         }), switchMap(nodeTypes => {
+            if (_.size(nodeTypes) === 0) {
+                return of({actions: []});
+            }
             if (_.size(nodeTypes) > ContentManagerConstants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, 'jmix:droppableContent')) {
                 return of({
                     includeSubTypes: true,

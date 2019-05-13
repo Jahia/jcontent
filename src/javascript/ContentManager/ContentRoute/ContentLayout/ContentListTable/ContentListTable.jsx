@@ -18,7 +18,7 @@ import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagin
 import * as _ from 'lodash';
 import {translate} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
-import Moment from 'react-moment';
+import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
 import {allowDoubleClickNavigation, extractPaths, isMarkedForDeletion} from '../../../ContentManager.utils';
 import ToolBar from '../ToolBar';
@@ -459,9 +459,7 @@ export class ContentListTable extends React.Component {
                                                                                         color="inherit"
                                                                                         className={classes.lastModifiedTypography}
                                                                             >
-                                                                                <Moment format="ll" locale={uiLang}>
-                                                                                    {_.get(node, column.property)}
-                                                                                </Moment>
+                                                                                <time>{dayjs(_.get(node, column.property)).locale(uiLang).format('ll')}</time>
                                                                             </Typography>
                                                                             {showActions &&
                                                                             <div key="actions"

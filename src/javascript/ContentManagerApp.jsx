@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import ContentManager from './ContentManager';
 import {CssBaseline} from '@material-ui/core';
 
+import './date.config';
+
 function renderContentManager(target, id, dxContext) {
     window.parent.addEventListener('click', e => {
         if (Array.prototype.slice.call(window.parent.document.querySelectorAll('#JahiaGxtEditEnginePanel-usages a[target=\'_blank\'')).indexOf(e.target) > -1) {

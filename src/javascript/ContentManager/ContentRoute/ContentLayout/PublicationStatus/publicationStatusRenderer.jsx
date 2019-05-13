@@ -1,6 +1,5 @@
 import React from 'react';
-import Moment from 'react-moment';
-import 'moment-timezone';
+import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
 import {isMarkedForDeletion} from '../../../ContentManager.utils';
 import * as _ from 'lodash';
@@ -10,7 +9,7 @@ class PublicationStatusUnpublished {
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{_.get(node, 'lastModified.value', '')}</Moment>
+                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(locale).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -35,7 +34,7 @@ class PublicationStatusPublished {
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.published', {userName: _.get(node, 'lastPublishedBy.value', ''), timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{_.get(node, 'lastPublished.value', '')}</Moment>
+                <time>{dayjs(_.get(node, 'lastPublished.value', '')).locale(locale).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -50,7 +49,7 @@ class PublicationStatusModified {
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{_.get(node, 'lastModified.value', '')}</Moment>
+                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(locale).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -68,7 +67,7 @@ class PublicationStatusMarkedForDeletion {
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.markedForDeletion', {userName: _.get(node, 'deletedBy.value', parentDeletionUser), timestamp: ''}) }
-                <Moment format="LLL" locale={locale}>{ _.get(node, 'deleted.value', parentDeletionDate)}</Moment>
+                <time>{dayjs(_.get(node, 'deleted.value', parentDeletionDate)).locale(locale).format('LLL')}</time>
             </React.Fragment>
         );
     }

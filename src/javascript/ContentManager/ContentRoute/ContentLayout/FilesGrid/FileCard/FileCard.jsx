@@ -6,8 +6,6 @@ import {compose} from 'react-apollo';
 import {ContextualMenu} from '@jahia/react-material';
 import {translate} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
-import Moment from 'react-moment';
-import 'moment-timezone';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
 import {CM_DRAWER_STATES} from '../../../../ContentManager.redux-actions';
@@ -16,6 +14,7 @@ import classNames from 'classnames';
 import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
+import dayjs from 'dayjs';
 
 const styles = theme => ({
     detailedCard: {
@@ -204,9 +203,7 @@ export class FileCard extends Component {
                                     <Typography variant="iota" component="p">
                                         {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
-                                        <Moment format="LLL" locale={uiLang}>
-                                            {node.created.value}
-                                        </Moment>
+                                        <time>{dayjs(node.created.value).locale(uiLang).format('LLL')}</time>
                                     </Typography>
                                 </div>
                             }

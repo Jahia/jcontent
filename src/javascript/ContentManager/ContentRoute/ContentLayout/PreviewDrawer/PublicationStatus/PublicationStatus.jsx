@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/ds-mui-theme';
-import Moment from 'react-moment';
-import 'moment-timezone';
+import dayjs from 'dayjs';
 import ContentManagerConstants from '../../../../ContentManager.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
@@ -61,7 +60,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             >
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
             &nbsp;
-                <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'deleted.value', '')}</Moment>
+                <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(uiLang).format('LLL')}</time>
             </Typography>
         );
     }
@@ -73,7 +72,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 >
                     {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
-                    <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'lastModified.value', '')}</Moment>
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(uiLang).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.PUBLISHED:
@@ -83,7 +82,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 >
                     {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                 &nbsp;
-                    <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'lastPublished.value', '')}</Moment>
+                    <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(uiLang).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED:
@@ -101,7 +100,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 >
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
-                    <Moment format="LLL" locale={uiLang}>{_.get(previewSelection, 'lastModified.value', '')}</Moment>
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(uiLang).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:

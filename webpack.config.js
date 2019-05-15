@@ -59,7 +59,6 @@ module.exports = (env, argv) => {
             new webpack.DllReferencePlugin({
                 manifest: require(manifest)
             }),
-            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fr|de/),
             new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),
             new webpack.HashedModuleIdsPlugin({
                 hashFunction: 'sha256',

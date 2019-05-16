@@ -4,7 +4,8 @@ import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
-import {ContentPreview} from '@jahia/react-material';
+import {ContentPreview} from '@jahia/react-apollo';
+import {PreviewComponent} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux-actions';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
@@ -88,13 +89,21 @@ export class Preview extends React.Component {
                             templateType="html"
                             view="cm"
                             contextConfiguration="preview"
-                            fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
                             language={language}
                             workspace={previewMode}
                             setRefetch={refetchingData => {
                                 this.refetchPreview = refetchingData.refetch;
                                 return null;
-                            }}/>
+                            }}
+            >
+                {
+                    data => (
+                        <PreviewComponent data={data.jcr ? data.jcr : {}}
+                                          workspace={previewMode}
+                                          fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}/>
+                    )
+                }
+            </ContentPreview>
         );
     }
 }

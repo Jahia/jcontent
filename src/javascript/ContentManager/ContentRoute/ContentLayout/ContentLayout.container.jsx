@@ -85,7 +85,7 @@ export class ContentLayoutContainer extends React.Component {
             }
 
             // De-select any removed nodes.
-            if (isDescendantOrSelf(previewSelection, nodePath)) {
+            if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
                 setPreviewSelection(null);
             }
         } else if (operation === 'rename') {
@@ -110,7 +110,7 @@ export class ContentLayoutContainer extends React.Component {
             }
 
             // De-select any removed nodes.
-            if (isDescendantOrSelf(previewSelection, nodePath)) {
+            if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
                 setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
             }
         } else if (operation === 'update') {

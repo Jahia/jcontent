@@ -4,13 +4,13 @@ import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Button} from '@jahia/ds-mui-theme';
 import {compose} from 'react-apollo';
-import ContentBreadcrumbs from './ContentBreadcrumbs';
 import {buttonRenderer, DisplayActions} from '@jahia/react-material';
 import FileModeSelector from '../FileModeSelector';
 import ContentManagerConstants from '../../../../ContentManager.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
 import {refetchContentTreeAndListData} from '../../../../ContentManager.refetches';
+import BreadcrumbContainer from './ContentBreadcrumbs/Breadcrumb/Breadcrumb.container';
 
 const styles = theme => ({
     grow: {
@@ -40,7 +40,7 @@ export class BrowseControlBar extends React.Component {
 
         return (
             <React.Fragment>
-                <ContentBreadcrumbs mode={mode}/>
+                <BreadcrumbContainer/>
                 <div className={classes.grow}/>
                 {showActions && mode === ContentManagerConstants.mode.FILES &&
                     <FileModeSelector/>

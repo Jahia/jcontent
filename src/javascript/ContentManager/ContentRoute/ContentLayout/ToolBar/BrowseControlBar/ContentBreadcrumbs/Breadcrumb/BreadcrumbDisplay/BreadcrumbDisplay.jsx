@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Menu, MenuItem} from '@material-ui/core';
 import iconRenderer from './iconRenderer';
-import {withStyles} from '@material-ui/core';
-import {Typography, Button} from '@jahia/ds-mui-theme';
+import {Menu, MenuItem, withStyles} from '@material-ui/core';
+import {Typography, Button, IconButton} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
 import {ellipsizeText} from '../../../../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
+import * as _ from 'lodash';
+import {ChevronRight as ChevronRightIcon, MoreHoriz} from '@material-ui/icons';
 
 const styles = theme => ({
     contentLabel: {
@@ -14,123 +15,123 @@ const styles = theme => ({
     },
     icon: {
         color: theme.palette.font.alpha
+    },
+    chevronSvg: {
+        verticalAlign: 'middle',
+        color: theme.palette.text.disabled
     }
 });
 
 export class BreadcrumbDisplay extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.onMenuButtonMouseOver = this.onMenuButtonMouseOver.bind(this);
-        this.onMenuItemSelected = this.onMenuItemSelected.bind(this);
-
-        this.menu = React.createRef();
-        this.anchorButton = React.createRef();
-
-        this.state = {
-            menuActive: false,
-            anchorPosition: {
-                top: 5,
-                left: 50
-            }
-        };
-    }
-
-    onMenuButtonMouseOver() {
-        if (!this.state.menuActive) {
-            this.setState({
-                menuActive: true,
-                anchorPosition: {
-                    top: this.anchorButton.current.getBoundingClientRect().top - 5,
-                    left: this.anchorButton.current.getBoundingClientRect().left
-                }
-            });
-        }
-    }
-
-    onMenuItemSelected(event, node) {
-        this.props.handleSelect(node.mode, node.path);
-    }
-
     render() {
-        let {menuActive, anchorPosition} = this.state;
-        let {node, maxLabelLength, trimLabel, classes} = this.props;
-        return (
-            <span ref={this.menu}>
-                <Button
+        let {node, maxLabelLength, showLabel, classes, selectItem, display, hiddenParents, hiddenContents,
+            openHiddenParents, openHiddenContents, handleClick, handleClose, mode} = this.props;
+        if (display) {
+            return (
+                <span ref={this.menu}>
+                    <Button
                     disableRipple
                     variant="ghost"
                     size="compact"
-                    buttonRef={this.anchorButton}
                     aria-haspopup="true"
                     aria-owns={'breadcrumbMenu_' + node.uuid}
-                    onMouseOver={() => node.siblings && node.siblings.length > 1 && this.onMenuButtonMouseOver()}
-                    onClick={ev => node.siblings && node.siblings.length === 1 && this.onMenuItemSelected(ev, node.siblings[0])}
-                >
-                    {iconRenderer(node, classes.icon)}
-                    {!trimLabel &&
+                    onClick={() => selectItem(node.path)}
+                    >
+                        {iconRenderer(node, classes.icon, !showLabel)}
+                        {showLabel &&
                         <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
                             {ellipsizeText(node.name, maxLabelLength)}
                         </Typography>
                     }
-                </Button>
-                <Menu
-                    key={node.uuid}
-                    disableAutoFocusItem
-                    anchorPosition={anchorPosition}
-                    anchorReference="anchorPosition"
-                    container={this.menu.current}
-                    open={menuActive}
-                    BackdropProps={{
-                        style: {
-                            opacity: 0
-                        },
-                        onMouseOver: () => {
-                            this.setState({menuActive: false});
-                        }
-                    }}
-                    onClose={() => this.setState({menuActive: false})}
-                >
-                    <MenuItem
-                        key={'dropdown_' + node.uuid}
-                        disableRipple
-                        selected
-                        disableGutters
-                        onClick={event => this.onMenuItemSelected(event, node)}
+                    </Button>
+                </span>
+            );
+        }
+        if (!_.isEmpty(hiddenParents) && _.find(hiddenParents, (parent, i) =>
+            parent.uuid === node.uuid && i === hiddenParents.length - 1) !== undefined) {
+            return (
+                <span key={node.uuid}>
+                    <IconButton icon={<MoreHoriz className={classes.chevronSvg}/>}
+                                onClick={e => handleClick(e, 'parent')}/>
+                    <Menu
+                        anchorEl={openHiddenParents}
+                        open={Boolean(openHiddenParents)}
+                        onClose={handleClose}
                     >
-                        {iconRenderer(node)}{node.name}
-                    </MenuItem>
-                    {node.siblings && node.siblings.length !== 0 &&
-                        node.siblings.map(siblingNode => {
-                            if (siblingNode.name === node.name) {
-                                return null;
-                            }
+                        {hiddenParents.map(parent => {
                             return (
                                 <MenuItem
-                                    key={siblingNode.uuid}
+                                    key={parent.uuid}
                                     disableRipple
-                                    onClick={event => this.onMenuItemSelected(event, siblingNode)}
+                                    onClick={() => selectItem(mode, parent.path, {sub: false})}
                                 >
-                                    {iconRenderer(siblingNode)}
-                                    <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
-                                        {siblingNode.name}
+                                    {iconRenderer(parent)}
+                                    <Typography variant="iota"
+                                                data-cm-role="breadcrumb-name"
+                                                classes={{root: classes.contentLabel}}
+                                    >
+                                        {parent.name}
                                     </Typography>
                                 </MenuItem>
                             );
-                        })
-                    }
-                </Menu>
-            </span>
-        );
+                        })}
+                    </Menu>
+                    <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
+                </span>
+            );
+        }
+        if (!_.isEmpty(hiddenContents) && _.find(hiddenContents, (content, i) =>
+            content.uuid === node.uuid && i === hiddenContents.length - 1) !== undefined) {
+            return (
+                <span key={node.uuid}>
+                    <IconButton icon={<MoreHoriz className={classes.chevronSvg}/>}
+                                onClick={e => handleClick(e, 'content')}/>
+                    <Menu
+                        anchorEl={openHiddenContents}
+                        open={Boolean(openHiddenContents)}
+                        onClose={handleClose}
+                    >
+                        {hiddenContents.map(content => {
+                            return (
+                                <MenuItem
+                                    key={content.uuid}
+                                    disableRipple
+                                    onClick={() => selectItem(mode, content.path, {sub: false})}
+                                >
+                                    {iconRenderer(content)}
+                                    <Typography variant="iota"
+                                                data-cm-role="breadcrumb-name"
+                                                classes={{root: classes.contentLabel}}
+                                    >
+                                        {content.name}
+                                    </Typography>
+                                </MenuItem>
+                            );
+                        })}
+
+                    </Menu>
+                    <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
+                </span>
+            );
+        }
+        return null;
     }
 }
 
 BreadcrumbDisplay.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleSelect: PropTypes.func.isRequired,
+    selectItem: PropTypes.func.isRequired,
     maxLabelLength: PropTypes.number.isRequired,
     node: PropTypes.object.isRequired,
-    trimLabel: PropTypes.bool.isRequired
+    showLabel: PropTypes.bool.isRequired,
+    display: PropTypes.bool.isRequired,
+    hiddenParents: PropTypes.array.isRequired,
+    hiddenContents: PropTypes.array.isRequired,
+    openHiddenParents: PropTypes.object,
+    openHiddenContents: PropTypes.object,
+    handleClick: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    mode: PropTypes.string.isRequired
 };
 
 export default compose(translate(), withStyles(styles))(BreadcrumbDisplay);

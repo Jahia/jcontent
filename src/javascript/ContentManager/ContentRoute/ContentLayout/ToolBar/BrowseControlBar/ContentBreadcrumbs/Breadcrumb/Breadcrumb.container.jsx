@@ -12,9 +12,16 @@ import BreadcrumbDisplay from './BreadcrumbDisplay';
 import * as _ from 'lodash';
 
 const styles = theme => ({
+    container: {
+        display: 'flex'
+    },
     chevronSvg: {
         verticalAlign: 'middle',
         color: theme.palette.text.disabled
+    },
+    breadcrumb: {
+        display: 'flex',
+        alignItems: 'center'
     }
 });
 
@@ -75,34 +82,37 @@ export class BreadcrumbContainer extends React.Component {
                     let hiddenParents = getHiddenParents(breadcrumbs);
                     let hiddenContents = getHiddenContents(breadcrumbs);
                     return (
-                        breadcrumbs.map((breadcrumb, i) => {
-                            let showLabel = breadcrumb.type === 'jnt:page' || breadcrumb.type === 'jnt:folder' ||
-                                breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:virtualsite' || i === items.length - 1;
-                            let hideParent = _.find(hiddenParents, parent => parent.uuid === breadcrumb.uuid);
-                            let hideContent = _.find(hiddenContents, content => content.uuid === breadcrumb.uuid);
-                            return (
-                                <span key={breadcrumb.uuid} data-cm-role="breadcrumb">
-                                    <BreadcrumbDisplay
-                                            id={breadcrumb.uuid}
-                                            node={breadcrumb}
-                                            maxLabelLength={15}
-                                            selectItem={path => selectItem(mode, path, {sub: false})}
-                                            showLabel={showLabel}
-                                            display={items.length < 4 || (!hideParent && !hideContent)}
-                                            mode={mode}
-                                            hiddenParents={hiddenParents}
-                                            hiddenContents={hiddenContents}
-                                            openHiddenParents={this.state.openHiddenParents}
-                                            openHiddenContents={this.state.openHiddenContents}
-                                            handleClick={this.handleClick}
-                                            handleClose={this.handleClose}
+                        <div className={classes.container}>
+                            {breadcrumbs.map((breadcrumb, i) => {
+                                let showLabel = breadcrumb.type === 'jnt:page' || breadcrumb.type === 'jnt:folder' ||
+                                    breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:virtualsite' || i === items.length - 1;
+                                let hideParent = _.find(hiddenParents, parent => parent.uuid === breadcrumb.uuid);
+                                let hideContent = _.find(hiddenContents, content => content.uuid === breadcrumb.uuid);
+                                return (
+                                    <span key={breadcrumb.uuid} data-cm-role="breadcrumb" className={classes.breadcrumb}>
+                                        <BreadcrumbDisplay
+                                        id={breadcrumb.uuid}
+                                        node={breadcrumb}
+                                        maxLabelLength={15}
+                                        selectItem={path => selectItem(mode, path, {sub: false})}
+                                        showLabel={showLabel}
+                                        display={items.length < 4 || (!hideParent && !hideContent)}
+                                        mode={mode}
+                                        hiddenParents={hiddenParents}
+                                        hiddenContents={hiddenContents}
+                                        openHiddenParents={this.state.openHiddenParents}
+                                        openHiddenContents={this.state.openHiddenContents}
+                                        handleClick={this.handleClick}
+                                        handleClose={this.handleClose}
                                     />
-                                    {(i < items.length - 1 && !hideParent && !hideContent) &&
-                                    <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
-                                    }
-                                </span>
-                            );
-                        }));
+                                        {(i < items.length - 1 && !hideParent && !hideContent) &&
+                                        <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
+                                        }
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    );
                 }}
             </Query>
         );

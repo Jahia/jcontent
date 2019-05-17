@@ -24,33 +24,33 @@ const styles = theme => ({
 
 export class BreadcrumbDisplay extends React.Component {
     render() {
-        let {node, maxLabelLength, showLabel, classes, selectItem, display, hiddenParents, hiddenContents,
-            openHiddenParents, openHiddenContents, handleClick, handleClose, mode} = this.props;
+        let {
+            node, maxLabelLength, showLabel, classes, selectItem, display, hiddenParents, hiddenContents,
+            openHiddenParents, openHiddenContents, handleClick, handleClose, mode
+        } = this.props;
         if (display) {
             return (
-                <span ref={this.menu}>
-                    <Button
+                <Button
                     disableRipple
                     variant="ghost"
                     size="compact"
                     aria-haspopup="true"
                     aria-owns={'breadcrumbMenu_' + node.uuid}
                     onClick={() => selectItem(node.path)}
-                    >
-                        {iconRenderer(node, classes.icon, !showLabel)}
-                        {showLabel &&
-                        <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
-                            {ellipsizeText(node.name, maxLabelLength)}
-                        </Typography>
+                >
+                    {iconRenderer(node, classes.icon, !showLabel)}
+                    {showLabel &&
+                    <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                        {ellipsizeText(node.name, maxLabelLength)}
+                    </Typography>
                     }
-                    </Button>
-                </span>
+                </Button>
             );
         }
         if (!_.isEmpty(hiddenParents) && _.find(hiddenParents, (parent, i) =>
             parent.uuid === node.uuid && i === hiddenParents.length - 1) !== undefined) {
             return (
-                <span key={node.uuid}>
+                <React.Fragment>
                     <IconButton icon={<MoreHoriz className={classes.chevronSvg}/>}
                                 onClick={e => handleClick(e, 'parent')}/>
                     <Menu
@@ -77,13 +77,13 @@ export class BreadcrumbDisplay extends React.Component {
                         })}
                     </Menu>
                     <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
-                </span>
+                </React.Fragment>
             );
         }
         if (!_.isEmpty(hiddenContents) && _.find(hiddenContents, (content, i) =>
             content.uuid === node.uuid && i === hiddenContents.length - 1) !== undefined) {
             return (
-                <span key={node.uuid}>
+                <React.Fragment>
                     <IconButton icon={<MoreHoriz className={classes.chevronSvg}/>}
                                 onClick={e => handleClick(e, 'content')}/>
                     <Menu
@@ -111,7 +111,7 @@ export class BreadcrumbDisplay extends React.Component {
 
                     </Menu>
                     <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
-                </span>
+                </React.Fragment>
             );
         }
         return null;

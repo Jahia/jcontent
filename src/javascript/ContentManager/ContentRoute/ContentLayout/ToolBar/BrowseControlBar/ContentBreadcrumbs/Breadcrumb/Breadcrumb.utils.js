@@ -56,7 +56,7 @@ const getHiddenContents = breadcrumbs => {
         breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:folder' || breadcrumb.type === 'jmix:cmContentTreeDisplayable');
     let length = breadcrumbs.length;
     breadcrumbs.map((breadcrumb, i) => {
-        if (i > lastParent && i < length - 2) {
+        if (i > lastParent && i < length - 1) {
             hiddenContents.push(breadcrumb);
         }
         return null;

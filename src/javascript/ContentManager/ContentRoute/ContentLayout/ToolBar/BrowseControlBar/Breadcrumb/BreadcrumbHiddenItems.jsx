@@ -20,12 +20,12 @@ const BreadcrumbHiddenItems = ({hidden, selectItem, classes}) => {
 
     return (
         <React.Fragment>
-            <IconButton icon={<MoreHoriz className={classes.menu} data-sel-role="hidden-parents"/>}
+            <IconButton icon={<MoreHoriz className={classes.menu} data-sel-role="hidden-items"/>}
                         onClick={e => setMenuAnchor(e.currentTarget)}/>
             <Menu
                 anchorEl={menuAnchor}
                 open={Boolean(menuAnchor)}
-                data-sel-role="hidden-parents-menu"
+                data-sel-role="hidden-menu"
                 onClose={() => setMenuAnchor(null)}
             >
                 {hidden.map(item => {

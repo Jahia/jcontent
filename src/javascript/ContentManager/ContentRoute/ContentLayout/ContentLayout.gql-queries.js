@@ -211,7 +211,23 @@ class SearchQueryHandler {
         return gql`
             query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
                 jcr {
-                    nodesByCriteria(criteria: {language: $language, nodeType: $nodeType, paths: [$path], nodeConstraint: {contains: $searchTerms}}, offset: $offset, limit: $limit, fieldSorter: $fieldSorter) {
+                    nodesByCriteria(
+                        criteria: {
+                            language: $language,
+                            nodeType: $nodeType,
+                            paths: [$path],
+                            nodeConstraint: {
+                                any: [
+                                    {contains: $searchTerms}
+                                    {contains: $searchTerms, property: "j:tagList"}
+                                    {contains: $searchTerms, property: "j:nodename"}
+                                ]
+                            }
+                        },
+                        offset: $offset,
+                        limit: $limit,
+                        fieldSorter: $fieldSorter
+                    ) {
                         pageInfo {
                             totalCount
                         }

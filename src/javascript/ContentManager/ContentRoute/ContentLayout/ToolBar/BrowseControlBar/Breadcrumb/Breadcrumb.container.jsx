@@ -7,9 +7,10 @@ import {withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
 import {cmGoto} from '../../../../../ContentManager.redux-actions';
 import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
-import {buildBreadcrumbItems, getHiddenParents, getHiddenContents} from './Breadcrumb.utils';
-import Breadcrumb from './Breadcrumb';
+import {buildBreadcrumbItems, getLastParent} from './Breadcrumb.utils';
 import * as _ from 'lodash';
+import BreadcrumbItem from './BreadcrumbItem';
+import BreadcrumbHiddenItems from './BreadcrumbHiddenItems';
 
 const styles = theme => ({
     container: {
@@ -28,98 +29,82 @@ const styles = theme => ({
     }
 });
 
-export class BreadcrumbContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            openHiddenParents: null,
-            openHiddenContents: null
-        };
-        this.handleClick = this.handleClick.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-    }
-
-    handleClick(event, id) {
-        switch (id) {
-            case 'parent':
-                this.setState({
-                    openHiddenParents: event.currentTarget
-                });
-                break;
-            case 'content':
-                this.setState({
-                    openHiddenContents: event.currentTarget
-                });
-                break;
-            default:
-                // Nothing
-        }
-    }
-
-    handleClose() {
-        this.setState({
-            openHiddenParents: null,
-            openHiddenContents: null
-        });
-    }
-
-    render() {
-        let {path, classes, language, selectItem, mode, t, site} = this.props;
-        let queryParams = {path: path, type: 'jnt:contentList', language: language};
-        let key = JSON.stringify(queryParams);
-        let breadcrumbs = [];
-        return (
-            <Query key={key} query={breadcrumbQuery} variables={queryParams}>
-                {({loading, error, data}) => {
-                    if (error) {
-                        let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-                        console.error(message);
-                    }
-                    if (loading) {
-                        // Do nothing
-                    }
-                    if (data && data.jcr && data.jcr.nodeByPath) {
-                        breadcrumbs = buildBreadcrumbItems(path, data, mode, t, site);
-                    }
-                    let items = _.clone(breadcrumbs);
-                    let hiddenParents = getHiddenParents(breadcrumbs);
-                    let hiddenContents = getHiddenContents(breadcrumbs);
-                    return (
-                        <div className={classes.container}>
-                            {breadcrumbs.map((breadcrumb, i) => {
-                                let showLabel = breadcrumb.type === 'jnt:page' || breadcrumb.type === 'jnt:folder' ||
-                                    breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:virtualsite' || i === items.length - 1;
-                                let hideParent = _.find(hiddenParents, parent => parent.uuid === breadcrumb.uuid);
-                                let hideContent = _.find(hiddenContents, content => content.uuid === breadcrumb.uuid);
+export const BreadcrumbContainer = ({path, classes, language, selectItem, mode, t, site}) => {
+    let queryParams = {path: path, type: 'jnt:contentList', language: language};
+    let key = JSON.stringify(queryParams);
+    let breadcrumbs = [];
+    return (
+        <Query key={key} query={breadcrumbQuery} variables={queryParams}>
+            {({loading, error, data}) => {
+                if (error) {
+                    let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                    console.error(message);
+                }
+                if (loading) {
+                    // Do nothing
+                }
+                if (data && data.jcr && data.jcr.nodeByPath) {
+                    breadcrumbs = buildBreadcrumbItems(path, data, mode, t, site);
+                }
+                let items = _.clone(breadcrumbs);
+                let lastParent = getLastParent(breadcrumbs);
+                let hiddenParents = breadcrumbs.filter((b, i) => i > 0 && i < lastParent && lastParent > 3);
+                let hiddenContents = breadcrumbs.filter((b, i) => i > lastParent && i < breadcrumbs.length - 1 && (breadcrumbs.length - lastParent) > 1);
+                return (
+                    <div className={classes.container}>
+                        {breadcrumbs.map((breadcrumb, i) => {
+                            let showLabel = breadcrumb.type === 'jnt:page' || breadcrumb.type === 'jnt:folder' ||
+                                breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:virtualsite' || i === items.length - 1;
+                            let isHidden = hiddenParents.indexOf(breadcrumb) > -1 || hiddenContents.indexOf(breadcrumb) > -1;
+                            if (isHidden) {
+                                let showHiddenList;
+                                if (hiddenParents.indexOf(breadcrumb) === 0) {
+                                    showHiddenList = hiddenParents;
+                                }
+                                if (hiddenContents.indexOf(breadcrumb) === 0) {
+                                    showHiddenList = hiddenContents;
+                                }
+                                if (showHiddenList) {
+                                    return (
+                                        <span key={breadcrumb.uuid}
+                                              data-cm-role="breadcrumb"
+                                              className={classes.breadcrumb}
+                                        >
+                                            <BreadcrumbHiddenItems
+                                                hidden={showHiddenList}
+                                                selectItem={path => selectItem(mode, path, {sub: false})}
+                                            />
+                                            <ChevronRightIcon fontSize="small"
+                                                              classes={{root: classes.chevronSvg}}/>
+                                        </span>
+                                    );
+                                }
+                            }
+                            if (!isHidden) {
                                 return (
-                                    <span key={breadcrumb.uuid} data-cm-role="breadcrumb" className={classes.breadcrumb}>
-                                        <Breadcrumb
-                                        id={breadcrumb.uuid}
-                                        node={breadcrumb}
-                                        selectItem={path => selectItem(mode, path, {sub: false})}
-                                        showLabel={showLabel}
-                                        display={items.length < 4 || (!hideParent && !hideContent)}
-                                        mode={mode}
-                                        hiddenParents={hiddenParents}
-                                        hiddenContents={hiddenContents}
-                                        openHiddenParents={this.state.openHiddenParents}
-                                        openHiddenContents={this.state.openHiddenContents}
-                                        handleClick={this.handleClick}
-                                        handleClose={this.handleClose}
-                                    />
-                                        {(i < items.length - 1 && !hideParent && !hideContent) &&
+                                    <span key={breadcrumb.uuid}
+                                          data-cm-role="breadcrumb"
+                                          className={classes.breadcrumb}
+                                    >
+                                        <BreadcrumbItem
+                                            item={breadcrumb}
+                                            selectItem={path => selectItem(mode, path, {sub: false})}
+                                            showLabel={showLabel}
+                                        />
+                                        {(i < items.length - 1) &&
                                         <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
                                         }
                                     </span>
                                 );
-                            })}
-                        </div>
-                    );
-                }}
-            </Query>
-        );
-    }
-}
+                            }
+                            return false;
+                        })}
+                    </div>
+                );
+            }}
+        </Query>
+    );
+};
 
 const mapStateToProps = state => ({
     path: state.path,

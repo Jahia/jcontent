@@ -35,33 +35,10 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
     return breadcrumbs;
 };
 
-const getHiddenParents = breadcrumbs => {
-    let hiddenParents = [];
+function getLastParent(breadcrumbs) {
     let lastParent = _.findLastIndex(breadcrumbs, breadcrumb => breadcrumb.type === 'jnt:page' ||
         breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:folder' || breadcrumb.type === 'jmix:cmContentTreeDisplayable');
-    breadcrumbs.map((breadcrumb, i) => {
-        // First elements always displayed
-        // According to the specification, if we have more than 2 elements we hide them except the last one & the last parent
-        if (i > 0 && i < lastParent && lastParent > 3) {
-            hiddenParents.push(breadcrumb);
-        }
-        return null;
-    });
-    return hiddenParents;
-};
+    return lastParent;
+}
 
-const getHiddenContents = breadcrumbs => {
-    let hiddenContents = [];
-    let lastParent = _.findLastIndex(breadcrumbs, breadcrumb => breadcrumb.type === 'jnt:page' ||
-        breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:folder' || breadcrumb.type === 'jmix:cmContentTreeDisplayable');
-    let length = breadcrumbs.length;
-    breadcrumbs.map((breadcrumb, i) => {
-        if (i > lastParent && i < length - 1) {
-            hiddenContents.push(breadcrumb);
-        }
-        return null;
-    });
-    return hiddenContents;
-};
-
-export {buildBreadcrumbItems, getHiddenParents, getHiddenContents};
+export {buildBreadcrumbItems, getLastParent};

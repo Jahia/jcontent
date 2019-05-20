@@ -29,12 +29,14 @@ const styles = theme => ({
         display: 'flex',
         transition: 'margin-left .25s,margin-right .25s',
         backgroundColor: theme.palette.background.default,
+        minWidth: 0,
         marginLeft: -theme.contentManager.treeDrawerWidth,
         marginRight: -theme.contentManager.previewDrawerWidth
     },
     contentPaper: {
         flex: '1 1 auto',
         flexDirection: 'column',
+        minWidth: 0,
         display: 'flex'
     },
     contentLeftShift: {

@@ -5,15 +5,17 @@ import {compose, Query, withApollo} from 'react-apollo';
 import {breadcrumbQuery} from './Breadcrumb.gql-queries';
 import {withStyles} from '@material-ui/core';
 import {translate} from 'react-i18next';
-import {cmGoto} from '../../../../../../ContentManager.redux-actions';
+import {cmGoto} from '../../../../../ContentManager.redux-actions';
 import {ChevronRight as ChevronRightIcon} from '@material-ui/icons';
 import {buildBreadcrumbItems, getHiddenParents, getHiddenContents} from './Breadcrumb.utils';
-import BreadcrumbDisplay from './BreadcrumbDisplay';
+import Breadcrumb from './Breadcrumb';
 import * as _ from 'lodash';
 
 const styles = theme => ({
     container: {
-        display: 'flex'
+        display: 'flex',
+        flex: 10,
+        minWidth: 0
     },
     chevronSvg: {
         verticalAlign: 'middle',
@@ -21,7 +23,8 @@ const styles = theme => ({
     },
     breadcrumb: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        minWidth: 0
     }
 });
 
@@ -90,10 +93,9 @@ export class BreadcrumbContainer extends React.Component {
                                 let hideContent = _.find(hiddenContents, content => content.uuid === breadcrumb.uuid);
                                 return (
                                     <span key={breadcrumb.uuid} data-cm-role="breadcrumb" className={classes.breadcrumb}>
-                                        <BreadcrumbDisplay
+                                        <Breadcrumb
                                         id={breadcrumb.uuid}
                                         node={breadcrumb}
-                                        maxLabelLength={15}
                                         selectItem={path => selectItem(mode, path, {sub: false})}
                                         showLabel={showLabel}
                                         display={items.length < 4 || (!hideParent && !hideContent)}

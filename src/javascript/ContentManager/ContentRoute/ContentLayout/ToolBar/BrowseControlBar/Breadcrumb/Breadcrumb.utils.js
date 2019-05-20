@@ -1,4 +1,4 @@
-import ContentManagerConstants from '../../../../../../ContentManager.constants';
+import ContentManagerConstants from '../../../../../ContentManager.constants';
 import * as _ from 'lodash';
 
 const buildBreadcrumbItems = (path, data, mode, t, site) => {

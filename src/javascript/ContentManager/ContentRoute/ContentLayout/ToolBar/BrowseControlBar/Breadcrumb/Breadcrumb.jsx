@@ -4,7 +4,6 @@ import iconRenderer from './iconRenderer';
 import {Menu, MenuItem, withStyles} from '@material-ui/core';
 import {Typography, Button, IconButton} from '@jahia/ds-mui-theme';
 import {translate} from 'react-i18next';
-import {ellipsizeText} from '../../../../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {ChevronRight as ChevronRightIcon, MoreHoriz} from '@material-ui/icons';
@@ -19,19 +18,23 @@ const styles = theme => ({
     chevronSvg: {
         verticalAlign: 'middle',
         color: theme.palette.text.disabled
+    },
+    button: {
+        minWidth: 0
     }
 });
 
-export class BreadcrumbDisplay extends React.Component {
+export class Breadcrumb extends React.Component {
     render() {
         let {
-            node, maxLabelLength, showLabel, classes, selectItem, display, hiddenParents, hiddenContents,
+            node, showLabel, classes, selectItem, display, hiddenParents, hiddenContents,
             openHiddenParents, openHiddenContents, handleClick, handleClose, mode
         } = this.props;
         if (display) {
             return (
                 <Button
                     disableRipple
+                    className={classes.button}
                     variant="ghost"
                     size="compact"
                     aria-haspopup="true"
@@ -40,8 +43,8 @@ export class BreadcrumbDisplay extends React.Component {
                 >
                     {iconRenderer(node, classes.icon, !showLabel)}
                     {showLabel &&
-                    <Typography variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
-                        {ellipsizeText(node.name, maxLabelLength)}
+                    <Typography noWrap variant="iota" data-cm-role="breadcrumb-name" classes={{root: classes.contentLabel}}>
+                        {node.name}
                     </Typography>
                     }
                 </Button>
@@ -118,10 +121,9 @@ export class BreadcrumbDisplay extends React.Component {
     }
 }
 
-BreadcrumbDisplay.propTypes = {
+Breadcrumb.propTypes = {
     classes: PropTypes.object.isRequired,
     selectItem: PropTypes.func.isRequired,
-    maxLabelLength: PropTypes.number.isRequired,
     node: PropTypes.object.isRequired,
     showLabel: PropTypes.bool.isRequired,
     display: PropTypes.bool.isRequired,
@@ -134,4 +136,4 @@ BreadcrumbDisplay.propTypes = {
     mode: PropTypes.string.isRequired
 };
 
-export default compose(translate(), withStyles(styles))(BreadcrumbDisplay);
+export default compose(translate(), withStyles(styles))(Breadcrumb);

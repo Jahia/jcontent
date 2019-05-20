@@ -10,7 +10,7 @@ import ContentManagerConstants from '../../../../ContentManager.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
 import {refetchContentTreeAndListData} from '../../../../ContentManager.refetches';
-import BreadcrumbContainer from './ContentBreadcrumbs/Breadcrumb/Breadcrumb.container';
+import Breadcrumb from './Breadcrumb';
 
 const styles = theme => ({
     grow: {
@@ -40,7 +40,7 @@ export class BrowseControlBar extends React.Component {
 
         return (
             <React.Fragment>
-                <BreadcrumbContainer/>
+                <Breadcrumb/>
                 <div className={classes.grow}/>
                 {showActions && mode === ContentManagerConstants.mode.FILES &&
                     <FileModeSelector/>

@@ -54,11 +54,12 @@ export class Breadcrumb extends React.Component {
             parent.uuid === node.uuid && i === hiddenParents.length - 1) !== undefined) {
             return (
                 <React.Fragment>
-                    <IconButton icon={<MoreHoriz className={classes.chevronSvg}/>}
+                    <IconButton icon={<MoreHoriz className={classes.chevronSvg} data-sel-role="hidden-parents"/>}
                                 onClick={e => handleClick(e, 'parent')}/>
                     <Menu
                         anchorEl={openHiddenParents}
                         open={Boolean(openHiddenParents)}
+                        data-sel-role="hidden-parents-menu"
                         onClose={handleClose}
                     >
                         {hiddenParents.map(parent => {
@@ -87,11 +88,12 @@ export class Breadcrumb extends React.Component {
             content.uuid === node.uuid && i === hiddenContents.length - 1) !== undefined) {
             return (
                 <React.Fragment>
-                    <IconButton icon={<MoreHoriz className={classes.chevronSvg}/>}
+                    <IconButton icon={<MoreHoriz className={classes.chevronSvg} data-sel-role="hidden-contents"/>}
                                 onClick={e => handleClick(e, 'content')}/>
                     <Menu
                         anchorEl={openHiddenContents}
                         open={Boolean(openHiddenContents)}
+                        data-sel-role="hidden-contents-menu"
                         onClose={handleClose}
                     >
                         {hiddenContents.map(content => {

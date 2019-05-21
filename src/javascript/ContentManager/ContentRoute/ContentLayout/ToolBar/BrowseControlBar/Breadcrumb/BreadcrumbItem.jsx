@@ -16,7 +16,7 @@ const styles = theme => ({
     }
 });
 
-const BreadcrumbItem = ({item, selectItem, classes, showLabel}) => (
+export const BreadcrumbItem = ({item, selectItem, classes, showLabel}) => (
     <Button
         disableRipple
         className={classes.button}

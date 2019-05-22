@@ -36,6 +36,7 @@
     contextJsParameters['userName'] = '${renderContext.user.username}';
     contextJsParameters['workspace'] = '${renderContext.workspace}';
     contextJsParameters['maxUploadSize'] = parseInt("<%= SettingsBean.getInstance().getJahiaFileUploadMaxSize() %>") / (1024 * 1024);
+    contextJsParameters['displayWorkflowCounter'] = <%= SettingsBean.getInstance().getString("jahia.ui.displayWorkflowCounter", "true").equals("true") %>;
     contextJsParameters['config'] = {
         sql2CheatSheetUrl: "<%= SettingsBean.getInstance().getString("sql2CheatSheet.link", null) %>",
         actions: [],

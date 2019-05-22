@@ -355,8 +355,7 @@ function contentManagerActions(actionsRegistry) {
     actionsRegistry.add('locate', locateAction, {
         buttonLabel: 'label.contentManager.actions.locate',
         buttonIcon: <FindInPage/>,
-        target: ['contentActions:0.5'],
-        hideOnNodeTypes: ['jnt:folder', 'jnt:contentFolder']
+        target: ['contentActions:0.5']
     });
     actionsRegistry.add('subContents', subContentsAction, {
         buttonIcon: <SubdirectoryArrowRight/>,

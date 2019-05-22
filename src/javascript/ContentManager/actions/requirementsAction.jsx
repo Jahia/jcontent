@@ -45,20 +45,19 @@ function checkNodeRequirement(context, options) {
                 (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, node.path))
             )));
         }
-        if (enabled) {
-            if (context.enabled) {
-                context.enabled = combineLatest(context.enabled, concat(of(false), enabled(context)))
-                    .pipe(map(arr => arr[0] && arr[1]));
-            } else {
-                context.enabled = concat(of(false), enabled(context));
-            }
-        }
     } else {
         context.enabled = of((_.isEmpty(showForPaths) || evaluateVisibilityPaths(true, showForPaths, context.path)) &&
-            (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, context.path)) &&
-            (!enabled || enabled(context))
+            (_.isEmpty(hideForPaths) || evaluateVisibilityPaths(false, hideForPaths, context.path))
         );
         context.node = of(undefined);
+    }
+    if (enabled) {
+        if (context.enabled) {
+            context.enabled = combineLatest(context.enabled, concat(of(false), enabled(context)))
+                .pipe(map(arr => arr[0] && arr[1]));
+        } else {
+            context.enabled = concat(of(false), enabled(context));
+        }
     }
     return context;
 }

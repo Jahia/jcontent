@@ -13,6 +13,17 @@ const childNodesCount = gql`
     }
 `;
 
+const mixinTypes = gql`
+    query mixinTypes($path: String!) {
+        jcr {
+            nodeByPath(path: $path) {
+                mixinTypes {
+                    name
+                }
+            }
+        }
+    }
+`;
 const nodeFields = gql`
     fragment NodeFields on JCRNode {
         name
@@ -312,5 +323,6 @@ export {
     ContentQueryHandler,
     SearchQueryHandler,
     Sql2SearchQueryHandler,
-    FilesQueryHandler
+    FilesQueryHandler,
+    mixinTypes
 };

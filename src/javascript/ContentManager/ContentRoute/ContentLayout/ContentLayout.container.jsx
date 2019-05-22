@@ -5,7 +5,8 @@ import {
     ContentQueryHandler,
     FilesQueryHandler,
     SearchQueryHandler,
-    Sql2SearchQueryHandler
+    Sql2SearchQueryHandler,
+    mixinTypes
 } from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
@@ -114,7 +115,21 @@ export class ContentLayoutContainer extends React.Component {
                 setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
             }
         } else if (operation === 'update') {
-            client.cache.flushNodeEntryById(nodeUuid);
+            // If we're modifying the contribute settings we need to fliush also node descendants
+            // so we fetch the node in cache and we search for contribute mixin
+            let nodeData;
+            try {
+                nodeData = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+            } catch (e) {
+                console.log(e);
+            }
+            if (nodeData && nodeData.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) {
+                Object.keys(client.cache.idByPath)
+                    .filter(p => isDescendantOrSelf(p, nodePath))
+                    .forEach(p => client.cache.flushNodeEntryByPath(p));
+            } else {
+                client.cache.flushNodeEntryById(nodeUuid);
+            }
 
             if (selection.length > 0) {
                 // Modification when using multiple selection actions

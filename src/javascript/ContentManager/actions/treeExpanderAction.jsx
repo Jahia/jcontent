@@ -7,7 +7,7 @@ const GetAncestorsQuery = gql`
     query getAncestorsQuery($path:String!) {
         jcr {
             nodeByPath(path:$path) {
-                ancestors(fieldFilter: {filters: {fieldName: "type.value", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder"]}}) {
+                ancestors(fieldFilter: {filters: {fieldName: "type.value", evaluation: AMONG, values:["jnt:page", "jnt:folder", "jnt:contentFolder", "jnt:virtualsite"]}}) {
                     type:property(name: "jcr:primaryType") {
                         value
                     }

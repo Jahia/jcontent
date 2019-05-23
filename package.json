@@ -92,6 +92,7 @@
     "eslint-plugin-jest": "^22.3.0",
     "eslint-plugin-react": "^7.11.1",
     "file-loader": "^2.0.0",
+    "npx": "^10.2.0",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
     "webpack": "^4.26.0",

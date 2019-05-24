@@ -24,7 +24,9 @@ export default class PushEventHandler extends React.Component {
         if (eventData) {
             let evtType = eventData.type;
             if (evtType === 'workflowTask') {
-                refetchActiveWorkflowTasks();
+                if (window.contextJsParameters.displayWorkflowCounter) {
+                    refetchActiveWorkflowTasks();
+                }
                 if (eventData.endedWorkflow !== null) {
                     this.refetchData();
                 }

@@ -13,18 +13,22 @@ const query = gql`query getActiveWorkflowTaskCountForUser{
 
 let workflowDashboardAction = composeActions(withApolloAction, {
     init: context => {
-        let watchQuery = context.client.watchQuery({query});
-        let watchQueryObs = from(watchQuery);
+        if (window.contextJsParameters.displayWorkflowCounter) {
+            let watchQuery = context.client.watchQuery({query});
+            let watchQueryObs = from(watchQuery);
 
-        context.badge = watchQueryObs
-            .pipe(
-                filter(res => (res.data && res.data.jcr)),
-                map(res => res.data.jcr.result > 0 ? res.data.jcr.result : null)
-            );
+            context.badge = watchQueryObs
+                .pipe(
+                    filter(res => (res.data && res.data.jcr)),
+                    map(res => res.data.jcr.result > 0 ? res.data.jcr.result : null)
+                );
 
-        setActiveWorkflowTaskRefetcher({refetch: () => {
-            watchQuery.refetch();
-        }});
+            setActiveWorkflowTaskRefetcher({
+                refetch: () => {
+                    watchQuery.refetch();
+                }
+            });
+        }
     },
     onClick: () => window.parent.authoringApi.openWorkflowDashboard()
 });

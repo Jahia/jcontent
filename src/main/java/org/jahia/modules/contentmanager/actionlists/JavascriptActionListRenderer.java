@@ -56,7 +56,6 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
@@ -64,7 +63,8 @@ import java.util.TreeSet;
 public class JavascriptActionListRenderer implements ActionListRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(JavascriptActionListRenderer.class);
-
+    private static final double THRESHOLD = .0001;
+    
     public class ActionListResource implements Comparable<ActionListResource> {
 
         private String url;
@@ -100,7 +100,7 @@ public class JavascriptActionListRenderer implements ActionListRenderer {
             if (otherActionListResource == null) {
                 return 1;
             }
-            if (priority == otherActionListResource.priority) {
+            if (Math.abs(priority - otherActionListResource.priority) < THRESHOLD) {
                 return url.compareTo(otherActionListResource.url);
             }
             if (priority < otherActionListResource.priority) {

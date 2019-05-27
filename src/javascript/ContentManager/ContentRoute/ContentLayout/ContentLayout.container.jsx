@@ -53,9 +53,10 @@ export class ContentLayoutContainer extends React.Component {
         unregisterContentModificationEventHandler(this.onGwtContentModification);
     }
 
-    onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
+    async onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
         let {client, path, previewSelection, openedPaths, setPath, setPreviewSelection,
             openPaths, closePaths, selection, removeSelection, switchSelection} = this.props;
+        let observableQueriesRefetched = false;
 
         if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
             operation = 'rename';
@@ -115,20 +116,23 @@ export class ContentLayoutContainer extends React.Component {
                 setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
             }
         } else if (operation === 'update') {
-            // If we're modifying the contribute settings we need to fliush also node descendants
+            // If we're modifying the contribute settings we need to flush also node descendants
             // so we fetch the node in cache and we search for contribute mixin
-            let nodeData;
+            let node;
             try {
-                nodeData = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+                node = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
             } catch (e) {
                 console.log(e);
             }
-            if (nodeData && nodeData.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) {
+            client.cache.flushNodeEntryById(nodeUuid);
+            await client.reFetchObservableQueries();
+            observableQueriesRefetched = true;
+            let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+            if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
+                !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
                 Object.keys(client.cache.idByPath)
                     .filter(p => isDescendantOrSelf(p, nodePath))
                     .forEach(p => client.cache.flushNodeEntryByPath(p));
-            } else {
-                client.cache.flushNodeEntryById(nodeUuid);
             }
 
             if (selection.length > 0) {
@@ -143,7 +147,9 @@ export class ContentLayoutContainer extends React.Component {
             }
         }
 
-        client.reFetchObservableQueries();
+        if (!observableQueriesRefetched) {
+            client.reFetchObservableQueries();
+        }
     }
 
     render() {

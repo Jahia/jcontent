@@ -52,7 +52,7 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
         onExit();
     };
     return (
-        <Query query={CreateFolderQuery} variables={gqlParams.query} fetchPolicy="cache-first">
+        <Query query={CreateFolderQuery} variables={gqlParams.query} fetchPolicy="network-only">
             {({loading, data}) => {
                 if (data && data.jcr && data.jcr.nodeByPath) {
                     updateChildNodes(data.jcr.nodeByPath.children.nodes);

@@ -17,7 +17,7 @@ describe('Resize panel', () => {
                     width: 400,
                     height: 200
                 },
-                onResize: jest.fn(),
+                onResize: jest.fn()
             };
 
             wrapper = shallow(<ResizePanel {...defaultProps} {...props}/>);
@@ -27,7 +27,7 @@ describe('Resize panel', () => {
     });
 
     it('Should resize the image keeping ratio', () => {
-        wrapper.find(Input).at(0).prop('onChange').call(null, {
+        wrapper.find(Input).at(0).simulate('change', {
             target: {
                 value: '50'
             }
@@ -35,7 +35,7 @@ describe('Resize panel', () => {
         expect(props.onResize.mock.calls.length).toBe(1);
         expect(props.onResize.mock.calls[0][0].width).toBe(50);
 
-        wrapper.find(Input).at(1).prop('onChange').call(null, {
+        wrapper.find(Input).at(1).simulate('change', {
             target: {
                 value: '300'
             }
@@ -45,12 +45,11 @@ describe('Resize panel', () => {
     });
 
     it('Should not resize when typing garbage', () => {
-        wrapper.find(Input).at(0).prop('onChange').call(null, {
+        wrapper.find(Input).at(0).simulate('change', {
             target: {
                 value: 'gzgzgz'
             }
         });
         expect(props.onResize.mock.calls.length).toBe(0);
     });
-
 });

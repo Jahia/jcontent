@@ -12,6 +12,7 @@ export default composeActions(requirementsAction, menuAction, reduxAction(state 
                 if (context.availableLanguages.length <= 1) {
                     return of(false);
                 }
+
                 return context.node.pipe(map(node => context.availableLanguages.reduce((acc, lang) => acc || node['jcr_modifyProperties_default_' + lang.language], false)));
             }
         });

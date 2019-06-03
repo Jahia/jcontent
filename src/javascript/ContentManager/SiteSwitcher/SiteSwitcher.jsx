@@ -53,6 +53,7 @@ class SiteSwitcher extends React.Component {
                 }
             }
         }
+
         return _.sortBy(siteNodes, ['displayName']);
     }
 
@@ -68,6 +69,7 @@ class SiteSwitcher extends React.Component {
                 }
             }
         }
+
         return newLang ? newLang : siteNode.site.defaultLanguage;
     }
 

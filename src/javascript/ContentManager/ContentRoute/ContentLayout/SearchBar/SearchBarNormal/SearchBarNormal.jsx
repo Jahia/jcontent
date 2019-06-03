@@ -43,6 +43,7 @@ export class SearchBarNormal extends React.Component {
                 ongoingSearch: params
             };
         }
+
         return {
             searchContentType: state.searchContentType !== undefined ? state.searchContentType : (params.searchContentType ? params.searchContentType : ''),
             searchTerms: state.searchTerms !== undefined ? state.searchTerms : (params.searchTerms ? params.searchTerms : ''),
@@ -66,6 +67,7 @@ export class SearchBarNormal extends React.Component {
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
+
         var self = this;
         this.timeout = setTimeout(function () {
             self.onSearch(value, self.state.searchContentType);
@@ -76,6 +78,7 @@ export class SearchBarNormal extends React.Component {
         if (e.key === 'Enter') {
             this.onSearch(e.target.value, this.state.searchContentType);
         }
+
         return true;
     }
 
@@ -83,10 +86,12 @@ export class SearchBarNormal extends React.Component {
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
+
         let {path, search} = this.props;
         if (!searchTerms) {
             return;
         }
+
         searchTerms = searchTerms.trim();
         if (searchTerms === '') {
             return;
@@ -96,6 +101,7 @@ export class SearchBarNormal extends React.Component {
         if (searchContentType) {
             params.searchContentType = searchContentType;
         }
+
         search('search', path, params);
     }
 
@@ -164,7 +170,8 @@ SearchBarNormal.propTypes = {
     path: PropTypes.string.isRequired,
     search: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired
 };
 
 export default compose(

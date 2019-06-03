@@ -10,21 +10,25 @@ let selectionReducer = (state = [], action) => {
             return action.path.map(path => ({type: action.type, path})).reduce(selectionReducer, state);
         }
     }
+
     switch (action.type) {
         case CM_ADD_SELECTION:
             if (state.indexOf(action.path) === -1) {
                 return [...state, action.path];
             }
+
             return state;
         case CM_REMOVE_SELECTION:
             if (state.indexOf(action.path) > -1) {
                 return state.filter(path => path !== action.path);
             }
+
             return state;
         case CM_SWITCH_SELECTION:
             if (state.indexOf(action.path) === -1) {
                 return [...state, action.path];
             }
+
             return state.filter(path => path !== action.path);
 
         case CM_CLEAR_SELECTION:

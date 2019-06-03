@@ -69,6 +69,7 @@ export class ContentTypeSelect extends React.Component {
                             icon: null
                         });
                     }
+
                     return (
                         <FilterSelect
                             selectedOption={contentType}

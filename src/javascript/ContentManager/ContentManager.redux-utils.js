@@ -30,6 +30,7 @@ let buildUrl = (site, language, mode, path, params) => {
     } else {
         path = '';
     }
+
     // Special chars in folder naming
     path = path.replace(/[^/]/g, encodeURIComponent);
 
@@ -53,6 +54,7 @@ let extractParamsFromUrl = (pathname, search) => {
             path += ('/' + pathElements.join('/'));
         }
     }
+
     path = decodeURIComponent(path);
     let params = deserializeQueryString(search);
     return {site, language, mode, path, params};
@@ -65,6 +67,7 @@ let deserializeQueryString = search => {
             return rison.decode(params);
         }
     }
+
     return {};
 };
 
@@ -73,6 +76,7 @@ let pathResolver = (currentValue, currentValueFromUrl) => {
         // Switched sites, we have to set default path based on mode: browse -> /contents | browse-files -> /files
         return currentValueFromUrl.path.substr(0, currentValueFromUrl.path.indexOf(currentValueFromUrl.site)) + currentValue.site + DEFAULT_MODE_PATHS[currentValue.mode];
     }
+
     return currentValue.path;
 };
 

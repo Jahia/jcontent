@@ -41,9 +41,11 @@ export const Breadcrumb = ({breadcrumbs, classes, mode, selectItem}) => {
                     if (hiddenParents.indexOf(breadcrumb) === 0) {
                         showHiddenList = hiddenParents;
                     }
+
                     if (hiddenContents.indexOf(breadcrumb) === 0) {
                         showHiddenList = hiddenContents;
                     }
+
                     if (showHiddenList) {
                         return (
                             <span key={breadcrumb.uuid}
@@ -60,6 +62,7 @@ export const Breadcrumb = ({breadcrumbs, classes, mode, selectItem}) => {
                         );
                     }
                 }
+
                 if (!isHidden) {
                     return (
                         <span key={breadcrumb.uuid}
@@ -77,6 +80,7 @@ export const Breadcrumb = ({breadcrumbs, classes, mode, selectItem}) => {
                         </span>
                     );
                 }
+
                 return false;
             })}
         </div>

@@ -39,11 +39,13 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
         updateIsNameAvailable(childNodes.find(node => node.name === e.target.value) === undefined);
         updateName(e.target.value);
     };
+
     const handleCancel = () => {
         // Close dialog
         updateIsDialogOpen(false);
         onExit();
     };
+
     const handleCreate = mutation => {
         // Do mutation to create folder.
         gqlParams.mutation.folderName = name;
@@ -51,12 +53,14 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
         updateIsDialogOpen(false);
         onExit();
     };
+
     return (
         <Query query={CreateFolderQuery} variables={gqlParams.query} fetchPolicy="network-only">
             {({loading, data}) => {
                 if (data && data.jcr && data.jcr.nodeByPath) {
                     updateChildNodes(data.jcr.nodeByPath.children.nodes);
                 }
+
                 return (
                     <Mutation mutation={CreateFolderMutation} refetchQueries={() => refetchQueries}>
                         {mutation => (

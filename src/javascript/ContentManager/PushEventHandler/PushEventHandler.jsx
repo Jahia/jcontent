@@ -27,6 +27,7 @@ export default class PushEventHandler extends React.Component {
                 if (window.contextJsParameters.displayWorkflowCounter) {
                     refetchActiveWorkflowTasks();
                 }
+
                 if (eventData.endedWorkflow !== null) {
                     this.refetchData();
                 }
@@ -47,6 +48,7 @@ export default class PushEventHandler extends React.Component {
                 return (job.group === 'StartProcessJob' || job.group === 'PublicationJob');
             });
         }
+
         return found;
     }
 

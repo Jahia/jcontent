@@ -6,6 +6,7 @@ function getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
         let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
         return (newAncestorPath + relativePath);
     }
+
     return oldPath;
 }
 
@@ -13,10 +14,12 @@ function hasMixin(node, mixin) {
     if (node.mixinTypes) {
         return _.find(node.mixinTypes, t => t.name === mixin) !== undefined;
     }
+
     let mixinTypesProperty = _.find(node.properties, property => property.name === 'jcr:mixinTypes');
     if (mixinTypesProperty) {
         return _.includes(mixinTypesProperty.values, mixin);
     }
+
     return false;
 }
 
@@ -48,6 +51,7 @@ function extractPaths(siteKey, path, mode) {
             paths.push(pathBase);
         }
     }
+
     return paths;
 }
 
@@ -59,6 +63,7 @@ function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
     if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
         return fcn;
     }
+
     return function () {};
 }
 

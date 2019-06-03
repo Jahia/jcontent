@@ -80,6 +80,7 @@ export class Preview extends React.Component {
         if (selection.length > 0) {
             return <MultipleSelection {...this.props}/>;
         }
+
         if (_.isEmpty(previewSelection)) {
             return <NoPreviewComponent {...this.props}/>;
         }

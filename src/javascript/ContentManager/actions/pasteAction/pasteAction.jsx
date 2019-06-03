@@ -70,12 +70,14 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                                             return subEntry.name;
                                         }));
                                     }
+
                                     allowedNodeTypes.push(entry.name);
                                 });
                                 return _.difference(primaryNodeTypesToPaste, allowedNodeTypes).length === 0;
                             })
                         );
                     }
+
                     return of(true);
                 }));
             }
@@ -110,6 +112,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 if (pathsToReopen.indexOf(context.path) === -1) {
                     pathsToReopen.push(context.path);
                 }
+
                 context.openPaths(pathsToReopen);
             }
 

@@ -41,17 +41,20 @@ export default composeActions(requirementsAction, withDxContextAction, {
                     })
                 );
             }
+
             return of(childNodeTypeNames);
         }), switchMap(nodeTypes => {
             if (_.size(nodeTypes) === 0) {
                 return of({actions: []});
             }
+
             if (_.size(nodeTypes) > ContentManagerConstants.maxCreateContentOfTypeDirectItems || _.includes(nodeTypes, 'jmix:droppableContent')) {
                 return of({
                     includeSubTypes: true,
                     nodeTypes: nodeTypes
                 });
             }
+
             return from(context.client.query({query: ContentTypeNamesQuery, variables: {nodeTypes: nodeTypes, displayLanguage: context.dxContext.uilang}})).pipe(
                 filter(res => (res.data && res.data.jcr)),
                 map(res => ({

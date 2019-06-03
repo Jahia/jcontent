@@ -117,6 +117,7 @@ export class Upload extends React.Component {
         } else {
             us = uploadsStatuses.UPLOADED;
         }
+
         if (us !== this.props.status) {
             this.props.setStatus(us);
         }
@@ -147,6 +148,7 @@ export class Upload extends React.Component {
                     default:
                         status.uploading += 1;
                 }
+
                 if (upload.type === 'import') {
                     status.type = 'import';
                 }
@@ -154,6 +156,7 @@ export class Upload extends React.Component {
         } else {
             return null;
         }
+
         return status;
     }
 
@@ -167,6 +170,7 @@ export class Upload extends React.Component {
                 height: overlayTarget.height
             });
         }
+
         return this.overlayStyle.inactive;
     }
 }
@@ -175,6 +179,7 @@ const mapStateToProps = (state, ownProps) => {
     if (ownProps.statePartName) {
         return state[ownProps.statePartName];
     }
+
     return {
         status: state.fileUpload.status,
         uploads: state.fileUpload.uploads,

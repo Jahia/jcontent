@@ -173,6 +173,7 @@ export class UploadItem extends React.Component {
                 }
             });
         }
+
         if (type === 'replace') {
             return client.mutate({
                 mutation: updateFileContent,
@@ -183,6 +184,7 @@ export class UploadItem extends React.Component {
                 }
             });
         }
+
         if (type === 'replaceWith') {
             return client.mutate({
                 mutation: updateFileContent,
@@ -193,6 +195,7 @@ export class UploadItem extends React.Component {
                 }
             });
         }
+
         return client.mutate({
             mutation: uploadFile,
             variables: {

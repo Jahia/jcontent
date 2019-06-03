@@ -149,6 +149,7 @@ export const publicationStatusByName = {
         if (isMarkedForDeletion(node)) {
             return this.MARKED_FOR_DELETION;
         }
+
         return this[node.aggregatedPublicationInfo.publicationStatus] || this.UNKNOWN;
     }
 };

@@ -17,6 +17,7 @@ const SecondaryActionsList = props => {
         if (error === 'WRONG_INPUT') {
             return <DontUploadButton {...props}/>;
         }
+
         if (error === 'FILE_EXISTS') {
             return (
                 <>
@@ -26,6 +27,7 @@ const SecondaryActionsList = props => {
                 </>
             );
         }
+
         return (
             <>
                 <DontUploadButton {...props}/>

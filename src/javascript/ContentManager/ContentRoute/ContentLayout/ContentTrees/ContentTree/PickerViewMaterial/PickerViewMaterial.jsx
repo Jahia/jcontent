@@ -205,6 +205,7 @@ export class PickerViewMaterial extends React.Component {
             const rootNode = this.reconstructNodeHierarchy(JSON.parse(JSON.stringify(pickerEntries)));
             return this.sortAndFlatten(rootNode);
         }
+
         return pickerEntries;
     }
 
@@ -223,6 +224,7 @@ export class PickerViewMaterial extends React.Component {
                 if (!top.children) {
                     top.children = [];
                 }
+
                 top.children.push(currentPickerEntry);
                 hierarchyStack.push(currentPickerEntry);
                 pickerEntriesSortedByPath.splice(0, 1);
@@ -248,9 +250,11 @@ export class PickerViewMaterial extends React.Component {
                     if (A < B) {
                         return -1;
                     }
+
                     if (A > B) {
                         return 1;
                     }
+
                     return 0;
                 });
 

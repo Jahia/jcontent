@@ -39,6 +39,7 @@ export const fileUpload = (state = initialState, action) => {
                 if (upload.id === action.upload.id) {
                     return action.upload;
                 }
+
                 return upload;
             })
         };
@@ -59,6 +60,7 @@ export const fileUpload = (state = initialState, action) => {
                             status: uploadStatuses.UPLOADING
                         };
                     }
+
                     return upload;
                 })
             };

@@ -22,6 +22,7 @@ export const BreadcrumbContainer = ({path, language, selectItem, mode, t, site})
                 if (loading || !data || !data.jcr || !data.jcr.nodeByPath) {
                     return null;
                 }
+
                 let breadcrumbs = buildBreadcrumbItems(path, data, mode, t, site);
                 return (
                     <Breadcrumb breadcrumbs={breadcrumbs}

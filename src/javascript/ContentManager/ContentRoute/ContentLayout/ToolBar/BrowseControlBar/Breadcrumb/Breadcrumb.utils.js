@@ -13,6 +13,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
             type: 'jnt:virtualsite'
         });
     }
+
     // Then we build the other objects based on paths returned by the query
     data.jcr.nodeByPath.ancestors.forEach(ancestor => {
         breadcrumbs.push({
@@ -32,6 +33,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
             uuid: data.jcr.nodeByPath.uuid
         });
     }
+
     return breadcrumbs;
 };
 

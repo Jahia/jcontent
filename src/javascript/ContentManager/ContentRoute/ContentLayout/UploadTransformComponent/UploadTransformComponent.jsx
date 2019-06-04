@@ -54,6 +54,7 @@ export class UploadTransformComponent extends React.Component {
                 />
             );
         }
+
         return (
             <Component {...this.generatePropertiesForComponent()}/>
         );
@@ -82,6 +83,7 @@ export class UploadTransformComponent extends React.Component {
             this.dragTargets.push(evt.target);
             this.node = evt.target;
         }
+
         evt.persist();
         let position = this.getOverlayPosition(evt.currentTarget);
         this.props.uploadSetOverlayTarget(position);
@@ -101,6 +103,7 @@ export class UploadTransformComponent extends React.Component {
         if (this.dragTargets.length > 0) {
             return;
         }
+
         this.props.uploadSetOverlayTarget(null);
     }
 
@@ -165,6 +168,7 @@ export class UploadTransformComponent extends React.Component {
         if (el.offsetParent && el.offsetParent.offsetTop === 0) {
             return position;
         }
+
         position.x = 0;
         position.y = 0;
         while (el && el.offsetParent) {
@@ -172,6 +176,7 @@ export class UploadTransformComponent extends React.Component {
             position.y += el.offsetTop - el.offsetParent.scrollTop || 0;
             el = el.offsetParent;
         }
+
         return position;
     }
 }

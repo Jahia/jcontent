@@ -197,55 +197,70 @@ class ActionRequirementsQueryHandler {
         if (context.retrieveDisplayName) {
             this.requirementsFragments.push(ActionRequirementsFragments.displayName);
         }
+
         if (context.retrievePrimaryNodeType) {
             this.requirementsFragments.push(ActionRequirementsFragments.primaryNodeType);
         }
+
         if (!_.isEmpty(context.requiredPermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.permission);
             this.variables.permission = context.requiredPermission;
         }
+
         if (!_.isEmpty(context.retrievePermission)) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrievePermission(context.retrievePermission));
             Object.assign(this.variables, context.retrievePermission.map((name, idx) => idx).reduce((acc, idx) => Object.assign(acc, {['permission' + idx]: context.retrievePermission[idx]}), {}));
         }
+
         if (!_.isEmpty(context.hideOnNodeTypes)) {
             this.requirementsFragments.push(ActionRequirementsFragments.isNotNodeType);
             this.variables.isNotNodeType = {types: context.hideOnNodeTypes};
         }
+
         if (!_.isEmpty(context.showOnNodeTypes)) {
             this.requirementsFragments.push(ActionRequirementsFragments.isNodeType);
             this.variables.isNodeType = {types: context.showOnNodeTypes};
         }
+
         if (!_.isEmpty(context.retrieveProperties)) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveProperties);
             this.variables = {...context.retrieveProperties, ...this.variables};
         }
+
         if (!_.isEmpty(context.requireModuleInstalledOnSite)) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteInstalledModules);
         }
+
         if (!_.isEmpty(context.contentType)) {
             this.requirementsFragments.push(ActionRequirementsFragments.requiredChildNodeType);
             this.variables.childNodeTypes = [context.contentType];
         }
+
         if (!_.isEmpty(context.contentTypes)) {
             this.requirementsFragments.push(ActionRequirementsFragments.requiredChildNodeType);
             this.variables.childNodeTypes = context.contentTypes;
         }
+
         if (context.baseContentType) {
             this.requirementsFragments.push(ActionRequirementsFragments.allowedChildNodeTypes);
         }
+
         if (context.retrieveSiteLanguages) {
             this.requirementsFragments.push(ActionRequirementsFragments.siteLanguages);
         }
+
         if (context.getDisplayableNodePath) {
             this.requirementsFragments.push(ActionRequirementsFragments.displayableNodePath);
         }
+
         if (context.getLockInfo) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveLockInfo);
         }
+
         if (context.getContributeTypesRestrictions) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveContentRestriction);
         }
+
         if (context.retrieveSubNodes) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveSubNodes);
         }

@@ -124,6 +124,7 @@ export class ContentLayoutContainer extends React.Component {
             } catch (e) {
                 console.log(e);
             }
+
             client.cache.flushNodeEntryById(nodeUuid);
             await client.reFetchObservableQueries();
             observableQueriesRefetched = true;
@@ -215,6 +216,7 @@ export class ContentLayoutContainer extends React.Component {
                                 setPath(path, {sub: true});
                             }
                         }
+
                         this.currentResult = queryHandler.getResultsPath(data);
                     }
 

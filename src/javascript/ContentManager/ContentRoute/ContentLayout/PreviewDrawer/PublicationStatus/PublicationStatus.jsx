@@ -52,6 +52,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
     if (_.isEmpty(previewSelection) || !previewSelection.operationsSupport.publication) {
         return null;
     }
+
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
@@ -64,6 +65,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             </Typography>
         );
     }
+
     switch (previewSelection.aggregatedPublicationInfo.publicationStatus) {
         case ContentManagerConstants.availablePublicationStatuses.MODIFIED:
             return (

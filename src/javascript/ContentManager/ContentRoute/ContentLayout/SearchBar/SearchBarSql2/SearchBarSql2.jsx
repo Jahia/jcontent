@@ -46,6 +46,7 @@ export class SearchBarSql2 extends React.Component {
                 ongoingSearch: params
             };
         }
+
         return {
             sql2SearchWhere: state.sql2SearchWhere !== undefined ? state.sql2SearchWhere : (params.sql2SearchWhere ? params.sql2SearchWhere : ''),
             sql2SearchFrom: state.sql2SearchFrom !== undefined ? state.sql2SearchFrom : (params.sql2SearchFrom ? params.sql2SearchFrom : ''),
@@ -148,7 +149,8 @@ SearchBarSql2.propTypes = {
     onNormalClick: PropTypes.func.isRequired,
     path: PropTypes.string.isRequired,
     search: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired
 };
 
 export default compose(

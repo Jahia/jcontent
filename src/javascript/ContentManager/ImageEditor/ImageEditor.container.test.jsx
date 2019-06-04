@@ -1,12 +1,12 @@
 import React from 'react';
-import {mount, shallow} from '@jahia/test-framework';
+import {mount} from '@jahia/test-framework';
 import {ImageEditorContainer} from './ImageEditor.container';
 import {MockedProvider} from 'react-apollo/test-utils';
 import {ImageQuery} from './ImageEditor.gql-queries';
 import {getImageMutation} from './ImageEditor.gql-mutations';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {fragmentMatcher} from '@jahia/apollo-dx';
-import {MuiThemeProvider} from "@material-ui/core";
+import {MuiThemeProvider} from '@material-ui/core';
 import ImageEditor from './ImageEditor';
 import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
 import {DxContext} from '@jahia/react-material';
@@ -86,7 +86,7 @@ describe('Image Edition', () => {
                 site: 'mySite',
                 language: 'en',
                 editImage: jest.fn(),
-                refreshData: jest.fn(),
+                refreshData: jest.fn()
             };
 
             wrapper = mount(
@@ -104,7 +104,7 @@ describe('Image Edition', () => {
     });
 
     it('render', async () => {
-        // await (wait(0));
+        // Await (wait(0));
         // wrapper.update();
         expect(wrapper.find(ImageEditor).length).toBe(1);
     });
@@ -130,28 +130,26 @@ describe('Image Edition', () => {
 
     it('resizes', () => {
         wrapper = wrapper.find('ImageEditorContainer');
-        wrapper.instance().onImageLoaded({naturalHeight: 200, naturalWidth:300});
-        wrapper.instance().resize({width:150});
+        wrapper.instance().onImageLoaded({naturalHeight: 200, naturalWidth: 300});
+        wrapper.instance().resize({width: 150});
         expect(wrapper.state().resizeParams.width).toBe(150);
         expect(wrapper.state().resizeParams.height).toBe(100);
         expect(wrapper.state().transforms[0].op).toBe('resizeImage');
         expect(wrapper.state().transforms[0].args.width).toBe(150);
         expect(wrapper.state().transforms[0].args.height).toBe(100);
 
-        wrapper.instance().resize({keepRatio:false});
+        wrapper.instance().resize({keepRatio: false});
         expect(wrapper.state().resizeParams.width).toBe(150);
         expect(wrapper.state().resizeParams.height).toBe(100);
         expect(wrapper.state().transforms[0].op).toBe('resizeImage');
         expect(wrapper.state().transforms[0].args.width).toBe(150);
         expect(wrapper.state().transforms[0].args.height).toBe(100);
 
-        wrapper.instance().resize({height:150});
+        wrapper.instance().resize({height: 150});
         expect(wrapper.state().resizeParams.width).toBe(150);
         expect(wrapper.state().resizeParams.height).toBe(150);
         expect(wrapper.state().transforms[0].op).toBe('resizeImage');
         expect(wrapper.state().transforms[0].args.width).toBe(150);
         expect(wrapper.state().transforms[0].args.height).toBe(150);
-
     });
-
 });

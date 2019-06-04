@@ -51,6 +51,7 @@ class ContentManager extends React.Component {
         if (!this.store) {
             this.store = contentManagerReduxStore(dxContext, this.getHistory(dxContext, t));
         }
+
         return this.store;
     }
 
@@ -65,6 +66,7 @@ class ContentManager extends React.Component {
                 });
             }
         }
+
         return this.history;
     }
 

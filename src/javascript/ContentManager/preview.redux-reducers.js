@@ -5,6 +5,7 @@ let previewSelectionReducer = (state = null, action) => {
     if (action.type === CM_SET_PREVIEW_SELECTION) {
         return action.previewSelection;
     }
+
     return state;
 };
 
@@ -27,11 +28,14 @@ let previewStateReducer = (state = CM_DRAWER_STATES.HIDE, action) => {
             if (action.treeState === CM_DRAWER_STATES.SHOW && state === CM_DRAWER_STATES.SHOW) {
                 return CM_DRAWER_STATES.TEMP;
             }
+
             if (action.treeState === CM_DRAWER_STATES.HIDE && state === CM_DRAWER_STATES.TEMP) {
                 return CM_DRAWER_STATES.SHOW;
             }
+
             return state;
         }
+
         default:
             return state;
     }

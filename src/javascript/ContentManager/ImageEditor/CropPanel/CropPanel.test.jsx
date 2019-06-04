@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
-import {CropPanel} from "./CropPanel";
+import {CropPanel} from './CropPanel';
 import defaultProps from '../../../testDefaultProps';
 import {IconButton} from '@jahia/ds-mui-theme';
 
@@ -28,7 +28,7 @@ describe('Crop panel', () => {
     });
 
     it('Should crop the image keeping ratio', () => {
-        wrapper.find(Input).at(0).prop('onChange').call(null, {
+        wrapper.find(Input).at(0).simulate('change', {
             target: {
                 value: '400'
             }
@@ -36,7 +36,7 @@ describe('Crop panel', () => {
         expect(props.onCrop.mock.calls.length).toBe(1);
         expect(props.onCrop.mock.calls[0][0].width).toBe(400);
 
-        wrapper.find(Input).at(1).prop('onChange').call(null, {
+        wrapper.find(Input).at(1).simulate('change', {
             target: {
                 value: '200'
             }
@@ -48,7 +48,7 @@ describe('Crop panel', () => {
     it('Should crop the image without keeping ratio', () => {
         wrapper.find(IconButton).at(0).simulate('click');
 
-        wrapper.find(Input).at(0).prop('onChange').call(null, {
+        wrapper.find(Input).at(0).simulate('change', {
             target: {
                 value: '200'
             }
@@ -57,7 +57,7 @@ describe('Crop panel', () => {
         expect(props.onCrop.mock.calls[0][0].aspect).toBe(false);
         expect(props.onCrop.mock.calls[1][0].width).toBe(200);
 
-        wrapper.find(Input).at(1).prop('onChange').call(null, {
+        wrapper.find(Input).at(1).simulate('change', {
             target: {
                 value: '200'
             }
@@ -67,12 +67,11 @@ describe('Crop panel', () => {
     });
 
     it('Should not crop when typing garbage', () => {
-        wrapper.find(Input).at(0).prop('onChange').call(null, {
+        wrapper.find(Input).at(0).simulate('change', {
             target: {
                 value: 'gzgzgz'
             }
         });
         expect(props.onCrop.mock.calls.length).toBe(0);
     });
-
 });

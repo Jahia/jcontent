@@ -43,6 +43,7 @@ let triggerRefetch = (name, queryParams) => {
     if (!refetch) {
         return;
     }
+
     if (queryParams) {
         refetch.refetch(queryParams);
     } else {

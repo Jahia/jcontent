@@ -23,6 +23,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({languag
                         destLang: dest.language
                     }];
                 }
+
                 return [];
             }))
         ));

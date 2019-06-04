@@ -111,6 +111,7 @@ export class PublicationStatus extends Component {
                 </div>
             );
         }
+
         return false;
     }
 }

@@ -19,12 +19,14 @@ export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
                 if (gridMode !== 'thumbnail') {
                     onGridMode('thumbnail');
                 }
+
                 break;
             case 'detailed-view':
                 onChange('grid');
                 if (gridMode !== 'detailed') {
                     onGridMode('detailed');
                 }
+
                 break;
             default:
                 if (mode === 'list') {

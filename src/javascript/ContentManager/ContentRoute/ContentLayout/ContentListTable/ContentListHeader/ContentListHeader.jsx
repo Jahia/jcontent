@@ -39,6 +39,7 @@ export const ContentListHeader = ({order, orderBy, columnData, t, classes, setSo
                             </TableCell>
                         );
                     }
+
                     return (
                         <TableCell
                             key={column.id}

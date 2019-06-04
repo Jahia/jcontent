@@ -17,6 +17,7 @@ let uiLanguageReducer = dxContext => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
         return action.uiLang;
     }
+
     return state;
 };
 
@@ -24,6 +25,7 @@ let siteReducer = siteKey => (state = siteKey, action) => {
     if (action.site && action.type === CM_NAVIGATE) {
         return action.site;
     }
+
     return state;
 };
 
@@ -31,6 +33,7 @@ let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayable
     if (action.siteDisplayableName && (action.type === CM_NAVIGATE || action.type === CM_SET_SITE_DISPLAYABLE_NAME)) {
         return action.siteDisplayableName;
     }
+
     return state;
 };
 
@@ -38,6 +41,7 @@ let languageReducer = language => (state = language, action) => {
     if (action.language && action.type === CM_NAVIGATE) {
         return action.language;
     }
+
     return state;
 };
 
@@ -45,6 +49,7 @@ let availableLanguagesReducer = (state = [], action) => {
     if (action.availableLanguages && action.type === CM_SET_AVAILABLE_LANGUAGES) {
         return action.availableLanguages;
     }
+
     return state;
 };
 
@@ -52,6 +57,7 @@ let modeReducer = mode => (state = mode, action) => {
     if (action.mode && action.type === CM_NAVIGATE) {
         return action.mode;
     }
+
     return state;
 };
 
@@ -59,6 +65,7 @@ let pathReducer = path => (state = path, action) => {
     if (action.path && action.type === CM_NAVIGATE) {
         return action.path;
     }
+
     return state;
 };
 
@@ -66,6 +73,7 @@ let paramsReducer = params => (state = params, action) => {
     if (action.params && action.type === CM_NAVIGATE) {
         return action.params;
     }
+
     return state;
 };
 
@@ -82,11 +90,14 @@ let openPathsReducer = (siteKey, path, mode) => (state, action) => {
         if (action.open) {
             return _.union(state, action.open);
         }
+
         if (action.close) {
             return _.difference(state, action.close);
         }
+
         return state;
     }
+
     return state;
 };
 
@@ -98,11 +109,14 @@ let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action) => {
             if (action.previewState === CM_DRAWER_STATES.SHOW && state === CM_DRAWER_STATES.SHOW) {
                 return CM_DRAWER_STATES.TEMP;
             }
+
             if (action.previewState === CM_DRAWER_STATES.HIDE && state === CM_DRAWER_STATES.TEMP) {
                 return CM_DRAWER_STATES.SHOW;
             }
+
             return state;
         }
+
         default:
             return state;
     }
@@ -124,6 +138,7 @@ let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'no
     if (action.type === CM_SET_SEARCH_MODE) {
         return action.searchMode;
     }
+
     return state;
 };
 

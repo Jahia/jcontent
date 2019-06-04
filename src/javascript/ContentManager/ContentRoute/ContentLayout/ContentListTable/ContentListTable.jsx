@@ -263,6 +263,7 @@ export class ContentListTable extends React.Component {
                     return false;
             }
         }
+
         return false;
     }
 
@@ -411,6 +412,7 @@ export class ContentListTable extends React.Component {
                                                                         </TableCell>
                                                                     );
                                                                 }
+
                                                                 if (column.id === 'wip') {
                                                                     return (
                                                                         <TableCell
@@ -429,6 +431,7 @@ export class ContentListTable extends React.Component {
                                                                         </TableCell>
                                                                     );
                                                                 }
+
                                                                 if (column.id === 'lock') {
                                                                     return (
                                                                         <TableCell
@@ -446,6 +449,7 @@ export class ContentListTable extends React.Component {
                                                                         </TableCell>
                                                                     );
                                                                 }
+
                                                                 if (column.id === 'lastModified') {
                                                                     return (
                                                                         <TableCell
@@ -497,6 +501,7 @@ export class ContentListTable extends React.Component {
                                                                         </TableCell>
                                                                     );
                                                                 }
+
                                                                 return (
                                                                     <TableCell
                                                                         key={column.id}

@@ -106,6 +106,7 @@ export class ImageEditorContainer extends React.Component {
             } else {
                 keepRatio = resizeParams.keepRatio;
             }
+
             if (keepRatio && width) {
                 height = Math.round(keepRatio && originalHeight && originalWidth ? width * originalHeight / originalWidth : (resizeParams.height || originalHeight));
             } else if (keepRatio && height) {
@@ -113,6 +114,7 @@ export class ImageEditorContainer extends React.Component {
             } else if (keepRatio) {
                 height = Math.round(resizeParams.width * originalHeight / originalWidth);
             }
+
             width = width || resizeParams.width;
             height = height || resizeParams.height;
 
@@ -147,11 +149,13 @@ export class ImageEditorContainer extends React.Component {
             } else {
                 aspect = cropParams.aspect;
             }
+
             if (aspect && width) {
                 height = width / aspect;
             } else if (aspect && height) {
                 width = height * aspect;
             }
+
             width = width || cropParams.width;
             height = height || cropParams.height;
             top = top || cropParams.top;
@@ -159,15 +163,19 @@ export class ImageEditorContainer extends React.Component {
             if (width > originalWidth) {
                 width = originalWidth;
             }
+
             if (height > originalHeight) {
                 height = originalHeight;
             }
+
             if (width && left + width > originalWidth) {
                 left = originalWidth - width;
             }
+
             if (height && top + height > originalHeight) {
                 top = originalHeight - height;
             }
+
             return {
                 cropParams: {
                     dirty: Boolean(height || width || top || left),
@@ -245,6 +253,7 @@ export class ImageEditorContainer extends React.Component {
         } else {
             editImage(site, language, newPath);
         }
+
         this.handleClose();
         refreshData();
     }

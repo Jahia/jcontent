@@ -44,6 +44,7 @@ export class ContentTrees extends React.Component {
                 this.container.current = r;
             }
         };
+
         return (
             <React.Fragment>
                 <AppBar position="relative" color="default">

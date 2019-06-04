@@ -13,11 +13,13 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
         if (element !== null) {
             element.remove();
         }
+
         let input = document.createElement('input');
         input.setAttribute('type', 'file');
         if (context.uploadType !== 'replaceWith') {
             input.setAttribute('multiple', 'true');
         }
+
         input.setAttribute('id', 'file-upload-input-' + context.key);
         document.body.appendChild(input);
         input.addEventListener('change', e => {

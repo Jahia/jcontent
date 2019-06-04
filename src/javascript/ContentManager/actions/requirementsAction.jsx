@@ -12,6 +12,7 @@ function evaluateVisibilityPaths(visible, visibilityPaths, nodePath) {
             return visible;
         }
     }
+
     return !visible;
 }
 
@@ -51,6 +52,7 @@ function checkNodeRequirement(context, options) {
         );
         context.node = of(undefined);
     }
+
     if (enabled) {
         if (context.enabled) {
             context.enabled = combineLatest(context.enabled, concat(of(false), enabled(context)))
@@ -59,6 +61,7 @@ function checkNodeRequirement(context, options) {
             context.enabled = concat(of(false), enabled(context));
         }
     }
+
     return context;
 }
 

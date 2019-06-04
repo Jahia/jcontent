@@ -11,6 +11,7 @@ export default composeActions(requirementsAction, componentRendererAction, {
         const onExit = () => {
             handler.destroy();
         };
+
         let handler = context.renderComponent(
             <CreateFolderDialog node={context.node}
                                 contentType={context.contentType}

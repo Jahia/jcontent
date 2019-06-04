@@ -8,4 +8,5 @@ let sortReducer = (state = {order: 'ASC', orderBy: 'lastModified.value'}, action
             return state;
     }
 };
+
 export {sortReducer};

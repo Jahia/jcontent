@@ -17,6 +17,7 @@ function iconRenderer(node, style, showTooltip) {
         default:
             Icon = getIcon(node.type) || ContentIcon;
     }
+
     return showTooltip ? <Tooltip title={node.name}><Icon className={style}/></Tooltip> : <Icon className={style}/>;
 }
 

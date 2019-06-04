@@ -51,5 +51,4 @@ describe('Image actions', () => {
         expect(props.saveChanges.mock.calls.length).toBe(1);
         expect(props.saveChanges.mock.calls[0][0]).toBe(false);
     });
-
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from '@jahia/test-framework';
+import {shallow} from '@jahia/test-framework';
 import {Breadcrumb} from './Breadcrumb';
 
 let breadcrumbs1 = [
@@ -92,14 +92,14 @@ describe('breadcrumb with 3 levels', () => {
         expect(wrapper.find('WithStyles(BreadcrumbItem)').length).toBe(4);
     });
 
-    it('should render Browse breadcrumb first', async ()=> {
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(0).props().item.name).toBe("Browse Folders");
+    it('should render Browse breadcrumb first', async () => {
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(0).props().item.name).toBe('Browse Folders');
     });
 
-    it('should render the items in the right order', async ()=> {
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(1).props().item.name).toBe("folderA");
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(2).props().item.name).toBe("folderB");
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(3).props().item.name).toBe("folderC");
+    it('should render the items in the right order', async () => {
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(1).props().item.name).toBe('folderA');
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(2).props().item.name).toBe('folderB');
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(3).props().item.name).toBe('folderC');
     });
 });
 
@@ -129,22 +129,16 @@ describe('breadcrumb with many levels', () => {
         expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden.length).toBe(3);
     });
 
-    it('should render Browse breadcrumb first', async ()=> {
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(0).props().item.name).toBe("Browse Folders");
-
+    it('should render Browse breadcrumb first', async () => {
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(0).props().item.name).toBe('Browse Folders');
     });
 
-    it('should render the items in the right order', async ()=> {
-        expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden[0].name).toBe("folderA");
-        expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden[1].name).toBe("folderB");
-        expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden[2].name).toBe("folderC");
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(1).props().item.name).toBe("folderD");
-        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(2).props().item.name).toBe("area1");
+    it('should render the items in the right order', async () => {
+        expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden[0].name).toBe('folderA');
+        expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden[1].name).toBe('folderB');
+        expect(wrapper.find('WithStyles(BreadcrumbHiddenItems)').at(0).props().hidden[2].name).toBe('folderC');
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(1).props().item.name).toBe('folderD');
+        expect(wrapper.find('WithStyles(BreadcrumbItem)').at(2).props().item.name).toBe('area1');
     });
 });
-
-
-
-
-
 

@@ -30,6 +30,7 @@ export const isDragDataWithFiles = evt => {
     if (!evt.dataTransfer) {
         return true;
     }
+
     // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
     // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#file
     return Array.prototype.every.call(
@@ -74,5 +75,6 @@ export const getMimeTypes = acceptedFileTypes => {
             return mimetypes.lookup(type);
         });
     }
+
     return undefined;
 };

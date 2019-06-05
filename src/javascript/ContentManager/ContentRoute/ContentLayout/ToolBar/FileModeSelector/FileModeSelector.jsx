@@ -1,6 +1,6 @@
 import React from 'react';
 import {MenuItem} from '@material-ui/core';
-import {Select} from '@jahia/ds-mui-theme';
+import {Select} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';

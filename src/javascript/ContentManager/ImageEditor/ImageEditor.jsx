@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {MainLayout, TwoColumnsContent} from '@jahia/layouts';
+import {MainLayout, TwoColumnsContent} from '@jahia/design-system-kit';
 import {
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary,
     IconButton,
     Typography
-} from '@jahia/ds-mui-theme';
+} from '@jahia/design-system-kit';
 import ImageEditorPreview from './ImageEditorPreview';
 import {Tooltip, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';

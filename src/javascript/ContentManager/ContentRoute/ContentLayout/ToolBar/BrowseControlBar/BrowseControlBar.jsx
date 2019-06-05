@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {buttonRenderer, DisplayActions} from '@jahia/react-material';
 import FileModeSelector from '../FileModeSelector';

@@ -819,10 +819,17 @@
     lodash "^4.17.10"
     zen-observable "^0.8.8"
 
+<<<<<<< HEAD
 "@jahia/ds-mui-theme@^1.0.0-beta.20190515122203":
   version "1.0.0-beta.20190603142130"
   resolved "https://npm.jahia.com/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20190603142130.tgz#769dd2036b966c9325762ce47af8c912d14a274f"
   integrity sha512-CbRl7ZEeWhXHTtSdFt6IH6OohfQVeEFT+Eb//i0+g0Jsnmgq/LqTTpXipe0jyjoVYLdj1hUV9anBLeEV1qY0Nw==
+=======
+"@jahia/design-system-kit@^1.0.0-beta.20190605160644":
+  version "1.0.0-beta.20190605160644"
+  resolved "https://npm.jahia.com/@jahia%2fdesign-system-kit/-/design-system-kit-1.0.0-beta.20190605160644.tgz#662afae3d123c5a4cc4a267c8b6d0916fded49ec"
+  integrity sha512-3tLrfaOUOq75a0BU5SV4lNtnlHfO97Mf4q6fMILxwoN/rcnJiVmHJs81ajEQe0l8omojFaZp7gYk8hWx8wypiA==
+>>>>>>> BACKLOG-10397 : switched to design-system-kit
   dependencies:
     "@material-ui/core" "^3.9.3"
     classnames "^2.2.6"
@@ -860,6 +867,7 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
+<<<<<<< HEAD
 "@jahia/layouts@^1.0.0-beta.20190515122204":
   version "1.0.0-beta.20190603142131"
   resolved "https://npm.jahia.com/@jahia%2flayouts/-/layouts-1.0.0-beta.20190603142131.tgz#69da06ae1b5cbe6c86ccb172cc9f8f37a298dbd0"
@@ -871,6 +879,8 @@
     react-i18next "^7.6.1"
     recompose "^0.30.0"
 
+=======
+>>>>>>> BACKLOG-10397 : switched to design-system-kit
 "@jahia/react-apollo@^1.0.0-beta.20190516124448":
   version "1.0.0-beta.20190603142131"
   resolved "https://npm.jahia.com/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20190603142131.tgz#5021ad5a0d81a27169aeeecc58b5d473e22d9ac2"
@@ -882,10 +892,17 @@
     prop-types "^15.6.1"
     react-apollo "^2.5.3"
 
+<<<<<<< HEAD
 "@jahia/react-material@^1.0.0-beta.20190516124448":
   version "1.0.0-beta.20190603142132"
   resolved "https://npm.jahia.com/@jahia%2freact-material/-/react-material-1.0.0-beta.20190603142132.tgz#713a45c1c341488158eba49ec148b51b5516ba66"
   integrity sha512-SrlL7SeMkdTiH1+LO1t6uziDUUV1qaIsMkx4Fb/Lb6VQ9BMWSXmXT1zsSomspHRHE42pvmfNKDC1hyF42Bacwg==
+=======
+"@jahia/react-material@^1.0.0-beta.20190605160645":
+  version "1.0.0-beta.20190605160645"
+  resolved "https://npm.jahia.com/@jahia%2freact-material/-/react-material-1.0.0-beta.20190605160645.tgz#256e1a55ed7935c8c1428fc73f6df8eca082a223"
+  integrity sha512-UTHU2LAHTz5UlQ3wSwLoXhtgBDILLSJi74GyPYgJJIjOYhjj7eMizznqkrQNjB12SALvOJFsRyaZngpOe1s0kw==
+>>>>>>> BACKLOG-10397 : switched to design-system-kit
   dependencies:
     lodash "^4.17.10"
     prop-types "^15.6.1"

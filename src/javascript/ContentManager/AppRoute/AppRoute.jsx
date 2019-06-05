@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {MainLayout, FullWidthContent} from '@jahia/layouts';
+import {MainLayout, FullWidthContent} from '@jahia/design-system-kit';
 import LanguageSwitcher from '../LanguageSwitcher';
 import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from './IFrameLayout';

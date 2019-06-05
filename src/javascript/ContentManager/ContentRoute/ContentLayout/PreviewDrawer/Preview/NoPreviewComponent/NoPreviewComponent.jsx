@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Paper} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 
 const NoPreviewComponent = ({classes, t}) => (
     <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>

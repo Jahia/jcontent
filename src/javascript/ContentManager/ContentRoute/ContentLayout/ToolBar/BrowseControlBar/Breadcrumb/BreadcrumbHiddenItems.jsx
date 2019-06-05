@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import iconRenderer from './iconRenderer';
 import {Menu, MenuItem, withStyles} from '@material-ui/core';
-import {IconButton, Typography} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/design-system-kit';
 import {MoreHoriz} from '@material-ui/icons';
 
 const styles = theme => ({

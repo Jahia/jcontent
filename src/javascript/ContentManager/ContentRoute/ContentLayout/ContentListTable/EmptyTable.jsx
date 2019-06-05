@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {TableBody, TableCell, TableRow} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import ContentListTableConstants from './ContentListTable.constants';
 
 const EmptyTable = ({columnData, t}) => (

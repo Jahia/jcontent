@@ -3,7 +3,7 @@ import {shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
 import {CropPanel} from './CropPanel';
 import defaultProps from '../../../testDefaultProps';
-import {IconButton} from '@jahia/ds-mui-theme';
+import {IconButton} from '@jahia/design-system-kit';
 
 describe('Crop panel', () => {
     let props;

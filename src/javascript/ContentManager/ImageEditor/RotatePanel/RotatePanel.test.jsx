@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {IconButton} from '@jahia/ds-mui-theme';
+import {IconButton} from '@jahia/design-system-kit';
 import {RotatePanel} from './RotatePanel';
 import defaultProps from '../../../testDefaultProps';
 

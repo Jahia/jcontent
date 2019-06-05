@@ -4,7 +4,7 @@ import {Trans, translate} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetPath} from '../../../../ContentManager.redux-actions';
 import {withStyles} from '@material-ui/core';
-import {Button, Typography} from '@jahia/ds-mui-theme';
+import {Button, Typography} from '@jahia/design-system-kit';
 import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';

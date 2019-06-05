@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Snackbar, withStyles} from '@material-ui/core';
-import {IconButton} from '@jahia/ds-mui-theme';
+import {IconButton} from '@jahia/design-system-kit';
 import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';

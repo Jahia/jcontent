@@ -1,6 +1,6 @@
 import React from 'react';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button} from '@jahia/design-system-kit';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 import PropTypes from 'prop-types';

@@ -6,7 +6,7 @@ import {ProgressOverlay, actionsRegistry, withNotifications} from '@jahia/react-
 import {compose, Query} from 'react-apollo';
 import {ActionRequirementsQueryHandler} from '../../ContentManager.gql-queries';
 import {translate} from 'react-i18next';
-import {styleConstants} from '@jahia/layouts';
+import {styleConstants} from '@jahia/design-system-kit';
 import PropTypes from 'prop-types';
 
 export class IFrameLayout extends React.Component {

@@ -4,7 +4,7 @@ import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
 import {Route, Switch, withRouter} from 'react-router';
-import {AppLayout} from '@jahia/layouts';
+import {AppLayout} from '@jahia/design-system-kit';
 import {registry} from '@jahia/registry';
 
 export class AppLayoutContainer extends React.Component {

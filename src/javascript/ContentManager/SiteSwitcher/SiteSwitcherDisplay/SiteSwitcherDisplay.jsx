@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {Menu, MenuItem, withStyles} from '@material-ui/core';
-import {Button, Typography} from '@jahia/ds-mui-theme';
+import {Button, Typography} from '@jahia/design-system-kit';
 import {ChevronDown} from 'mdi-material-ui';
 import {lodash as _} from 'lodash';
 import {compose} from 'react-apollo';

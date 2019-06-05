@@ -13,6 +13,7 @@ import FilesGrid from './FilesGrid';
 import ContentManagerConstants from '../../ContentManager.constants';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
 import Upload from './Upload';
+import contentManagerStyleConstants from '../../ContentManager.style-constants';
 
 const styles = theme => ({
     root: {
@@ -30,8 +31,8 @@ const styles = theme => ({
         transition: 'margin-left .25s,margin-right .25s',
         backgroundColor: theme.palette.background.default,
         minWidth: 0,
-        marginLeft: -theme.contentManager.treeDrawerWidth,
-        marginRight: -theme.contentManager.previewDrawerWidth
+        marginLeft: -contentManagerStyleConstants.treeDrawerWidth,
+        marginRight: -contentManagerStyleConstants.previewDrawerWidth
     },
     contentPaper: {
         flex: '1 1 auto',
@@ -46,7 +47,7 @@ const styles = theme => ({
         marginRight: 0
     },
     treeDrawer: {
-        flex: '0 1 ' + theme.contentManager.treeDrawerWidth + 'px',
+        flex: '0 1 ' + contentManagerStyleConstants.treeDrawerWidth + 'px',
         display: 'flex',
         order: 1,
         transition: 'transform .15s'
@@ -59,7 +60,7 @@ const styles = theme => ({
         overflow: 'hidden'
     },
     previewDrawer: {
-        flex: '0 1 ' + theme.contentManager.previewDrawerWidth + 'px',
+        flex: '0 1 ' + contentManagerStyleConstants.previewDrawerWidth + 'px',
         order: 3,
         display: 'flex',
         overflow: 'hidden',
@@ -75,7 +76,7 @@ const styles = theme => ({
         height: 'unset',
         transition: '.15s !important',
         overflow: 'hidden',
-        maxWidth: theme.contentManager.previewDrawerWidth
+        maxWidth: contentManagerStyleConstants.previewDrawerWidth
     },
     previewDrawerPaperFullScreen: {
         transition: '.15s !important',

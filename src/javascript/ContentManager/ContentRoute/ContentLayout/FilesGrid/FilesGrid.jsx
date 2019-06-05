@@ -5,7 +5,7 @@ import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {Pagination, DxContext} from '@jahia/react-material';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';

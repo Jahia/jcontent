@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Tooltip, withStyles} from '@material-ui/core';
 import {RotateLeft, RotateRight} from '@material-ui/icons';
-import {IconButton, Typography} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 

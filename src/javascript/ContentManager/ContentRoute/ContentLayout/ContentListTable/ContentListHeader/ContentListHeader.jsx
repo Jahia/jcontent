@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {translate} from 'react-i18next';
 import {compose} from 'react-apollo';
 

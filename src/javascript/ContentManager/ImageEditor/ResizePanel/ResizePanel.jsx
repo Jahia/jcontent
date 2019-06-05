@@ -4,7 +4,7 @@ import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 import {Link} from 'mdi-material-ui';
-import {IconButton, Typography} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/design-system-kit';
 
 let styles = theme => ({
     panel: {

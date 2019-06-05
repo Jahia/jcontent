@@ -64,7 +64,11 @@ let deserializeQueryString = search => {
     if (search) {
         let params = queryString.parse(search).params;
         if (params) {
-            return rison.decode(params);
+            try {
+                return rison.decode(params);
+            } catch (e) {
+                return {};
+            }
         }
     }
 

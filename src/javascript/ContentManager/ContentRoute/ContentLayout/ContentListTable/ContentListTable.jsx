@@ -273,13 +273,18 @@ export class ContentListTable extends React.Component {
 
     doubleClickNavigation(node) {
         let {setPath, mode, siteKey, setMode} = this.props;
-        if (mode === 'search' && node.path.indexOf('/files') === -1) {
-            setMode('browse');
-        } else {
-            setMode('browse-files');
+        let newMode = mode;
+        if (mode === 'search') {
+            if (node.path.indexOf('/files') === -1) {
+                setMode('browse');
+                newMode = 'browse';
+            } else {
+                setMode('browse-files');
+                newMode = 'browse-files';
+            }
         }
 
-        setPath(siteKey, node.path, this.props.mode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
+        setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
     }
 
     render() {

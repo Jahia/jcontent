@@ -819,17 +819,10 @@
     lodash "^4.17.10"
     zen-observable "^0.8.8"
 
-<<<<<<< HEAD
-"@jahia/ds-mui-theme@^1.0.0-beta.20190515122203":
-  version "1.0.0-beta.20190603142130"
-  resolved "https://npm.jahia.com/@jahia%2fds-mui-theme/-/ds-mui-theme-1.0.0-beta.20190603142130.tgz#769dd2036b966c9325762ce47af8c912d14a274f"
-  integrity sha512-CbRl7ZEeWhXHTtSdFt6IH6OohfQVeEFT+Eb//i0+g0Jsnmgq/LqTTpXipe0jyjoVYLdj1hUV9anBLeEV1qY0Nw==
-=======
 "@jahia/design-system-kit@^1.0.0-beta.20190605160644":
   version "1.0.0-beta.20190605160644"
   resolved "https://npm.jahia.com/@jahia%2fdesign-system-kit/-/design-system-kit-1.0.0-beta.20190605160644.tgz#662afae3d123c5a4cc4a267c8b6d0916fded49ec"
   integrity sha512-3tLrfaOUOq75a0BU5SV4lNtnlHfO97Mf4q6fMILxwoN/rcnJiVmHJs81ajEQe0l8omojFaZp7gYk8hWx8wypiA==
->>>>>>> BACKLOG-10397 : switched to design-system-kit
   dependencies:
     "@material-ui/core" "^3.9.3"
     classnames "^2.2.6"
@@ -867,20 +860,6 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
-<<<<<<< HEAD
-"@jahia/layouts@^1.0.0-beta.20190515122204":
-  version "1.0.0-beta.20190603142131"
-  resolved "https://npm.jahia.com/@jahia%2flayouts/-/layouts-1.0.0-beta.20190603142131.tgz#69da06ae1b5cbe6c86ccb172cc9f8f37a298dbd0"
-  integrity sha512-aStbmHhEX/k/H0lIMSMeVaqpjnFcHJb5f0B4KsTFZZEr3P5Z6VIGXxNC1wfPvYjwLyTdtQg/vh5lvKI6o1yFpw==
-  dependencies:
-    classnames "^2.2.6"
-    lodash "^4.17.10"
-    prop-types "^15.6.2"
-    react-i18next "^7.6.1"
-    recompose "^0.30.0"
-
-=======
->>>>>>> BACKLOG-10397 : switched to design-system-kit
 "@jahia/react-apollo@^1.0.0-beta.20190516124448":
   version "1.0.0-beta.20190603142131"
   resolved "https://npm.jahia.com/@jahia%2freact-apollo/-/react-apollo-1.0.0-beta.20190603142131.tgz#5021ad5a0d81a27169aeeecc58b5d473e22d9ac2"
@@ -892,17 +871,10 @@
     prop-types "^15.6.1"
     react-apollo "^2.5.3"
 
-<<<<<<< HEAD
-"@jahia/react-material@^1.0.0-beta.20190516124448":
-  version "1.0.0-beta.20190603142132"
-  resolved "https://npm.jahia.com/@jahia%2freact-material/-/react-material-1.0.0-beta.20190603142132.tgz#713a45c1c341488158eba49ec148b51b5516ba66"
-  integrity sha512-SrlL7SeMkdTiH1+LO1t6uziDUUV1qaIsMkx4Fb/Lb6VQ9BMWSXmXT1zsSomspHRHE42pvmfNKDC1hyF42Bacwg==
-=======
 "@jahia/react-material@^1.0.0-beta.20190605160645":
   version "1.0.0-beta.20190605160645"
   resolved "https://npm.jahia.com/@jahia%2freact-material/-/react-material-1.0.0-beta.20190605160645.tgz#256e1a55ed7935c8c1428fc73f6df8eca082a223"
   integrity sha512-UTHU2LAHTz5UlQ3wSwLoXhtgBDILLSJi74GyPYgJJIjOYhjj7eMizznqkrQNjB12SALvOJFsRyaZngpOe1s0kw==
->>>>>>> BACKLOG-10397 : switched to design-system-kit
   dependencies:
     lodash "^4.17.10"
     prop-types "^15.6.1"
@@ -3111,7 +3083,7 @@ debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "^2.1.1"
 
-debuglog@*, debuglog@^1.0.1:
+debuglog@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debuglog/-/debuglog-1.0.1.tgz#aa24ffb9ac3df9a2351837cfb2d279360cd78492"
   integrity sha1-qiT/uaw9+aI1GDfPstJ5NgzXhJI=
@@ -4817,7 +4789,7 @@ import-local@^2.0.0:
     pkg-dir "^3.0.0"
     resolve-cwd "^2.0.0"
 
-imurmurhash@*, imurmurhash@^0.1.4:
+imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha1-khi5srkoojixPcT7a21XbyMUU+o=
@@ -5976,11 +5948,6 @@ lockfile@~1.0.3:
   dependencies:
     signal-exit "^3.0.2"
 
-lodash._baseindexof@*:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/lodash._baseindexof/-/lodash._baseindexof-3.1.0.tgz#fe52b53a1c6761e42618d654e4a25789ed61822c"
-  integrity sha1-/lK1OhxnYeQmGNZU5KJXie1hgiw=
-
 lodash._baseuniq@~4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash._baseuniq/-/lodash._baseuniq-4.6.0.tgz#0ebb44e456814af7905c6212fa2c9b2d51b841e8"
@@ -5989,32 +5956,10 @@ lodash._baseuniq@~4.6.0:
     lodash._createset "~4.0.0"
     lodash._root "~3.0.0"
 
-lodash._bindcallback@*:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/lodash._bindcallback/-/lodash._bindcallback-3.0.1.tgz#e531c27644cf8b57a99e17ed95b35c748789392e"
-  integrity sha1-5THCdkTPi1epnhftlbNcdIeJOS4=
-
-lodash._cacheindexof@*:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/lodash._cacheindexof/-/lodash._cacheindexof-3.0.2.tgz#3dc69ac82498d2ee5e3ce56091bafd2adc7bde92"
-  integrity sha1-PcaayCSY0u5ePOVgkbr9Ktx73pI=
-
-lodash._createcache@*:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/lodash._createcache/-/lodash._createcache-3.1.2.tgz#56d6a064017625e79ebca6b8018e17440bdcf093"
-  integrity sha1-VtagZAF2JeeevKa4AY4XRAvc8JM=
-  dependencies:
-    lodash._getnative "^3.0.0"
-
 lodash._createset@~4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/lodash._createset/-/lodash._createset-4.0.3.tgz#0f4659fbb09d75194fa9e2b88a6644d363c9fe26"
   integrity sha1-D0ZZ+7CddRlPqeK4imZE02PJ/iY=
-
-lodash._getnative@*, lodash._getnative@^3.0.0:
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/lodash._getnative/-/lodash._getnative-3.9.1.tgz#570bc7dede46d61cdcde687d65d3eecbaa3aaff5"
-  integrity sha1-VwvH3t5G1hzc3mh9ZdPuy6o6r/U=
 
 lodash._root@~3.0.0:
   version "3.0.1"
@@ -6040,11 +5985,6 @@ lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
-
-lodash.restparam@*:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.restparam/-/lodash.restparam-3.6.1.tgz#936a4e309ef330a7645ed4145986c85ae5b20805"
-  integrity sha1-k2pOMJ7zMKdkXtQUWYbIWuWyCAU=
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
@@ -8093,7 +8033,7 @@ readable-stream@~1.1.10:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-readdir-scoped-modules@*, readdir-scoped-modules@^1.0.0:
+readdir-scoped-modules@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/readdir-scoped-modules/-/readdir-scoped-modules-1.0.2.tgz#9fafa37d286be5d92cbaebdee030dc9b5f406747"
   integrity sha1-n6+jfShr5dksuuve4DDcm19AZ0c=
@@ -9664,7 +9604,7 @@ v8-compile-cache@^2.0.2:
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.0.3.tgz#00f7494d2ae2b688cfe2899df6ed2c54bef91dbe"
   integrity sha512-CNmdbwQMBjwr9Gsmohvm0pbL954tJrNzf6gWL3K+QMQf00PF7ERGrEiLgjuU3mKreLC2MeGhUsNV9ybTbLgd3w==
 
-validate-npm-package-license@*, validate-npm-package-license@^3.0.1:
+validate-npm-package-license@^3.0.1:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
   integrity sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==

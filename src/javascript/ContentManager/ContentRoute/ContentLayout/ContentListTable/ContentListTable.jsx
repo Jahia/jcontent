@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import {translate} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
-import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../ContentManager.redux-actions';
 import {allowDoubleClickNavigation, extractPaths, isMarkedForDeletion} from '../../../ContentManager.utils';
 import ToolBar from '../ToolBar';
 import {connect} from 'react-redux';
@@ -271,11 +271,27 @@ export class ContentListTable extends React.Component {
         return (icon.includes('.png') ? icon : icon + '.png');
     }
 
+    doubleClickNavigation(node) {
+        let {setPath, mode, siteKey, setMode} = this.props;
+        let newMode = mode;
+        if (mode === 'search') {
+            if (node.path.indexOf('/files') === -1) {
+                setMode('browse');
+                newMode = 'browse';
+            } else {
+                setMode('browse-files');
+                newMode = 'browse-files';
+            }
+        }
+
+        setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
+    }
+
     render() {
         const {
             rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onPreviewSelect, previewSelection, totalCount, t, classes, uiLang, setSort, setPath, path, previewState,
-            siteKey, mode, lang, switchSelection, addSelection, removeSelection, selection, loading
+            onPreviewSelect, previewSelection, totalCount, t, classes, uiLang, setSort, path, previewState,
+            mode, lang, switchSelection, addSelection, removeSelection, selection, loading
         } = this.props;
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
@@ -343,8 +359,9 @@ export class ContentListTable extends React.Component {
                                                             onDoubleClick={allowDoubleClickNavigation(
                                                                 node.primaryNodeType.name,
                                                                 node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                                                () => setPath(siteKey, node.path, mode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'})
-                                                            )}
+                                                                () => {
+                                                                    this.doubleClickNavigation(node);
+                                                                })}
                                                         >
                                                             <ContextualMenu
                                                                 ref={contextualMenu}
@@ -573,6 +590,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
         dispatch(cmGoto({path, params}));
     },
+    setMode: mode => dispatch(cmSetMode(mode)),
     setCurrentPage: page => dispatch(cmSetPage(page)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
     setSort: state => dispatch(cmSetSort(state)),
@@ -607,6 +625,7 @@ ContentListTable.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
     setPageSize: PropTypes.func.isRequired,
     setPath: PropTypes.func.isRequired,
+    setMode: PropTypes.func.isRequired,
     setSort: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     sort: PropTypes.object.isRequired,

@@ -56,7 +56,7 @@ export class ContentLayoutContainer extends React.Component {
     async onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
         let {client, path, previewSelection, openedPaths, setPath, setPreviewSelection,
             openPaths, closePaths, selection, removeSelection, switchSelection} = this.props;
-        let observableQueriesRefetched = false;
+        let refetchObservableQueries = true;
 
         if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
             operation = 'rename';
@@ -127,7 +127,7 @@ export class ContentLayoutContainer extends React.Component {
 
             client.cache.flushNodeEntryById(nodeUuid);
             await client.reFetchObservableQueries();
-            observableQueriesRefetched = true;
+            refetchObservableQueries = false;
             let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
             if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
                 !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
@@ -148,7 +148,7 @@ export class ContentLayoutContainer extends React.Component {
             }
         }
 
-        if (!observableQueriesRefetched) {
+        if (refetchObservableQueries) {
             client.reFetchObservableQueries();
         }
     }

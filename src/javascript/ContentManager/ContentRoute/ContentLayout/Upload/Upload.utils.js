@@ -1,8 +1,6 @@
 import {uploadSeed} from './Upload.redux-reducer';
 import {takeFromQueue, addUploads} from './Upload.redux-actions';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
-import accepts from 'attr-accept';
-import mimetypes from 'mime-types';
 import randomUUID from 'uuid/v4';
 
 export const files = {
@@ -61,20 +59,6 @@ export const getDataTransferItems = event => {
     return Array.prototype.slice.call(dataTransferItemsList);
 };
 
-export const fileAccepted = (file, accept) => {
-    return file.type === 'application/x-moz-file' || accepts(file, accept);
-};
-
 export const fileMatchSize = (file, maxSize, minSize) => {
     return file.size <= maxSize && file.size >= minSize;
-};
-
-export const getMimeTypes = acceptedFileTypes => {
-    if (acceptedFileTypes) {
-        return acceptedFileTypes.map(type => {
-            return mimetypes.lookup(type);
-        });
-    }
-
-    return undefined;
 };

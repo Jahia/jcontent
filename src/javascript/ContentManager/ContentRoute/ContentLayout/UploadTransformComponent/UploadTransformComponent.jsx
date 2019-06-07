@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 import {
-    fileAccepted,
     fileMatchSize,
     getDataTransferItems,
     isDragDataWithFiles,
-    getMimeTypes,
     onFilesSelected
 } from '../Upload/Upload.utils';
 import {setOverlayTarget} from '../Upload/Upload.redux-actions';
@@ -108,8 +106,7 @@ export class UploadTransformComponent extends React.Component {
     }
 
     onDrop(evt) {
-        const {uploadAcceptedFileTypes, uploadMaxSize, uploadMinSize, uploadPath, mode} = this.props;
-        const accept = getMimeTypes(uploadAcceptedFileTypes);
+        const {uploadMaxSize, uploadMinSize, uploadPath, mode} = this.props;
 
         evt.preventDefault();
         evt.persist();
@@ -122,7 +119,7 @@ export class UploadTransformComponent extends React.Component {
                     return;
                 }
 
-                let acceptedFiles = fileList.filter(file => fileAccepted(file, accept) && fileMatchSize(file, uploadMaxSize, uploadMinSize));
+                let acceptedFiles = fileList.filter(file => fileMatchSize(file, uploadMaxSize, uploadMinSize));
 
                 onFilesSelected(
                     acceptedFiles,

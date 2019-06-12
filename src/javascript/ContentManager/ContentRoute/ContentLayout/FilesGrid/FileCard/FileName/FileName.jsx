@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../../../../../ContentManager.utils';
 import {Tooltip, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 
 const styles = () => ({
     isDeleted: {

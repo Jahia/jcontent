@@ -6,7 +6,7 @@ import ActionButton from '../ActionButton';
 import Sql2Input from './Sql2Input';
 import {compose} from 'react-apollo';
 import {Paper, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';
 import {Trans, translate} from 'react-i18next';
 import {cmGoto} from '../../../../ContentManager.redux-actions';

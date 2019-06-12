@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Paper} from '@material-ui/core';
-import {Button, Typography} from '@jahia/ds-mui-theme';
+import {Button, Typography} from '@jahia/design-system-kit';
 import {ContentCopy} from 'mdi-material-ui';
 
 const MultipleSelection = ({classes, t, selection, clearSelection}) => (

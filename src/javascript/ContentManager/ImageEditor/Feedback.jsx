@@ -1,6 +1,6 @@
 import React from 'react';
 import {Snackbar, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {Check} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import PropTypes from 'prop-types';

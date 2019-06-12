@@ -9,7 +9,7 @@ import {
     withStyles,
     withTheme
 } from '@material-ui/core';
-import {IconButton, Typography} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/design-system-kit';
 import {KeyboardArrowRight} from '@material-ui/icons';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../../../../../ContentManager.utils';

@@ -9,7 +9,7 @@ import {
     TextField,
     withStyles
 } from '@material-ui/core';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {translate} from 'react-i18next';
 

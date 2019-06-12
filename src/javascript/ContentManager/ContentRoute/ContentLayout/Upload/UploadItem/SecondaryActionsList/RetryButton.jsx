@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button} from '@jahia/design-system-kit';
 
 const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
     <Button

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {lodash as _} from 'lodash';
 import {Menu, MenuItem} from '@material-ui/core';
-import {Button, Typography} from '@jahia/ds-mui-theme';
+import {Button, Typography} from '@jahia/design-system-kit';
 import {ChevronDown} from 'mdi-material-ui';
 
 export const LanguageSwitcherDisplay = ({lang, languages, onSelectLanguage}) => {

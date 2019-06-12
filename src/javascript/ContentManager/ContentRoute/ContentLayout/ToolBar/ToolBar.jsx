@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {AppBar, Toolbar, withStyles} from '@material-ui/core';
-import {IconButton, Typography} from '@jahia/ds-mui-theme';
+import {IconButton, Typography} from '@jahia/design-system-kit';
 import {ChevronRight} from '@material-ui/icons';
 import {CM_DRAWER_STATES, cmSetTreeState} from '../../../ContentManager.redux-actions';
 import {connect} from 'react-redux';

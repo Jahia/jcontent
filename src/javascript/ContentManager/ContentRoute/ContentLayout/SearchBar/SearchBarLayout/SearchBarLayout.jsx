@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Paper, Tooltip, withStyles} from '@material-ui/core';
-import {Button} from '@jahia/ds-mui-theme';
+import {Button} from '@jahia/design-system-kit';
 import {Search} from '@material-ui/icons';
 
 const styles = () => ({

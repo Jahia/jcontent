@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {ContextualMenu} from '@jahia/react-material';
 import {translate} from 'react-i18next';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {translate} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import dayjs from 'dayjs';
 import ContentManagerConstants from '../../../../ContentManager.constants';
 import {lodash as _} from 'lodash';

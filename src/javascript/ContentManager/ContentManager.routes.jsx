@@ -1,8 +1,15 @@
 import React from 'react';
-import ImageEditor from './ImageEditor';
+import Loadable from 'react-loadable';
 import {Trans} from 'react-i18next';
 import AppRoute from './AppRoute';
 import ContentRoute from './ContentRoute';
+import {ProgressPaper} from '@jahia/design-system-kit';
+
+// eslint-disable-next-line
+const ImageEditor = Loadable({
+    loader: () => import(/* webpackChunkName: "imageEditor" */ './ImageEditor'),
+    loading: ProgressPaper
+});
 
 function contentManagerRoutes(registry) {
     const help = (

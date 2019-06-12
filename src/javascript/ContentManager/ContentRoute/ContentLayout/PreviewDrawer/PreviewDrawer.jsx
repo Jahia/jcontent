@@ -11,7 +11,7 @@ import {
     Tooltip,
     withStyles
 } from '@material-ui/core';
-import {Typography, IconButton} from '@jahia/ds-mui-theme';
+import {Typography, IconButton} from '@jahia/design-system-kit';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import Preview from './Preview';
 import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import iconRenderer from './iconRenderer';
 import {withStyles} from '@material-ui/core';
-import {Button, Typography} from '@jahia/ds-mui-theme';
+import {Button, Typography} from '@jahia/design-system-kit';
 
 const styles = theme => ({
     contentLabel: {

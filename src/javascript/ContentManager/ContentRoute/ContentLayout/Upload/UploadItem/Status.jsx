@@ -2,7 +2,7 @@ import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
 import {CheckCircle, FiberManualRecord, Info} from '@material-ui/icons';
 import {CircularProgress} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 
 const Status = ({classes, status, error, t, type}) => {
     let content;

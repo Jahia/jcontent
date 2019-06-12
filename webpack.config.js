@@ -22,12 +22,11 @@ module.exports = (env, argv) => {
             filename: 'cmm.bundle.js',
             chunkFilename: '[name].cmm.[chunkhash:6].js'
         },
-        // BACKLOG-9616 : fix chunks
-        // optimization: {
-        //     splitChunks: {
-        //         maxSize: 4000000
-        //     }
-        // },
+        optimization: {
+            splitChunks: {
+                maxSize: 400000
+            }
+        },
         resolve: {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', 'json']
@@ -45,6 +44,16 @@ module.exports = (env, argv) => {
                         ],
                         plugins: [
                             'lodash',
+                            ['transform-imports', {
+                                '@material-ui/icons': {
+                                    transform: '@material-ui/icons/${member}',
+                                    preventFullImport: true
+                                },
+                                'mdi-material-ui': {
+                                    transform: 'mdi-material-ui/${member}',
+                                    preventFullImport: true
+                                }
+                            }],
                             '@babel/plugin-syntax-dynamic-import'
                         ]
                     }

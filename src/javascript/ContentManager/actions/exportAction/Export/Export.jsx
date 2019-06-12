@@ -13,7 +13,7 @@ import {Dialog,
     FormHelperText,
     withStyles
 } from '@material-ui/core';
-import {FormControlLabel, Typography, Button} from '@jahia/ds-mui-theme';
+import {FormControlLabel, Typography, Button} from '@jahia/design-system-kit';
 
 const styles = theme => ({
     margins: {

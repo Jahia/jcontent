@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {CircularProgress, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {CheckCircle, Info} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import {translate, Trans} from 'react-i18next';

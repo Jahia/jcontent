@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {MuiThemeProvider} from '@material-ui/core';
 import {actionsRegistry, ComponentRendererProvider, NotificationProvider, DxContext} from '@jahia/react-material';
-import {dsGenericTheme as theme} from '@jahia/ds-mui-theme';
+import {DSProvider} from '@jahia/design-system-kit';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
 import {I18n, I18nextProvider} from 'react-i18next';
@@ -14,8 +13,6 @@ import {Provider} from 'react-redux';
 import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import contentManagerActions from './ContentManager.actions';
-import contentManagerStyleConstants from './ContentManager.style-constants';
-import {styleConstants} from '@jahia/layouts';
 import {registry} from '@jahia/registry';
 import contentManagerRoutes from './ContentManager.routes';
 import AppLayout from './AppLayout';
@@ -42,9 +39,6 @@ class ContentManager extends React.Component {
         this.namespaceResolvers = {
             'content-media-manager': lang => require('../../main/resources/javascript/locales/' + lang + '.json')
         };
-
-        theme.layout = styleConstants;
-        theme.contentManager = contentManagerStyleConstants;
     }
 
     getStore(dxContext, t) {
@@ -80,7 +74,7 @@ class ContentManager extends React.Component {
         let {dxContext} = this.props;
 
         return (
-            <MuiThemeProvider theme={theme}>
+            <DSProvider>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={client({
                         contextPath: dxContext.contextPath,
@@ -114,7 +108,7 @@ class ContentManager extends React.Component {
                         </I18nextProvider>
                     </ApolloProvider>
                 </NotificationProvider>
-            </MuiThemeProvider>
+            </DSProvider>
         );
     }
 }

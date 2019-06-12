@@ -1,5 +1,5 @@
 import React from 'react';
-import {LeftDrawerContent} from '@jahia/layouts';
+import {LeftDrawerContent} from '@jahia/design-system-kit';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
 import {reduxAction} from './reduxAction';

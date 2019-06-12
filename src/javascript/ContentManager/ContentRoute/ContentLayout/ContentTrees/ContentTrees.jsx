@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {AppBar, Grid, Toolbar, withStyles} from '@material-ui/core';
-import {Typography, IconButton} from '@jahia/ds-mui-theme';
+import {Typography, IconButton} from '@jahia/design-system-kit';
 import {translate} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
@@ -11,12 +11,13 @@ import {compose} from 'react-apollo';
 import ContentManagerConstants from '../../../ContentManager.constants';
 import ContentTree from './ContentTree';
 import {setRefetcher} from '../../../ContentManager.refetches';
+import contentManagerStyleConstants from '../../../ContentManager.style-constants';
 
-const styles = theme => ({
+const styles = () => ({
     listContainer: {
         flex: '1 0 0%',
         overflow: 'auto',
-        width: theme.contentManager.treeDrawerWidth + 'px'
+        width: contentManagerStyleConstants.treeDrawerWidth + 'px'
     },
     list: {
         width: 'fit-content',

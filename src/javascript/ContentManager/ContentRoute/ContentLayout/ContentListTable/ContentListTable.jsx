@@ -10,7 +10,7 @@ import {
     Tooltip,
     withStyles
 } from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {Lock} from '@material-ui/icons';
 import {Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/ds-mui-theme';
+import {Typography} from '@jahia/design-system-kit';
 import {InfoOutlined} from '@material-ui/icons';
 import {publicationStatusByName} from './publicationStatusRenderer';
 import {translate} from 'react-i18next';

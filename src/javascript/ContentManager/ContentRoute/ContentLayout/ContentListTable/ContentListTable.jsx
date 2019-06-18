@@ -118,7 +118,12 @@ const styles = theme => ({
             backgroundColor: theme.palette.background.default + '7F'
         },
         '&&:hover': {
-            backgroundColor: theme.palette.background.default
+            backgroundColor: theme.palette.hover.beta
+        }
+    },
+    contextualMenuOpen: {
+        '&&&': {
+            backgroundColor: theme.palette.hover.beta
         }
     },
     rowShowActions: {
@@ -236,6 +241,13 @@ const styles = theme => ({
 });
 
 export class ContentListTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            contextualMenuOpen: null
+        };
+    }
+
     getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
         let selected = isSelected && isPreviewOpened;
         return {
@@ -296,6 +308,12 @@ export class ContentListTable extends React.Component {
         let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
         let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
+        const onContextualMenuExit = ctx => {
+            if (ctx.actionKey === 'contentMenu' || ctx.actionKey === 'selectedContentMenu') {
+                this.setState(() => ({contextualMenuOpen: null}));
+            }
+        };
+
         return (
             <>
                 <ToolBar/>
@@ -333,6 +351,12 @@ export class ContentListTable extends React.Component {
                                                     let showActions = !isPreviewOpened && selection.length === 0;
                                                     let contextualMenu = React.createRef();
                                                     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
+
+                                                    const openContextualMenu = event => {
+                                                        contextualMenu.current.open(event);
+                                                        this.setState(() => ({contextualMenuOpen: contextualMenu.current.props.context.path ? [contextualMenu.current.props.context.path] : contextualMenu.current.props.context.paths}));
+                                                    };
+
                                                     return (
                                                         <TableRow
                                                             key={node.uuid}
@@ -340,7 +364,8 @@ export class ContentListTable extends React.Component {
                                                             classes={{
                                                                 root: classNames(classes.row, {
                                                                     [classes.rowCursor]: isPreviewOpened,
-                                                                    [classes.rowShowActions]: showActions
+                                                                    [classes.rowShowActions]: showActions,
+                                                                    [classes.contextualMenuOpen]: this.state.contextualMenuOpen && this.state.contextualMenuOpen.indexOf(node.path) > -1
                                                                 }),
                                                                 selected: classes.selectedRow
                                                             }}
@@ -354,7 +379,7 @@ export class ContentListTable extends React.Component {
                                                             }}
                                                             onContextMenu={event => {
                                                                 event.stopPropagation();
-                                                                contextualMenu.current.open(event);
+                                                                openContextualMenu(event);
                                                             }}
                                                             onDoubleClick={allowDoubleClickNavigation(
                                                                 node.primaryNodeType.name,
@@ -366,7 +391,7 @@ export class ContentListTable extends React.Component {
                                                             <ContextualMenu
                                                                 ref={contextualMenu}
                                                                 actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                                                context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
+                                                                context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path, onExit: onContextualMenuExit} : {paths: selection, onExit: onContextualMenuExit}}
                                                             />
                                                             <TableCell
                                                                 padding="none"

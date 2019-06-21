@@ -114,6 +114,7 @@ const styles = theme => ({
         position: 'relative'
     },
     row: {
+        userSelect: 'none',
         '&&:nth-of-type(odd)': {
             backgroundColor: theme.palette.background.default + '7F'
         },

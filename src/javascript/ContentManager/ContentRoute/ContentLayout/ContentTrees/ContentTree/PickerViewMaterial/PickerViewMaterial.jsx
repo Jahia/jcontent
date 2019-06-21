@@ -38,7 +38,8 @@ let styles = theme => ({
         paddingLeft: theme.spacing.unit,
         height: theme.spacing.unit * 6,
         whiteSpace: 'nowrap',
-        color: theme.palette.text.secondary
+        color: theme.palette.text.secondary,
+        userSelect: 'none'
     },
     listItemDeleted: {
         color: theme.palette.text.disabled,
@@ -69,6 +70,11 @@ let styles = theme => ({
         alignItems: 'center',
         cursor: 'pointer !important'
     },
+    contextualMenuOpen: {
+        '&&&': {
+            backgroundColor: theme.palette.hover.beta
+        }
+    },
     unpublishedEntryLabel: {
         fontStyle: 'italic'
     }
@@ -78,7 +84,8 @@ export class PickerViewMaterial extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hover: false
+            hover: false,
+            contextualMenuOpen: null
         };
         this.hoverOn = this.hoverOn.bind(this);
         this.hoverOff = this.hoverOff.bind(this);
@@ -97,6 +104,12 @@ export class PickerViewMaterial extends React.Component {
         // Sorts entries that are folder types
         let sortedEntries = this.sortFoldersAlphabetical(pickerEntries);
 
+        const onContextualMenuExit = ctx => {
+            if (ctx.actionKey === 'contentMenu') {
+                this.setState(() => ({contextualMenuOpen: null}));
+            }
+        };
+
         return (
             <div className={classes.root}>
                 {loading &&
@@ -106,10 +119,15 @@ export class PickerViewMaterial extends React.Component {
                     {
                         sortedEntries.map(entry => {
                             let contextualMenu = React.createRef();
+                            const openContextualMenu = event => {
+                                contextualMenu.current.open(event);
+                                this.setState(() => ({contextualMenuOpen: contextualMenu.current.props.context.path}));
+                            };
 
                             let itemClass = classNames(classes.listItem, {
                                 [classes.listItemDeleted]: isMarkedForDeletion(entry.node),
-                                [classes.listItemSelected]: entry.selected
+                                [classes.listItemSelected]: entry.selected,
+                                [classes.contextualMenuOpen]: this.state.contextualMenuOpen && this.state.contextualMenuOpen === entry.path && !entry.selected
                             });
                             return (
                                 <React.Fragment key={entry.path}>
@@ -120,7 +138,8 @@ export class PickerViewMaterial extends React.Component {
                                             path: entry.node.path,
                                             menuFilter: value => {
                                                 return !_.includes(['preview'], value.key);
-                                            }
+                                            },
+                                            onExit: onContextualMenuExit
                                         }}
                                     />
                                     <UploadTransformComponent
@@ -134,7 +153,10 @@ export class PickerViewMaterial extends React.Component {
                                         onDoubleClick={() => onOpenItem(entry.path, !entry.open)}
                                         onMouseEnter={() => this.hoverOn(entry.path)}
                                         onMouseLeave={this.hoverOff}
-                                        onContextMenu={event => contextualMenu.current.open(event)}
+                                        onContextMenu={event => {
+                                            event.stopPropagation();
+                                            openContextualMenu(event);
+                                        }}
                                     >
                                         <div
                                             style={{

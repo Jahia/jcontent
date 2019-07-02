@@ -79,6 +79,7 @@ const styles = theme => ({
         width: '100%'
     },
     cardContent: {
+        maxWidth: '280px',
         paddingLeft: theme.spacing.unit,
         paddingRight: theme.spacing.unit,
         paddingTop: theme.spacing.unit * 3,

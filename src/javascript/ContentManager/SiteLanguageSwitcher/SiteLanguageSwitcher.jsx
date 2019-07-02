@@ -6,9 +6,9 @@ import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {SiteInfo} from '@jahia/react-apollo';
 import {cmSetAvailableLanguages, cmSetLanguage, cmSetSiteDisplayableName} from '../ContentManager.redux-actions';
-import LanguageSwitcherDisplay from './LanguageSwitcherDisplay';
+import {LanguageSwitcher} from '@jahia/design-system-kit';
 
-export class LanguageSwitcher extends React.Component {
+export class SiteLanguageSwitcher extends React.Component {
     constructor(props) {
         super(props);
 
@@ -46,7 +46,7 @@ export class LanguageSwitcher extends React.Component {
                     }
 
                     return (
-                        <LanguageSwitcherDisplay
+                        <LanguageSwitcher
                             lang={lang}
                             languages={siteInfo.languages}
                             onSelectLanguage={lang => this.onSelectLanguage(lang)}
@@ -75,7 +75,7 @@ const mapDispatchToProps = dispatch => ({
     }
 });
 
-LanguageSwitcher.propTypes = {
+SiteLanguageSwitcher.propTypes = {
     onSelectLanguage: PropTypes.func.isRequired,
     setAvailableLanguages: PropTypes.func.isRequired,
     setSiteDisplayableName: PropTypes.func.isRequired,
@@ -89,4 +89,4 @@ export default compose(
     translate(),
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
-)(LanguageSwitcher);
+)(SiteLanguageSwitcher);

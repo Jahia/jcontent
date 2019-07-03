@@ -71,10 +71,12 @@ const styles = theme => ({
         height: 150
     },
     mediaCardContentContainer: {
+        minWidth: 0,
         position: 'relative',
         width: '100%'
     },
     fileCardContentContainer: {
+        minWidth: 0,
         position: 'relative',
         width: '100%'
     },

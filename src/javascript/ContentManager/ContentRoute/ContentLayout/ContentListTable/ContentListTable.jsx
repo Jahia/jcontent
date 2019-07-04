@@ -115,6 +115,7 @@ const styles = theme => ({
     },
     row: {
         userSelect: 'none',
+        cursor: 'default',
         '&&:nth-of-type(odd)': {
             backgroundColor: theme.palette.background.default + '7F'
         },

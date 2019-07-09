@@ -49,6 +49,7 @@ export class SiteLanguageSwitcher extends React.Component {
                         <LanguageSwitcher
                             lang={lang}
                             languages={siteInfo.languages}
+                            color="inverted"
                             onSelectLanguage={lang => this.onSelectLanguage(lang)}
                         />
                     );

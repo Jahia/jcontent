@@ -6,7 +6,6 @@ import {ProgressOverlay, actionsRegistry, withNotifications} from '@jahia/react-
 import {compose, Query} from 'react-apollo';
 import {ActionRequirementsQueryHandler} from '../../ContentManager.gql-queries';
 import {translate} from 'react-i18next';
-import {styleConstants} from '@jahia/design-system-kit';
 import PropTypes from 'prop-types';
 
 export class IFrameLayout extends React.Component {
@@ -154,7 +153,7 @@ export class IFrameLayout extends React.Component {
                             position="relative"
                             width="100%"
                             className="myClassname"
-                            height={'calc( 100vh - ' + styleConstants.topBarHeight + 'px )'}
+                            height="100%"
                             onLoad={() => this.onIframeLoaded(iframe)}
                         />
                     );

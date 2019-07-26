@@ -53,13 +53,17 @@ export class ResizableDrawer extends React.Component {
 
         const drawerRightX = this.drawer.current.getBoundingClientRect().right;
         const offset = event.pageX - drawerRightX;
-        const newWidth = this.props.width + offset;
+        const {maxWidth, minWidth, width} = this.props;
 
-        this.props.onResized(Math.max(newWidth, 0));
+        let newWidth = width + offset;
+        newWidth = Math.max(minWidth, newWidth);
+        newWidth = Math.min(maxWidth, newWidth);
+
+        this.props.onResized(newWidth);
     }
 
     render() {
-        const {children, onResized, width, open, ...otherProps} = this.props;
+        const {children, maxWidth, minWidth, onResized, width, open, ...otherProps} = this.props;
         return (
             <>
                 {open &&
@@ -77,9 +81,16 @@ export class ResizableDrawer extends React.Component {
 
 ResizableDrawer.propTypes = {
     children: PropTypes.node,
+    minWidth: PropTypes.number,
+    maxWidth: PropTypes.number,
     onResized: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     width: PropTypes.number.isRequired
+};
+
+ResizableDrawer.defaultProps = {
+    minWidth: 0,
+    maxWidth: 600
 };
 
 export default ResizableDrawer;

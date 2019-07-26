@@ -45,8 +45,14 @@ export class ResizableDrawer extends React.Component {
 
         event.preventDefault();
 
-        const initialPosition = this.drawer.current.getBoundingClientRect().right;
-        const offset = event.pageX - initialPosition;
+        const body = this.drawer.current.ownerDocument.body;
+        const maxRightX = body.getBoundingClientRect().right;
+        if (event.pageX >= maxRightX) {
+            return;
+        }
+
+        const drawerRightX = this.drawer.current.getBoundingClientRect().right;
+        const offset = event.pageX - drawerRightX;
         const newWidth = this.props.width + offset;
 
         this.props.onResized(Math.max(newWidth, 0));

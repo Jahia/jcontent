@@ -64,7 +64,7 @@ export class ResizableDrawer extends React.Component {
             <>
                 {open &&
                     <RootRef rootRef={this.drawer}>
-                        <Drawer width={width + 'px'} open={open} {...otherProps}>
+                        <Drawer width={width} open={open} {...otherProps}>
                             <ResizingHandleBar onMouseDown={this.startResizing}/>
                             {children}
                         </Drawer>

@@ -3,11 +3,6 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import ResizingHandleIcon from './ResizingHandleIcon';
 
-const Constants = Object.freeze({
-    containerBorderWidth: 1,
-    offset: 6
-});
-
 const styles = theme => ({
     root: {
         backgroundColor: 'transparent',
@@ -15,8 +10,8 @@ const styles = theme => ({
         minHeight: '100%',
         height: '100%',
         position: 'absolute',
-        right: `-${Constants.offset}px`,
-        width: `calc(${Constants.offset}px * 2 + ${Constants.containerBorderWidth}px)`,
+        right: 0,
+        width: '1px',
         zIndex: theme.zIndex.drawer
     },
     iconContainer: {

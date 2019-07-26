@@ -14,6 +14,7 @@ import ContentManagerConstants from '../../ContentManager.constants';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
 import Upload from './Upload';
 import contentManagerStyleConstants from '../../ContentManager.style-constants';
+import ResizableDrawer from './ResizableDrawer';
 
 const styles = theme => ({
     root: {
@@ -31,7 +32,6 @@ const styles = theme => ({
         transition: 'margin-left .25s,margin-right .25s',
         backgroundColor: theme.palette.background.default,
         minWidth: 0,
-        marginLeft: -contentManagerStyleConstants.treeDrawerWidth,
         marginRight: -contentManagerStyleConstants.previewDrawerWidth
     },
     contentPaper: {
@@ -47,7 +47,7 @@ const styles = theme => ({
         marginRight: 0
     },
     treeDrawer: {
-        flex: '0 1 ' + contentManagerStyleConstants.treeDrawerWidth + 'px',
+        flex: '0 1 auto',
         display: 'flex',
         order: 1,
         transition: 'transform .15s'
@@ -88,8 +88,18 @@ const styles = theme => ({
 });
 
 export class ContentLayout extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {treeWidth: contentManagerStyleConstants.treeDrawerWidth};
+        this.setTreeWidth = this.setTreeWidth.bind(this);
+    }
+
     refreshContentsAndTree(contentTreeConfigs) {
         refetchContentTreeAndListData(contentTreeConfigs);
+    }
+
+    setTreeWidth(width) {
+        this.setState({treeWidth: width});
     }
 
     render() {
@@ -100,17 +110,19 @@ export class ContentLayout extends React.Component {
         return (
             <>
                 <div className={classes.root}>
-                    <Drawer
-                        variant="persistent"
-                        anchor="left"
-                        open={treeOpen}
-                        classes={{
-                            root: classes.treeDrawer,
-                            paper: classes.treeDrawerPaper
-                        }}
+                    <ResizableDrawer
+                            variant="persistent"
+                            anchor="left"
+                            open={treeOpen}
+                            classes={{
+                                root: classes.treeDrawer,
+                                paper: classes.treeDrawerPaper
+                            }}
+                            width={this.state.treeWidth}
+                            onResized={width => this.setTreeWidth(width)}
                     >
-                        <ContentTrees isOpen={treeOpen}/>
-                    </Drawer>
+                        <ContentTrees isOpen={treeOpen} width={this.state.treeWidth}/>
+                    </ResizableDrawer>
                     <Drawer
                         data-cm-role="preview-drawer"
                         variant="persistent"

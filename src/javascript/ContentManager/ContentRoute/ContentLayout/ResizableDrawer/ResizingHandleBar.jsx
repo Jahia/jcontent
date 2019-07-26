@@ -11,7 +11,7 @@ const styles = theme => ({
         height: '100%',
         position: 'absolute',
         right: '-3px',
-        width: '6px',
+        width: '7px',
         zIndex: theme.zIndex.drawer
     },
     iconContainer: {

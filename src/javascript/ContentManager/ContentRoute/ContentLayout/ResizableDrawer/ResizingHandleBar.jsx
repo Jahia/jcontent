@@ -1,9 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/styles';
+import {withStyles} from '@material-ui/core';
 import ResizingHandleIcon from './ResizingHandleIcon';
 
-const useStyles = makeStyles({
+const Constants = Object.freeze({
+    containerBorderWidth: 1,
+    offset: 6
+});
+
+const styles = theme => ({
+    root: {
+        backgroundColor: 'transparent',
+        cursor: 'col-resize',
+        minHeight: '100%',
+        height: '100%',
+        position: 'absolute',
+        right: `-${Constants.offset}px`,
+        width: `calc(${Constants.offset}px * 2 + ${Constants.containerBorderWidth}px)`,
+        zIndex: theme.zIndex.drawer
+    },
     iconContainer: {
         alignItems: 'center',
         display: 'flex',
@@ -14,20 +29,17 @@ const useStyles = makeStyles({
     }
 });
 
-const ResizingHandleBar = React.forwardRef(({className, onMouseDown}, ref) => {
-    const classes = useStyles();
-    return (
-        <div ref={ref} className={className} onMouseDown={onMouseDown}>
-            <div className={classes.iconContainer}>
-                <ResizingHandleIcon/>
-            </div>
+const ResizingHandleBar = ({classes, onMouseDown}) => (
+    <div className={classes.root} onMouseDown={onMouseDown}>
+        <div className={classes.iconContainer}>
+            <ResizingHandleIcon/>
         </div>
-    );
-});
+    </div>
+);
 
 ResizingHandleBar.propTypes = {
-    className: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
     onMouseDown: PropTypes.func.isRequired
 };
 
-export default ResizingHandleBar;
+export default withStyles(styles)(ResizingHandleBar);

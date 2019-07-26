@@ -31,20 +31,13 @@ const styles = theme => ({
         display: 'flex',
         transition: 'margin-left .25s,margin-right .25s',
         backgroundColor: theme.palette.background.default,
-        minWidth: 0,
-        marginRight: -contentManagerStyleConstants.previewDrawerWidth
+        minWidth: 0
     },
     contentPaper: {
         flex: '1 1 auto',
         flexDirection: 'column',
         minWidth: 0,
         display: 'flex'
-    },
-    contentLeftShift: {
-        marginLeft: 0
-    },
-    contentRightShift: {
-        marginRight: 0
     },
     treeDrawer: {
         flex: '0 1 auto',
@@ -142,10 +135,11 @@ export class ContentLayout extends React.Component {
                     </Drawer>
                     <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: path}}/>
                     <div
-                        className={classNames(classes.content, {
-                            [classes.contentLeftShift]: treeOpen,
-                            [classes.contentRightShift]: previewOpen
-                        })}
+                        className={classNames(classes.content)}
+                        style={{
+                            marginLeft: treeOpen ? 0 : -this.state.treeWidth,
+                            marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
+                        }}
                         onContextMenu={event => contextualMenu.current.open(event)}
                     >
                         <Paper className={classes.contentPaper}>

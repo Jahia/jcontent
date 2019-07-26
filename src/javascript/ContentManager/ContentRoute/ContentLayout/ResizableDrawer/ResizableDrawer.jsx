@@ -63,17 +63,15 @@ export class ResizableDrawer extends React.Component {
     }
 
     render() {
-        const {children, maxWidth, minWidth, onResized, width, open, ...otherProps} = this.props;
+        const {children, maxWidth, minWidth, onResized, width, ...otherProps} = this.props;
         return (
             <>
-                {open &&
-                    <RootRef rootRef={this.drawer}>
-                        <Drawer width={width} open={open} {...otherProps}>
-                            <ResizingHandleBar onMouseDown={this.startResizing}/>
-                            {children}
-                        </Drawer>
-                    </RootRef>
-                }
+                <RootRef rootRef={this.drawer}>
+                    <Drawer width={width} {...otherProps}>
+                        <ResizingHandleBar onMouseDown={this.startResizing}/>
+                        {children}
+                    </Drawer>
+                </RootRef>
             </>
         );
     }
@@ -84,7 +82,6 @@ ResizableDrawer.propTypes = {
     minWidth: PropTypes.number,
     maxWidth: PropTypes.number,
     onResized: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
     width: PropTypes.number.isRequired
 };
 

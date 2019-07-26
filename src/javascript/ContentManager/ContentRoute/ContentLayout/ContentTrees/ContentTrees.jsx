@@ -16,8 +16,7 @@ import contentManagerStyleConstants from '../../../ContentManager.style-constant
 const styles = () => ({
     listContainer: {
         flex: '1 0 0%',
-        overflow: 'auto',
-        width: contentManagerStyleConstants.treeDrawerWidth + 'px'
+        overflow: 'auto'
     },
     list: {
         width: 'fit-content',
@@ -34,7 +33,7 @@ export class ContentTrees extends React.Component {
     render() {
         const {
             lang, siteKey, path, openPaths, t, setPath, openPath,
-            closePath, classes, mode, isOpen, closeTree
+            closePath, classes, mode, isOpen, closeTree, width
         } = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
@@ -62,7 +61,7 @@ export class ContentTrees extends React.Component {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                <div ref={setContainer} className={classes.listContainer}>
+                <div ref={setContainer} className={classes.listContainer} style={{width: width + 'px'}}>
                     <div className={classes.list}>
                         {isOpen ?
                             _.map(contentTreeConfigs, contentTreeConfig => {
@@ -121,7 +120,12 @@ ContentTrees.propTypes = {
     path: PropTypes.string.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    width: PropTypes.number
+};
+
+ContentTrees.defaultProps = {
+    width: contentManagerStyleConstants.treeDrawerWidth
 };
 
 export default compose(

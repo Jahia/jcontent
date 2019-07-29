@@ -10,7 +10,7 @@ const styles = theme => ({
         minHeight: '100%',
         height: '100%',
         position: 'absolute',
-        right: '-3px',
+        right: '0px',
         width: '7px',
         zIndex: theme.zIndex.drawer
     },

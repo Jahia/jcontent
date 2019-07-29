@@ -112,6 +112,7 @@ export class ContentLayout extends React.Component {
                                 paper: classes.treeDrawerPaper
                             }}
                             width={this.state.treeWidth}
+                            minWidth="200"
                             onResized={width => this.setTreeWidth(width)}
                     >
                         <ContentTrees isOpen={treeOpen} width={this.state.treeWidth}/>

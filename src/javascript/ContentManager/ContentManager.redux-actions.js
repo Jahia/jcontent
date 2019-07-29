@@ -1,6 +1,7 @@
 const CM_NAVIGATE = 'CM_NAVIGATE';
 const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
 const CM_SET_TREE = 'CM_SET_TREE';
+const CM_SET_TREE_WIDTH = 'CM_SET_TREE_WIDTH';
 const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
 const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
 const CM_ADD_PATHS_TO_REFETCH = 'CM_ADD_PATHS_TO_REFETCH';
@@ -91,6 +92,13 @@ function cmSetTreeState(state) {
     };
 }
 
+function cmSetTreeWidth(width) {
+    return {
+        type: CM_SET_TREE_WIDTH,
+        width: width
+    };
+}
+
 function cmSetSearchMode(searchMode) {
     return {
         type: CM_SET_SEARCH_MODE,
@@ -102,6 +110,7 @@ export {
     CM_NAVIGATE,
     CM_SET_UILANGUAGE,
     CM_SET_TREE,
+    CM_SET_TREE_WIDTH,
     CM_SET_OPEN_PATHS,
     CM_SET_SEARCH_MODE,
     CM_DRAWER_STATES,
@@ -122,6 +131,7 @@ export {
     cmOpenPaths,
     cmClosePaths,
     cmSetTreeState,
+    cmSetTreeWidth,
     cmSetSearchMode,
     cmAddPathsToRefetch,
     cmRemovePathsToRefetch

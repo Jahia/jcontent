@@ -14,7 +14,10 @@ import {
     uiLanguageReducer,
     openPathsReducer,
     searchModeReducer,
-    siteDisplayableNameReducer, treeStateReducer, pathsToRefetchReducer,
+    siteDisplayableNameReducer,
+    treeStateReducer,
+    treeWidthReducer,
+    pathsToRefetchReducer,
     availableLanguagesReducer
 } from './ContentManager.redux-reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
@@ -39,6 +42,7 @@ let contentManagerReduxStore = (dxContext, history) => {
         previewState: previewStateReducer,
         previewSelection: previewSelectionReducer,
         treeState: treeStateReducer,
+        treeWidth: treeWidthReducer,
         openPaths: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode),
         searchMode: searchModeReducer(currentValueFromUrl.params),
         copyPaste: copyPaste,

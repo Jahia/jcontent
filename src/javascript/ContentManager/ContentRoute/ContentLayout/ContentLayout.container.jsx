@@ -16,7 +16,7 @@ import {
 } from '../../eventHandlerRegistry';
 import {translate} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../ContentManager.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch, cmSetTreeWidth} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
 import {getNewNodePath, isDescendantOrSelf} from '../../ContentManager.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux-actions';
@@ -154,7 +154,12 @@ export class ContentLayoutContainer extends React.Component {
     }
 
     render() {
-        const {notificationContext, t, mode, path, uiLang, lang, siteKey, params, pagination, sort, pathsToRefetch, removePathsToRefetch, setPath, treeState, filesMode, previewState, previewSelection} = this.props;
+        const {
+            notificationContext, t, mode, path, uiLang, lang, siteKey, params, pagination, sort, pathsToRefetch,
+            removePathsToRefetch, setPath, treeState, treeWidth, filesMode, previewState, previewSelection,
+            setTreeWidth
+        } = this.props;
+
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
         // If the path to display is part of the paths to refetch then refetch
         if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
@@ -193,13 +198,16 @@ export class ContentLayoutContainer extends React.Component {
                                            path={path}
                                            filesMode={filesMode}
                                            treeState={treeState}
+                                           treeWidth={treeWidth}
                                            previewState={previewState}
                                            previewSelection={previewSelection}
                                            rows={[]}
                                            loading={loading}
                                            totalCount={0}
                                            layoutQuery={layoutQuery}
-                                           layoutQueryParams={layoutQueryParams}/>
+                                           layoutQueryParams={layoutQueryParams}
+                                           setTreeWidth={setTreeWidth}
+                            />
                         );
                     }
 
@@ -238,13 +246,16 @@ export class ContentLayoutContainer extends React.Component {
                                            path={path}
                                            filesMode={filesMode}
                                            treeState={treeState}
+                                           treeWidth={treeWidth}
                                            previewState={previewState}
                                            previewSelection={previewSelection}
                                            rows={rows}
                                            loading={loading}
                                            totalCount={totalCount}
                                            layoutQuery={layoutQuery}
-                                           layoutQueryParams={layoutQueryParams}/>
+                                           layoutQueryParams={layoutQueryParams}
+                                           setTreeWidth={setTreeWidth}
+                            />
                         </React.Fragment>
                     );
                 }}
@@ -268,6 +279,7 @@ const mapStateToProps = state => ({
     openedPaths: state.openPaths,
     pathsToRefetch: state.pathsToRefetch,
     treeState: state.treeState,
+    treeWidth: state.treeWidth,
     selection: state.selection
 });
 
@@ -278,7 +290,8 @@ const mapDispatchToProps = dispatch => ({
     closePaths: paths => dispatch(cmClosePaths(paths)),
     removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths)),
     removeSelection: path => dispatch(cmRemoveSelection(path)),
-    switchSelection: path => dispatch(cmSwitchSelection(path))
+    switchSelection: path => dispatch(cmSwitchSelection(path)),
+    setTreeWidth: width => dispatch(cmSetTreeWidth(width))
 });
 
 ContentLayoutContainer.propTypes = {
@@ -302,11 +315,13 @@ ContentLayoutContainer.propTypes = {
     t: PropTypes.func.isRequired,
     uiLang: PropTypes.string.isRequired,
     treeState: PropTypes.number.isRequired,
+    treeWidth: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
     filesMode: PropTypes.string.isRequired,
     selection: PropTypes.array.isRequired,
     removeSelection: PropTypes.func.isRequired,
-    switchSelection: PropTypes.func.isRequired
+    switchSelection: PropTypes.func.isRequired,
+    setTreeWidth: PropTypes.func.isRequired
 };
 
 export default compose(

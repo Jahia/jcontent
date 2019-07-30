@@ -81,22 +81,16 @@ const styles = theme => ({
 });
 
 export class ContentLayout extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {treeWidth: contentManagerStyleConstants.treeDrawerWidth};
-        this.setTreeWidth = this.setTreeWidth.bind(this);
-    }
-
     refreshContentsAndTree(contentTreeConfigs) {
         refetchContentTreeAndListData(contentTreeConfigs);
     }
 
-    setTreeWidth(width) {
-        this.setState({treeWidth: width});
-    }
-
     render() {
-        const {contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, previewSelection, rows, contentNotFound, totalCount, loading} = this.props;
+        const {
+            contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, treeWidth, previewSelection, rows, contentNotFound,
+            totalCount, loading, setTreeWidth
+        } = this.props;
+
         let contextualMenu = React.createRef();
         let treeOpen = treeState >= CM_DRAWER_STATES.SHOW && mode !== ContentManagerConstants.mode.SEARCH && mode !== ContentManagerConstants.mode.SQL2SEARCH;
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -104,18 +98,18 @@ export class ContentLayout extends React.Component {
             <>
                 <div className={classes.root}>
                     <ResizableDrawer
-                            variant="persistent"
-                            anchor="left"
-                            open={treeOpen}
-                            classes={{
-                                root: classes.treeDrawer,
-                                paper: classes.treeDrawerPaper
-                            }}
-                            width={this.state.treeWidth}
-                            minWidth="200"
-                            onResized={width => this.setTreeWidth(width)}
+                        variant="persistent"
+                        anchor="left"
+                        open={treeOpen}
+                        classes={{
+                            root: classes.treeDrawer,
+                            paper: classes.treeDrawerPaper
+                        }}
+                        width={treeWidth}
+                        minWidth="200"
+                        onResized={width => setTreeWidth(width)}
                     >
-                        <ContentTrees isOpen={treeOpen} width={this.state.treeWidth}/>
+                        <ContentTrees isOpen={treeOpen} width={treeWidth}/>
                     </ResizableDrawer>
                     <Drawer
                         data-cm-role="preview-drawer"
@@ -138,7 +132,7 @@ export class ContentLayout extends React.Component {
                     <div
                         className={classNames(classes.content)}
                         style={{
-                            marginLeft: treeOpen ? 0 : -this.state.treeWidth,
+                            marginLeft: treeOpen ? 0 : -treeWidth,
                             marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                         }}
                         onContextMenu={event => contextualMenu.current.open(event)}
@@ -173,13 +167,15 @@ ContentLayout.propTypes = {
     classes: PropTypes.object.isRequired,
     filesMode: PropTypes.string.isRequired,
     treeState: PropTypes.number.isRequired,
+    treeWidth: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
     contentTreeConfigs: PropTypes.object,
     previewSelection: PropTypes.string,
     rows: PropTypes.array.isRequired,
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    setTreeWidth: PropTypes.func.isRequired
 };
 
 export default compose(

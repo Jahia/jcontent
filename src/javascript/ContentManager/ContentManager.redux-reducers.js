@@ -7,11 +7,13 @@ import {
     CM_SET_OPEN_PATHS,
     CM_SET_SEARCH_MODE,
     CM_SET_TREE,
+    CM_SET_TREE_WIDTH,
     CM_SET_UILANGUAGE
 } from './ContentManager.redux-actions';
 import * as _ from 'lodash';
 import {extractPaths} from './ContentManager.utils';
 import {CM_SET_PREVIEW} from './preview.redux-actions';
+import ContentManagerStyleConstants from './ContentManager.style-constants';
 
 let uiLanguageReducer = dxContext => (state = dxContext.uilang, action) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
@@ -122,6 +124,14 @@ let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action) => {
     }
 };
 
+let treeWidthReducer = (state = ContentManagerStyleConstants.treeDrawerWidth, action) => {
+    if (action.type === CM_SET_TREE_WIDTH) {
+        return action.width;
+    }
+
+    return state;
+};
+
 let pathsToRefetchReducer = (state, action) => {
     if (state === undefined) {
         state = [];
@@ -142,4 +152,8 @@ let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'no
     return state;
 };
 
-export {languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, openPathsReducer, treeStateReducer, searchModeReducer, siteDisplayableNameReducer, pathsToRefetchReducer, availableLanguagesReducer};
+export {
+    languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, openPathsReducer,
+    treeStateReducer, treeWidthReducer, searchModeReducer, siteDisplayableNameReducer, pathsToRefetchReducer,
+    availableLanguagesReducer
+};

@@ -98,6 +98,7 @@ export class ContentLayout extends React.Component {
             <>
                 <div className={classes.root}>
                     <ResizableDrawer
+                        data-cm-role="resizable-tree"
                         variant="persistent"
                         anchor="left"
                         open={treeOpen}

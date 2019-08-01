@@ -14,10 +14,12 @@ export class ResizableDrawer extends React.Component {
         this.resize = this.resize.bind(this);
     }
 
-    startResizing() {
+    startResizing(event) {
         if (this.state.resizing) {
             return;
         }
+
+        event.preventDefault();
 
         this.setState({resizing: true});
 
@@ -26,10 +28,12 @@ export class ResizableDrawer extends React.Component {
         ownerDocument.addEventListener('mouseup', this.stopResizing);
     }
 
-    stopResizing() {
+    stopResizing(event) {
         if (!this.state.resizing) {
             return;
         }
+
+        event.preventDefault();
 
         this.setState({resizing: false});
 

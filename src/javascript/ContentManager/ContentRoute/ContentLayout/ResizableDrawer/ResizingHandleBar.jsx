@@ -25,7 +25,7 @@ const styles = theme => ({
 });
 
 const ResizingHandleBar = ({classes, onMouseDown}) => (
-    <div className={classes.root} onMouseDown={onMouseDown}>
+    <div data-cm-role="resizing-handle-bar" className={classes.root} onMouseDown={onMouseDown}>
         <div className={classes.iconContainer}>
             <ResizingHandleIcon/>
         </div>

@@ -19,7 +19,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        minHeight: '100%',
+        height: '100%',
         minWidth: '100%'
     }
 });

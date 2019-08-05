@@ -37,7 +37,8 @@ const styles = theme => ({
         flex: '1 1 auto',
         flexDirection: 'column',
         minWidth: 0,
-        display: 'flex'
+        display: 'flex',
+        width: '100%'
     },
     treeDrawer: {
         flex: '0 1 auto',

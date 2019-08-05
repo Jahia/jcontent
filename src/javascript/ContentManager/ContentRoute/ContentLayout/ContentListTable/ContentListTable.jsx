@@ -110,6 +110,7 @@ const reducedColumnData = [
 const styles = theme => ({
     tableWrapper: {
         flex: '1 1 0%',
+        maxWidth: '100%',
         overflow: 'auto',
         position: 'relative'
     },

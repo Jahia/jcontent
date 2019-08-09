@@ -3,7 +3,7 @@ import {batchDispatchMiddleware} from 'redux-batched-actions';
 import thunk from 'redux-thunk';
 import {selectionReducer} from './ContentRoute/ContentLayout/contentSelection.redux-reducers';
 import {fileUpload} from './ContentRoute/ContentLayout/Upload/Upload.redux-reducer';
-import {copyPaste} from './actions/actions.redux-reducer';
+import {copyPaste} from './actions/copyPaste/copyPaste.redux-reducer';
 import {filesGrid} from './ContentRoute/ContentLayout/FilesGrid/FilesGrid.redux-reducer';
 import {
     languageReducer,

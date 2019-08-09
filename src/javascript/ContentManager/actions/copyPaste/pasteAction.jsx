@@ -1,8 +1,7 @@
 import * as _ from 'lodash';
-import CopyPasteNode from '../CopyPasteNode';
-import pasteMutations from './pasteAction.gql-mutations';
+import pasteMutations from './copyPaste.gql-mutations';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
-import {clear} from '../actions.redux-actions';
+import {clear} from './copyPaste.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {reduxAction} from '../reduxAction';
@@ -14,10 +13,12 @@ import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../ContentManager.utils';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../ContentManager.redux-actions';
 import {cmSetPreviewSelection} from '../../preview.redux-actions';
+import copyPasteConstants from './copyPaste.constants';
+import {setLocalStorage} from './localStorageHandler';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({
-        ...state.copyPaste,
+        copyPaste: state.copyPaste,
         treePath: state.path,
         openedPaths: state.openPaths,
         previewSelection: state.previewSelection
@@ -35,23 +36,24 @@ export default composeActions(requirementsAction, withNotificationContextAction,
     init: context => {
         context.initRequirements({
             requiredPermission: 'jcr:addChildNodes',
-            contentTypes: _.uniq(context.items.map(n => n.primaryNodeType.name)),
+            contentTypes: _.uniq(context.copyPaste.nodes.map(n => n.primaryNodeType.name)),
             getContributeTypesRestrictions: true,
 
             enabled: context => {
                 return context.node.pipe(switchMap(targetNode => {
-                    if (context.items.length === 0) {
+                    const {nodes, type} = context.copyPaste;
+
+                    if (nodes.length === 0) {
                         return of(false);
                     }
 
-                    let nodesToPaste = context.items;
-                    if (nodesToPaste.reduce((acc, nodeToPaste) => acc ||
-                        (nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) ||
+                    if (nodes.reduce((acc, nodeToPaste) => acc ||
+                        (type === copyPasteConstants.CUT && nodeToPaste.path === targetNode.path + '/' + nodeToPaste.name) ||
                         (isDescendantOrSelf(targetNode.path, nodeToPaste.path)), false)) {
                         return of(false);
                     }
 
-                    const primaryNodeTypesToPaste = _.uniq(nodesToPaste.map(n => n.primaryNodeType.name));
+                    const primaryNodeTypesToPaste = _.uniq(nodes.map(n => n.primaryNodeType.name));
                     let contributeTypesProperty = targetNode.contributeTypes ||
                         (targetNode.ancestors && targetNode.ancestors.length > 0 && targetNode.ancestors[targetNode.ancestors.length - 1].contributeTypes);
                     if (contributeTypesProperty && contributeTypesProperty.values.length > 0) {
@@ -85,27 +87,30 @@ export default composeActions(requirementsAction, withNotificationContextAction,
     },
 
     onClick: context => {
-        const nodesToPaste = context.items;
+        const {nodes, type} = context.copyPaste;
+
+        const mutation = type === copyPasteConstants.CUT ? pasteMutations.moveNode : pasteMutations.pasteNode;
 
         // Execute paste
-        Promise.all(nodesToPaste.map(nodeToPaste => context.client.mutate({
+        Promise.all(nodes.map(nodeToPaste => context.client.mutate({
             variables: {
                 pathOrId: nodeToPaste.path,
                 destParentPathOrId: context.path,
                 destName: nodeToPaste.name
             },
-            mutation: nodeToPaste.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE ? pasteMutations.moveNode : pasteMutations.pasteNode
+            mutation
         }))).then(datas => {
             context.clear();
+            setLocalStorage(copyPasteConstants.COPY, [], context.client);
             context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
 
             // Let's make sure the content table will be refreshed when displayed
-            context.addPathsToRefetch([context.path, ...nodesToPaste.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/')))]);
+            context.addPathsToRefetch([context.path, ...nodes.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/')))]);
 
             // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the preview selection
-            let pastedNodes = _.merge(nodesToPaste, datas.map(({data}) => ({newPath: data.jcr.pasteNode.node.path})));
+            let pastedNodes = _.merge(nodes, datas.map(({data}) => ({newPath: data.jcr.pasteNode.node.path})));
 
-            const pathsToClose = context.openedPaths.filter(openedPath => pastedNodes.reduce((acc, pastedNode) => acc || (pastedNode.mutationToUse === CopyPasteNode.PASTE_MODES.MOVE && isDescendantOrSelf(openedPath, pastedNode.path)), false));
+            const pathsToClose = context.openedPaths.filter(openedPath => pastedNodes.reduce((acc, pastedNode) => acc || (type === copyPasteConstants.CUT && isDescendantOrSelf(openedPath, pastedNode.path)), false));
             if (pathsToClose.length > 0) {
                 context.closePaths(pathsToClose);
                 const pathsToReopen = pathsToClose.map(pathToReopen => pastedNodes.reduce((acc, pastedNode) => getNewNodePath(acc, pastedNode.path, pastedNode.newPath), pathToReopen));

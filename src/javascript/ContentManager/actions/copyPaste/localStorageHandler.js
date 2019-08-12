@@ -1,4 +1,6 @@
 import copyPasteQueries from './copyPaste.gql-queries';
+import copyPasteConstants from './copyPaste.constants';
+import {cut, copy} from './copyPaste.redux-actions';
 
 const localStorage = window.localStorage;
 
@@ -23,14 +25,28 @@ const getGWTNode = n => {
 
 let currentValue = '';
 
-setInterval(() => {
-    let previousValue = currentValue;
-    currentValue = localStorage.getItem('jahia-clipboard');
+const initClipboardWatcher = (store, client) => {
+    setInterval(() => {
+        let previousValue = currentValue;
+        currentValue = localStorage.getItem('jahia-clipboard');
 
-    if (previousValue !== currentValue) {
-        console.log('New clipboard', currentValue);
-    }
-}, 1000);
+        if (previousValue !== currentValue) {
+            let cb = JSON.parse(currentValue);
+            client.query({
+                query: copyPasteQueries.getClipboardInfo,
+                variables: {uuids: cb.nodes.map(n => n.uuid)}
+            }).then(({data}) => {
+                const nodesWithData = data.jcr.nodesById;
+
+                if (cb.type === copyPasteConstants.CUT) {
+                    store.dispatch(cut(nodesWithData));
+                } else {
+                    store.dispatch(copy(nodesWithData));
+                }
+            });
+        }
+    }, 1000);
+};
 
 const setLocalStorage = (type, nodes, client) => {
     client.query({
@@ -39,12 +55,12 @@ const setLocalStorage = (type, nodes, client) => {
     }).then(({data}) => {
         const nodesWithData = data.jcr.nodesById;
         let clipboard = {
-            type,
-            nodes: nodesWithData.map(getGWTNode)
+            nodes: nodesWithData.map(getGWTNode),
+            type
         };
-
-        localStorage.setItem('jahia-clipboard', JSON.stringify(clipboard));
+        currentValue = JSON.stringify(clipboard);
+        localStorage.setItem('jahia-clipboard', currentValue);
     });
 };
 
-export {setLocalStorage};
+export {setLocalStorage, initClipboardWatcher};

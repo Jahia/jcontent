@@ -224,8 +224,7 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <ContentPaste/>,
         buttonLabel: 'label.contentManager.contentPreview.paste',
         target: ['tableHeaderActions:1', 'contentActions:3.91'],
-        hideOnNodeTypes: ['jnt:page'],
-        showForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS]
+        hideOnNodeTypes: ['jnt:page']
     });
     actionsRegistry.add('cut', cutAction, {
         buttonIcon: <ContentCut/>,

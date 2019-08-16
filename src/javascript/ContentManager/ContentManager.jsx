@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {actionsRegistry, ComponentRendererProvider, NotificationProvider, DxContext} from '@jahia/react-material';
+import {actionsRegistry, ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia/react-material';
 import {DSProvider} from '@jahia/design-system-kit';
 import {client} from '@jahia/apollo-dx';
 import {getI18n} from '@jahia/i18next';
@@ -16,6 +16,7 @@ import contentManagerActions from './ContentManager.actions';
 import {registry} from '@jahia/registry';
 import contentManagerRoutes from './ContentManager.routes';
 import AppLayout from './AppLayout';
+import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
 
 class ContentManager extends React.Component {
     constructor(props) {
@@ -41,9 +42,10 @@ class ContentManager extends React.Component {
         };
     }
 
-    getStore(dxContext, t) {
+    getStore(dxContext, apolloClient, t) {
         if (!this.store) {
             this.store = contentManagerReduxStore(dxContext, this.getHistory(dxContext, t));
+            initClipboardWatcher(this.store, apolloClient);
         }
 
         return this.store;
@@ -73,15 +75,15 @@ class ContentManager extends React.Component {
     render() {
         let {dxContext} = this.props;
 
+        let apolloClient = client({
+            contextPath: dxContext.contextPath,
+            useBatch: true,
+            httpOptions: {batchMax: 50}
+        });
         return (
             <DSProvider>
                 <NotificationProvider notificationContext={{}}>
-                    <ApolloProvider client={client({
-                        contextPath: dxContext.contextPath,
-                        useBatch: true,
-                        httpOptions: {batchMax: 50}
-                    })}
-                    >
+                    <ApolloProvider client={apolloClient}>
                         <I18nextProvider i18n={getI18n({
                             lng: dxContext.uilang,
                             contextPath: dxContext.contextPath,
@@ -92,7 +94,7 @@ class ContentManager extends React.Component {
                         >
                             <I18n>{t => {
                                 return (
-                                    <Provider store={this.getStore(dxContext, t)}>
+                                    <Provider store={this.getStore(dxContext, apolloClient, t)}>
                                         <DxContext.Provider value={dxContext}>
                                             <PushEventHandler/>
                                             <ComponentRendererProvider>

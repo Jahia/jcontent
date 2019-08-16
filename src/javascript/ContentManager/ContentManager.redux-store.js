@@ -3,25 +3,25 @@ import {batchDispatchMiddleware} from 'redux-batched-actions';
 import thunk from 'redux-thunk';
 import {selectionReducer} from './ContentRoute/ContentLayout/contentSelection.redux-reducers';
 import {fileUpload} from './ContentRoute/ContentLayout/Upload/Upload.redux-reducer';
-import {copyPaste} from './actions/actions.redux-reducer';
+import {copyPaste} from './actions/copyPaste/copyPaste.redux-reducer';
 import {filesGrid} from './ContentRoute/ContentLayout/FilesGrid/FilesGrid.redux-reducer';
 import {
+    availableLanguagesReducer,
     languageReducer,
-    siteReducer,
     modeReducer,
-    pathReducer,
-    paramsReducer,
-    uiLanguageReducer,
     openPathsReducer,
+    paramsReducer,
+    pathReducer,
+    pathsToRefetchReducer,
     searchModeReducer,
     siteDisplayableNameReducer,
+    siteReducer,
     treeStateReducer,
     treeWidthReducer,
-    pathsToRefetchReducer,
-    availableLanguagesReducer
+    uiLanguageReducer
 } from './ContentManager.redux-reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
-import {getSyncListener, extractParamsFromUrl} from './ContentManager.redux-utils';
+import {extractParamsFromUrl, getSyncListener} from './ContentManager.redux-utils';
 import {previewModeReducer, previewSelectionReducer, previewStateReducer} from './preview.redux-reducers';
 import {sortReducer} from './ContentRoute/ContentLayout/sort.redux-reducers';
 import {paginationReducer} from './ContentRoute/ContentLayout/pagination.redux-reducers';

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const pasteMutations = {
+const copyPasteQueries = {
     pasteNode: gql`mutation pasteNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String) {
         jcr {
             pasteNode(mode: COPY, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, destName: $destName, namingConflictResolution: RENAME) {
@@ -30,4 +30,4 @@ const pasteMutations = {
     }`
 };
 
-export default pasteMutations;
+export default copyPasteQueries;

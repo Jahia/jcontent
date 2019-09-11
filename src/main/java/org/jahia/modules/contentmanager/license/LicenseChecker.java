@@ -31,7 +31,7 @@ import org.jahia.security.license.LicenseCheckerService;
  * @author yousria
  */
 public class LicenseChecker {
-    private static final String FEATURE = "org.jahia.contentMediaManager";
+    private static final String FEATURE = "org.jahia.core";
 
     public static boolean isAllowed() {
         return LicenseCheckerService.Stub.isAllowed(FEATURE);

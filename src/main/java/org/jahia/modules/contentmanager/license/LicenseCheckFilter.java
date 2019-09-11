@@ -23,30 +23,25 @@
  */
 package org.jahia.modules.contentmanager.license;
 
+import org.jahia.bin.Jahia;
 import org.jahia.services.render.RenderContext;
 import org.jahia.services.render.Resource;
 import org.jahia.services.render.filter.AbstractFilter;
 import org.jahia.services.render.filter.RenderChain;
-import org.jahia.services.render.filter.RenderFilter;
-import org.osgi.service.component.annotations.Component;
 
 /**
  *
  * Filter inserted in the render chain to validate the licence for CMM
  * @author yousria
  */
-@Component(service = RenderFilter.class, immediate = true, name = "LicenseCheckFilterCMM")
 public class LicenseCheckFilter extends AbstractFilter {
-
-    public LicenseCheckFilter() {
-        setPriority(1);
-        setApplyOnTemplates("content-manager");
-    }
 
     @Override
     public String prepare(RenderContext renderContext, Resource resource, RenderChain chain) throws Exception {
-        if (!LicenseChecker.isAllowed()) {
-            renderContext.getRequest().setAttribute("cmmMissingLicense", true);
+        if (Jahia.isEnterpriseEdition()) {
+            if (!LicenseChecker.isAllowed()) {
+                renderContext.getRequest().setAttribute("cmmMissingLicense", true);
+            }
         }
         return null;
     }

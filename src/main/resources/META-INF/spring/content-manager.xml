@@ -12,6 +12,12 @@
         <property name="cacheService" ref="ehCacheProvider"/>
     </bean>
 
+    <bean id="licenseCheckFilter" class="org.jahia.modules.contentmanager.license.LicenseCheckFilter">
+        <property name="priority" value="1"/>
+        <property name="applyOnTemplates" value="content-manager"/>
+        <property name="description" value="Checks validity of the license"/>
+    </bean>
+
     <bean class="org.jahia.ajax.gwt.helper.ModuleGWTResources">
         <property name="javascriptResources">
             <list>

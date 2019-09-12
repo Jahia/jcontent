@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "scripts": {
     "build": "yarn lint && yarn test && yarn webpack",
-    "webpack": "npx --node-arg=--max_old_space_size=2048 webpack",
+    "webpack": "node --max_old_space_size=2048 node_modules/.bin/webpack",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build -p",
     "build:production-analyze": "yarn build -p --analyze",
@@ -86,7 +86,6 @@
     "eslint": "^5.15.1",
     "eslint-loader": "2.1.0",
     "file-loader": "^2.0.0",
-    "npx": "^10.2.0",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
     "webpack": "^4.26.0",

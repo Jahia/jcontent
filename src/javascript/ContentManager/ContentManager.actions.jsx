@@ -298,6 +298,7 @@ function contentManagerActions(actionsRegistry) {
         target: ['leftMenuActions:5'],
         buttonIcon: <ManageIcon/>,
         menu: 'leftMenuManageActions',
+        requiredPermission: 'siteSettingsSelector',
         hasChildren: true
     });
     actionsRegistry.add('workflowsLeftMenu', workflowDashboardAction, {

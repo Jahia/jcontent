@@ -11,8 +11,6 @@ import {translate} from 'react-i18next';
 import {CM_DRAWER_STATES} from '../../ContentManager.redux-actions';
 import FilesGrid from './FilesGrid';
 import ContentManagerConstants from '../../ContentManager.constants';
-import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
-import Upload from './Upload';
 import contentManagerStyleConstants from '../../ContentManager.style-constants';
 import ResizableDrawer from './ResizableDrawer';
 
@@ -82,13 +80,9 @@ const styles = theme => ({
 });
 
 export class ContentLayout extends React.Component {
-    refreshContentsAndTree(contentTreeConfigs) {
-        refetchContentTreeAndListData(contentTreeConfigs);
-    }
-
     render() {
         const {
-            contentTreeConfigs, mode, path, previewState, classes, filesMode, treeState, treeWidth, previewSelection, rows, contentNotFound,
+            mode, path, previewState, classes, filesMode, treeState, treeWidth, previewSelection, rows, contentNotFound,
             totalCount, loading, setTreeWidth
         } = this.props;
 
@@ -153,11 +147,6 @@ export class ContentLayout extends React.Component {
                         </Paper>
                     </div>
                 </div>
-                <Upload uploadUpdateCallback={status => {
-                    if (status && status.uploading === 0) {
-                        this.refreshContentsAndTree(contentTreeConfigs);
-                    }
-                }}/>
             </>
         );
     }
@@ -171,7 +160,6 @@ ContentLayout.propTypes = {
     treeState: PropTypes.number.isRequired,
     treeWidth: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
-    contentTreeConfigs: PropTypes.object,
     previewSelection: PropTypes.string,
     rows: PropTypes.array.isRequired,
     contentNotFound: PropTypes.bool,

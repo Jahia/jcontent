@@ -6,6 +6,10 @@ const ActionRequirementsQuery = gql`
     query ActionRequirementsQuery($path:String!, $language:String!) {
         jcr {
             nodeByPath(path:$path) {
+                parent {
+                    path
+                    name
+                }
                 name
                 operationsSupport {
                     lock

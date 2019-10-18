@@ -59,6 +59,14 @@ function ellipsizeText(text, maxLength) {
     return ellipsize(text, maxLength || 100, {chars: [' ', '&']});
 }
 
+function getZipName(name) {
+    if (name.lastIndexOf('.') > 0) {
+        return name.substr(0, name.lastIndexOf('.')) + '.zip';
+    }
+
+    return name + '.zip';
+}
+
 function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
     if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
         return fcn;
@@ -76,5 +84,6 @@ export {
     extractPaths,
     ellipsizeText,
     hasProperty,
+    getZipName,
     allowDoubleClickNavigation
 };

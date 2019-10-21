@@ -67,6 +67,28 @@ function getZipName(name) {
     return name + '.zip';
 }
 
+function getNameWithoutExtension(name) {
+    if (name.lastIndexOf('.') > 0) {
+        return name.substr(0, name.lastIndexOf('.'));
+    }
+
+    return name;
+}
+
+function getNewCounter(nodes) {
+    let max = 0;
+    nodes.forEach(node => {
+        let counter = node.name.match(/[0-9]+.zip/g);
+        if (counter !== null) {
+            counter = counter[0].match(/[0-9]+/g);
+            if (counter !== null && counter[0] > max) {
+                max = counter;
+            }
+        }
+    });
+    return parseFloat(max) + 1;
+}
+
 function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
     if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
         return fcn;
@@ -85,5 +107,7 @@ export {
     ellipsizeText,
     hasProperty,
     getZipName,
+    getNewCounter,
+    getNameWithoutExtension,
     allowDoubleClickNavigation
 };

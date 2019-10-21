@@ -2,28 +2,46 @@ import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {withNotificationContextAction} from '../withNotificationContextAction';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
-import gql from 'graphql-tag';
-import {getZipName} from '../../ContentManager.utils';
+import zipUnzipQueries from './zipUnzip.gql-queries';
+import zipUnzipMutation from './zipUnzip.gql-mutations';
+import {getZipName, getNewCounter, getNameWithoutExtension} from '../../ContentManager.utils';
 
 export default composeActions(requirementsAction, withNotificationContextAction, {
-    init: context => context.initRequirements({}),
-
+    init: context => {
+        context.initRequirements({});
+    },
     onClick: context => {
-        let name = context.node ? getZipName(context.node.name) : getZipName(context.nodes[0].parent.name);
+        let name = context.node ? context.node.name : context.nodes[0].parent.name;
+        let nameWitoutExtension = getNameWithoutExtension(name);
         let paths = context.node ? [context.node.path] : context.paths;
+        let uuid = context.node ? context.node.uuid : context.nodes[0].uuid;
         let parentPath = context.node ? context.node.parent.path : context.nodes[0].parent.path;
-        context.client.mutate({
-            variables: {parentPathOrId: parentPath, name: name, paths: paths},
-            mutation: gql`mutation zipFile($parentPathOrId: String!, $name: String!, $paths: [String!]!) {
-                            jcr {
-                                addNode(parentPathOrId: $parentPathOrId, name: $name, primaryNodeType:"jnt:file") {
-                                    zip {
-                                        addToZip(pathsOrIds: $paths)
-                                    }
-                                }
-                            }
-                        }`
-        }).catch((reason => context.notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose'])));
-        refetchContentTreeAndListData();
+
+        // Query to have zip files in the same directory with the same name to add a counter
+        let siblings = context.client.query({
+            query: zipUnzipQueries.siblingsWithSameNameQuery,
+            variables: {uuid: uuid, name: nameWitoutExtension, extension: '.zip'}
+        });
+
+        let newName = '';
+        siblings.then(function (res) {
+            if (res.data && res.data.jcr && res.data.jcr.nodeById.parent.filteredSubNodes.nodes.length > 0) {
+                let siblings = res.data.jcr.nodeById.parent.filteredSubNodes.nodes;
+                newName = nameWitoutExtension.concat(getNewCounter(siblings) + '.zip');
+            } else {
+                newName = getZipName(name);
+            }
+
+            // Zip mutation after calculating the new name of zip file
+            context.client.mutate({
+                variables: {parentPathOrId: parentPath, name: newName, paths: paths},
+                mutation: zipUnzipMutation.zip,
+                refetchQueries: [{
+                    query: zipUnzipQueries.siblingsWithSameNameQuery,
+                    variables: {uuid: uuid, name: nameWitoutExtension, extension: '.zip'}
+                }]
+            }).catch((reason => context.notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose'])));
+            refetchContentTreeAndListData();
+        });
     }
 });

@@ -76,7 +76,7 @@ function getNewCounter(nodes) {
             max = counter;
         }
     });
-    return parseFloat(max) + 1;
+    return parseInt(max) + 1;
 }
 
 function allowDoubleClickNavigation(nodeType, subNodes, fcn) {

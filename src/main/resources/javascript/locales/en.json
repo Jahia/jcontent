@@ -78,7 +78,7 @@
         "action": "Import content"
       },
       "zipUnzip": {
-        "zip": "zip"
+        "zip": "Zip"
       },
       "error": {
         "contentUnavailable": "The requested content is unavailable",

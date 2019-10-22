@@ -4,7 +4,7 @@ import {withNotificationContextAction} from '../withNotificationContextAction';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
 import zipUnzipQueries from './zipUnzip.gql-queries';
 import zipUnzipMutation from './zipUnzip.gql-mutations';
-import {getZipName, getNewCounter, getNameWithoutExtension} from '../../ContentManager.utils';
+import {getNewCounter, removeFileExtension} from '../../ContentManager.utils';
 
 export default composeActions(requirementsAction, withNotificationContextAction, {
     init: context => {
@@ -12,7 +12,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
     },
     onClick: context => {
         let name = context.node ? context.node.name : context.nodes[0].parent.name;
-        let nameWitoutExtension = getNameWithoutExtension(name);
+        let nameWithoutExtension = removeFileExtension(name);
         let paths = context.node ? [context.node.path] : context.paths;
         let uuid = context.node ? context.node.uuid : context.nodes[0].uuid;
         let parentPath = context.node ? context.node.parent.path : context.nodes[0].parent.path;
@@ -20,16 +20,16 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         // Query to have zip files in the same directory with the same name to add a counter
         let siblings = context.client.query({
             query: zipUnzipQueries.siblingsWithSameNameQuery,
-            variables: {uuid: uuid, name: nameWitoutExtension, extension: '.zip'}
+            variables: {uuid: uuid, name: nameWithoutExtension, extension: '.zip'}
         });
 
         let newName = '';
         siblings.then(function (res) {
             if (res.data && res.data.jcr && res.data.jcr.nodeById.parent.filteredSubNodes.nodes.length > 0) {
                 let siblings = res.data.jcr.nodeById.parent.filteredSubNodes.nodes;
-                newName = nameWitoutExtension.concat(getNewCounter(siblings) + '.zip');
+                newName = nameWithoutExtension.concat(getNewCounter(siblings) + '.zip');
             } else {
-                newName = getZipName(name);
+                newName = removeFileExtension(name).concat('.zip');
             }
 
             // Zip mutation after calculating the new name of zip file
@@ -38,7 +38,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 mutation: zipUnzipMutation.zip,
                 refetchQueries: [{
                     query: zipUnzipQueries.siblingsWithSameNameQuery,
-                    variables: {uuid: uuid, name: nameWitoutExtension, extension: '.zip'}
+                    variables: {uuid: uuid, name: nameWithoutExtension, extension: '.zip'}
                 }]
             }).catch((reason => context.notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose'])));
             refetchContentTreeAndListData();

@@ -59,6 +59,26 @@ function ellipsizeText(text, maxLength) {
     return ellipsize(text, maxLength || 100, {chars: [' ', '&']});
 }
 
+function removeFileExtension(filename) {
+    if (filename.lastIndexOf('.') > 0) {
+        return filename.substr(0, filename.lastIndexOf('.'));
+    }
+
+    return filename;
+}
+
+function getNewCounter(nodes) {
+    let max = 0;
+    nodes.forEach(node => {
+        let name = removeFileExtension(node.name);
+        let counter = name.match(/[0-9]+$/g);
+        if (counter !== null && counter[0] > max) {
+            max = counter;
+        }
+    });
+    return parseInt(max) + 1;
+}
+
 function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
     if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
         return fcn;
@@ -76,5 +96,7 @@ export {
     extractPaths,
     ellipsizeText,
     hasProperty,
+    getNewCounter,
+    removeFileExtension,
     allowDoubleClickNavigation
 };

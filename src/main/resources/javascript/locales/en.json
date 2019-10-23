@@ -77,6 +77,9 @@
         "dropMessage": "Drag and drop a file to import",
         "action": "Import content"
       },
+      "zipUnzip": {
+        "zip": "Zip"
+      },
       "error": {
         "contentUnavailable": "The requested content is unavailable",
         "queryingContent": "Error querying content: {{details}}"

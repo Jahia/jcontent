@@ -77,6 +77,9 @@
         "dropMessage": "Drag und Drop zu importierende Datei",
         "action": "Content importieren"
       },
+      "zipUnzip": {
+        "zip": "Postleitzahl"
+      },
       "error": {
         "contentUnavailable": "Der angeforderte Inhalt ist nicht verfügbar",
         "queryingContent": "Fehler während Content-Abfrage: {{details}}"

@@ -77,6 +77,9 @@
         "dropMessage": "Glisser-déposer un fichier à importer",
         "action": "Importer un contenu"
       },
+      "zipUnzip": {
+        "zip": "Compresser"
+      },
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",
         "queryingContent": "Erreur lors de l'interrogation du contenu: {{details}}"

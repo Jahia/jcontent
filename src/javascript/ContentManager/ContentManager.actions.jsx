@@ -1,6 +1,6 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
-import {ContentIcon, ManageIcon, WorkflowIcon, ZipIcon} from './actions/icons';
+import {ContentIcon, ManageIcon, WorkflowIcon, ZipIcon, UnzipIcon} from './actions/icons';
 import {
     Add,
     Autorenew,
@@ -62,6 +62,7 @@ import exportAction from './actions/exportAction';
 import downloadFileAction from './actions/downloadFileAction';
 import createFolderAction from './actions/createFolderAction';
 import zipAction from './actions/zipUnzip/zipAction';
+import unzipAction from './actions/zipUnzip/unzipAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
@@ -404,6 +405,12 @@ function contentManagerActions(actionsRegistry) {
         buttonLabel: 'label.contentManager.zipUnzip.zip',
         target: ['contentActions:2.1', 'selectedContentActions'],
         showOnNodeTypes: ['jnt:file', 'jnt:folder']
+    });
+    actionsRegistry.add('unzip', unzipAction, {
+        buttonIcon: <UnzipIcon/>,
+        buttonLabel: 'label.contentManager.zipUnzip.unzip',
+        target: ['contentActions:2.2'],
+        showOnNodeTypes: ['jnt:file']
     });
 }
 

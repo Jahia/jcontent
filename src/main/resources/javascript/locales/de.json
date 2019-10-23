@@ -78,7 +78,8 @@
         "action": "Content importieren"
       },
       "zipUnzip": {
-        "zip": "Postleitzahl"
+        "zip": "Postleitzahl",
+        "unzip": "entpacken"
       },
       "error": {
         "contentUnavailable": "Der angeforderte Inhalt ist nicht verfügbar",

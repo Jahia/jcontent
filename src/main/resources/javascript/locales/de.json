@@ -79,7 +79,7 @@
       },
       "zipUnzip": {
         "zip": "Postleitzahl",
-        "unzip": "entpacken"
+        "unzip": "Entpacken"
       },
       "error": {
         "contentUnavailable": "Der angeforderte Inhalt ist nicht verfügbar",

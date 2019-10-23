@@ -79,7 +79,7 @@
       },
       "zipUnzip": {
         "zip": "Zip",
-        "unzip": "unzip"
+        "unzip": "Unzip"
       },
       "error": {
         "contentUnavailable": "The requested content is unavailable",

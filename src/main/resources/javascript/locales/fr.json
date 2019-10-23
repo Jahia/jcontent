@@ -79,7 +79,7 @@
       },
       "zipUnzip": {
         "zip": "Compresser",
-        "unzip": "décompresser"
+        "unzip": "Décompresser"
       },
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",

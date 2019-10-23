@@ -11,7 +11,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         context.initRequirements({});
     },
     onClick: context => {
-        let name = context.node ? context.node.name : context.nodes[0].parent.name;
+        let name = context.node ? context.node.name : (context.nodes.length > 1 ? context.nodes[0].parent.name : context.nodes[0].name);
         let nameWithoutExtension = removeFileExtension(name);
         let paths = context.node ? [context.node.path] : context.paths;
         let uuid = context.node ? context.node.uuid : context.nodes[0].uuid;

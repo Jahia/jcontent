@@ -78,7 +78,8 @@
         "action": "Importer un contenu"
       },
       "zipUnzip": {
-        "zip": "Compresser"
+        "zip": "Compresser",
+        "unzip": "Décompresser"
       },
       "error": {
         "contentUnavailable": "Le contenu demandé n'est pas disponible",

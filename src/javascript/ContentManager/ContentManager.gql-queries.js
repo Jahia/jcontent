@@ -186,6 +186,18 @@ const ActionRequirementsFragments = {
                 }
             }
         }`
+    },
+    retrieveMimeType: {
+        applyFor: 'requirements',
+        gql: gql` fragment resourceNode on JCRNode {
+             children(typesFilter: {types: ["jnt:resource"]}) {
+                nodes {
+                    mimeType: property(name: "jcr:mimeType") {
+                        value
+                    }
+                }
+             }
+        }`
     }
 };
 
@@ -267,6 +279,10 @@ class ActionRequirementsQueryHandler {
 
         if (context.retrieveSubNodes) {
             this.requirementsFragments.push(ActionRequirementsFragments.retrieveSubNodes);
+        }
+
+        if (context.retrieveMimeType) {
+            this.requirementsFragments.push(ActionRequirementsFragments.retrieveMimeType);
         }
     }
 

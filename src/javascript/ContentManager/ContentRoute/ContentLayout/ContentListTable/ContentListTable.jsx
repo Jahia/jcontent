@@ -118,15 +118,15 @@ const styles = theme => ({
         userSelect: 'none',
         cursor: 'default',
         '&&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default + '7F'
+            backgroundColor: theme.palette.ui.alpha
         },
         '&&:hover': {
-            backgroundColor: theme.palette.hover.beta
+            backgroundColor: theme.palette.hover.row
         }
     },
     contextualMenuOpen: {
         '&&&': {
-            backgroundColor: theme.palette.hover.beta
+            backgroundColor: theme.palette.hover.row
         }
     },
     rowShowActions: {

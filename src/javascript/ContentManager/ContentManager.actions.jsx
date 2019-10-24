@@ -404,13 +404,15 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <ZipIcon/>,
         buttonLabel: 'label.contentManager.zipUnzip.zip',
         target: ['contentActions:2.1', 'selectedContentActions'],
-        showOnNodeTypes: ['jnt:file', 'jnt:folder']
+        showOnNodeTypes: ['jnt:file', 'jnt:folder'],
+        hideForPaths: [PATH_FILES_ITSELF]
     });
     actionsRegistry.add('unzip', unzipAction, {
         buttonIcon: <UnzipIcon/>,
         buttonLabel: 'label.contentManager.zipUnzip.unzip',
         target: ['contentActions:2.2'],
-        showOnNodeTypes: ['jnt:file']
+        showOnNodeTypes: ['jnt:file'],
+        hideForPaths: [PATH_FILES_ITSELF]
     });
 }
 

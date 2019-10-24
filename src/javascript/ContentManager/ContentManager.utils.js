@@ -72,7 +72,7 @@ function getNewCounter(nodes) {
     nodes.forEach(node => {
         let name = removeFileExtension(node.name);
         let counter = name.match(/[0-9]+$/g);
-        if (counter !== null && counter[0] > max) {
+        if (counter !== null && parseInt(counter[0], 10) > parseInt(max, 10)) {
             max = counter;
         }
     });

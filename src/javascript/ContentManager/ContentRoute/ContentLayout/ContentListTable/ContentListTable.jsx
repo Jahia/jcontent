@@ -121,12 +121,12 @@ const styles = theme => ({
             backgroundColor: theme.palette.ui.alpha
         },
         '&&:hover': {
-            backgroundColor: '#EFF2F3'
+            backgroundColor: theme.palette.hover.row
         }
     },
     contextualMenuOpen: {
         '&&&': {
-            backgroundColor: '#EFF2F3'
+            backgroundColor: theme.palette.hover.row
         }
     },
     rowShowActions: {

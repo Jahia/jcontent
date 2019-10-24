@@ -3,13 +3,15 @@ import requirementsAction from '../requirementsAction';
 import {withNotificationContextAction} from '../withNotificationContextAction';
 import {map} from 'rxjs/operators';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
+import {isMarkedForDeletion} from '../../ContentManager.utils';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
 
 export default composeActions(requirementsAction, withNotificationContextAction, {
     init: context => {
         context.initRequirements({
+            retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
             retrieveMimeType: true,
-            enabled: context => context.node.pipe(map(node => node.children.nodes.length !== 0 && node.children.nodes[0].mimeType.value === 'application/zip'))
+            enabled: context => context.node.pipe(map(node => node.children.nodes.length !== 0 && node.children.nodes[0].mimeType.value === 'application/zip' && !isMarkedForDeletion(node)))
         });
     },
     onClick: context => {

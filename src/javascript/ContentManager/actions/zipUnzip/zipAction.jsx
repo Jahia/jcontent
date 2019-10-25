@@ -8,7 +8,9 @@ import {getNewCounter, removeFileExtension} from '../../ContentManager.utils';
 
 export default composeActions(requirementsAction, withNotificationContextAction, {
     init: context => {
-        context.initRequirements({});
+        context.initRequirements({
+            requiredPermission: 'jcr:addChildNodes'
+        });
     },
     onClick: context => {
         let name = context.node ? context.node.name : (context.nodes.length > 1 ? context.nodes[0].parent.name : context.nodes[0].name);

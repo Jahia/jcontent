@@ -71,12 +71,15 @@ function getNewCounter(nodes) {
     let max = 0;
     nodes.forEach(node => {
         let name = removeFileExtension(node.name);
-        let counter = name.match(/[0-9]+$/g);
-        if (counter !== null && counter[0] > max) {
-            max = counter;
+        let extracted = name.match(/[0-9]+$/g);
+        if (extracted !== null) {
+            let counter = parseInt(extracted[0], 10);
+            if (counter > max) {
+                max = counter;
+            }
         }
     });
-    return parseInt(max, 10) + 1;
+    return max + 1;
 }
 
 function allowDoubleClickNavigation(nodeType, subNodes, fcn) {

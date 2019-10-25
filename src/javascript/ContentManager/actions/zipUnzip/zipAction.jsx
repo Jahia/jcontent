@@ -20,7 +20,8 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         // Query to have zip files in the same directory with the same name to add a counter
         let siblings = context.client.query({
             query: zipUnzipQueries.siblingsWithSameNameQuery,
-            variables: {uuid: uuid, name: nameWithoutExtension, extension: '.zip'}
+            variables: {uuid: uuid, name: nameWithoutExtension, extension: '.zip'},
+            fetchPolicy: 'network-only'
         });
 
         let newName = '';

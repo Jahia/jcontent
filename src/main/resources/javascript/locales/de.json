@@ -78,7 +78,7 @@
         "action": "Content importieren"
       },
       "zipUnzip": {
-        "zip": "Postleitzahl",
+        "zip": "Zippen",
         "unzip": "Entpacken"
       },
       "error": {

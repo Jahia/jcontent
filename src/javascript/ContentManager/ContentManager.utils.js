@@ -69,12 +69,11 @@ function removeFileExtension(filename) {
 
 function getNewCounter(nodes) {
     let max = 0;
-    let counter;
     nodes.forEach(node => {
         let name = removeFileExtension(node.name);
         let extracted = name.match(/[0-9]+$/g);
         if (extracted !== null) {
-            counter = parseInt(extracted[0], 10);
+            let counter = parseInt(extracted[0], 10);
             if (counter > max) {
                 max = counter;
             }

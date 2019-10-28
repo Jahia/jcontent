@@ -1,6 +1,8 @@
+const localStorage = window.localStorage;
+
 const initialState = {
-    mode: 'grid',
-    gridMode: 'thumbnail'
+    mode: localStorage.getItem('cmm_files_selector_mode') !== null ? localStorage.getItem('cmm_files_selector_mode') : 'grid',
+    gridMode: localStorage.getItem('cmm_files_selector_grid_mode') !== null ? localStorage.getItem('cmm_files_selector_grid_mode') : 'thumbnail'
 };
 
 export const filesGrid = (state = initialState, action) => {

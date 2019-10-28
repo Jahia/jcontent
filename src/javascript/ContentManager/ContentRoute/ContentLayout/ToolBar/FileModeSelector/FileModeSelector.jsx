@@ -7,24 +7,31 @@ import {translate} from 'react-i18next';
 import {setMode, setGridMode} from '../../FilesGrid/FilesGrid.redux-actions';
 import PropTypes from 'prop-types';
 
+const localStorage = window.localStorage;
+
 export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
     const handleChange = e => {
         let selectedMode = e.target.value;
         switch (selectedMode) {
             case 'list-view':
                 onChange('list');
+                localStorage.setItem('cmm_files_selector_mode', 'list');
                 break;
             case 'thumbnail':
                 onChange('grid');
+                localStorage.setItem('cmm_files_selector_mode', 'grid');
                 if (gridMode !== 'thumbnail') {
                     onGridMode('thumbnail');
+                    localStorage.setItem('cmm_files_selector_grid_mode', 'thumbnail');
                 }
 
                 break;
             case 'detailed-view':
                 onChange('grid');
+                localStorage.setItem('cmm_files_selector_mode', 'grid');
                 if (gridMode !== 'detailed') {
                     onGridMode('detailed');
+                    localStorage.setItem('cmm_files_selector_grid_mode', 'detailed');
                 }
 
                 break;

@@ -138,6 +138,7 @@ export class FileCard extends Component {
         let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
         let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
         let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
+        let defaultLocale = ['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en';
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
@@ -206,7 +207,7 @@ export class FileCard extends Component {
                                     <Typography variant="iota" component="p">
                                         {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
-                                        <time>{dayjs(node.created.value).locale(uiLang).format('LLL')}</time>
+                                        <time>{dayjs(node.created.value).locale(defaultLocale).format('LLL')}</time>
                                     </Typography>
                                 </div>
                             }

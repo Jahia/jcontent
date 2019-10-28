@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {Lock} from '@material-ui/icons';
-import {Wrench} from 'mdi-material-ui';
+import {Wrench, Folder} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import * as _ from 'lodash';
@@ -34,6 +34,7 @@ import ContentManagerConstants from '../../../ContentManager.constants';
 import ContentListEmptyDropZone from './ContentListEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
+import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../icons';
 
 const allColumnData = [
     {
@@ -240,6 +241,10 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         backgroundColor: theme.palette.brand.alpha,
         color: theme.palette.invert.beta
+    },
+    icon: {
+        verticalAlign: 'bottom',
+        marginRight: '3px'
     }
 });
 
@@ -284,6 +289,30 @@ export class ContentListTable extends React.Component {
 
     addIconSuffix(icon) {
         return (icon.includes('.png') ? icon : icon + '.png');
+    }
+
+    getMediaIcon(node) {
+        let {classes} = this.props;
+        switch (node.primaryNodeType.displayName) {
+            case 'Folder':
+                return <Folder className={classes.icon}/>;
+            case 'File':
+                if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:image'))) {
+                    return <ImageIcon className={classes.icon}/>;
+                }
+
+                if (node.name.includes('zip') || node.name.includes('tar') || node.name.includes('rar')) {
+                    return <ZipIcon className={classes.icon}/>;
+                }
+
+                if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:document'))) {
+                    return <DocumentIcon className={classes.icon}/>;
+                }
+
+                return <FileIcon className={classes.icon}/>;
+            default:
+                return <img src={this.addIconSuffix(node.primaryNodeType.icon)}/>;
+        }
     }
 
     doubleClickNavigation(node) {
@@ -350,7 +379,7 @@ export class ContentListTable extends React.Component {
                                             >
                                                 {rows.map(node => {
                                                     let isSelected = node.path === previewSelection && isPreviewOpened;
-                                                    let icon = this.addIconSuffix(node.primaryNodeType.icon);
+                                                    let icon = this.getMediaIcon(node);
                                                     let showActions = !isPreviewOpened && selection.length === 0;
                                                     let contextualMenu = React.createRef();
                                                     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
@@ -442,7 +471,7 @@ export class ContentListTable extends React.Component {
                                                                                                 variant="iota"
                                                                                                 color="inherit"
                                                                                     >
-                                                                                        <img src={icon}/>
+                                                                                        {icon}
                                                                                         {_.get(node, column.property)}
                                                                                     </Typography>
                                                                                 </Badge> :
@@ -450,7 +479,7 @@ export class ContentListTable extends React.Component {
                                                                                             variant="iota"
                                                                                             color="inherit"
                                                                                 >
-                                                                                    <img src={icon}/>
+                                                                                    {icon}
                                                                                     {_.get(node, column.property)}
                                                                                 </Typography>
                                                                             }

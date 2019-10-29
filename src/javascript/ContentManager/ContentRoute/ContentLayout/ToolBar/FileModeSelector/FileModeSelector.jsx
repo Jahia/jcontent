@@ -6,36 +6,53 @@ import {connect} from 'react-redux';
 import {translate} from 'react-i18next';
 import {setMode, setGridMode} from '../../FilesGrid/FilesGrid.redux-actions';
 import PropTypes from 'prop-types';
+import ContentManagerConstants from '../../../../ContentManager.constants';
+
+const localStorage = window.localStorage;
+
+const GRID = ContentManagerConstants.mode.GRID;
+const LIST = ContentManagerConstants.mode.LIST;
+const DETAILED_VIEW = ContentManagerConstants.gridMode.DETAILED_VIEW;
+const DETAILED = ContentManagerConstants.gridMode.DETAILED;
+const LIST_VIEW = ContentManagerConstants.gridMode.LIST;
+const THUMBNAIL = ContentManagerConstants.gridMode.THUMBNAIL;
+const FILE_SELECTOR_MODE = ContentManagerConstants.localStorageKeys.filesSelectorMode;
+const FILE_SELECTOR_GRID_MODE = ContentManagerConstants.localStorageKeys.filesSelectorGridMode;
 
 export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
     const handleChange = e => {
         let selectedMode = e.target.value;
         switch (selectedMode) {
-            case 'list-view':
-                onChange('list');
+            case LIST_VIEW:
+                onChange(LIST);
+                localStorage.setItem(FILE_SELECTOR_MODE, LIST);
                 break;
-            case 'thumbnail':
-                onChange('grid');
-                if (gridMode !== 'thumbnail') {
-                    onGridMode('thumbnail');
+            case THUMBNAIL:
+                onChange(GRID);
+                localStorage.setItem(FILE_SELECTOR_MODE, GRID);
+                if (gridMode !== THUMBNAIL) {
+                    onGridMode(THUMBNAIL);
+                    localStorage.setItem(FILE_SELECTOR_GRID_MODE, THUMBNAIL);
                 }
 
                 break;
-            case 'detailed-view':
-                onChange('grid');
-                if (gridMode !== 'detailed') {
-                    onGridMode('detailed');
+            case DETAILED_VIEW:
+                onChange(GRID);
+                localStorage.setItem(FILE_SELECTOR_MODE, GRID);
+                if (gridMode !== DETAILED) {
+                    onGridMode(DETAILED);
+                    localStorage.setItem(FILE_SELECTOR_GRID_MODE, DETAILED);
                 }
 
                 break;
             default:
-                if (mode === 'list') {
-                    onChange('grid');
+                if (mode === LIST) {
+                    onChange(GRID);
                 }
         }
     };
 
-    let select = mode === 'grid' && gridMode === 'thumbnail' ? 'thumbnail' : (mode === 'grid' ? 'detailed-view' : 'list-view');
+    let select = mode === GRID && gridMode === THUMBNAIL ? THUMBNAIL : (mode === GRID ? DETAILED_VIEW : LIST_VIEW);
 
     return (
         <Select
@@ -45,9 +62,9 @@ export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
             variant="ghost"
             onChange={e => handleChange(e)}
         >
-            <MenuItem value="thumbnail">{t('label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
-            <MenuItem value="list-view">{t('label.contentManager.filesGrid.selectListView')}</MenuItem>
-            <MenuItem value="detailed-view">{t('label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
+            <MenuItem value={THUMBNAIL}>{t('label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
+            <MenuItem value={LIST_VIEW}>{t('label.contentManager.filesGrid.selectListView')}</MenuItem>
+            <MenuItem value={DETAILED_VIEW}>{t('label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
         </Select>
     );
 };

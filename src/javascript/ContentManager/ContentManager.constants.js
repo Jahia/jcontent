@@ -21,7 +21,9 @@ const ContentManagerConstants = {
         BROWSE: 'browse',
         FILES: 'browse-files',
         SEARCH: 'search',
-        SQL2SEARCH: 'sql2Search'
+        SQL2SEARCH: 'sql2Search',
+        LIST: 'list',
+        GRID: 'grid'
     },
     contentTreeConfigs: {
         contents: {
@@ -48,6 +50,16 @@ const ContentManagerConstants = {
             rootLabel: 'label.contentManager.browseFiles',
             key: 'browse-tree-files'
         }
+    },
+    localStorageKeys: {
+        filesSelectorMode: 'cmm_files_selector_mode',
+        filesSelectorGridMode: 'cmm_files_selector_grid_mode'
+    },
+    gridMode: {
+        THUMBNAIL: 'thumbnail',
+        DETAILED_VIEW: 'detailed-view',
+        DETAILED: 'detailed',
+        LIST: 'list-view'
     }
 };
 

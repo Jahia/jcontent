@@ -301,7 +301,7 @@ export class ContentListTable extends React.Component {
                     return <ImageIcon className={classes.icon}/>;
                 }
 
-                if (node.name.includes('zip') || node.name.includes('tar') || node.name.includes('rar')) {
+                if (node.name.match(/.zip$/g) || node.name.match(/.tar$/g) || node.name.match(/.rar$/g)) {
                     return <ZipIcon className={classes.icon}/>;
                 }
 

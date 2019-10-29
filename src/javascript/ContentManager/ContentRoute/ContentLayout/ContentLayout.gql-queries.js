@@ -181,6 +181,13 @@ class FilesQueryHandler {
                                 height: property(name: "j:height") {
                                     value
                                 }
+                                children(typesFilter: {types: ["jnt:resource"]}) {
+                                    nodes {
+                                        mimeType: property(name: "jcr:mimeType") {
+                                            value
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

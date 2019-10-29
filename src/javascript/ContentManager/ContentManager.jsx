@@ -39,9 +39,9 @@ class ContentManager extends React.Component {
         this.defaultNS = 'content-media-manager';
         this.namespaceResolvers = {
             'content-media-manager': lang => {
-                if (['fr', 'en', 'de'].indexOf(lang) >= 0) {
+                try {
                     require('../../main/resources/javascript/locales/' + lang + '.json');
-                } else {
+                } catch (e) {
                     require('../../main/resources/javascript/locales/en.json');
                 }
             }

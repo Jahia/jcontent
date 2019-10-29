@@ -1,8 +1,14 @@
+import ContentManagerConstants from '../../../ContentManager.constants';
+
 const localStorage = window.localStorage;
+const FILE_SELECTOR_MODE = ContentManagerConstants.localStorageKeys.filesSelectorMode;
+const FILE_SELECTOR_GRID_MODE = ContentManagerConstants.localStorageKeys.filesSelectorGridMode;
+const THUMBNAIL = ContentManagerConstants.gridMode.THUMBNAIL;
+const GRID = ContentManagerConstants.mode.GRID;
 
 const initialState = {
-    mode: localStorage.getItem('cmm_files_selector_mode') !== null ? localStorage.getItem('cmm_files_selector_mode') : 'grid',
-    gridMode: localStorage.getItem('cmm_files_selector_grid_mode') !== null ? localStorage.getItem('cmm_files_selector_grid_mode') : 'thumbnail'
+    mode: localStorage.getItem(FILE_SELECTOR_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_GRID_MODE) : GRID,
+    gridMode: localStorage.getItem(FILE_SELECTOR_GRID_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_GRID_MODE) : THUMBNAIL
 };
 
 export const filesGrid = (state = initialState, action) => {

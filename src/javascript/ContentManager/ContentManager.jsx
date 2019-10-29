@@ -103,7 +103,7 @@ class ContentManager extends React.Component {
                                                 <ConnectedRouter history={this.getHistory(dxContext, t)}>
                                                     <AppLayout dxContext={dxContext}/>
                                                 </ConnectedRouter>
-                                                <Upload ploadUpdateCallback={status => {
+                                                <Upload uploadUpdateCallback={status => {
                                                     if (status && status.uploading === 0) {
                                                         refetchContentTreeAndListData();
                                                     }

@@ -17,6 +17,8 @@ import {registry} from '@jahia/registry';
 import contentManagerRoutes from './ContentManager.routes';
 import AppLayout from './AppLayout';
 import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
+import Upload from './ContentRoute/ContentLayout/Upload';
+import {refetchContentTreeAndListData} from './ContentManager.refetches';
 
 class ContentManager extends React.Component {
     constructor(props) {
@@ -101,6 +103,11 @@ class ContentManager extends React.Component {
                                                 <ConnectedRouter history={this.getHistory(dxContext, t)}>
                                                     <AppLayout dxContext={dxContext}/>
                                                 </ConnectedRouter>
+                                                <Upload ploadUpdateCallback={status => {
+                                                    if (status && status.uploading === 0) {
+                                                        refetchContentTreeAndListData();
+                                                    }
+                                                }}/>
                                             </ComponentRendererProvider>
                                         </DxContext.Provider>
                                     </Provider>

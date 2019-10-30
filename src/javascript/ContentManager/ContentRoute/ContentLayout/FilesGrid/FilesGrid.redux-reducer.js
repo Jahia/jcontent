@@ -7,7 +7,7 @@ const THUMBNAIL = ContentManagerConstants.gridMode.THUMBNAIL;
 const GRID = ContentManagerConstants.mode.GRID;
 
 const initialState = {
-    mode: localStorage.getItem(FILE_SELECTOR_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_GRID_MODE) : GRID,
+    mode: localStorage.getItem(FILE_SELECTOR_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_MODE) : GRID,
     gridMode: localStorage.getItem(FILE_SELECTOR_GRID_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_GRID_MODE) : THUMBNAIL
 };
 

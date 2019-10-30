@@ -525,8 +525,6 @@ export class ContentListTable extends React.Component {
                                                                 }
 
                                                                 if (column.id === 'lastModified') {
-                                                                    let property = dayjs(_.get(node, column.property));
-                                                                    let propertyInLocale = property.locale(uiLang).$L === undefined ? property.locale('en') : property.locale(uiLang);
                                                                     return (
                                                                         <TableCell
                                                                             key={column.id}
@@ -539,7 +537,7 @@ export class ContentListTable extends React.Component {
                                                                                         color="inherit"
                                                                                         className={classes.lastModifiedTypography}
                                                                             >
-                                                                                <time>{propertyInLocale.format('ll')}</time>
+                                                                                <time>{dayjs(_.get(node, column.property)).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('ll')}</time>
                                                                             </Typography>
                                                                             {showActions &&
                                                                             <div key="actions"

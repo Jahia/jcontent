@@ -55,48 +55,38 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
 
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
-        let property = dayjs(_.get(previewSelection, 'deleted.value', ''));
-        let propertyInLocale = property.locale(uiLang).$L === undefined ? property.locale('en') : property.locale(uiLang);
         return (
             <Typography component="span"
                         className={classes.publicationInfoMarkedForDeletion}
             >
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
-            &nbsp;
-                <time>{propertyInLocale.format('LLL')}</time>
+                &nbsp;
+                <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
             </Typography>
         );
     }
 
     switch (previewSelection.aggregatedPublicationInfo.publicationStatus) {
-        case ContentManagerConstants.availablePublicationStatuses.MODIFIED: {
-            let property = dayjs(_.get(previewSelection, 'lastModified.value', ''));
-            let propertyInLocale = property.locale(uiLang).$L === undefined ? property.locale('en') : property.locale(uiLang);
+        case ContentManagerConstants.availablePublicationStatuses.MODIFIED:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoModified}
                 >
                     {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
-                &nbsp;
-                    <time>{propertyInLocale.format('LLL')}</time>
+                    &nbsp;
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
                 </Typography>
             );
-        }
-
-        case ContentManagerConstants.availablePublicationStatuses.PUBLISHED: {
-            let property = dayjs(_.get(previewSelection, 'lastPublished.value', ''));
-            let propertyInLocale = property.locale(uiLang).$L === undefined ? property.locale('en') : property.locale(uiLang);
+        case ContentManagerConstants.availablePublicationStatuses.PUBLISHED:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoPublished}
                 >
                     {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                     &nbsp;
-                    <time>{propertyInLocale.format('LLL')}</time>
+                    <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
                 </Typography>
             );
-        }
-
         case ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED:
             return (
                 <Typography component="p"
@@ -105,20 +95,16 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                     {t('label.contentManager.contentPreview.notPublished')}
                 </Typography>
             );
-        case ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED: {
-            let property = dayjs(_.get(previewSelection, 'lastModified.value', ''));
-            let propertyInLocale = property.locale(uiLang).$L === undefined ? property.locale('en') : property.locale(uiLang);
+        case ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoUnpublished}
                 >
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                     &nbsp;
-                    <time>{propertyInLocale.format('LLL')}</time>
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
                 </Typography>
             );
-        }
-
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
             return (
                 <Typography component="p"

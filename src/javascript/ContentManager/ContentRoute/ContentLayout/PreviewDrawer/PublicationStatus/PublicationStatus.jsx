@@ -53,6 +53,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
         return null;
     }
 
+    let defaultLocale = ['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en';
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
@@ -61,7 +62,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             >
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
                 &nbsp;
-                <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
+                <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(defaultLocale).format('LLL')}</time>
             </Typography>
         );
     }
@@ -74,7 +75,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 >
                     {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                     &nbsp;
-                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.PUBLISHED:
@@ -84,7 +85,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 >
                     {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                     &nbsp;
-                    <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
+                    <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED:
@@ -102,7 +103,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 >
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                     &nbsp;
-                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en').format('LLL')}</time>
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:

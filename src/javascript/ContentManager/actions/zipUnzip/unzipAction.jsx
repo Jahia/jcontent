@@ -1,4 +1,5 @@
-import {composeActions} from '@jahia/react-material';
+import React from 'react';
+import {componentRendererAction, composeActions, ProgressOverlay} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {withNotificationContextAction} from '../withNotificationContextAction';
 import {map} from 'rxjs/operators';
@@ -6,7 +7,7 @@ import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {isMarkedForDeletion} from '../../ContentManager.utils';
 import {refetchContentTreeAndListData} from '../../ContentManager.refetches';
 
-export default composeActions(requirementsAction, withNotificationContextAction, {
+export default composeActions(requirementsAction, withNotificationContextAction, componentRendererAction, {
     init: context => {
         context.initRequirements({
             retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
@@ -16,10 +17,16 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         });
     },
     onClick: context => {
+        let handler = context.renderComponent(<ProgressOverlay/>);
         context.client.mutate({
             variables: {pathOrId: context.node.path, path: context.node.parent.path},
             mutation: zipUnzipMutations.unzip
-        }).catch((reason => context.notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose'])));
-        refetchContentTreeAndListData();
+        }).then(() => {
+            refetchContentTreeAndListData();
+            handler.destroy();
+        }).catch((reason => {
+            handler.destroy();
+            context.notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose']);
+        }));
     }
 });

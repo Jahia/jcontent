@@ -9,7 +9,7 @@ import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
 import {CM_DRAWER_STATES} from '../../../../ContentManager.redux-actions';
-import {allowDoubleClickNavigation} from '../../../../ContentManager.utils';
+import {allowDoubleClickNavigation, getDefaultLocale} from '../../../../ContentManager.utils';
 import classNames from 'classnames';
 import FileName from './FileName';
 import Actions from './Actions';
@@ -142,7 +142,6 @@ export class FileCard extends Component {
         let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
         let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
         let isPdf = node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0;
-        let defaultLocale = ['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en';
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
@@ -213,7 +212,7 @@ export class FileCard extends Component {
                                     <Typography variant="iota" component="p">
                                         {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
-                                        <time>{dayjs(node.created.value).locale(defaultLocale).format('LLL')}</time>
+                                        <time>{dayjs(node.created.value).locale(getDefaultLocale(uiLang)).format('LLL')}</time>
                                     </Typography>
                                 </div>
                             }

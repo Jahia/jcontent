@@ -1,16 +1,15 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
-import {isMarkedForDeletion} from '../../../ContentManager.utils';
+import {getDefaultLocale, isMarkedForDeletion} from '../../../ContentManager.utils';
 import * as _ from 'lodash';
 
 class PublicationStatusUnpublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        let defaultLocale = ['en', 'fr', 'de'].indexOf(locale) > -1 ? locale : 'en';
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
+                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -32,11 +31,10 @@ class PublicationStatusNotPublished {
 
 class PublicationStatusPublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        let defaultLocale = ['en', 'fr', 'de'].indexOf(locale) > -1 ? locale : 'en';
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.published', {userName: _.get(node, 'lastPublishedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastPublished.value', '')).locale(defaultLocale).format('LLL')}</time>
+                <time>{dayjs(_.get(node, 'lastPublished.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -48,11 +46,10 @@ class PublicationStatusPublished {
 
 class PublicationStatusModified {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        let defaultLocale = ['en', 'fr', 'de'].indexOf(locale) > -1 ? locale : 'en';
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
+                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -66,12 +63,11 @@ class PublicationStatusMarkedForDeletion {
     geti18nDetailsMessage(node, t, locale = 'en') {
         let parentDeletionUser = _.get(_.head(node.ancestors), 'deletionUser.value', '');
         let parentDeletionDate = _.get(_.head(node.ancestors), 'deletionDate.value', '');
-        let defaultLocale = ['en', 'fr', 'de'].indexOf(locale) > -1 ? locale : 'en';
 
         return (
             <React.Fragment>
                 { t('label.contentManager.publicationStatus.markedForDeletion', {userName: _.get(node, 'deletedBy.value', parentDeletionUser), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'deleted.value', parentDeletionDate)).locale(defaultLocale).format('LLL')}</time>
+                <time>{dayjs(_.get(node, 'deleted.value', parentDeletionDate)).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
     }

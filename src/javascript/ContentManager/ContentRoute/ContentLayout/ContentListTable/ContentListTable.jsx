@@ -20,7 +20,7 @@ import {translate} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../ContentManager.redux-actions';
-import {allowDoubleClickNavigation, extractPaths, isMarkedForDeletion} from '../../../ContentManager.utils';
+import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion} from '../../../ContentManager.utils';
 import ToolBar from '../ToolBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
@@ -525,7 +525,6 @@ export class ContentListTable extends React.Component {
                                                                 }
 
                                                                 if (column.id === 'lastModified') {
-                                                                    let defaultLocale = ['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en';
                                                                     return (
                                                                         <TableCell
                                                                             key={column.id}
@@ -538,7 +537,7 @@ export class ContentListTable extends React.Component {
                                                                                         color="inherit"
                                                                                         className={classes.lastModifiedTypography}
                                                                             >
-                                                                                <time>{dayjs(_.get(node, column.property)).locale(defaultLocale).format('ll')}</time>
+                                                                                <time>{dayjs(_.get(node, column.property)).locale(getDefaultLocale(uiLang)).format('ll')}</time>
                                                                             </Typography>
                                                                             {showActions &&
                                                                             <div key="actions"

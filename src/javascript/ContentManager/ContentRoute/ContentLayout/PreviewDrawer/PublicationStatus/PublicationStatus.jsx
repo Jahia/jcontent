@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import ContentManagerConstants from '../../../../ContentManager.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {isMarkedForDeletion} from '../../../../ContentManager.utils';
+import {isMarkedForDeletion, getDefaultLocale} from '../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
 
 // TODO Here as well as in ContentListTable unpublished status is not clear
@@ -53,7 +53,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
         return null;
     }
 
-    let defaultLocale = ['en', 'fr', 'de'].indexOf(uiLang) > -1 ? uiLang : 'en';
+    let defaultLocale = getDefaultLocale(uiLang);
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (

@@ -90,10 +90,6 @@ function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
     return function () {};
 }
 
-function getDefaultLocale(lang) {
-    return ['en', 'fr', 'de'].indexOf(lang) > -1 ? lang : 'en';
-}
-
 export {
     getNewNodePath,
     hasMixin,
@@ -103,7 +99,6 @@ export {
     extractPaths,
     ellipsizeText,
     hasProperty,
-    getDefaultLocale,
     getNewCounter,
     removeFileExtension,
     allowDoubleClickNavigation

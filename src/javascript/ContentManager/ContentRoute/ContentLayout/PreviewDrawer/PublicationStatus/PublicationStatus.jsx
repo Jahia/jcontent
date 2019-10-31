@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import ContentManagerConstants from '../../../../ContentManager.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {isMarkedForDeletion} from '../../../../ContentManager.utils';
+import {isMarkedForDeletion, getDefaultLocale} from '../../../../ContentManager.utils';
 import {compose} from 'react-apollo';
 
 // TODO Here as well as in ContentListTable unpublished status is not clear
@@ -53,6 +53,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
         return null;
     }
 
+    let defaultLocale = getDefaultLocale(uiLang);
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
@@ -60,8 +61,8 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                         className={classes.publicationInfoMarkedForDeletion}
             >
                 {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
-            &nbsp;
-                <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(uiLang).format('LLL')}</time>
+                &nbsp;
+                <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(defaultLocale).format('LLL')}</time>
             </Typography>
         );
     }
@@ -73,8 +74,8 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                             className={classes.publicationInfoModified}
                 >
                     {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
-                &nbsp;
-                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(uiLang).format('LLL')}</time>
+                    &nbsp;
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.PUBLISHED:
@@ -83,8 +84,8 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                             className={classes.publicationInfoPublished}
                 >
                     {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
-                &nbsp;
-                    <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(uiLang).format('LLL')}</time>
+                    &nbsp;
+                    <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.NOT_PUBLISHED:
@@ -101,8 +102,8 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                             className={classes.publicationInfoUnpublished}
                 >
                     {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
-                &nbsp;
-                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(uiLang).format('LLL')}</time>
+                    &nbsp;
+                    <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:

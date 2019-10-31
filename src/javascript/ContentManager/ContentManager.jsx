@@ -40,7 +40,13 @@ class ContentManager extends React.Component {
 
         this.defaultNS = 'content-media-manager';
         this.namespaceResolvers = {
-            'content-media-manager': lang => require('../../main/resources/javascript/locales/' + lang + '.json')
+            'content-media-manager': lang => {
+                try {
+                    require('../../main/resources/javascript/locales/' + lang + '.json');
+                } catch (e) {
+                    require('../../main/resources/javascript/locales/en.json');
+                }
+            }
         };
     }
 

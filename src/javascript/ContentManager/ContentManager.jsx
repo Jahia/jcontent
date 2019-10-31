@@ -105,6 +105,14 @@ class ContentManager extends React.Component {
                                                 </ConnectedRouter>
                                                 <Upload uploadUpdateCallback={status => {
                                                     if (status && status.uploading === 0) {
+                                                        const refetchCallbacks = registry.find({type: 'refetch-upload'});
+
+                                                        refetchCallbacks.forEach(refetchCallback => {
+                                                            if (refetchCallback.refetch) {
+                                                                refetchCallback.refetch();
+                                                            }
+                                                        });
+
                                                         refetchContentTreeAndListData();
                                                     }
                                                 }}/>

@@ -141,7 +141,7 @@ export class FileCard extends Component {
         let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
         let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
         let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
-        let isPdf = node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0;
+        let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
         return (
             <React.Fragment>
                 <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>

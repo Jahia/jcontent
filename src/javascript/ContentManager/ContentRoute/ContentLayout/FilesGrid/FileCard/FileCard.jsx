@@ -9,7 +9,7 @@ import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
 import {CM_DRAWER_STATES} from '../../../../ContentManager.redux-actions';
-import {allowDoubleClickNavigation} from '../../../../ContentManager.utils';
+import {allowDoubleClickNavigation, getDefaultLocale} from '../../../../ContentManager.utils';
 import classNames from 'classnames';
 import FileName from './FileName';
 import Actions from './Actions';
@@ -212,7 +212,7 @@ export class FileCard extends Component {
                                     <Typography variant="iota" component="p">
                                         {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
-                                        <time>{dayjs(node.created.value).locale(uiLang).format('LLL')}</time>
+                                        <time>{dayjs(node.created.value).locale(getDefaultLocale(uiLang)).format('LLL')}</time>
                                     </Typography>
                                 </div>
                             }

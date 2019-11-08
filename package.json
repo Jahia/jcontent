@@ -6,13 +6,19 @@
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build -p",
-    "build:production-analyze": "yarn build -p --analyze",
+    "build:production-analyze": "yarn build:production --analyze",
     "watch": "yarn webpack --watch",
     "clean": "rimraf *.log src/main/resources/javascript/apps",
     "clean:all": "yarn clean && rimraf node_modules node",
     "test": "jest",
     "lint": "eslint --ext js,jsx .",
     "lint:fix": "eslint --ext js,jsx --fix ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn test"
+    }
   },
   "description": "Content and Media Manager for DX",
   "main": "index.js",
@@ -86,6 +92,7 @@
     "eslint": "^5.15.1",
     "eslint-loader": "2.1.0",
     "file-loader": "^2.0.0",
+    "husky": "^3.0.5",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.1",
     "webpack": "^4.26.0",

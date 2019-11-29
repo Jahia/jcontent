@@ -50,6 +50,7 @@ class ContentManager extends React.Component {
     getHistory(dxContext, t) {
         if (!this.history) {
             this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
+            console.log('H', this.history);
             if (window.top !== window) {
                 this.history.listen(location => {
                     const title = t('content-media-manager:label.contentManager.appTitle', {path: location.pathname});
@@ -59,6 +60,7 @@ class ContentManager extends React.Component {
             }
         }
 
+        this.history.location.pathname = '/systemsite/en/browse/contents';
         return this.history;
     }
 

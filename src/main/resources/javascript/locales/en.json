@@ -1,5 +1,6 @@
 {
   "label": {
+    "name": "Content Media Manager",
     "pagination": {
       "rowsPerPage": "Rows per page",
       "of": "of"

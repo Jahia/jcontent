@@ -1,4 +1,5 @@
 const ContentManagerConstants = {
+    i18nNamespace: 'content-media-manager',
     contentType: 'jmix:editorialContent',
     maxCreateContentOfTypeDirectItems: 5,
     availablePublicationStatuses: {

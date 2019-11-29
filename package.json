@@ -25,6 +25,9 @@
   "repository": "git@github.com:Jahia/content-manager.git",
   "author": "Jahia Core Team <core@jahia.com>",
   "license": "MIT",
+  "dx-extends": {
+    "@jahia/jahia-ui-root": "0.0.1"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@jahia/apollo-dx": "^1.1.0",
@@ -32,6 +35,7 @@
     "@jahia/icons": "^1.1.0",
     "@jahia/react-apollo": "^1.1.0",
     "@jahia/react-material": "^1.1.2",
+    "@jahia/moonstone": "^0.4.0",
     "@jahia/registry": "^1.0.0-beta.20190724063719",
     "@material-ui/core": "^3.6.2",
     "@material-ui/icons": "^3.0.2",
@@ -62,6 +66,7 @@
     "react-pdf-js": "^4.0.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
+    "react-router-dom": "^5.1.2",
     "react-select": "^2.0.0",
     "redux": "^4.0.0",
     "redux-batched-actions": "^0.4.0",

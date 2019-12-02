@@ -28,7 +28,10 @@ class ContentManager extends React.Component {
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
 
-        contentManagerRoutes(registry);
+        if (registry.registry['cmm-default-route'] === undefined) {
+            contentManagerRoutes(registry);
+        }
+
         contentManagerActions(actionsRegistry, this.props.t);
 
         _.each(dxContext.config.actions, callback => {
@@ -50,7 +53,6 @@ class ContentManager extends React.Component {
     getHistory(dxContext, t) {
         if (!this.history) {
             this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
-            console.log('H', this.history);
             if (window.top !== window) {
                 this.history.listen(location => {
                     const title = t('content-media-manager:label.contentManager.appTitle', {path: location.pathname});
@@ -60,7 +62,7 @@ class ContentManager extends React.Component {
             }
         }
 
-        this.history.location.pathname = '/systemsite/en/browse/contents';
+        this.history.location.pathname = `/${window.location.pathname.split('/cmm/')[1]}`;
         return this.history;
     }
 

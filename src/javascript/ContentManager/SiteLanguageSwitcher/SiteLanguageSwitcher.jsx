@@ -19,7 +19,7 @@ export class SiteLanguageSwitcher extends React.Component {
         console.log('Switching language to: ' + lang);
         this.props.onSelectLanguage(lang);
         // Switch edit mode linker language
-        window.parent.authoringApi.switchLanguage(lang);
+        window.authoringApi.switchLanguage(lang);
     }
 
     render() {

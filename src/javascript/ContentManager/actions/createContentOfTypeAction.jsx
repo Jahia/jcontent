@@ -21,5 +21,5 @@ export default composeActions(requirementsAction, {
             );
         }
     },
-    onClick: context => window.parent.authoringApi.createContent(context.path, [context.contentType], false)
+    onClick: context => window.authoringApi.createContent(context.path, [context.contentType], false)
 });

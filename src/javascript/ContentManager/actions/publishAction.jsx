@@ -22,9 +22,9 @@ export default composeActions(requirementsAction, withNodeName, {
     },
     onClick: context => {
         if (context.node) {
-            window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
+            window.authoringApi.openPublicationWorkflow([context.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
         } else if (context.nodes) {
-            window.parent.authoringApi.openPublicationWorkflow(context.nodes.map(n => n.uuid), context.allSubTree, context.allLanguages, context.checkForUnpublication);
+            window.authoringApi.openPublicationWorkflow(context.nodes.map(n => n.uuid), context.allSubTree, context.allLanguages, context.checkForUnpublication);
         }
     }
 });

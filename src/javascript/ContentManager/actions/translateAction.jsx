@@ -29,6 +29,6 @@ export default composeActions(requirementsAction, reduxAction(state => ({languag
         ));
     },
     onClick: context => {
-        window.parent.authoringApi.translateContent(context.path, context.sourceLang, context.destLang, null);
+        window.authoringApi.translateContent(context.path, context.sourceLang, context.destLang, null);
     }
 });

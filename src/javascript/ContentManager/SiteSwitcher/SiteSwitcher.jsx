@@ -78,7 +78,7 @@ class SiteSwitcher extends React.Component {
     onSelectSite(siteNode, currentLang) {
         let newLang = this.getTargetSiteLanguageForSwitch(siteNode, currentLang);
         this.props.selectSite(siteNode, newLang);
-        window.parent.authoringApi.switchSite(siteNode.name, newLang);
+        window.authoringApi.switchSite(siteNode.name, newLang);
     }
 
     render() {

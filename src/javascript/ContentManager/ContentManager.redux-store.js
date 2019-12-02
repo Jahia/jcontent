@@ -18,7 +18,7 @@ import {
     siteReducer,
     treeStateReducer,
     treeWidthReducer,
-    uilanguageReducer
+    uiLanguageReducer
 } from './ContentManager.redux-reducers';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import {extractParamsFromUrl, getSyncListener} from './ContentManager.redux-utils';
@@ -29,7 +29,7 @@ import {paginationReducer} from './ContentRoute/ContentLayout/pagination.redux-r
 let contentManagerReduxStore = (dxContext, history) => {
     let currentValueFromUrl = extractParamsFromUrl(history.location.pathname, history.location.search);
     const rootReducer = combineReducers({
-        uilang: uilanguageReducer(dxContext),
+        uilang: uiLanguageReducer(dxContext),
         site: siteReducer(currentValueFromUrl.site),
         siteDisplayableName: siteDisplayableNameReducer(dxContext.siteDisplayableName),
         language: languageReducer(currentValueFromUrl.language),

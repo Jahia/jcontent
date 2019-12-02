@@ -53,7 +53,7 @@ function checkNodeRequirement(context, options) {
         context.node = of(undefined);
     }
 
-    if (enabled) {
+    if (enabled && typeof enabled === 'function') {
         if (context.enabled) {
             context.enabled = combineLatest(context.enabled, concat(of(false), enabled(context)))
                 .pipe(map(arr => arr[0] && arr[1]));

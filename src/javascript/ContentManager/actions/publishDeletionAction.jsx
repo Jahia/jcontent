@@ -12,9 +12,9 @@ export default composeActions(requirementsAction, {
     },
     onClick: context => {
         if (context.node) {
-            window.parent.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false);
+            window.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false);
         } else if (context.nodes) {
-            window.parent.authoringApi.openPublicationWorkflow(context.nodes.map(node => node.uuid), true, false, false);
+            window.authoringApi.openPublicationWorkflow(context.nodes.map(node => node.uuid), true, false, false);
         }
     }
 });

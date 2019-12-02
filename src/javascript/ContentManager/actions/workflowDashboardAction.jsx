@@ -30,7 +30,7 @@ let workflowDashboardAction = composeActions(withApolloAction, {
             });
         }
     },
-    onClick: () => window.parent.authoringApi.openWorkflowDashboard()
+    onClick: () => window.authoringApi.openWorkflowDashboard()
 });
 
 export default workflowDashboardAction;

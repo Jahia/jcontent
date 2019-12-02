@@ -15,7 +15,7 @@ import {extractPaths} from './ContentManager.utils';
 import {CM_SET_PREVIEW} from './preview.redux-actions';
 import ContentManagerStyleConstants from './ContentManager.style-constants';
 
-let uilanguageReducer = dxContext => (state = dxContext.uilang, action = {}) => {
+let uiLanguageReducer = dxContext => (state = dxContext.uilang, action = {}) => {
     if (action.uilang && action.type === CM_SET_UILANGUAGE) {
         return action.uilang;
     }
@@ -153,7 +153,7 @@ let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'no
 };
 
 export {
-    languageReducer, uilanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, openPathsReducer,
+    languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, openPathsReducer,
     treeStateReducer, treeWidthReducer, searchModeReducer, siteDisplayableNameReducer, pathsToRefetchReducer,
     availableLanguagesReducer
 };

@@ -38,7 +38,7 @@
             contextJsParameters['urlBrowser'] = '/cms/contentmanager';
             contextJsParameters['urlbase'] = '${renderContext.servletPath}';
             contextJsParameters['langName'] = '${functions:displayLocaleNameWith(mainResourceLocale, mainResourceLocale)}';
-            contextJsParameters['userName'] = '${renderContext.user.username}';
+            contextJsParameters['userName'] = '${functions:escapeJavaScript(renderContext.user.username)}';
             contextJsParameters['workspace'] = '${renderContext.workspace}';
             contextJsParameters['maxUploadSize'] = parseInt("<%= SettingsBean.getInstance().getJahiaFileUploadMaxSize() %>") / (1024 * 1024);
             contextJsParameters['displayWorkflowCounter'] = <%= SettingsBean.getInstance().getString("jahia.ui.displayWorkflowCounter", "true").equals("true") %>;

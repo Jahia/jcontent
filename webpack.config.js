@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
 // Get manifest
 var normalizedPath = require('path').join(__dirname, './target/dependency');
@@ -74,7 +75,8 @@ module.exports = (env, argv) => {
                 hashDigest: 'hex',
                 hashDigestLength: 20
             }),
-            new CopyWebpackPlugin([{from: './package.json', to: ''}])
+            new CopyWebpackPlugin([{from: './package.json', to: ''}]),
+            new CaseSensitivePathsPlugin()
         ],
         mode: 'development'
     };

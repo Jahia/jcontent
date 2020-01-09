@@ -11,7 +11,9 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
         });
         let element = document.getElementById('file-upload-input-' + context.key);
         if (element !== null) {
-            element.remove();
+            element.setAttribute('context-path', context.path);
+            element.value = null;
+            return;
         }
 
         let input = document.createElement('input');
@@ -21,13 +23,15 @@ export default composeActions(requirementsAction, reduxAction(null, dispatch => 
         }
 
         input.setAttribute('id', 'file-upload-input-' + context.key);
+        input.setAttribute('context-path', context.path);
         document.body.appendChild(input);
         input.addEventListener('change', e => {
-            setPath(context.path);
+            const path = input.getAttribute('context-path');
+            setPath(path);
             onFilesSelected(
                 [...e.target.files],
                 context.dispatchBatch,
-                {path: context.path},
+                {path},
                 context.uploadType
             );
         });

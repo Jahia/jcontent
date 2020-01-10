@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {SiteInfo} from '@jahia/react-apollo';
@@ -30,7 +30,7 @@ export class SiteLanguageSwitcher extends React.Component {
                 {({siteInfo, error, loading}) => {
                     if (error) {
                         console.log('Error when fetching data: ' + error);
-                        let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                        let message = t('content-media-manager:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         return null;
                     }
@@ -87,7 +87,7 @@ SiteLanguageSwitcher.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(SiteLanguageSwitcher);

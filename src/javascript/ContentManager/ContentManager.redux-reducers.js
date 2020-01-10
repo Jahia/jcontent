@@ -15,7 +15,7 @@ import {extractPaths} from './ContentManager.utils';
 import {CM_SET_PREVIEW} from './preview.redux-actions';
 import ContentManagerStyleConstants from './ContentManager.style-constants';
 
-let uiLanguageReducer = dxContext => (state = dxContext.uilang, action) => {
+let uiLanguageReducer = dxContext => (state = dxContext.uilang, action = {}) => {
     if (action.uiLang && action.type === CM_SET_UILANGUAGE) {
         return action.uiLang;
     }
@@ -23,7 +23,7 @@ let uiLanguageReducer = dxContext => (state = dxContext.uilang, action) => {
     return state;
 };
 
-let siteReducer = siteKey => (state = siteKey, action) => {
+let siteReducer = siteKey => (state = siteKey, action = {}) => {
     if (action.site && action.type === CM_NAVIGATE) {
         return action.site;
     }
@@ -31,7 +31,7 @@ let siteReducer = siteKey => (state = siteKey, action) => {
     return state;
 };
 
-let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayableName, action) => {
+let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayableName, action = {}) => {
     if (action.siteDisplayableName && (action.type === CM_NAVIGATE || action.type === CM_SET_SITE_DISPLAYABLE_NAME)) {
         return action.siteDisplayableName;
     }
@@ -39,7 +39,7 @@ let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayable
     return state;
 };
 
-let languageReducer = language => (state = language, action) => {
+let languageReducer = language => (state = language, action = {}) => {
     if (action.language && action.type === CM_NAVIGATE) {
         return action.language;
     }
@@ -47,7 +47,7 @@ let languageReducer = language => (state = language, action) => {
     return state;
 };
 
-let availableLanguagesReducer = (state = [], action) => {
+let availableLanguagesReducer = (state = [], action = {}) => {
     if (action.availableLanguages && action.type === CM_SET_AVAILABLE_LANGUAGES) {
         return action.availableLanguages;
     }
@@ -55,7 +55,7 @@ let availableLanguagesReducer = (state = [], action) => {
     return state;
 };
 
-let modeReducer = mode => (state = mode, action) => {
+let modeReducer = mode => (state = mode, action = {}) => {
     if (action.mode && action.type === CM_NAVIGATE) {
         return action.mode;
     }
@@ -63,7 +63,7 @@ let modeReducer = mode => (state = mode, action) => {
     return state;
 };
 
-let pathReducer = path => (state = path, action) => {
+let pathReducer = path => (state = path, action = {}) => {
     if (action.path && action.type === CM_NAVIGATE) {
         return action.path;
     }
@@ -71,7 +71,7 @@ let pathReducer = path => (state = path, action) => {
     return state;
 };
 
-let paramsReducer = params => (state = params, action) => {
+let paramsReducer = params => (state = params, action = {}) => {
     if (action.params && action.type === CM_NAVIGATE) {
         return action.params;
     }
@@ -103,7 +103,7 @@ let openPathsReducer = (siteKey, path, mode) => (state, action) => {
     return state;
 };
 
-let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action) => {
+let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action = {}) => {
     switch (action.type) {
         case CM_SET_TREE:
             return action.treeState;
@@ -124,7 +124,7 @@ let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action) => {
     }
 };
 
-let treeWidthReducer = (state = ContentManagerStyleConstants.treeDrawerWidth, action) => {
+let treeWidthReducer = (state = ContentManagerStyleConstants.treeDrawerWidth, action = {}) => {
     if (action.type === CM_SET_TREE_WIDTH) {
         return action.width;
     }
@@ -144,7 +144,7 @@ let pathsToRefetchReducer = (state, action) => {
     return _.difference(state, action.paths);
 };
 
-let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'normal'), action) => {
+let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'normal'), action = {}) => {
     if (action.type === CM_SET_SEARCH_MODE) {
         return action.searchMode;
     }

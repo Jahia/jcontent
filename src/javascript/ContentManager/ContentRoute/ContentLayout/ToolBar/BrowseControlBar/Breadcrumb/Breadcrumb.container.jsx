@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {compose, Query, withApollo} from 'react-apollo';
 import {breadcrumbQuery} from './Breadcrumb.gql-queries';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {cmGoto} from '../../../../../ContentManager.redux-actions';
 import Breadcrumb from './Breadcrumb';
 import {buildBreadcrumbItems} from './Breadcrumb.utils';
@@ -15,7 +15,7 @@ export const BreadcrumbContainer = ({path, language, selectItem, mode, t, site})
         <Query key={key} query={breadcrumbQuery} variables={queryParams}>
             {({loading, error, data}) => {
                 if (error) {
-                    let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                    let message = t('content-media-manager:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                     console.error(message);
                 }
 
@@ -55,7 +55,7 @@ BreadcrumbContainer.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withApollo,
     connect(mapStateToProps, mapDispatchToProps)
 )(BreadcrumbContainer);

@@ -5,7 +5,7 @@ import {compose, Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import gql from 'graphql-tag';
 import {connect} from 'react-redux';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmSetSite} from '../ContentManager.redux-actions';
 import SiteSwitcherDisplay from './SiteSwitcherDisplay';
@@ -47,6 +47,7 @@ class SiteSwitcher extends React.Component {
     getSites(data) {
         let siteNodes = [];
         if (data && data.jcr.result !== null) {
+            // eslint-disable-next-line no-unused-vars
             for (let i in data.jcr.result.siteNodes) {
                 if (data.jcr.result.siteNodes[i].hasPermission) {
                     siteNodes.push(data.jcr.result.siteNodes[i]);
@@ -60,6 +61,7 @@ class SiteSwitcher extends React.Component {
     getTargetSiteLanguageForSwitch(siteNode, currentLang) {
         let newLang = null;
         let siteLanguages = siteNode.site.languages;
+        // eslint-disable-next-line no-unused-vars
         for (let i in siteLanguages) {
             if (Object.prototype.hasOwnProperty.call(siteLanguages, i)) {
                 let lang = siteLanguages[i];
@@ -87,7 +89,7 @@ class SiteSwitcher extends React.Component {
                 ({error, loading, data}) => {
                     if (error) {
                         console.log('Error when fetching data: ' + error);
-                        let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                        let message = t('content-media-manager:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         return null;
                     }
@@ -140,7 +142,7 @@ SiteSwitcher.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps),
-    withNotifications(),
+    withNotifications()
 )(SiteSwitcher);

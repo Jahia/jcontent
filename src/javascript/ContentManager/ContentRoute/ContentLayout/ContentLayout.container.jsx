@@ -14,7 +14,7 @@ import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
 } from '../../eventHandlerRegistry';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch, cmSetTreeWidth} from '../../ContentManager.redux-actions';
 import ContentManagerConstants from '../../ContentManager.constants';
@@ -190,7 +190,7 @@ export class ContentLayoutContainer extends React.Component {
                     });
 
                     if (error) {
-                        let message = t('label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                        let message = t('content-media-manager:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         console.error(message);
                         return (
                             <ContentLayout contentNotFound
@@ -240,8 +240,7 @@ export class ContentLayoutContainer extends React.Component {
                     return (
                         <React.Fragment>
                             {loading &&
-                            <ProgressOverlay/>
-                            }
+                            <ProgressOverlay/>}
                             <ContentLayout mode={mode}
                                            path={path}
                                            filesMode={filesMode}
@@ -326,7 +325,7 @@ ContentLayoutContainer.propTypes = {
 
 export default compose(
     withNotifications(),
-    translate(),
+    withTranslation(),
     withApollo,
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentLayoutContainer);

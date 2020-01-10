@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 let styles = {
     root: {
@@ -24,18 +24,18 @@ export const ConfirmSaveDialog = ({open, handleClose, handleSave, classes, t}) =
             classes={{paper: classes.root}}
             onClose={handleClose}
     >
-        <DialogTitle id="form-dialog-title">{t('label.contentManager.editImage.confirmSaveDialog.title')}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.title')}</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                {t('label.contentManager.editImage.confirmSaveDialog.text')}
+                {t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.text')}
             </DialogContentText>
         </DialogContent>
         <DialogActions>
             <Button variant="secondary" data-cm-role="image-save-no" onClick={handleClose}>
-                {t('label.contentManager.editImage.confirmSaveDialog.no')}
+                {t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.no')}
             </Button>
             <Button variant="primary" data-cm-role="image-save-yes" onClick={() => handleSave()}>
-                {t('label.contentManager.editImage.confirmSaveDialog.yes')}
+                {t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.yes')}
             </Button>
         </DialogActions>
     </Dialog>
@@ -50,6 +50,6 @@ ConfirmSaveDialog.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(ConfirmSaveDialog);

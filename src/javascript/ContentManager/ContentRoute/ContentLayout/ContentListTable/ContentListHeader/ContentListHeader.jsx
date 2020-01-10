@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 
 export const ContentListHeader = ({order, orderBy, columnData, t, classes, setSort, allSelected, anySelected, selectAll, unselectAll}) => {
@@ -69,5 +69,5 @@ ContentListHeader.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation()
 )(ContentListHeader);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
@@ -43,18 +43,15 @@ export class BrowseControlBar extends React.Component {
                 <Breadcrumb/>
                 <div className={classes.grow}/>
                 {showActions && mode === ContentManagerConstants.mode.FILES &&
-                    <FileModeSelector/>
-                }
+                    <FileModeSelector/>}
                 {showActions && !this.isRootNode() &&
                     <DisplayActions
                         target="tableHeaderActions"
                         context={{path: path}}
                         render={buttonRenderer({variant: 'ghost'}, true)}
-                    />
-                }
+                    />}
                 {showActions &&
-                <Button variant="ghost" icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}><span>{t('label.contentManager.refresh')}</span></Button>
-                }
+                <Button variant="ghost" icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}><span>{t('content-media-manager:label.contentManager.refresh')}</span></Button>}
             </React.Fragment>
         );
     }
@@ -78,6 +75,6 @@ BrowseControlBar.propTypes = {
 
 export default compose(
     connect(mapStateToProps),
-    translate(),
-    withStyles(styles),
+    withTranslation(),
+    withStyles(styles)
 )(BrowseControlBar);

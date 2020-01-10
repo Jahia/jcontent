@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {CloudUpload} from '@material-ui/icons';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 const styles = theme => ({
     dropZone: {
@@ -37,6 +37,6 @@ EmptyDropZone.propTypes = {
 };
 
 export default compose(
-    translate(),
-    withStyles(styles, {withTheme: true}),
+    withTranslation(),
+    withStyles(styles, {withTheme: true})
 )(EmptyDropZone);

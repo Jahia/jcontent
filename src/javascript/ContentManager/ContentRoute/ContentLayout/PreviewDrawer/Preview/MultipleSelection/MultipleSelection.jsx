@@ -9,11 +9,11 @@ const MultipleSelection = ({classes, t, selection, clearSelection}) => (
     <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>
         <Paper elevation={1} className={classes.contentContainer} classes={{root: classes.center}}>
             <Typography variant="gamma">
-                {t('label.contentManager.selection.itemsSelected', {count: selection.length})}
+                {t('content-media-manager:label.contentManager.selection.itemsSelected', {count: selection.length})}
             </Typography>
             <ContentCopy className={classes.centerIcon} color="inherit"/>
             <Button onClick={clearSelection}>
-                {t('label.contentManager.selection.clearMultipleSelection')}
+                {t('content-media-manager:label.contentManager.selection.clearMultipleSelection')}
             </Button>
         </Paper>
     </div>

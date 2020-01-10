@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withNotifications} from '@jahia/react-material';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
@@ -50,7 +50,7 @@ export class ContentTypeSelect extends React.Component {
                 {({error, data}) => {
                     let contentTypes = [];
                     if (error) {
-                        let message = t('label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
+                        let message = t('content-media-manager:label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                     } else if (data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
                         contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
@@ -64,8 +64,8 @@ export class ContentTypeSelect extends React.Component {
                         });
                         contentTypes.unshift({
                             value: '',
-                            title: t('label.contentManager.contentTypes.any'),
-                            label: t('label.contentManager.contentTypes.any'),
+                            title: t('content-media-manager:label.contentManager.contentTypes.any'),
+                            label: t('content-media-manager:label.contentManager.contentTypes.any'),
                             icon: null
                         });
                     }
@@ -101,5 +101,5 @@ ContentTypeSelect.defaultProps = {
 
 export default compose(
     withNotifications(),
-    translate(),
+    withTranslation()
 )(ContentTypeSelect);

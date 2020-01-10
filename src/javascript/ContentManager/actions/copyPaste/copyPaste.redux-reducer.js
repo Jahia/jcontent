@@ -5,7 +5,7 @@ const initialState = {
     nodes: []
 };
 
-export const copyPaste = (state = initialState, action) => {
+export const copyPaste = (state = initialState, action = {}) => {
     switch (action.type) {
         case 'COPYPASTE_COPY': return {
             type: copyPasteConstants.COPY,

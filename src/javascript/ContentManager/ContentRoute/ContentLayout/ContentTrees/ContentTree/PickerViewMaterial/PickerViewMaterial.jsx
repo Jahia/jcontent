@@ -113,8 +113,7 @@ export class PickerViewMaterial extends React.Component {
         return (
             <div className={classes.root}>
                 {loading &&
-                    <CircularProgress classes={{root: classes.loading}}/>
-                }
+                    <CircularProgress classes={{root: classes.loading}}/>}
                 <List disablePadding classes={{root: classes.root}}>
                     {
                         sortedEntries.map(entry => {
@@ -210,8 +209,7 @@ export class PickerViewMaterial extends React.Component {
                                                         'data-cm-role': 'picker-item-menu'
                                                     })}
                                                 />
-                                            </ListItemIcon>
-                                        }
+                                            </ListItemIcon>}
                                     </UploadTransformComponent>
                                 </React.Fragment>
                             );

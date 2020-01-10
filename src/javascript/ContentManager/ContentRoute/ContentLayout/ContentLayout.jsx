@@ -7,7 +7,7 @@ import ContentListTable from './ContentListTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import ContentTrees from './ContentTrees';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES} from '../../ContentManager.redux-actions';
 import FilesGrid from './FilesGrid';
 import ContentManagerConstants from '../../ContentManager.constants';
@@ -102,7 +102,7 @@ export class ContentLayout extends React.Component {
                             paper: classes.treeDrawerPaper
                         }}
                         width={treeWidth}
-                        minWidth="200"
+                        minWidth={200}
                         onResized={width => setTreeWidth(width)}
                     >
                         <ContentTrees isOpen={treeOpen} width={treeWidth}/>
@@ -121,8 +121,7 @@ export class ContentLayout extends React.Component {
                         }}
                     >
                         {previewOpen &&
-                        <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
-                        }
+                        <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>}
                     </Drawer>
                     <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: path}}/>
                     <div
@@ -142,8 +141,7 @@ export class ContentLayout extends React.Component {
                                 <ContentListTable totalCount={totalCount}
                                                   rows={rows}
                                                   contentNotFound={contentNotFound}
-                                                  loading={loading}/>
-                            }
+                                                  loading={loading}/>}
                         </Paper>
                     </div>
                 </div>
@@ -169,6 +167,6 @@ ContentLayout.propTypes = {
 };
 
 export default compose(
-    translate(),
-    withStyles(styles),
+    withTranslation(),
+    withStyles(styles)
 )(ContentLayout);

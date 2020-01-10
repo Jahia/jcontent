@@ -4,7 +4,7 @@ import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {ContextualMenu} from '@jahia/react-material';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
@@ -168,8 +168,7 @@ export class FileCard extends Component {
                     onMouseLeave={event => this.onHoverExit(event)}
                 >
                     {!isThumbCard &&
-                        <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>
-                    }
+                        <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
 
                     {isImage ?
                         <CardMedia
@@ -185,47 +184,42 @@ export class FileCard extends Component {
                                 <Folder color="action"/> :
                                 isPdf ?
                                     <img src={`${dxContext.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
-                                    <FileIcon filename={node.path} color="disabled"/>
-                            }
-                        </div>
-                    }
+                                    <FileIcon filename={node.path} color="disabled"/>}
+                        </div>}
 
                     <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
                         {isThumbCard &&
-                            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>
-                        }
+                            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
 
                         <Actions node={node} isHovered={isHovered}/>
 
                         <CardContent classes={{root: classes.cardContent}}>
                             <div>
                                 <Typography variant="caption" component="p">
-                                    {t('label.contentManager.filesGrid.name')}
+                                    {t('content-media-manager:label.contentManager.filesGrid.name')}
                                 </Typography>
                                 <FileName maxLength={maxLengthLabels} node={node}/>
                             </div>
                             {!isThumbCard &&
                                 <div>
                                     <Typography variant="caption" component="p">
-                                        {t('label.contentManager.filesGrid.createdBy')}
+                                        {t('content-media-manager:label.contentManager.filesGrid.createdBy')}
                                     </Typography>
                                     <Typography variant="iota" component="p">
-                                        {t('label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
+                                        {t('content-media-manager:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
                                         <time>{dayjs(node.created.value).locale(getDefaultLocale(uiLang)).format('LLL')}</time>
                                     </Typography>
-                                </div>
-                            }
+                                </div>}
                             {(isDetailedCard) && node.width && node.height &&
                                 <div>
                                     <Typography variant="caption" component="p">
-                                        {t('label.contentManager.filesGrid.fileInfo')}
+                                        {t('content-media-manager:label.contentManager.filesGrid.fileInfo')}
                                     </Typography>
                                     <Typography variant="iota" component="p">
                                         {`${node.width.value} x ${node.height.value}`}
                                     </Typography>
-                                </div>
-                            }
+                                </div>}
                         </CardContent>
                     </div>
                 </Card>
@@ -260,5 +254,5 @@ FileCard.propTypes = {
 
 export default compose(
     withStyles(styles),
-    translate()
+    withTranslation()
 )(FileCard);

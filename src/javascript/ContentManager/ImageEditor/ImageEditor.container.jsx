@@ -364,5 +364,5 @@ ImageEditorContainer.propTypes = {
 };
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps)
 )(ImageEditorContainer);

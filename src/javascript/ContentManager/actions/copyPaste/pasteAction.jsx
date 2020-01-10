@@ -102,7 +102,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         }))).then(datas => {
             context.clear();
             setLocalStorage(copyPasteConstants.COPY, [], context.client);
-            context.notificationContext.notify(context.t('label.contentManager.copyPaste.success'), ['closeButton']);
+            context.notificationContext.notify(context.t('content-media-manager:label.contentManager.copyPaste.success'), ['closeButton']);
 
             // Let's make sure the content table will be refreshed when displayed
             context.addPathsToRefetch([context.path, ...nodes.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/')))]);
@@ -135,7 +135,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         }, error => {
             console.error(error);
             context.clear();
-            context.notificationContext.notify(context.t('label.contentManager.copyPaste.error'), ['closeButton']);
+            context.notificationContext.notify(context.t('content-media-manager:label.contentManager.copyPaste.error'), ['closeButton']);
             refetchContentTreeAndListData();
         });
     }

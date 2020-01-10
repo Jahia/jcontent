@@ -4,7 +4,7 @@ import {Input, withStyles} from '@material-ui/core';
 import ContentTypeSelect from './ContentTypeSelect';
 import {cmGoto} from '../../../../ContentManager.redux-actions';
 import {withNotifications, DxContext} from '@jahia/react-material';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 import SearchBarLayout from '../SearchBarLayout';
 import ActionButton from '../ActionButton';
@@ -116,12 +116,11 @@ export class SearchBarNormal extends React.Component {
                     <React.Fragment>
                         {!ongoingSearch.searchTerms ?
                             <ActionButton
-                                label="label.contentManager.search.sql2"
+                                label="content-media-manager:label.contentManager.search.sql2"
                                 cmRole="search-type-sql2search"
                                 onClick={onSql2Click}
                             /> :
-                            <div/>
-                        }
+                            <div/>}
                     </React.Fragment>
                 }
                 onSearch={() => this.onSearch(searchTerms, searchContentType)}
@@ -141,7 +140,7 @@ export class SearchBarNormal extends React.Component {
                         className={classes.searchSize}
                         value={searchTerms}
                         classes={{input: classes.input}}
-                        placeholder={t('label.contentManager.search.normalPrompt')}
+                        placeholder={t('content-media-manager:label.contentManager.search.normalPrompt')}
                         onChange={this.onSearchInputChange}
                         onKeyDown={this.onSearchInputKeyDown}
                     />
@@ -176,7 +175,7 @@ SearchBarNormal.propTypes = {
 
 export default compose(
     withNotifications(),
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(SearchBarNormal);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {
     AppBar,
     Card,
@@ -55,7 +55,7 @@ export class PreviewDrawer extends React.Component {
                     <Toolbar variant="dense">
                         <IconButton data-cm-role="preview-drawer-close" icon={<Close fontSize="small"/>} onClick={closePreview}/>
                         <Typography variant="zeta" color="inherit">
-                            {t('label.contentManager.contentPreview.preview')}
+                            {t('content-media-manager:label.contentManager.contentPreview.preview')}
                         </Typography>
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                             <ToggleButtonGroup exclusive
@@ -64,23 +64,22 @@ export class PreviewDrawer extends React.Component {
                             >
                                 <ToggleButton value="edit" disabled={previewMode === 'edit' || disabledToggle} data-cm-role="edit-preview-button">
                                     <Typography variant="caption" color="inherit">
-                                        {t('label.contentManager.contentPreview.staging')}
+                                        {t('content-media-manager:label.contentManager.contentPreview.staging')}
                                     </Typography>
                                 </ToggleButton>
                                 <ToggleButton value="live" disabled={previewMode === 'live' || disabledLive} data-cm-role="live-preview-button">
                                     <Typography variant="caption" color="inherit">
-                                        {t('label.contentManager.contentPreview.live')}
+                                        {t('content-media-manager:label.contentManager.contentPreview.live')}
                                     </Typography>
                                 </ToggleButton>
                             </ToggleButtonGroup>
                             {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
-                                <Tooltip title={t('label.contentManager.contentPreview.collapse')}>
+                                <Tooltip title={t('content-media-manager:label.contentManager.contentPreview.collapse')}>
                                     <IconButton variant="ghost" color="inherit" icon={<FullscreenExit/>} onClick={closeFullScreen}/>
                                 </Tooltip> :
-                                <Tooltip title={t('label.contentManager.contentPreview.expand')}>
+                                <Tooltip title={t('content-media-manager:label.contentManager.contentPreview.expand')}>
                                     <IconButton variant="ghost" color="inherit" icon={<Fullscreen/>} onClick={openFullScreen}/>
-                                </Tooltip>
-                            }
+                                </Tooltip>}
                         </Grid>
                     </Toolbar>
                 </AppBar>
@@ -115,8 +114,7 @@ export class PreviewDrawer extends React.Component {
                                 />
                             </div>
                         </CardActions>
-                    </Card>
-                }
+                    </Card>}
             </React.Fragment>
         );
     }
@@ -157,7 +155,7 @@ PreviewDrawer.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(PreviewDrawer);

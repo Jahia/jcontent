@@ -4,7 +4,7 @@ import {Typography} from '@jahia/design-system-kit';
 import {Check} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import PropTypes from 'prop-types';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 let styles = theme => ({
     feedback: {
@@ -47,6 +47,6 @@ Feedback.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(Feedback);

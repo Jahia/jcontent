@@ -16,7 +16,7 @@ import {Wrench, Folder} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import * as _ from 'lodash';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../ContentManager.redux-actions';
@@ -39,7 +39,7 @@ import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../icons';
 const allColumnData = [
     {
         id: 'name',
-        label: 'label.contentManager.listColumns.name',
+        label: 'content-media-manager:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName'
     },
@@ -57,19 +57,19 @@ const allColumnData = [
     },
     {
         id: 'type',
-        label: 'label.contentManager.listColumns.type',
+        label: 'content-media-manager:label.contentManager.listColumns.type',
         sortable: true,
         property: 'primaryNodeType.displayName'
     },
     {
         id: 'createdBy',
-        label: 'label.contentManager.listColumns.createdBy',
+        label: 'content-media-manager:label.contentManager.listColumns.createdBy',
         sortable: true,
         property: 'createdBy.value'
     },
     {
         id: 'lastModified',
-        label: 'label.contentManager.listColumns.lastModified',
+        label: 'content-media-manager:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value'
     }
@@ -78,7 +78,7 @@ const allColumnData = [
 const reducedColumnData = [
     {
         id: 'name',
-        label: 'label.contentManager.listColumns.name',
+        label: 'content-media-manager:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName'
     },
@@ -96,13 +96,13 @@ const reducedColumnData = [
     },
     {
         id: 'createdBy',
-        label: 'label.contentManager.listColumns.createdBy',
+        label: 'content-media-manager:label.contentManager.listColumns.createdBy',
         sortable: true,
         property: 'createdBy.value'
     },
     {
         id: 'lastModified',
-        label: 'label.contentManager.listColumns.lastModified',
+        label: 'content-media-manager:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value'
     }
@@ -481,8 +481,7 @@ export class ContentListTable extends React.Component {
                                                                                 >
                                                                                     {icon}
                                                                                     {_.get(node, column.property)}
-                                                                                </Typography>
-                                                                            }
+                                                                                </Typography>}
                                                                         </TableCell>
                                                                     );
                                                                 }
@@ -496,12 +495,11 @@ export class ContentListTable extends React.Component {
                                                                         >
                                                                             {this.isWip(node, lang) &&
                                                                             <Tooltip
-                                                                                title={node.wipLangs ? t('label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('label.contentManager.workInProgressAll')}
+                                                                                title={node.wipLangs ? t('content-media-manager:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('content-media-manager:label.contentManager.workInProgressAll')}
                                                                             >
                                                                                 <Wrench fontSize="small"
                                                                                         color="inherit"/>
-                                                                            </Tooltip>
-                                                                            }
+                                                                            </Tooltip>}
                                                                         </TableCell>
                                                                     );
                                                                 }
@@ -515,11 +513,10 @@ export class ContentListTable extends React.Component {
                                                                         >
                                                                             {node.lockOwner !== null &&
                                                                             <Tooltip
-                                                                                title={t('label.contentManager.locked')}
+                                                                                title={t('content-media-manager:label.contentManager.locked')}
                                                                             >
                                                                                 <Lock fontSize="small" color="inherit"/>
-                                                                            </Tooltip>
-                                                                            }
+                                                                            </Tooltip>}
                                                                         </TableCell>
                                                                     );
                                                                 }
@@ -570,8 +567,7 @@ export class ContentListTable extends React.Component {
                                                                                         disableRipple: true
                                                                                     }, true)}
                                                                                 />
-                                                                            </div>
-                                                                            }
+                                                                            </div>}
                                                                         </TableCell>
                                                                     );
                                                                 }
@@ -604,6 +600,10 @@ export class ContentListTable extends React.Component {
                     totalCount={totalCount}
                     pageSize={pagination.pageSize}
                     currentPage={pagination.currentPage}
+                    labels={{
+                      labelRowsPerPage: t('content-media-manager:label.pagination.rowsPerPage'),
+                      of: t('content-media-manager:label.pagination.of')
+                    }}
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}
                 />
@@ -694,6 +694,6 @@ ContentListTable.propTypes = {
 
 export default compose(
     withStyles(styles),
-    translate(),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentListTable);

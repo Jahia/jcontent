@@ -7,11 +7,11 @@ const THUMBNAIL = ContentManagerConstants.gridMode.THUMBNAIL;
 const GRID = ContentManagerConstants.mode.GRID;
 
 const initialState = {
-    mode: localStorage.getItem(FILE_SELECTOR_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_MODE) : GRID,
-    gridMode: localStorage.getItem(FILE_SELECTOR_GRID_MODE) !== null ? localStorage.getItem(FILE_SELECTOR_GRID_MODE) : THUMBNAIL
+    mode: localStorage.getItem(FILE_SELECTOR_MODE) === null ? GRID : localStorage.getItem(FILE_SELECTOR_MODE),
+    gridMode: localStorage.getItem(FILE_SELECTOR_GRID_MODE) === null ? THUMBNAIL : localStorage.getItem(FILE_SELECTOR_GRID_MODE)
 };
 
-export const filesGrid = (state = initialState, action) => {
+export const filesGrid = (state = initialState, action = {}) => {
     switch (action.type) {
         case 'FILESGRID_SET_MODE': return {
             mode: action.mode,

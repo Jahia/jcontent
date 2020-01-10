@@ -8,7 +8,7 @@ const EmptyTable = ({columnData, t}) => (
     <TableBody>
         <TableRow>
             <TableCell colSpan={columnData.length + ContentListTableConstants.appTableCells + 2}>
-                <Typography variant="p">{t('label.contentManager.noResults')}</Typography>
+                <Typography variant="p">{t('content-media-manager:label.contentManager.noResults')}</Typography>
             </TableCell>
         </TableRow>
     </TableBody>

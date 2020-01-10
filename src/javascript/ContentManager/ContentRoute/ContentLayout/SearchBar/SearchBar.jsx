@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 import SearchBarNormal from './SearchBarNormal';
 import SearchBarSql2 from './SearchBarSql2';
@@ -13,11 +13,9 @@ export class SearchBar extends React.Component {
         return (
             <React.Fragment>
                 {(searchMode === 'normal') &&
-                <SearchBarNormal onSql2Click={() => setSearchMode('sql2')}/>
-                }
+                <SearchBarNormal onSql2Click={() => setSearchMode('sql2')}/>}
                 {(searchMode === 'sql2') &&
-                <SearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>
-                }
+                <SearchBarSql2 onNormalClick={() => setSearchMode('normal')}/>}
             </React.Fragment>
         );
     }
@@ -39,6 +37,6 @@ SearchBar.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(SearchBar);

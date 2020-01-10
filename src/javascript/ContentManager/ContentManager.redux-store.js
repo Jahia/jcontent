@@ -63,8 +63,8 @@ let contentManagerReduxStore = (dxContext, history) => {
                 batchDispatchMiddleware,
                 thunk
                 // Logger
-            ),
-        ),
+            )
+        )
     );
 
     store.subscribe(getSyncListener(store, history));

@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 let styles = theme => ({
     root: {
@@ -31,10 +31,10 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                 classes={{paper: classes.root}}
                 onClose={handleCancel}
         >
-            <DialogTitle id="form-dialog-title">{t('label.contentManager.createFolderAction.title')}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('content-media-manager:label.contentManager.createFolderAction.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={!isNameValid || !isNameAvailable ? classes.error : null}>
-                    {t('label.contentManager.createFolderAction.text')}
+                    {t('content-media-manager:label.contentManager.createFolderAction.text')}
                 </DialogContentText>
                 <TextField
                     fullWidth
@@ -45,20 +45,20 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                     id="folder-name"
                     aria-describedby="folder-name-error-text"
                     margin="dense"
-                    helperText={!isNameAvailable ? t('label.contentManager.createFolderAction.exists') : ''}
+                    helperText={isNameAvailable ? '' : t('content-media-manager:label.contentManager.createFolderAction.exists')}
                     onChange={onChangeName}
                 />
             </DialogContent>
             <DialogActions>
                 <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>
-                    {t('label.contentManager.createFolderAction.cancel')}
+                    {t('content-media-manager:label.contentManager.createFolderAction.cancel')}
                 </Button>
                 <Button variant="primary"
                         data-cm-role="create-folder-as-confirm"
                         disabled={loading || !name || !isNameValid || !isNameAvailable}
                         onClick={handleCreate}
                 >
-                    {t('label.contentManager.createFolderAction.ok')}
+                    {t('content-media-manager:label.contentManager.createFolderAction.ok')}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -79,6 +79,6 @@ CreateFolderDialog.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(CreateFolderDialog);

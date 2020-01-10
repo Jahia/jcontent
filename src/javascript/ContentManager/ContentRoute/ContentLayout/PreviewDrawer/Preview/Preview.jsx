@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {lodash as _} from 'lodash';
 import {ContentPreview} from '@jahia/react-apollo';
@@ -137,7 +137,7 @@ Preview.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(Preview);

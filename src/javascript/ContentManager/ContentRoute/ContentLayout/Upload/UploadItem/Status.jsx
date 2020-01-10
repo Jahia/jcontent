@@ -12,7 +12,7 @@ const Status = ({classes, status, error, t, type}) => {
             <React.Fragment>
                 <FiberManualRecord className={classes.statusIcon} color="inherit"/>
                 <Typography variant="zeta" className={classes.progressText} color="inherit">
-                    {t('label.contentManager.fileUpload.queued')}
+                    {t('content-media-manager:label.contentManager.fileUpload.queued')}
                 </Typography>
             </React.Fragment>
         );
@@ -21,17 +21,17 @@ const Status = ({classes, status, error, t, type}) => {
             <React.Fragment>
                 <CheckCircle className={classes.statusIcon} color="inherit"/>
                 <Typography variant="zeta" className={classes.progressText} color="inherit">
-                    {type === 'import' ? t('label.contentManager.fileUpload.imported') : t('label.contentManager.fileUpload.uploaded')}
+                    {type === 'import' ? t('content-media-manager:label.contentManager.fileUpload.imported') : t('content-media-manager:label.contentManager.fileUpload.uploaded')}
                 </Typography>
             </React.Fragment>
         );
     } else if (status === uploadStatuses.HAS_ERROR) {
         let getErrorMessage = (error => {
             switch (error) {
-                case 'WRONG_INPUT': return t('label.contentManager.fileUpload.wrongInput');
-                case 'FILE_EXISTS': return t('label.contentManager.fileUpload.exists');
-                case 'INCORRECT_SIZE': return t('label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize});
-                default: return type === 'import' ? t('label.contentManager.fileUpload.failedImport') : t('label.contentManager.fileUpload.failedUpload');
+                case 'WRONG_INPUT': return t('content-media-manager:label.contentManager.fileUpload.wrongInput');
+                case 'FILE_EXISTS': return t('content-media-manager:label.contentManager.fileUpload.exists');
+                case 'INCORRECT_SIZE': return t('content-media-manager:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize});
+                default: return type === 'import' ? t('content-media-manager:label.contentManager.fileUpload.failedImport') : t('content-media-manager:label.contentManager.fileUpload.failedUpload');
             }
         });
 
@@ -48,7 +48,7 @@ const Status = ({classes, status, error, t, type}) => {
             <React.Fragment>
                 <CircularProgress size={20} className={classes.statusIcon} color="inherit"/>
                 <Typography variant="zeta" className={classes.progressText} color="inherit">
-                    {type === 'import' ? t('label.contentManager.fileUpload.importing') : t('label.contentManager.fileUpload.uploading')}
+                    {type === 'import' ? t('content-media-manager:label.contentManager.fileUpload.importing') : t('content-media-manager:label.contentManager.fileUpload.uploading')}
                 </Typography>
             </React.Fragment>
         );

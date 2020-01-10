@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import dayjs from 'dayjs';
@@ -60,7 +60,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             <Typography component="span"
                         className={classes.publicationInfoMarkedForDeletion}
             >
-                {t('label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
+                {t('content-media-manager:label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
             &nbsp;
                 <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(defaultLocale).format('LLL')}</time>
             </Typography>
@@ -73,7 +73,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoModified}
                 >
-                    {t('label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
+                    {t('content-media-manager:label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -83,7 +83,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoPublished}
                 >
-                    {t('label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
+                    {t('content-media-manager:label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -93,7 +93,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoNotPublished}
                 >
-                    {t('label.contentManager.contentPreview.notPublished')}
+                    {t('content-media-manager:label.contentManager.contentPreview.notPublished')}
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED:
@@ -101,7 +101,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoUnpublished}
                 >
-                    {t('label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
+                    {t('content-media-manager:label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -110,27 +110,27 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
             return (
                 <Typography component="p"
                             className={classes.publicationInfoMandatoryLanguageUnpublishable}
-                            title={t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
+                            title={t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
                 >
-                    {t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
+                    {t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoMandatoryLanguageValid}
-                            title={t('label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
+                            title={t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
                 >
-                    {t('label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
+                    {t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.CONFLICT:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoConflict}
-                            title={t('label.contentManager.publicationStatus.conflict.description')}
+                            title={t('content-media-manager:label.contentManager.publicationStatus.conflict.description')}
                 >
-                    {t('label.contentManager.publicationStatus.conflict.label')}
+                    {t('content-media-manager:label.contentManager.publicationStatus.conflict.label')}
                 </Typography>
             );
         default:
@@ -150,7 +150,7 @@ PublicationStatus.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps)
 )(PublicationStatus);

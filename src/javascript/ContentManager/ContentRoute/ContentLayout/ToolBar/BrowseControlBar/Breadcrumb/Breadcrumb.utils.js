@@ -39,7 +39,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
 
 function getLastParent(breadcrumbs) {
     let lastParent = _.findLastIndex(breadcrumbs, breadcrumb => breadcrumb.type === 'jnt:page' ||
-        breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:folder' || breadcrumb.type === 'jmix:cmContentTreeDisplayable');
+        breadcrumb.type === 'jnt:contentFolder' || breadcrumb.type === 'jnt:folder' || breadcrumb.type === 'jmix:cmContentTreeDisplayable' || breadcrumb.type === 'jmix:visibleInContentTree');
     return lastParent;
 }
 

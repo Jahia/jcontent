@@ -1,5 +1,10 @@
 {
   "label": {
+    "pagination": {
+      "rowsPerPage": "Rows per page",
+      "of": "of"
+    },
+    "burgerMenuTitle": "Open main menu",
     "contentManager": {
       "preview": {
         "hide": "Hide Preview",

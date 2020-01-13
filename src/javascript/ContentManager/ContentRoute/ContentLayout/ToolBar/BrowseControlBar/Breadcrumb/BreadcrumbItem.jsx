@@ -34,8 +34,7 @@ export const BreadcrumbItem = ({item, selectItem, classes, showLabel}) => (
                     classes={{root: classes.contentLabel}}
         >
             {item.name}
-        </Typography>
-        }
+        </Typography>}
     </Button>
 );
 

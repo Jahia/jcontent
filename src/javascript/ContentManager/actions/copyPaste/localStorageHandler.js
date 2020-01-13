@@ -32,6 +32,10 @@ const initClipboardWatcher = (store, client) => {
 
         if (previousValue !== currentValue) {
             let cb = JSON.parse(currentValue);
+            if (!cb) {
+                return;
+            }
+
             client.query({
                 query: copyPasteQueries.getClipboardInfo,
                 variables: {uuids: cb.nodes.map(n => n.uuid)}

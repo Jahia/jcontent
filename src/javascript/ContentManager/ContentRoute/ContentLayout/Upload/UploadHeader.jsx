@@ -5,7 +5,7 @@ import {CircularProgress, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {CheckCircle, Info} from '@material-ui/icons';
 import {compose} from 'react-apollo';
-import {translate, Trans} from 'react-i18next';
+import {withTranslation, Trans} from 'react-i18next';
 
 let styles = theme => ({
     headerText: {
@@ -39,9 +39,8 @@ export function UploadHeader({classes, t, status}) {
                 </Typography>
                 {(status.error !== 0) &&
                     <Typography color="inherit">
-                        {t('label.contentManager.fileUpload.uploadingActionMessage')}
-                    </Typography>
-                }
+                        {t('content-media-manager:label.contentManager.fileUpload.uploadingActionMessage')}
+                    </Typography>}
             </div>
         );
     }
@@ -61,7 +60,7 @@ export function UploadHeader({classes, t, status}) {
                                       className={classes.link}
                                    >.
                                    </a>
-                               ]}/> : t('label.contentManager.fileUpload.errorMessage')}
+                               ]}/> : t('content-media-manager:label.contentManager.fileUpload.errorMessage')}
                 </Typography>
             </div>
         );
@@ -88,5 +87,5 @@ UploadHeader.propTypes = {
 
 export default compose(
     withStyles(styles, {withTheme: true}),
-    translate(),
+    withTranslation()
 )(UploadHeader);

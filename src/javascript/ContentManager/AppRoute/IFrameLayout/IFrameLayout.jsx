@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {ProgressOverlay, actionsRegistry, withNotifications} from '@jahia/react-material';
 import {compose, Query} from 'react-apollo';
 import {ActionRequirementsQueryHandler} from '../../ContentManager.gql-queries';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 
 export class IFrameLayout extends React.Component {
@@ -182,7 +182,7 @@ IFrameLayout.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(IFrameLayout);

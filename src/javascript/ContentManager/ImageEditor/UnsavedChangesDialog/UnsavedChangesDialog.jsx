@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 import PropTypes from 'prop-types';
 
@@ -11,18 +11,18 @@ export class UnsavedChangesDialog extends React.Component {
         return (
             <Dialog fullWidth open={open} aria-labelledby="form-dialog-title" onClose={onClose}>
                 <DialogTitle>
-                    {t('label.contentManager.editImage.discardChangesTitle')}
+                    {t('content-media-manager:label.contentManager.editImage.discardChangesTitle')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {t('label.contentManager.editImage.exitConfirmation')}
+                        {t('content-media-manager:label.contentManager.editImage.exitConfirmation')}
                     </DialogContentText>
                     <DialogActions>
                         <Button variant="secondary" onClick={onClose}>
-                            {t('label.contentManager.editImage.continueEditing')}
+                            {t('content-media-manager:label.contentManager.editImage.continueEditing')}
                         </Button>
                         <Button variant="primary" onClick={onBack}>
-                            {t('label.contentManager.editImage.discardChangesButton')}
+                            {t('content-media-manager:label.contentManager.editImage.discardChangesButton')}
                         </Button>
                     </DialogActions>
                 </DialogContent>
@@ -39,5 +39,5 @@ UnsavedChangesDialog.propTypes = {
 };
 
 export default compose(
-    translate()
+    withTranslation()
 )(UnsavedChangesDialog);

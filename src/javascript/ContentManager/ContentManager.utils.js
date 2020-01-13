@@ -44,6 +44,7 @@ function extractPaths(siteKey, path, mode) {
     let pathBase = '/sites/' + siteKey + (mode === 'browse-files' ? '/files' : '');
     let pathParts = path.replace(pathBase, '').split('/');
     let paths = [];
+    // eslint-disable-next-line no-unused-vars
     for (let i in pathParts) {
         if (i > 0) {
             paths.push(paths[i - 1] + '/' + pathParts[i]);

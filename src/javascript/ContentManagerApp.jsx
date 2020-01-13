@@ -4,19 +4,29 @@ import ContentManager from './ContentManager';
 import {CssBaseline} from '@material-ui/core';
 
 import './date.config';
+import {useI18nCMMNamespace} from './i18n';
 
-function renderContentManager(target, id, dxContext) {
+export function renderContentManager(target, id, dxContext) {
     window.parent.addEventListener('click', e => {
         if (Array.prototype.slice.call(window.parent.document.querySelectorAll('#JahiaGxtEditEnginePanel-usages a[target=\'_blank\'')).indexOf(e.target) > -1) {
             e.target.href = e.target.href.replace('contentmanager', 'preview');
         }
     });
 
-    ReactDOM.render(
-        <React.Fragment>
-            <CssBaseline/>
-            <ContentManager id={id} dxContext={dxContext}/>
-        </React.Fragment>, document.getElementById(target));
-}
+    const ContentMediaManager = () => {
+        const {loading} = useI18nCMMNamespace();
 
-export {renderContentManager};
+        if (loading) {
+            return '';
+        }
+
+        return (
+            <>
+                <CssBaseline/>
+                <ContentManager id={id} dxContext={dxContext}/>
+            </>
+        );
+    };
+
+    ReactDOM.render(<ContentMediaManager/>, document.getElementById(target));
+}

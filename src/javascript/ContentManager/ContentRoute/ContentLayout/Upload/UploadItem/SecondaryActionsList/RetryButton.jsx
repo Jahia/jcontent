@@ -11,7 +11,7 @@ const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
         color="inverted"
         onClick={() => doUploadAndStatusUpdate()}
     >
-        {t('label.contentManager.fileUpload.retry')}
+        {t('content-media-manager:label.contentManager.fileUpload.retry')}
     </Button>
 );
 

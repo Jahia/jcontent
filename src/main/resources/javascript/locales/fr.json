@@ -1,5 +1,10 @@
 {
   "label": {
+    "pagination": {
+      "rowsPerPage": "Lignes par page",
+      "of": "de"
+    },
+    "burgerMenuTitle": "Ouvrir le menu principal",
     "contentManager": {
       "preview": {
         "hide": "Masquer l'aperçu",

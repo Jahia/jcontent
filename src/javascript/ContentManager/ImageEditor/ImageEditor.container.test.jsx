@@ -78,34 +78,28 @@ describe('Image Edition', () => {
     };
 
     beforeEach(() => {
-        try {
-            global.contextJsParameters = dxContext;
+        global.contextJsParameters = dxContext;
 
-            props = {
-                path: '/toto.jpg',
-                site: 'mySite',
-                language: 'en',
-                editImage: jest.fn(),
-                refreshData: jest.fn()
-            };
+        props = {
+            path: '/toto.jpg',
+            site: 'mySite',
+            language: 'en',
+            editImage: jest.fn(),
+            refreshData: jest.fn()
+        };
 
-            wrapper = mount(
-                <DxContext.Provider value={dxContext}>
-                    <MuiThemeProvider theme={theme}>
-                        <MockedProvider mocks={mocks} cache={new InMemoryCache({fragmentMatcher})}>
-                            <ImageEditorContainer {...props}/>
-                        </MockedProvider>
-                    </MuiThemeProvider>
-                </DxContext.Provider>
-            );
-        } catch (e) {
-            console.log(e);
-        }
+        wrapper = mount(
+            <DxContext.Provider value={dxContext}>
+                <MuiThemeProvider theme={theme}>
+                    <MockedProvider mocks={mocks} cache={new InMemoryCache({fragmentMatcher})}>
+                        <ImageEditorContainer {...props}/>
+                    </MockedProvider>
+                </MuiThemeProvider>
+            </DxContext.Provider>
+        );
     });
 
     it('render', async () => {
-        // Await (wait(0));
-        // wrapper.update();
         expect(wrapper.find(ImageEditor).length).toBe(1);
     });
 

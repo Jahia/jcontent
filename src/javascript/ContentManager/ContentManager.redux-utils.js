@@ -66,6 +66,7 @@ let deserializeQueryString = search => {
         if (params) {
             try {
                 return rison.decode(params);
+                // eslint-disable-next-line no-unused-vars
             } catch (e) {
                 return {};
             }

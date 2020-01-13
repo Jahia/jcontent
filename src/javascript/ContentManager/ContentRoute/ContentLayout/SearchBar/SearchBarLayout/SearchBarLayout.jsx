@@ -32,7 +32,7 @@ export const SearchBarLayout = ({children, leftFooter, rightFooter, onSearch, t,
     <div className={classes.root}>
         <div className={classes.searchInput}>
             {children}
-            <Tooltip title={t('label.contentManager.search.search')}>
+            <Tooltip title={t('content-media-manager:label.contentManager.search.search')}>
                 <Paper>
                     <Button variant="ghost"
                             size="compact"

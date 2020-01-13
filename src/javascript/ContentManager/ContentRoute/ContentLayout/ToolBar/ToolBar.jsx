@@ -10,7 +10,7 @@ import ContentManagerConstants from '../../../ContentManager.constants';
 import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
 import {DisplayActions, iconButtonRenderer} from '@jahia/react-material';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 const styles = theme => ({
     appBarElevation: {
@@ -32,15 +32,13 @@ export class ToolBar extends React.Component {
                         <SearchControlBar showActions={selection.length === 0}/> :
                         <React.Fragment>
                             {treeState !== CM_DRAWER_STATES.SHOW &&
-                                <IconButton icon={<ChevronRight/>} color="inherit" data-sel-role="show-tree" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}/>
-                            }
+                                <IconButton icon={<ChevronRight/>} color="inherit" data-sel-role="show-tree" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}/>}
                             <BrowseControlBar showActions={selection.length === 0}/>
-                        </React.Fragment>
-                    }
+                        </React.Fragment>}
                     {selection.length > 0 &&
                         <React.Fragment>
                             <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
-                                {t('label.contentManager.selection.itemsSelected', {count: selection.length})}
+                                {t('content-media-manager:label.contentManager.selection.itemsSelected', {count: selection.length})}
                             </Typography>
                             <div className={classes.spacer}/>
                             <DisplayActions
@@ -48,8 +46,7 @@ export class ToolBar extends React.Component {
                                 context={{paths: selection}}
                                 render={iconButtonRenderer({color: 'inherit', size: 'compact'})}
                             />
-                        </React.Fragment>
-                    }
+                        </React.Fragment>}
                 </Toolbar>
             </AppBar>
         );
@@ -76,7 +73,7 @@ ToolBar.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(ToolBar);

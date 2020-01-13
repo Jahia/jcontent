@@ -67,8 +67,7 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxCo
                          transform: 'rotate(' + (rotationParams.rotations * 90) + 'deg)' + (keepOrientation ? '' : ' translateX(' + translate + 'px) translateY(' + translate + 'px)')
                      }}
                      src={filepath}
-                     onLoad={e => onImageLoaded(e.target)}/>
-            }
+                     onLoad={e => onImageLoaded(e.target)}/>}
         </div>
     );
 };

@@ -8,7 +8,7 @@ import {compose} from 'react-apollo';
 import {Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';
-import {Trans, translate} from 'react-i18next';
+import {Trans, withTranslation} from 'react-i18next';
 import {cmGoto} from '../../../../ContentManager.redux-actions';
 
 const styles = theme => ({
@@ -72,7 +72,7 @@ export class SearchBarSql2 extends React.Component {
                 leftFooter={
                     <DxContext.Consumer>{dxContext => (
                         <Typography align="left" color="invert">
-                            <Trans i18nKey="label.contentManager.search.sql2Prompt"
+                            <Trans i18nKey="content-media-manager:label.contentManager.search.sql2Prompt"
                                    className={classes.academy}
                                    components={[
                                        <a key="sql2Prompt"
@@ -87,7 +87,8 @@ export class SearchBarSql2 extends React.Component {
                             />
                         </Typography>
                     )}
-                    </DxContext.Consumer>}
+                    </DxContext.Consumer>
+}
                 rightFooter={
                     <React.Fragment>
                         {ongoingSearch.sql2SearchFrom ?
@@ -96,9 +97,9 @@ export class SearchBarSql2 extends React.Component {
                                 label="label.contentManager.search.normal"
                                 cmRole="search-type-normal"
                                 onClick={onNormalClick}
-                            />
-                        }
-                    </React.Fragment>}
+                            />}
+                    </React.Fragment>
+}
                 onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
             >
                 <Paper className={classes.input}>
@@ -154,7 +155,7 @@ SearchBarSql2.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(SearchBarSql2);

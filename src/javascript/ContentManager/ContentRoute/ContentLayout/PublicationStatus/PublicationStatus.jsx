@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {InfoOutlined} from '@material-ui/icons';
 import {publicationStatusByName} from './publicationStatusRenderer';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import classNames from 'classnames';
 
 const styles = theme => ({
@@ -123,4 +123,4 @@ PublicationStatus.propTypes = {
     i18n: PropTypes.object.isRequired
 };
 
-export default translate()(withStyles(styles)(PublicationStatus));
+export default withTranslation()(withStyles(styles)(PublicationStatus));

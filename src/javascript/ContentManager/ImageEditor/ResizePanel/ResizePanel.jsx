@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {Link} from 'mdi-material-ui';
 import {IconButton, Typography} from '@jahia/design-system-kit';
 
@@ -59,12 +59,12 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
     return (
         <>
             <Typography variant="zeta">
-                {t('label.contentManager.editImage.resizeInfo')}
+                {t('content-media-manager:label.contentManager.editImage.resizeInfo')}
             </Typography>
             <div className={classes.form}>
                 <div className={classes.firstCol}>
                     <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('label.contentManager.editImage.width')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('content-media-manager:label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
                             value={resizeParams.width ? resizeParams.width : originalWidth}
@@ -74,7 +74,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
                         />
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('label.contentManager.editImage.height')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('content-media-manager:label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
                             value={resizeParams.height ? resizeParams.height : originalHeight}
@@ -104,6 +104,6 @@ ResizePanel.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(ResizePanel);

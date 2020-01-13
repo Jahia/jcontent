@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
@@ -88,7 +88,7 @@ export class FilesGrid extends Component {
                     <ToolBar/>
                     <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                         <Typography variant="epsilon" className={classes.empty}>
-                            {t('label.contentManager.contentNotFound')}
+                            {t('content-media-manager:label.contentManager.contentNotFound')}
                         </Typography>
                     </Grid>
                 </React.Fragment>
@@ -145,6 +145,10 @@ export class FilesGrid extends Component {
                     totalCount={totalCount}
                     pageSize={pagination.pageSize}
                     currentPage={pagination.currentPage}
+                    labels={{
+                      labelRowsPerPage: t('content-media-manager:label.pagination.rowsPerPage'),
+                      of: t('content-media-manager:label.pagination.of')
+                    }}
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}
                 />
@@ -197,6 +201,6 @@ FilesGrid.propTypes = {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    translate(),
-    withStyles(styles, {withTheme: true}),
+    withTranslation(),
+    withStyles(styles, {withTheme: true})
 )(FilesGrid);

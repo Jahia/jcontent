@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {removeUpload, setStatus, setUploads, takeFromQueue, updateUpload} from './Upload.redux-actions';
 import UploadItem from './UploadItem';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 import {files} from './Upload.utils';
 import UploadHeader from './UploadHeader';
@@ -217,6 +217,6 @@ Upload.propTypes = {
 
 export default compose(
     withStyles(styles, {withTheme: true}),
-    translate(),
+    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(Upload);

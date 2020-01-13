@@ -15,7 +15,7 @@ const DontUploadButton = ({removeFile, index, removeUploadFromQueue, t, classes,
             updateUploadsStatus();
         }}
     >
-        {type === 'import' ? t('label.contentManager.fileUpload.dontImport') : t('label.contentManager.fileUpload.dontUpload')}
+        {type === 'import' ? t('content-media-manager:label.contentManager.fileUpload.dontImport') : t('content-media-manager:label.contentManager.fileUpload.dontUpload')}
     </Button>
 );
 

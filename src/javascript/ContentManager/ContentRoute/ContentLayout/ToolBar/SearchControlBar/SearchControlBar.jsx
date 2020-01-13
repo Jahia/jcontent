@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Trans, translate} from 'react-i18next';
+import {Trans, withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmGoto, cmSetPath} from '../../../../ContentManager.redux-actions';
 import {withStyles} from '@material-ui/core';
@@ -46,9 +46,8 @@ export class SearchControlBar extends React.Component {
                         onClick={() => setPath(siteRootPath)}
                     >
                         <VirtualsiteIcon/>
-                        {t('label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
-                    </Button>
-                }
+                        {t('content-media-manager:label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
+                    </Button>}
                 {showActions &&
                     <Button
                         data-cm-role="search-clear"
@@ -56,9 +55,8 @@ export class SearchControlBar extends React.Component {
                         onClick={() => clearSearch(params)}
                     >
                         <Close/>
-                        {t('label.contentManager.search.clear')}
-                    </Button>
-                }
+                        {t('content-media-manager:label.contentManager.search.clear')}
+                    </Button>}
             </React.Fragment>
         );
     }
@@ -104,7 +102,7 @@ SearchControlBar.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(SearchControlBar);

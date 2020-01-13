@@ -14,7 +14,7 @@ export const uploadSeed = {
     path: null // Will try to take globally set path if this is null
 };
 
-export const fileUpload = (state = initialState, action) => {
+export const fileUpload = (state = initialState, action = {}) => {
     let numTaken = 0;
     switch (action.type) {
         case 'FILEUPLOAD_SET_PATH': return {

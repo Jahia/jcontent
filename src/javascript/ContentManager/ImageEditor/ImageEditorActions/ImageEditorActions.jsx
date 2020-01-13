@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, ExpansionPanelActions} from '@jahia/design-system-kit';
 import {withStyles} from '@material-ui/core';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 let styles = {
     buttons: {
@@ -21,14 +21,14 @@ let styles = {
 const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
     <ExpansionPanelActions className={classes.buttons}>
         <Button data-cm-role="undo-changes" variant="ghost" disabled={!dirty} onClick={undoChanges}>
-            {t('label.contentManager.editImage.undo')}
+            {t('content-media-manager:label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>
         <Button variant="secondary" data-cm-role="image-save-as-button" disabled={!dirty} onClick={() => saveChanges(true)}>
-            {t('label.contentManager.editImage.saveAs')}
+            {t('content-media-manager:label.contentManager.editImage.saveAs')}
         </Button>
         <Button variant="primary" data-cm-role="image-save-button" disabled={!dirty} onClick={() => saveChanges(false)}>
-            {t('label.contentManager.editImage.save')}
+            {t('content-media-manager:label.contentManager.editImage.save')}
         </Button>
     </ExpansionPanelActions>
 );
@@ -42,6 +42,6 @@ ImageEditorActions.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(ImageEditorActions);

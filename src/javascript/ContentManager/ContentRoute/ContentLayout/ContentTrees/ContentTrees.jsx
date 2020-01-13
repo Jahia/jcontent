@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {AppBar, Grid, Toolbar, withStyles} from '@material-ui/core';
 import {Typography, IconButton} from '@jahia/design-system-kit';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
@@ -52,7 +52,7 @@ export class ContentTrees extends React.Component {
                         <Grid container alignItems="center" spacing={8} justify="space-between">
                             <Grid item>
                                 <Typography variant="zeta" color="inherit">
-                                    {t('label.contentManager.tree.title')}
+                                    {t('content-media-manager:label.contentManager.tree.title')}
                                 </Typography>
                             </Grid>
                             <Grid item>
@@ -83,8 +83,7 @@ export class ContentTrees extends React.Component {
                                                  setRefetch={refetchingData => setRefetcher(contentTreeConfig.key, refetchingData)}
                                     />
                                 );
-                            }) : null
-                        }
+                            }) : null}
                     </div>
                 </div>
             </React.Fragment>
@@ -129,7 +128,7 @@ ContentTrees.defaultProps = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles, {withTheme: true}),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentTrees);

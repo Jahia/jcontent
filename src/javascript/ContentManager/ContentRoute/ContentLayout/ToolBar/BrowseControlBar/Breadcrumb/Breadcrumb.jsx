@@ -75,8 +75,7 @@ export const Breadcrumb = ({breadcrumbs, classes, mode, selectItem}) => {
                                 showLabel={showLabel}
                             />
                             {(i < items.length - 1) &&
-                            <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>
-                            }
+                            <ChevronRightIcon fontSize="small" classes={{root: classes.chevronSvg}}/>}
                         </span>
                     );
                 }

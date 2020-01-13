@@ -4,7 +4,7 @@ import {Tooltip, withStyles} from '@material-ui/core';
 import {RotateLeft, RotateRight} from '@material-ui/icons';
 import {IconButton, Typography} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 let styles = theme => ({
     icons: {
@@ -16,15 +16,15 @@ export const RotatePanel = ({classes, t, onRotate}) => {
     return (
         <>
             <Typography variant="zeta">
-                {t('label.contentManager.editImage.rotateInfo')}
+                {t('content-media-manager:label.contentManager.editImage.rotateInfo')}
             </Typography>
             <div className={classes.icons}>
-                <Tooltip title={t('label.contentManager.editImage.rotateLeft')}>
+                <Tooltip title={t('content-media-manager:label.contentManager.editImage.rotateLeft')}>
                     <IconButton data-cm-role="rotate-left"
                                 icon={<RotateLeft color="primary" fontSize="large"/>}
                                 onClick={() => onRotate(-1)}/>
                 </Tooltip>
-                <Tooltip title={t('label.contentManager.editImage.rotateRight')}>
+                <Tooltip title={t('content-media-manager:label.contentManager.editImage.rotateRight')}>
                     <IconButton data-cm-role="rotate-right"
                                 icon={<RotateRight color="primary" fontSize="large"/>}
                                 onClick={() => onRotate(1)}/>
@@ -41,6 +41,6 @@ RotatePanel.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(RotatePanel);

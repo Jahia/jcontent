@@ -29,8 +29,7 @@ class Option extends React.Component {
                         fontWeight: isSelected ? 500 : 400,
                         color: '#3a3c3f',
                         minWidth: '155px'
-                    }
-                }
+                    }}
                 title={data.title}
                 onClick={this.handleClick}
                 onFocus={onFocus}
@@ -38,8 +37,7 @@ class Option extends React.Component {
                 {data.icon !== null &&
                 <ListItemIcon>
                     <img src={data.icon + '.png'}/>
-                </ListItemIcon>
-                }
+                </ListItemIcon>}
                 <ListItemText disableTypography>
                     {children}
                 </ListItemText>

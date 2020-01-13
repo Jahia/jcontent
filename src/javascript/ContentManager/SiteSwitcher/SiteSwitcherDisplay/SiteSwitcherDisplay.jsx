@@ -67,6 +67,6 @@ SiteSwitcherDisplay.propTypes = {
 };
 
 export default compose(
-    withStyles(styles),
+    withStyles(styles)
 )(SiteSwitcherDisplay);
 

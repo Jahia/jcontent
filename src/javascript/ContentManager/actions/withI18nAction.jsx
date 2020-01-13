@@ -1,7 +1,7 @@
 import React from 'react';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
-let TranslateConsumer = translate()(props => props.children(props.t));
+let TranslateConsumer = withTranslation()(props => props.children(props.t));
 
 let withI18nAction = {
     init: (context, props) => {

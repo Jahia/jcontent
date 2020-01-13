@@ -9,8 +9,8 @@ import ContentLayout from './ContentLayout';
 const ContentRoute = ({help, match, t}) => (
     <MainLayout
         topBarProps={{
-            path: t('label.contentManager.appTitle', {path: ''}),
-            title: t('label.contentManager.title.' + match.params.mode),
+            path: t('content-media-manager:label.contentManager.appTitle', {path: ''}),
+            title: t('content-media-manager:label.contentManager.title.' + match.params.mode),
             contextModifiers: <React.Fragment><SiteSwitcher/><SiteLanguageSwitcher/></React.Fragment>,
             actions: <React.Fragment><SearchBar/></React.Fragment>
         }}

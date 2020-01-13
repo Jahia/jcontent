@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
-import {translate} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 let styles = {
     root: {
@@ -28,10 +28,10 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
                 classes={{paper: classes.root}}
                 onClose={handleClose}
         >
-            <DialogTitle id="form-dialog-title">{t('label.contentManager.editImage.saveAsDialog.title')}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('content-media-manager:label.contentManager.editImage.saveAsDialog.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {t('label.contentManager.editImage.saveAsDialog.text')}
+                    {t('content-media-manager:label.contentManager.editImage.saveAsDialog.text')}
                 </DialogContentText>
                 <TextField
                     autoFocus
@@ -46,10 +46,10 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
             </DialogContent>
             <DialogActions>
                 <Button variant="secondary" data-cm-role="image-save-as-cancel" onClick={handleClose}>
-                    {t('label.contentManager.editImage.saveAsDialog.cancel')}
+                    {t('content-media-manager:label.contentManager.editImage.saveAsDialog.cancel')}
                 </Button>
                 <Button variant="primary" data-cm-role="image-save-as-confirm" disabled={!isNameValid} onClick={handleSave}>
-                    {t('label.contentManager.editImage.saveAsDialog.save')}
+                    {t('content-media-manager:label.contentManager.editImage.saveAsDialog.save')}
                 </Button>
             </DialogActions>
         </Dialog>
@@ -68,6 +68,6 @@ SaveAsDialog.propTypes = {
 };
 
 export default compose(
-    translate(),
+    withTranslation(),
     withStyles(styles)
 )(SaveAsDialog);

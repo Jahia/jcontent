@@ -48,7 +48,6 @@
                 academyLink: "<%= SettingsBean.getInstance().getString("contentMediaAcademyLink", "https://academy.jahia.com/documentation/modules/content-and-media-manager/1.0") %>",
                 importAcademyLink: "<%= SettingsBean.getInstance().getString("contentMediaImportAcademyLink", "https://academy.jahia.com/documentation/digital-experience-manager/7.3/modules/content-and-media-manager#exporting_importing_contents") %>"
             };
-            contextJsParameters['i18nNamespaces'] = ${cmFunctions:getI18nNamespaces()};
 
             window.cmmContext = {
                 targetId: '${targetId}',

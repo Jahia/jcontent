@@ -60,7 +60,7 @@ public class TagFunctions {
 
     /**
      * Generates the list of actions for the Content and Media Manager.
-     * 
+     *
      * @param renderContext current render context
      * @return a string representation of the JavaScript resources for action lists
      */
@@ -73,23 +73,6 @@ public class TagFunctions {
         }
 
         return result.toString();
-    }
-
-    /**
-     * Retrieves a list of namespaces (module names) that contain JavaScript locales.
-     * 
-     * @return a string representation of an array with all i18n namespaces
-     */
-    public static String getI18nNameSpaces() {
-        Collection<Bundle> bundles = Utils.getBundlesWithActionListResources();
-        Set<String> namespaces = new LinkedHashSet<>();
-        for (Bundle bundle : bundles) {
-            if (bundle.getEntry("/javascript/locales") != null) {
-                namespaces.add(BundleUtils.getModuleId(bundle));
-            }
-        }
-
-        return namespaces.isEmpty() ? "[]" : "['" + StringUtils.join(namespaces, "', '") + "']";
     }
 
     @SuppressWarnings("unchecked")

@@ -16,11 +16,4 @@
         <function-class>org.jahia.modules.contentmanager.actionlists.TagFunctions</function-class>
         <function-signature>java.lang.String generateActionLists(org.jahia.services.render.RenderContext)</function-signature>
     </function>
-    <function>
-        <description>Retrieves a list of namespaces (module names) that contain JavaScript locales</description>
-        <name>getI18nNamespaces</name>
-        <function-class>org.jahia.modules.contentmanager.actionlists.TagFunctions</function-class>
-        <function-signature>java.lang.String getI18nNameSpaces()</function-signature>
-    </function>
-
 </taglib>

@@ -13,11 +13,11 @@
                 de: 'Content- und Medien-Manager wird geladen...'
             });
         } else {
-            console.info('Waiting for 100ms for function window.displayDXLoadingScreen to become available');
+            console.debug('%c Waiting for 100ms for function window.displayDXLoadingScreen to become available', 'color: #6B5CA5');
             if (count++ < retry) {
                 setTimeout(waitForFunction, 100);
             } else {
-                console.info('Function window.displayDXLoadingScreen not available, give up after ' + retry + ' times');
+                console.debug('%c Function window.displayDXLoadingScreen not available, give up after ' + retry + ' times', 'color: #6B5CA5');
             }
         }
     })();

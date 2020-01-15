@@ -70,7 +70,7 @@ export function UploadHeader({classes, t, status}) {
         <div className={classNames(classes.headerText)}>
             <CheckCircle className={classNames(classes.statusIcon)}/>
             <Typography color="inherit" data-cm-role="upload-status-success">
-                {t(status.type === 'import' ? 'label.contentManager.fileUpload.successfulImportMessage' : 'label.contentManager.fileUpload.successfulUploadMessage', {
+                {t(status.type === 'import' ? 'content-media-manager:label.contentManager.fileUpload.successfulImportMessage' : 'content-media-manager:label.contentManager.fileUpload.successfulUploadMessage', {
                     count: status.total,
                     number: status.total
                 })}

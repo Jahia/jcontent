@@ -24,7 +24,7 @@ const styles = theme => ({
 
 const EmptyDropZone = ({component: Component, t, classes, mode}) => (
     <Component className={classes.dropZone}>
-        <Typography variant="gamma" color="inherit">{t(mode === 'browse-files' ? 'label.contentManager.fileUpload.dropMessage' : 'label.contentManager.import.dropMessage')}</Typography>
+        <Typography variant="gamma" color="inherit">{t(mode === 'browse-files' ? 'content-media-manager:label.contentManager.fileUpload.dropMessage' : 'content-media-manager:label.contentManager.import.dropMessage')}</Typography>
         <CloudUpload/>
     </Component>
 );

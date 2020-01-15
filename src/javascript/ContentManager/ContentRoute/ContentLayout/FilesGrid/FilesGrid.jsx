@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, {useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
@@ -54,108 +54,149 @@ const styles = theme => ({
     }
 });
 
-export class FilesGrid extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            hoveredCard: null
-        };
+export const FilesGrid = ({
+    gridMode,
+    contentNotFound,
+    classes,
+    path,
+    totalCount,
+    pagination,
+    setPageSize,
+    onPreviewSelect,
+    setCurrentPage,
+    rows,
+    loading,
+    mode,
+    uiLang,
+    siteKey,
+    previewSelection,
+    previewState,
+    setPath
+}) => {
+    const {t} = useTranslation();
+    const mainPanelEl = useRef(null);
+    const [hoveredCard, setHoveredCard] = useState(null);
+
+    const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
+    const onHoverEnter = (_, path) => {
+        setHoveredCard(path);
+    };
+
+    const onHoverExit = () => {
+        setHoveredCard(null);
+    };
+
+    const handleKeyboardNavigation = event => {
+        // Right arrow code: 39, Down arrow code: 40
+        if (selectedItemIndex !== rows.length - 1 && (event.keyCode === 39 || event.keyCode === 40)) {
+            setSelectedItemIndex(selectedItemIndex + 1);
+            onPreviewSelect(rows[selectedItemIndex + 1].path);
+            // Left arrow code: 37, Up arrow code: 38
+        } else if (selectedItemIndex !== 0 && (event.keyCode === 37 || event.keyCode === 38)) {
+            setSelectedItemIndex(selectedItemIndex - 1);
+            onPreviewSelect(rows[selectedItemIndex - 1].path);
+        }
+    };
+
+    const setFocusOnMainContainer = () => {
+        mainPanelEl.current.focus();
+    };
+
+    if ((!rows || rows.length === 0) && loading) {
+        return null;
     }
 
-    onHoverEnter($event, path) {
-        this.setState({
-            hoveredCard: path
-        });
-    }
-
-    onHoverExit() {
-        this.setState({
-            hoveredCard: null
-        });
-    }
-
-    render() {
-        const {gridMode, t, contentNotFound, classes, path, totalCount, pagination, setPageSize, onPreviewSelect,
-            setCurrentPage, rows, loading, mode, uiLang, siteKey, previewSelection, previewState, setPath} = this.props;
-        const {hoveredCard} = this.state;
-        if ((!rows || rows.length === 0) && loading) {
-            return null;
-        }
-
-        if (contentNotFound) {
-            return (
-                <React.Fragment>
-                    <ToolBar/>
-                    <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                        <Typography variant="epsilon" className={classes.empty}>
-                            {t('content-media-manager:label.contentManager.contentNotFound')}
-                        </Typography>
-                    </Grid>
-                </React.Fragment>
-            );
-        }
-
-        if ((!rows || rows.length === 0) && !loading) {
-            return (
-                <React.Fragment>
-                    <ToolBar/>
-                    <FilesGridEmptyDropZone mode="browse-files" path={path}/>
-                </React.Fragment>
-            );
-        }
-
+    if (contentNotFound) {
         return (
             <React.Fragment>
                 <ToolBar/>
-                <div className={classes.grid} data-cm-role="grid-content-list">
-                    <UploadTransformComponent uploadTargetComponent={Paper}
-                                              uploadPath={path}
-                                              mode="browse-files"
-                                              className={classNames(classes.defaultGrid,
-                                                  (!gridMode || gridMode === 'thumbnail') && classes.thumbGrid,
-                                                  gridMode === 'detailed' && classes.detailedGrid)}
-                    >
-                        {this.props.rows.map((node, index) => (
-                            <DxContext.Consumer key={node.uuid}>
-                                {dxContext => (
-                                    <FileCard
-                                            gridMode={gridMode}
-                                            mode={mode}
-                                            uiLang={uiLang}
-                                            siteKey={siteKey}
-                                            previewSelection={previewSelection}
-                                            previewState={previewState}
-                                            index={index}
-                                            isHovered={node.path === hoveredCard}
-                                            node={node}
-                                            dxContext={dxContext}
-                                            setPath={setPath}
-                                            onPreviewSelect={onPreviewSelect}
-                                            onMouseEnter={$event => this.onHoverEnter($event, node.path)}
-                                            onMouseLeave={$event => this.onHoverExit($event)}
-                                        />
-                                    )}
-                            </DxContext.Consumer>
-                        ))}
-                        {/* please keep this divs to handle the grid layout when there is less than 6 elements */}
-                        <div/><div/><div/><div/><div/><div/>
-                    </UploadTransformComponent>
-                </div>
-                <Pagination
-                    totalCount={totalCount}
-                    pageSize={pagination.pageSize}
-                    currentPage={pagination.currentPage}
-                    labels={{
-                      labelRowsPerPage: t('content-media-manager:label.pagination.rowsPerPage'),
-                      of: t('content-media-manager:label.pagination.of')
-                    }}
-                    onChangeRowsPerPage={setPageSize}
-                    onChangePage={setCurrentPage}
-                />
+                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
+                    <Typography variant="epsilon" className={classes.empty}>
+                        {t('label.contentManager.contentNotFound')}
+                    </Typography>
+                </Grid>
             </React.Fragment>
         );
     }
-}
+
+    if ((!rows || rows.length === 0) && !loading) {
+        return (
+            <React.Fragment>
+                <ToolBar/>
+                <FilesGridEmptyDropZone mode="browse-files" path={path}/>
+            </React.Fragment>
+        );
+    }
+
+    return (
+        <React.Fragment>
+            <ToolBar/>
+            <div ref={mainPanelEl}
+                 className={classes.grid}
+                 data-cm-role="grid-content-list"
+                 tabIndex="1"
+                 onKeyDown={handleKeyboardNavigation}
+                 onClick={setFocusOnMainContainer}
+            >
+                <UploadTransformComponent uploadTargetComponent={Paper}
+                                          uploadPath={path}
+                                          mode="browse-files"
+                                          className={classNames(classes.defaultGrid,
+                                              (!gridMode || gridMode === 'thumbnail') && classes.thumbGrid,
+                                              gridMode === 'detailed' && classes.detailedGrid)}
+                >
+                    {rows.map((node, index) => (
+                        <DxContext.Consumer key={node.uuid}>
+                            {dxContext => (
+                                <FileCard
+                                    gridMode={gridMode}
+                                    mode={mode}
+                                    uiLang={uiLang}
+                                    siteKey={siteKey}
+                                    previewSelection={previewSelection}
+                                    previewState={previewState}
+                                    index={index}
+                                    isHovered={node.path === hoveredCard}
+                                    node={node}
+                                    dxContext={dxContext}
+                                    setPath={setPath}
+                                    onPreviewSelect={(...args) => {
+                                        setSelectedItemIndex(index);
+                                        onPreviewSelect(...args);
+                                    }}
+                                    onMouseEnter={$event => {
+                                        onHoverEnter($event, node.path);
+                                    }}
+                                    onMouseLeave={$event => {
+                                        onHoverExit($event);
+                                    }}
+                                />
+                            )}
+                        </DxContext.Consumer>
+                    ))}
+                    {/* please keep this divs to handle the grid layout when there is less than 6 elements */}
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                </UploadTransformComponent>
+            </div>
+            <Pagination
+                totalCount={totalCount}
+                pageSize={pagination.pageSize}
+                currentPage={pagination.currentPage}
+                labels={{
+                    labelRowsPerPage: t('content-media-manager:label.pagination.rowsPerPage'),
+                    of: t('content-media-manager:label.pagination.of')
+                }}
+                onChangePage={setCurrentPage}
+                onChangeRowsPerPage={setPageSize}
+            />
+        </React.Fragment>
+    );
+};
 
 let mapStateToProps = state => ({
     path: state.path,
@@ -188,7 +229,6 @@ FilesGrid.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
     setPageSize: PropTypes.func.isRequired,
     gridMode: PropTypes.string.isRequired,
-    t: PropTypes.func.isRequired,
     uiLang: PropTypes.string.isRequired,
     previewSelection: PropTypes.string,
     previewState: PropTypes.number.isRequired,
@@ -201,6 +241,5 @@ FilesGrid.propTypes = {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    withTranslation(),
     withStyles(styles, {withTheme: true})
 )(FilesGrid);

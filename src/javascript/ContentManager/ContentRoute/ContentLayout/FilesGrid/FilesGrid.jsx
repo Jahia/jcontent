@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
@@ -15,6 +15,7 @@ import {cmSetPreviewSelection} from '../../../preview.redux-actions';
 import {cmGoto, cmOpenPaths} from '../../../ContentManager.redux-actions';
 import classNames from 'classnames';
 import {extractPaths} from '../../../ContentManager.utils';
+import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
 const styles = theme => ({
     grid: {
@@ -74,24 +75,16 @@ export const FilesGrid = ({
     setPath
 }) => {
     const {t} = useTranslation();
-    const mainPanelEl = useRef(null);
-    const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
 
-    const handleKeyboardNavigation = event => {
-        // Right arrow code: 39, Down arrow code: 40
-        if (selectedItemIndex !== rows.length - 1 && (event.keyCode === 39 || event.keyCode === 40)) {
-            setSelectedItemIndex(selectedItemIndex + 1);
-            onPreviewSelect(rows[selectedItemIndex + 1].path);
-            // Left arrow code: 37, Up arrow code: 38
-        } else if (selectedItemIndex !== 0 && (event.keyCode === 37 || event.keyCode === 38)) {
-            setSelectedItemIndex(selectedItemIndex - 1);
-            onPreviewSelect(rows[selectedItemIndex - 1].path);
-        }
-    };
-
-    const setFocusOnMainContainer = () => {
-        mainPanelEl.current.focus();
-    };
+    const {
+        mainPanelRef,
+        handleKeyboardNavigation,
+        setFocusOnMainContainer,
+        setSelectedItemIndex
+    } = useKeyboardNavigation({
+        listLength: rows.length,
+        onSelectionChange: index => onPreviewSelect(rows[index].path)
+    });
 
     if ((!rows || rows.length === 0) && loading) {
         return null;
@@ -122,7 +115,7 @@ export const FilesGrid = ({
     return (
         <React.Fragment>
             <ToolBar/>
-            <div ref={mainPanelEl}
+            <div ref={mainPanelRef}
                  className={classes.grid}
                  data-cm-role="grid-content-list"
                  tabIndex="1"

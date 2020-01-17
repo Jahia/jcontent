@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
-import {compose} from 'react-apollo';
 import {ContextualMenu} from '@jahia/react-material';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
@@ -102,51 +101,55 @@ const styles = theme => ({
     }
 });
 
-export class FileCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isHovered: false
-        };
+export const FileCard = ({gridMode,
+    classes,
+    node,
+    dxContext,
+    uiLang,
+    setPath,
+    previewSelection,
+    onPreviewSelect,
+    previewState,
+    siteKey,
+    mode,
+    index
+}) => {
+    const {t} = useTranslation();
+    const [isHovered, setHovered] = useState(false);
+
+    let contextualMenu = React.createRef();
+
+    const isImage = isBrowserImage(node.path);
+    const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+    const isPreviewSelected = (previewSelection && previewSelection === node.path) && isPreviewOpened;
+
+    let isDetailedCard = false;
+    let isThumbCard = false;
+    let maxLengthLabels;
+    switch (gridMode) {
+        case 'thumbnail':
+            isThumbCard = true;
+            maxLengthLabels = 18;
+            break;
+        case 'detailed':
+            isDetailedCard = true;
+            maxLengthLabels = 28;
+            break;
+        default:
+            isThumbCard = true;
+            maxLengthLabels = 18;
     }
 
-    render() {
-        const {gridMode, classes, t, node, dxContext, uiLang, setPath, previewSelection, onPreviewSelect, previewState, siteKey, mode, index} = this.props;
-        const {isHovered} = this.state;
+    // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
+    let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
+    let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
+    let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
+    let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
+    return (
+        <React.Fragment>
+            <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
 
-        let contextualMenu = React.createRef();
-
-        const isImage = isBrowserImage(node.path);
-        const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
-        const isPreviewSelected = (previewSelection && previewSelection === node.path) && isPreviewOpened;
-
-        let isDetailedCard = false;
-        let isThumbCard = false;
-        let maxLengthLabels;
-        switch (gridMode) {
-            case 'thumbnail':
-                isThumbCard = true;
-                maxLengthLabels = 18;
-                break;
-            case 'detailed':
-                isDetailedCard = true;
-                maxLengthLabels = 28;
-                break;
-            default:
-                isThumbCard = true;
-                maxLengthLabels = 18;
-        }
-
-        // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
-        let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
-        let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
-        let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
-        let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
-        return (
-            <React.Fragment>
-                <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
-
-                <Card
+            <Card
                     style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
                     className={classNames(
                         isThumbCard && classes.thumbCard,
@@ -164,14 +167,14 @@ export class FileCard extends Component {
                         }
                     }}
                     onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
-                    onMouseEnter={event => this.onHoverEnter(event)}
-                    onMouseLeave={event => this.onHoverExit(event)}
-                >
-                    {!isThumbCard &&
-                        <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
+            >
+                {!isThumbCard &&
+                <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
 
-                    {isImage ?
-                        <CardMedia
+                {isImage ?
+                    <CardMedia
                             className={classNames(
                                 isDetailedCard && classes.detailedCover,
                                 isThumbCard && classes.thumbCover
@@ -179,62 +182,53 @@ export class FileCard extends Component {
                             image={`${dxContext.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
                             title={node.name}
                         /> :
-                        <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>
-                            {node.primaryNodeType.name === 'jnt:folder' ?
-                                <Folder color="action"/> :
+                    <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>
+                        {node.primaryNodeType.name === 'jnt:folder' ?
+                            <Folder color="action"/> :
                                 isPdf ?
                                     <img src={`${dxContext.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
                                     <FileIcon filename={node.path} color="disabled"/>}
-                        </div>}
+                    </div>}
 
-                    <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
-                        {isThumbCard &&
-                            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
+                <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
+                    {isThumbCard &&
+                    <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
 
-                        <Actions node={node} isHovered={isHovered}/>
+                    <Actions node={node} isHovered={isHovered}/>
 
-                        <CardContent classes={{root: classes.cardContent}}>
-                            <div>
-                                <Typography variant="caption" component="p">
-                                    {t('content-media-manager:label.contentManager.filesGrid.name')}
-                                </Typography>
-                                <FileName maxLength={maxLengthLabels} node={node}/>
-                            </div>
-                            {!isThumbCard &&
-                                <div>
-                                    <Typography variant="caption" component="p">
-                                        {t('content-media-manager:label.contentManager.filesGrid.createdBy')}
-                                    </Typography>
-                                    <Typography variant="iota" component="p">
-                                        {t('content-media-manager:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
+                    <CardContent classes={{root: classes.cardContent}}>
+                        <div>
+                            <Typography variant="caption" component="p">
+                                {t('content-media-manager:label.contentManager.filesGrid.name')}
+                            </Typography>
+                            <FileName maxLength={maxLengthLabels} node={node}/>
+                        </div>
+                        {!isThumbCard &&
+                        <div>
+                            <Typography variant="caption" component="p">
+                                {t('content-media-manager:label.contentManager.filesGrid.createdBy')}
+                            </Typography>
+                            <Typography variant="iota" component="p">
+                                {t('content-media-manager:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
-                                        <time>{dayjs(node.created.value).locale(getDefaultLocale(uiLang)).format('LLL')}</time>
-                                    </Typography>
-                                </div>}
-                            {(isDetailedCard) && node.width && node.height &&
-                                <div>
-                                    <Typography variant="caption" component="p">
-                                        {t('content-media-manager:label.contentManager.filesGrid.fileInfo')}
-                                    </Typography>
-                                    <Typography variant="iota" component="p">
-                                        {`${node.width.value} x ${node.height.value}`}
-                                    </Typography>
-                                </div>}
-                        </CardContent>
-                    </div>
-                </Card>
-            </React.Fragment>
-        );
-    }
-
-    onHoverEnter() {
-        this.setState({isHovered: true});
-    }
-
-    onHoverExit() {
-        this.setState({isHovered: false});
-    }
-}
+                                <time>{dayjs(node.created.value).locale(getDefaultLocale(uiLang)).format('LLL')}</time>
+                            </Typography>
+                        </div>}
+                        {(isDetailedCard) && node.width && node.height &&
+                        <div>
+                            <Typography variant="caption" component="p">
+                                {t('content-media-manager:label.contentManager.filesGrid.fileInfo')}
+                            </Typography>
+                            <Typography variant="iota" component="p">
+                                {`${node.width.value} x ${node.height.value}`}
+                            </Typography>
+                        </div>}
+                    </CardContent>
+                </div>
+            </Card>
+        </React.Fragment>
+    );
+};
 
 FileCard.propTypes = {
     classes: PropTypes.object.isRequired,
@@ -247,12 +241,8 @@ FileCard.propTypes = {
     index: PropTypes.number.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    t: PropTypes.func.isRequired,
     uiLang: PropTypes.string.isRequired,
     gridMode: PropTypes.string.isRequired
 };
 
-export default compose(
-    withStyles(styles),
-    withTranslation()
-)(FileCard);
+export default withStyles(styles)(FileCard);

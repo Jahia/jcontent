@@ -75,16 +75,7 @@ export const FilesGrid = ({
 }) => {
     const {t} = useTranslation();
     const mainPanelEl = useRef(null);
-    const [hoveredCard, setHoveredCard] = useState(null);
-
     const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
-    const onHoverEnter = (_, path) => {
-        setHoveredCard(path);
-    };
-
-    const onHoverExit = () => {
-        setHoveredCard(null);
-    };
 
     const handleKeyboardNavigation = event => {
         // Right arrow code: 39, Down arrow code: 40
@@ -156,19 +147,12 @@ export const FilesGrid = ({
                                     previewSelection={previewSelection}
                                     previewState={previewState}
                                     index={index}
-                                    isHovered={node.path === hoveredCard}
                                     node={node}
                                     dxContext={dxContext}
                                     setPath={setPath}
                                     onPreviewSelect={(...args) => {
                                         setSelectedItemIndex(index);
                                         onPreviewSelect(...args);
-                                    }}
-                                    onMouseEnter={$event => {
-                                        onHoverEnter($event, node.path);
-                                    }}
-                                    onMouseLeave={$event => {
-                                        onHoverExit($event);
                                     }}
                                 />
                             )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
@@ -112,12 +112,10 @@ export const FileCard = ({gridMode,
     previewState,
     siteKey,
     mode,
-    index,
-    onMouseEnter,
-    onMouseLeave,
-    isHovered
+    index
 }) => {
     const {t} = useTranslation();
+    const [isHovered, setHovered] = useState(false);
 
     let contextualMenu = React.createRef();
 
@@ -169,8 +167,8 @@ export const FileCard = ({gridMode,
                         }
                     }}
                     onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
-                    onMouseEnter={event => onMouseEnter(event)}
-                    onMouseLeave={event => onMouseLeave(event)}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
             >
                 {!isThumbCard &&
                 <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
@@ -244,10 +242,7 @@ FileCard.propTypes = {
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     uiLang: PropTypes.string.isRequired,
-    gridMode: PropTypes.string.isRequired,
-    onMouseEnter: PropTypes.func.isRequired,
-    onMouseLeave: PropTypes.func.isRequired,
-    isHovered: PropTypes.func.isRequired
+    gridMode: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FileCard);

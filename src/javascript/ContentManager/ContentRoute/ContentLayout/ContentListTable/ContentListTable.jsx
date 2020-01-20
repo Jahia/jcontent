@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     Badge,
@@ -16,7 +16,7 @@ import {Wrench, Folder} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
 import * as _ from 'lodash';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../ContentManager.redux-actions';
@@ -35,6 +35,7 @@ import ContentListEmptyDropZone from './ContentListEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
 import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../icons';
+import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
 const allColumnData = [
     {
@@ -248,75 +249,113 @@ const styles = theme => ({
     }
 });
 
-export class ContentListTable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            contextualMenuOpen: null
-        };
+const getCellClasses = (node, classes, column, isSelected, isPreviewOpened) => {
+    let selected = isSelected && isPreviewOpened;
+    return {
+        root: classNames(
+            classes.cell,
+            classes[column + 'Cell'],
+            {
+                [classes.selectedCell]: selected,
+                [classes[column + 'CellPreviewOpened']]: isPreviewOpened,
+                [classes[column + 'CellSelected']]: selected,
+                [classes.isDeleted]: isMarkedForDeletion(node)
+            }
+        )
+    };
+};
+
+const isWip = (node, lang) => {
+    if (node.wipStatus) {
+        switch (node.wipStatus.value) {
+            case 'ALL_CONTENT':
+                return true;
+            case 'LANGUAGES':
+                return _.includes(node.wipLangs.values, lang);
+            default:
+                return false;
+        }
     }
 
-    getCellClasses(node, classes, column, isSelected, isPreviewOpened) {
-        let selected = isSelected && isPreviewOpened;
-        return {
-            root: classNames(
-                classes.cell,
-                classes[column + 'Cell'],
-                {
-                    [classes.selectedCell]: selected,
-                    [classes[column + 'CellPreviewOpened']]: isPreviewOpened,
-                    [classes[column + 'CellSelected']]: selected,
-                    [classes.isDeleted]: isMarkedForDeletion(node)
-                }
-            )
-        };
-    }
+    return false;
+};
 
-    isWip(node, lang) {
-        if (node.wipStatus) {
-            switch (node.wipStatus.value) {
-                case 'ALL_CONTENT':
-                    return true;
-                case 'LANGUAGES':
-                    return _.includes(node.wipLangs.values, lang);
-                default:
-                    return false;
+const addIconSuffix = icon => {
+    return (icon.includes('.png') ? icon : icon + '.png');
+};
+
+const getMediaIcon = (node, classes) => {
+    switch (node.primaryNodeType.displayName) {
+        case 'Folder':
+            return <Folder className={classes.icon}/>;
+        case 'File':
+            if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:image'))) {
+                return <ImageIcon className={classes.icon}/>;
+            }
+
+            if (node.name.match(/.zip$/g) || node.name.match(/.tar$/g) || node.name.match(/.rar$/g)) {
+                return <ZipIcon className={classes.icon}/>;
+            }
+
+            if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:document'))) {
+                return <DocumentIcon className={classes.icon}/>;
+            }
+
+            return <FileIcon className={classes.icon}/>;
+        default:
+            return <img src={addIconSuffix(node.primaryNodeType.icon)}/>;
+    }
+};
+
+export const ContentListTable = ({
+    setPath,
+    mode,
+    siteKey,
+    setMode,
+    rows,
+    selection,
+    removeSelection,
+    contentNotFound,
+    pagination,
+    sort,
+    setCurrentPage,
+    setPageSize,
+    onPreviewSelect,
+    previewSelection,
+    totalCount,
+    classes,
+    uiLang,
+    setSort,
+    path,
+    previewState,
+    lang,
+    switchSelection,
+    addSelection,
+    loading}) => {
+    const {t} = useTranslation();
+    const [contextualMenuOpen, setContextualMenuOpen] = useState(null);
+
+    const {
+        mainPanelRef,
+        handleKeyboardNavigation,
+        setFocusOnMainContainer,
+        setSelectedItemIndex
+    } = useKeyboardNavigation({
+        listLength: rows.length,
+        onSelectionChange: index => onPreviewSelect(rows[index].path)
+    });
+
+    useEffect(() => {
+        if (selection.length > 0) {
+            const paths = rows.map(node => node.path);
+            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
+            if (toRemove.length > 0) {
+                removeSelection(toRemove);
             }
         }
+    }, [rows, selection, removeSelection]);
 
-        return false;
-    }
-
-    addIconSuffix(icon) {
-        return (icon.includes('.png') ? icon : icon + '.png');
-    }
-
-    getMediaIcon(node) {
-        let {classes} = this.props;
-        switch (node.primaryNodeType.displayName) {
-            case 'Folder':
-                return <Folder className={classes.icon}/>;
-            case 'File':
-                if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:image'))) {
-                    return <ImageIcon className={classes.icon}/>;
-                }
-
-                if (node.name.match(/.zip$/g) || node.name.match(/.tar$/g) || node.name.match(/.rar$/g)) {
-                    return <ZipIcon className={classes.icon}/>;
-                }
-
-                if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:document'))) {
-                    return <DocumentIcon className={classes.icon}/>;
-                }
-
-                return <FileIcon className={classes.icon}/>;
-            default:
-                return <img src={this.addIconSuffix(node.primaryNodeType.icon)}/>;
-        }
-    }
-
-    doubleClickNavigation(node) {
-        let {setPath, mode, siteKey, setMode} = this.props;
+    const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === 'search') {
             if (node.path.indexOf('/files') === -1) {
@@ -329,29 +368,28 @@ export class ContentListTable extends React.Component {
         }
 
         setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
-    }
+    };
 
-    render() {
-        const {
-            rows, contentNotFound, pagination, sort, setCurrentPage, setPageSize,
-            onPreviewSelect, previewSelection, totalCount, t, classes, uiLang, setSort, path, previewState,
-            mode, lang, switchSelection, addSelection, removeSelection, selection, loading
-        } = this.props;
-        let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
-        let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+    let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
+    let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
-        const onContextualMenuExit = ctx => {
-            if (ctx.actionKey === 'contentMenu' || ctx.actionKey === 'selectedContentMenu') {
-                this.setState(() => ({contextualMenuOpen: null}));
-            }
-        };
+    const onContextualMenuExit = ctx => {
+        if (ctx.actionKey === 'contentMenu' || ctx.actionKey === 'selectedContentMenu') {
+            setContextualMenuOpen(null);
+        }
+    };
 
-        return (
-            <>
-                <ToolBar/>
-                <div className={classes.tableWrapper}>
-                    <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
-                        <ContentListHeader
+    return (
+        <>
+            <ToolBar/>
+            <div ref={mainPanelRef}
+                 className={classes.tableWrapper}
+                 tabIndex="1"
+                 onKeyDown={handleKeyboardNavigation}
+                 onClick={setFocusOnMainContainer}
+            >
+                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
+                    <ContentListHeader
                             order={sort.order}
                             orderBy={sort.orderBy}
                             columnData={columnData}
@@ -362,7 +400,7 @@ export class ContentListTable extends React.Component {
                             selectAll={() => addSelection(rows.map(node => node.path))}
                             unselectAll={() => removeSelection(rows.map(node => node.path))}
                         />
-                        {
+                    {
                             contentNotFound ? (
                                 <ContentNotFound columnData={columnData} t={t} className={classes.empty}/>
                                 ) :
@@ -377,16 +415,16 @@ export class ContentListTable extends React.Component {
                                                                       uploadPath={path}
                                                                       mode={mode}
                                             >
-                                                {rows.map(node => {
+                                                {rows.map((node, index) => {
                                                     let isSelected = node.path === previewSelection && isPreviewOpened;
-                                                    let icon = this.getMediaIcon(node);
+                                                    let icon = getMediaIcon(node, classes);
                                                     let showActions = !isPreviewOpened && selection.length === 0;
                                                     let contextualMenu = React.createRef();
                                                     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
 
                                                     const openContextualMenu = event => {
                                                         contextualMenu.current.open(event);
-                                                        this.setState(() => ({contextualMenuOpen: contextualMenu.current.props.context.path ? [contextualMenu.current.props.context.path] : contextualMenu.current.props.context.paths}));
+                                                        setContextualMenuOpen(contextualMenu.current.props.context.path ? [contextualMenu.current.props.context.path] : contextualMenu.current.props.context.paths);
                                                     };
 
                                                     return (
@@ -397,7 +435,7 @@ export class ContentListTable extends React.Component {
                                                                 root: classNames(classes.row, {
                                                                     [classes.rowCursor]: isPreviewOpened,
                                                                     [classes.rowShowActions]: showActions,
-                                                                    [classes.contextualMenuOpen]: this.state.contextualMenuOpen && this.state.contextualMenuOpen.indexOf(node.path) > -1
+                                                                    [classes.contextualMenuOpen]: contextualMenuOpen && contextualMenuOpen.indexOf(node.path) > -1
                                                                 }),
                                                                 selected: classes.selectedRow
                                                             }}
@@ -406,6 +444,7 @@ export class ContentListTable extends React.Component {
                                                             selected={isSelected}
                                                             onClick={() => {
                                                                 if (!node.notSelectableForPreview) {
+                                                                    setSelectedItemIndex(index);
                                                                     onPreviewSelect(node.path);
                                                                 }
                                                             }}
@@ -417,7 +456,7 @@ export class ContentListTable extends React.Component {
                                                                 node.primaryNodeType.name,
                                                                 node.subNodes ? node.subNodes.pageInfo.totalCount : null,
                                                                 () => {
-                                                                    this.doubleClickNavigation(node);
+                                                                    doubleClickNavigation(node);
                                                                 })}
                                                         >
                                                             <ContextualMenu
@@ -442,13 +481,12 @@ export class ContentListTable extends React.Component {
                                                             </TableCell>
                                                             <TableCell
                                                                 padding="checkbox"
-                                                                classes={this.getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
+                                                                classes={getCellClasses(node, classes, 'checkbox', isSelected, isPreviewOpened)}
                                                             >
                                                                 <Checkbox
                                                                     checked={selection.indexOf(node.path) !== -1}
-                                                                    onClick={event => {
+                                                                    onClick={() => {
                                                                         switchSelection(node.path);
-                                                                        event.stopPropagation();
                                                                     }}
                                                                 />
                                                             </TableCell>
@@ -457,7 +495,7 @@ export class ContentListTable extends React.Component {
                                                                     return (
                                                                         <TableCell
                                                                             key={column.id}
-                                                                            classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                            classes={getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                             data-cm-role="table-content-list-cell-name"
                                                                         >
                                                                             {showSubNodes ?
@@ -490,10 +528,10 @@ export class ContentListTable extends React.Component {
                                                                     return (
                                                                         <TableCell
                                                                             key={column.id}
-                                                                            classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                            classes={getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                             padding="none"
                                                                         >
-                                                                            {this.isWip(node, lang) &&
+                                                                            {isWip(node, lang) &&
                                                                             <Tooltip
                                                                                 title={node.wipLangs ? t('content-media-manager:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('content-media-manager:label.contentManager.workInProgressAll')}
                                                                             >
@@ -508,7 +546,7 @@ export class ContentListTable extends React.Component {
                                                                     return (
                                                                         <TableCell
                                                                             key={column.id}
-                                                                            classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                            classes={getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                             padding="none"
                                                                         >
                                                                             {node.lockOwner !== null &&
@@ -525,7 +563,7 @@ export class ContentListTable extends React.Component {
                                                                     return (
                                                                         <TableCell
                                                                             key={column.id}
-                                                                            classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                            classes={getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                             data-cm-role={'table-content-list-cell-' + column.id}
                                                                             padding={showActions ? 'checkbox' : 'default'}
                                                                         >
@@ -551,7 +589,7 @@ export class ContentListTable extends React.Component {
                                                                                         color: 'inherit',
                                                                                         size: 'compact',
                                                                                         disableRipple: true
-                                                                                    }, true)}
+                                                                                    }, true, true)}
                                                                                 />
                                                                                 <DisplayAction
                                                                                     actionKey="contentMenu"
@@ -575,7 +613,7 @@ export class ContentListTable extends React.Component {
                                                                 return (
                                                                     <TableCell
                                                                         key={column.id}
-                                                                        classes={this.getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
+                                                                        classes={getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                         data-cm-role={'table-content-list-cell-' + column.id}
                                                                     >
                                                                         <Typography noWrap
@@ -594,9 +632,9 @@ export class ContentListTable extends React.Component {
                                         )
                                 )
                         }
-                    </Table>
-                </div>
-                <Pagination
+                </Table>
+            </div>
+            <Pagination
                     totalCount={totalCount}
                     pageSize={pagination.pageSize}
                     currentPage={pagination.currentPage}
@@ -607,21 +645,9 @@ export class ContentListTable extends React.Component {
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}
                 />
-            </>
-        );
-    }
-
-    componentDidUpdate() {
-        const {rows, selection, removeSelection} = this.props;
-        if (selection.length > 0) {
-            const paths = rows.map(node => node.path);
-            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
-            if (toRemove.length > 0) {
-                removeSelection(toRemove);
-            }
-        }
-    }
-}
+        </>
+    );
+};
 
 const mapStateToProps = state => ({
     mode: state.mode,
@@ -687,13 +713,11 @@ ContentListTable.propTypes = {
     siteKey: PropTypes.string.isRequired,
     sort: PropTypes.object.isRequired,
     switchSelection: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
     uiLang: PropTypes.string.isRequired
 };
 
 export default compose(
     withStyles(styles),
-    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(ContentListTable);

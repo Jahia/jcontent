@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';

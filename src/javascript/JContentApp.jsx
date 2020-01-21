@@ -13,7 +13,6 @@ const JContentApp = () => {
 
     // TODO there parameters need to come from jahia-ui-root context which should become accessible once dx-commons and jur is merged
     const ctx = {
-        urlBrowser: '/modules/moonstone/cmm',
         urlbase: '/modules/moonstone/cmm', // This one goes right after context path
         langName: window.contextJsParameters.locale,
         uilang: window.contextJsParameters.locale,

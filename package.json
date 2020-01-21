@@ -15,7 +15,10 @@
     "lint:fix": "eslint --ext js,jsx --fix ."
   },
   "husky": {
-    "hooks": {}
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn test"
+    }
   },
   "description": "Content and Media Manager for DX",
   "main": "index.js",

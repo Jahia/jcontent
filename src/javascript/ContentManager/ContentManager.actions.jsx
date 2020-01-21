@@ -48,8 +48,6 @@ import copyAction from './actions/copyPaste/copyAction';
 import cutAction from './actions/copyPaste/cutAction';
 import lockAction from './actions/lockAction';
 import {routerAction} from './actions/routerAction';
-import sideMenuAction from './actions/sideMenuAction';
-import sideMenuListAction from './actions/sideMenuListAction';
 import openInEditModeAction from './actions/openInEditModeAction';
 import unlockAction from './actions/unlockAction';
 import clearAllLocksAction from './actions/clearAllLocksAction';
@@ -75,8 +73,6 @@ const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 
 function contentManagerActions(actionsRegistry, t) {
     actionsRegistry.add('router', routerAction);
-    actionsRegistry.add('sideMenu', sideMenuAction);
-    actionsRegistry.add('sideMenuList', sideMenuListAction);
 
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,

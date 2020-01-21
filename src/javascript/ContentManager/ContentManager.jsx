@@ -12,7 +12,6 @@ import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import contentManagerActions from './ContentManager.actions';
 import {registry} from '@jahia/registry';
-import contentManagerRoutes from './ContentManager.routes';
 import AppLayout from './AppLayout';
 import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
 import Upload from './ContentRoute/ContentLayout/Upload';
@@ -27,10 +26,6 @@ class ContentManager extends React.Component {
         this.getStore = this.getStore.bind(this);
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
-
-        if (registry.registry['cmm-default-route'] === undefined) {
-            contentManagerRoutes(registry);
-        }
 
         contentManagerActions(actionsRegistry, this.props.t);
 

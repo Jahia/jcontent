@@ -4,12 +4,6 @@ import {CssBaseline} from '@material-ui/core';
 import {useI18nCMMNamespace} from './i18n';
 import './date.config';
 
-// Window.addEventListener('click', e => {
-//     if (Array.prototype.slice.call(window.document.querySelectorAll('#JahiaGxtEditEnginePanel-usages a[target=\'_blank\'')).indexOf(e.target) > -1) {
-//         e.target.href = e.target.href.replace('contentmanager', 'preview');
-//     }
-// });
-
 const JContentApp = () => {
     const {loading} = useI18nCMMNamespace();
 
@@ -33,8 +27,7 @@ const JContentApp = () => {
     return (
         <>
             <CssBaseline/>
-            <ContentManager id="fakeId"
-                            dxContext={{
+            <ContentManager dxContext={{
                 siteDisplayableName: '',
                 maxUploadSize: 10000000,
                 displayWorkflowCounter: true,

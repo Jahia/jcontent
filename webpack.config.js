@@ -24,12 +24,6 @@ module.exports = (env, argv) => {
             chunkFilename: '[name].jahia.[chunkhash:6].js',
             jsonpFunction: 'cmmJsonp'
         },
-        // This was causing issue with runtime chunk being built incorrectly unable to load entry module
-        // optimization: {
-        //     splitChunks: {
-        //         maxSize: 400000
-        //     }
-        // },
         resolve: {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', 'json']
@@ -93,7 +87,7 @@ module.exports = (env, argv) => {
         mode: 'development'
     };
 
-    config.devtool = (argv.mode === 'production') ? 'source-map' : 'source-map';
+    config.devtool = (argv.mode === 'production') ? 'source-map' : 'eval-source-map';
 
     if (argv.analyze) {
         config.devtool = 'source-map';

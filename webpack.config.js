@@ -16,7 +16,7 @@ require('fs').readdirSync(normalizedPath).forEach(function (file) {
 module.exports = (env, argv) => {
     let config = {
         entry: {
-            main: ['whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/index.js')]
+            main: ['whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/register.jsx')]
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),

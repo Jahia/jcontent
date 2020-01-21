@@ -24,19 +24,8 @@ export class AppLayoutContainer extends React.Component {
                 }}
             >
                 <Switch>
-                    {routes.map(r => (
-                        <Route key={r.key}
-                               path={r.path}
-                               render={props => {
-                            let render1 = r.render(props, {dxContext, t});
-                            if (render1 !== undefined) {
-return render1;
-}
-
-                                console.log(`error while rendering ${r.key}`, r, props, dxContext);
-                                return <h2 style={{color: 'red'}}>Error while rendering route {r.key}</h2>;
-                        }}/>
-                      )
+                    {routes.map(r =>
+                        <Route key={r.key} path={r.path} render={props => r.render(props, {dxContext, t})}/>
                     )}
                 </Switch>
             </AppLayout>

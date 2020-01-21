@@ -3,7 +3,7 @@ import {registry} from '@jahia/registry';
 import {useHistory} from 'react-router-dom';
 import {PrimaryNavItem} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import ContentMediaManagerApp8 from './ContentManagerApp8';
+import JContentApp from './JContentApp';
 import Collections from '@jahia/moonstone/dist/icons/Collections';
 
 const ROUTE = '/cmm';
@@ -33,7 +33,7 @@ registry.add('route-cmm', {
     target: ['nav-root-top:2'],
     path: `${ROUTE}/:siteKey/:lang/:mode`, // Catch everything that's cmm and let the app resolve correct view
     defaultPath: SYSTEM_SITE_ROUTE,
-    render: () => <Suspense fallback="loading ..."><ContentMediaManagerApp8/></Suspense>
+    render: () => <Suspense fallback="loading ..."><JContentApp/></Suspense>
 });
 
 window.contextJsParameters.namespaceResolvers['content-media-manager'] = lang => require('../main/resources/javascript/locales/' + lang + '.json');

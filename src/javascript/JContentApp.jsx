@@ -10,7 +10,7 @@ import './date.config';
 //     }
 // });
 
-const ContentManagerApp8 = () => {
+const JContentApp = () => {
     const {loading} = useI18nCMMNamespace();
 
     if (loading) {
@@ -51,4 +51,4 @@ const ContentManagerApp8 = () => {
     );
 };
 
-export default ContentManagerApp8;
+export default JContentApp;

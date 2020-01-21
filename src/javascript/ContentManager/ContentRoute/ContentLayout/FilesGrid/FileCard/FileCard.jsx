@@ -105,7 +105,7 @@ export const FileCard = ({gridMode,
     classes,
     node,
     dxContext,
-    uiLang,
+    uilang,
     setPath,
     previewSelection,
     onPreviewSelect,
@@ -211,7 +211,7 @@ export const FileCard = ({gridMode,
                             <Typography variant="iota" component="p">
                                 {t('content-media-manager:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
-                                <time>{dayjs(node.created.value).locale(getDefaultLocale(uiLang)).format('LLL')}</time>
+                                <time>{dayjs(node.created.value).locale(getDefaultLocale(uilang)).format('LLL')}</time>
                             </Typography>
                         </div>}
                         {(isDetailedCard) && node.width && node.height &&
@@ -241,7 +241,7 @@ FileCard.propTypes = {
     index: PropTypes.number.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    uiLang: PropTypes.string.isRequired,
+    uilang: PropTypes.string.isRequired,
     gridMode: PropTypes.string.isRequired
 };
 

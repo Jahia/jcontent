@@ -65,7 +65,7 @@ function checkNodeRequirement(context, options) {
     return context;
 }
 
-let requirementsAction = composeActions(withApolloAction, reduxAction(state => ({language: state.language, uiLang: state.uiLang, site: state.site})), {
+let requirementsAction = composeActions(withApolloAction, reduxAction(state => ({language: state.language, uilang: state.uilang, site: state.site})), {
     init: context => {
         context.initRequirements = options => {
             if (context.path) {

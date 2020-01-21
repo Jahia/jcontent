@@ -81,7 +81,7 @@ export class IFrameLayout extends React.Component {
         let sitePath = '/sites/' + siteKey;
 
         // Ensure requirements (permissions and module state on site)
-        let context = {...action, path: sitePath, language: lang, uiLang: lang};
+        let context = {...action, path: sitePath, language: lang, uilang: lang};
         let requirementQueryHandler = new ActionRequirementsQueryHandler(context);
         let {requiredPermission, requireModuleInstalledOnSite} = action;
 

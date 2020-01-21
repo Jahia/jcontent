@@ -324,7 +324,7 @@ export const ContentListTable = ({
     previewSelection,
     totalCount,
     classes,
-    uiLang,
+    uilang,
     setSort,
     path,
     previewState,
@@ -572,7 +572,7 @@ export const ContentListTable = ({
                                                                                         color="inherit"
                                                                                         className={classes.lastModifiedTypography}
                                                                             >
-                                                                                <time>{dayjs(_.get(node, column.property)).locale(getDefaultLocale(uiLang)).format('ll')}</time>
+                                                                                <time>{dayjs(_.get(node, column.property)).locale(getDefaultLocale(uilang)).format('ll')}</time>
                                                                             </Typography>
                                                                             {showActions &&
                                                                             <div key="actions"
@@ -652,7 +652,7 @@ export const ContentListTable = ({
 const mapStateToProps = state => ({
     mode: state.mode,
     previewSelection: state.previewSelection,
-    uiLang: state.uiLang,
+    uilang: state.uilang,
     siteKey: state.site,
     path: state.path,
     lang: state.language,
@@ -714,7 +714,7 @@ ContentListTable.propTypes = {
     sort: PropTypes.object.isRequired,
     switchSelection: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
-    uiLang: PropTypes.string.isRequired
+    uilang: PropTypes.string.isRequired
 };
 
 export default compose(

@@ -12,10 +12,10 @@ const CM_SET_SITE_DISPLAYABLE_NAME = 'CM_SET_SITE_DISPLAYABLE_NAME';
 const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
-function setUiLang(uiLang) {
+function setUiLang(uilang) {
     return {
         type: CM_SET_UILANGUAGE,
-        uiLang
+        uilang
     };
 }
 

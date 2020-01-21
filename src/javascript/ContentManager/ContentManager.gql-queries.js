@@ -207,7 +207,7 @@ class ActionRequirementsQueryHandler {
         this.variables = {
             path: context.path,
             language: context.language,
-            displayLanguage: context.uiLang
+            displayLanguage: context.uilang
         };
 
         if (context.retrieveDisplayName) {

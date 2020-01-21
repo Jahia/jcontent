@@ -68,7 +68,7 @@ export const FilesGrid = ({
     rows,
     loading,
     mode,
-    uiLang,
+    uilang,
     siteKey,
     previewSelection,
     previewState,
@@ -135,7 +135,7 @@ export const FilesGrid = ({
                                 <FileCard
                                     gridMode={gridMode}
                                     mode={mode}
-                                    uiLang={uiLang}
+                                    uilang={uilang}
                                     siteKey={siteKey}
                                     previewSelection={previewSelection}
                                     previewState={previewState}
@@ -181,7 +181,7 @@ let mapStateToProps = state => ({
     gridMode: state.filesGrid.gridMode,
     mode: state.filesGrid.mode,
     siteKey: state.site,
-    uiLang: state.uiLang,
+    uilang: state.uilang,
     previewSelection: state.previewSelection,
     previewState: state.previewState
 });
@@ -206,7 +206,7 @@ FilesGrid.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
     setPageSize: PropTypes.func.isRequired,
     gridMode: PropTypes.string.isRequired,
-    uiLang: PropTypes.string.isRequired,
+    uilang: PropTypes.string.isRequired,
     previewSelection: PropTypes.string,
     previewState: PropTypes.number.isRequired,
     siteKey: PropTypes.string.isRequired,

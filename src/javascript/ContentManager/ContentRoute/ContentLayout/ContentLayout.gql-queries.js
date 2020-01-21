@@ -118,7 +118,7 @@ class ContentQueryHandler {
         `;
     }
 
-    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
         let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
         if (urlParams.sub) {
             type = 'contents';
@@ -138,7 +138,7 @@ class ContentQueryHandler {
         return {
             path: path,
             language: lang,
-            displayLanguage: uiLang,
+            displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
             typeFilter: paramsByBrowseType[type].typeFilter,
@@ -198,11 +198,11 @@ class FilesQueryHandler {
         `;
     }
 
-    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
         return {
             path: path,
             language: lang,
-            displayLanguage: uiLang,
+            displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
             typeFilter: ['jnt:file', 'jnt:folder'],
@@ -259,13 +259,13 @@ class SearchQueryHandler {
         `;
     }
 
-    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
         return {
             path: path,
             nodeType: (urlParams.searchContentType || 'jmix:searchable'),
             searchTerms: urlParams.searchTerms,
             language: lang,
-            displayLanguage: uiLang,
+            displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
             fieldSorter: sort.orderBy === '' ? null : {
@@ -300,7 +300,7 @@ class Sql2SearchQueryHandler {
         `;
     }
 
-    getQueryParams(path, uiLang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
@@ -310,7 +310,7 @@ class Sql2SearchQueryHandler {
         return {
             query: query,
             language: lang,
-            displayLanguage: uiLang,
+            displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
             fieldSorter: sort.orderBy === '' ? null : {

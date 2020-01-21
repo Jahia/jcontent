@@ -155,7 +155,7 @@ export class ContentLayoutContainer extends React.Component {
 
     render() {
         const {
-            notificationContext, t, mode, path, uiLang, lang, siteKey, params, pagination, sort, pathsToRefetch,
+            notificationContext, t, mode, path, uilang, lang, siteKey, params, pagination, sort, pathsToRefetch,
             removePathsToRefetch, setPath, treeState, treeWidth, filesMode, previewState, previewSelection,
             setTreeWidth
         } = this.props;
@@ -171,7 +171,7 @@ export class ContentLayoutContainer extends React.Component {
         const layoutQuery = queryHandler.getQuery();
         const rootPath = `/sites/${siteKey}`;
 
-        const layoutQueryParams = queryHandler.getQueryParams(path, uiLang, lang, params, rootPath, pagination, sort);
+        const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
         // Workaround to prevent QA-11390
         // See https://github.com/apollographql/react-apollo/issues/2658
@@ -270,7 +270,7 @@ const mapStateToProps = state => ({
     lang: state.language,
     previewSelection: state.previewSelection,
     previewState: state.previewState,
-    uiLang: state.uiLang,
+    uilang: state.uilang,
     params: state.params,
     filesMode: state.filesGrid.mode,
     pagination: state.pagination,
@@ -312,7 +312,7 @@ ContentLayoutContainer.propTypes = {
     siteKey: PropTypes.string.isRequired,
     sort: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
-    uiLang: PropTypes.string.isRequired,
+    uilang: PropTypes.string.isRequired,
     treeState: PropTypes.number.isRequired,
     treeWidth: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,

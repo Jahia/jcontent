@@ -48,12 +48,12 @@ const styles = theme => ({
     }
 });
 
-export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
+export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
     if (_.isEmpty(previewSelection) || !previewSelection.operationsSupport.publication) {
         return null;
     }
 
-    let defaultLocale = getDefaultLocale(uiLang);
+    let defaultLocale = getDefaultLocale(uilang);
     // Special handling for marked for deletion content
     if (ContentManagerConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
@@ -139,14 +139,14 @@ export const PublicationStatus = ({previewSelection, t, classes, uiLang}) => {
 };
 
 const mapStateToProps = state => ({
-    uiLang: state.uiLang
+    uilang: state.uilang
 });
 
 PublicationStatus.propTypes = {
     classes: PropTypes.object.isRequired,
     previewSelection: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
-    uiLang: PropTypes.string.isRequired
+    uilang: PropTypes.string.isRequired
 };
 
 export default compose(

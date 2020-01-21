@@ -8,16 +8,6 @@
                         http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd
                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="contentmanager.urlResolverFactory" class="org.jahia.modules.contentmanager.configuration.URLResolverFactory">
-        <property name="cacheService" ref="ehCacheProvider"/>
-    </bean>
-
-    <bean id="licenseCheckFilter" class="org.jahia.modules.contentmanager.license.LicenseCheckFilter">
-        <property name="priority" value="1"/>
-        <property name="applyOnTemplates" value="content-manager"/>
-        <property name="description" value="Checks validity of the license"/>
-    </bean>
-
     <bean class="org.jahia.ajax.gwt.helper.ModuleGWTResources">
         <property name="javascriptResources">
             <list>
@@ -25,11 +15,6 @@
             </list>
         </property>
     </bean>
-
-    <util:list id="legacyMenu">
-        <ref bean="editmode.managers.menu"/>
-        <ref bean="studiomode.managers.menu"/>
-    </util:list>
 
     <util:list id="menu">
         <ref bean="bluemenu"/>
@@ -48,7 +33,7 @@
             <list>
                 <bean class="org.jahia.services.uicomponents.bean.toolbar.Property">
                     <property name="name" value="url"/>
-                    <property name="value" value="$context/cms/contentmanager/$site-key/$lang/browse/contents"/>
+                    <property name="value" value="$context/modules/moonstone/cmm/$site-key/$lang/browse/contents"/>
                 </bean>
                 <bean class="org.jahia.services.uicomponents.bean.toolbar.Property">
                     <property name="name" value="target"/>
@@ -61,117 +46,5 @@
             </list>
         </property>
     </bean>
-
-    <!-- Content Manager -->
-    <bean id="Toolbar.Item.ContentManager.legacy" parent="Toolbar.Item.ContentManager">
-        <property name="parent" ref="legacyMenu"/>
-        <property name="icon" value="content-manager-1616"/>
-    </bean>
-
-    <bean name="org.jahia.bin.ContentManager" parent="abstractRender" class="org.jahia.bin.Edit">
-        <property name="sessionExpiryTime" value="${sessionExpiryTime}"/>
-        <property name="editConfiguration" ref="contentmanagermode"/>
-        <property name="availableInDistantPublicationServerMode" value="false"/>
-        <property name="workspace" value="default"/>
-        <property name="urlResolverFactory" ref="contentmanager.urlResolverFactory"/>
-    </bean>
-
-    <bean name="contentmanagerRendererMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="urlMap">
-            <map>
-                <entry key="/contentmanager/**" value-ref="org.jahia.bin.ContentManager"/>
-                <entry key="/contentmanagerframe/**" value-ref="org.jahia.bin.ContentManager"/>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="contentmanagermode" class="org.jahia.services.uicomponents.bean.editmode.EditConfiguration">
-
-        <property name="refreshEnabled" value="false"/>
-        <property name="requiredPermission" value="contentManager"/>
-        <property name="nodeCheckPermission" value="$site"/>
-        <property name="defaultLocation" value="$defaultSiteHome"/>
-        <property name="defaultUrlMapping" value="/cms/contentmanager"/>
-        <property name="needFrameParsing" value="false"/>
-        <property name="sitesLocation" value="/sites/*"/>
-        <property name="refreshOnExternalModification" value="${jahia.ui.refreshOnExternalModification:true}"/>
-        <property name="eventDispatchingEnabled" value="true"/>
-
-        <property name="nonEditableTypes">
-            <set>
-                <value>jmix:studioOnly</value>
-            </set>
-        </property>
-
-        <property name="excludedNodeTypes">
-            <set>
-                <value>jmix:hiddenType</value>
-            </set>
-        </property>
-
-        <property name="topToolbars">
-            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar" id="Edit.Menu.LeftTop">
-                <property name="items">
-                    <list>
-                        <bean id="editmode.managers.menu" class="org.jahia.services.uicomponents.bean.toolbar.Menu">
-                            <property name="items" ref="bluemenu"/>
-                        </bean>
-
-                    </list>
-                </property>
-            </bean>
-        </property>
-
-        <property name="sidePanelToolbar">
-            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
-                <property name="items">
-                    <list/>
-                </property>
-            </bean>
-        </property>
-
-        <property name="mainModuleToolbar">
-            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
-                <property name="items">
-                    <list/>
-                </property>
-            </bean>
-        </property>
-
-        <property name="contextMenu">
-            <bean class="org.jahia.services.uicomponents.bean.toolbar.Toolbar">
-                <property name="items">
-                    <list/>
-                </property>
-            </bean>
-        </property>
-
-        <property name="tabs">
-            <list/>
-        </property>
-
-        <!-- edit engine -->
-        <property name="engineConfigurations" ref="editEnginesConfiguration"/>
-
-    </bean>
-
-    <osgi:list id="org.jahia.modules.contentmanager.actionListRenderers" interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" availability="optional"/>
-
-    <bean id="javascriptActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.JavascriptActionListRenderer"/>
-
-    <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="javascriptActionListRenderer">
-        <osgi:service-properties>
-            <entry key="service.pid" value="org.jahia.modules.contentmanager.actionlists.JavascriptActionListRenderer"/>
-            <entry key="service.description" value="JavaScript action list renderer for Content and Media Manager"/>
-            <entry key="service.vendor" value="Jahia Solutions Group SA"/>
-        </osgi:service-properties>
-    </osgi:service>
-
-    <!--
-    <bean id="savedSearchActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.SavedSearchActionListRenderer" />
-    <bean id="filtersActionListRenderer" class="org.jahia.modules.contentmanager.actionlists.FiltersActionListRenderer" />
-    <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="savedSearchActionListRenderer" />
-    <osgi:service interface="org.jahia.modules.contentmanager.actionlists.ActionListRenderer" ref="filtersActionListRenderer" />
-    -->
 
 </beans>

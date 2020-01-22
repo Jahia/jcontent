@@ -8,7 +8,7 @@ const JContentApp = () => {
     const {loading} = useI18nCMMNamespace();
 
     if (loading) {
-        return '...';
+        return '';
     }
 
     // TODO there parameters need to come from jahia-ui-root context which should become accessible once dx-commons and jur is merged

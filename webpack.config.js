@@ -16,17 +16,13 @@ require('fs').readdirSync(normalizedPath).forEach(function (file) {
 module.exports = (env, argv) => {
     let config = {
         entry: {
-            main: ['whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/ContentManagerApp.loader')]
+            main: ['whatwg-fetch', path.resolve(__dirname, 'src/javascript/publicPath'), path.resolve(__dirname, 'src/javascript/register.jsx')]
         },
         output: {
             path: path.resolve(__dirname, 'src/main/resources/javascript/apps/'),
-            filename: 'cmm.bundle.js',
-            chunkFilename: '[name].cmm.[chunkhash:6].js'
-        },
-        optimization: {
-            splitChunks: {
-                maxSize: 400000
-            }
+            filename: 'jahia.bundle.js',
+            chunkFilename: '[name].jahia.[chunkhash:6].js',
+            jsonpFunction: 'cmmJsonp'
         },
         resolve: {
             mainFields: ['module', 'main'],
@@ -62,6 +58,16 @@ module.exports = (env, argv) => {
                 {
                     test: /\.css$/,
                     use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                    use: [{
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'fonts/'
+                        }
+                    }]
                 }
             ]
         },

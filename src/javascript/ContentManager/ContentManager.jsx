@@ -12,7 +12,6 @@ import contentManagerReduxStore from './ContentManager.redux-store';
 import PushEventHandler from './PushEventHandler';
 import contentManagerActions from './ContentManager.actions';
 import {registry} from '@jahia/registry';
-import contentManagerRoutes from './ContentManager.routes';
 import AppLayout from './AppLayout';
 import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
 import Upload from './ContentRoute/ContentLayout/Upload';
@@ -28,7 +27,6 @@ class ContentManager extends React.Component {
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
 
-        contentManagerRoutes(registry);
         contentManagerActions(actionsRegistry, this.props.t);
 
         _.each(dxContext.config.actions, callback => {
@@ -47,18 +45,12 @@ class ContentManager extends React.Component {
         return this.store;
     }
 
-    getHistory(dxContext, t) {
+    getHistory(dxContext) {
         if (!this.history) {
             this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
-            if (window.top !== window) {
-                this.history.listen(location => {
-                    const title = t('content-media-manager:label.contentManager.appTitle', {path: location.pathname});
-                    window.parent.history.replaceState(window.parent.history.state, title, dxContext.contextPath + dxContext.urlBrowser + location.pathname + location.search);
-                    window.parent.document.title = title;
-                });
-            }
         }
 
+        this.history.location.pathname = `/${window.location.pathname.split('/cmm/')[1]}`;
         return this.history;
     }
 
@@ -85,7 +77,7 @@ class ContentManager extends React.Component {
                                 <PushEventHandler/>
                                 <ComponentRendererProvider>
                                     <>
-                                        <ConnectedRouter history={this.getHistory(dxContext, t)}>
+                                        <ConnectedRouter history={this.getHistory(dxContext)}>
                                             <AppLayout dxContext={dxContext}/>
                                         </ConnectedRouter>
                                         <Upload uploadUpdateCallback={status => {

@@ -146,8 +146,8 @@
                             <goal>install-node-and-yarn</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v8.11.3</nodeVersion>
-                            <yarnVersion>v1.12.3</yarnVersion>
+                            <nodeVersion>v11.11.0</nodeVersion>
+                            <yarnVersion>v1.19.1</yarnVersion>
                         </configuration>
                     </execution>
                     <execution>
@@ -175,7 +175,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <jahia-depends>dx-commons-webpack</jahia-depends>
+                        <Jahia-Depends>dx-commons-webpack,jahia-ui-root</Jahia-Depends>
                         <Import-Package>org.jahia.modules.graphql.provider.dxm;version="1.1.0",${jahia.plugin.projectPackageImport},*</Import-Package>
                     </instructions>
                 </configuration>

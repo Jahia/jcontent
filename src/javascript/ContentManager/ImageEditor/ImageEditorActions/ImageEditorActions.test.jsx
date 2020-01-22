@@ -24,6 +24,7 @@ describe('Image actions', () => {
     });
 
     it('should have disabled buttons', () => {
+        wrapper.setProps({dirty: false});
         expect(wrapper.find(Button).everyWhere(n => n.prop('disabled'))).toBeTruthy();
     });
 

@@ -16,7 +16,7 @@ function contentManagerRoutes(registry) {
         <Trans i18nKey="content-media-manager:label.contentManager.link.academy"
                components={[
                    <a key="academyLink"
-                      href={contextJsParameters.config.academyLink}
+                      href=""
                       target="_blank"
                       rel="noopener noreferrer"
                    >.
@@ -28,8 +28,8 @@ function contentManagerRoutes(registry) {
         type: 'route',
         target: ['cmm:50'],
         path: '/:siteKey/:lang/apps/:menu/:entry',
-        render: (props, {dxContext, t}) => (
-            <AppRoute dxContext={dxContext} t={t} help={help} {...props}/>
+        render: (props, {dxContext}) => (
+            <AppRoute dxContext={dxContext} help={help} {...props}/>
         )
     });
 

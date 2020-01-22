@@ -1,6 +1,6 @@
 import React from 'react';
 import {menuAction} from '@jahia/react-material';
-import {ContentIcon, ManageIcon, WorkflowIcon, ZipIcon, UnzipIcon} from './actions/icons';
+import {ContentIcon, ZipIcon, UnzipIcon} from './actions/icons';
 import {
     Add,
     Autorenew,
@@ -47,10 +47,7 @@ import pasteAction from './actions/copyPaste/pasteAction';
 import copyAction from './actions/copyPaste/copyAction';
 import cutAction from './actions/copyPaste/cutAction';
 import lockAction from './actions/lockAction';
-import workflowDashboardAction from './actions/workflowDashboardAction';
 import {routerAction} from './actions/routerAction';
-import sideMenuAction from './actions/sideMenuAction';
-import sideMenuListAction from './actions/sideMenuListAction';
 import openInEditModeAction from './actions/openInEditModeAction';
 import unlockAction from './actions/unlockAction';
 import clearAllLocksAction from './actions/clearAllLocksAction';
@@ -76,8 +73,6 @@ const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 
 function contentManagerActions(actionsRegistry, t) {
     actionsRegistry.add('router', routerAction);
-    actionsRegistry.add('sideMenu', sideMenuAction);
-    actionsRegistry.add('sideMenuList', sideMenuListAction);
 
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,
@@ -294,19 +289,6 @@ function contentManagerActions(actionsRegistry, t) {
         target: ['leftMenuActions:2'],
         buttonIcon: <FolderMultipleImage/>,
         mode: 'browse-files'
-    });
-    actionsRegistry.add('manageLeftMenu', sideMenuAction, {
-        buttonLabel: t('content-media-manager:label.contentManager.leftMenu.manage.title'),
-        target: ['leftMenuActions:5'],
-        buttonIcon: <ManageIcon/>,
-        menu: 'leftMenuManageActions',
-        requiredPermission: 'siteSettingsSelector',
-        hasChildren: true
-    });
-    actionsRegistry.add('workflowsLeftMenu', workflowDashboardAction, {
-        buttonLabel: t('content-media-manager:label.contentManager.leftMenu.workflow'),
-        buttonIcon: <WorkflowIcon/>,
-        target: ['leftMenuBottomActions:6']
     });
     actionsRegistry.add('groups', routerAction, {
         buttonLabel: t('content-media-manager:label.contentManager.leftMenu.manage.groups.title'),

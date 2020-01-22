@@ -14,9 +14,9 @@ export default composeActions(requirementsAction, {
     },
     onClick: context => {
         if (context.node) {
-            window.parent.authoringApi.deleteContent(context.node.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, true);
+            window.authoringApi.deleteContent(context.node.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, true);
         } else if (context.nodes) {
-            window.parent.authoringApi.deleteContents(context.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})), false, true);
+            window.authoringApi.deleteContents(context.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})), false, true);
         }
     }
 });

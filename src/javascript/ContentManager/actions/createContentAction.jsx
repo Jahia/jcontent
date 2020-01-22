@@ -77,7 +77,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
     },
 
     onClick: context => {
-        window.parent.authoringApi.createContent(context.path, context.nodeTypes, context.includeSubTypes);
+        window.authoringApi.createContent(context.path, context.nodeTypes, context.includeSubTypes);
     }
 
 });

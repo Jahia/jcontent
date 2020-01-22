@@ -11,22 +11,22 @@ let doUnregister = (eventHandler, registry) => {
 };
 
 let registerContentModificationEventHandler = eventHandler => {
-    window.parent.contentModificationEventHandlers = window.parent.contentModificationEventHandlers || [];
-    doRegister(eventHandler, window.parent.contentModificationEventHandlers);
+    window.contentModificationEventHandlers = window.contentModificationEventHandlers || [];
+    doRegister(eventHandler, window.contentModificationEventHandlers);
 };
 
 let unregisterContentModificationEventHandler = eventHandler => {
-    doUnregister(eventHandler, window.parent.contentModificationEventHandlers);
+    doUnregister(eventHandler, window.contentModificationEventHandlers);
 };
 
 let registerPushEventHandler = eventHandler => {
-    window.parent.authoringApi = window.parent.authoringApi || {};
-    window.parent.authoringApi.pushEventHandlers = window.parent.authoringApi.pushEventHandlers || [];
-    doRegister(eventHandler, window.parent.authoringApi.pushEventHandlers);
+    window.authoringApi = window.authoringApi || {};
+    window.authoringApi.pushEventHandlers = window.authoringApi.pushEventHandlers || [];
+    doRegister(eventHandler, window.authoringApi.pushEventHandlers);
 };
 
 let unregisterPushEventHandler = eventHandler => {
-    doUnregister(eventHandler, window.parent.authoringApi.pushEventHandlers);
+    doUnregister(eventHandler, window.authoringApi.pushEventHandlers);
 };
 
 export {

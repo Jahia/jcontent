@@ -11,6 +11,13 @@
         <to last="true">/modules/content-media-manager/javascript/$1.js</to>
     </rule>
 
+    <rule>
+        <name>Content and Media Manager to Nav8</name>
+        <note>Handles timestamps for the resources of the Content and Media Manager for the proper cache support</note>
+        <from>^/cms/contentmanager/(.*)$</from>
+        <to type="redirect">/modules/moonstone/cmm/$1.js</to>
+    </rule>
+
     <outbound-rule>
         <name>Content and Media Manager resources (outbound)</name>
         <note>Handles timestamps for the resources of the Content and Media Manager for the proper cache support</note>

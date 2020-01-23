@@ -61,13 +61,13 @@ import createFolderAction from './actions/createFolderAction';
 import zipAction from './actions/zipUnzip/zipAction';
 import unzipAction from './actions/zipUnzip/unzipAction';
 
-const PATH_CONTENTS_ITSELF = '^/sites/.+?/contents/?$';
-const PATH_CONTENTS_DESCENDANTS = '^/sites/.+?/contents/.+';
-const PATH_CONTENTS_AND_DESCENDANTS = '^/sites/.+?/contents/?';
+const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
+const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
+const PATH_CONTENTS_AND_DESCENDANTS = '^/sites/((?!/).)+/contents/?';
 
-const PATH_FILES_ITSELF = '^/sites/.+?/files/?$';
-const PATH_FILES_DESCENDANTS = '^/sites/.+?/files/.+';
-const PATH_FILES_AND_DESCENDANTS = '^/sites/.+?/files/?';
+const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
+const PATH_FILES_DESCENDANTS = '^/sites/((?!/).)+/files/.+';
+const PATH_FILES_AND_DESCENDANTS = '^/sites/((?!/).)+/files/?';
 
 const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 

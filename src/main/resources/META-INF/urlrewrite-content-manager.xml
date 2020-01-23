@@ -15,7 +15,7 @@
         <name>Content and Media Manager to Nav8</name>
         <note>Handles timestamps for the resources of the Content and Media Manager for the proper cache support</note>
         <from>^/cms/contentmanager/(.*)$</from>
-        <to type="redirect">/modules/moonstone/cmm/$1.js</to>
+        <to type="redirect">%{context-path}/modules/moonstone/cmm/$1</to>
     </rule>
 
     <outbound-rule>

@@ -1,5 +1,5 @@
 import React from 'react';
-import ContentManager from './ContentManager';
+import JContent from './JContent';
 import {CssBaseline} from '@material-ui/core';
 import {useI18nCMMNamespace} from './i18n';
 import './date.config';
@@ -13,7 +13,7 @@ const JContentApp = () => {
 
     // TODO there parameters need to come from jahia-ui-root context which should become accessible once dx-commons and jur is merged
     const ctx = {
-        urlbase: '/modules/moonstone/cmm', // This one goes right after context path
+        urlbase: '/modules/moonstone/jcontent', // This one goes right after context path
         langName: window.contextJsParameters.locale,
         uilang: window.contextJsParameters.locale,
         userName: window.contextJsParameters.user.fullname,
@@ -26,7 +26,7 @@ const JContentApp = () => {
     return (
         <>
             <CssBaseline/>
-            <ContentManager dxContext={{
+            <JContent dxContext={{
                 siteDisplayableName: '',
                 maxUploadSize: 10000000,
                 displayWorkflowCounter: true,

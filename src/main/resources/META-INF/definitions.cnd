@@ -2,4 +2,4 @@
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 
 // Deprecated now use core type [jmix:visibleInContentTree] instead
-[jmix:cmContentTreeDisplayable] mixin
+// [jmix:cmContentTreeDisplayable] mixin

@@ -1,1 +1,1 @@
-__webpack_public_path__ = window.contextJsParameters.contextPath + '/modules/content-media-manager/javascript/apps/';
+__webpack_public_path__ = window.contextJsParameters.contextPath + '/modules/jcontent/javascript/apps/';

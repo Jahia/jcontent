@@ -6,7 +6,7 @@ export const useI18nCMMNamespace = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        i18n.loadNamespaces('content-media-manager')
+        i18n.loadNamespaces('jcontent')
             .then(() => setLoading(false));
     }, [i18n]);
 

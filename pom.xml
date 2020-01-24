@@ -49,25 +49,26 @@
     <parent>
         <artifactId>jahia-modules</artifactId>
         <groupId>org.jahia.modules</groupId>
-        <version>7.3.5.0-SNAPSHOT</version>
+        <version>7.5.0.0-SNAPSHOT</version>
         <relativePath />
     </parent>
-    <artifactId>content-media-manager</artifactId>
-    <name>Content and Media Manager</name>
-    <version>1.5.0-SNAPSHOT</version>
+    <artifactId>jcontent</artifactId>
+    <name>jContent</name>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <description>This is the custom module (Content and Media Manager) for running on a Digital Experience Manager server.</description>
+    <description>This is the custom module (jContent) for running on a Digital Experience Manager server.</description>
 
     <scm>
-        <connection>scm:git:git@github.com:Jahia/content-media-manager.git</connection>
-        <developerConnection>scm:git:git@github.com:Jahia/content-media-manager.git</developerConnection>
-        <url>https://github.com/Jahia/content-media-manager</url>
+        <connection>scm:git:git@github.com:Jahia/jcontent.git</connection>
+        <developerConnection>scm:git:git@github.com:Jahia/jcontent.git</developerConnection>
+        <url>https://github.com/Jahia/jcontent</url>
         <tag>HEAD</tag>
     </scm>
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
+        <jahia-module-signature>MCwCFFv6LYXbVfm0DDtUDGdkdZ74xzhbAhQrFm3X87DSERUyJd3Wfd7KeakWqw==</jahia-module-signature>
     </properties>
 
     <repositories>

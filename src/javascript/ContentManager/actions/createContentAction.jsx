@@ -62,7 +62,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
                         key: nodeType.name,
                         includeSubTypes: false,
                         nodeTypes: [nodeType.name],
-                        buttonLabel: 'content-media-manager:label.contentManager.create.contentOfType',
+                        buttonLabel: 'jcontent:label.contentManager.create.contentOfType',
                         buttonLabelParams: {typeName: nodeType.displayName}
                     }))
                 })

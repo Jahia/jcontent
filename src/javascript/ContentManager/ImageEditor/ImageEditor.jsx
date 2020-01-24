@@ -81,7 +81,7 @@ export class ImageEditor extends React.Component {
 
         let dirty = resizeParams.dirty || rotationParams.dirty || cropParams.dirty;
         let name = path.substr(path.lastIndexOf('/') + 1);
-        let changesFeedback = dirty ? t('content-media-manager:label.contentManager.editImage.unsavedChanges') : '';
+        let changesFeedback = dirty ? t('jcontent:label.contentManager.editImage.unsavedChanges') : '';
 
         return (
             <MainLayout topBarProps={{
@@ -92,7 +92,7 @@ export class ImageEditor extends React.Component {
                                         size="compact"
                                         icon={<ChevronLeft/>}
                                         onClick={() => onBackNavigation(dirty)}/>
-                            {t('content-media-manager:label.contentManager.editImage.goBack')}
+                            {t('jcontent:label.contentManager.editImage.goBack')}
                         </Typography>
                     </React.Fragment>
                 ),
@@ -121,14 +121,14 @@ export class ImageEditor extends React.Component {
                                                                  onImageLoaded={this.props.onImageLoaded}/>}
                 >
                     <>
-                        <Tooltip title={(resizeParams.dirty || cropParams.dirty) ? t('content-media-manager:label.contentManager.editImage.tooltip') : ''}>
+                        <Tooltip title={(resizeParams.dirty || cropParams.dirty) ? t('jcontent:label.contentManager.editImage.tooltip') : ''}>
                             <ExpansionPanel disabled={resizeParams.dirty || cropParams.dirty}
                                             expanded={expanded === PANELS.ROTATE}
                                             data-cm-role="rotate-panel"
                                             onChange={(event, expanded) => expanded && !resizeParams.dirty && !cropParams.dirty && this.onChangePanel(PANELS.ROTATE)}
                             >
                                 <ExpansionPanelSummary expandIcon={expanded !== PANELS.ROTATE && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('content-media-manager:label.contentManager.editImage.rotate')}</Typography>
+                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.rotate')}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <RotatePanel onRotate={onRotate}/>
@@ -136,14 +136,14 @@ export class ImageEditor extends React.Component {
                                 <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
-                        <Tooltip title={(rotationParams.dirty || cropParams.dirty) ? t('content-media-manager:label.contentManager.editImage.tooltip') : ''}>
+                        <Tooltip title={(rotationParams.dirty || cropParams.dirty) ? t('jcontent:label.contentManager.editImage.tooltip') : ''}>
                             <ExpansionPanel disabled={rotationParams.dirty || cropParams.dirty}
                                             expanded={expanded === PANELS.RESIZE}
                                             data-cm-role="resize-panel"
                                             onChange={(event, expanded) => expanded && !rotationParams.dirty && !cropParams.dirty && this.onChangePanel(PANELS.RESIZE)}
                             >
                                 <ExpansionPanelSummary expandIcon={expanded !== PANELS.RESIZE && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('content-media-manager:label.contentManager.editImage.resize')}</Typography>
+                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.resize')}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <ResizePanel originalWidth={originalWidth}
@@ -155,14 +155,14 @@ export class ImageEditor extends React.Component {
                                 <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
-                        <Tooltip title={(resizeParams.dirty || rotationParams.dirty) ? t('content-media-manager:label.contentManager.editImage.tooltip') : ''}>
+                        <Tooltip title={(resizeParams.dirty || rotationParams.dirty) ? t('jcontent:label.contentManager.editImage.tooltip') : ''}>
                             <ExpansionPanel disabled={resizeParams.dirty || rotationParams.dirty}
                                             expanded={expanded === PANELS.CROP}
                                             data-cm-role="crop-panel"
                                             onChange={(event, expanded) => expanded && !resizeParams.dirty && !rotationParams.dirty && this.onChangePanel(PANELS.CROP)}
                             >
                                 <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('content-media-manager:label.contentManager.editImage.crop')}</Typography>
+                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.crop')}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <CropPanel cropParams={cropParams}

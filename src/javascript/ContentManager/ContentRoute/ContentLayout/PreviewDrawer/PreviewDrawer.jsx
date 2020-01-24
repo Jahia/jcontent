@@ -55,7 +55,7 @@ export class PreviewDrawer extends React.Component {
                     <Toolbar variant="dense">
                         <IconButton data-cm-role="preview-drawer-close" icon={<Close fontSize="small"/>} onClick={closePreview}/>
                         <Typography variant="zeta" color="inherit">
-                            {t('content-media-manager:label.contentManager.contentPreview.preview')}
+                            {t('jcontent:label.contentManager.contentPreview.preview')}
                         </Typography>
                         <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                             <ToggleButtonGroup exclusive
@@ -64,20 +64,20 @@ export class PreviewDrawer extends React.Component {
                             >
                                 <ToggleButton value="edit" disabled={previewMode === 'edit' || disabledToggle} data-cm-role="edit-preview-button">
                                     <Typography variant="caption" color="inherit">
-                                        {t('content-media-manager:label.contentManager.contentPreview.staging')}
+                                        {t('jcontent:label.contentManager.contentPreview.staging')}
                                     </Typography>
                                 </ToggleButton>
                                 <ToggleButton value="live" disabled={previewMode === 'live' || disabledLive} data-cm-role="live-preview-button">
                                     <Typography variant="caption" color="inherit">
-                                        {t('content-media-manager:label.contentManager.contentPreview.live')}
+                                        {t('jcontent:label.contentManager.contentPreview.live')}
                                     </Typography>
                                 </ToggleButton>
                             </ToggleButtonGroup>
                             {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
-                                <Tooltip title={t('content-media-manager:label.contentManager.contentPreview.collapse')}>
+                                <Tooltip title={t('jcontent:label.contentManager.contentPreview.collapse')}>
                                     <IconButton variant="ghost" color="inherit" icon={<FullscreenExit/>} onClick={closeFullScreen}/>
                                 </Tooltip> :
-                                <Tooltip title={t('content-media-manager:label.contentManager.contentPreview.expand')}>
+                                <Tooltip title={t('jcontent:label.contentManager.contentPreview.expand')}>
                                     <IconButton variant="ghost" color="inherit" icon={<Fullscreen/>} onClick={openFullScreen}/>
                                 </Tooltip>}
                         </Grid>

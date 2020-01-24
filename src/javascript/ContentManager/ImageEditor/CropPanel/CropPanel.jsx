@@ -56,12 +56,12 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
     return (
         <>
             <Typography variant="zeta">
-                {t('content-media-manager:label.contentManager.editImage.cropInfo')}
+                {t('jcontent:label.contentManager.editImage.cropInfo')}
             </Typography>
             <div className={classes.form}>
                 <div className={classes.firstCol}>
                     <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('content-media-manager:label.contentManager.editImage.width')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
                             value={cropParams.width ? Math.round(cropParams.width) : ''}
@@ -71,7 +71,7 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
                         />
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('content-media-manager:label.contentManager.editImage.height')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
                             value={cropParams.height ? Math.round(cropParams.height) : ''}

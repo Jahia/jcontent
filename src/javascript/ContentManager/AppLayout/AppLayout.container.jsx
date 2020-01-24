@@ -20,7 +20,7 @@ export class AppLayoutContainer extends React.Component {
                     },
                     actionsTarget: 'leftMenuActions',
                     secondaryActionsTarget: 'leftMenuBottomActions',
-                    burgerIconTitle: t('content-media-manager:label.burgerMenuTitle')
+                    burgerIconTitle: t('jcontent:label.burgerMenuTitle')
                 }}
             >
                 <Switch>

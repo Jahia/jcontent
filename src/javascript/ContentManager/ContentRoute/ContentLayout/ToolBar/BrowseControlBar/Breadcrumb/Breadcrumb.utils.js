@@ -8,7 +8,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
     if (mode === ContentManagerConstants.mode.BROWSE && path.lastIndexOf('contents') === -1) {
         breadcrumbs.push({
             uuid: 'pages_id',
-            name: t('content-media-manager:label.contentManager.browsePages'),
+            name: t('jcontent:label.contentManager.browsePages'),
             path: rootPath,
             type: 'jnt:virtualsite'
         });
@@ -18,7 +18,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
     data.jcr.nodeByPath.ancestors.forEach(ancestor => {
         breadcrumbs.push({
             path: ancestor.path,
-            name: ancestor.path.endsWith('contents') ? t('content-media-manager:label.contentManager.browseFolders') : (ancestor.path.endsWith('files') ? t('content-media-manager:label.contentManager.browseFiles') : ancestor.displayName),
+            name: ancestor.path.endsWith('contents') ? t('jcontent:label.contentManager.browseFolders') : (ancestor.path.endsWith('files') ? t('jcontent:label.contentManager.browseFiles') : ancestor.displayName),
             type: ancestor.type.name,
             uuid: ancestor.uuid
         });
@@ -28,7 +28,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
     if (!path.endsWith(site)) {
         breadcrumbs.push({
             path: path,
-            name: path.endsWith('contents') ? t('content-media-manager:label.contentManager.browseFolders') : (path.endsWith('files') ? t('content-media-manager:label.contentManager.browseFiles') : data.jcr.nodeByPath.displayName),
+            name: path.endsWith('contents') ? t('jcontent:label.contentManager.browseFolders') : (path.endsWith('files') ? t('jcontent:label.contentManager.browseFiles') : data.jcr.nodeByPath.displayName),
             type: data.jcr.nodeByPath.primaryNodeType.name,
             uuid: data.jcr.nodeByPath.uuid
         });

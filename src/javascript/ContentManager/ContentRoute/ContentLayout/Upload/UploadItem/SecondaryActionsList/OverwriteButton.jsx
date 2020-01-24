@@ -13,7 +13,7 @@ const OverwriteButton = ({t, classes, doUploadAndStatusUpdate}) => (
             doUploadAndStatusUpdate('replace');
         }}
     >
-        {t('content-media-manager:label.contentManager.fileUpload.replace')}
+        {t('jcontent:label.contentManager.fileUpload.replace')}
     </Button>
 );
 

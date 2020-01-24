@@ -46,7 +46,7 @@ export class SearchControlBar extends React.Component {
                         onClick={() => setPath(siteRootPath)}
                     >
                         <VirtualsiteIcon/>
-                        {t('content-media-manager:label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
+                        {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
                     </Button>}
                 {showActions &&
                     <Button
@@ -55,7 +55,7 @@ export class SearchControlBar extends React.Component {
                         onClick={() => clearSearch(params)}
                     >
                         <Close/>
-                        {t('content-media-manager:label.contentManager.search.clear')}
+                        {t('jcontent:label.contentManager.search.clear')}
                     </Button>}
             </React.Fragment>
         );

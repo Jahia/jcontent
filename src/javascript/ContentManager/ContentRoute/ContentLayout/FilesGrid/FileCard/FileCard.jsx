@@ -199,17 +199,17 @@ export const FileCard = ({gridMode,
                     <CardContent classes={{root: classes.cardContent}}>
                         <div>
                             <Typography variant="caption" component="p">
-                                {t('content-media-manager:label.contentManager.filesGrid.name')}
+                                {t('jcontent:label.contentManager.filesGrid.name')}
                             </Typography>
                             <FileName maxLength={maxLengthLabels} node={node}/>
                         </div>
                         {!isThumbCard &&
                         <div>
                             <Typography variant="caption" component="p">
-                                {t('content-media-manager:label.contentManager.filesGrid.createdBy')}
+                                {t('jcontent:label.contentManager.filesGrid.createdBy')}
                             </Typography>
                             <Typography variant="iota" component="p">
-                                {t('content-media-manager:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
+                                {t('jcontent:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                                         &nbsp;
                                 <time>{dayjs(node.created.value).locale(getDefaultLocale(uilang)).format('LLL')}</time>
                             </Typography>
@@ -217,7 +217,7 @@ export const FileCard = ({gridMode,
                         {(isDetailedCard) && node.width && node.height &&
                         <div>
                             <Typography variant="caption" component="p">
-                                {t('content-media-manager:label.contentManager.filesGrid.fileInfo')}
+                                {t('jcontent:label.contentManager.filesGrid.fileInfo')}
                             </Typography>
                             <Typography variant="iota" component="p">
                                 {`${node.width.value} x ${node.height.value}`}

@@ -39,7 +39,7 @@ export function UploadHeader({classes, t, status}) {
                 </Typography>
                 {(status.error !== 0) &&
                     <Typography color="inherit">
-                        {t('content-media-manager:label.contentManager.fileUpload.uploadingActionMessage')}
+                        {t('jcontent:label.contentManager.fileUpload.uploadingActionMessage')}
                     </Typography>}
             </div>
         );
@@ -60,7 +60,7 @@ export function UploadHeader({classes, t, status}) {
                                       className={classes.link}
                                    >.
                                    </a>
-                               ]}/> : t('content-media-manager:label.contentManager.fileUpload.errorMessage')}
+                               ]}/> : t('jcontent:label.contentManager.fileUpload.errorMessage')}
                 </Typography>
             </div>
         );
@@ -70,7 +70,7 @@ export function UploadHeader({classes, t, status}) {
         <div className={classNames(classes.headerText)}>
             <CheckCircle className={classNames(classes.statusIcon)}/>
             <Typography color="inherit" data-cm-role="upload-status-success">
-                {t(status.type === 'import' ? 'content-media-manager:label.contentManager.fileUpload.successfulImportMessage' : 'content-media-manager:label.contentManager.fileUpload.successfulUploadMessage', {
+                {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.successfulImportMessage' : 'jcontent:label.contentManager.fileUpload.successfulUploadMessage', {
                     count: status.total,
                     number: status.total
                 })}

@@ -89,7 +89,7 @@ class SiteSwitcher extends React.Component {
                 ({error, loading, data}) => {
                     if (error) {
                         console.log('Error when fetching data: ' + error);
-                        let message = t('content-media-manager:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                        let message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                         return null;
                     }

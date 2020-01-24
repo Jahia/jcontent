@@ -37,11 +37,6 @@ The application is packaged using Webpack and is composed of the following main 
     - Apollo GraphQL client, https://www.apollographql.com
     - i18next (for internationalization support), https://www.i18next.com
 
-### Bootstrapping
-
-Currently the bootstrapping is done in the `src/main/resources/jnt_template/html/template.content-manager.jsp` view but 
-should be move to an external file.
-
 ### Entry point 
 
 The entry point to the React app is in 

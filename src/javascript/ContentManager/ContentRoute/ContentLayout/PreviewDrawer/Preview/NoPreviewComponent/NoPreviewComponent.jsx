@@ -8,7 +8,7 @@ const NoPreviewComponent = ({classes, t}) => (
     <div className={classNames(classes.noPreviewContainer, classes.contentContainer)}>
         <Paper elevation={1} className={classes.contentContainer} classes={{root: classes.center}}>
             <Typography variant="gamma" color="gamma">
-                {t('content-media-manager:label.contentManager.contentPreview.noContentSelected')}
+                {t('jcontent:label.contentManager.contentPreview.noContentSelected')}
             </Typography>
         </Paper>
     </div>

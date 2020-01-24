@@ -165,8 +165,8 @@ export const FilesGrid = ({
                 pageSize={pagination.pageSize}
                 currentPage={pagination.currentPage}
                 labels={{
-                    labelRowsPerPage: t('content-media-manager:label.pagination.rowsPerPage'),
-                    of: t('content-media-manager:label.pagination.of')
+                    labelRowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                    of: t('jcontent:label.pagination.of')
                 }}
                 onChangePage={setCurrentPage}
                 onChangeRowsPerPage={setPageSize}

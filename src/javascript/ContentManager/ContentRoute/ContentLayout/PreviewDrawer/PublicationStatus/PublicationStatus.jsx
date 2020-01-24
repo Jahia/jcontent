@@ -60,7 +60,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
             <Typography component="span"
                         className={classes.publicationInfoMarkedForDeletion}
             >
-                {t('content-media-manager:label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
+                {t('jcontent:label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
             &nbsp;
                 <time>{dayjs(_.get(previewSelection, 'deleted.value', '')).locale(defaultLocale).format('LLL')}</time>
             </Typography>
@@ -73,7 +73,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoModified}
                 >
-                    {t('content-media-manager:label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
+                    {t('jcontent:label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -83,7 +83,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoPublished}
                 >
-                    {t('content-media-manager:label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
+                    {t('jcontent:label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastPublished.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -93,7 +93,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoNotPublished}
                 >
-                    {t('content-media-manager:label.contentManager.contentPreview.notPublished')}
+                    {t('jcontent:label.contentManager.contentPreview.notPublished')}
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.UNPUBLISHED:
@@ -101,7 +101,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
                 <Typography component="p"
                             className={classes.publicationInfoUnpublished}
                 >
-                    {t('content-media-manager:label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
+                    {t('jcontent:label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
                     <time>{dayjs(_.get(previewSelection, 'lastModified.value', '')).locale(defaultLocale).format('LLL')}</time>
                 </Typography>
@@ -110,27 +110,27 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
             return (
                 <Typography component="p"
                             className={classes.publicationInfoMandatoryLanguageUnpublishable}
-                            title={t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
+                            title={t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
                 >
-                    {t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
+                    {t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoMandatoryLanguageValid}
-                            title={t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
+                            title={t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
                 >
-                    {t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
+                    {t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
                 </Typography>
             );
         case ContentManagerConstants.availablePublicationStatuses.CONFLICT:
             return (
                 <Typography component="p"
                             className={classes.publicationInfoConflict}
-                            title={t('content-media-manager:label.contentManager.publicationStatus.conflict.description')}
+                            title={t('jcontent:label.contentManager.publicationStatus.conflict.description')}
                 >
-                    {t('content-media-manager:label.contentManager.publicationStatus.conflict.label')}
+                    {t('jcontent:label.contentManager.publicationStatus.conflict.label')}
                 </Typography>
             );
         default:

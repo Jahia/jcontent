@@ -9,7 +9,7 @@ const ContentNotFound = ({columnData, t, className}) => (
         <TableRow>
             <TableCell colSpan={columnData.length + ContentListTableConstants.appTableCells}>
                 <Typography variant="p" className={className}>
-                    {t('content-media-manager:label.contentManager.contentNotFound')}
+                    {t('jcontent:label.contentManager.contentNotFound')}
                 </Typography>
             </TableCell>
         </TableRow>

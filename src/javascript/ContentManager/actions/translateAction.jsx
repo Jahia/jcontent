@@ -14,7 +14,7 @@ export default composeActions(requirementsAction, reduxAction(state => ({languag
                 if (source.language !== dest.language && (source.language === context.language || dest.language === context.language) && node['jcr_modifyProperties_default_' + dest.language]) {
                     return [{
                         key: source.displayName + dest.displayName,
-                        buttonLabel: 'content-media-manager:label.contentManager.translateAction',
+                        buttonLabel: 'jcontent:label.contentManager.translateAction',
                         buttonLabelParams: {
                             source: _.upperFirst(source.displayName),
                             dest: _.upperFirst(dest.displayName)

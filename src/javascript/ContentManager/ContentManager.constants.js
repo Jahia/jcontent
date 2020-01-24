@@ -31,7 +31,7 @@ const ContentManagerConstants = {
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
             type: 'contents',
             openableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
-            rootLabel: 'content-media-manager:label.contentManager.browseFolders',
+            rootLabel: 'jcontent:label.contentManager.browseFolders',
             key: 'browse-tree-content'
         },
         pages: {
@@ -39,7 +39,7 @@ const ContentManagerConstants = {
             selectableTypes: ['jnt:page', 'jnt:virtualsite'],
             type: 'pages',
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
-            rootLabel: 'content-media-manager:label.contentManager.browsePages',
+            rootLabel: 'jcontent:label.contentManager.browsePages',
             key: 'browse-tree-pages'
         },
         files: {
@@ -47,7 +47,7 @@ const ContentManagerConstants = {
             selectableTypes: ['jnt:folder'],
             type: 'files',
             openableTypes: ['jnt:folder'],
-            rootLabel: 'content-media-manager:label.contentManager.browseFiles',
+            rootLabel: 'jcontent:label.contentManager.browseFiles',
             key: 'browse-tree-files'
         }
     },

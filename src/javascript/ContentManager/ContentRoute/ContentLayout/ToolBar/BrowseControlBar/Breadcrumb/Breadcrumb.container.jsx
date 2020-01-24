@@ -15,7 +15,7 @@ export const BreadcrumbContainer = ({path, language, selectItem, mode, t, site})
         <Query key={key} query={breadcrumbQuery} variables={queryParams}>
             {({loading, error, data}) => {
                 if (error) {
-                    let message = t('content-media-manager:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+                    let message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
                     console.error(message);
                 }
 

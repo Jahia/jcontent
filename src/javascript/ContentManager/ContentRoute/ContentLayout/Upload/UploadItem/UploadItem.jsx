@@ -92,27 +92,27 @@ export class UploadItem extends React.Component {
                 <Status {...this.props}/>
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>
-                        {t('content-media-manager:label.contentManager.fileUpload.dialogRenameTitle')}
+                        {t('jcontent:label.contentManager.fileUpload.dialogRenameTitle')}
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            {t('content-media-manager:label.contentManager.fileUpload.dialogRenameText')}
+                            {t('jcontent:label.contentManager.fileUpload.dialogRenameText')}
                         </DialogContentText>
                         <TextField
                             autoFocus
-                            label={t('content-media-manager:label.contentManager.fileUpload.newName')}
+                            label={t('jcontent:label.contentManager.fileUpload.newName')}
                             type="text"
-                            name={t('content-media-manager:label.contentManager.fileUpload.dialogRenameExample')}
+                            name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
                             defaultValue={file.name}
                             onChange={e => this.setState({userChosenName: e.target.value})}
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button variant="secondary" onClick={() => this.setState({anchorEl: null})}>
-                            {t('content-media-manager:label.contentManager.fileUpload.dialogRenameCancel')}
+                            {t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
                         </Button>
                         <Button variant="primary" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}>
-                            {t('content-media-manager:label.contentManager.fileUpload.dialogRename')}
+                            {t('jcontent:label.contentManager.fileUpload.dialogRename')}
                         </Button>
                     </DialogActions>
                 </Dialog>

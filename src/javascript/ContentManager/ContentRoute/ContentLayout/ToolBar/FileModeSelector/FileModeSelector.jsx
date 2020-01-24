@@ -62,9 +62,9 @@ export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
             variant="ghost"
             onChange={e => handleChange(e)}
         >
-            <MenuItem value={THUMBNAIL}>{t('content-media-manager:label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
-            <MenuItem value={LIST_VIEW}>{t('content-media-manager:label.contentManager.filesGrid.selectListView')}</MenuItem>
-            <MenuItem value={DETAILED_VIEW}>{t('content-media-manager:label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
+            <MenuItem value={THUMBNAIL}>{t('jcontent:label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
+            <MenuItem value={LIST_VIEW}>{t('jcontent:label.contentManager.filesGrid.selectListView')}</MenuItem>
+            <MenuItem value={DETAILED_VIEW}>{t('jcontent:label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
         </Select>
     );
 };

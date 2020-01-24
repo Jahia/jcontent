@@ -40,7 +40,7 @@ import {useKeyboardNavigation} from '../useKeyboardNavigation';
 const allColumnData = [
     {
         id: 'name',
-        label: 'content-media-manager:label.contentManager.listColumns.name',
+        label: 'jcontent:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName'
     },
@@ -58,19 +58,19 @@ const allColumnData = [
     },
     {
         id: 'type',
-        label: 'content-media-manager:label.contentManager.listColumns.type',
+        label: 'jcontent:label.contentManager.listColumns.type',
         sortable: true,
         property: 'primaryNodeType.displayName'
     },
     {
         id: 'createdBy',
-        label: 'content-media-manager:label.contentManager.listColumns.createdBy',
+        label: 'jcontent:label.contentManager.listColumns.createdBy',
         sortable: true,
         property: 'createdBy.value'
     },
     {
         id: 'lastModified',
-        label: 'content-media-manager:label.contentManager.listColumns.lastModified',
+        label: 'jcontent:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value'
     }
@@ -79,7 +79,7 @@ const allColumnData = [
 const reducedColumnData = [
     {
         id: 'name',
-        label: 'content-media-manager:label.contentManager.listColumns.name',
+        label: 'jcontent:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName'
     },
@@ -97,13 +97,13 @@ const reducedColumnData = [
     },
     {
         id: 'createdBy',
-        label: 'content-media-manager:label.contentManager.listColumns.createdBy',
+        label: 'jcontent:label.contentManager.listColumns.createdBy',
         sortable: true,
         property: 'createdBy.value'
     },
     {
         id: 'lastModified',
-        label: 'content-media-manager:label.contentManager.listColumns.lastModified',
+        label: 'jcontent:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value'
     }
@@ -533,7 +533,7 @@ export const ContentListTable = ({
                                                                         >
                                                                             {isWip(node, lang) &&
                                                                             <Tooltip
-                                                                                title={node.wipLangs ? t('content-media-manager:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('content-media-manager:label.contentManager.workInProgressAll')}
+                                                                                title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}
                                                                             >
                                                                                 <Wrench fontSize="small"
                                                                                         color="inherit"/>
@@ -551,7 +551,7 @@ export const ContentListTable = ({
                                                                         >
                                                                             {node.lockOwner !== null &&
                                                                             <Tooltip
-                                                                                title={t('content-media-manager:label.contentManager.locked')}
+                                                                                title={t('jcontent:label.contentManager.locked')}
                                                                             >
                                                                                 <Lock fontSize="small" color="inherit"/>
                                                                             </Tooltip>}
@@ -639,8 +639,8 @@ export const ContentListTable = ({
                     pageSize={pagination.pageSize}
                     currentPage={pagination.currentPage}
                     labels={{
-                      labelRowsPerPage: t('content-media-manager:label.pagination.rowsPerPage'),
-                      of: t('content-media-manager:label.pagination.of')
+                      labelRowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                      of: t('jcontent:label.pagination.of')
                     }}
                     onChangeRowsPerPage={setPageSize}
                     onChangePage={setCurrentPage}

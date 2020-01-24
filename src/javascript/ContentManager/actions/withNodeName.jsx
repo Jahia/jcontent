@@ -29,7 +29,7 @@ let withNodeName = composeActions(withDxContextAction, withI18nAction, {
                 context.buttonLabelParams = context.nodes.pipe(map(nodes => {
                     if (nodes.length > 0) {
                         return {
-                            displayName: props.t('content-media-manager:label.contentManager.selection.itemsSelected', {count: context.paths.length}),
+                            displayName: props.t('jcontent:label.contentManager.selection.itemsSelected', {count: context.paths.length}),
                             language: nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(nodes[0].site.languages, context.language).displayName)) : null
                         };
                     }

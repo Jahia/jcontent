@@ -52,7 +52,7 @@ export class ContentTrees extends React.Component {
                         <Grid container alignItems="center" spacing={8} justify="space-between">
                             <Grid item>
                                 <Typography variant="zeta" color="inherit">
-                                    {t('content-media-manager:label.contentManager.tree.title')}
+                                    {t('jcontent:label.contentManager.tree.title')}
                                 </Typography>
                             </Grid>
                             <Grid item>

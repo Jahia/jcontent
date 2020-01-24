@@ -16,15 +16,15 @@ export const RotatePanel = ({classes, t, onRotate}) => {
     return (
         <>
             <Typography variant="zeta">
-                {t('content-media-manager:label.contentManager.editImage.rotateInfo')}
+                {t('jcontent:label.contentManager.editImage.rotateInfo')}
             </Typography>
             <div className={classes.icons}>
-                <Tooltip title={t('content-media-manager:label.contentManager.editImage.rotateLeft')}>
+                <Tooltip title={t('jcontent:label.contentManager.editImage.rotateLeft')}>
                     <IconButton data-cm-role="rotate-left"
                                 icon={<RotateLeft color="primary" fontSize="large"/>}
                                 onClick={() => onRotate(-1)}/>
                 </Tooltip>
-                <Tooltip title={t('content-media-manager:label.contentManager.editImage.rotateRight')}>
+                <Tooltip title={t('jcontent:label.contentManager.editImage.rotateRight')}>
                     <IconButton data-cm-role="rotate-right"
                                 icon={<RotateRight color="primary" fontSize="large"/>}
                                 onClick={() => onRotate(1)}/>

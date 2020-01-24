@@ -24,18 +24,18 @@ export const ConfirmSaveDialog = ({open, handleClose, handleSave, classes, t}) =
             classes={{paper: classes.root}}
             onClose={handleClose}
     >
-        <DialogTitle id="form-dialog-title">{t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.title')}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.editImage.confirmSaveDialog.title')}</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                {t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.text')}
+                {t('jcontent:label.contentManager.editImage.confirmSaveDialog.text')}
             </DialogContentText>
         </DialogContent>
         <DialogActions>
             <Button variant="secondary" data-cm-role="image-save-no" onClick={handleClose}>
-                {t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.no')}
+                {t('jcontent:label.contentManager.editImage.confirmSaveDialog.no')}
             </Button>
             <Button variant="primary" data-cm-role="image-save-yes" onClick={() => handleSave()}>
-                {t('content-media-manager:label.contentManager.editImage.confirmSaveDialog.yes')}
+                {t('jcontent:label.contentManager.editImage.confirmSaveDialog.yes')}
             </Button>
         </DialogActions>
     </Dialog>

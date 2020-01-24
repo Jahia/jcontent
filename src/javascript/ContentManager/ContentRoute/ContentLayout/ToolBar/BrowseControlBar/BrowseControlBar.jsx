@@ -51,7 +51,7 @@ export class BrowseControlBar extends React.Component {
                         render={buttonRenderer({variant: 'ghost'}, true)}
                     />}
                 {showActions &&
-                <Button variant="ghost" icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}><span>{t('content-media-manager:label.contentManager.refresh')}</span></Button>}
+                <Button variant="ghost" icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}><span>{t('jcontent:label.contentManager.refresh')}</span></Button>}
             </React.Fragment>
         );
     }

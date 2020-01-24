@@ -21,14 +21,14 @@ let styles = {
 const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
     <ExpansionPanelActions className={classes.buttons}>
         <Button data-cm-role="undo-changes" variant="ghost" disabled={!dirty} onClick={undoChanges}>
-            {t('content-media-manager:label.contentManager.editImage.undo')}
+            {t('jcontent:label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>
         <Button variant="secondary" data-cm-role="image-save-as-button" disabled={!dirty} onClick={() => saveChanges(true)}>
-            {t('content-media-manager:label.contentManager.editImage.saveAs')}
+            {t('jcontent:label.contentManager.editImage.saveAs')}
         </Button>
         <Button variant="primary" data-cm-role="image-save-button" disabled={!dirty} onClick={() => saveChanges(false)}>
-            {t('content-media-manager:label.contentManager.editImage.save')}
+            {t('jcontent:label.contentManager.editImage.save')}
         </Button>
     </ExpansionPanelActions>
 );

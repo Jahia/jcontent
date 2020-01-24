@@ -11,7 +11,7 @@ const RenameButton = ({t, classes, showRenameDialog}) => (
         color="inverted"
         onClick={showRenameDialog}
     >
-        {t('content-media-manager:label.contentManager.fileUpload.rename')}
+        {t('jcontent:label.contentManager.fileUpload.rename')}
     </Button>
 );
 

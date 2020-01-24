@@ -18,8 +18,8 @@
         <property name="actionItem">
             <bean class="org.jahia.ajax.gwt.client.widget.toolbar.action.OpenWindowActionItem"/>
         </property>
-        <property name="titleKey" value="label.contentAndMediaManager@resources.content-media-manager"/>
-        <property name="icon" value="/modules/content-media-manager/icons/app-document.svg"/>
+        <property name="titleKey" value="label.contentAndMediaManager@resources.jcontent"/>
+        <property name="icon" value="/modules/jcontent/icons/app-document.svg"/>
         <property name="requiredPermission" value="contentManager"/>
         <property name="properties">
             <list>

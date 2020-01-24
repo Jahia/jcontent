@@ -50,7 +50,7 @@ export class ContentTypeSelect extends React.Component {
                 {({error, data}) => {
                     let contentTypes = [];
                     if (error) {
-                        let message = t('content-media-manager:label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
+                        let message = t('jcontent:label.contentManager.contentTypes.error.loading', {details: (error.message ? error.message : '')});
                         notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
                     } else if (data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
                         contentTypes = _.sortBy(data.jcr.nodeTypes.nodes, [nt => nt.displayName.toLowerCase()], 'displayName');
@@ -64,8 +64,8 @@ export class ContentTypeSelect extends React.Component {
                         });
                         contentTypes.unshift({
                             value: '',
-                            title: t('content-media-manager:label.contentManager.contentTypes.any'),
-                            label: t('content-media-manager:label.contentManager.contentTypes.any'),
+                            title: t('jcontent:label.contentManager.contentTypes.any'),
+                            label: t('jcontent:label.contentManager.contentTypes.any'),
                             icon: null
                         });
                     }

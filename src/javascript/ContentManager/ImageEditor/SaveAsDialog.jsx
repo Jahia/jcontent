@@ -28,10 +28,10 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
                 classes={{paper: classes.root}}
                 onClose={handleClose}
         >
-            <DialogTitle id="form-dialog-title">{t('content-media-manager:label.contentManager.editImage.saveAsDialog.title')}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.editImage.saveAsDialog.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {t('content-media-manager:label.contentManager.editImage.saveAsDialog.text')}
+                    {t('jcontent:label.contentManager.editImage.saveAsDialog.text')}
                 </DialogContentText>
                 <TextField
                     autoFocus
@@ -46,10 +46,10 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
             </DialogContent>
             <DialogActions>
                 <Button variant="secondary" data-cm-role="image-save-as-cancel" onClick={handleClose}>
-                    {t('content-media-manager:label.contentManager.editImage.saveAsDialog.cancel')}
+                    {t('jcontent:label.contentManager.editImage.saveAsDialog.cancel')}
                 </Button>
                 <Button variant="primary" data-cm-role="image-save-as-confirm" disabled={!isNameValid} onClick={handleSave}>
-                    {t('content-media-manager:label.contentManager.editImage.saveAsDialog.save')}
+                    {t('jcontent:label.contentManager.editImage.saveAsDialog.save')}
                 </Button>
             </DialogActions>
         </Dialog>

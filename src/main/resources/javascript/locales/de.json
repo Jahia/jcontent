@@ -95,7 +95,7 @@
         "sql2Search": "Suche",
         "browse": "Content"
       },
-      "appTitle": "Content and Media Manager {{path}}",
+      "appTitle": "jContent {{path}}",
       "showCurrentPath": "Zeige aktuellen Pfad",
       "filesGrid": {
         "emptyMessage": "Dieser Ordner enthält keine Dateien",

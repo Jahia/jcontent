@@ -38,7 +38,7 @@ export class ToolBar extends React.Component {
                     {selection.length > 0 &&
                         <React.Fragment>
                             <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
-                                {t('content-media-manager:label.contentManager.selection.itemsSelected', {count: selection.length})}
+                                {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
                             </Typography>
                             <div className={classes.spacer}/>
                             <DisplayActions

@@ -9,8 +9,8 @@ import {actionsRegistry} from '@jahia/react-material';
 const AppRoute = ({dxContext, help, match, t}) => (
     <MainLayout
         topBarProps={{
-            path: t('content-media-manager:label.contentManager.appTitle', {path: ''}),
-            title: t([actionsRegistry.get(match.params.menu).buttonLabel, 'content-media-manager:label.contentManager.leftMenu.manage.title']),
+            path: t('jcontent:label.contentManager.appTitle', {path: ''}),
+            title: t([actionsRegistry.get(match.params.menu).buttonLabel, 'jcontent:label.contentManager.leftMenu.manage.title']),
             contextModifiers: <React.Fragment><SiteSwitcher/> <SiteLanguageSwitcher/></React.Fragment>,
             actions: <React.Fragment></React.Fragment>
         }}

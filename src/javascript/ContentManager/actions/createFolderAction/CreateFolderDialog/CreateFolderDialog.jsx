@@ -31,10 +31,10 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                 classes={{paper: classes.root}}
                 onClose={handleCancel}
         >
-            <DialogTitle id="form-dialog-title">{t('content-media-manager:label.contentManager.createFolderAction.title')}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.createFolderAction.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={!isNameValid || !isNameAvailable ? classes.error : null}>
-                    {t('content-media-manager:label.contentManager.createFolderAction.text')}
+                    {t('jcontent:label.contentManager.createFolderAction.text')}
                 </DialogContentText>
                 <TextField
                     fullWidth
@@ -45,20 +45,20 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                     id="folder-name"
                     aria-describedby="folder-name-error-text"
                     margin="dense"
-                    helperText={isNameAvailable ? '' : t('content-media-manager:label.contentManager.createFolderAction.exists')}
+                    helperText={isNameAvailable ? '' : t('jcontent:label.contentManager.createFolderAction.exists')}
                     onChange={onChangeName}
                 />
             </DialogContent>
             <DialogActions>
                 <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>
-                    {t('content-media-manager:label.contentManager.createFolderAction.cancel')}
+                    {t('jcontent:label.contentManager.createFolderAction.cancel')}
                 </Button>
                 <Button variant="primary"
                         data-cm-role="create-folder-as-confirm"
                         disabled={loading || !name || !isNameValid || !isNameAvailable}
                         onClick={handleCreate}
                 >
-                    {t('content-media-manager:label.contentManager.createFolderAction.ok')}
+                    {t('jcontent:label.contentManager.createFolderAction.ok')}
                 </Button>
             </DialogActions>
         </Dialog>

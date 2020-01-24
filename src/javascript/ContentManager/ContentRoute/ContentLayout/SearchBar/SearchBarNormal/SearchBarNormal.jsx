@@ -116,7 +116,7 @@ export class SearchBarNormal extends React.Component {
                     <React.Fragment>
                         {!ongoingSearch.searchTerms ?
                             <ActionButton
-                                label="content-media-manager:label.contentManager.search.sql2"
+                                label="jcontent:label.contentManager.search.sql2"
                                 cmRole="search-type-sql2search"
                                 onClick={onSql2Click}
                             /> :
@@ -140,7 +140,7 @@ export class SearchBarNormal extends React.Component {
                         className={classes.searchSize}
                         value={searchTerms}
                         classes={{input: classes.input}}
-                        placeholder={t('content-media-manager:label.contentManager.search.normalPrompt')}
+                        placeholder={t('jcontent:label.contentManager.search.normalPrompt')}
                         onChange={this.onSearchInputChange}
                         onKeyDown={this.onSearchInputKeyDown}
                     />

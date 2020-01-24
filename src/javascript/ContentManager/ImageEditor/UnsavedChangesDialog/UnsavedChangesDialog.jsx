@@ -11,18 +11,18 @@ export class UnsavedChangesDialog extends React.Component {
         return (
             <Dialog fullWidth open={open} aria-labelledby="form-dialog-title" onClose={onClose}>
                 <DialogTitle>
-                    {t('content-media-manager:label.contentManager.editImage.discardChangesTitle')}
+                    {t('jcontent:label.contentManager.editImage.discardChangesTitle')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {t('content-media-manager:label.contentManager.editImage.exitConfirmation')}
+                        {t('jcontent:label.contentManager.editImage.exitConfirmation')}
                     </DialogContentText>
                     <DialogActions>
                         <Button variant="secondary" onClick={onClose}>
-                            {t('content-media-manager:label.contentManager.editImage.continueEditing')}
+                            {t('jcontent:label.contentManager.editImage.continueEditing')}
                         </Button>
                         <Button variant="primary" onClick={onBack}>
-                            {t('content-media-manager:label.contentManager.editImage.discardChangesButton')}
+                            {t('jcontent:label.contentManager.editImage.discardChangesButton')}
                         </Button>
                     </DialogActions>
                 </DialogContent>

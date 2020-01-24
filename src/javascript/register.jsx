@@ -12,7 +12,7 @@ const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${wind
 
 const CmmNavItem = () => {
     const history = useHistory();
-    const {t} = useTranslation('content-media-manager');
+    const {t} = useTranslation('jcontent');
     return (
         <PrimaryNavItem key={ROUTE}
                         isSelected={history.location.pathname.startsWith(ROUTE) && history.location.pathname.split('/').length > 3}

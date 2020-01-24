@@ -13,7 +13,7 @@ const ImageEditor = Loadable({
 
 function contentManagerRoutes(registry) {
     const help = (
-        <Trans i18nKey="content-media-manager:label.contentManager.link.academy"
+        <Trans i18nKey="jcontent:label.contentManager.link.academy"
                components={[
                    <a key="academyLink"
                       href=""

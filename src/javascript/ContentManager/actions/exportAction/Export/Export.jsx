@@ -68,11 +68,11 @@ export class Export extends React.Component {
         return (
             <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
-                    {t('content-media-manager:label.contentManager.export.dialogTitle')}
+                    {t('jcontent:label.contentManager.export.dialogTitle')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText className={classes.margins}>
-                        {t('content-media-manager:label.contentManager.export.selectWorkspace')}
+                        {t('jcontent:label.contentManager.export.selectWorkspace')}
                     </DialogContentText>
                     <Select
                         className={classes.margins}
@@ -81,14 +81,14 @@ export class Export extends React.Component {
                         onChange={e => this.onWorkspaceChange(e)}
                     >
                         <MenuItem value="default" data-cm-role="default-workspace">
-                            {t('content-media-manager:label.contentManager.export.stagingOnlyOption')}
+                            {t('jcontent:label.contentManager.export.stagingOnlyOption')}
                         </MenuItem>
                         <MenuItem value="live" data-cm-role="live-workspace">
-                            {t('content-media-manager:label.contentManager.export.stagingAndLiveOption')}
+                            {t('jcontent:label.contentManager.export.stagingAndLiveOption')}
                         </MenuItem>
                     </Select>
                     <FormHelperText>
-                        {t('content-media-manager:label.contentManager.export.exportDetails')}
+                        {t('jcontent:label.contentManager.export.exportDetails')}
                     </FormHelperText>
                     <div className={classes.checkboxContainer}>
                         <FormControlLabel
@@ -96,7 +96,7 @@ export class Export extends React.Component {
                             value="xml"
                             label={
                                 <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.checkboxTypo}>
-                                    {t('content-media-manager:label.contentManager.export.asXml')}
+                                    {t('jcontent:label.contentManager.export.asXml')}
                                 </Typography>
                             }
                             checked={this.state.xml}
@@ -109,7 +109,7 @@ export class Export extends React.Component {
                 </DialogContent>
                 <DialogActions>
                     <Button variant="secondary" onClick={onClose}>
-                        {t('content-media-manager:label.contentManager.fileUpload.dialogRenameCancel')}
+                        {t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
                     </Button>
                     <Button
                         variant="primary"
@@ -119,7 +119,7 @@ export class Export extends React.Component {
                             onClose();
                         }}
                     >
-                        {t('content-media-manager:label.contentManager.export.actionLabel')}
+                        {t('jcontent:label.contentManager.export.actionLabel')}
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -59,12 +59,12 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
     return (
         <>
             <Typography variant="zeta">
-                {t('content-media-manager:label.contentManager.editImage.resizeInfo')}
+                {t('jcontent:label.contentManager.editImage.resizeInfo')}
             </Typography>
             <div className={classes.form}>
                 <div className={classes.firstCol}>
                     <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('content-media-manager:label.contentManager.editImage.width')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
                             value={resizeParams.width ? resizeParams.width : originalWidth}
@@ -74,7 +74,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
                         />
                     </FormControl>
                     <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('content-media-manager:label.contentManager.editImage.height')}</InputLabel>
+                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
                             value={resizeParams.height ? resizeParams.height : originalHeight}

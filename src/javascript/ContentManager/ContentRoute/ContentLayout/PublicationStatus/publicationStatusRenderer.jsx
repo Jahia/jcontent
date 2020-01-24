@@ -8,7 +8,7 @@ class PublicationStatusUnpublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
         return (
             <React.Fragment>
-                { t('content-media-manager:label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
+                { t('jcontent:label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
                 <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
@@ -21,7 +21,7 @@ class PublicationStatusUnpublished {
 
 class PublicationStatusNotPublished {
     geti18nDetailsMessage(node, t) {
-        return t('content-media-manager:label.contentManager.publicationStatus.notPublished');
+        return t('jcontent:label.contentManager.publicationStatus.notPublished');
     }
 
     getContentClass(classes) {
@@ -33,7 +33,7 @@ class PublicationStatusPublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
         return (
             <React.Fragment>
-                { t('content-media-manager:label.contentManager.publicationStatus.published', {userName: _.get(node, 'lastPublishedBy.value', ''), timestamp: ''}) }
+                { t('jcontent:label.contentManager.publicationStatus.published', {userName: _.get(node, 'lastPublishedBy.value', ''), timestamp: ''}) }
                 <time>{dayjs(_.get(node, 'lastPublished.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
@@ -48,7 +48,7 @@ class PublicationStatusModified {
     geti18nDetailsMessage(node, t, locale = 'en') {
         return (
             <React.Fragment>
-                { t('content-media-manager:label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
+                { t('jcontent:label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
                 <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
@@ -66,7 +66,7 @@ class PublicationStatusMarkedForDeletion {
 
         return (
             <React.Fragment>
-                { t('content-media-manager:label.contentManager.publicationStatus.markedForDeletion', {userName: _.get(node, 'deletedBy.value', parentDeletionUser), timestamp: ''}) }
+                { t('jcontent:label.contentManager.publicationStatus.markedForDeletion', {userName: _.get(node, 'deletedBy.value', parentDeletionUser), timestamp: ''}) }
                 <time>{dayjs(_.get(node, 'deleted.value', parentDeletionDate)).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
@@ -80,9 +80,9 @@ class PublicationStatusMarkedForDeletion {
 class PublicationStatusMandatoryLanguageUnpublishable {
     geti18nDetailsMessage(node, t) {
         return (
-            <Tooltip title={t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}>
+            <Tooltip title={t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}>
                 <span>
-                    {t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
+                    {t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
                 </span>
             </Tooltip>
         );
@@ -96,9 +96,9 @@ class PublicationStatusMandatoryLanguageUnpublishable {
 class PublicationStatusMandatoryLanguageValid {
     geti18nDetailsMessage(node, t) {
         return (
-            <Tooltip title={t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageValid.description')}>
+            <Tooltip title={t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageValid.description')}>
                 <span>
-                    {t('content-media-manager:label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
+                    {t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
                 </span>
             </Tooltip>
         );
@@ -112,9 +112,9 @@ class PublicationStatusMandatoryLanguageValid {
 class PublicationStatusConflict {
     geti18nDetailsMessage(node, t) {
         return (
-            <Tooltip title={t('content-media-manager:label.contentManager.publicationStatus.conflict.description')}>
+            <Tooltip title={t('jcontent:label.contentManager.publicationStatus.conflict.description')}>
                 <span>
-                    {t('content-media-manager:label.contentManager.publicationStatus.conflict.label')}
+                    {t('jcontent:label.contentManager.publicationStatus.conflict.label')}
                 </span>
             </Tooltip>
         );
@@ -127,7 +127,7 @@ class PublicationStatusConflict {
 
 class PublicationStatusUnknown {
     geti18nDetailsMessage(node, t) {
-        return t('content-media-manager:label.contentManager.publicationStatus.unknown');
+        return t('jcontent:label.contentManager.publicationStatus.unknown');
     }
 
     getContentClass(classes) {

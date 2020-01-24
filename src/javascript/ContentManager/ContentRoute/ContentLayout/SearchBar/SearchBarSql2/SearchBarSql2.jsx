@@ -72,7 +72,7 @@ export class SearchBarSql2 extends React.Component {
                 leftFooter={
                     <DxContext.Consumer>{dxContext => (
                         <Typography align="left" color="invert">
-                            <Trans i18nKey="content-media-manager:label.contentManager.search.sql2Prompt"
+                            <Trans i18nKey="jcontent:label.contentManager.search.sql2Prompt"
                                    className={classes.academy}
                                    components={[
                                        <a key="sql2Prompt"

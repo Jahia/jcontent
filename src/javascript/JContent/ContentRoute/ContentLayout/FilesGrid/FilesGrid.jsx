@@ -25,7 +25,8 @@ const styles = theme => ({
         overflowX: 'hidden',
         margin: '0!important',
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3
+        padding: theme.spacing.unit * 3,
+        outline: 'none'
     },
     gridEmpty: {
         flex: '1 1 0%',

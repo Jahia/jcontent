@@ -114,7 +114,8 @@ const styles = theme => ({
         flex: '1 1 0%',
         maxWidth: '100%',
         overflow: 'auto',
-        position: 'relative'
+        position: 'relative',
+        outline: 'none'
     },
     row: {
         userSelect: 'none',

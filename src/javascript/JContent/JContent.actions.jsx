@@ -75,6 +75,10 @@ const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 function jContentActions(registry) {
     registry.add('action', 'router', routerAction);
 
+    const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
+        menuRenderer: MenuRenderer,
+        menuItemRenderer: MenuItemRenderer
+    });
     registry.add('action', 'edit', editAction, {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.edit',
@@ -135,14 +139,12 @@ function jContentActions(registry) {
         checkIfLanguagesMoreThanOne: false,
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
-    registry.add('action', 'publishMenu', menuAction, {
+    registry.add('action', 'publishMenu', menuActionWithRenderer, {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         targets: ['contentActions:6', 'selectedContentActions:5'],
         menuTarget: 'publishMenu',
-        menuPreload: true,
-        menuRenderer: MenuRenderer,
-        menuItemRenderer: MenuItemRenderer
+        menuPreload: true
     });
     registry.add('action', 'publishInAllLanguages', publishAction, {
         buttonIcon: <CloudUpload/>,
@@ -200,22 +202,18 @@ function jContentActions(registry) {
         checkForUnpublication: true,
         checkIfLanguagesMoreThanOne: true
     });
-    registry.add('action', 'contentMenu', menuAction, {
+    registry.add('action', 'contentMenu', menuActionWithRenderer, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'contentActions',
-        showIcons: true,
-        menuRenderer: MenuRenderer,
-        menuItemRenderer: MenuItemRenderer
+        showIcons: true
     });
-    registry.add('action', 'selectedContentMenu', menuAction, {
+    registry.add('action', 'selectedContentMenu', menuActionWithRenderer, {
         buttonIcon: <DotsVertical/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'selectedContentActions',
         menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',
-        showIcons: true,
-        menuRenderer: MenuRenderer,
-        menuItemRenderer: MenuItemRenderer
+        showIcons: true
     });
     registry.add('action', 'copy', copyAction, {
         buttonIcon: <ContentCopy/>,
@@ -258,16 +256,13 @@ function jContentActions(registry) {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
-    registry.add('action', 'createMenu', menuAction, {
+    registry.add('action', 'createMenu', menuActionWithRenderer, {
         buttonIcon: <Add/>,
         buttonLabel: 'jcontent:label.contentManager.create.create',
         targets: ['tableHeaderActions:10'],
         menuTarget: 'createMenuActions',
         showIcons: true,
-        menuPreload: true,
-        menuRenderer: MenuRenderer,
-        menuItemRenderer: MenuItemRenderer
-
+        menuPreload: true
     });
     registry.add('action', 'lock', lockAction, {
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.lock',

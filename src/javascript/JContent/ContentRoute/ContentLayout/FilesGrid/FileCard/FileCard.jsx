@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
-import {ContextualMenu} from '@jahia/react-material';
+import {ContextualMenu} from '../../../../ContextualMenu';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../FilesGrid.utils';

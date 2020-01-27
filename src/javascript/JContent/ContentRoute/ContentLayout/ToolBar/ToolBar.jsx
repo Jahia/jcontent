@@ -9,7 +9,8 @@ import {compose} from 'react-apollo';
 import JContentConstants from '../../../JContent.constants';
 import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
-import {DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {DisplayActions} from '@jahia/ui-extender';
+import {iconButtonRenderer} from '@jahia/react-material';
 import {withTranslation} from 'react-i18next';
 
 const styles = theme => ({

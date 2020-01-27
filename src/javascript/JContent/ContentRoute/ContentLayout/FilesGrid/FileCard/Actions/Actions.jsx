@@ -1,7 +1,9 @@
 import React from 'react';
 import {withStyles} from '@material-ui/core';
-import {DisplayAction, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {iconButtonRenderer} from '@jahia/react-material';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import * as _ from 'lodash';
+import PropTypes from 'prop-types';
 
 const styles = () => ({
     actionButtons: {
@@ -37,6 +39,14 @@ export const Actions = ({classes, isHovered, node}) => {
                 render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
             />
         </div>;
+};
+
+Actions.propTypes = {
+    classes: PropTypes.object.isRequired,
+
+    isHovered: PropTypes.bool.isRequired,
+
+    node: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Actions);

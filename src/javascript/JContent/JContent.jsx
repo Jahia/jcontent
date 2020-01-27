@@ -1,44 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {actionsRegistry, ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia/react-material';
+import {ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia/react-material';
+import {ComponentRendererProvider as NewComponentRendererProvider, registry} from '@jahia/ui-extender';
 import {DSProvider} from '@jahia/design-system-kit';
 import {client} from '@jahia/apollo-dx';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
-import * as _ from 'lodash';
 import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
-import jContentReduxStore from './JContent.redux-store';
 import PushEventHandler from './PushEventHandler';
-import jContentActions from './JContent.actions';
-import {registry} from '@jahia/registry';
 import AppLayout from './AppLayout';
-import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
 import Upload from './ContentRoute/ContentLayout/Upload';
 import {refetchContentTreeAndListData} from './JContent.refetches';
-import {withTranslation} from 'react-i18next';
+import jContentReduxStore from './JContent.redux-store';
+import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
 
 class JContent extends React.Component {
     constructor(props) {
         super(props);
-        const {dxContext} = props;
         window.forceCMUpdate = this.forceCMUpdate.bind(this);
-        this.getStore = this.getStore.bind(this);
         this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
-
-        jContentActions(actionsRegistry, this.props.t);
-
-        _.each(dxContext.config.actions, callback => {
-            if (typeof callback === 'function') {
-                callback(actionsRegistry, dxContext);
-            }
-        });
     }
 
-    getStore(dxContext, apolloClient, t) {
+    getStore(dxContext, apolloClient) {
         if (!this.store) {
-            this.store = jContentReduxStore(dxContext, this.getHistory(dxContext, t));
+            this.store = jContentReduxStore(dxContext, this.getHistory(dxContext));
             initClipboardWatcher(this.store, apolloClient);
         }
 
@@ -61,7 +48,7 @@ class JContent extends React.Component {
     }
 
     render() {
-        let {dxContext, t} = this.props;
+        let {dxContext} = this.props;
 
         let apolloClient = client({
             contextPath: dxContext.contextPath,
@@ -72,28 +59,30 @@ class JContent extends React.Component {
             <DSProvider>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={apolloClient}>
-                        <Provider store={this.getStore(dxContext, apolloClient, t)}>
+                        <Provider store={this.getStore(dxContext, apolloClient)}>
                             <DxContext.Provider value={dxContext}>
                                 <PushEventHandler/>
                                 <ComponentRendererProvider>
-                                    <>
-                                        <ConnectedRouter history={this.getHistory(dxContext)}>
-                                            <AppLayout dxContext={dxContext}/>
-                                        </ConnectedRouter>
-                                        <Upload uploadUpdateCallback={status => {
-                                                    if (status && status.uploading === 0) {
-                                                        const refetchCallbacks = registry.find({type: 'refetch-upload'});
+                                    <NewComponentRendererProvider>
+                                        <>
+                                            <ConnectedRouter history={this.getHistory(dxContext)}>
+                                                <AppLayout dxContext={dxContext}/>
+                                            </ConnectedRouter>
+                                            <Upload uploadUpdateCallback={status => {
+                                                if (status && status.uploading === 0) {
+                                                    const refetchCallbacks = registry.find({type: 'refetch-upload'});
 
-                                                        refetchCallbacks.forEach(refetchCallback => {
-                                                            if (refetchCallback.refetch) {
-                                                                refetchCallback.refetch();
-                                                            }
-                                                        });
+                                                    refetchCallbacks.forEach(refetchCallback => {
+                                                        if (refetchCallback.refetch) {
+                                                            refetchCallback.refetch();
+                                                        }
+                                                    });
 
-                                                        refetchContentTreeAndListData();
-                                                    }
-                                                }}/>
-                                    </>
+                                                    refetchContentTreeAndListData();
+                                                }
+                                            }}/>
+                                        </>
+                                    </NewComponentRendererProvider>
                                 </ComponentRendererProvider>
                             </DxContext.Provider>
                         </Provider>
@@ -105,8 +94,7 @@ class JContent extends React.Component {
 }
 
 JContent.propTypes = {
-    dxContext: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    dxContext: PropTypes.object.isRequired
 };
 
-export default withTranslation()(JContent);
+export default JContent;

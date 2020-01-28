@@ -51,7 +51,7 @@ export function UploadHeader({classes, t, status}) {
                 <Info className={classNames(classes.statusIcon)}/>
                 <Typography color="inherit" data-cm-role="upload-status-error">
                     {status.type === 'import' ?
-                        <Trans i18nKey="label.contentManager.fileUpload.importErrorMessage"
+                        <Trans i18nKey="jcontent:label.contentManager.fileUpload.importErrorMessage"
                                components={[
                                    <a key="importAcademyLink"
                                       href={contextJsParameters.config.importAcademyLink}

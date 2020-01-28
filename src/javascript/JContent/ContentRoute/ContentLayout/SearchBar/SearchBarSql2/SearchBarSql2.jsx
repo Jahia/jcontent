@@ -94,7 +94,7 @@ export class SearchBarSql2 extends React.Component {
                         {ongoingSearch.sql2SearchFrom ?
                             <div/> :
                             <ActionButton
-                                label="label.contentManager.search.normal"
+                                label="jcontent:label.contentManager.search.normal"
                                 cmRole="search-type-normal"
                                 onClick={onNormalClick}
                             />}

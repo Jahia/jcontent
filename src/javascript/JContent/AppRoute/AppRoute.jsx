@@ -6,7 +6,7 @@ import SiteSwitcher from '../SiteSwitcher';
 import IFrameLayout from './IFrameLayout';
 import {actionsRegistry} from '@jahia/react-material';
 
-const AppRoute = ({dxContext, help, match, t}) => (
+const AppRoute = ({dxContext, match, t}) => (
     <MainLayout
         topBarProps={{
             path: t('jcontent:label.contentManager.appTitle', {path: ''}),
@@ -14,7 +14,6 @@ const AppRoute = ({dxContext, help, match, t}) => (
             contextModifiers: <React.Fragment><SiteSwitcher/> <SiteLanguageSwitcher/></React.Fragment>,
             actions: <React.Fragment></React.Fragment>
         }}
-        help={help}
     >
         <FullWidthContent>
             <IFrameLayout
@@ -26,7 +25,6 @@ const AppRoute = ({dxContext, help, match, t}) => (
 
 AppRoute.propTypes = {
     dxContext: PropTypes.object.isRequired,
-    help: PropTypes.element,
     match: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
 };

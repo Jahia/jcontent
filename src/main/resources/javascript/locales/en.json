@@ -37,9 +37,6 @@
         "unknown": "Publication status unavailable"
       },
       "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",
-      "link": {
-        "academy": "Need help with jContent? Visit our <0>Academy</0>."
-      },
       "fileUpload": {
         "selectMessage": "Select files from my computer",
         "uploadingActionMessage": "There are error(s) which need your attention",

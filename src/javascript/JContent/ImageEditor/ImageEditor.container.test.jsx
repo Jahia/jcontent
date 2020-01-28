@@ -73,7 +73,6 @@ describe('Image Edition', () => {
 
     let dxContext = {
         config: {
-            academyLink: 'http://'
         }
     };
 

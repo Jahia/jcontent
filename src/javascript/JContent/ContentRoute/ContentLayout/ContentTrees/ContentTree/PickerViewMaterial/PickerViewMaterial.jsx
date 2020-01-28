@@ -8,7 +8,7 @@ import {isMarkedForDeletion} from '../../../../../JContent.utils';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../../../UploadTransformComponent';
 import classNames from 'classnames';
-import {ContextualMenu} from '../../../../../ContextualMenu';
+import {ContextualMenu} from '@jahia/ui-extender';
 import {iconButtonRenderer} from '@jahia/react-material';
 import {DisplayAction} from '@jahia/ui-extender';
 import * as _ from 'lodash';

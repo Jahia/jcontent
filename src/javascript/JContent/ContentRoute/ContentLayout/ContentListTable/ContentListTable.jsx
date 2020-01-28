@@ -5,7 +5,7 @@ import {Typography} from '@jahia/design-system-kit';
 import {Lock} from '@material-ui/icons';
 import {Folder, Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
-import {ContextualMenu} from '../../../ContextualMenu';
+import {ContextualMenu} from '@jahia/ui-extender';
 import {iconButtonRenderer, Pagination} from '@jahia/react-material';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import * as _ from 'lodash';

@@ -1,26 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {
-    Badge,
-    Checkbox,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    Tooltip,
-    withStyles
-} from '@material-ui/core';
+import {Badge, Checkbox, Table, TableBody, TableCell, TableRow, Tooltip, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {Lock} from '@material-ui/icons';
-import {Wrench, Folder} from 'mdi-material-ui';
+import {Folder, Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
-import {ContextualMenu, DisplayAction, DisplayActions, iconButtonRenderer, Pagination} from '@jahia/react-material';
+import {ContextualMenu} from '@jahia/ui-extender';
+import {iconButtonRenderer, Pagination} from '@jahia/react-material';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux-actions';
-import {allowDoubleClickNavigation, extractPaths, isMarkedForDeletion, getDefaultLocale} from '../../../JContent.utils';
+import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion} from '../../../JContent.utils';
 import ToolBar from '../ToolBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';

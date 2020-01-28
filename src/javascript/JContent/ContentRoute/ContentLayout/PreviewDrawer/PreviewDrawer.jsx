@@ -1,24 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
-import {
-    AppBar,
-    Card,
-    CardActions,
-    CardContent,
-    Grid,
-    Toolbar,
-    Tooltip,
-    withStyles
-} from '@material-ui/core';
-import {Typography, IconButton} from '@jahia/design-system-kit';
+import {AppBar, Card, CardActions, CardContent, Grid, Toolbar, Tooltip, withStyles} from '@material-ui/core';
+import {IconButton, Typography} from '@jahia/design-system-kit';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import Preview from './Preview';
 import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES} from '../../../JContent.redux-actions';
 import {compose} from 'react-apollo';
-import {DisplayAction, DisplayActions, iconButtonRenderer} from '@jahia/react-material';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
+import {iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
 import * as _ from 'lodash';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../preview.redux-actions';

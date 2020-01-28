@@ -1,14 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    CircularProgress,
-    withStyles,
-    withTheme
-} from '@material-ui/core';
+import {CircularProgress, List, ListItem, ListItemIcon, ListItemText, withStyles, withTheme} from '@material-ui/core';
 import {IconButton, Typography} from '@jahia/design-system-kit';
 import {KeyboardArrowRight} from '@material-ui/icons';
 import defaultIconRenderer from './iconRenderer';
@@ -16,7 +8,9 @@ import {isMarkedForDeletion} from '../../../../../JContent.utils';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../../../UploadTransformComponent';
 import classNames from 'classnames';
-import {ContextualMenu, DisplayAction, iconButtonRenderer} from '@jahia/react-material';
+import {ContextualMenu} from '@jahia/ui-extender';
+import {iconButtonRenderer} from '@jahia/react-material';
+import {DisplayAction} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 
 let styles = theme => ({

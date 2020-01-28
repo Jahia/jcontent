@@ -56,7 +56,7 @@
     <name>jContent</name>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <description>This is the custom module (jContent) for running on a Digital Experience Manager server.</description>
+    <description>This is the custom module (jContent) for running on a Jahia server.</description>
 
     <scm>
         <connection>scm:git:git@github.com:Jahia/jcontent.git</connection>

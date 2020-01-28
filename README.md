@@ -1,7 +1,6 @@
-# Content & Media Manager
+# jContent
 
-Content & Media Manager Module for Jahia DX. This module provides a backend UI for a headless usage scenario of Jahia
-DX.
+jContent for Jahia. This module provides the main authoring UI for Jahia.
 
 ## Getting Started
 

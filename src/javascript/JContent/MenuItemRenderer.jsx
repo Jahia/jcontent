@@ -19,7 +19,6 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
 
     let h = hover;
     if (context.menuContext) {
-        console.log(context.menuContext.inMenu);
         h = h || context.menuContext.inMenu;
     }
 

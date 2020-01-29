@@ -1,6 +1,6 @@
 import React from 'react';
 
-let JContentReversedLogo = () => (
+let JContentLogo = () => (
     <svg width="120" height="30" viewBox="0 0 319 79" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#clip0)">
             <path
@@ -37,7 +37,6 @@ let JContentReversedLogo = () => (
     </svg>
 );
 
-JContentReversedLogo.displayName = 'JContentReversedLogo';
-JContentReversedLogo.muiName = 'SvgIcon';
+JContentLogo.displayName = 'JContentLogo';
 
-export default JContentReversedLogo;
+export default JContentLogo;

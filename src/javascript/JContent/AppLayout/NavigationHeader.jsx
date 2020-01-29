@@ -1,4 +1,4 @@
-import JContentReversedLogo from './JContentLogo';
+import JContentLogo from './JContentLogo';
 import SiteSwitcher from '../SiteSwitcher';
 import SiteLanguageSwitcher from '../SiteLanguageSwitcher';
 import React from 'react';
@@ -22,7 +22,7 @@ export class NavigationHeader extends React.Component {
         const {classes} = this.props;
         return (
             <div className={classes.logoContainer}>
-                <JContentReversedLogo/>
+                <JContentLogo/>
                 <div className={classes.switchersContainer}>
                     <SiteSwitcher/>
                     <SiteLanguageSwitcher/>

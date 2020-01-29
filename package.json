@@ -33,7 +33,7 @@
     "@jahia/apollo-dx": "^1.1.0",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.0",
-    "@jahia/moonstone": "^0.4.0",
+    "@jahia/moonstone": "^0.6.0",
     "@jahia/react-apollo": "^1.1.0",
     "@jahia/react-material": "^1.1.2",
     "@jahia/ui-extender": "^0.2.0",

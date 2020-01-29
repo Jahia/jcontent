@@ -35,7 +35,6 @@ import {
 } from 'mdi-material-ui';
 import createContentAction from './actions/createContentAction';
 import fileUploadAction from './actions/fileUploadAction';
-import editAction from './actions/editAction';
 import deleteAction from './actions/deleteAction';
 import undeleteAction from './actions/undeleteAction';
 import deletePermanentlyAction from './actions/deletePermanentlyAction';
@@ -78,13 +77,6 @@ function jContentActions(registry) {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
         menuRenderer: MenuRenderer,
         menuItemRenderer: MenuItemRenderer
-    });
-    registry.add('action', 'edit', editAction, {
-        buttonIcon: <Edit/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.edit',
-        targets: ['contentActions:2'],
-        hideOnNodeTypes: ['jnt:virtualsite'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     registry.add('action', 'preview', previewAction, {
         buttonIcon: <Visibility/>,

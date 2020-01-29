@@ -36,9 +36,6 @@
         "unknown": "Veröffentlichungsstatus nicht verfügbar"
       },
       "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
-      "link": {
-        "academy": "Benötigen Sie Hilfe zum Content- und Medien-Manager? Besuchen Sie unsere <0>Academy</0>."
-      },
       "fileUpload": {
         "selectMessage": "Datei von meinem Computer wählen",
         "uploadingActionMessage": "Es gibt Fehler, die Ihre Aufmerksamkeit benötigen",

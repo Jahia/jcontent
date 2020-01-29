@@ -39,4 +39,4 @@ registry.add('route', 'route-jcontent', {
 contentManagerRoutes(registry);
 jContentActions(registry);
 
-console.debug('%c Content Media Manager is activated', 'color: #3c8cba');
+console.debug('%c jContent is activated', 'color: #3c8cba');

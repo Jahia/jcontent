@@ -33,7 +33,6 @@ const JContentApp = () => {
                 config: {
                     sql2CheatSheetUrl: '',
                     actions: [],
-                    academyLink: '',
                     importAcademyLink: '',
                     ...window.contextJsParameters.config
                 },

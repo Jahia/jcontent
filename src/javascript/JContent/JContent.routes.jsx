@@ -1,6 +1,5 @@
 import React from 'react';
 import Loadable from 'react-loadable';
-import {Trans} from 'react-i18next';
 import AppRoute from './AppRoute';
 import ContentRoute from './ContentRoute';
 import {ProgressPaper} from '@jahia/design-system-kit';
@@ -12,23 +11,11 @@ const ImageEditor = Loadable({
 });
 
 function JContentRoutes(registry) {
-    const help = (
-        <Trans i18nKey="jcontent:label.contentManager.link.academy"
-               components={[
-                   <a key="academyLink"
-                      href=""
-                      target="_blank"
-                      rel="noopener noreferrer"
-                   >.
-                   </a>
-               ]}/>
-    );
-
     registry.add('route', 'app-route', {
         targets: ['jcontent:50'],
         path: '/:siteKey/:lang/apps/:menu/:entry',
         render: (props, {dxContext}) => (
-            <AppRoute dxContext={dxContext} help={help} {...props}/>
+            <AppRoute dxContext={dxContext} {...props}/>
         )
     });
 
@@ -44,7 +31,7 @@ function JContentRoutes(registry) {
         targets: ['jcontent:99'],
         path: '/:siteKey/:lang/:mode',
         render: (props, {t}) => (
-            <ContentRoute t={t} help={help} {...props}/>
+            <ContentRoute t={t} {...props}/>
         )
     });
 }

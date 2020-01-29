@@ -36,9 +36,6 @@
         "unknown": "Statut de publication indisponible"
       },
       "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",
-      "link": {
-        "academy": "Besoin d'aide avec le Gestionnaire de contenu et média ? Consultez l'<0>Academy</0>."
-      },
       "fileUpload": {
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
         "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
@@ -95,7 +92,7 @@
         "sql2Search": "Recherche",
         "browse": "Contenu"
       },
-      "appTitle": "Gestionnaire de contenu et média {{path}}",
+      "appTitle": "jContent {{path}}",
       "showCurrentPath": "Ouvrir le chemin courant",
       "filesGrid": {
         "emptyMessage": "Ce dossier ne contient aucun fichier",

@@ -22,7 +22,7 @@ class SiteSwitcher extends React.Component {
                     result:nodesByQuery(query: $query) {
                         siteNodes:nodes {
                             name
-                            hasPermission(permissionName: "contentManager")
+                            hasPermission(permissionName: "editModeAccess")
                             displayName(language: $displayLanguage)
                             site {
                                 defaultLanguage

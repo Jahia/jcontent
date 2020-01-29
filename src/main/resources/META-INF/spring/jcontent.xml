@@ -20,7 +20,7 @@
         </property>
         <property name="titleKey" value="label.jContent@resources.jcontent"/>
         <property name="icon" value="/modules/jcontent/icons/app-document.svg"/>
-        <property name="requiredPermission" value="contentManager"/>
+        <property name="requiredPermission" value="editModeAccess"/>
         <property name="properties">
             <list>
                 <bean class="org.jahia.services.uicomponents.bean.toolbar.Property">

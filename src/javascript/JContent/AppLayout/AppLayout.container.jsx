@@ -6,7 +6,7 @@ import {LayoutModule, SecondaryNav} from '@jahia/moonstone';
 import ContentNavigation from '../ContentNavigation';
 import {Route, Switch, withRouter} from 'react-router';
 import {registry} from '@jahia/ui-extender';
-import JContentNavigationHeader from './JContentNavigationHeader';
+import JContentNavigationHeader from './NavigationHeader';
 
 export class AppLayoutContainer extends React.Component {
     render() {

@@ -17,7 +17,7 @@ const styles = () => ({
     }
 });
 
-export class JContentNavigationHeader extends React.Component {
+export class NavigationHeader extends React.Component {
     render() {
         const {classes} = this.props;
         return (
@@ -32,8 +32,8 @@ export class JContentNavigationHeader extends React.Component {
     }
 }
 
-JContentNavigationHeader.propTypes = {
+NavigationHeader.propTypes = {
     classes: PropTypes.object
 };
 
-export default withStyles(styles)(JContentNavigationHeader);
+export default withStyles(styles)(NavigationHeader);

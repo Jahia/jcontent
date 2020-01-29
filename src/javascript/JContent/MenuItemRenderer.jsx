@@ -25,6 +25,7 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
     return (
         context.enabled !== false &&
         <div style={{padding: '8 24', color: '#131C21', backgroundColor: h ? '#E0E6EA' : 'inherit'}}
+             role="menuitem"
              onClick={onClick}
              onMouseEnter={onEnter}
              onMouseLeave={onLeave}

@@ -155,10 +155,14 @@
         "asXml": "Export as an XML file",
         "exportDetails": "Exported as a zip file by default"
       },
-      "leftMenu": {
+      "navigation": {
         "savedSearches": "Saved searches",
         "workflow": "Workflow",
         "media": "Media",
+        "pages": "Pages",
+        "contentFolders": "Content Folders",
+        "forms": "Forms",
+        "additional": "Additional",
         "content": "Content",
         "manage": {
           "languages": {

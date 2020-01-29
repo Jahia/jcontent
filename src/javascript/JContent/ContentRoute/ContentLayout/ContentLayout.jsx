@@ -6,13 +6,11 @@ import {Drawer, Paper, withStyles} from '@material-ui/core';
 import ContentListTable from './ContentListTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
-import ContentTrees from './ContentTrees';
 import {withTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES} from '../../JContent.redux-actions';
 import FilesGrid from './FilesGrid';
 import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
-import ResizableDrawer from './ResizableDrawer';
 
 const styles = theme => ({
     root: {
@@ -83,7 +81,7 @@ export class ContentLayout extends React.Component {
     render() {
         const {
             mode, path, previewState, classes, filesMode, treeState, treeWidth, previewSelection, rows, contentNotFound,
-            totalCount, loading, setTreeWidth
+            totalCount, loading
         } = this.props;
 
         let contextualMenu = React.createRef();
@@ -92,21 +90,6 @@ export class ContentLayout extends React.Component {
         return (
             <>
                 <div className={classes.root}>
-                    <ResizableDrawer
-                        data-cm-role="resizable-tree"
-                        variant="persistent"
-                        anchor="left"
-                        open={treeOpen}
-                        classes={{
-                            root: classes.treeDrawer,
-                            paper: classes.treeDrawerPaper
-                        }}
-                        width={treeWidth}
-                        minWidth={200}
-                        onResized={width => setTreeWidth(width)}
-                    >
-                        <ContentTrees isOpen={treeOpen} width={treeWidth}/>
-                    </ResizableDrawer>
                     <Drawer
                         data-cm-role="preview-drawer"
                         variant="persistent"
@@ -162,8 +145,7 @@ ContentLayout.propTypes = {
     rows: PropTypes.array.isRequired,
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired,
-    setTreeWidth: PropTypes.func.isRequired
+    loading: PropTypes.bool.isRequired
 };
 
 export default compose(

@@ -926,15 +926,16 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
-"@jahia/moonstone@^0.4.0":
-  version "0.4.1"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-0.4.1.tgz#5b8ba18fa525d799eebb3005d8cf0cba7a1de05b"
-  integrity sha512-JQL5EcOrTdT/ukY7KmGXMzc0lU0HTJxhDjlN3dTC/WWHlA6jzTOR26GvotEn+ry/g9SBLpz8cuspIjI1R5Rvgw==
+"@jahia/moonstone@^0.6.0":
+  version "0.6.0"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-0.6.0.tgz#9089a30b5efff2842ca2dca85c8da69e10351e42"
+  integrity sha512-2rbUx+9MXlWa8vs+gSRTkAlXVE9V7hA7Y1fZmsJuauM/ZwAso9Ho2fgHPCvXjKMV2bvRetOH6vdaQ7abJJIqEA==
   dependencies:
     "@svgr/webpack" "^4.3.3"
     clsx "^1.0.4"
     prop-types "^15.7.2"
     re-resizable "^6.1.0"
+    react-is "^16.12.0"
 
 "@jahia/react-apollo@^1.1.0":
   version "1.1.0"

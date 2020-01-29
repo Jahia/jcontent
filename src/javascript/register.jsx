@@ -7,6 +7,7 @@ import JContentApp from './JContentApp';
 import Collections from '@jahia/moonstone/dist/icons/Collections';
 import contentManagerRoutes from './JContent/JContent.routes';
 import jContentActions from './JContent/JContent.actions';
+import jContentAccordionItems from './JContent/JContentAccordionItems';
 
 const ROUTE = '/jcontent';
 const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/browse`;
@@ -38,5 +39,6 @@ registry.add('route', 'route-jcontent', {
 
 contentManagerRoutes(registry);
 jContentActions(registry);
+jContentAccordionItems(registry);
 
 console.debug('%c jContent is activated', 'color: #3c8cba');

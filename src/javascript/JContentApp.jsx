@@ -33,7 +33,7 @@ const JContentApp = () => {
                 config: {
                     sql2CheatSheetUrl: '',
                     actions: [],
-                    importAcademyLink: '',
+                    importAcademyLink: 'https://academy.jahia.com/documentation/enduser/dx/7.3/using-jahia/using-content-and-media-manager#exporting_importing_contents',
                     ...window.contextJsParameters.config
                 },
                 ...ctx

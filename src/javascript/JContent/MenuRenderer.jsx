@@ -38,7 +38,7 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, onClose, onExited, onMo
                  onMouseLeave={onMouseLeave}
                  onTransitionEnd={() => !isOpen && onExited()}
             >
-                <div style={{flex: '0 1 auto'}} role="menu">
+                <div style={{flex: '0 1 auto'}} data-sel-role="cmm-context-menu">
                     {children}
                 </div>
             </div>

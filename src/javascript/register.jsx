@@ -24,21 +24,23 @@ const CmmNavItem = () => {
     );
 };
 
-registry.add('topNavGroup', 'jcontentGroupItem', {
-    targets: ['nav-root-top:2'],
-    render: () => <CmmNavItem key="jcontentGroupItem"/>
+registry.add('callback', 'jContent', {
+    targets: ['jahiaApp-init:1'],
+    callback: () => {
+        registry.add('topNavGroup', 'jcontentGroupItem', {
+            targets: ['nav-root-top:2'],
+            render: () => <CmmNavItem key="jcontentGroupItem"/>
+        });
+        registry.add('route', 'route-jcontent', {
+            targets: ['nav-root-top:2'],
+            path: `${ROUTE}/:siteKey/:lang/:mode`, // Catch everything that's jcontent and let the app resolve correct view
+            defaultPath: SYSTEM_SITE_ROUTE,
+            render: () => <JContentApp/>
+        });
+
+        contentManagerRoutes(registry);
+        jContentActions(registry);
+        jContentAccordionItems(registry);
+    }
 });
-
-// Make this async
-registry.add('route', 'route-jcontent', {
-    targets: ['nav-root-top:2'],
-    path: `${ROUTE}/:siteKey/:lang/:mode`, // Catch everything that's jcontent and let the app resolve correct view
-    defaultPath: SYSTEM_SITE_ROUTE,
-    render: () => <JContentApp/>
-});
-
-contentManagerRoutes(registry);
-jContentActions(registry);
-jContentAccordionItems(registry);
-
 console.debug('%c jContent is activated', 'color: #3c8cba');

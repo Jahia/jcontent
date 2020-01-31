@@ -9,9 +9,11 @@ const ContentNavigation = ({mode}) => {
     let items = registry.find({type: 'accordionItem', target: 'jcontent'});
     return (
         <Accordion isReversed openByDefault={mode}>
-            {items.map(item =>
-                <AccordionItem key={item.key} id={item.key} label={t(item.label)} icon={item.icon}/>
-            )}
+            {items.map(item => (
+                <AccordionItem key={item.key} id={item.key} label={t(item.label)} icon={item.icon}>
+                    {item.render()}
+                </AccordionItem>
+            ))}
         </Accordion>
     );
 };

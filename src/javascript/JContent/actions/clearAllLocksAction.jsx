@@ -11,7 +11,7 @@ export default composeActions(requirementsAction, withDxContextAction, {
             getLockInfo: true,
             requiredPermission: 'jcr:lockManagement',
             enabled: context => context.node.pipe(map(node => node.lockTypes !== null && !_.includes(node.lockTypes.values, ' deletion :deletion') &&
-                context.dxContext.userName === 'root'))
+                context.dxContext.user.username === 'root'))
         });
     },
     onClick: context => {

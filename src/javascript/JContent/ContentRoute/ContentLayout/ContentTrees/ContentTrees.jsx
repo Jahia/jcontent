@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {AppBar, Grid, Toolbar, withStyles} from '@material-ui/core';
-import {Typography, IconButton} from '@jahia/design-system-kit';
+import {withStyles} from '@material-ui/core';
 import {withTranslation} from 'react-i18next';
-import {ChevronLeft} from '@material-ui/icons';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths, cmSetTreeState} from '../../../JContent.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '../../../JContent.redux-actions';
 import {compose} from 'react-apollo';
-import JContentConstants from '../../../JContent.constants';
 import ContentTree from './ContentTree';
 import {setRefetcher} from '../../../JContent.refetches';
 import contentManagerStyleConstants from '../../../JContent.style-constants';
@@ -33,12 +30,11 @@ export class ContentTrees extends React.Component {
     render() {
         const {
             lang, siteKey, path, openPaths, t, setPath, openPath,
-            closePath, classes, mode, isOpen, closeTree, width
+            closePath, classes, mode, width, contentTreeConfigs
         } = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
-        let contentTreeConfigs = mode === 'browse' ? [JContentConstants.contentTreeConfigs.contents, JContentConstants.contentTreeConfigs.pages] : [JContentConstants.contentTreeConfigs.files];
         let setContainer = r => {
             if (r) {
                 this.container.current = r;
@@ -47,23 +43,9 @@ export class ContentTrees extends React.Component {
 
         return (
             <React.Fragment>
-                <AppBar position="relative" color="default">
-                    <Toolbar variant="dense">
-                        <Grid container alignItems="center" spacing={8} justify="space-between">
-                            <Grid item>
-                                <Typography variant="zeta" color="inherit">
-                                    {t('jcontent:label.contentManager.tree.title')}
-                                </Typography>
-                            </Grid>
-                            <Grid item>
-                                <IconButton icon={<ChevronLeft fontSize="small"/>} color="inherit" data-cm-role="hide-tree" onClick={closeTree}/>
-                            </Grid>
-                        </Grid>
-                    </Toolbar>
-                </AppBar>
                 <div ref={setContainer} className={classes.listContainer} style={{width: width + 'px'}}>
                     <div className={classes.list}>
-                        {isOpen ?
+                        {
                             _.map(contentTreeConfigs, contentTreeConfig => {
                                 return (
                                     <ContentTree key={contentTreeConfig.key}
@@ -83,7 +65,8 @@ export class ContentTrees extends React.Component {
                                                  setRefetch={refetchingData => setRefetcher(contentTreeConfig.key, refetchingData)}
                                     />
                                 );
-                            }) : null}
+                            })
+                        }
                     </div>
                 </div>
             </React.Fragment>
@@ -97,21 +80,19 @@ const mapStateToProps = state => ({
     path: state.path,
     mode: state.mode,
     openPaths: state.openPaths,
-    previewSelection: state.previewSelection
+    previewSelection: state.previewSelection,
+    width: state.treeWidth
 });
 
 const mapDispatchToProps = dispatch => ({
     setPath: (path, params) => dispatch(cmGoto({path, params})),
     openPath: path => dispatch(cmOpenPaths([path])),
-    closePath: path => dispatch(cmClosePaths([path])),
-    closeTree: () => dispatch(cmSetTreeState(CM_DRAWER_STATES.HIDE))
+    closePath: path => dispatch(cmClosePaths([path]))
 });
 
 ContentTrees.propTypes = {
     classes: PropTypes.object.isRequired,
     closePath: PropTypes.func.isRequired,
-    closeTree: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired,
     lang: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     openPath: PropTypes.func.isRequired,
@@ -120,7 +101,8 @@ ContentTrees.propTypes = {
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
-    width: PropTypes.number
+    width: PropTypes.number,
+    contentTreeConfigs: PropTypes.array.isRequired
 };
 
 ContentTrees.defaultProps = {

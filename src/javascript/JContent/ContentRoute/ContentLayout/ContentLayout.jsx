@@ -80,12 +80,11 @@ const styles = theme => ({
 export class ContentLayout extends React.Component {
     render() {
         const {
-            mode, path, previewState, classes, filesMode, treeState, treeWidth, previewSelection, rows, contentNotFound,
+            mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
             totalCount, loading
         } = this.props;
 
         let contextualMenu = React.createRef();
-        let treeOpen = treeState >= CM_DRAWER_STATES.SHOW && mode !== JContentConstants.mode.SEARCH && mode !== JContentConstants.mode.SQL2SEARCH;
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
         return (
             <>
@@ -110,7 +109,6 @@ export class ContentLayout extends React.Component {
                     <div
                         className={classNames(classes.content)}
                         style={{
-                            marginLeft: treeOpen ? 0 : -treeWidth,
                             marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                         }}
                         onContextMenu={event => contextualMenu.current.open(event)}
@@ -138,8 +136,6 @@ ContentLayout.propTypes = {
     path: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
     filesMode: PropTypes.string.isRequired,
-    treeState: PropTypes.number.isRequired,
-    treeWidth: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.string,
     rows: PropTypes.array.isRequired,

@@ -39,25 +39,29 @@ let buildUrl = (site, language, mode, path, params) => {
 };
 
 let extractParamsFromUrl = (pathname, search) => {
-    let [, site, language, mode, ...pathElements] = pathname.split('/');
+    if (pathname.startsWith('jcontent')) {
+        let [, site, language, mode, ...pathElements] = pathname.split('/');
 
-    let path;
-    if (mode === 'apps') {
-        path = pathElements.join('/');
-    } else {
-        path = '/sites/' + site;
-        if (_.isEmpty(pathElements)) {
-            if (mode === 'browse-files') {
-                path += '/files';
-            }
+        let path;
+        if (mode === 'apps') {
+            path = pathElements.join('/');
         } else {
-            path += ('/' + pathElements.join('/'));
+            path = '/sites/' + site;
+            if (_.isEmpty(pathElements)) {
+                if (mode === 'browse-files') {
+                    path += '/files';
+                }
+            } else {
+                path += ('/' + pathElements.join('/'));
+            }
         }
+
+        path = decodeURIComponent(path);
+        let params = deserializeQueryString(search);
+        return {site, language, mode, path, params};
     }
 
-    path = decodeURIComponent(path);
-    let params = deserializeQueryString(search);
-    return {site, language, mode, path, params};
+    return {site: '', language: '', mode: '', path: '', params: {}};
 };
 
 let deserializeQueryString = search => {
@@ -108,10 +112,10 @@ let getSyncListener = (store, history) => () => {
                 store.dispatch(cmGoto(data));
             }
         } else if ((previousValue.site !== currentValue.site && currentValueFromUrl.site !== currentValue.site) ||
-                (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
-                (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
-                (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
-                (!_.isEqual(currentValueFromUrl.params, currentValue.params))
+            (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
+            (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
+            (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
+            (!_.isEqual(currentValueFromUrl.params, currentValue.params))
         ) {
             history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params));
         }

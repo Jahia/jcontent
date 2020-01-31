@@ -11,12 +11,12 @@ import JContentNavigationHeader from './NavigationHeader';
 export class AppLayoutContainer extends React.Component {
     render() {
         let routes = registry.find({type: 'route', target: 'jcontent'});
-        const {dxContext, t} = this.props;
+        const {dxContext, t, match} = this.props;
 
         return (
             <LayoutModule navigation={
                 <SecondaryNav header={<JContentNavigationHeader/>}>
-                    <ContentNavigation/>
+                    <ContentNavigation mode={match.params.mode}/>
                 </SecondaryNav>
             }
                           content={
@@ -32,6 +32,7 @@ export class AppLayoutContainer extends React.Component {
 
 AppLayoutContainer.propTypes = {
     dxContext: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
 };
 

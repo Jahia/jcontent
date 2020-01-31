@@ -22,7 +22,7 @@ let styles = theme => ({
     }
 });
 
-export function UploadHeader({classes, t, status}) {
+export function UploadHeader({classes, t, status, dxContext}) {
     if (!status) {
         return null;
     }
@@ -54,7 +54,7 @@ export function UploadHeader({classes, t, status}) {
                         <Trans i18nKey="jcontent:label.contentManager.fileUpload.importErrorMessage"
                                components={[
                                    <a key="importAcademyLink"
-                                      href={contextJsParameters.config.importAcademyLink}
+                                      href={dxContext.config.importAcademyLink}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className={classes.link}
@@ -81,6 +81,7 @@ export function UploadHeader({classes, t, status}) {
 
 UploadHeader.propTypes = {
     classes: PropTypes.object.isRequired,
+    dxContext: PropTypes.object.isRequired,
     status: PropTypes.object,
     t: PropTypes.func.isRequired
 };

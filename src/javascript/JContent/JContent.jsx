@@ -68,19 +68,22 @@ class JContent extends React.Component {
                                             <ConnectedRouter history={this.getHistory(dxContext)}>
                                                 <AppLayout dxContext={dxContext}/>
                                             </ConnectedRouter>
-                                            <Upload uploadUpdateCallback={status => {
-                                                if (status && status.uploading === 0) {
-                                                    const refetchCallbacks = registry.find({type: 'refetch-upload'});
+                                            <Upload
+                                                dxContext={dxContext}
+                                                uploadUpdateCallback={status => {
+                                                    if (status && status.uploading === 0) {
+                                                        const refetchCallbacks = registry.find({type: 'refetch-upload'});
 
-                                                    refetchCallbacks.forEach(refetchCallback => {
-                                                        if (refetchCallback.refetch) {
-                                                            refetchCallback.refetch();
-                                                        }
-                                                    });
+                                                        refetchCallbacks.forEach(refetchCallback => {
+                                                            if (refetchCallback.refetch) {
+                                                                refetchCallback.refetch();
+                                                            }
+                                                        });
 
-                                                    refetchContentTreeAndListData();
-                                                }
-                                            }}/>
+                                                        refetchContentTreeAndListData();
+                                                    }
+                                                }}
+                                            />
                                         </>
                                     </NewComponentRendererProvider>
                                 </ComponentRendererProvider>

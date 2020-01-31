@@ -6,7 +6,6 @@ import {DSProvider} from '@jahia/design-system-kit';
 import {client} from '@jahia/apollo-dx';
 import {ApolloProvider} from 'react-apollo';
 import {createBrowserHistory} from 'history';
-import {ConnectedRouter} from 'connected-react-router';
 import {Provider} from 'react-redux';
 import PushEventHandler from './PushEventHandler';
 import AppLayout from './AppLayout';
@@ -65,9 +64,7 @@ class JContent extends React.Component {
                                 <ComponentRendererProvider>
                                     <NewComponentRendererProvider>
                                         <>
-                                            <ConnectedRouter history={this.getHistory(dxContext)}>
-                                                <AppLayout dxContext={dxContext}/>
-                                            </ConnectedRouter>
+                                            <AppLayout dxContext={dxContext}/>
                                             <Upload
                                                 dxContext={dxContext}
                                                 uploadUpdateCallback={status => {

@@ -8,7 +8,7 @@ function jContentAccordionItems(registry) {
         label: 'label.contentManager.navigation.pages'
     });
 
-    registry.add('accordionItem', 'contentFolders', {
+    registry.add('accordionItem', 'content-folders', {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders'
@@ -26,7 +26,7 @@ function jContentAccordionItems(registry) {
         label: 'label.contentManager.navigation.forms'
     });
 
-    registry.add('accordionItem', 'additional', {
+    registry.add('accordionItem', 'apps', {
         targets: ['jcontent:90'],
         icon: <Setting/>,
         label: 'label.contentManager.navigation.additional'

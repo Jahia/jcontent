@@ -7,6 +7,7 @@ import JContentApp from './JContentApp';
 import Collections from '@jahia/moonstone/dist/icons/Collections';
 import contentManagerRoutes from './JContent/JContent.routes';
 import jContentActions from './JContent/JContent.actions';
+import jContentReduxStore from './JContent/JContent.redux-store';
 import jContentAccordionItems from './JContent/JContentAccordionItems';
 
 const ROUTE = '/jcontent';
@@ -40,6 +41,7 @@ registry.add('callback', 'jContent', {
 
         contentManagerRoutes(registry);
         jContentActions(registry);
+        jContentReduxStore(registry, window.contextJsParameters);
         jContentAccordionItems(registry);
     }
 });

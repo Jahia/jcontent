@@ -5,39 +5,16 @@ import {ComponentRendererProvider as NewComponentRendererProvider, registry} fro
 import {DSProvider} from '@jahia/design-system-kit';
 import {client} from '@jahia/apollo-dx';
 import {ApolloProvider} from 'react-apollo';
-import {createBrowserHistory} from 'history';
-import {Provider} from 'react-redux';
 import PushEventHandler from './PushEventHandler';
 import AppLayout from './AppLayout';
 import Upload from './ContentRoute/ContentLayout/Upload';
 import {refetchContentTreeAndListData} from './JContent.refetches';
-import jContentReduxStore from './JContent.redux-store';
-import {initClipboardWatcher} from './actions/copyPaste/localStorageHandler';
 
 class JContent extends React.Component {
     constructor(props) {
         super(props);
         window.forceCMUpdate = this.forceCMUpdate.bind(this);
-        this.getHistory = this.getHistory.bind(this);
         this.forceCMUpdate = this.forceCMUpdate.bind(this);
-    }
-
-    getStore(dxContext, apolloClient) {
-        if (!this.store) {
-            this.store = jContentReduxStore(dxContext, this.getHistory(dxContext));
-            initClipboardWatcher(this.store, apolloClient);
-        }
-
-        return this.store;
-    }
-
-    getHistory(dxContext) {
-        if (!this.history) {
-            this.history = createBrowserHistory({basename: dxContext.contextPath + dxContext.urlbase});
-        }
-
-        this.history.location.pathname = `/${window.location.pathname.split('/jcontent/')[1]}`;
-        return this.history;
     }
 
     // !!this method should never be called but is necessary until BACKLOG-8369 fixed!!
@@ -58,34 +35,31 @@ class JContent extends React.Component {
             <DSProvider>
                 <NotificationProvider notificationContext={{}}>
                     <ApolloProvider client={apolloClient}>
-                        <Provider store={this.getStore(dxContext, apolloClient)}>
-                            <DxContext.Provider value={dxContext}>
-                                <PushEventHandler/>
-                                <ComponentRendererProvider>
-                                    <NewComponentRendererProvider>
-                                        <>
-                                            <AppLayout dxContext={dxContext}/>
-                                            <Upload
-                                                dxContext={dxContext}
-                                                uploadUpdateCallback={status => {
-                                                    if (status && status.uploading === 0) {
-                                                        const refetchCallbacks = registry.find({type: 'refetch-upload'});
+                        <DxContext.Provider value={dxContext}>
+                            <PushEventHandler/>
+                            <ComponentRendererProvider>
+                                <NewComponentRendererProvider>
+                                    <>
+                                        <AppLayout dxContext={dxContext}/>
+                                        <Upload
+                                            dxContext={dxContext}
+                                            uploadUpdateCallback={status => {
+                                                if (status && status.uploading === 0) {
+                                                    const refetchCallbacks = registry.find({type: 'refetch-upload'});
+                                                    refetchCallbacks.forEach(refetchCallback => {
+                                                        if (refetchCallback.refetch) {
+                                                            refetchCallback.refetch();
+                                                        }
+                                                    });
 
-                                                        refetchCallbacks.forEach(refetchCallback => {
-                                                            if (refetchCallback.refetch) {
-                                                                refetchCallback.refetch();
-                                                            }
-                                                        });
-
-                                                        refetchContentTreeAndListData();
-                                                    }
-                                                }}
-                                            />
-                                        </>
-                                    </NewComponentRendererProvider>
-                                </ComponentRendererProvider>
-                            </DxContext.Provider>
-                        </Provider>
+                                                    refetchContentTreeAndListData();
+                                                }
+                                            }}
+                                        />
+                                    </>
+                                </NewComponentRendererProvider>
+                            </ComponentRendererProvider>
+                        </DxContext.Provider>
                     </ApolloProvider>
                 </NotificationProvider>
             </DSProvider>

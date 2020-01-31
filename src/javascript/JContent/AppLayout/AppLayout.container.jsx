@@ -5,7 +5,7 @@ import {LayoutModule, SecondaryNav} from '@jahia/moonstone';
 import ContentNavigation from '../ContentNavigation';
 import {Route, Switch, useParams} from 'react-router';
 import {registry} from '@jahia/ui-extender';
-import JContentNavigationHeader from './NavigationHeader';
+import NavigationHeader from './NavigationHeader';
 
 const AppLayoutContainer = ({dxContext}) => {
     const routes = registry.find({type: 'route', target: 'jcontent'});
@@ -14,7 +14,7 @@ const AppLayoutContainer = ({dxContext}) => {
     return (
         <LayoutModule
             navigation={
-                <SecondaryNav header={<JContentNavigationHeader/>}>
+                <SecondaryNav header={<NavigationHeader/>}>
                     <ContentNavigation mode={mode}/>
                 </SecondaryNav>
             }

@@ -13,7 +13,7 @@ const ImageEditor = Loadable({
 function JContentRoutes(registry) {
     registry.add('route', 'app-route', {
         targets: ['jcontent:50'],
-        path: '/:siteKey/:lang/apps/:menu/:entry',
+        path: '/jcontent/:siteKey/:lang/apps/:menu/:entry',
         render: (props, {dxContext}) => (
             <AppRoute dxContext={dxContext} {...props}/>
         )
@@ -21,7 +21,7 @@ function JContentRoutes(registry) {
 
     registry.add('route', 'image-edit-route', {
         targets: ['jcontent:60'],
-        path: '/:siteKey/:lang/image-edit',
+        path: '/jcontent/:siteKey/:lang/image-edit',
         render: props => (
             <ImageEditor {...props}/>
         )
@@ -29,7 +29,7 @@ function JContentRoutes(registry) {
 
     registry.add('route', 'jcontent-default-route', {
         targets: ['jcontent:99'],
-        path: '/:siteKey/:lang/:mode',
+        path: '/jcontent/:siteKey/:lang/:mode',
         render: (props, {t}) => (
             <ContentRoute t={t} {...props}/>
         )

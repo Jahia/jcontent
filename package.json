@@ -47,7 +47,6 @@
     "ellipsize": "^0.1.0",
     "graphql": "14.0.2",
     "graphql-tag": "^2.9.1",
-    "history": "^4.7.2",
     "i18next": "^19.0.3",
     "image-extensions": "^1.1.0",
     "lodash": "^4.17.4",

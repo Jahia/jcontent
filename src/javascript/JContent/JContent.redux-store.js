@@ -17,13 +17,13 @@ import {
     treeWidthReducer,
     uiLanguageReducer
 } from './JContent.redux-reducers';
-import {extractParamsFromUrl} from './JContent.redux-utils';
+import {extractParamsFromUrl, getSyncListener} from './JContent.redux-utils';
 import {previewModeReducer, previewSelectionReducer, previewStateReducer} from './preview.redux-reducers';
 import {sortReducer} from './ContentRoute/ContentLayout/sort.redux-reducers';
 import {paginationReducer} from './ContentRoute/ContentLayout/pagination.redux-reducers';
 
 const jContentReduxStore = (registry, dxContext) => {
-    const pathName = window.location.pathname.substring((dxContext.contextPath + dxContext.urlbase).length + 1);
+    const pathName = window.location.pathname.substring((dxContext.contextPath + dxContext.urlbase).length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
     registry.add('redux-reducer', 'uilang', {reducer: uiLanguageReducer(dxContext)});
@@ -48,6 +48,8 @@ const jContentReduxStore = (registry, dxContext) => {
     registry.add('redux-reducer', 'sort', {reducer: sortReducer});
     registry.add('redux-reducer', 'pathsToRefetch', {reducer: pathsToRefetchReducer});
     registry.add('redux-reducer', 'selection', {reducer: selectionReducer});
+
+    registry.add('redux-listener', 'jcontent', {createListener: getSyncListener});
 };
 
 export default jContentReduxStore;

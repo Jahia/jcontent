@@ -2,6 +2,7 @@ import {cmGoto} from './JContent.redux-actions';
 import _ from 'lodash';
 import rison from 'rison';
 import queryString from 'query-string';
+import {push} from 'connected-react-router';
 
 const PARAMS_KEY = '?params=';
 const DEFAULT_MODE_PATHS = {browse: '/contents', 'browse-files': '/files'};
@@ -35,12 +36,12 @@ let buildUrl = (site, language, mode, path, params) => {
     path = path.replace(/[^/]/g, encodeURIComponent);
 
     let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + rison.encode_uri(params);
-    return '/' + [site, language, mode].join('/') + path + queryString;
+    return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
 };
 
 let extractParamsFromUrl = (pathname, search) => {
-    if (pathname.startsWith('jcontent')) {
-        let [, site, language, mode, ...pathElements] = pathname.split('/');
+    if (pathname.startsWith('/jcontent')) {
+        let [, , site, language, mode, ...pathElements] = pathname.split('/');
 
         let path;
         if (mode === 'apps') {
@@ -89,7 +90,7 @@ let pathResolver = (currentValue, currentValueFromUrl) => {
     return currentValue.path;
 };
 
-let getSyncListener = (store, history) => () => {
+let getSyncListener = store => () => {
     let previousValue = currentValue;
     currentValue = select(store.getState());
     if (previousValue) {
@@ -117,7 +118,7 @@ let getSyncListener = (store, history) => () => {
             (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
             (!_.isEqual(currentValueFromUrl.params, currentValue.params))
         ) {
-            history.push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params));
+            store.dispatch(push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params)));
         }
     }
 };

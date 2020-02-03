@@ -6,8 +6,10 @@ import ContentNavigation from '../ContentNavigation';
 import {Route, Switch, useParams} from 'react-router';
 import {registry} from '@jahia/ui-extender';
 import NavigationHeader from './NavigationHeader';
+import {connect} from 'react-redux';
+import {cmGoto} from '../JContent.redux-actions';
 
-const AppLayoutContainer = ({dxContext}) => {
+const AppLayoutContainer = ({dxContext, handleNavigation}) => {
     const routes = registry.find({type: 'route', target: 'jcontent'});
     const {t} = useTranslation('jcontent');
     const {mode} = useParams();
@@ -15,7 +17,7 @@ const AppLayoutContainer = ({dxContext}) => {
         <LayoutModule
             navigation={
                 <SecondaryNav header={<NavigationHeader/>}>
-                    <ContentNavigation mode={mode}/>
+                    <ContentNavigation mode={mode} handleNavigation={handleNavigation}/>
                 </SecondaryNav>
             }
             content={
@@ -30,7 +32,12 @@ const AppLayoutContainer = ({dxContext}) => {
 };
 
 AppLayoutContainer.propTypes = {
-    dxContext: PropTypes.object.isRequired
+    dxContext: PropTypes.object.isRequired,
+    handleNavigation: PropTypes.func.isRequired
 };
 
-export default AppLayoutContainer;
+const mapDispatchToProps = dispatch => ({
+    handleNavigation: (mode, path) => dispatch(cmGoto({mode, path}))
+});
+
+export default connect(null, mapDispatchToProps)(AppLayoutContainer);

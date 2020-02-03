@@ -43,7 +43,7 @@ const JContentConstants = {
             key: 'browse-tree-pages'
         },
         files: {
-            rootPath: '/media',
+            rootPath: '/files',
             selectableTypes: ['jnt:folder'],
             type: 'files',
             openableTypes: ['jnt:folder'],

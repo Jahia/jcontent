@@ -41,7 +41,7 @@ function jContentAccordionItems(registry) {
         label: 'label.contentManager.navigation.media',
         render: () => (
             <ContentTrees contentTreeConfigs={[{
-                rootPath: '/files',
+                rootPath: '/media',
                 selectableTypes: ['jnt:folder'],
                 type: 'files',
                 openableTypes: ['jnt:folder'],

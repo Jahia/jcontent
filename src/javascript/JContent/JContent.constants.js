@@ -19,7 +19,7 @@ const JContentConstants = {
     locationModeIndex: 2,
     mode: {
         BROWSE: 'browse',
-        FILES: 'browse-files',
+        FILES: 'media',
         SEARCH: 'search',
         SQL2SEARCH: 'sql2Search',
         LIST: 'list',
@@ -43,7 +43,7 @@ const JContentConstants = {
             key: 'browse-tree-pages'
         },
         files: {
-            rootPath: '/files',
+            rootPath: '/media',
             selectableTypes: ['jnt:folder'],
             type: 'files',
             openableTypes: ['jnt:folder'],

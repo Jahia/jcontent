@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {LayoutModule, SecondaryNav} from '@jahia/moonstone';
-import ContentNavigationContainer from '../ContentNavigation/ContentNavigation.container';
+import ContentNavigation from '../ContentNavigation/';
 import {Route, Switch} from 'react-router';
 import {registry} from '@jahia/ui-extender';
 import NavigationHeader from './NavigationHeader';
@@ -14,7 +14,7 @@ const AppLayoutContainer = ({dxContext}) => {
         <LayoutModule
             navigation={
                 <SecondaryNav header={<NavigationHeader/>}>
-                    <ContentNavigationContainer/>
+                    <ContentNavigation/>
                 </SecondaryNav>
             }
             content={

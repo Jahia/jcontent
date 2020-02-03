@@ -2,22 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {LayoutModule, SecondaryNav} from '@jahia/moonstone';
-import ContentNavigation from '../ContentNavigation';
-import {Route, Switch, useParams} from 'react-router';
+import ContentNavigationContainer from '../ContentNavigation/ContentNavigation.container';
+import {Route, Switch} from 'react-router';
 import {registry} from '@jahia/ui-extender';
 import NavigationHeader from './NavigationHeader';
-import {connect} from 'react-redux';
-import {cmGoto} from '../JContent.redux-actions';
 
-const AppLayoutContainer = ({dxContext, handleNavigation}) => {
+const AppLayoutContainer = ({dxContext}) => {
     const routes = registry.find({type: 'route', target: 'jcontent'});
     const {t} = useTranslation('jcontent');
-    const {mode} = useParams();
     return (
         <LayoutModule
             navigation={
                 <SecondaryNav header={<NavigationHeader/>}>
-                    <ContentNavigation mode={mode} handleNavigation={handleNavigation}/>
+                    <ContentNavigationContainer/>
                 </SecondaryNav>
             }
             content={
@@ -32,12 +29,7 @@ const AppLayoutContainer = ({dxContext, handleNavigation}) => {
 };
 
 AppLayoutContainer.propTypes = {
-    dxContext: PropTypes.object.isRequired,
-    handleNavigation: PropTypes.func.isRequired
+    dxContext: PropTypes.object.isRequired
 };
 
-const mapDispatchToProps = dispatch => ({
-    handleNavigation: (mode, path) => dispatch(cmGoto({mode, path}))
-});
-
-export default connect(null, mapDispatchToProps)(AppLayoutContainer);
+export default AppLayoutContainer;

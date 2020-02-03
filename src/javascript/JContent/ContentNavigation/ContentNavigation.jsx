@@ -10,9 +10,15 @@ const ContentNavigation = ({mode, handleNavigation}) => {
     return (
         <Accordion isReversed openByDefault={mode}>
             {items.map(item => (
-                <AccordionItem key={item.key} id={item.key} label={t(item.label)} icon={item.icon} onClickToOpen={() => handleNavigation(item.key, '')}>
-                    {item.render()}
-                </AccordionItem>
+                <span key={item.key} data-sel-role="left-menu-item">
+                    <AccordionItem id={item.key}
+                                   label={t(item.label)}
+                                   icon={item.icon}
+                                   onClickToOpen={() => handleNavigation(item.key, '')}
+                    >
+                        {item.render()}
+                    </AccordionItem>
+                </span>
             ))}
         </Accordion>
     );

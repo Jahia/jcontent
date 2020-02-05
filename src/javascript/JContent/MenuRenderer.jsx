@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const MenuRenderer = ({isSubMenu, anchor, isOpen, onClose, onExited, onMouseEnter, onMouseLeave, children}) => {
+    const outsideBottom = (anchor.top + (isSubMenu ? 100 : 300)) > window.document.body.clientHeight;
+    const top = outsideBottom ? {bottom: 0} : {top: anchor.top};
+    const outsideRight = (anchor.left + 150) > window.document.body.clientWidth;
+    const left = outsideRight ? {right: 0} : {left: anchor.left};
+
     return (
         <>
             {
@@ -22,8 +27,8 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, onClose, onExited, onMo
             }
             <div style={{
                 position: 'fixed',
-                top: anchor.top,
-                left: anchor.left,
+                ...top,
+                ...left,
                 borderRadius: '2px',
                 boxShadow: '0px 4px 8px rgba(19, 28, 33, 0.2)',
                 backgroundColor: '#FDFDFD',

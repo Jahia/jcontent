@@ -54,7 +54,7 @@ function jContentAccordionItems(registry) {
     registry.add('accordionItem', 'apps', {
         targets: ['jcontent:80'],
         icon: <Setting/>,
-        label: 'label.contentManager.navigation.additional',
+        label: 'label.contentManager.navigation.apps',
         render: () => <div>HELLO</div>
     });
 }

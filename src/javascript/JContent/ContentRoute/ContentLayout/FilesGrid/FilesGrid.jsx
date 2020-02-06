@@ -108,7 +108,7 @@ export const FilesGrid = ({
         return (
             <React.Fragment>
                 <ToolBar/>
-                <FilesGridEmptyDropZone mode="browse-files" path={path}/>
+                <FilesGridEmptyDropZone mode="media" path={path}/>
             </React.Fragment>
         );
     }
@@ -125,7 +125,7 @@ export const FilesGrid = ({
             >
                 <UploadTransformComponent uploadTargetComponent={Paper}
                                           uploadPath={path}
-                                          mode="browse-files"
+                                          mode="media"
                                           className={classNames(classes.defaultGrid,
                                               (!gridMode || gridMode === 'thumbnail') && classes.thumbGrid,
                                               gridMode === 'detailed' && classes.detailedGrid)}

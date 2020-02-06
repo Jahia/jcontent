@@ -125,7 +125,7 @@ export class UploadTransformComponent extends React.Component {
                     acceptedFiles,
                     this.props.uploadDispatchBatch,
                     {path: uploadPath},
-                    mode === 'browse-files' ? 'upload' : 'import'
+                    mode === 'media' ? 'upload' : 'import'
                 );
             });
         }

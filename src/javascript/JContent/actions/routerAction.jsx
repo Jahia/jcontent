@@ -25,18 +25,10 @@ let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProp
         }
 
         let resolvedPath = '';
-        switch (mode) {
-            case 'apps':
-                resolvedPath = context.actionPath ? context.actionPath : context.actionKey;
-                break;
-            case 'browse':
-                resolvedPath = `/sites/${siteKey}/contents`;
-                break;
-            case 'browse-files':
-                resolvedPath = `/sites/${siteKey}/files`;
-                break;
-            default:
-                resolvedPath = path;
+        if (mode === 'apps') {
+            resolvedPath = context.actionPath ? context.actionPath : context.actionKey;
+        } else {
+            resolvedPath = path;
         }
 
         setUrl(siteKey, language, mode, resolvedPath, context.urlParams ? context.urlParams : {});

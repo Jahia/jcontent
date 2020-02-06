@@ -49,5 +49,5 @@ are bookmarkeable.
         
 ### Main view routing
 
-The main route contains the site key and the language of the content as well as the mode in which we are (browse, search,
+The main route contains the site key and the language of the content as well as the mode in which we are (pages, search,
 apps). The routing is done in the `ContentManager` component.

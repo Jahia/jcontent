@@ -10,7 +10,7 @@ const AppRoute = ({dxContext, match, t}) => (
     <MainLayout
         topBarProps={{
             path: t('jcontent:label.contentManager.appTitle', {path: ''}),
-            title: t([actionsRegistry.get(match.params.menu).buttonLabel, 'jcontent:label.contentManager.leftMenu.manage.title']),
+            title: t([actionsRegistry.get(match.params.menu).buttonLabel, 'jcontent:label.contentManager.navigation.manage.title']),
             contextModifiers: <React.Fragment><SiteSwitcher/> <SiteLanguageSwitcher/></React.Fragment>,
             actions: <React.Fragment></React.Fragment>
         }}

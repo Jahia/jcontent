@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import {push} from 'connected-react-router';
 
 const PARAMS_KEY = '?params=';
-const DEFAULT_MODE_PATHS = {browse: '/contents', 'browse-files': '/files'};
+const DEFAULT_MODE_PATHS = {browse: '/contents', media: '/files'};
 let currentValue;
 
 let select = state => {
@@ -49,7 +49,7 @@ let extractParamsFromUrl = (pathname, search) => {
         } else {
             path = '/sites/' + site;
             if (_.isEmpty(pathElements)) {
-                if (mode === 'browse-files') {
+                if (mode === 'media') {
                     path += '/files';
                 }
             } else {
@@ -83,7 +83,7 @@ let deserializeQueryString = search => {
 
 let pathResolver = (currentValue, currentValueFromUrl) => {
     if (currentValue.site !== currentValueFromUrl.site && currentValue.mode !== 'apps') {
-        // Switched sites, we have to set default path based on mode: browse -> /contents | browse-files -> /files
+        // Switched sites, we have to set default path based on mode: browse -> /content-folders | media -> /files
         return currentValueFromUrl.path.substr(0, currentValueFromUrl.path.indexOf(currentValueFromUrl.site)) + currentValue.site + DEFAULT_MODE_PATHS[currentValue.mode];
     }
 

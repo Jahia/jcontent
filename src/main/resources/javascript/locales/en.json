@@ -88,7 +88,10 @@
         "queryingContent": "Error querying content: {{details}}"
       },
       "title": {
-        "browse-files": "Media",
+        "media": "Media",
+        "pages": "Pages",
+        "content-folders": "Content Folders",
+        "apps": "Additional",
         "search": "Search",
         "sql2Search": "Search",
         "browse": "Content"
@@ -162,7 +165,7 @@
         "pages": "Pages",
         "contentFolders": "Content Folders",
         "forms": "Forms",
-        "additional": "Additional",
+        "apps": "Additional",
         "content": "Content",
         "manage": {
           "languages": {

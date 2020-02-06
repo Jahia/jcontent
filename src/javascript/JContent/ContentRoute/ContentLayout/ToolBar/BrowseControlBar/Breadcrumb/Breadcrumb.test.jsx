@@ -77,7 +77,7 @@ describe('breadcrumb with 3 levels', () => {
             props = {
                 classes: {},
                 breadcrumbs: breadcrumbs1,
-                mode: 'browse',
+                mode: 'content-folders',
                 path: '/folderA/folderB/folderC',
                 selectItem: jest.fn()
             };
@@ -112,7 +112,7 @@ describe('breadcrumb with many levels', () => {
             props = {
                 classes: {},
                 breadcrumbs: breadcrumbs2,
-                mode: 'browse',
+                mode: 'content-folders',
                 path: '/folderA/folderB/folderC/folderD/area',
                 selectItem: jest.fn()
             };

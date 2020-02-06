@@ -41,7 +41,7 @@ function isMarkedForDeletion(node) {
 }
 
 function extractPaths(siteKey, path, mode) {
-    let pathBase = '/sites/' + siteKey + (mode === 'browse-files' ? '/files' : '');
+    let pathBase = '/sites/' + siteKey + (mode === 'media' ? '/files' : '');
     let pathParts = path.replace(pathBase, '').split('/');
     let paths = [];
     // eslint-disable-next-line no-unused-vars

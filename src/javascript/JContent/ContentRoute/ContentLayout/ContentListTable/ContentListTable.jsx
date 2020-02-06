@@ -352,12 +352,15 @@ export const ContentListTable = ({
     const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === 'search') {
-            if (node.path.indexOf('/files') === -1) {
-                setMode('browse');
-                newMode = 'browse';
+            if (node.path.indexOf('/files') !== -1) {
+                setMode('media');
+                newMode = 'media';
+            } else if (node.path.indexOf('/contents') !== -1) {
+                setMode('content-folders');
+                newMode = 'content-folders';
             } else {
-                setMode('browse-files');
-                newMode = 'browse-files';
+                setMode('pages');
+                newMode = 'pages';
             }
         }
 
@@ -677,7 +680,7 @@ const mapDispatchToProps = dispatch => ({
         _.unset(params, 'searchTerms');
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: 'browse', params: params}));
+        dispatch(cmGoto({mode: 'content-folders', params: params}));
     },
     switchSelection: path => dispatch(cmSwitchSelection(path)),
     addSelection: path => dispatch(cmAddSelection(path)),

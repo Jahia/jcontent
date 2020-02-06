@@ -5,7 +5,7 @@ const buildBreadcrumbItems = (path, data, mode, t, site) => {
     let rootPath = '/sites/' + site;
     let breadcrumbs = [];
     // First we build first element depending on the mode (files & contents are already in the results of the query)
-    if (mode === JContentConstants.mode.BROWSE && path.lastIndexOf('contents') === -1) {
+    if (mode === JContentConstants.mode.CONTENT_FOLDERS && path.lastIndexOf('contents') === -1) {
         breadcrumbs.push({
             uuid: 'pages_id',
             name: t('jcontent:label.contentManager.browsePages'),

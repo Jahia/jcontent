@@ -275,7 +275,7 @@ function jContentActions(registry) {
         hideOnNodeTypes: ['jnt:page']
     });
     registry.add('action', 'groups', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.leftMenu.manage.groups.title',
+        buttonLabel: 'jcontent:label.contentManager.navigation.manage.groups.title',
         targets: ['leftMenuManageActions:10'],
         buttonIcon: <AccountGroup/>,
         mode: 'apps',
@@ -283,7 +283,7 @@ function jContentActions(registry) {
         requiredPermission: 'siteAdminGroups'
     });
     registry.add('action', 'languages', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.leftMenu.manage.languages.title',
+        buttonLabel: 'jcontent:label.contentManager.navigation.manage.languages.title',
         targets: ['leftMenuManageActions:20'],
         buttonIcon: <Web/>,
         mode: 'apps',
@@ -291,7 +291,7 @@ function jContentActions(registry) {
         requiredPermission: 'siteAdminLanguages'
     });
     registry.add('action', 'roles', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.leftMenu.manage.roles.title',
+        buttonLabel: 'jcontent:label.contentManager.navigation.manage.roles.title',
         targets: ['leftMenuManageActions:30'],
         buttonIcon: <ShieldKey/>,
         mode: 'apps',
@@ -299,7 +299,7 @@ function jContentActions(registry) {
         requiredPermission: 'siteAdminSiteRoles'
     });
     registry.add('action', 'users', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.leftMenu.manage.users.title',
+        buttonLabel: 'jcontent:label.contentManager.navigation.manage.users.title',
         targets: ['leftMenuManageActions:40'],
         buttonIcon: <Account/>,
         mode: 'apps',
@@ -307,7 +307,7 @@ function jContentActions(registry) {
         requiredPermission: 'siteAdminUsers'
     });
     registry.add('action', 'tags', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.leftMenu.manage.tags.title',
+        buttonLabel: 'jcontent:label.contentManager.navigation.manage.tags.title',
         targets: ['leftMenuManageActions:50'],
         buttonIcon: <TagMultiple/>,
         mode: 'apps',

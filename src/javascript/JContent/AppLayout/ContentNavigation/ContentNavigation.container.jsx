@@ -4,8 +4,8 @@ import {cmGoto} from '../../JContent.redux-actions';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 
-const ContentNavigationContainer = ({handleNavigation, mode}) => {
-    return <ContentNavigation handleNavigation={handleNavigation} mode={mode}/>;
+const ContentNavigationContainer = ({handleNavigation, mode, siteKey}) => {
+    return <ContentNavigation handleNavigation={handleNavigation} mode={mode} siteKey={siteKey}/>;
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -13,12 +13,14 @@ const mapDispatchToProps = dispatch => ({
 });
 
 let mapStateToProps = state => ({
-    mode: state.mode
+    mode: state.mode,
+    siteKey: state.site
 });
 
 ContentNavigationContainer.propTypes = {
     handleNavigation: PropTypes.func.isRequired,
-    mode: PropTypes.string.isRequired
+    mode: PropTypes.string.isRequired,
+    siteKey: PropTypes.string.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentNavigationContainer);

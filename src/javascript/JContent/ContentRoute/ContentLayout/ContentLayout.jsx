@@ -114,7 +114,7 @@ export class ContentLayout extends React.Component {
                         onContextMenu={event => contextualMenu.current.open(event)}
                     >
                         <Paper className={classes.contentPaper}>
-                            {mode === JContentConstants.mode.FILES && filesMode === 'grid' ?
+                            {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
                                 <FilesGrid totalCount={totalCount}
                                            rows={rows}
                                            contentNotFound={contentNotFound}

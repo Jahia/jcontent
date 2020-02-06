@@ -1,9 +1,10 @@
 import React from 'react';
 import {File, FolderSpecial, Collections, Setting} from '@jahia/moonstone/dist/icons';
 import ContentTrees from './ContentRoute/ContentLayout/ContentTrees/ContentTrees';
+import JContentConstants from './JContent.constants';
 
 function jContentAccordionItems(registry) {
-    registry.add('accordionItem', 'pages', {
+    registry.add('accordionItem', JContentConstants.mode.PAGES, {
         targets: ['jcontent:50'],
         icon: <File/>,
         label: 'label.contentManager.navigation.pages',
@@ -19,7 +20,7 @@ function jContentAccordionItems(registry) {
         )
     });
 
-    registry.add('accordionItem', 'content-folders', {
+    registry.add('accordionItem', JContentConstants.mode.CONTENT_FOLDERS, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders',
@@ -35,7 +36,7 @@ function jContentAccordionItems(registry) {
         )
     });
 
-    registry.add('accordionItem', 'media', {
+    registry.add('accordionItem', JContentConstants.mode.MEDIA, {
         targets: ['jcontent:70'],
         icon: <Collections/>,
         label: 'label.contentManager.navigation.media',
@@ -51,7 +52,7 @@ function jContentAccordionItems(registry) {
         )
     });
 
-    registry.add('accordionItem', 'apps', {
+    registry.add('accordionItem', JContentConstants.mode.APPS, {
         targets: ['jcontent:80'],
         icon: <Setting/>,
         label: 'label.contentManager.navigation.apps',

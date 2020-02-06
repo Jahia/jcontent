@@ -1,4 +1,5 @@
 import {buildBreadcrumbItems} from './Breadcrumb.utils';
+import JContentConstants from '../../../../../JContent.constants';
 
 let data = {
     jcr: {
@@ -70,7 +71,7 @@ let data = {
 };
 
 describe('build breadcrumb test', () => {
-    let items = buildBreadcrumbItems('/sites/digitall/contents/folderA/folderB/folderC/folderD/area', data, 'content-folders', () => 'Browse Folders', 'digitall');
+    let items = buildBreadcrumbItems('/sites/digitall/contents/folderA/folderB/folderC/folderD/area', data, JContentConstants.mode.CONTENT_FOLDERS, () => 'Browse Folders', 'digitall');
 
     it('should build the right breadcrumb object', () => {
         expect(items.length).toBe(6);

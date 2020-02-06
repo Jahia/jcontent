@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import {extractPaths} from './JContent.utils';
 import {CM_SET_PREVIEW} from './preview.redux-actions';
 import JContentStyleConstants from './JContent.style-constants';
+import JContentConstants from './JContent.constants';
 
 let uiLanguageReducer = dxContext => (state = dxContext.uilang, action = {}) => {
     if (action.uilang && action.type === CM_SET_UILANGUAGE) {
@@ -81,7 +82,7 @@ let paramsReducer = params => (state = params, action = {}) => {
 
 let openPathsReducer = (siteKey, path, mode) => (state, action) => {
     if (state === undefined) {
-        if (mode === 'apps') {
+        if (mode === JContentConstants.mode.APPS) {
             state = [];
         } else {
             state = _.dropRight(extractPaths(siteKey, path, mode), 1);

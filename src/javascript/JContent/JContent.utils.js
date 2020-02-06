@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import ellipsize from 'ellipsize';
+import JContentConstants from './JContent.constants';
 
 function getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
     if (_.startsWith(oldPath, oldAncestorPath + '/') || oldPath === oldAncestorPath) {
@@ -41,7 +42,7 @@ function isMarkedForDeletion(node) {
 }
 
 function extractPaths(siteKey, path, mode) {
-    let pathBase = '/sites/' + siteKey + (mode === 'media' ? '/files' : '');
+    let pathBase = '/sites/' + siteKey + (mode === JContentConstants.mode.MEDIA ? '/files' : '');
     let pathParts = path.replace(pathBase, '').split('/');
     let paths = [];
     // eslint-disable-next-line no-unused-vars

@@ -6,6 +6,7 @@ import treeExpanderAction from './treeExpanderAction';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
 import {cmSetPreviewSelection} from '../preview.redux-actions';
+import JContentConstants from '../JContent.constants';
 
 export default composeActions(
     requirementsAction,
@@ -33,7 +34,7 @@ export default composeActions(
     {
         init: context => {
             context.initRequirements({
-                enabled: context => of(context.mode === 'search' || context.mode === 'sql2Search')
+                enabled: context => of(context.mode === JContentConstants.mode.SEARCH || context.mode === JContentConstants.mode.SQL2SEARCH)
             });
         }
     }

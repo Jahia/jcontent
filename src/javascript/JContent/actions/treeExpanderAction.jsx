@@ -37,7 +37,7 @@ let treeExpanderAction = onClick => {
                         mode = JContentConstants.mode.CONTENT_FOLDERS;
                         break;
                     case 'jnt:folder':
-                        mode = JContentConstants.mode.FILES;
+                        mode = JContentConstants.mode.MEDIA;
                         break;
                     default: {
                         let base = ancestorPaths[0].split('/');

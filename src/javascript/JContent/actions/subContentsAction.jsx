@@ -6,6 +6,7 @@ import treeExpanderAction from './treeExpanderAction';
 import * as _ from 'lodash';
 import {cmGoto, cmOpenPaths} from '../JContent.redux-actions';
 import {cmSetPreviewSelection} from '../preview.redux-actions';
+import JContentConstants from '../JContent.constants';
 
 export default composeActions(
     requirementsAction,
@@ -37,7 +38,7 @@ export default composeActions(
                 retrievePrimaryNodeType: true,
                 enabled: context => context.node.pipe(map(node => ((node.primaryNodeType.name === 'jnt:page' || node.primaryNodeType.name === 'jnt:folder' || node.primaryNodeType.name === 'jnt:contentFolder') ||
                     (node.subNodes.pageInfo.totalCount > 0)) &&
-                    context.mode !== 'search' && context.mode !== 'sql2Search'))
+                    context.mode !== JContentConstants.mode.SEARCH && context.mode !== JContentConstants.mode.SQL2SEARCH))
             });
         }
     }

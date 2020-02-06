@@ -10,6 +10,7 @@ import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';
 import {Trans, withTranslation} from 'react-i18next';
 import {cmGoto} from '../../../../JContent.redux-actions';
+import JContentConstants from '../../../../JContent.constants';
 
 const styles = theme => ({
     input: {
@@ -59,7 +60,7 @@ export class SearchBarSql2 extends React.Component {
 
         let params = {sql2SearchFrom, sql2SearchWhere};
 
-        search('sql2Search', path, params);
+        search(JContentConstants.mode.SQL2SEARCH, path, params);
     }
 
     render() {
@@ -88,7 +89,7 @@ export class SearchBarSql2 extends React.Component {
                         </Typography>
                     )}
                     </DxContext.Consumer>
-}
+                }
                 rightFooter={
                     <React.Fragment>
                         {ongoingSearch.sql2SearchFrom ?
@@ -99,7 +100,7 @@ export class SearchBarSql2 extends React.Component {
                                 onClick={onNormalClick}
                             />}
                     </React.Fragment>
-}
+                }
                 onSearch={() => this.onSearch(sql2SearchFrom, sql2SearchWhere)}
             >
                 <Paper className={classes.input}>

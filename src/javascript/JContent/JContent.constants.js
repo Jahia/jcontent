@@ -14,11 +14,14 @@ const JContentConstants = {
     mode: {
         CONTENT_FOLDERS: 'content-folders',
         PAGES: 'pages',
-        FILES: 'media',
+        MEDIA: 'media',
         SEARCH: 'search',
         SQL2SEARCH: 'sql2Search',
         LIST: 'list',
-        GRID: 'grid'
+        GRID: 'grid',
+        UPLOAD: 'upload',
+        IMPORT: 'import',
+        APPS: 'apps'
     },
     localStorageKeys: {
         filesSelectorMode: 'jcontent_files_selector_mode',

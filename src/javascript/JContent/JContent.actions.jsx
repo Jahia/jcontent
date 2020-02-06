@@ -60,6 +60,7 @@ import zipAction from './actions/zipUnzip/zipAction';
 import unzipAction from './actions/zipUnzip/unzipAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
+import JContentConstants from './JContent.constants';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
@@ -278,7 +279,7 @@ function jContentActions(registry) {
         buttonLabel: 'jcontent:label.contentManager.navigation.manage.groups.title',
         targets: ['leftMenuManageActions:10'],
         buttonIcon: <AccountGroup/>,
-        mode: 'apps',
+        mode: JContentConstants.mode.APPS,
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageGroups.html',
         requiredPermission: 'siteAdminGroups'
     });
@@ -286,7 +287,7 @@ function jContentActions(registry) {
         buttonLabel: 'jcontent:label.contentManager.navigation.manage.languages.title',
         targets: ['leftMenuManageActions:20'],
         buttonIcon: <Web/>,
-        mode: 'apps',
+        mode: JContentConstants.mode.APPS,
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageLanguages.html',
         requiredPermission: 'siteAdminLanguages'
     });
@@ -294,7 +295,7 @@ function jContentActions(registry) {
         buttonLabel: 'jcontent:label.contentManager.navigation.manage.roles.title',
         targets: ['leftMenuManageActions:30'],
         buttonIcon: <ShieldKey/>,
-        mode: 'apps',
+        mode: JContentConstants.mode.APPS,
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageSiteRoles.html',
         requiredPermission: 'siteAdminSiteRoles'
     });
@@ -302,7 +303,7 @@ function jContentActions(registry) {
         buttonLabel: 'jcontent:label.contentManager.navigation.manage.users.title',
         targets: ['leftMenuManageActions:40'],
         buttonIcon: <Account/>,
-        mode: 'apps',
+        mode: JContentConstants.mode.APPS,
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageUsers.html',
         requiredPermission: 'siteAdminUsers'
     });
@@ -310,7 +311,7 @@ function jContentActions(registry) {
         buttonLabel: 'jcontent:label.contentManager.navigation.manage.tags.title',
         targets: ['leftMenuManageActions:50'],
         buttonIcon: <TagMultiple/>,
-        mode: 'apps',
+        mode: JContentConstants.mode.APPS,
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html',
         requiredPermission: 'tagManager'
     });

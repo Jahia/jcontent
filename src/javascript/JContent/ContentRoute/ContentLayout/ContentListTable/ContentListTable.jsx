@@ -351,14 +351,16 @@ export const ContentListTable = ({
 
     const doubleClickNavigation = node => {
         let newMode = mode;
-        if (mode === 'search') {
-            if (node.path.indexOf('/files') === -1) {
-                setMode('browse');
-                newMode = 'browse';
+        if (mode === JContentConstants.mode.SEARCH) {
+            if (node.path.indexOf('/files') !== -1) {
+                newMode = JContentConstants.mode.MEDIA;
+            } else if (node.path.indexOf('/contents') !== -1) {
+                newMode = JContentConstants.mode.CONTENT_FOLDERS;
             } else {
-                setMode('browse-files');
-                newMode = 'browse-files';
+                newMode = JContentConstants.mode.PAGES;
             }
+
+            setMode(newMode);
         }
 
         setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
@@ -677,7 +679,7 @@ const mapDispatchToProps = dispatch => ({
         _.unset(params, 'searchTerms');
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: 'browse', params: params}));
+        dispatch(cmGoto({mode: JContentConstants.mode.CONTENT_FOLDERS, params: params}));
     },
     switchSelection: path => dispatch(cmSwitchSelection(path)),
     addSelection: path => dispatch(cmAddSelection(path)),

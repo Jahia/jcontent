@@ -1,4 +1,3 @@
-import JContentConstants from './JContent.constants';
 import _ from 'lodash';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
@@ -60,7 +59,7 @@ let refetchContentListData = () => {
 };
 
 let refetchContentTreeData = contentTreeConfigs => {
-    _.forOwn(contentTreeConfigs || JContentConstants.contentTreeConfigs, function (cfg) {
+    _.forOwn(contentTreeConfigs, function (cfg) {
         triggerRefetch(cfg.key);
     });
 };

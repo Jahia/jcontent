@@ -43,7 +43,7 @@ export class BrowseControlBar extends React.Component {
             <React.Fragment>
                 <Breadcrumb/>
                 <div className={classes.grow}/>
-                {showActions && mode === JContentConstants.mode.FILES &&
+                {showActions && mode === JContentConstants.mode.MEDIA &&
                     <FileModeSelector/>}
                 {showActions && !this.isRootNode() &&
                     <DisplayActions

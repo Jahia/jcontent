@@ -1,5 +1,6 @@
 {
   "label": {
+    "name": "jContent",
     "pagination": {
       "rowsPerPage": "Zeilen pro Seite",
       "of": "von"
@@ -87,7 +88,10 @@
         "queryingContent": "Fehler während Content-Abfrage: {{details}}"
       },
       "title": {
-        "browse-files": "Medien",
+        "media": "Medien",
+        "pages": "Seiten",
+        "content-folders": "Inhalts-Ordner",
+        "apps": "Zusätzlich",
         "search": "Suche",
         "sql2Search": "Suche",
         "browse": "Content"
@@ -120,6 +124,7 @@
       "unpublish": "Veröffentlichung rückgängig machen",
       "editAction": "Bearbeiten",
       "subContentsAction": "Sub-Inhalte anzeigen",
+      "translateAction": "{{source}} -> {{dest}}",
       "noResults": "Kein Ergebnis",
       "create": {
         "contentFolder": "Neues Content Verzeichnis",
@@ -153,10 +158,14 @@
         "asXml": "Exportieren als XML Datei",
         "exportDetails": "Standardmäßig als ZIP Datei exportieren"
       },
-      "leftMenu": {
+      "navigation": {
         "savedSearches": "Gespeicherte Suchen",
         "workflow": "Workflow",
         "media": "Medien",
+        "pages": "Seiten",
+        "contentFolders": "Inhalts-Ordner",
+        "forms": "Formulare",
+        "apps": "Zusätzlich",
         "content": "Content",
         "manage": {
           "languages": {

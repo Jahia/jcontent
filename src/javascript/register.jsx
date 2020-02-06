@@ -8,7 +8,7 @@ import Collections from '@jahia/moonstone/dist/icons/Collections';
 import contentManagerRoutes from './JContent/JContent.routes';
 import jContentActions from './JContent/JContent.actions';
 import jContentReduxStore from './JContent/JContent.redux-store';
-import jContentAccordionItems from './JContent/JContentAccordionItems';
+import jContentAccordionItems from './JContent/JContent.accordion-items';
 
 const ROUTE = '/jcontent';
 const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/browse`;

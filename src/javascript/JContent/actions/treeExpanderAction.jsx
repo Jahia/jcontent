@@ -34,16 +34,16 @@ let treeExpanderAction = onClick => {
                 let parent = node.ancestors[node.ancestors.length - 1];
                 switch (parent.type.value) {
                     case 'jnt:contentFolder':
-                        mode = JContentConstants.mode.BROWSE;
+                        mode = JContentConstants.mode.CONTENT_FOLDERS;
                         break;
                     case 'jnt:folder':
-                        mode = JContentConstants.mode.FILES;
+                        mode = JContentConstants.mode.MEDIA;
                         break;
                     default: {
                         let base = ancestorPaths[0].split('/');
                         base.pop();
                         ancestorPaths.splice(0, 0, base.join('/'));
-                        mode = JContentConstants.mode.BROWSE;
+                        mode = JContentConstants.mode.PAGES;
                     }
                 }
 

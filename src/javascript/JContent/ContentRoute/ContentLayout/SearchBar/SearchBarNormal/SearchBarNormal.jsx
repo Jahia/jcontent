@@ -9,6 +9,7 @@ import {compose} from 'react-apollo';
 import SearchBarLayout from '../SearchBarLayout';
 import ActionButton from '../ActionButton';
 import {connect} from 'react-redux';
+import JContentConstants from '../../../../JContent.constants';
 
 const styles = () => ({
     searchSize: {
@@ -102,7 +103,7 @@ export class SearchBarNormal extends React.Component {
             params.searchContentType = searchContentType;
         }
 
-        search('search', path, params);
+        search(JContentConstants.mode.SEARCH, path, params);
     }
 
     render() {

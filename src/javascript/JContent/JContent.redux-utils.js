@@ -3,9 +3,10 @@ import _ from 'lodash';
 import rison from 'rison';
 import queryString from 'query-string';
 import {push} from 'connected-react-router';
+import JContentConstants from './JContent.constants';
 
 const PARAMS_KEY = '?params=';
-const DEFAULT_MODE_PATHS = {browse: '/contents', 'browse-files': '/files'};
+const DEFAULT_MODE_PATHS = {browse: '/contents', media: '/files'};
 let currentValue;
 
 let select = state => {
@@ -25,7 +26,7 @@ let buildUrl = (site, language, mode, path, params) => {
     let sitePath = '/sites/' + site;
     if (path.startsWith(sitePath + '/')) {
         path = path.substring(('/sites/' + site).length);
-    } else if (mode === 'apps') {
+    } else if (mode === JContentConstants.mode.APPS) {
         // Path is an action key
         path = path.startsWith('/') ? path : '/' + path;
     } else {
@@ -44,12 +45,12 @@ let extractParamsFromUrl = (pathname, search) => {
         let [, , site, language, mode, ...pathElements] = pathname.split('/');
 
         let path;
-        if (mode === 'apps') {
+        if (mode === JContentConstants.mode.APPS) {
             path = pathElements.join('/');
         } else {
             path = '/sites/' + site;
             if (_.isEmpty(pathElements)) {
-                if (mode === 'browse-files') {
+                if (mode === JContentConstants.mode.MEDIA) {
                     path += '/files';
                 }
             } else {
@@ -82,8 +83,8 @@ let deserializeQueryString = search => {
 };
 
 let pathResolver = (currentValue, currentValueFromUrl) => {
-    if (currentValue.site !== currentValueFromUrl.site && currentValue.mode !== 'apps') {
-        // Switched sites, we have to set default path based on mode: browse -> /contents | browse-files -> /files
+    if (currentValue.site !== currentValueFromUrl.site && currentValue.mode !== JContentConstants.mode.APPS) {
+        // Switched sites, we have to set default path based on mode: browse -> /content-folders | media -> /files
         return currentValueFromUrl.path.substr(0, currentValueFromUrl.path.indexOf(currentValueFromUrl.site)) + currentValue.site + DEFAULT_MODE_PATHS[currentValue.mode];
     }
 

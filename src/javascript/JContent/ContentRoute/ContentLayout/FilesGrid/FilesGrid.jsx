@@ -16,6 +16,7 @@ import {cmGoto, cmOpenPaths} from '../../../JContent.redux-actions';
 import classNames from 'classnames';
 import {extractPaths} from '../../../JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
+import JContentConstants from '../../../JContent.constants';
 
 const styles = theme => ({
     grid: {
@@ -108,7 +109,7 @@ export const FilesGrid = ({
         return (
             <React.Fragment>
                 <ToolBar/>
-                <FilesGridEmptyDropZone mode="browse-files" path={path}/>
+                <FilesGridEmptyDropZone mode={JContentConstants.mode.MEDIA} path={path}/>
             </React.Fragment>
         );
     }
@@ -125,7 +126,7 @@ export const FilesGrid = ({
             >
                 <UploadTransformComponent uploadTargetComponent={Paper}
                                           uploadPath={path}
-                                          mode="browse-files"
+                                          mode="media"
                                           className={classNames(classes.defaultGrid,
                                               (!gridMode || gridMode === 'thumbnail') && classes.thumbGrid,
                                               gridMode === 'detailed' && classes.detailedGrid)}

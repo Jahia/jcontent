@@ -5,6 +5,7 @@ import {Typography} from '@jahia/design-system-kit';
 import {CloudUpload} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import {withTranslation} from 'react-i18next';
+import JContentConstants from '../../../JContent.constants';
 
 const styles = theme => ({
     dropZone: {
@@ -24,7 +25,7 @@ const styles = theme => ({
 
 const EmptyDropZone = ({component: Component, t, classes, mode}) => (
     <Component className={classes.dropZone}>
-        <Typography variant="gamma" color="inherit">{t(mode === 'browse-files' ? 'jcontent:label.contentManager.fileUpload.dropMessage' : 'jcontent:label.contentManager.import.dropMessage')}</Typography>
+        <Typography variant="gamma" color="inherit">{t(mode === JContentConstants.mode.MEDIA ? 'jcontent:label.contentManager.fileUpload.dropMessage' : 'jcontent:label.contentManager.import.dropMessage')}</Typography>
         <CloudUpload/>
     </Component>
 );

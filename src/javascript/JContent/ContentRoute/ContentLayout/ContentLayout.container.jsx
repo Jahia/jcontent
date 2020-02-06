@@ -27,7 +27,7 @@ import {setContentListDataRefetcher} from '../../JContent.refetches';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
-        case JContentConstants.mode.FILES:
+        case JContentConstants.mode.MEDIA:
             return new FilesQueryHandler();
         case JContentConstants.mode.SEARCH:
             return new SearchQueryHandler();

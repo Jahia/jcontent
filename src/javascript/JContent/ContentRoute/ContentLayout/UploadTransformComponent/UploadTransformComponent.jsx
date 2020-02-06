@@ -11,6 +11,7 @@ import {
 import {setOverlayTarget} from '../Upload/Upload.redux-actions';
 import {withApollo, compose} from 'react-apollo';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
+import JContentConstants from '../../../JContent.constants';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
@@ -125,7 +126,7 @@ export class UploadTransformComponent extends React.Component {
                     acceptedFiles,
                     this.props.uploadDispatchBatch,
                     {path: uploadPath},
-                    mode === 'browse-files' ? 'upload' : 'import'
+                    mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
                 );
             });
         }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {Breadcrumb} from './Breadcrumb';
+import JContentConstants from '../../../../../JContent.constants';
 
 let breadcrumbs1 = [
     {
@@ -77,7 +78,7 @@ describe('breadcrumb with 3 levels', () => {
             props = {
                 classes: {},
                 breadcrumbs: breadcrumbs1,
-                mode: 'browse',
+                mode: JContentConstants.mode.CONTENT_FOLDERS,
                 path: '/folderA/folderB/folderC',
                 selectItem: jest.fn()
             };
@@ -112,7 +113,7 @@ describe('breadcrumb with many levels', () => {
             props = {
                 classes: {},
                 breadcrumbs: breadcrumbs2,
-                mode: 'browse',
+                mode: JContentConstants.mode.CONTENT_FOLDERS,
                 path: '/folderA/folderB/folderC/folderD/area',
                 selectItem: jest.fn()
             };

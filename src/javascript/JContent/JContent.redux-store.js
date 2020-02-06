@@ -27,8 +27,8 @@ const jContentReduxStore = (registry, dxContext) => {
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
     registry.add('redux-reducer', 'uilang', {reducer: uiLanguageReducer(dxContext)});
-    registry.add('redux-reducer', 'site', {reducer: siteReducer(dxContext.siteKey)});
-    registry.add('redux-reducer', 'siteDisplayableName', {reducer: siteDisplayableNameReducer(dxContext.siteKey)});
+    registry.add('redux-reducer', 'site', {reducer: siteReducer(currentValueFromUrl.site)});
+    registry.add('redux-reducer', 'siteDisplayableName', {reducer: siteDisplayableNameReducer(currentValueFromUrl.site)});
     registry.add('redux-reducer', 'language', {reducer: languageReducer(currentValueFromUrl.language)});
     registry.add('redux-reducer', 'availableLanguages', {reducer: availableLanguagesReducer});
     registry.add('redux-reducer', 'mode', {reducer: modeReducer(currentValueFromUrl.mode)});

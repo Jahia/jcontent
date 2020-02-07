@@ -1,1 +1,3 @@
-module.exports = require('@jahia/test-framework').jestConfig;
+const jestConfig = require('@jahia/test-framework').jestConfig;
+
+module.exports = jestConfig;

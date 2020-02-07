@@ -9,6 +9,7 @@ import contentManagerRoutes from './JContent/JContent.routes';
 import jContentActions from './JContent/JContent.actions';
 import jContentReduxStore from './JContent/JContent.redux-store';
 import jContentAccordionItems from './JContent/JContent.accordion-items';
+import {jContentAppRoot} from './JContent/JContent.app-root';
 
 const ROUTE = '/jcontent';
 const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/browse`;
@@ -43,6 +44,7 @@ registry.add('callback', 'jContent', {
         jContentActions(registry);
         jContentReduxStore(registry, window.contextJsParameters);
         jContentAccordionItems(registry);
+        jContentAppRoot(registry);
     }
 });
 console.debug('%c jContent is activated', 'color: #3c8cba');

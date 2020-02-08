@@ -6,7 +6,7 @@ export const previewSelectionReducer = handleAction(cmSetPreviewSelection, (stat
 
 export const previewModeReducer = handleActions({
     [cmSetPreviewMode]: (state, action) => action.payload,
-    [cmSetPreviewState]: () => CM_PREVIEW_MODES.EDIT,
+    [cmSetPreviewState]: () => CM_PREVIEW_MODES.EDIT
 }, CM_PREVIEW_MODES.EDIT);
 
 export const previewStateReducer = handleAction(cmSetPreviewState, (state, action) => action.payload, CM_DRAWER_STATES.HIDE);

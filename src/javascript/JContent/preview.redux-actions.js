@@ -11,5 +11,5 @@ export const cmSetPreviewSelection = previewSelection => (dispatch, getState) =>
 
 cmSetPreviewSelection.toString = () => 'CM_SET_PREVIEW_SELECTION';
 
-export const {cmSetPreviewMode, cmSetPreviewState} = createActions('CM_SET_PREVIEW_MODE', 'CM_SET_PREVIEW_STATE')
+export const {cmSetPreviewMode, cmSetPreviewState} = createActions('CM_SET_PREVIEW_MODE', 'CM_SET_PREVIEW_STATE');
 

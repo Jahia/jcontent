@@ -78,5 +78,5 @@ export const fileUpload = handleActions({
     [fileuploadSetOverlayTarget]: (state, action) => ({
         ...state,
         overlayTarget: action.overlayTarget
-    }),
+    })
 }, initialState);

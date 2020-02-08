@@ -1,4 +1,6 @@
 import JContentConstants from '../../../JContent.constants';
+import {filesgridSetGridMode, filesgridSetMode} from './FilesGrid.redux-actions';
+import {handleActions} from 'redux-actions';
 
 const localStorage = window.localStorage;
 const FILE_SELECTOR_MODE = JContentConstants.localStorageKeys.filesSelectorMode;
@@ -11,16 +13,7 @@ const initialState = {
     gridMode: localStorage.getItem(FILE_SELECTOR_GRID_MODE) === null ? THUMBNAIL : localStorage.getItem(FILE_SELECTOR_GRID_MODE)
 };
 
-export const filesGrid = (state = initialState, action = {}) => {
-    switch (action.type) {
-        case 'FILESGRID_SET_MODE': return {
-            mode: action.mode,
-            gridMode: state.gridMode
-        };
-        case 'FILESGRID_SET_GRID_MODE': return {
-            gridMode: action.gridMode,
-            mode: state.mode
-        };
-        default: return state;
-    }
-};
+export const filesGrid = handleActions({
+    [filesgridSetMode]: (state, action) => ({...state, mode: action.payload}),
+    [filesgridSetGridMode]: (state, action) => ({...state, gridMode: action.payload})
+}, initialState);

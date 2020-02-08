@@ -1,19 +1,3 @@
-export const copy = nodes => {
-    return {
-        type: 'COPYPASTE_COPY',
-        nodes: nodes
-    };
-};
+import {createActions} from 'redux-actions';
 
-export const cut = nodes => {
-    return {
-        type: 'COPYPASTE_CUT',
-        nodes: nodes
-    };
-};
-
-export const clear = () => {
-    return {
-        type: 'COPYPASTE_CLEAR'
-    };
-};
+export const {copypasteCopy, copypasteCut, copypasteClear} = createActions('COPYPASTE_COPY', 'COPYPASTE_CUT', 'COPYPASTE_CLEAR');

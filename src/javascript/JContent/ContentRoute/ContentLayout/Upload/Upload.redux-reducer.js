@@ -1,4 +1,15 @@
-import {uploadStatuses, uploadsStatuses} from './Upload.constants';
+import {uploadsStatuses, uploadStatuses} from './Upload.constants';
+import {handleActions} from 'redux-actions';
+import {
+    fileuploadAddUploads,
+    fileuploadRemoveUpload,
+    fileuploadSetOverlayTarget,
+    fileuploadSetPath,
+    fileuploadSetStatus,
+    fileuploadSetUploads,
+    fileuploadTakeFromQueue,
+    fileuploadUpdateUpload
+} from './Upload.redux-actions';
 
 const initialState = {
     path: null, // Folder that will get files
@@ -14,61 +25,58 @@ export const uploadSeed = {
     path: null // Will try to take globally set path if this is null
 };
 
-export const fileUpload = (state = initialState, action = {}) => {
-    let numTaken = 0;
-    switch (action.type) {
-        case 'FILEUPLOAD_SET_PATH': return {
-            ...state,
-            path: action.path
-        };
-        case 'FILEUPLOAD_SET_STATUS': return {
-            ...state,
-            status: action.status
-        };
-        case 'FILEUPLOAD_SET_UPLOADS': return {
-            ...state,
-            uploads: action.uploads
-        };
-        case 'FILEUPLOAD_ADD_UPLOADS': return {
-            ...state,
-            uploads: state.uploads.concat(action.uploads)
-        };
-        case 'FILEUPLOAD_UPDATE_UPLOAD': return {
+export const fileUpload = handleActions({
+    [fileuploadSetPath]: (state, action) => ({
+        ...state,
+        path: action.payload
+    }),
+    [fileuploadSetStatus]: (state, action) => ({
+        ...state,
+        status: action.payload
+    }),
+    [fileuploadSetUploads]: (state, action) => ({
+        ...state,
+        uploads: action.payload
+    }),
+    [fileuploadAddUploads]: (state, action) => ({
+        ...state,
+        uploads: state.uploads.concat(action.payload)
+    }),
+    [fileuploadUpdateUpload]: (state, action) => ({
+        ...state,
+        uploads: state.uploads.map(upload => {
+            if (upload.id === action.payload.id) {
+                return action.payload;
+            }
+
+            return upload;
+        })
+    }),
+    [fileuploadRemoveUpload]: (state, action) => ({
+        ...state,
+        uploads: state.uploads.filter((upload, index) => {
+            return index !== action.payload;
+        })
+    }),
+    [fileuploadTakeFromQueue]: (state, action) => {
+        let numTaken = 0;
+        return {
             ...state,
             uploads: state.uploads.map(upload => {
-                if (upload.id === action.upload.id) {
-                    return action.upload;
+                if (upload.status === uploadStatuses.QUEUED && numTaken < action.payload) {
+                    numTaken++;
+                    return {
+                        ...upload,
+                        status: uploadStatuses.UPLOADING
+                    };
                 }
 
                 return upload;
             })
         };
-        case 'FILEUPLOAD_REMOVE_UPLOAD': return {
-            ...state,
-            uploads: state.uploads.filter((upload, index) => {
-                return index !== action.index;
-            })
-        };
-        case 'FILEUPLOAD_TAKE_FROM_QUEUE':
-            return {
-                ...state,
-                uploads: state.uploads.map(upload => {
-                    if (upload.status === uploadStatuses.QUEUED && numTaken < action.number) {
-                        numTaken++;
-                        return {
-                            ...upload,
-                            status: uploadStatuses.UPLOADING
-                        };
-                    }
-
-                    return upload;
-                })
-            };
-        case 'FILEUPLOAD_SET_OVERLAY_TARGET':
-            return {
-                ...state,
-                overlayTarget: action.overlayTarget
-            };
-        default: return state;
-    }
-};
+    },
+    [fileuploadSetOverlayTarget]: (state, action) => ({
+        ...state,
+        overlayTarget: action.overlayTarget
+    }),
+}, initialState);

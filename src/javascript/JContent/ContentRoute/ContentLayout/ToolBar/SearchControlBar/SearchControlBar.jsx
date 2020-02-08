@@ -22,7 +22,7 @@ const styles = theme => ({
 export class SearchControlBar extends React.Component {
     render() {
         let {
-            siteKey, path, setPath, t, classes, siteDisplayableName, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms, showActions
+            siteKey, path, setPath, t, classes, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms, showActions
         } = this.props;
         let siteRootPath = '/sites/' + siteKey;
         const params = {
@@ -46,7 +46,7 @@ export class SearchControlBar extends React.Component {
                         onClick={() => setPath(siteRootPath)}
                     >
                         <VirtualsiteIcon/>
-                        {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
+                        {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteKey})}
                     </Button>}
                 {showActions &&
                     <Button
@@ -64,7 +64,6 @@ export class SearchControlBar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        siteDisplayableName: state.siteDisplayableName,
         siteKey: state.site,
         path: state.path,
         searchTerms: state.params.searchTerms,
@@ -95,7 +94,6 @@ SearchControlBar.propTypes = {
     searchTerms: PropTypes.string,
     setPath: PropTypes.func.isRequired,
     showActions: PropTypes.bool.isRequired,
-    siteDisplayableName: PropTypes.string.isRequired,
     siteKey: PropTypes.string.isRequired,
     sql2SearchFrom: PropTypes.string,
     sql2SearchWhere: PropTypes.string

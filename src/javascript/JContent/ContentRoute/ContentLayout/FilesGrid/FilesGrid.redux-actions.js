@@ -1,13 +1,4 @@
-export const setMode = mode => {
-    return {
-        type: 'FILESGRID_SET_MODE',
-        mode
-    };
-};
+import {createActions} from 'redux-actions';
 
-export const setGridMode = gridMode => {
-    return {
-        type: 'FILESGRID_SET_GRID_MODE',
-        gridMode
-    };
-};
+export const {filesgridSetMode, filesgridSetGridMode} = createActions('FILESGRID_SET_MODE', 'FILESGRID_SET_GRID_MODE');
+/**/

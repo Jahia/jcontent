@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {AppBar, Toolbar, withStyles} from '@material-ui/core';
-import {IconButton, Typography} from '@jahia/design-system-kit';
-import {ChevronRight} from '@material-ui/icons';
-import {CM_DRAWER_STATES, cmSetTreeState} from '../../../JContent.redux-actions';
+import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import JContentConstants from '../../../JContent.constants';
@@ -24,7 +22,7 @@ const styles = theme => ({
 
 export class ToolBar extends React.Component {
     render() {
-        const {classes, mode, treeState, setTreeState, selection, t} = this.props;
+        const {classes, mode, selection, t} = this.props;
 
         return (
             <AppBar position="relative" color="default" classes={{root: classes.appBarElevation}}>
@@ -32,8 +30,6 @@ export class ToolBar extends React.Component {
                     {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?
                         <SearchControlBar showActions={selection.length === 0}/> :
                         <React.Fragment>
-                            {treeState !== CM_DRAWER_STATES.SHOW &&
-                                <IconButton icon={<ChevronRight/>} color="inherit" data-sel-role="show-tree" onClick={() => setTreeState(CM_DRAWER_STATES.SHOW)}/>}
                             <BrowseControlBar showActions={selection.length === 0}/>
                         </React.Fragment>}
                     {selection.length > 0 &&
@@ -56,25 +52,18 @@ export class ToolBar extends React.Component {
 
 const mapStateToProps = state => ({
     mode: state.mode,
-    treeState: state.treeState,
     selection: state.selection
-});
-
-const mapDispatchToProps = dispatch => ({
-    setTreeState: state => dispatch(cmSetTreeState(state))
 });
 
 ToolBar.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     mode: PropTypes.string.isRequired,
-    selection: PropTypes.array.isRequired,
-    setTreeState: PropTypes.func.isRequired,
-    treeState: PropTypes.number.isRequired
+    selection: PropTypes.array.isRequired
 };
 
 export default compose(
     withTranslation(),
     withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps)
 )(ToolBar);

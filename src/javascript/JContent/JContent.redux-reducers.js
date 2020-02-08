@@ -1,160 +1,38 @@
 import {
-    CM_ADD_PATHS_TO_REFETCH,
-    CM_DRAWER_STATES,
-    CM_NAVIGATE,
-    CM_SET_AVAILABLE_LANGUAGES,
-    CM_SET_SITE_DISPLAYABLE_NAME,
-    CM_SET_OPEN_PATHS,
-    CM_SET_SEARCH_MODE,
-    CM_SET_TREE,
-    CM_SET_TREE_WIDTH,
-    CM_SET_UILANGUAGE
+    cmAddPathsToRefetch,
+    cmClosePaths,
+    cmOpenPaths,
+    cmRemovePathsToRefetch,
+    cmSetAvailableLanguages,
+    cmSetMode,
+    cmSetParams,
+    cmSetPath,
+    cmSetSearchMode,
+    cmSetUilanguage
 } from './JContent.redux-actions';
 import * as _ from 'lodash';
 import {extractPaths} from './JContent.utils';
-import {CM_SET_PREVIEW} from './preview.redux-actions';
-import JContentStyleConstants from './JContent.style-constants';
 import JContentConstants from './JContent.constants';
+import {handleAction, handleActions} from 'redux-actions';
 
-let uiLanguageReducer = dxContext => (state = dxContext.uilang, action = {}) => {
-    if (action.uilang && action.type === CM_SET_UILANGUAGE) {
-        return action.uilang;
-    }
+export const uiLanguageReducer = defaultValue => handleAction(cmSetUilanguage, (state, action) => action.payload, defaultValue);
 
-    return state;
-};
+export const availableLanguagesReducer = handleAction(cmSetAvailableLanguages, (state, action) => action.payload, []);
 
-let siteReducer = siteKey => (state = siteKey, action = {}) => {
-    if (action.site && action.type === CM_NAVIGATE) {
-        return action.site;
-    }
+export const modeReducer = defaultValue => handleAction(cmSetMode, (state, action) => action.payload, defaultValue);
 
-    return state;
-};
+export const pathReducer = defaultValue => handleAction(cmSetPath, (state, action) => action.payload, defaultValue);
 
-let siteDisplayableNameReducer = siteDisplayableName => (state = siteDisplayableName, action = {}) => {
-    if (action.siteDisplayableName && (action.type === CM_NAVIGATE || action.type === CM_SET_SITE_DISPLAYABLE_NAME)) {
-        return action.siteDisplayableName;
-    }
+export const paramsReducer = defaultValue => handleAction(cmSetParams, (state, action) => action.payload, defaultValue);
 
-    return state;
-};
+export const openPathsReducer = (siteKey, path, mode) => handleActions({
+    [cmOpenPaths]: (state, action) => _.union(state, action.payload),
+    [cmClosePaths]: (state, action) => _.difference(state, action.payload)
+}, (mode === JContentConstants.mode.APPS) ? [] : _.dropRight(extractPaths(siteKey, path, mode), 1));
 
-let languageReducer = language => (state = language, action = {}) => {
-    if (action.language && action.type === CM_NAVIGATE) {
-        return action.language;
-    }
+export const pathsToRefetchReducer = handleActions({
+    [cmAddPathsToRefetch]: (state, action) => _.union(state, action.payload),
+    [cmRemovePathsToRefetch]: (state, action) => _.difference(state, action.payload)
+}, []);
 
-    return state;
-};
-
-let availableLanguagesReducer = (state = [], action = {}) => {
-    if (action.availableLanguages && action.type === CM_SET_AVAILABLE_LANGUAGES) {
-        return action.availableLanguages;
-    }
-
-    return state;
-};
-
-let modeReducer = mode => (state = mode, action = {}) => {
-    if (action.mode && action.type === CM_NAVIGATE) {
-        return action.mode;
-    }
-
-    return state;
-};
-
-let pathReducer = path => (state = path, action = {}) => {
-    if (action.path && action.type === CM_NAVIGATE) {
-        return action.path;
-    }
-
-    return state;
-};
-
-let paramsReducer = params => (state = params, action = {}) => {
-    if (action.params && action.type === CM_NAVIGATE) {
-        return action.params;
-    }
-
-    return state;
-};
-
-let openPathsReducer = (siteKey, path, mode) => (state, action) => {
-    if (state === undefined) {
-        if (mode === JContentConstants.mode.APPS) {
-            state = [];
-        } else {
-            state = _.dropRight(extractPaths(siteKey, path, mode), 1);
-        }
-    }
-
-    if (action.type === CM_SET_OPEN_PATHS) {
-        if (action.open) {
-            return _.union(state, action.open);
-        }
-
-        if (action.close) {
-            return _.difference(state, action.close);
-        }
-
-        return state;
-    }
-
-    return state;
-};
-
-let treeStateReducer = (state = CM_DRAWER_STATES.SHOW, action = {}) => {
-    switch (action.type) {
-        case CM_SET_TREE:
-            return action.treeState;
-        case CM_SET_PREVIEW: {
-            if (action.previewState === CM_DRAWER_STATES.SHOW && state === CM_DRAWER_STATES.SHOW) {
-                return CM_DRAWER_STATES.TEMP;
-            }
-
-            if (action.previewState === CM_DRAWER_STATES.HIDE && state === CM_DRAWER_STATES.TEMP) {
-                return CM_DRAWER_STATES.SHOW;
-            }
-
-            return state;
-        }
-
-        default:
-            return state;
-    }
-};
-
-let treeWidthReducer = (state = JContentStyleConstants.treeDrawerWidth, action = {}) => {
-    if (action.type === CM_SET_TREE_WIDTH) {
-        return action.width;
-    }
-
-    return state;
-};
-
-let pathsToRefetchReducer = (state, action) => {
-    if (state === undefined) {
-        state = [];
-    }
-
-    if (action.type === CM_ADD_PATHS_TO_REFETCH) {
-        return _.union(state, action.paths);
-    }
-
-    return _.difference(state, action.paths);
-};
-
-let searchModeReducer = params => (state = (params.sql2SearchFrom ? 'sql2' : 'normal'), action = {}) => {
-    if (action.type === CM_SET_SEARCH_MODE) {
-        return action.searchMode;
-    }
-
-    return state;
-};
-
-export {
-    languageReducer, uiLanguageReducer, siteReducer, modeReducer, pathReducer, paramsReducer, openPathsReducer,
-    treeStateReducer, treeWidthReducer, searchModeReducer, siteDisplayableNameReducer, pathsToRefetchReducer,
-    availableLanguagesReducer
-};
+export const searchModeReducer = params => handleAction(cmSetSearchMode, (state, action) => action.payload, (params.sql2SearchFrom ? 'sql2' : 'normal'));

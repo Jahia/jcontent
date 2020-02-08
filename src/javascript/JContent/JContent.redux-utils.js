@@ -92,9 +92,9 @@ let pathResolver = (currentValue, currentValueFromUrl) => {
 };
 
 let getSyncListener = store => () => {
-    let previousValue = currentValue;
-    currentValue = select(store.getState());
-    if (previousValue) {
+    setTimeout(() => {
+        let previousValue = currentValue || {};
+        currentValue = select(store.getState());
         let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search);
         if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
             if (currentValueFromUrl.site !== previousValue.site ||
@@ -121,7 +121,7 @@ let getSyncListener = store => () => {
         ) {
             store.dispatch(push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params)));
         }
-    }
+    });
 };
 
 export {getSyncListener, extractParamsFromUrl};

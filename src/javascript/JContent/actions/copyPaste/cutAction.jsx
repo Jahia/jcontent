@@ -1,4 +1,4 @@
-import {cut} from './copyPaste.redux-actions';
+import {copypasteCut} from './copyPaste.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from '../reduxAction';
 import requirementsAction from '../requirementsAction';
@@ -7,7 +7,7 @@ import {hasMixin} from '../../JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
 import copyPasteConstants from './copyPaste.constants';
 
-export default composeActions(requirementsAction, reduxAction(() => ({}), dispatch => ({cut: n => dispatch(cut(n))})), {
+export default composeActions(requirementsAction, reduxAction(() => ({}), dispatch => ({cut: n => dispatch(copypasteCut(n))})), {
 
     init: context => {
         context.initRequirements({

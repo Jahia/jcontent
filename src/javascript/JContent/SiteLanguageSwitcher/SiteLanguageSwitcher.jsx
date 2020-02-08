@@ -5,8 +5,9 @@ import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {SiteInfo} from '@jahia/react-apollo';
-import {cmSetAvailableLanguages, cmSetLanguage, cmSetSiteDisplayableName} from '../JContent.redux-actions';
+import {cmSetAvailableLanguages} from '../JContent.redux-actions';
 import {LanguageSwitcher} from '@jahia/design-system-kit';
+import {registry} from '@jahia/ui-extender';
 
 export class SiteLanguageSwitcher extends React.Component {
     constructor(props) {
@@ -23,7 +24,7 @@ export class SiteLanguageSwitcher extends React.Component {
     }
 
     render() {
-        const {t, notificationContext, siteKey, lang, setAvailableLanguages, setSiteDisplayableName} = this.props;
+        const {t, notificationContext, siteKey, lang, setAvailableLanguages} = this.props;
 
         return (
             <SiteInfo siteKey={siteKey} displayLanguage={lang}>
@@ -41,9 +42,6 @@ export class SiteLanguageSwitcher extends React.Component {
 
                     // Update redux
                     setAvailableLanguages(siteInfo.languages);
-                    if (siteInfo.displayName) {
-                        setSiteDisplayableName(siteInfo.displayName);
-                    }
 
                     return (
                         <LanguageSwitcher
@@ -66,20 +64,16 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSelectLanguage: lang => {
-        dispatch(cmSetLanguage(lang));
+        dispatch(registry.get('redux-reducer', 'language').actions.setLanguage(lang));
     },
     setAvailableLanguages: availableLanguages => {
         dispatch(cmSetAvailableLanguages(availableLanguages));
-    },
-    setSiteDisplayableName: siteDisplayableName => {
-        dispatch(cmSetSiteDisplayableName(siteDisplayableName));
     }
 });
 
 SiteLanguageSwitcher.propTypes = {
     onSelectLanguage: PropTypes.func.isRequired,
     setAvailableLanguages: PropTypes.func.isRequired,
-    setSiteDisplayableName: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     notificationContext: PropTypes.object.isRequired,
     siteKey: PropTypes.string.isRequired,

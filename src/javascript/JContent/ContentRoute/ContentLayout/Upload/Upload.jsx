@@ -5,7 +5,7 @@ import {IconButton} from '@jahia/design-system-kit';
 import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
-import {removeUpload, setStatus, setUploads, takeFromQueue, updateUpload} from './Upload.redux-actions';
+import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux-actions';
 import UploadItem from './UploadItem';
 import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
@@ -189,13 +189,13 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        setStatus: s => dispatch(setStatus(s)),
-        clearUploads: () => dispatch(setUploads([])),
-        updateUpload: upload => dispatch(updateUpload(upload)),
+        setStatus: s => dispatch(fileuploadSetStatus(s)),
+        clearUploads: () => dispatch(fileuploadSetUploads([])),
+        updateUpload: upload => dispatch(fileuploadUpdateUpload(upload)),
         uploadFile: upload => {
-            dispatch(batchActions([updateUpload(upload), takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
+            dispatch(batchActions([fileuploadUpdateUpload(upload), fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)]));
         },
-        removeUploadFromQueue: index => dispatch(removeUpload(index))
+        removeUploadFromQueue: index => dispatch(fileuploadRemoveUpload(index))
 
     };
 };

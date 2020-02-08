@@ -1,26 +1,9 @@
-import {CM_SET_PAGE, CM_SET_PAGE_SIZE} from './pagination.redux-actions';
-import {LOCATION_CHANGE} from 'connected-react-router';
+import {cmSetPage, cmSetPageSize} from './pagination.redux-actions';
+import {cmSetPath} from '../../JContent.redux-actions';
+import {handleActions} from 'redux-actions';
 
-let paginationReducer = (state = {currentPage: 0, pageSize: 25}, action = {}) => {
-    switch (action.type) {
-        case CM_SET_PAGE_SIZE:
-            return {
-                ...state,
-                pageSize: action.pageSize
-            };
-        case CM_SET_PAGE:
-            return {
-                ...state,
-                currentPage: action.page
-            };
-        case LOCATION_CHANGE:
-            return {
-                ...state,
-                currentPage: 0
-            };
-        default:
-            return state;
-    }
-};
-
-export {paginationReducer};
+export const paginationReducer = handleActions({
+    [cmSetPage]: (state, action) => ({...state, currentPage: action.payload}),
+    [cmSetPageSize]: (state, action) => ({...state, pageSize: action.payload}),
+    [cmSetPath]: state => ({...state, currentPage: 0})
+}, {currentPage: 0, pageSize: 25});

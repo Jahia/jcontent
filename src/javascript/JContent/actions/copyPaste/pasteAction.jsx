@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import pasteMutations from './copyPaste.gql-mutations';
 import {refetchContentTreeAndListData} from '../../JContent.refetches';
-import {clear} from './copyPaste.redux-actions';
+import {copypasteClear} from './copyPaste.redux-actions';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {reduxAction} from '../reduxAction';
@@ -24,7 +24,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
         previewSelection: state.previewSelection
     }),
     dispatch => ({
-        clear: () => dispatch(clear()),
+        clear: () => dispatch(copypasteClear()),
         setPath: (path, params) => dispatch(cmGoto({path, params})),
         setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
         openPaths: paths => dispatch(cmOpenPaths(paths)),

@@ -1,6 +1,6 @@
 import copyPasteQueries from './copyPaste.gql-queries';
 import copyPasteConstants from './copyPaste.constants';
-import {cut, copy} from './copyPaste.redux-actions';
+import {copypasteCut, copypasteCopy} from './copyPaste.redux-actions';
 
 const localStorage = window.localStorage;
 
@@ -43,9 +43,9 @@ const initClipboardWatcher = (store, client) => {
                 const nodesWithData = data.jcr.nodesById;
 
                 if (cb.type === copyPasteConstants.CUT) {
-                    store.dispatch(cut(nodesWithData));
+                    store.dispatch(copypasteCut(nodesWithData));
                 } else {
-                    store.dispatch(copy(nodesWithData));
+                    store.dispatch(copypasteCopy(nodesWithData));
                 }
             });
         }

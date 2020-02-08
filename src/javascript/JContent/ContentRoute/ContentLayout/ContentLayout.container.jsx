@@ -4,9 +4,9 @@ import {compose, Query, withApollo} from 'react-apollo';
 import {
     ContentQueryHandler,
     FilesQueryHandler,
+    mixinTypes,
     SearchQueryHandler,
-    Sql2SearchQueryHandler,
-    mixinTypes
+    Sql2SearchQueryHandler
 } from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
@@ -16,7 +16,7 @@ import {
 } from '../../eventHandlerRegistry';
 import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch, cmSetTreeWidth} from '../../JContent.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../JContent.redux-actions';
 import JContentConstants from '../../JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux-actions';
@@ -156,8 +156,7 @@ export class ContentLayoutContainer extends React.Component {
     render() {
         const {
             notificationContext, t, mode, path, uilang, lang, siteKey, params, pagination, sort, pathsToRefetch,
-            removePathsToRefetch, setPath, treeState, treeWidth, filesMode, previewState, previewSelection,
-            setTreeWidth
+            removePathsToRefetch, setPath, treeState, treeWidth, filesMode, previewState, previewSelection
         } = this.props;
 
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
@@ -206,7 +205,6 @@ export class ContentLayoutContainer extends React.Component {
                                            totalCount={0}
                                            layoutQuery={layoutQuery}
                                            layoutQueryParams={layoutQueryParams}
-                                           setTreeWidth={setTreeWidth}
                             />
                         );
                     }
@@ -253,7 +251,6 @@ export class ContentLayoutContainer extends React.Component {
                                            totalCount={totalCount}
                                            layoutQuery={layoutQuery}
                                            layoutQueryParams={layoutQueryParams}
-                                           setTreeWidth={setTreeWidth}
                             />
                         </React.Fragment>
                     );
@@ -289,8 +286,7 @@ const mapDispatchToProps = dispatch => ({
     closePaths: paths => dispatch(cmClosePaths(paths)),
     removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths)),
     removeSelection: path => dispatch(cmRemoveSelection(path)),
-    switchSelection: path => dispatch(cmSwitchSelection(path)),
-    setTreeWidth: width => dispatch(cmSetTreeWidth(width))
+    switchSelection: path => dispatch(cmSwitchSelection(path))
 });
 
 ContentLayoutContainer.propTypes = {
@@ -319,8 +315,7 @@ ContentLayoutContainer.propTypes = {
     filesMode: PropTypes.string.isRequired,
     selection: PropTypes.array.isRequired,
     removeSelection: PropTypes.func.isRequired,
-    switchSelection: PropTypes.func.isRequired,
-    setTreeWidth: PropTypes.func.isRequired
+    switchSelection: PropTypes.func.isRequired
 };
 
 export default compose(

@@ -1,138 +1,36 @@
-const CM_NAVIGATE = 'CM_NAVIGATE';
-const CM_SET_UILANGUAGE = 'CM_SET_UILANGUAGE';
-const CM_SET_TREE = 'CM_SET_TREE';
-const CM_SET_TREE_WIDTH = 'CM_SET_TREE_WIDTH';
-const CM_SET_OPEN_PATHS = 'CM_SET_OPEN_PATHS';
-const CM_SET_SEARCH_MODE = 'CM_SET_SEARCH_MODE';
-const CM_ADD_PATHS_TO_REFETCH = 'CM_ADD_PATHS_TO_REFETCH';
-const CM_REMOVE_PATHS_TO_REFETCH = 'CM_REMOVE_PATHS_TO_REFETCH';
-const CM_SET_AVAILABLE_LANGUAGES = 'CM_SET_AVAILABLE_LANGUAGES';
-const CM_SET_SITE_DISPLAYABLE_NAME = 'CM_SET_SITE_DISPLAYABLE_NAME';
+import {batch} from 'react-redux';
+import {registry} from '@jahia/ui-extender';
+import {createActions} from 'redux-actions';
 
-const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
-const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
+export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
+export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
-function setUiLang(uilang) {
-    return {
-        type: CM_SET_UILANGUAGE,
-        uilang
-    };
-}
+export const {cmSetUilanguage, cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetAvailableLanguages, cmSetMode, cmSetPath, cmSetParams, cmSetSearchMode} =
+    createActions('CM_SET_UILANGUAGE', 'CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_AVAILABLE_LANGUAGES', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS', 'CM_SET_SEARCH_MODE');
 
-function cmAddPathsToRefetch(paths) {
-    return {
-        type: CM_ADD_PATHS_TO_REFETCH,
-        paths: paths
-    };
-}
+export const cmGoto = data => (
+    dispatch => {
+        batch(() => {
+            if (data.site) {
+                dispatch(registry.get('redux-reducer', 'site').actions.setSite(data.site));
+            }
 
-function cmRemovePathsToRefetch(paths) {
-    return {
-        type: CM_REMOVE_PATHS_TO_REFETCH,
-        paths: paths
-    };
-}
+            if (data.language) {
+                dispatch(registry.get('redux-reducer', 'language').actions.setLanguage(data.language));
+            }
 
-function cmOpenPaths(paths) {
-    return {
-        type: CM_SET_OPEN_PATHS,
-        open: paths
-    };
-}
+            if (data.mode) {
+                dispatch(cmSetMode(data.mode));
+            }
 
-function cmClosePaths(paths) {
-    return {
-        type: CM_SET_OPEN_PATHS,
-        close: paths
-    };
-}
+            if (data.path) {
+                dispatch(cmSetPath(data.path));
+            }
 
-function cmGoto(data) {
-    return Object.assign(data || {}, {type: CM_NAVIGATE});
-}
+            if (data.params) {
+                dispatch(cmSetParams(data.params));
+            }
+        });
+    }
+);
 
-function cmSetSite(site, language, siteDisplayableName) {
-    return cmGoto({site, language, siteDisplayableName});
-}
-
-function cmSetLanguage(language) {
-    return cmGoto({language});
-}
-
-function cmSetAvailableLanguages(availableLanguages) {
-    return {
-        type: CM_SET_AVAILABLE_LANGUAGES,
-        availableLanguages: availableLanguages
-    };
-}
-
-function cmSetSiteDisplayableName(siteDisplayableName) {
-    return {
-        type: CM_SET_SITE_DISPLAYABLE_NAME,
-        siteDisplayableName: siteDisplayableName
-    };
-}
-
-function cmSetMode(mode) {
-    return cmGoto({mode});
-}
-
-function cmSetPath(path) {
-    return cmGoto({path});
-}
-
-function cmSetParams(params) {
-    return cmGoto({params});
-}
-
-function cmSetTreeState(state) {
-    return {
-        type: CM_SET_TREE,
-        treeState: state
-    };
-}
-
-function cmSetTreeWidth(width) {
-    return {
-        type: CM_SET_TREE_WIDTH,
-        width: width
-    };
-}
-
-function cmSetSearchMode(searchMode) {
-    return {
-        type: CM_SET_SEARCH_MODE,
-        searchMode: searchMode
-    };
-}
-
-export {
-    CM_NAVIGATE,
-    CM_SET_UILANGUAGE,
-    CM_SET_TREE,
-    CM_SET_TREE_WIDTH,
-    CM_SET_OPEN_PATHS,
-    CM_SET_SEARCH_MODE,
-    CM_DRAWER_STATES,
-    CM_PREVIEW_MODES,
-    CM_ADD_PATHS_TO_REFETCH,
-    CM_REMOVE_PATHS_TO_REFETCH,
-    CM_SET_AVAILABLE_LANGUAGES,
-    CM_SET_SITE_DISPLAYABLE_NAME,
-    cmGoto,
-    cmSetLanguage,
-    cmSetAvailableLanguages,
-    cmSetSiteDisplayableName,
-    setUiLang,
-    cmSetSite,
-    cmSetMode,
-    cmSetPath,
-    cmSetParams,
-    cmOpenPaths,
-    cmClosePaths,
-    cmSetTreeState,
-    cmSetTreeWidth,
-    cmSetSearchMode,
-    cmAddPathsToRefetch,
-    cmRemovePathsToRefetch
-};

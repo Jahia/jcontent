@@ -4,17 +4,12 @@ import {copyPaste} from './actions/copyPaste/copyPaste.redux-reducer';
 import {filesGrid} from './ContentRoute/ContentLayout/FilesGrid/FilesGrid.redux-reducer';
 import {
     availableLanguagesReducer,
-    languageReducer,
     modeReducer,
     openPathsReducer,
     paramsReducer,
     pathReducer,
     pathsToRefetchReducer,
     searchModeReducer,
-    siteDisplayableNameReducer,
-    siteReducer,
-    treeStateReducer,
-    treeWidthReducer,
     uiLanguageReducer
 } from './JContent.redux-reducers';
 import {extractParamsFromUrl, getSyncListener} from './JContent.redux-utils';
@@ -26,10 +21,7 @@ const jContentReduxStore = (registry, dxContext) => {
     const pathName = window.location.pathname.substring((dxContext.contextPath + dxContext.urlbase).length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
-    registry.add('redux-reducer', 'uilang', {reducer: uiLanguageReducer(dxContext)});
-    registry.add('redux-reducer', 'site', {reducer: siteReducer(currentValueFromUrl.site)});
-    registry.add('redux-reducer', 'siteDisplayableName', {reducer: siteDisplayableNameReducer(currentValueFromUrl.site)});
-    registry.add('redux-reducer', 'language', {reducer: languageReducer(currentValueFromUrl.language)});
+    registry.add('redux-reducer', 'uilang', {reducer: uiLanguageReducer(dxContext.uilang)});
     registry.add('redux-reducer', 'availableLanguages', {reducer: availableLanguagesReducer});
     registry.add('redux-reducer', 'mode', {reducer: modeReducer(currentValueFromUrl.mode)});
     registry.add('redux-reducer', 'path', {reducer: pathReducer(currentValueFromUrl.path)});
@@ -38,10 +30,8 @@ const jContentReduxStore = (registry, dxContext) => {
     registry.add('redux-reducer', 'previewMode', {reducer: previewModeReducer});
     registry.add('redux-reducer', 'previewState', {reducer: previewStateReducer});
     registry.add('redux-reducer', 'previewSelection', {reducer: previewSelectionReducer});
-    registry.add('redux-reducer', 'treeState', {reducer: treeStateReducer});
-    registry.add('redux-reducer', 'treeWidth', {reducer: treeWidthReducer});
     registry.add('redux-reducer', 'openPaths', {reducer: openPathsReducer(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode)});
-    registry.add('redux-reducer', 'searchMode', {reducer: searchModeReducer({})});
+    registry.add('redux-reducer', 'searchMode', {reducer: searchModeReducer(currentValueFromUrl.params)});
     registry.add('redux-reducer', 'copyPaste', {reducer: copyPaste});
     registry.add('redux-reducer', 'filesGrid', {reducer: filesGrid});
     registry.add('redux-reducer', 'pagination', {reducer: paginationReducer});

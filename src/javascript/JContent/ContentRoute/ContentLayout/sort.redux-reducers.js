@@ -1,12 +1,4 @@
-import {CM_SET_SORT} from './sort.redux-actions';
+import {cmSetSort} from './sort.redux-actions';
+import {handleAction} from 'redux-actions';
 
-let sortReducer = (state = {order: 'ASC', orderBy: 'lastModified.value'}, action = {}) => {
-    switch (action.type) {
-        case CM_SET_SORT:
-            return action.sort;
-        default:
-            return state;
-    }
-};
-
-export {sortReducer};
+export const sortReducer = handleAction(cmSetSort, (state, action) => (action.payload), {order: 'ASC', orderBy: 'lastModified.value'});

@@ -1,10 +1,3 @@
-const CM_SET_SORT = 'CM_SET_SORT';
+import {createAction} from 'redux-actions';
 
-function cmSetSort(sort) {
-    return {
-        type: CM_SET_SORT,
-        sort: sort
-    };
-}
-
-export {CM_SET_SORT, cmSetSort};
+export const cmSetSort = createAction('CM_SET_SORT');

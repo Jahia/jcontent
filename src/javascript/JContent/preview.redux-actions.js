@@ -1,30 +1,15 @@
-const CM_SET_PREVIEW_SELECTION = 'CM_SET_PREVIEW_SELECTION';
-const CM_SET_PREVIEW_MODE = 'CM_SET_PREVIEW_MODE';
-const CM_SET_PREVIEW = 'CM_SET_PREVIEW';
+import {createActions} from 'redux-actions';
 
-function cmSetPreviewSelection(previewSelection) {
-    return (dispatch, getState) => {
-        if (!previewSelection || getState().selection.length === 0) {
-            dispatch({
-                type: CM_SET_PREVIEW_SELECTION,
-                previewSelection
-            });
-        }
-    };
-}
+export const cmSetPreviewSelection = previewSelection => (dispatch, getState) => {
+    if (!previewSelection || getState().selection.length === 0) {
+        dispatch({
+            type: 'CM_SET_PREVIEW_SELECTION',
+            payload: previewSelection
+        });
+    }
+};
 
-function cmSetPreviewMode(mode) {
-    return {
-        type: CM_SET_PREVIEW_MODE,
-        previewMode: mode
-    };
-}
+cmSetPreviewSelection.toString = () => 'CM_SET_PREVIEW_SELECTION';
 
-function cmSetPreviewState(state) {
-    return {
-        type: CM_SET_PREVIEW,
-        previewState: state
-    };
-}
+export const {cmSetPreviewMode, cmSetPreviewState} = createActions('CM_SET_PREVIEW_MODE', 'CM_SET_PREVIEW_STATE')
 
-export {CM_SET_PREVIEW, CM_SET_PREVIEW_MODE, CM_SET_PREVIEW_SELECTION, cmSetPreviewState, cmSetPreviewMode, cmSetPreviewSelection};

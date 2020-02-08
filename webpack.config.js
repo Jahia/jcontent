@@ -24,11 +24,6 @@ module.exports = (env, argv) => {
             chunkFilename: '[name].jahia.[chunkhash:6].js',
             jsonpFunction: 'cmmJsonp'
         },
-        optimization: {
-            splitChunks: {
-                maxSize: 400000
-            }
-        },
         resolve: {
             mainFields: ['module', 'main'],
             extensions: ['.mjs', '.js', '.jsx', 'json']

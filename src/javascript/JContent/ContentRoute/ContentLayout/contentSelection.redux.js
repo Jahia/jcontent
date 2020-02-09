@@ -26,7 +26,7 @@ cmSwitchSelection.toString = () => 'CM_SWITCH_SELECTION';
 
 export const cmClearSelection = createAction('CM_CLEAR_SELECTION');
 
-export const contentSelectionReduxReducers = registry => {
+export const contentSelectionRedux = registry => {
     const toArray = value => (Array.isArray(value) ? value : [value]);
 
     const selectionReducer = handleActions({

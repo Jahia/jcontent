@@ -14,7 +14,7 @@ export const cmSetPreviewSelection = previewSelection => (dispatch, getState) =>
 
 cmSetPreviewSelection.toString = () => 'CM_SET_PREVIEW_SELECTION';
 
-export const previewReduxReducers = registry => {
+export const previewRedux = registry => {
     const previewSelectionReducer = handleAction(cmSetPreviewSelection, (state, action) => action.payload, null);
 
     const previewModeReducer = handleActions({

@@ -3,7 +3,7 @@ import {File, FolderSpecial, Collections, Setting} from '@jahia/moonstone/dist/i
 import ContentTrees from './ContentRoute/ContentLayout/ContentTrees/ContentTrees';
 import JContentConstants from './JContent.constants';
 
-function jContentAccordionItems(registry) {
+export const jContentAccordionItems = registry => {
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: item => (
             <ContentTrees contentTreeConfigs={item.configs}/>
@@ -62,6 +62,4 @@ function jContentAccordionItems(registry) {
         defaultUrl: siteKey => '/sites/' + siteKey,
         render: () => <div>HELLO</div>
     });
-}
-
-export default jContentAccordionItems;
+};

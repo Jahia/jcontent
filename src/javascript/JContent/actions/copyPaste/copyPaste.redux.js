@@ -3,7 +3,7 @@ import {createActions, handleActions} from 'redux-actions';
 
 export const {copypasteCopy, copypasteCut, copypasteClear} = createActions('COPYPASTE_COPY', 'COPYPASTE_CUT', 'COPYPASTE_CLEAR');
 
-export const copypasteReduxReducers = registry => {
+export const copypasteRedux = registry => {
     const initialState = {
         type: copyPasteConstants.COPY,
         nodes: []

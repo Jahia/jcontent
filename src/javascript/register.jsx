@@ -5,18 +5,18 @@ import {PrimaryNavItem} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
 import Collections from '@jahia/moonstone/dist/icons/Collections';
-import contentManagerRoutes from './JContent/JContent.routes';
-import jContentActions from './JContent/JContent.actions';
-import jContentAccordionItems from './JContent/JContent.accordion-items';
+import {jContentRoutes} from './JContent/JContent.routes';
+import {jContentActions} from './JContent/JContent.actions';
+import {jContentAccordionItems} from './JContent/JContent.accordion-items';
 import {jContentAppRoot} from './JContent/JContent.app-root';
-import {jContentReduxReducers} from './JContent/JContent.redux';
-import {fileuploadReduxReducers} from './JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
-import {previewReduxReducers} from './JContent/preview.redux';
-import {copypasteReduxReducers} from './JContent/actions/copyPaste/copyPaste.redux';
-import {filesGridReduxReducers} from './JContent/ContentRoute/ContentLayout/FilesGrid/FilesGrid.redux';
-import {paginationReduxReducers} from './JContent/ContentRoute/ContentLayout/pagination.redux';
-import {sortReduxReducers} from './JContent/ContentRoute/ContentLayout/sort.redux';
-import {contentSelectionReduxReducers} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
+import {jContentRedux} from './JContent/JContent.redux';
+import {fileuploadRedux} from './JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
+import {previewRedux} from './JContent/preview.redux';
+import {copypasteRedux} from './JContent/actions/copyPaste/copyPaste.redux';
+import {filesGridRedux} from './JContent/ContentRoute/ContentLayout/FilesGrid/FilesGrid.redux';
+import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.redux';
+import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
+import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
 
 const ROUTE = '/jcontent';
 const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/browse`;
@@ -47,17 +47,17 @@ registry.add('callback', 'jContent', {
             render: () => <JContentApp/>
         });
 
-        contentManagerRoutes(registry);
+        jContentRoutes(registry);
         jContentActions(registry);
 
-        jContentReduxReducers(registry);
-        fileuploadReduxReducers(registry);
-        previewReduxReducers(registry);
-        copypasteReduxReducers(registry);
-        filesGridReduxReducers(registry);
-        paginationReduxReducers(registry);
-        sortReduxReducers(registry);
-        contentSelectionReduxReducers(registry);
+        jContentRedux(registry);
+        fileuploadRedux(registry);
+        previewRedux(registry);
+        copypasteRedux(registry);
+        filesGridRedux(registry);
+        paginationRedux(registry);
+        sortRedux(registry);
+        contentSelectionRedux(registry);
 
         jContentAccordionItems(registry);
         jContentAppRoot(registry);

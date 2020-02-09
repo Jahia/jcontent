@@ -11,7 +11,7 @@ export const uploadSeed = {
     path: null // Will try to take globally set path if this is null
 };
 
-export const fileuploadReduxReducers = registry => {
+export const fileuploadRedux = registry => {
     const initialState = {
         path: null, // Folder that will get files
         status: uploadsStatuses.NOT_STARTED,

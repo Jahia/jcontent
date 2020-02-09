@@ -72,7 +72,7 @@ const PATH_FILES_AND_DESCENDANTS = '^/sites/((?!/).)+/files/?';
 
 const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 
-function jContentActions(registry) {
+export const jContentActions = registry => {
     registry.add('action', 'router', routerAction);
 
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -381,6 +381,4 @@ function jContentActions(registry) {
         showOnNodeTypes: ['jnt:file'],
         hideForPaths: [PATH_FILES_ITSELF]
     });
-}
-
-export default jContentActions;
+};

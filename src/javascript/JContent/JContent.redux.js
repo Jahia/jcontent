@@ -125,7 +125,7 @@ export const cmGoto = data => (
     }
 );
 
-export const jContentReduxReducers = registry => {
+export const jContentRedux = registry => {
     const jahiaCtx = window.contextJsParameters;
     const pathName = window.location.pathname.substring((jahiaCtx.contextPath + jahiaCtx.urlbase).length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);

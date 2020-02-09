@@ -9,7 +9,7 @@ const FILE_SELECTOR_GRID_MODE = JContentConstants.localStorageKeys.filesSelector
 const THUMBNAIL = JContentConstants.gridMode.THUMBNAIL;
 const GRID = JContentConstants.mode.GRID;
 
-export const filesGridReduxReducers = registry => {
+export const filesGridRedux = registry => {
     const initialState = {
         mode: localStorage.getItem(FILE_SELECTOR_MODE) === null ? GRID : localStorage.getItem(FILE_SELECTOR_MODE),
         gridMode: localStorage.getItem(FILE_SELECTOR_GRID_MODE) === null ? THUMBNAIL : localStorage.getItem(FILE_SELECTOR_GRID_MODE)

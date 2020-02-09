@@ -96,8 +96,8 @@ const pathResolver = (currentValue, currentValueFromUrl) => {
     return currentValue.path;
 };
 
-export const {cmSetUilanguage, cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetAvailableLanguages, cmSetMode, cmSetPath, cmSetParams, cmSetSearchMode} =
-    createActions('CM_SET_UILANGUAGE', 'CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_AVAILABLE_LANGUAGES', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS', 'CM_SET_SEARCH_MODE');
+export const {cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetAvailableLanguages, cmSetMode, cmSetPath, cmSetParams, cmSetSearchMode} =
+    createActions('CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_AVAILABLE_LANGUAGES', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS', 'CM_SET_SEARCH_MODE');
 
 export const cmGoto = data => (
     dispatch => {
@@ -130,7 +130,6 @@ export const jContentReduxReducers = registry => {
     const pathName = window.location.pathname.substring((jahiaCtx.contextPath + jahiaCtx.urlbase).length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
-    const uiLanguageReducer = handleAction(cmSetUilanguage, (state, action) => action.payload, jahiaCtx.uilang);
     const availableLanguagesReducer = handleAction(cmSetAvailableLanguages, (state, action) => action.payload, []);
     const modeReducer = handleAction(cmSetMode, (state, action) => action.payload, currentValueFromUrl.mode);
     const pathReducer = handleAction(cmSetPath, (state, action) => action.payload, currentValueFromUrl.path);
@@ -148,7 +147,6 @@ export const jContentReduxReducers = registry => {
 
     const searchModeReducer = handleAction(cmSetSearchMode, (state, action) => action.payload, (currentValueFromUrl.params.sql2SearchFrom ? 'sql2' : 'normal'));
 
-    registry.add('redux-reducer', 'uilang', {reducer: uiLanguageReducer});
     registry.add('redux-reducer', 'availableLanguages', {reducer: availableLanguagesReducer});
     registry.add('redux-reducer', 'mode', {reducer: modeReducer});
     registry.add('redux-reducer', 'path', {reducer: pathReducer});

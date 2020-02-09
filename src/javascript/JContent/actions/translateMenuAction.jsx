@@ -4,7 +4,7 @@ import {reduxAction} from './reduxAction';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 
-export default composeActions(requirementsAction, menuAction, reduxAction(state => ({availableLanguages: state.availableLanguages})), {
+export default composeActions(requirementsAction, menuAction, reduxAction(state => ({availableLanguages: state.jcontent.availableLanguages})), {
     init: context => {
         context.initRequirements({
             retrievePermission: context.availableLanguages.map(lang => 'jcr:modifyProperties_default_' + lang.language),

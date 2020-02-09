@@ -9,5 +9,5 @@ export const paginationRedux = registry => {
         [cmSetPath]: state => ({...state, currentPage: 0})
     }, {currentPage: 0, pageSize: 25});
 
-    registry.add('redux-reducer', 'pagination', {reducer: paginationReducer});
+    registry.add('redux-reducer', 'pagination', {targets: ['jcontent'], reducer: paginationReducer});
 };

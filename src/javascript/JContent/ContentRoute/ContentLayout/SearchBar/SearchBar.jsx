@@ -22,7 +22,7 @@ export class SearchBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    searchMode: state.searchMode
+    searchMode: state.jcontent.searchMode
 });
 
 const mapDispatchToProps = dispatch => {

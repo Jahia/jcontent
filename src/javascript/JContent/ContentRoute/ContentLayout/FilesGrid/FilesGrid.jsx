@@ -178,14 +178,14 @@ export const FilesGrid = ({
 };
 
 let mapStateToProps = state => ({
-    path: state.path,
-    pagination: state.pagination,
-    gridMode: state.filesGrid.gridMode,
-    mode: state.filesGrid.mode,
+    path: state.jcontent.path,
+    pagination: state.jcontent.pagination,
+    gridMode: state.jcontent.filesGrid.gridMode,
+    mode: state.jcontent.filesGrid.mode,
     siteKey: state.site,
     uilang: state.uilang,
-    previewSelection: state.previewSelection,
-    previewState: state.previewState
+    previewSelection: state.jcontent.previewSelection,
+    previewState: state.jcontent.previewState
 });
 
 let mapDispatchToProps = dispatch => ({

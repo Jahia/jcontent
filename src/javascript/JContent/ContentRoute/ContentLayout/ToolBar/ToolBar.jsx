@@ -51,8 +51,8 @@ export class ToolBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    mode: state.mode,
-    selection: state.selection
+    mode: state.jcontent.mode,
+    selection: state.jcontent.selection
 });
 
 ToolBar.propTypes = {

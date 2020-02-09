@@ -7,6 +7,7 @@ import {registry} from '@jahia/ui-extender';
 import rison from 'rison';
 import queryString from 'query-string';
 import {push} from 'connected-react-router';
+import {combineReducers} from 'redux';
 
 export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
@@ -57,7 +58,7 @@ const deserializeQueryString = search => {
 };
 
 const select = state => {
-    let {router: {location: {pathname, search}}, site, language, mode, path, params} = state;
+    let {router: {location: {pathname, search}}, site, language, jcontent: {mode, path, params}} = state;
     return {
         pathname,
         search,
@@ -147,13 +148,13 @@ export const jContentRedux = registry => {
 
     const searchModeReducer = handleAction(cmSetSearchMode, (state, action) => action.payload, (currentValueFromUrl.params.sql2SearchFrom ? 'sql2' : 'normal'));
 
-    registry.add('redux-reducer', 'availableLanguages', {reducer: availableLanguagesReducer});
-    registry.add('redux-reducer', 'mode', {reducer: modeReducer});
-    registry.add('redux-reducer', 'path', {reducer: pathReducer});
-    registry.add('redux-reducer', 'params', {reducer: paramsReducer});
-    registry.add('redux-reducer', 'openPaths', {reducer: openPathsReducer});
-    registry.add('redux-reducer', 'pathsToRefetch', {reducer: pathsToRefetchReducer});
-    registry.add('redux-reducer', 'searchMode', {reducer: searchModeReducer});
+    registry.add('redux-reducer', 'availableLanguages', {targets: ['jcontent'], reducer: availableLanguagesReducer});
+    registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
+    registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
+    registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
+    registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
+    registry.add('redux-reducer', 'pathsToRefetch', {targets: ['jcontent'], reducer: pathsToRefetchReducer});
+    registry.add('redux-reducer', 'searchMode', {targets: ['jcontent'], reducer: searchModeReducer});
 
     let currentValue;
     let getSyncListener = store => () => {
@@ -189,5 +190,14 @@ export const jContentRedux = registry => {
         });
     };
 
+    const reducersArray = registry.find({type: 'redux-reducer', target: 'jcontent'});
+    const reducerObj = {};
+    reducersArray.forEach(r => {
+        reducerObj[r.key] = r.reducer;
+    });
+
+    const jcontentReducer = combineReducers(reducerObj);
+
+    registry.add('redux-reducer', 'jcontent', {targets: ['root'], reducer: jcontentReducer});
     registry.add('redux-listener', 'jcontent', {createListener: getSyncListener});
 };

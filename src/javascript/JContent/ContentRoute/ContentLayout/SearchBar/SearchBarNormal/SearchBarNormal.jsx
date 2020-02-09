@@ -154,8 +154,8 @@ export class SearchBarNormal extends React.Component {
 const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
-    path: state.path,
-    params: state.params
+    path: state.jcontent.path,
+    params: state.jcontent.params
 });
 
 const mapDispatchToProps = dispatch => {

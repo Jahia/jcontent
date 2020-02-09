@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 let mapStateToProps = state => ({
-    mode: state.mode,
+    mode: state.jcontent.mode,
     siteKey: state.site
 });
 

@@ -50,7 +50,6 @@ registry.add('callback', 'jContent', {
         jContentRoutes(registry);
         jContentActions(registry);
 
-        jContentRedux(registry);
         fileuploadRedux(registry);
         previewRedux(registry);
         copypasteRedux(registry);
@@ -58,6 +57,7 @@ registry.add('callback', 'jContent', {
         paginationRedux(registry);
         sortRedux(registry);
         contentSelectionRedux(registry);
+        jContentRedux(registry);
 
         jContentAccordionItems(registry);
         jContentAppRoot(registry);

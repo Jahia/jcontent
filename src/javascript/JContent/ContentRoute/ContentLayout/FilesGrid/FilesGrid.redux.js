@@ -20,5 +20,5 @@ export const filesGridRedux = registry => {
         [filesgridSetGridMode]: (state, action) => ({...state, gridMode: action.payload})
     }, initialState);
 
-    registry.add('redux-reducer', 'filesGrid', {reducer: filesGrid});
+    registry.add('redux-reducer', 'filesGrid', {targets: ['jcontent'], reducer: filesGrid});
 };

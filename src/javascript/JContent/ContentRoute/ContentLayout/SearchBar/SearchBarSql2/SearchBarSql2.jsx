@@ -136,8 +136,8 @@ export class SearchBarSql2 extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    path: state.path,
-    params: state.params
+    path: state.jcontent.path,
+    params: state.jcontent.params
 });
 
 const mapDispatchToProps = dispatch => {

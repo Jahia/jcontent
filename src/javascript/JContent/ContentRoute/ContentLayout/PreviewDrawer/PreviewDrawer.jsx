@@ -114,8 +114,8 @@ export class PreviewDrawer extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        previewMode: state.previewMode,
-        previewState: state.previewState
+        previewMode: state.jcontent.previewMode,
+        previewState: state.jcontent.previewState
     };
 };
 

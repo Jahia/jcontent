@@ -78,8 +78,8 @@ FileModeSelector.propTypes = {
 };
 
 let mapStateToProps = state => ({
-    mode: state.filesGrid.mode,
-    gridMode: state.filesGrid.gridMode
+    mode: state.jcontent.filesGrid.mode,
+    gridMode: state.jcontent.filesGrid.gridMode
 });
 
 let mapDispatchToProps = dispatch => ({

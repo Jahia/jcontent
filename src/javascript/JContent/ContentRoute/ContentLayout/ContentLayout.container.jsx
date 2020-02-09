@@ -261,22 +261,22 @@ export class ContentLayoutContainer extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    mode: state.mode,
+    mode: state.jcontent.mode,
     siteKey: state.site,
-    path: state.path,
+    path: state.jcontent.path,
     lang: state.language,
-    previewSelection: state.previewSelection,
-    previewState: state.previewState,
+    previewSelection: state.jcontent.previewSelection,
+    previewState: state.jcontent.previewState,
     uilang: state.uilang,
-    params: state.params,
-    filesMode: state.filesGrid.mode,
-    pagination: state.pagination,
-    sort: state.sort,
-    openedPaths: state.openPaths,
-    pathsToRefetch: state.pathsToRefetch,
-    treeState: state.treeState,
-    treeWidth: state.treeWidth,
-    selection: state.selection
+    params: state.jcontent.params,
+    filesMode: state.jcontent.filesGrid.mode,
+    pagination: state.jcontent.pagination,
+    sort: state.jcontent.sort,
+    openedPaths: state.jcontent.openPaths,
+    pathsToRefetch: state.jcontent.pathsToRefetch,
+    treeState: state.jcontent.treeState,
+    treeWidth: state.jcontent.treeWidth,
+    selection: state.jcontent.selection
 });
 
 const mapDispatchToProps = dispatch => ({

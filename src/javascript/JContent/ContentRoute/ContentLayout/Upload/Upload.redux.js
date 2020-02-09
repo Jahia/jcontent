@@ -75,5 +75,5 @@ export const fileuploadRedux = registry => {
         })
     }, initialState);
 
-    registry.add('redux-reducer', 'fileUpload', {reducer: fileUpload});
+    registry.add('redux-reducer', 'fileUpload', {targets: ['jcontent'], reducer: fileUpload});
 };

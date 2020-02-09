@@ -65,11 +65,11 @@ export class SearchControlBar extends React.Component {
 const mapStateToProps = state => {
     return {
         siteKey: state.site,
-        path: state.path,
-        searchTerms: state.params.searchTerms,
-        searchContentType: state.params.searchContentType,
-        sql2SearchFrom: state.params.sql2SearchFrom,
-        sql2SearchWhere: state.params.sql2SearchWhere
+        path: state.jcontent.path,
+        searchTerms: state.jcontent.params.searchTerms,
+        searchContentType: state.jcontent.params.searchContentType,
+        sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
+        sql2SearchWhere: state.jcontent.params.sql2SearchWhere
     };
 };
 

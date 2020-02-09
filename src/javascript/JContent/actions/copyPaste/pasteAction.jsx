@@ -18,10 +18,10 @@ import {setLocalStorage} from './localStorageHandler';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({
-        copyPaste: state.copyPaste,
-        treePath: state.path,
-        openedPaths: state.openPaths,
-        previewSelection: state.previewSelection
+        copyPaste: state.jcontent.copyPaste,
+        treePath: state.jcontent.path,
+        openedPaths: state.jcontent.openPaths,
+        previewSelection: state.jcontent.previewSelection
     }),
     dispatch => ({
         clear: () => dispatch(copypasteClear()),

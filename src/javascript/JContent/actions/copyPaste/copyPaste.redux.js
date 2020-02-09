@@ -15,5 +15,5 @@ export const copypasteRedux = registry => {
         [copypasteClear]: () => (initialState)
     }, initialState);
 
-    registry.add('redux-reducer', 'copyPaste', {reducer: copyPaste});
+    registry.add('redux-reducer', 'copyPaste', {targets: ['jcontent'], reducer: copyPaste});
 };

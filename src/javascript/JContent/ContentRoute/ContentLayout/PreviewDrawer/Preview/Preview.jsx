@@ -111,10 +111,10 @@ export class Preview extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        previewMode: state.previewMode,
-        previewState: state.previewState,
+        previewMode: state.jcontent.previewMode,
+        previewState: state.jcontent.previewState,
         language: state.language,
-        selection: state.selection
+        selection: state.jcontent.selection
     };
 };
 

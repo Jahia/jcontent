@@ -40,5 +40,5 @@ export const contentSelectionRedux = registry => {
         [cmSetPageSize]: () => ([])
     }, []);
 
-    registry.add('redux-reducer', 'selection', {reducer: selectionReducer});
+    registry.add('redux-reducer', 'selection', {targets: ['jcontent'], reducer: selectionReducer});
 };

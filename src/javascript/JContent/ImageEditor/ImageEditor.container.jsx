@@ -345,7 +345,7 @@ export class ImageEditorContainer extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    path: state.path,
+    path: state.jcontent.path,
     site: state.site,
     language: state.language
 });

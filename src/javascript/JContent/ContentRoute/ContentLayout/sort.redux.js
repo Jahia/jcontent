@@ -8,5 +8,5 @@ export const sortRedux = registry => {
         orderBy: 'lastModified.value'
     });
 
-    registry.add('redux-reducer', 'sort', {reducer: sortReducer});
+    registry.add('redux-reducer', 'sort', {targets: ['jcontent'], reducer: sortReducer});
 };

@@ -24,7 +24,7 @@ export const previewRedux = registry => {
 
     const previewStateReducer = handleAction(cmSetPreviewState, (state, action) => action.payload, CM_DRAWER_STATES.HIDE);
 
-    registry.add('redux-reducer', 'previewMode', {reducer: previewModeReducer});
-    registry.add('redux-reducer', 'previewState', {reducer: previewStateReducer});
-    registry.add('redux-reducer', 'previewSelection', {reducer: previewSelectionReducer});
+    registry.add('redux-reducer', 'previewMode', {targets: ['jcontent'], reducer: previewModeReducer});
+    registry.add('redux-reducer', 'previewState', {targets: ['jcontent'], reducer: previewStateReducer});
+    registry.add('redux-reducer', 'previewSelection', {targets: ['jcontent'], reducer: previewSelectionReducer});
 };

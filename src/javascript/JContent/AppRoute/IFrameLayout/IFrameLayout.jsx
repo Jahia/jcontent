@@ -166,7 +166,7 @@ export class IFrameLayout extends React.Component {
 const mapStateToProps = state => ({
     lang: state.language,
     siteKey: state.site,
-    actionPath: state.path
+    actionPath: state.jcontent.path
 });
 
 const mapDispatchToProps = () => ({});

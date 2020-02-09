@@ -181,9 +181,9 @@ const mapStateToProps = (state, ownProps) => {
     }
 
     return {
-        status: state.fileUpload.status,
-        uploads: state.fileUpload.uploads,
-        overlayTarget: state.fileUpload.overlayTarget
+        status: state.jcontent.fileUpload.status,
+        uploads: state.jcontent.fileUpload.uploads,
+        overlayTarget: state.jcontent.fileUpload.overlayTarget
     };
 };
 

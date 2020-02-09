@@ -77,11 +77,11 @@ export class ContentTrees extends React.Component {
 const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
-    path: state.path,
-    mode: state.mode,
-    openPaths: state.openPaths,
-    previewSelection: state.previewSelection,
-    width: state.treeWidth
+    path: state.jcontent.path,
+    mode: state.jcontent.mode,
+    openPaths: state.jcontent.openPaths,
+    previewSelection: state.jcontent.previewSelection,
+    width: state.jcontent.treeWidth
 });
 
 const mapDispatchToProps = dispatch => ({

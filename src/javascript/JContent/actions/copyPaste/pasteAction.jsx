@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import pasteMutations from './copyPaste.gql-mutations';
 import {refetchContentTreeAndListData} from '../../JContent.refetches';
-import {copypasteClear} from './copyPaste.redux-actions';
+import {copypasteClear} from './copyPaste.redux';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {reduxAction} from '../reduxAction';
@@ -11,8 +11,8 @@ import {withI18nAction} from '../withI18nAction';
 import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../JContent.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../JContent.redux-actions';
-import {cmSetPreviewSelection} from '../../preview.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../JContent.redux';
+import {cmSetPreviewSelection} from '../../preview.redux';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 

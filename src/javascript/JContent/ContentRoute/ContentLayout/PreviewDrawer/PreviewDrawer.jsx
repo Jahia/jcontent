@@ -7,13 +7,13 @@ import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import Preview from './Preview';
 import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
-import {CM_DRAWER_STATES} from '../../../JContent.redux-actions';
+import {CM_DRAWER_STATES} from '../../../JContent.redux';
 import {compose} from 'react-apollo';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
 import * as _ from 'lodash';
-import {cmSetPreviewMode, cmSetPreviewState} from '../../../preview.redux-actions';
+import {cmSetPreviewMode, cmSetPreviewState} from '../../../preview.redux';
 
 const styles = theme => ({
     leftButtons: {

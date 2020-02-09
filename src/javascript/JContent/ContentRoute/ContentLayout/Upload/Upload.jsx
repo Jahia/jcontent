@@ -5,7 +5,7 @@ import {IconButton} from '@jahia/design-system-kit';
 import {Close} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
-import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux-actions';
+import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux';
 import UploadItem from './UploadItem';
 import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';

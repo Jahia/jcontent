@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {cmGoto} from '../../JContent.redux-actions';
+import {cmGoto} from '../../JContent.redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 

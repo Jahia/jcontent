@@ -9,7 +9,7 @@ import {Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';
 import {Trans, withTranslation} from 'react-i18next';
-import {cmGoto} from '../../../../JContent.redux-actions';
+import {cmGoto} from '../../../../JContent.redux';
 import JContentConstants from '../../../../JContent.constants';
 
 const styles = theme => ({

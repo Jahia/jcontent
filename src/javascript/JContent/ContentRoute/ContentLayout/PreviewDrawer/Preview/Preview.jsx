@@ -7,10 +7,10 @@ import {lodash as _} from 'lodash';
 import {ContentPreview} from '@jahia/react-apollo';
 import {PreviewComponent} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
-import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux-actions';
+import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
-import {cmClearSelection} from '../../contentSelection.redux-actions';
-import {CM_DRAWER_STATES} from '../../../../JContent.redux-actions';
+import {cmClearSelection} from '../../contentSelection.redux';
+import {CM_DRAWER_STATES} from '../../../../JContent.redux';
 import {withStyles} from '@material-ui/core';
 
 const styles = theme => ({

@@ -4,7 +4,7 @@ import {Select} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {withTranslation} from 'react-i18next';
-import {filesgridSetMode, filesgridSetGridMode} from '../../FilesGrid/FilesGrid.redux-actions';
+import {filesgridSetMode, filesgridSetGridMode} from '../../FilesGrid/FilesGrid.redux';
 import PropTypes from 'prop-types';
 import JContentConstants from '../../../../JContent.constants';
 

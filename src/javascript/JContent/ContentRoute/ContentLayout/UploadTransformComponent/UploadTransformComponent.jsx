@@ -8,7 +8,7 @@ import {
     isDragDataWithFiles,
     onFilesSelected
 } from '../Upload/Upload.utils';
-import {fileuploadSetOverlayTarget} from '../Upload/Upload.redux-actions';
+import {fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
 import {withApollo, compose} from 'react-apollo';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 import JContentConstants from '../../../JContent.constants';

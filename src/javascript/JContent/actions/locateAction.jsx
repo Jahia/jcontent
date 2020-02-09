@@ -1,11 +1,11 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {cmGoto, cmOpenPaths} from '../JContent.redux-actions';
+import {cmGoto, cmOpenPaths} from '../JContent.redux';
 import {reduxAction} from './reduxAction';
 import treeExpanderAction from './treeExpanderAction';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
-import {cmSetPreviewSelection} from '../preview.redux-actions';
+import {cmSetPreviewSelection} from '../preview.redux';
 import JContentConstants from '../JContent.constants';
 
 export default composeActions(

@@ -16,12 +16,12 @@ import {
 } from '../../eventHandlerRegistry';
 import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../JContent.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../JContent.redux';
 import JContentConstants from '../../JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
-import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux-actions';
+import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {setModificationHook} from './ContentLayout.utils';
-import {cmSetPreviewSelection} from '../../preview.redux-actions';
+import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {setContentListDataRefetcher} from '../../JContent.refetches';
 

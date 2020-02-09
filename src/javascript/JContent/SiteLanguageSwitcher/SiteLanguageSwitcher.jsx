@@ -5,7 +5,7 @@ import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {SiteInfo} from '@jahia/react-apollo';
-import {cmSetAvailableLanguages} from '../JContent.redux-actions';
+import {cmSetAvailableLanguages} from '../JContent.redux';
 import {LanguageSwitcher} from '@jahia/design-system-kit';
 import {registry} from '@jahia/ui-extender';
 

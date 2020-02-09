@@ -1,4 +1,4 @@
-import {copypasteCopy} from './copyPaste.redux-actions';
+import {copypasteCopy} from './copyPaste.redux';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from '../reduxAction';
 import requirementsAction from '../requirementsAction';

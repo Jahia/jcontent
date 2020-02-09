@@ -8,7 +8,7 @@ import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import {DxContext} from '@jahia/react-material';
-import {cmGoto} from '../JContent.redux-actions';
+import {cmGoto} from '../JContent.redux';
 import {refetchContentListData} from '../JContent.refetches';
 import Feedback from './Feedback';
 

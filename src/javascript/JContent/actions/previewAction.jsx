@@ -1,8 +1,8 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {CM_DRAWER_STATES} from '../JContent.redux-actions';
+import {CM_DRAWER_STATES} from '../JContent.redux';
 import {reduxAction} from './reduxAction';
-import {cmSetPreviewSelection, cmSetPreviewState} from '../preview.redux-actions';
+import {cmSetPreviewSelection, cmSetPreviewState} from '../preview.redux';
 
 export default composeActions(requirementsAction, reduxAction(() => ({}), dispatch => ({
     setPreviewState: state => dispatch(cmSetPreviewState(state)),

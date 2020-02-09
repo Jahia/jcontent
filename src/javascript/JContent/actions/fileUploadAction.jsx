@@ -3,7 +3,7 @@ import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
 import {reduxAction} from './reduxAction';
 import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils';
-import {fileuploadSetPath} from '../ContentRoute/ContentLayout/Upload/Upload.redux-actions';
+import {fileuploadSetPath} from '../ContentRoute/ContentLayout/Upload/Upload.redux';
 
 export default composeActions(requirementsAction, reduxAction(null, dispatch => ({dispatchBatch: actions => dispatch(batchActions(actions))})), {
     init: context => {

@@ -7,7 +7,7 @@ import ContentListTable from './ContentListTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import {withTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES} from '../../JContent.redux-actions';
+import {CM_DRAWER_STATES} from '../../JContent.redux';
 import FilesGrid from './FilesGrid';
 import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';

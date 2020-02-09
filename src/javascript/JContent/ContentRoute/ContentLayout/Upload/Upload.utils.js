@@ -1,5 +1,4 @@
-import {uploadSeed} from './Upload.redux-reducer';
-import {fileuploadTakeFromQueue, fileuploadAddUploads} from './Upload.redux-actions';
+import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Upload.redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
 import randomUUID from 'uuid/v4';
 

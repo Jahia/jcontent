@@ -1,6 +1,6 @@
 import copyPasteQueries from './copyPaste.gql-queries';
 import copyPasteConstants from './copyPaste.constants';
-import {copypasteCut, copypasteCopy} from './copyPaste.redux-actions';
+import {copypasteCut, copypasteCopy} from './copyPaste.redux';
 
 const localStorage = window.localStorage;
 

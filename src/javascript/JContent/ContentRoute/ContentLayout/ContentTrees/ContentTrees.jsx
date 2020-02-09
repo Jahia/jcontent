@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core';
 import {withTranslation} from 'react-i18next';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '../../../JContent.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '../../../JContent.redux';
 import {compose} from 'react-apollo';
 import ContentTree from './ContentTree';
 import {setRefetcher} from '../../../JContent.refetches';

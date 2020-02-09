@@ -4,8 +4,8 @@ import requirementsAction from './requirementsAction';
 import {reduxAction} from './reduxAction';
 import treeExpanderAction from './treeExpanderAction';
 import * as _ from 'lodash';
-import {cmGoto, cmOpenPaths} from '../JContent.redux-actions';
-import {cmSetPreviewSelection} from '../preview.redux-actions';
+import {cmGoto, cmOpenPaths} from '../JContent.redux';
+import {cmSetPreviewSelection} from '../preview.redux';
 import JContentConstants from '../JContent.constants';
 
 export default composeActions(

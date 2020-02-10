@@ -8,7 +8,7 @@ import {
     isDragDataWithFiles,
     onFilesSelected
 } from '../Upload/Upload.utils';
-import {setOverlayTarget} from '../Upload/Upload.redux-actions';
+import {fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
 import {withApollo, compose} from 'react-apollo';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 import JContentConstants from '../../../JContent.constants';
@@ -182,7 +182,7 @@ export class UploadTransformComponent extends React.Component {
 const mapDispatchToProps = dispatch => {
     return {
         uploadDispatchBatch: actions => dispatch(batchActions(actions)),
-        uploadSetOverlayTarget: state => dispatch(setOverlayTarget(state))
+        uploadSetOverlayTarget: state => dispatch(fileuploadSetOverlayTarget(state))
     };
 };
 

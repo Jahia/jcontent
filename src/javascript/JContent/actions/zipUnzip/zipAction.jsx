@@ -7,7 +7,7 @@ import zipUnzipQueries from './zipUnzip.gql-queries';
 import zipUnzipMutation from './zipUnzip.gql-mutations';
 import {getNewCounter, removeFileExtension} from '../../JContent.utils';
 import {reduxAction} from '../reduxAction';
-import {cmClearSelection} from '../../ContentRoute/ContentLayout/contentSelection.redux-actions';
+import {cmClearSelection} from '../../ContentRoute/ContentLayout/contentSelection.redux';
 
 export default composeActions(requirementsAction, withNotificationContextAction, componentRendererAction, reduxAction(() => ({}), dispatch => ({
     clearSelection: () => dispatch(cmClearSelection())

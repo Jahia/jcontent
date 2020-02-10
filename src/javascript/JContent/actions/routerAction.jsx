@@ -1,4 +1,4 @@
-import {cmGoto} from '../JContent.redux-actions';
+import {cmGoto} from '../JContent.redux';
 import {composeActions} from '@jahia/react-material';
 import {reduxAction} from './reduxAction';
 import requirementsAction from './requirementsAction';

@@ -5,7 +5,7 @@ import {compose} from 'react-apollo';
 import SearchBarNormal from './SearchBarNormal';
 import SearchBarSql2 from './SearchBarSql2';
 import {connect} from 'react-redux';
-import {cmSetSearchMode} from '../../../JContent.redux-actions';
+import {cmSetSearchMode} from '../../../JContent.redux';
 
 export class SearchBar extends React.Component {
     render() {
@@ -22,7 +22,7 @@ export class SearchBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    searchMode: state.searchMode
+    searchMode: state.jcontent.searchMode
 });
 
 const mapDispatchToProps = dispatch => {

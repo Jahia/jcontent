@@ -4,7 +4,7 @@ import {Select} from '@jahia/design-system-kit';
 import {compose} from 'react-apollo';
 import {connect} from 'react-redux';
 import {withTranslation} from 'react-i18next';
-import {setMode, setGridMode} from '../../FilesGrid/FilesGrid.redux-actions';
+import {filesgridSetMode, filesgridSetGridMode} from '../../FilesGrid/FilesGrid.redux';
 import PropTypes from 'prop-types';
 import JContentConstants from '../../../../JContent.constants';
 
@@ -78,13 +78,13 @@ FileModeSelector.propTypes = {
 };
 
 let mapStateToProps = state => ({
-    mode: state.filesGrid.mode,
-    gridMode: state.filesGrid.gridMode
+    mode: state.jcontent.filesGrid.mode,
+    gridMode: state.jcontent.filesGrid.gridMode
 });
 
 let mapDispatchToProps = dispatch => ({
-    onChange: mode => dispatch(setMode(mode)),
-    onGridMode: gridMode => dispatch(setGridMode(gridMode))
+    onChange: mode => dispatch(filesgridSetMode(mode)),
+    onGridMode: gridMode => dispatch(filesgridSetGridMode(gridMode))
 });
 
 export default compose(

@@ -12,17 +12,17 @@ import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
-import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux-actions';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux';
 import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion} from '../../../JContent.utils';
 import ToolBar from '../ToolBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../UploadTransformComponent';
 import classNames from 'classnames';
-import {cmSetPreviewSelection} from '../../../preview.redux-actions';
-import {cmSetSort} from '../sort.redux-actions';
-import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
-import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux-actions';
+import {cmSetPreviewSelection} from '../../../preview.redux';
+import {cmSetSort} from '../sort.redux';
+import {cmSetPage, cmSetPageSize} from '../pagination.redux';
+import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
 import JContentConstants from '../../../JContent.constants';
 import ContentListEmptyDropZone from './ContentListEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
@@ -646,21 +646,21 @@ export const ContentListTable = ({
 };
 
 const mapStateToProps = state => ({
-    mode: state.mode,
-    previewSelection: state.previewSelection,
+    mode: state.jcontent.mode,
+    previewSelection: state.jcontent.previewSelection,
     uilang: state.uilang,
     siteKey: state.site,
-    path: state.path,
+    path: state.jcontent.path,
     lang: state.language,
-    params: state.params,
-    searchTerms: state.params.searchTerms,
-    searchContentType: state.params.searchContentType,
-    sql2SearchFrom: state.params.sql2SearchFrom,
-    sql2SearchWhere: state.params.sql2SearchWhere,
-    pagination: state.pagination,
-    sort: state.sort,
-    previewState: state.previewState,
-    selection: state.selection
+    params: state.jcontent.params,
+    searchTerms: state.jcontent.params.searchTerms,
+    searchContentType: state.jcontent.params.searchContentType,
+    sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
+    sql2SearchWhere: state.jcontent.params.sql2SearchWhere,
+    pagination: state.jcontent.pagination,
+    sort: state.jcontent.sort,
+    previewState: state.jcontent.previewState,
+    selection: state.jcontent.selection
 });
 
 const mapDispatchToProps = dispatch => ({

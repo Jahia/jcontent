@@ -59,8 +59,8 @@ export class BrowseControlBar extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    path: state.path,
-    mode: state.mode,
+    path: state.jcontent.path,
+    mode: state.jcontent.mode,
     siteKey: state.site
 });
 

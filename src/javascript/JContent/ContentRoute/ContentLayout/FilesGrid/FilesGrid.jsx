@@ -9,10 +9,10 @@ import {Typography} from '@jahia/design-system-kit';
 import {Pagination, DxContext} from '@jahia/react-material';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';
-import {cmSetPage, cmSetPageSize} from '../pagination.redux-actions';
+import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
-import {cmSetPreviewSelection} from '../../../preview.redux-actions';
-import {cmGoto, cmOpenPaths} from '../../../JContent.redux-actions';
+import {cmSetPreviewSelection} from '../../../preview.redux';
+import {cmGoto, cmOpenPaths} from '../../../JContent.redux';
 import classNames from 'classnames';
 import {extractPaths} from '../../../JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
@@ -178,14 +178,14 @@ export const FilesGrid = ({
 };
 
 let mapStateToProps = state => ({
-    path: state.path,
-    pagination: state.pagination,
-    gridMode: state.filesGrid.gridMode,
-    mode: state.filesGrid.mode,
+    path: state.jcontent.path,
+    pagination: state.jcontent.pagination,
+    gridMode: state.jcontent.filesGrid.gridMode,
+    mode: state.jcontent.filesGrid.mode,
     siteKey: state.site,
     uilang: state.uilang,
-    previewSelection: state.previewSelection,
-    previewState: state.previewState
+    previewSelection: state.jcontent.previewSelection,
+    previewState: state.jcontent.previewState
 });
 
 let mapDispatchToProps = dispatch => ({

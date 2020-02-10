@@ -10,7 +10,7 @@ const ImageEditor = Loadable({
     loading: ProgressPaper
 });
 
-function JContentRoutes(registry) {
+export const jContentRoutes = registry => {
     registry.add('route', 'app-route', {
         targets: ['jcontent:50'],
         path: '/jcontent/:siteKey/:lang/apps/:menu/:entry',
@@ -34,6 +34,5 @@ function JContentRoutes(registry) {
             <ContentRoute t={t} {...props}/>
         )
     });
-}
+};
 
-export default JContentRoutes;

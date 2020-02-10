@@ -1,17 +1,17 @@
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from './requirementsAction';
-import {cmGoto, cmOpenPaths} from '../JContent.redux-actions';
+import {cmGoto, cmOpenPaths} from '../JContent.redux';
 import {reduxAction} from './reduxAction';
 import treeExpanderAction from './treeExpanderAction';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
-import {cmSetPreviewSelection} from '../preview.redux-actions';
+import {cmSetPreviewSelection} from '../preview.redux';
 import JContentConstants from '../JContent.constants';
 
 export default composeActions(
     requirementsAction,
 
-    reduxAction(state => ({mode: state.mode}), dispatch => ({
+    reduxAction(state => ({mode: state.jcontent.mode}), dispatch => ({
         setOpenPaths: state => dispatch(cmOpenPaths(state)),
         setPreviewSelection: state => dispatch(cmSetPreviewSelection(state)),
         navigateToPath: (mode, path, params) => {

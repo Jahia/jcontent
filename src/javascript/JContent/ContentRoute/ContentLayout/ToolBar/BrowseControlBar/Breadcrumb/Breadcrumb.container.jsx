@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {compose, Query, withApollo} from 'react-apollo';
 import {breadcrumbQuery} from './Breadcrumb.gql-queries';
 import {withTranslation} from 'react-i18next';
-import {cmGoto} from '../../../../../JContent.redux-actions';
+import {cmGoto} from '../../../../../JContent.redux';
 import Breadcrumb from './Breadcrumb';
 import {buildBreadcrumbItems} from './Breadcrumb.utils';
 
@@ -35,10 +35,10 @@ export const BreadcrumbContainer = ({path, language, selectItem, mode, t, site})
 };
 
 const mapStateToProps = state => ({
-    path: state.path,
+    path: state.jcontent.path,
     site: state.site,
     language: state.language,
-    mode: state.mode
+    mode: state.jcontent.mode
 });
 
 const mapDispatchToProps = dispatch => ({

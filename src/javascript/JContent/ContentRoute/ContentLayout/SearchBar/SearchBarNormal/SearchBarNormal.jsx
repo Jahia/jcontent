@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Input, withStyles} from '@material-ui/core';
 import ContentTypeSelect from './ContentTypeSelect';
-import {cmGoto} from '../../../../JContent.redux-actions';
+import {cmGoto} from '../../../../JContent.redux';
 import {withNotifications, DxContext} from '@jahia/react-material';
 import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
@@ -154,8 +154,8 @@ export class SearchBarNormal extends React.Component {
 const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
-    path: state.path,
-    params: state.params
+    path: state.jcontent.path,
+    params: state.jcontent.params
 });
 
 const mapDispatchToProps = dispatch => {

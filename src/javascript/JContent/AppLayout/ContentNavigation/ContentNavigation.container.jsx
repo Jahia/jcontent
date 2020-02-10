@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {cmGoto} from '../../JContent.redux-actions';
+import {cmGoto} from '../../JContent.redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 
@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 let mapStateToProps = state => ({
-    mode: state.mode,
+    mode: state.jcontent.mode,
     siteKey: state.site
 });
 

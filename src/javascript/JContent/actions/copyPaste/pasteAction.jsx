@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import pasteMutations from './copyPaste.gql-mutations';
 import {refetchContentTreeAndListData} from '../../JContent.refetches';
-import {clear} from './copyPaste.redux-actions';
+import {copypasteClear} from './copyPaste.redux';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {reduxAction} from '../reduxAction';
@@ -11,20 +11,20 @@ import {withI18nAction} from '../withI18nAction';
 import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
 import {isDescendantOrSelf, getNewNodePath} from '../../JContent.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../JContent.redux-actions';
-import {cmSetPreviewSelection} from '../../preview.redux-actions';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../JContent.redux';
+import {cmSetPreviewSelection} from '../../preview.redux';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 
 export default composeActions(requirementsAction, withNotificationContextAction, withI18nAction, reduxAction(
     state => ({
-        copyPaste: state.copyPaste,
-        treePath: state.path,
-        openedPaths: state.openPaths,
-        previewSelection: state.previewSelection
+        copyPaste: state.jcontent.copyPaste,
+        treePath: state.jcontent.path,
+        openedPaths: state.jcontent.openPaths,
+        previewSelection: state.jcontent.previewSelection
     }),
     dispatch => ({
-        clear: () => dispatch(clear()),
+        clear: () => dispatch(copypasteClear()),
         setPath: (path, params) => dispatch(cmGoto({path, params})),
         setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
         openPaths: paths => dispatch(cmOpenPaths(paths)),

@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../FilesGrid.utils';
 import FileIcon from '../FileIcon';
-import {CM_DRAWER_STATES} from '../../../../JContent.redux-actions';
+import {CM_DRAWER_STATES} from '../../../../JContent.redux';
 import {allowDoubleClickNavigation, getDefaultLocale} from '../../../../JContent.utils';
 import classNames from 'classnames';
 import FileName from './FileName';

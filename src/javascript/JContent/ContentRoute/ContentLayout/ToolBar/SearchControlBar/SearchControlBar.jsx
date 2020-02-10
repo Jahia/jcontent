@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Trans, withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetPath} from '../../../../JContent.redux-actions';
+import {cmGoto, cmSetPath} from '../../../../JContent.redux';
 import {withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/design-system-kit';
 import {Close, Search} from '@material-ui/icons';
@@ -22,7 +22,7 @@ const styles = theme => ({
 export class SearchControlBar extends React.Component {
     render() {
         let {
-            siteKey, path, setPath, t, classes, siteDisplayableName, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms, showActions
+            siteKey, path, setPath, t, classes, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms, showActions
         } = this.props;
         let siteRootPath = '/sites/' + siteKey;
         const params = {
@@ -46,7 +46,7 @@ export class SearchControlBar extends React.Component {
                         onClick={() => setPath(siteRootPath)}
                     >
                         <VirtualsiteIcon/>
-                        {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteDisplayableName})}
+                        {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteKey})}
                     </Button>}
                 {showActions &&
                     <Button
@@ -64,13 +64,12 @@ export class SearchControlBar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        siteDisplayableName: state.siteDisplayableName,
         siteKey: state.site,
-        path: state.path,
-        searchTerms: state.params.searchTerms,
-        searchContentType: state.params.searchContentType,
-        sql2SearchFrom: state.params.sql2SearchFrom,
-        sql2SearchWhere: state.params.sql2SearchWhere
+        path: state.jcontent.path,
+        searchTerms: state.jcontent.params.searchTerms,
+        searchContentType: state.jcontent.params.searchContentType,
+        sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
+        sql2SearchWhere: state.jcontent.params.sql2SearchWhere
     };
 };
 
@@ -95,7 +94,6 @@ SearchControlBar.propTypes = {
     searchTerms: PropTypes.string,
     setPath: PropTypes.func.isRequired,
     showActions: PropTypes.bool.isRequired,
-    siteDisplayableName: PropTypes.string.isRequired,
     siteKey: PropTypes.string.isRequired,
     sql2SearchFrom: PropTypes.string,
     sql2SearchWhere: PropTypes.string

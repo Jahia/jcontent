@@ -1,5 +1,4 @@
-import {uploadSeed} from './Upload.redux-reducer';
-import {takeFromQueue, addUploads} from './Upload.redux-actions';
+import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Upload.redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
 import randomUUID from 'uuid/v4';
 
@@ -18,8 +17,8 @@ export const onFilesSelected = (acceptedFiles, dispatchBatch, uploadInfo, type, 
         }));
 
         dispatchBatch(additionalActions.concat([
-            addUploads(uploads),
-            takeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
+            fileuploadAddUploads(uploads),
+            fileuploadTakeFromQueue(NUMBER_OF_SIMULTANEOUS_UPLOADS)
         ]));
     }
 };

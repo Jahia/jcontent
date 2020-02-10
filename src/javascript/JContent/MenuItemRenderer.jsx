@@ -17,13 +17,17 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
         setHover(false);
     };
 
+    if (context.enabled === false) {
+        // TODO: This should actually render a disabled button
+        return false;
+    }
+
     let h = hover;
     if (context.menuContext) {
         h = h || context.menuContext.inMenu;
     }
 
     return (
-        context.enabled !== false &&
         <div style={{padding: '8 24', color: '#131C21', backgroundColor: h ? '#E0E6EA' : 'inherit'}}
              data-sel-role={context.key}
              onClick={onClick}

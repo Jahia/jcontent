@@ -70,11 +70,13 @@ let requirementsAction = composeActions(withApolloAction, reduxAction(state => (
         context.initRequirements = options => {
             if (context.path) {
                 Object.assign(context, checkNodeRequirement(context, options));
+                context.loading = concat(of(true), context.enabled.pipe(map(() => false)));
             } else if (context.paths) {
                 let {paths, ...remainingContext} = context;
                 let contexts = paths.map(path => checkNodeRequirement({...remainingContext, path}, options));
                 context.nodes = combineLatest(contexts.map(ctx => ctx.node));
                 context.enabled = combineLatest(contexts.map(ctx => ctx.enabled)).pipe(map(enableds => enableds.reduce((acc, val) => acc && val, true)));
+                context.loading = concat(of(true), context.enabled.pipe(map(() => false)));
             }
         };
     }

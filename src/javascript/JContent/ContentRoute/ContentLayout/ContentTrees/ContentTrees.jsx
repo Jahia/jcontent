@@ -30,7 +30,7 @@ export class ContentTrees extends React.Component {
     render() {
         const {
             lang, siteKey, path, openPaths, t, setPath, openPath,
-            closePath, classes, mode, width, contentTreeConfigs
+            closePath, classes, mode, contentTreeConfigs
         } = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
@@ -43,7 +43,7 @@ export class ContentTrees extends React.Component {
 
         return (
             <React.Fragment>
-                <div ref={setContainer} className={classes.listContainer} style={{width: width + 'px'}}>
+                <div ref={setContainer} className={classes.listContainer} style={{width: contentManagerStyleConstants.treeDrawerWidth + 'px'}}>
                     <div className={classes.list}>
                         {
                             _.map(contentTreeConfigs, contentTreeConfig => {
@@ -80,8 +80,7 @@ const mapStateToProps = state => ({
     path: state.jcontent.path,
     mode: state.jcontent.mode,
     openPaths: state.jcontent.openPaths,
-    previewSelection: state.jcontent.previewSelection,
-    width: state.jcontent.treeWidth
+    previewSelection: state.jcontent.previewSelection
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -101,12 +100,7 @@ ContentTrees.propTypes = {
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
-    width: PropTypes.number,
     contentTreeConfigs: PropTypes.array.isRequired
-};
-
-ContentTrees.defaultProps = {
-    width: contentManagerStyleConstants.treeDrawerWidth
 };
 
 export default compose(

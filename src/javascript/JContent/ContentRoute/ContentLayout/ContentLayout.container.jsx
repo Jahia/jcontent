@@ -156,7 +156,7 @@ export class ContentLayoutContainer extends React.Component {
     render() {
         const {
             notificationContext, t, mode, path, uilang, lang, siteKey, params, pagination, sort, pathsToRefetch,
-            removePathsToRefetch, setPath, treeState, treeWidth, filesMode, previewState, previewSelection
+            removePathsToRefetch, setPath, treeState, filesMode, previewState, previewSelection
         } = this.props;
 
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
@@ -197,7 +197,6 @@ export class ContentLayoutContainer extends React.Component {
                                            path={path}
                                            filesMode={filesMode}
                                            treeState={treeState}
-                                           treeWidth={treeWidth}
                                            previewState={previewState}
                                            previewSelection={previewSelection}
                                            rows={[]}
@@ -243,7 +242,6 @@ export class ContentLayoutContainer extends React.Component {
                                            path={path}
                                            filesMode={filesMode}
                                            treeState={treeState}
-                                           treeWidth={treeWidth}
                                            previewState={previewState}
                                            previewSelection={previewSelection}
                                            rows={rows}
@@ -275,7 +273,6 @@ const mapStateToProps = state => ({
     openedPaths: state.jcontent.openPaths,
     pathsToRefetch: state.jcontent.pathsToRefetch,
     treeState: state.jcontent.treeState,
-    treeWidth: state.jcontent.treeWidth,
     selection: state.jcontent.selection
 });
 
@@ -310,7 +307,6 @@ ContentLayoutContainer.propTypes = {
     t: PropTypes.func.isRequired,
     uilang: PropTypes.string.isRequired,
     treeState: PropTypes.number.isRequired,
-    treeWidth: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
     filesMode: PropTypes.string.isRequired,
     selection: PropTypes.array.isRequired,

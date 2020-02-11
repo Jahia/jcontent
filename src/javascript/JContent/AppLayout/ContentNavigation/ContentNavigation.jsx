@@ -2,18 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Accordion, AccordionItem, SecondaryNav} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {registry} from '@jahia/ui-extender';
 import NavigationHeader from './NavigationHeader';
 
-const ContentNavigation = ({mode, siteKey, handleNavigation}) => {
+const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation}) => {
     const {t} = useTranslation('jcontent');
-    let items = registry.find({type: 'accordionItem', target: 'jcontent'});
     return (
         <SecondaryNav header={<NavigationHeader/>}>
             <Accordion isReversed openByDefault={mode}>
-                {items.map(item => (
-                    <AccordionItem key={item.key} id={item.key} label={t(item.label)} icon={item.icon} onClickToOpen={() => handleNavigation(item.key, item.defaultUrl(siteKey))}>
-                        {item.render(item)}
+                {accordionItems.map(accordionItem => (
+                    <AccordionItem key={accordionItem.key}
+                                   id={accordionItem.key}
+                                   label={t(accordionItem.label)}
+                                   icon={accordionItem.icon}
+                                   onClickToOpen={() => handleNavigation(accordionItem.key, accordionItem.defaultUrl(siteKey))}
+                    >
+                        {accordionItem.render(accordionItem)}
                     </AccordionItem>
                 ))}
             </Accordion>
@@ -24,6 +27,7 @@ const ContentNavigation = ({mode, siteKey, handleNavigation}) => {
 ContentNavigation.propTypes = {
     mode: PropTypes.string,
     siteKey: PropTypes.string.isRequired,
+    accordionItems: PropTypes.array.isRequired,
     handleNavigation: PropTypes.func.isRequired
 };
 

@@ -17,20 +17,17 @@ const styles = () => ({
     }
 });
 
-export class NavigationHeader extends React.Component {
-    render() {
-        const {classes} = this.props;
-        return (
-            <div className={classes.logoContainer}>
-                <JContentLogo/>
-                <div className={classes.switchersContainer}>
-                    <SiteSwitcher/>
-                    <SiteLanguageSwitcher/>
-                </div>
+const NavigationHeader = ({classes}) => {
+    return (
+        <div className={classes.logoContainer}>
+            <JContentLogo/>
+            <div className={classes.switchersContainer}>
+                <SiteSwitcher/>
+                <SiteLanguageSwitcher/>
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 NavigationHeader.propTypes = {
     classes: PropTypes.object

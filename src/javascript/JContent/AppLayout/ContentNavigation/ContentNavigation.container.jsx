@@ -3,9 +3,11 @@ import {connect} from 'react-redux';
 import {cmGoto} from '../../JContent.redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
+import {registry} from '@jahia/ui-extender';
 
-const ContentNavigationContainer = ({handleNavigation, mode, siteKey}) => {
-    return <ContentNavigation handleNavigation={handleNavigation} mode={mode} siteKey={siteKey}/>;
+const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
+    let accordionItems = registry.find({type: 'accordionItem', target: 'jcontent'});
+    return <ContentNavigation accordionItems={accordionItems} mode={mode} siteKey={siteKey} handleNavigation={handleNavigation}/>;
 };
 
 const mapDispatchToProps = dispatch => ({

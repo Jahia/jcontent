@@ -200,4 +200,5 @@ export const jContentRedux = registry => {
 
     registry.add('redux-reducer', 'jcontent', {targets: ['root'], reducer: jcontentReducer});
     registry.add('redux-listener', 'jcontent', {createListener: getSyncListener});
+    registry.add('redux-action', 'jcontentGoto', {action: cmGoto});
 };

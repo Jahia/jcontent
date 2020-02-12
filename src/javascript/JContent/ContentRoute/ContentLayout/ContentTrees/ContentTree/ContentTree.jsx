@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Picker} from '@jahia/react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
-import PickerViewMaterial from './PickerViewMaterial';
+import {TreeView} from '@jahia/moonstone';
 import gql from 'graphql-tag';
 
 const PickerItemsFragment = {
@@ -45,41 +45,48 @@ class ContentTree extends React.Component {
     }
 
     render() {
-        let {rootPath, path, openPaths, handleOpen, handleSelect, lang, openableTypes, selectableTypes, rootLabel, setRefetch, dataCmRole, container, mode} = this.props;
+        let {rootPath, openPaths, path, handleOpen, handleSelect, lang, openableTypes, selectableTypes, setRefetch, mode, convertPathsToTree} = this.props;
         return (
             <Picker
                 ref={this.picker}
+                openSelection
                 rootPaths={[rootPath]}
                 openPaths={openPaths}
                 openableTypes={openableTypes}
                 selectableTypes={selectableTypes}
                 queryVariables={{lang: lang}}
                 selectedPaths={[path]}
-                openSelection={false}
                 setRefetch={setRefetch}
                 fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PredefinedFragments.displayName]}
                 onOpenItem={(path, open) => handleOpen(path, open)}
                 onSelectItem={path => handleSelect(path)}
             >
-                {({handleSelect, ...others}) => (
-                    <PickerViewMaterial {...others} dataCmRole={dataCmRole} rootLabel={rootLabel} container={container} mode={mode}/>
-                )}
+                {({pickerEntries}) => {
+                    return (
+                        <TreeView isReversed
+                                  data={convertPathsToTree(pickerEntries, mode)}
+                                  openedItems={openPaths}
+                                  selectedItems={[path]}
+                                  onClickItem={object => handleSelect(object.id)}
+                                  onOpenItem={object => handleOpen(object.id, true)}
+                                  onCloseItem={object => handleOpen(object.id, false)}
+                        />
+                    );
+                }}
             </Picker>
         );
     }
 }
 
 ContentTree.propTypes = {
-    container: PropTypes.object.isRequired,
-    dataCmRole: PropTypes.string.isRequired,
     handleOpen: PropTypes.func.isRequired,
     handleSelect: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
     openableTypes: PropTypes.array.isRequired,
+    convertPathsToTree: PropTypes.func.isRequired,
     path: PropTypes.string.isRequired,
-    rootLabel: PropTypes.string.isRequired,
     rootPath: PropTypes.string.isRequired,
     selectableTypes: PropTypes.array.isRequired,
     setRefetch: PropTypes.func.isRequired

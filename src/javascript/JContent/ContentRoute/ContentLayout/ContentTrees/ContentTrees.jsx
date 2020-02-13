@@ -9,8 +9,6 @@ import {compose} from 'react-apollo';
 import ContentTree from './ContentTree';
 import {setRefetcher} from '../../../JContent.refetches';
 import contentManagerStyleConstants from '../../../JContent.style-constants';
-import JContentConstants from '../../../JContent.constants';
-import {Collections, File, FolderSpecial, Setting} from '@jahia/moonstone/dist/icons';
 
 const styles = () => ({
     listContainer: {
@@ -23,76 +21,10 @@ const styles = () => ({
     }
 });
 
-function getIcon(mode) {
-    switch (mode) {
-        case JContentConstants.mode.PAGES:
-            return <File size="small"/>;
-        case JContentConstants.mode.CONTENT_FOLDERS:
-            return <FolderSpecial size="small"/>;
-        case JContentConstants.mode.MEDIA:
-            return <Collections size="small"/>;
-        case JContentConstants.mode.APPS:
-            return <Setting size="small"/>;
-        default:
-            return <File size="small"/>;
-    }
-}
-
-function getParentPath(path) {
-    return path.substr(0, path.lastIndexOf('/'));
-}
-
-function findInTree(tree, id) {
-    for (var i = 0; i < tree.length; i++) {
-        if (tree[i].id === id) {
-            return tree[i];
-        }
-
-        let result = findInTree(tree[i].children, id);
-        if (result) {
-            return result;
-        }
-    }
-}
-
 export class ContentTrees extends React.Component {
     constructor(props) {
         super(props);
         this.container = React.createRef();
-    }
-
-    convertPathsToTree(pickerEntries, mode) {
-        let tree = [];
-        if (pickerEntries.length === 0) {
-            return tree;
-        }
-
-        let rootElement = {
-            id: pickerEntries[0].path,
-            label: pickerEntries[0].node.displayName,
-            hasChildren: pickerEntries[0].hasChildren,
-            parent: getParentPath(pickerEntries[0].path),
-            iconStart: getIcon(mode),
-            children: []
-        };
-        tree.push(rootElement);
-        for (let i = 1; i < pickerEntries.length; i++) {
-            let parentPath = getParentPath(pickerEntries[i].path);
-            let element = {
-                id: pickerEntries[i].path,
-                label: pickerEntries[i].node.displayName,
-                hasChildren: pickerEntries[i].hasChildren,
-                parent: parentPath,
-                iconStart: getIcon(mode),
-                children: []
-            };
-            let parent = findInTree(tree, parentPath);
-            if (parent !== undefined) {
-                parent.children.push(element);
-            }
-        }
-
-        return tree;
     }
 
     render() {
@@ -126,7 +58,6 @@ export class ContentTrees extends React.Component {
                                                  selectableTypes={contentTreeConfig.selectableTypes}
                                                  lang={lang}
                                                  dataCmRole={contentTreeConfig.key}
-                                                 convertPathsToTree={this.convertPathsToTree}
                                                  handleOpen={(path, open) => (open ? openPath(path) : closePath(path))}
                                                  handleSelect={path => setPath(path, {sub: false})}
                                                  openableTypes={contentTreeConfig.openableTypes}

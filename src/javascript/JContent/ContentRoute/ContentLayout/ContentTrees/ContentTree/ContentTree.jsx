@@ -4,8 +4,7 @@ import {Picker} from '@jahia/react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import {TreeView} from '@jahia/moonstone';
 import gql from 'graphql-tag';
-import JContentConstants from '../../../../JContent.constants';
-import {Collections, File, FolderSpecial, Setting} from '@jahia/moonstone/dist/icons';
+import {registry} from '@jahia/ui-extender';
 
 const PickerItemsFragment = {
     mixinTypes: {
@@ -41,18 +40,9 @@ const PickerItemsFragment = {
 };
 
 function getIcon(mode) {
-    switch (mode) {
-        case JContentConstants.mode.PAGES:
-            return <File size="small"/>;
-        case JContentConstants.mode.CONTENT_FOLDERS:
-            return <FolderSpecial size="small"/>;
-        case JContentConstants.mode.MEDIA:
-            return <Collections size="small"/>;
-        case JContentConstants.mode.APPS:
-            return <Setting size="small"/>;
-        default:
-            return <File size="small"/>;
-    }
+    let registryItem = registry.find({type: 'accordionItem', target: 'jcontent', key: mode});
+    const Icon = registryItem[0].icon;
+    return <Icon.type {...Icon.props} size="small"/>;
 }
 
 function getParentPath(path) {

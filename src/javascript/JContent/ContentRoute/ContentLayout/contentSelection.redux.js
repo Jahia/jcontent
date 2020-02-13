@@ -9,7 +9,7 @@ const getAction = (path, type) => (dispatch, getState) => {
         type: type,
         payload: path
     });
-    let s = getState();
+    let s = getState().jcontent;
     if (s.selection.length > 0 && s.previewSelection) {
         dispatch(cmSetPreviewSelection(null));
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import {Dialog,
     DialogTitle,

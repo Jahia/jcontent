@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import {Link} from 'mdi-material-ui';
 import {IconButton, Typography} from '@jahia/design-system-kit';

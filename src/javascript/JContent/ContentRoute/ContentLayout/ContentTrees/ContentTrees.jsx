@@ -5,7 +5,7 @@ import {withTranslation} from 'react-i18next';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '../../../JContent.redux';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import ContentTree from './ContentTree';
 import {setRefetcher} from '../../../JContent.refetches';
 import contentManagerStyleConstants from '../../../JContent.style-constants';

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose, Mutation} from 'react-apollo';
+import {compose} from '~/utils';
+import {Mutation} from 'react-apollo';
 import {connect} from 'react-redux';
 import ImageEditor from './ImageEditor';
 import {getImageMutation} from './ImageEditor.gql-mutations';

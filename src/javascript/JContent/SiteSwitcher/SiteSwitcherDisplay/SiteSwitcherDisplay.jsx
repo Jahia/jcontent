@@ -4,7 +4,7 @@ import {Menu, MenuItem, withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/design-system-kit';
 import {ChevronDown} from 'mdi-material-ui';
 import {lodash as _} from 'lodash';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 
 const styles = () => ({
     siteSwitcher: {

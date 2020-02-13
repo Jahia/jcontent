@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import {compose, Query} from 'react-apollo';
+import {compose} from '~/utils';
+import {Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/apollo-dx';
 import gql from 'graphql-tag';
 import {connect} from 'react-redux';

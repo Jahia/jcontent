@@ -5,7 +5,7 @@ import ContentTypeSelect from './ContentTypeSelect';
 import {cmGoto} from '../../../JContent.redux';
 import {withNotifications, DxContext} from '@jahia/react-material';
 import {withTranslation} from 'react-i18next';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import SearchBarLayout from '../SearchBarLayout';
 import ActionButton from '../ActionButton';
 import {connect} from 'react-redux';

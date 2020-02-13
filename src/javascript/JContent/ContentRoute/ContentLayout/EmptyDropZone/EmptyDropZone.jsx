@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {CloudUpload} from '@material-ui/icons';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import JContentConstants from '../../../JContent.constants';
 

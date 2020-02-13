@@ -6,10 +6,10 @@ import {cmGoto, cmSetPath} from '../../../JContent.redux';
 import {withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/design-system-kit';
 import {Close, Search} from '@material-ui/icons';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import * as _ from 'lodash';
 import {VirtualsiteIcon} from '@jahia/icons';
-import JContentConstants from '../../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const styles = theme => ({
     grow: {

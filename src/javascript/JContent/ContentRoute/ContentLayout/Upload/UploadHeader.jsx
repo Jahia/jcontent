@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import {CircularProgress, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {CheckCircle, Info} from '@material-ui/icons';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation, Trans} from 'react-i18next';
 
 let styles = theme => ({

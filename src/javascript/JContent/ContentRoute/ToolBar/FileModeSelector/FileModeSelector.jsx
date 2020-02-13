@@ -1,7 +1,7 @@
 import React from 'react';
 import {MenuItem} from '@material-ui/core';
 import {Select} from '@jahia/design-system-kit';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {connect} from 'react-redux';
 import {withTranslation} from 'react-i18next';
 import {filesgridSetMode, filesgridSetGridMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';

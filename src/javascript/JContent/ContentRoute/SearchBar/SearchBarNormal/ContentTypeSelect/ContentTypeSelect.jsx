@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withNotifications} from '@jahia/react-material';
 import {withTranslation} from 'react-i18next';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import * as _ from 'lodash';
 import {Query} from 'react-apollo';
 import FilterSelect from './FilterSelect';

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {buttonRenderer} from '@jahia/react-material';
 import {DisplayActions} from '@jahia/ui-extender';
 import FileModeSelector from '../FileModeSelector';

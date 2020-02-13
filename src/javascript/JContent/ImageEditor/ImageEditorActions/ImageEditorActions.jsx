@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, ExpansionPanelActions} from '@jahia/design-system-kit';
 import {withStyles} from '@material-ui/core';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 
 let styles = {

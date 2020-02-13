@@ -14,6 +14,8 @@ yarn-error.log
 graphql.config.json
 graphql.schema.json
 
+coverage/
+
 # macOS
 .DS_Store
 .yalc

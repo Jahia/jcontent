@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Tooltip, withStyles} from '@material-ui/core';
 import {RotateLeft, RotateRight} from '@material-ui/icons';
 import {IconButton, Typography} from '@jahia/design-system-kit';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 
 let styles = theme => ({

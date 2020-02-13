@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux';
 import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion} from '../../../JContent.utils';
 import {connect} from 'react-redux';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
 import classNames from 'classnames';
 import {cmSetPreviewSelection} from '../../../preview.redux';

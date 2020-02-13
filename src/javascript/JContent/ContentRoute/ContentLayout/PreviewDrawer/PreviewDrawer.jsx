@@ -8,7 +8,7 @@ import Preview from './Preview';
 import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES} from '../../../JContent.redux';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';

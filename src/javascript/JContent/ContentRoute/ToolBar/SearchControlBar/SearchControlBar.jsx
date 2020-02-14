@@ -9,6 +9,7 @@ import {Close, Search} from '@material-ui/icons';
 import {compose} from 'react-apollo';
 import * as _ from 'lodash';
 import {VirtualsiteIcon} from '@jahia/icons';
+import JContentConstants from '../../../../JContent.constants';
 
 const styles = theme => ({
     grow: {
@@ -81,7 +82,7 @@ const mapDispatchToProps = dispatch => ({
         _.unset(params, 'searchTerms');
         _.unset(params, 'sql2SearchFrom');
         _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: 'browse', params: params}));
+        dispatch(cmGoto({mode: JContentConstants.mode.PAGES, params: params}));
     }
 });
 

@@ -17,9 +17,10 @@ import {filesGridRedux} from './JContent/ContentRoute/ContentLayout/FilesGrid/Fi
 import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.redux';
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
+import JContentConstants from './JContent/JContent.constants';
 
 const ROUTE = '/jcontent';
-const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/browse`;
+const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/${JContentConstants.mode.PAGES}`;
 
 const CmmNavItem = () => {
     const history = useHistory();

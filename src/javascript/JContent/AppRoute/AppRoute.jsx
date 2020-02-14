@@ -1,20 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {MainLayout, FullWidthContent} from '@jahia/design-system-kit';
-import SiteLanguageSwitcher from '../SiteLanguageSwitcher';
-import SiteSwitcher from '../SiteSwitcher';
+import {FullWidthContent} from '@jahia/design-system-kit';
 import IFrameLayout from './IFrameLayout';
-import {actionsRegistry} from '@jahia/react-material';
+import MainLayout from '../MainLayout';
 
-const AppRoute = ({dxContext, match, t}) => (
-    <MainLayout
-        topBarProps={{
-            path: t('jcontent:label.contentManager.appTitle', {path: ''}),
-            title: t([actionsRegistry.get(match.params.menu).buttonLabel, 'jcontent:label.contentManager.navigation.manage.title']),
-            contextModifiers: <React.Fragment><SiteSwitcher/> <SiteLanguageSwitcher/></React.Fragment>,
-            actions: <React.Fragment></React.Fragment>
-        }}
-    >
+const AppRoute = ({dxContext}) => (
+    <MainLayout>
         <FullWidthContent>
             <IFrameLayout
                 contextPath={dxContext.contextPath}
@@ -24,9 +15,7 @@ const AppRoute = ({dxContext, match, t}) => (
 );
 
 AppRoute.propTypes = {
-    dxContext: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    dxContext: PropTypes.object.isRequired
 };
 
 export default AppRoute;

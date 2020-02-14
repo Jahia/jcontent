@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-    MainLayout,
     TwoColumnsContent,
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary,
     IconButton,
-    Typography
+    Typography,
+    TopBar
 } from '@jahia/design-system-kit';
 import ImageEditorPreview from './ImageEditorPreview';
 import {Tooltip, withStyles} from '@material-ui/core';
@@ -18,6 +18,7 @@ import ResizePanel from './ResizePanel';
 import CropPanel from './CropPanel';
 import {ChevronLeft, ExpandMore} from '@material-ui/icons';
 import ImageEditorActions from './ImageEditorActions';
+import MainLayout from '../MainLayout';
 
 let styles = theme => ({
     root: {
@@ -84,28 +85,31 @@ export class ImageEditor extends React.Component {
         let changesFeedback = dirty ? t('jcontent:label.contentManager.editImage.unsavedChanges') : '';
 
         return (
-            <MainLayout topBarProps={{
-                path: (
-                    <React.Fragment>
-                        <Typography variant="omega" color="invert">
-                            <IconButton color="inverted"
-                                        size="compact"
-                                        icon={<ChevronLeft/>}
-                                        onClick={() => onBackNavigation(dirty)}/>
-                            {t('jcontent:label.contentManager.editImage.goBack')}
-                        </Typography>
-                    </React.Fragment>
-                ),
-                title: name,
-                contextModifiers: <React.Fragment></React.Fragment>,
-                actions: (
-                    <React.Fragment>
-                        <Typography variant="omega" color="invert">
-                            {changesFeedback}
-                        </Typography>
-                    </React.Fragment>
-                )
-            }}
+            <MainLayout
+                header={
+                    <TopBar
+                        path={
+                            <React.Fragment>
+                                <Typography variant="omega">
+                                    <IconButton size="compact"
+                                                icon={<ChevronLeft/>}
+                                                onClick={() => onBackNavigation(dirty)}/>
+                                    {t('jcontent:label.contentManager.editImage.goBack')}
+                                </Typography>
+                            </React.Fragment>
+                        }
+                        title={name}
+                        titleProps={{color: 'alpha'}}
+                        contextModifiers={<React.Fragment></React.Fragment>}
+                        actions={
+                            <React.Fragment>
+                                <Typography variant="omega">
+                                    {changesFeedback}
+                                </Typography>
+                            </React.Fragment>
+                        }
+                    />
+                }
             >
                 <TwoColumnsContent classes={{root: classes.root, left: classes.left, right: classes.right}}
                                    rightCol={<ImageEditorPreview cropExpanded={expanded === PANELS.CROP}

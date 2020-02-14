@@ -10,7 +10,7 @@ import {withStyles} from '@material-ui/core';
 const styles = theme => ({
     container: {
         display: 'flex',
-        flex: 10,
+        flex: 1,
         minWidth: 0
     },
     chevronSvg: {

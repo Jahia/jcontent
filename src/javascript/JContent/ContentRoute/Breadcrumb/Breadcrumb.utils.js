@@ -1,4 +1,4 @@
-import JContentConstants from '../../../../../JContent.constants';
+import JContentConstants from '../../JContent.constants';
 import * as _ from 'lodash';
 
 const buildBreadcrumbItems = (path, data, mode, t, site) => {

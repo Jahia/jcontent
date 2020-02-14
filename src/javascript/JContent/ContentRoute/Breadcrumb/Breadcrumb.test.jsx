@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {Breadcrumb} from './Breadcrumb';
-import JContentConstants from '../../../../../JContent.constants';
+import JContentConstants from '../../JContent.constants';
 
 let breadcrumbs1 = [
     {

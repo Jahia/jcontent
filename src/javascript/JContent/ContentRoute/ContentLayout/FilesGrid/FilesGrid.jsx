@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ToolBar from '../ToolBar';
 import {compose} from 'react-apollo';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
@@ -95,7 +94,6 @@ export const FilesGrid = ({
     if (contentNotFound) {
         return (
             <React.Fragment>
-                <ToolBar/>
                 <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                     <Typography variant="epsilon" className={classes.empty}>
                         {t('label.contentManager.contentNotFound')}
@@ -108,7 +106,6 @@ export const FilesGrid = ({
     if ((!rows || rows.length === 0) && !loading) {
         return (
             <React.Fragment>
-                <ToolBar/>
                 <FilesGridEmptyDropZone mode={JContentConstants.mode.MEDIA} path={path}/>
             </React.Fragment>
         );
@@ -116,7 +113,6 @@ export const FilesGrid = ({
 
     return (
         <React.Fragment>
-            <ToolBar/>
             <div ref={mainPanelRef}
                  className={classes.grid}
                  data-cm-role="grid-content-list"

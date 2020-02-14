@@ -5,6 +5,7 @@ import {PredefinedFragments} from '@jahia/apollo-dx';
 import {TreeView} from '@jahia/moonstone';
 import gql from 'graphql-tag';
 import {registry} from '@jahia/ui-extender';
+import {File} from '@jahia/moonstone/dist/icons';
 
 const PickerItemsFragment = {
     mixinTypes: {
@@ -41,7 +42,7 @@ const PickerItemsFragment = {
 
 function getIcon(mode) {
     let registryItem = registry.find({type: 'accordionItem', target: 'jcontent', key: mode});
-    const Icon = registryItem[0].icon;
+    const Icon = registry[0] ? registryItem[0].icon : <File/>;
     return <Icon.type {...Icon.props} size="small"/>;
 }
 
@@ -68,15 +69,6 @@ function convertPathsToTree(pickerEntries, mode) {
         return tree;
     }
 
-    let rootElement = {
-        id: pickerEntries[0].path,
-        label: pickerEntries[0].node.displayName,
-        hasChildren: pickerEntries[0].hasChildren,
-        parent: getParentPath(pickerEntries[0].path),
-        iconStart: getIcon(mode),
-        children: []
-    };
-    tree.push(rootElement);
     for (let i = 1; i < pickerEntries.length; i++) {
         let parentPath = getParentPath(pickerEntries[i].path);
         let element = {
@@ -90,6 +82,8 @@ function convertPathsToTree(pickerEntries, mode) {
         let parent = findInTree(tree, parentPath);
         if (parent !== undefined) {
             parent.children.push(element);
+        } else if (!findInTree(tree, element.id)) {
+            tree.push(element);
         }
     }
 

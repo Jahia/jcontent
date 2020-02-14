@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Picker} from '@jahia/react-apollo';
-import {PredefinedFragments} from '@jahia/apollo-dx';
+import {PredefinedFragments, Picker} from '@jahia/data-helper';
 import {TreeView} from '@jahia/moonstone';
 import gql from 'graphql-tag';
 import {registry} from '@jahia/ui-extender';

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {lodash as _} from 'lodash';
-import {ContentPreview} from '@jahia/react-apollo';
+import {useTranslation} from 'react-i18next';
+import {useContentPreview} from '@jahia/data-helper';
+import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {PreviewComponent} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux';
@@ -63,51 +63,58 @@ const styles = theme => ({
     }
 });
 
-export class Preview extends React.Component {
-    constructor(props) {
-        super(props);
-        this.refetchPreview = () => {
-        };
-    }
+export const Preview = props => {
+    const {
+        previewSelection,
+        previewMode,
+        previewState,
+        selection,
+        language,
+        notificationContext
+    } = props;
+    const {t} = useTranslation();
 
-    componentDidUpdate() {
-        this.refetchPreview();
-    }
+    const {data, loading, error, refetch} = useContentPreview({
+        path: previewSelection && previewSelection.path,
+        templateType: 'html',
+        view: 'cm',
+        contextConfiguration: 'preview',
+        language,
+        workspace: previewMode
+    });
 
-    render() {
-        const {previewSelection, previewMode, previewState, selection, language} = this.props;
-
-        if (selection.length > 0) {
-            return <MultipleSelection {...this.props}/>;
+    useEffect(() => {
+        if (!loading && !error) {
+            refetch();
         }
+    });
 
-        if (_.isEmpty(previewSelection)) {
-            return <NoPreviewComponent {...this.props}/>;
-        }
-
-        return (
-            <ContentPreview path={previewSelection.path}
-                            templateType="html"
-                            view="cm"
-                            contextConfiguration="preview"
-                            language={language}
-                            workspace={previewMode}
-                            setRefetch={refetchingData => {
-                                this.refetchPreview = refetchingData.refetch;
-                                return null;
-                            }}
-            >
-                {
-                    data => (
-                        <PreviewComponent data={data.jcr ? data.jcr : {}}
-                                          workspace={previewMode}
-                                          fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}/>
-                    )
-                }
-            </ContentPreview>
-        );
+    if (selection.length > 0) {
+        return <MultipleSelection {...props}/>;
     }
-}
+
+    if (Object.keys(previewSelection).length === 0) {
+        return <NoPreviewComponent {...props}/>;
+    }
+
+    if (error) {
+        console.error('Error when fetching data: ', error);
+        const message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+        return null;
+    }
+
+    if (loading || Object.keys(data).length === 0) {
+        return <ProgressOverlay/>;
+    }
+
+    return (
+        <PreviewComponent data={data.jcr ? data.jcr : {}}
+                          workspace={previewMode}
+                          fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
+        />
+    );
+};
 
 const mapStateToProps = state => {
     return {
@@ -133,11 +140,12 @@ Preview.propTypes = {
     previewMode: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.object,
-    selection: PropTypes.array.isRequired
+    selection: PropTypes.array.isRequired,
+    notificationContext: PropTypes.object.isRequired
 };
 
 export default compose(
-    withTranslation(),
     withStyles(styles),
+    withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(Preview);

@@ -307,7 +307,7 @@ ContentLayoutContainer.propTypes = {
     sort: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
     uilang: PropTypes.string.isRequired,
-    treeState: PropTypes.number.isRequired,
+    treeState: PropTypes.number,
     previewState: PropTypes.number.isRequired,
     filesMode: PropTypes.string.isRequired,
     selection: PropTypes.array.isRequired,

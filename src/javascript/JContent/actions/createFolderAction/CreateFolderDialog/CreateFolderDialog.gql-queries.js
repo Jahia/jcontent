@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {PredefinedFragments} from '@jahia/apollo-dx';
+import {PredefinedFragments} from '@jahia/data-helper';
 
 const CreateFolderQuery = gql`
     query FolderQuery($path:String!, $typesFilter: InputNodeTypesInput!) {

@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {PredefinedFragments, replaceFragmentsInDocument} from '@jahia/apollo-dx';
+import {PredefinedFragments, replaceFragmentsInDocument} from '@jahia/data-helper';
 import * as _ from 'lodash';
 
 const ActionRequirementsQuery = gql`

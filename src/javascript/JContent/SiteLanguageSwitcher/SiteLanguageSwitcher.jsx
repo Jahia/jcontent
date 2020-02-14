@@ -1,61 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {SiteInfo} from '@jahia/react-apollo';
+import {useSiteInfo} from '@jahia/data-helper';
 import {cmSetAvailableLanguages} from '../JContent.redux';
 import {LanguageSwitcher} from '@jahia/design-system-kit';
 import {registry} from '@jahia/ui-extender';
 
-export class SiteLanguageSwitcher extends React.Component {
-    constructor(props) {
-        super(props);
+export const SiteLanguageSwitcher = ({
+    notificationContext,
+    siteKey,
+    lang,
+    setAvailableLanguages,
+    onSelectLanguage
+}) => {
+    const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: lang});
+    const {t} = useTranslation();
 
-        this.onSelectLanguage = this.onSelectLanguage.bind(this);
-    }
-
-    onSelectLanguage(lang) {
+    const onSelectLanguageHandler = lang => {
         console.debug(`%c  Switching language to: ${lang}`, 'color: #6B5CA5');
-        this.props.onSelectLanguage(lang);
+        onSelectLanguage(lang);
         // Switch edit mode linker language
         window.authoringApi.switchLanguage(lang);
+    };
+
+    if (error) {
+        console.error('Error when fetching data: ', error);
+        const message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+        return null;
     }
 
-    render() {
-        const {t, notificationContext, siteKey, lang, setAvailableLanguages} = this.props;
-
-        return (
-            <SiteInfo siteKey={siteKey} displayLanguage={lang}>
-                {({siteInfo, error, loading}) => {
-                    if (error) {
-                        console.log('Error when fetching data: ' + error);
-                        let message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-                        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-                        return null;
-                    }
-
-                    if (loading) {
-                        return <ProgressOverlay/>;
-                    }
-
-                    // Update redux
-                    setAvailableLanguages(siteInfo.languages);
-
-                    return (
-                        <LanguageSwitcher
-                            lang={lang}
-                            languages={siteInfo.languages}
-                            color="inverted"
-                            onSelectLanguage={lang => this.onSelectLanguage(lang)}
-                        />
-                    );
-                }}
-            </SiteInfo>
-        );
+    if (loading) {
+        return <ProgressOverlay/>;
     }
-}
+
+    // Update redux
+    setAvailableLanguages(siteInfo.languages);
+
+    return (
+        <LanguageSwitcher
+            lang={lang}
+            languages={siteInfo.languages}
+            color="inverted"
+            onSelectLanguage={lang => onSelectLanguageHandler(lang)}
+        />
+    );
+};
 
 const mapStateToProps = state => ({
     siteKey: state.site,
@@ -74,14 +67,12 @@ const mapDispatchToProps = dispatch => ({
 SiteLanguageSwitcher.propTypes = {
     onSelectLanguage: PropTypes.func.isRequired,
     setAvailableLanguages: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
     notificationContext: PropTypes.object.isRequired,
     siteKey: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired
 };
 
 export default compose(
-    withTranslation(),
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
 )(SiteLanguageSwitcher);

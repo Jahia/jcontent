@@ -37,7 +37,7 @@ export class SearchControlBar extends React.Component {
             <React.Fragment>
                 <Search fontSize="small"/>
                 <Trans i18nKey="label.contentManager.search.searchPath" values={{path: path}}>
-                    <Typography key="searchPath" variant="zeta">Searching under: </Typography><Typography key="searchPath" variant="zeta">path</Typography>
+                    <Typography key="searchPath" variant="zeta">Searching under: </Typography><Typography key="searchPath" variant="zeta">{path}</Typography>
                 </Trans>
                 <div className={classes.grow}/>
                 {showActions && (path !== siteRootPath) &&

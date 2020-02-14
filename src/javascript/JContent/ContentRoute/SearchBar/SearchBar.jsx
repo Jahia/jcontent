@@ -5,7 +5,7 @@ import {compose} from 'react-apollo';
 import SearchBarNormal from './SearchBarNormal';
 import SearchBarSql2 from './SearchBarSql2';
 import {connect} from 'react-redux';
-import {cmSetSearchMode} from '../../../JContent.redux';
+import {cmSetSearchMode} from '../../JContent.redux';
 
 export class SearchBar extends React.Component {
     render() {

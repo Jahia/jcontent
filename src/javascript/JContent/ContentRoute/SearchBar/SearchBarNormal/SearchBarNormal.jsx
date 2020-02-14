@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Input, withStyles} from '@material-ui/core';
 import ContentTypeSelect from './ContentTypeSelect';
-import {cmGoto} from '../../../../JContent.redux';
+import {cmGoto} from '../../../JContent.redux';
 import {withNotifications, DxContext} from '@jahia/react-material';
 import {withTranslation} from 'react-i18next';
 import {compose} from 'react-apollo';
 import SearchBarLayout from '../SearchBarLayout';
 import ActionButton from '../ActionButton';
 import {connect} from 'react-redux';
-import JContentConstants from '../../../../JContent.constants';
+import JContentConstants from '../../../JContent.constants';
 
 const styles = () => ({
     searchSize: {

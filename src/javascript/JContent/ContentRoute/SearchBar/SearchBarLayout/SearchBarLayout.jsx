@@ -8,8 +8,7 @@ const styles = () => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-end',
-        width: '100%'
+        justifyContent: 'flex-end'
     },
     searchInput: {
         display: 'flex',
@@ -33,7 +32,7 @@ export const SearchBarLayout = ({children, leftFooter, rightFooter, onSearch, t,
         <div className={classes.searchInput}>
             {children}
             <Tooltip title={t('jcontent:label.contentManager.search.search')}>
-                <Paper>
+                <Paper elevation={6}>
                     <Button variant="ghost"
                             size="compact"
                             icon={<Search/>}

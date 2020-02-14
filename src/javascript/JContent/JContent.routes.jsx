@@ -30,8 +30,8 @@ export const jContentRoutes = registry => {
     registry.add('route', 'jcontent-default-route', {
         targets: ['jcontent:99'],
         path: '/jcontent/:siteKey/:lang/:mode',
-        render: (props, {t}) => (
-            <ContentRoute t={t} {...props}/>
+        render: props => (
+            <ContentRoute {...props}/>
         )
     });
 };

@@ -31,7 +31,7 @@ module.exports = (env, argv) => {
         },
         resolve: {
             mainFields: ['module', 'main'],
-            extensions: ['.mjs', '.js', '.jsx', 'json']
+            extensions: ['.mjs', '.js', '.jsx', '.json', '.scss']
         },
         module: {
             rules: [
@@ -63,6 +63,24 @@ module.exports = (env, argv) => {
                 {
                     test: /\.css$/,
                     use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.scss$/i,
+                    sideEffects: true,
+                    use: [
+                        'style-loader',
+                        // Translates CSS into CommonJS
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: {
+                                    mode: 'local'
+                                }
+                            }
+                        },
+                        // Compiles Sass to CSS
+                        'sass-loader'
+                    ]
                 },
                 {
                     test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,

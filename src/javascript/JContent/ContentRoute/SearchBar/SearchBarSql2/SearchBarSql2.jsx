@@ -9,8 +9,8 @@ import {Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';
 import {Trans, withTranslation} from 'react-i18next';
-import {cmGoto} from '../../../../JContent.redux';
-import JContentConstants from '../../../../JContent.constants';
+import {cmGoto} from '../../../JContent.redux';
+import JContentConstants from '../../../JContent.constants';
 
 const styles = theme => ({
     input: {
@@ -72,7 +72,7 @@ export class SearchBarSql2 extends React.Component {
                 t={t}
                 leftFooter={
                     <DxContext.Consumer>{dxContext => (
-                        <Typography align="left" color="invert">
+                        <Typography align="left">
                             <Trans i18nKey="jcontent:label.contentManager.search.sql2Prompt"
                                    className={classes.academy}
                                    components={[

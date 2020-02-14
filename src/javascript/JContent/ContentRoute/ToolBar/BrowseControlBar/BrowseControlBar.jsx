@@ -7,11 +7,10 @@ import {compose} from 'react-apollo';
 import {buttonRenderer} from '@jahia/react-material';
 import {DisplayActions} from '@jahia/ui-extender';
 import FileModeSelector from '../FileModeSelector';
-import JContentConstants from '../../../../JContent.constants';
+import JContentConstants from '../../../JContent.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
-import {refetchContentTreeAndListData} from '../../../../JContent.refetches';
-import Breadcrumb from './Breadcrumb';
+import {refetchContentTreeAndListData} from '../../../JContent.refetches';
 
 const styles = theme => ({
     grow: {
@@ -41,7 +40,6 @@ export class BrowseControlBar extends React.Component {
 
         return (
             <React.Fragment>
-                <Breadcrumb/>
                 <div className={classes.grow}/>
                 {showActions && mode === JContentConstants.mode.MEDIA &&
                     <FileModeSelector/>}

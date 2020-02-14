@@ -1,31 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {MainLayout, FullWidthContent} from '@jahia/design-system-kit';
-import SiteLanguageSwitcher from '../SiteLanguageSwitcher';
-import SiteSwitcher from '../SiteSwitcher';
-import SearchBar from './ContentLayout/SearchBar';
+import {FullWidthContent} from '@jahia/design-system-kit';
 import ContentLayout from './ContentLayout';
+import MainLayout from '../MainLayout';
+import ContentHeader from './ContentHeader';
+import SearchBar from './SearchBar';
+import ToolBar from './ToolBar';
+import Breadcrumb from './Breadcrumb';
+import ContentTitle from './ContentTitle';
 
-const ContentRoute = ({help, match, t}) => (
-    <MainLayout
-        topBarProps={{
-            path: t('jcontent:label.contentManager.appTitle', {path: ''}),
-            title: t('jcontent:label.contentManager.title.' + match.params.mode),
-            contextModifiers: <React.Fragment><SiteSwitcher/><SiteLanguageSwitcher/></React.Fragment>,
-            actions: <React.Fragment><SearchBar/></React.Fragment>
-        }}
-        help={help}
-    >
-        <FullWidthContent>
-            <ContentLayout/>
-        </FullWidthContent>
-    </MainLayout>
-);
-
-ContentRoute.propTypes = {
-    help: PropTypes.element,
-    match: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+const ContentRoute = () => {
+    return (
+        <MainLayout
+            header={
+                <ContentHeader
+                    title={<ContentTitle/>}
+                    mainAction={<SearchBar/>}
+                    breadcrumb={<Breadcrumb/>}
+                    toolbar={<ToolBar/>}
+                />
+            }
+        >
+            <FullWidthContent>
+                <ContentLayout/>
+            </FullWidthContent>
+        </MainLayout>
+    );
 };
 
 export default ContentRoute;

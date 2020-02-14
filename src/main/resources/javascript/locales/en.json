@@ -96,7 +96,6 @@
         "sql2Search": "Search",
         "browse": "Content"
       },
-      "appTitle": "jContent {{path}}",
       "showCurrentPath": "Show current path",
       "filesGrid": {
         "emptyMessage": "This folder does not contain any files",

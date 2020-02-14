@@ -17,7 +17,7 @@ export class ActionButton extends React.Component {
         let {label, onClick, classes, t, cmRole} = this.props;
 
         return (
-            <Button variant="ghost" color="inverted" classes={{root: classes.actionButton}} data-cm-role={cmRole} onClick={onClick}>
+            <Button variant="ghost" classes={{root: classes.actionButton}} data-cm-role={cmRole} onClick={onClick}>
                 {t(label)}
             </Button>
         );

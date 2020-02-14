@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {compose, Query, withApollo} from 'react-apollo';
 import {breadcrumbQuery} from './Breadcrumb.gql-queries';
 import {withTranslation} from 'react-i18next';
-import {cmGoto} from '../../../../../JContent.redux';
+import {cmGoto} from '../../JContent.redux';
 import Breadcrumb from './Breadcrumb';
 import {buildBreadcrumbItems} from './Breadcrumb.utils';
 

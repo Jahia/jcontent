@@ -1,5 +1,5 @@
 import {buildBreadcrumbItems} from './Breadcrumb.utils';
-import JContentConstants from '../../../../../JContent.constants';
+import JContentConstants from '../../JContent.constants';
 
 let data = {
     jcr: {

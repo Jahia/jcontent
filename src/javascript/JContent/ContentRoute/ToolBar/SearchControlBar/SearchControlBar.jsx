@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Trans, withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmGoto, cmSetPath} from '../../../../JContent.redux';
+import {cmGoto, cmSetPath} from '../../../JContent.redux';
 import {withStyles} from '@material-ui/core';
 import {Button, Typography} from '@jahia/design-system-kit';
 import {Close, Search} from '@material-ui/icons';

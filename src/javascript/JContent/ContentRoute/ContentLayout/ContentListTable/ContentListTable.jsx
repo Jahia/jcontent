@@ -14,7 +14,6 @@ import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux';
 import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion} from '../../../JContent.utils';
-import ToolBar from '../ToolBar';
 import {connect} from 'react-redux';
 import {compose} from 'react-apollo';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -377,7 +376,6 @@ export const ContentListTable = ({
 
     return (
         <>
-            <ToolBar/>
             <div ref={mainPanelRef}
                  className={classes.tableWrapper}
                  tabIndex="1"

@@ -69,15 +69,6 @@ function convertPathsToTree(pickerEntries, mode) {
         return tree;
     }
 
-    let rootElement = {
-        id: pickerEntries[0].path,
-        label: pickerEntries[0].node.displayName,
-        hasChildren: pickerEntries[0].hasChildren,
-        parent: getParentPath(pickerEntries[0].path),
-        iconStart: getIcon(mode),
-        children: []
-    };
-    tree.push(rootElement);
     for (let i = 1; i < pickerEntries.length; i++) {
         let parentPath = getParentPath(pickerEntries[i].path);
         let element = {
@@ -91,6 +82,8 @@ function convertPathsToTree(pickerEntries, mode) {
         let parent = findInTree(tree, parentPath);
         if (parent !== undefined) {
             parent.children.push(element);
+        } else if (!findInTree(tree, element.id)) {
+            tree.push(element);
         }
     }
 

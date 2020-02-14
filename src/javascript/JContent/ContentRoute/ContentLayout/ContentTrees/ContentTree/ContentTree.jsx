@@ -5,6 +5,7 @@ import {PredefinedFragments} from '@jahia/apollo-dx';
 import {TreeView} from '@jahia/moonstone';
 import gql from 'graphql-tag';
 import {registry} from '@jahia/ui-extender';
+import {File} from '@jahia/moonstone/dist/icons';
 
 const PickerItemsFragment = {
     mixinTypes: {
@@ -41,7 +42,7 @@ const PickerItemsFragment = {
 
 function getIcon(mode) {
     let registryItem = registry.find({type: 'accordionItem', target: 'jcontent', key: mode});
-    const Icon = registryItem[0].icon;
+    const Icon = registry[0] ? registryItem[0].icon : <File/>;
     return <Icon.type {...Icon.props} size="small"/>;
 }
 

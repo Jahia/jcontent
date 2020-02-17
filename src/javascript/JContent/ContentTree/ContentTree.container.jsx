@@ -17,7 +17,7 @@ export class ContentTreeContainer extends React.Component {
     render() {
         const {
             lang, siteKey, path, openPaths, t, setPath, openPath,
-            closePath, mode, contentTreeConfig
+            closePath, mode, config
         } = this.props;
         const rootPath = '/sites/' + siteKey;
         const usedPath = path.startsWith(rootPath) ? path : rootPath;
@@ -29,22 +29,22 @@ export class ContentTreeContainer extends React.Component {
         let registryItem = registry.find({type: 'accordionItem', target: 'jcontent', key: mode});
 
         return (
-            <ContentTree key={contentTreeConfig.key}
+            <ContentTree key={config.key}
                          container={this.container}
                          mode={mode}
                          siteKey={siteKey}
                          path={usedPath}
                          registry={registryItem[0]}
-                         rootPath={rootPath + contentTreeConfig.rootPath}
+                         rootPath={rootPath + config.rootPath}
                          openPaths={openPaths}
-                         selectableTypes={contentTreeConfig.selectableTypes}
+                         selectableTypes={config.selectableTypes}
                          lang={lang}
-                         dataCmRole={contentTreeConfig.key}
+                         dataCmRole={config.key}
                          handleOpen={(openedPath, open) => (open ? openPath(openedPath) : closePath(openedPath))}
                          handleSelect={selectedPath => setPath(selectedPath, {sub: false})}
-                         openableTypes={contentTreeConfig.openableTypes}
-                         rootLabel={t(contentTreeConfig.rootLabel)}
-                         setRefetch={refetchingData => setRefetcher(contentTreeConfig.key, refetchingData)}
+                         openableTypes={config.openableTypes}
+                         rootLabel={t(config.rootLabel)}
+                         setRefetch={refetchingData => setRefetcher(config.key, refetchingData)}
             />
         );
     }
@@ -75,7 +75,7 @@ ContentTreeContainer.propTypes = {
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired,
-    contentTreeConfig: PropTypes.object.isRequired
+    config: PropTypes.object.isRequired
 };
 
 export default compose(

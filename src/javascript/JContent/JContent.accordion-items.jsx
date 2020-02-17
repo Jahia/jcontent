@@ -6,7 +6,7 @@ import JContentConstants from './JContent.constants';
 export const jContentAccordionItems = registry => {
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: item => (
-            <ContentTree contentTreeConfig={item.config}/>
+            <ContentTree config={item.config}/>
         )
     });
 

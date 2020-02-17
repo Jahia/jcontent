@@ -12,7 +12,7 @@ class ContentTree extends React.Component {
     }
 
     render() {
-        let {rootPath, openPaths, path, handleOpen, handleSelect, lang, openableTypes, selectableTypes, setRefetch, mode} = this.props;
+        let {rootPath, openPaths, path, handleOpen, handleSelect, lang, openableTypes, selectableTypes, setRefetch, mode, registry} = this.props;
         return (
             <Picker
                 ref={this.picker}
@@ -31,7 +31,7 @@ class ContentTree extends React.Component {
                 {({pickerEntries}) => {
                     return (
                         <TreeView isReversed
-                                  data={convertPathsToTree(pickerEntries, mode)}
+                                  data={convertPathsToTree(pickerEntries, mode, registry)}
                                   openedItems={openPaths}
                                   selectedItems={[path]}
                                   onClickItem={object => handleSelect(object.id)}
@@ -55,7 +55,8 @@ ContentTree.propTypes = {
     path: PropTypes.string.isRequired,
     rootPath: PropTypes.string.isRequired,
     selectableTypes: PropTypes.array.isRequired,
-    setRefetch: PropTypes.func.isRequired
+    setRefetch: PropTypes.func.isRequired,
+    registry: PropTypes.object
 };
 
 export default ContentTree;

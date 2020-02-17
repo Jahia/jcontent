@@ -1,12 +1,12 @@
 import React from 'react';
 import {File, FolderSpecial, Collections, Setting} from '@jahia/moonstone/dist/icons';
-import ContentTree from './ContentTree/ContentTree.container';
+import ContentTree from './ContentTree';
 import JContentConstants from './JContent.constants';
 
 export const jContentAccordionItems = registry => {
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: item => (
-            <ContentTree contentTreeConfig={item.configs}/>
+            <ContentTree contentTreeConfig={item.config}/>
         )
     });
 
@@ -15,7 +15,7 @@ export const jContentAccordionItems = registry => {
         icon: <File/>,
         label: 'label.contentManager.navigation.pages',
         defaultUrl: siteKey => '/sites/' + siteKey,
-        configs: {
+        config: {
             rootPath: '',
             selectableTypes: ['jnt:page', 'jnt:virtualsite'],
             type: 'pages',
@@ -30,7 +30,7 @@ export const jContentAccordionItems = registry => {
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders',
         defaultUrl: siteKey => '/sites/' + siteKey + '/contents',
-        configs: {
+        config: {
             rootPath: '/contents',
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
             type: 'contents',
@@ -45,7 +45,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'label.contentManager.navigation.media',
         defaultUrl: siteKey => '/sites/' + siteKey + '/files',
-        configs: {
+        config: {
             rootPath: '/files',
             selectableTypes: ['jnt:folder'],
             type: 'files',

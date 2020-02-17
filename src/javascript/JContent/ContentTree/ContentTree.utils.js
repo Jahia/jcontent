@@ -1,10 +1,8 @@
-import {registry} from '@jahia/ui-extender';
 import {File} from '@jahia/moonstone/dist/icons';
 import React from 'react';
 
-function getIcon(mode) {
-    let registryItem = registry.find({type: 'accordionItem', target: 'jcontent', key: mode});
-    const Icon = registryItem[0] ? registryItem[0].icon : <File/>;
+function getIcon(mode, registryItem) {
+    const Icon = registryItem ? registryItem.icon : <File/>;
     return <Icon.type {...Icon.props} size="small"/>;
 }
 
@@ -25,7 +23,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(pickerEntries, mode) {
+function convertPathsToTree(pickerEntries, mode, registryItem) {
     let tree = [];
     if (pickerEntries.length === 0) {
         return tree;
@@ -38,7 +36,7 @@ function convertPathsToTree(pickerEntries, mode) {
             label: pickerEntries[i].node.displayName,
             hasChildren: pickerEntries[i].hasChildren,
             parent: parentPath,
-            iconStart: getIcon(mode),
+            iconStart: getIcon(mode, registryItem),
             children: []
         };
         let parent = findInTree(tree, parentPath);

@@ -1,6 +1,6 @@
 import React from 'react';
 import {File, FolderSpecial, Collections, Setting} from '@jahia/moonstone/dist/icons';
-import ContentTree from './ContentRoute/ContentLayout/ContentTree/ContentTree.container';
+import ContentTree from './ContentTree/ContentTree.container';
 import JContentConstants from './JContent.constants';
 
 export const jContentAccordionItems = registry => {

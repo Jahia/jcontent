@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Picker} from '@jahia/react-apollo';
-import {PredefinedFragments} from '@jahia/apollo-dx';
+import {Picker, PredefinedFragments} from '@jahia/data-helper';
 import {TreeView} from '@jahia/moonstone';
-import {PickerItemsFragment} from './ContentTree.gq-fragments';
+import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {convertPathsToTree} from './ContentTree.utils';
 
 class ContentTree extends React.Component {

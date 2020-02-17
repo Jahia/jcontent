@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '../../../JContent.redux';
-import {compose} from 'react-apollo';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
+import {compose} from '~/utils';
 import ContentTree from './ContentTree';
-import {setRefetcher} from '../../../JContent.refetches';
-import contentManagerStyleConstants from '../../../JContent.style-constants';
+import {setRefetcher} from '../JContent.refetches';
+import contentManagerStyleConstants from '../JContent.style-constants';
 
 const styles = () => ({
     listContainer: {

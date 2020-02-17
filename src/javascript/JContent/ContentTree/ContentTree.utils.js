@@ -4,7 +4,7 @@ import React from 'react';
 
 function getIcon(mode) {
     let registryItem = registry.find({type: 'accordionItem', target: 'jcontent', key: mode});
-    const Icon = registry[0] ? registryItem[0].icon : <File/>;
+    const Icon = registryItem[0] ? registryItem[0].icon : <File/>;
     return <Icon.type {...Icon.props} size="small"/>;
 }
 

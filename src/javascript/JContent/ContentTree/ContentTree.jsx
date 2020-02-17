@@ -12,7 +12,12 @@ class ContentTree extends React.Component {
     }
 
     render() {
-        let {rootPath, openPaths, path, handleOpen, handleSelect, lang, openableTypes, selectableTypes, setRefetch, mode, registry} = this.props;
+        let {openPaths, path, handleOpen, handleSelect, lang, siteKey,
+            openableTypes, selectableTypes, setRefetch, mode, registryItem} = this.props;
+
+        const rootPath = '/sites/' + siteKey;
+        const selectedPaths = path.startsWith(rootPath) ? [path] : [rootPath];
+
         return (
             <Picker
                 ref={this.picker}
@@ -22,7 +27,7 @@ class ContentTree extends React.Component {
                 openableTypes={openableTypes}
                 selectableTypes={selectableTypes}
                 queryVariables={{lang: lang}}
-                selectedPaths={[path]}
+                selectedPaths={selectedPaths}
                 setRefetch={setRefetch}
                 fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PredefinedFragments.displayName]}
                 onOpenItem={(openedPath, open) => handleOpen(openedPath, open)}
@@ -31,7 +36,7 @@ class ContentTree extends React.Component {
                 {({pickerEntries}) => {
                     return (
                         <TreeView isReversed
-                                  data={convertPathsToTree(pickerEntries, mode, registry)}
+                                  data={convertPathsToTree(pickerEntries, mode, registryItem)}
                                   openedItems={openPaths}
                                   selectedItems={[path]}
                                   onClickItem={object => handleSelect(object.id)}
@@ -46,17 +51,17 @@ class ContentTree extends React.Component {
 }
 
 ContentTree.propTypes = {
+    mode: PropTypes.string.isRequired,
+    lang: PropTypes.string.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
+    registryItem: PropTypes.object,
+    openableTypes: PropTypes.array.isRequired,
+    selectableTypes: PropTypes.array.isRequired,
     handleOpen: PropTypes.func.isRequired,
     handleSelect: PropTypes.func.isRequired,
-    lang: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired,
-    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
-    openableTypes: PropTypes.array.isRequired,
-    path: PropTypes.string.isRequired,
-    rootPath: PropTypes.string.isRequired,
-    selectableTypes: PropTypes.array.isRequired,
-    setRefetch: PropTypes.func.isRequired,
-    registry: PropTypes.object
+    setRefetch: PropTypes.func.isRequired
 };
 
 export default ContentTree;

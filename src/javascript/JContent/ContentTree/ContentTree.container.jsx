@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
 import {compose} from '~/utils';
@@ -16,11 +15,9 @@ export class ContentTreeContainer extends React.Component {
 
     render() {
         const {
-            lang, siteKey, path, openPaths, t, setPath, openPath,
+            lang, siteKey, path, openPaths, setPath, openPath,
             closePath, mode, config
         } = this.props;
-        const rootPath = '/sites/' + siteKey;
-        const usedPath = path.startsWith(rootPath) ? path : rootPath;
 
         if (openPaths.findIndex(p => p === path) === -1) {
             openPaths.push(path);
@@ -30,20 +27,16 @@ export class ContentTreeContainer extends React.Component {
 
         return (
             <ContentTree key={config.key}
-                         container={this.container}
                          mode={mode}
-                         siteKey={siteKey}
-                         path={usedPath}
-                         registry={registryItem[0]}
-                         rootPath={rootPath + config.rootPath}
-                         openPaths={openPaths}
-                         selectableTypes={config.selectableTypes}
                          lang={lang}
-                         dataCmRole={config.key}
+                         siteKey={siteKey}
+                         path={path}
+                         openPaths={openPaths}
+                         registryItem={registryItem[0]}
+                         openableTypes={config.openableTypes}
+                         selectableTypes={config.selectableTypes}
                          handleOpen={(openedPath, open) => (open ? openPath(openedPath) : closePath(openedPath))}
                          handleSelect={selectedPath => setPath(selectedPath, {sub: false})}
-                         openableTypes={config.openableTypes}
-                         rootLabel={t(config.rootLabel)}
                          setRefetch={refetchingData => setRefetcher(config.key, refetchingData)}
             />
         );
@@ -66,19 +59,15 @@ const mapDispatchToProps = dispatch => ({
 });
 
 ContentTreeContainer.propTypes = {
-    closePath: PropTypes.func.isRequired,
-    lang: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
-    openPath: PropTypes.func.isRequired,
-    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
-    path: PropTypes.string.isRequired,
-    setPath: PropTypes.func.isRequired,
+    lang: PropTypes.string.isRequired,
     siteKey: PropTypes.string.isRequired,
-    t: PropTypes.func.isRequired,
-    config: PropTypes.object.isRequired
+    path: PropTypes.string.isRequired,
+    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
+    config: PropTypes.object.isRequired,
+    openPath: PropTypes.func.isRequired,
+    closePath: PropTypes.func.isRequired,
+    setPath: PropTypes.func.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(ContentTreeContainer);
+export default compose(connect(mapStateToProps, mapDispatchToProps))(ContentTreeContainer);

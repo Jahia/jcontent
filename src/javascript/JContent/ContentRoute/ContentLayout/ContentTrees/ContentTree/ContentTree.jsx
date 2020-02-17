@@ -79,7 +79,7 @@ function convertPathsToTree(pickerEntries, mode) {
             children: []
         };
         let parent = findInTree(tree, parentPath);
-        if (parent !== undefined) {
+        if (parent !== undefined && !findInTree(parent, element.id)) {
             parent.children.push(element);
         } else if (!findInTree(tree, element.id)) {
             tree.push(element);

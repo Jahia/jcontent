@@ -47,7 +47,10 @@ export class ContentTrees extends React.Component {
                     <div className={classes.list}>
                         {
                             _.map(contentTreeConfigs, contentTreeConfig => {
-                                openPaths.push(path);
+                                if (openPaths.findIndex(p => p === path) === -1) {
+                                    openPaths.push(path);
+                                }
+
                                 return (
                                     <ContentTree key={contentTreeConfig.key}
                                                  container={this.container}

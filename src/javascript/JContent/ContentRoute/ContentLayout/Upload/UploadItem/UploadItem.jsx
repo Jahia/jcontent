@@ -10,7 +10,8 @@ import {
     withStyles
 } from '@material-ui/core';
 import {Button, Typography} from '@jahia/design-system-kit';
-import {compose, withApollo} from 'react-apollo';
+import {compose} from '~/utils';
+import {withApollo} from 'react-apollo';
 import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
 import {uploadStatuses} from '../Upload.constants';
 import {withTranslation} from 'react-i18next';

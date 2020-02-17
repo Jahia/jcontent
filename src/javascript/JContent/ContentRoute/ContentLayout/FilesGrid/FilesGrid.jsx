@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper, withStyles} from '@material-ui/core';

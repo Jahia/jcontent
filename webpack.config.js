@@ -31,7 +31,10 @@ module.exports = (env, argv) => {
         },
         resolve: {
             mainFields: ['module', 'main'],
-            extensions: ['.mjs', '.js', '.jsx', '.json', '.scss']
+            extensions: ['.mjs', '.js', '.jsx', '.json', '.scss'],
+            alias: {
+                '~': path.resolve(__dirname, './src/javascript'),
+            }
         },
         module: {
             rules: [

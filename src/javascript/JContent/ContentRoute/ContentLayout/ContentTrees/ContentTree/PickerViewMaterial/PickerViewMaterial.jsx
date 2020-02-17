@@ -5,7 +5,7 @@ import {IconButton, Typography} from '@jahia/design-system-kit';
 import {KeyboardArrowRight} from '@material-ui/icons';
 import defaultIconRenderer from './iconRenderer';
 import {isMarkedForDeletion} from '../../../../../JContent.utils';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import UploadTransformComponent from '../../../UploadTransformComponent';
 import classNames from 'classnames';
 import {ContextualMenu} from '@jahia/ui-extender';

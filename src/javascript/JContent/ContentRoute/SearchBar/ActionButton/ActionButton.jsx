@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {Button} from '@jahia/design-system-kit';
 import {withTranslation} from 'react-i18next';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 
 const styles = () => ({
     actionButton: {

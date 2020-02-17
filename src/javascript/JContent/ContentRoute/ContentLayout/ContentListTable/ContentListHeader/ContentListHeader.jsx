@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {withTranslation} from 'react-i18next';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 
 export const ContentListHeader = ({order, orderBy, columnData, t, classes, setSort, allSelected, anySelected, selectAll, unselectAll}) => {
     let direction = order === 'DESC' ? 'ASC' : 'DESC';

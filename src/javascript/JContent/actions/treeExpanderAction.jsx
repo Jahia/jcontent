@@ -1,7 +1,7 @@
 import JContentConstants from '../JContent.constants';
 import * as _ from 'lodash';
 import gql from 'graphql-tag';
-import {PredefinedFragments} from '@jahia/apollo-dx';
+import {PredefinedFragments} from '@jahia/data-helper';
 
 const GetAncestorsQuery = gql`
     query getAncestorsQuery($path:String!) {

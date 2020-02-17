@@ -8,7 +8,7 @@ import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from '.
 import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux';
 import UploadItem from './UploadItem';
 import {withTranslation} from 'react-i18next';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {files} from './Upload.utils';
 import UploadHeader from './UploadHeader';
 import {batchActions} from 'redux-batched-actions';

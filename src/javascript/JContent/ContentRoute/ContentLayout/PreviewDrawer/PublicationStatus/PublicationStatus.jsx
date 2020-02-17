@@ -8,7 +8,7 @@ import JContentConstants from '../../../../JContent.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
 import {isMarkedForDeletion, getDefaultLocale} from '../../../../JContent.utils';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 
 // TODO Here as well as in ContentListTable unpublished status is not clear
 

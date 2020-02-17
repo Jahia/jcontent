@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {compose, Query, withApollo} from 'react-apollo';
+import {compose} from '~/utils';
+import {Query, withApollo} from 'react-apollo';
 import {breadcrumbQuery} from './Breadcrumb.gql-queries';
 import {withTranslation} from 'react-i18next';
 import {cmGoto} from '../../JContent.redux';

@@ -4,7 +4,7 @@ import {DxContext} from '@jahia/react-material';
 import SearchBarLayout from '../SearchBarLayout';
 import ActionButton from '../ActionButton';
 import Sql2Input from './Sql2Input';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {connect} from 'react-redux';

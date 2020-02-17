@@ -11,7 +11,7 @@ import {
 } from '@jahia/design-system-kit';
 import ImageEditorPreview from './ImageEditorPreview';
 import {Tooltip, withStyles} from '@material-ui/core';
-import {compose} from 'react-apollo';
+import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';

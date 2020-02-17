@@ -1,20 +1,12 @@
 import {DSProvider} from '@jahia/design-system-kit';
 import {ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia/react-material';
-import {ApolloProvider} from 'react-apollo';
 import PushEventHandler from './PushEventHandler';
 import {ComponentRendererProvider as NewComponentRendererProvider} from '@jahia/ui-extender';
 import React from 'react';
-import {client} from '@jahia/apollo-dx';
 import {refetchContentTreeAndListData} from './JContent.refetches';
 import Upload from './ContentRoute/ContentLayout/Upload';
 
 export const jContentAppRoot = registry => {
-    const apolloClient = client({
-        contextPath: window.contextJsParameters.contextPath,
-        useBatch: true,
-        httpOptions: {batchMax: 50}
-    });
-
     registry.add('app', 'jcontent-ds-provider', {
         targets: ['root:10'],
         render: next => (<DSProvider>{next}</DSProvider>)
@@ -24,10 +16,7 @@ export const jContentAppRoot = registry => {
         targets: ['root:11'],
         render: next => (<NotificationProvider notificationContext={{}}>{next}</NotificationProvider>)
     });
-    registry.add('app', 'jcontent-apollo-provider', {
-        targets: ['root:12'],
-        render: next => (<ApolloProvider client={apolloClient}>{next}</ApolloProvider>)
-    });
+
     registry.add('app', 'jcontent-context', {
         targets: ['root:13'],
         render: next => (<DxContext.Provider value={window.contextJsParameters}>{next}</DxContext.Provider>)

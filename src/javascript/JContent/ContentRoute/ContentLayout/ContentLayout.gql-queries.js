@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {PredefinedFragments} from '@jahia/apollo-dx';
+import {PredefinedFragments} from '@jahia/data-helper';
 import * as _ from 'lodash';
 import JContentConstants from '../../JContent.constants';
 

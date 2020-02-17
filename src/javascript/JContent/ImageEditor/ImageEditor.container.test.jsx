@@ -1,11 +1,9 @@
 import React from 'react';
 import {mount} from '@jahia/test-framework';
 import {ImageEditorContainer} from './ImageEditor.container';
-import {MockedProvider} from 'react-apollo/test-utils';
+import {MockedProvider} from '@apollo/react-testing';
 import {ImageQuery} from './ImageEditor.gql-queries';
 import {getImageMutation} from './ImageEditor.gql-mutations';
-import {InMemoryCache} from 'apollo-cache-inmemory';
-import {fragmentMatcher} from '@jahia/apollo-dx';
 import {MuiThemeProvider} from '@material-ui/core';
 import ImageEditor from './ImageEditor';
 import {dsGenericTheme as theme} from '@jahia/design-system-kit';
@@ -90,7 +88,7 @@ describe('Image Edition', () => {
         wrapper = mount(
             <DxContext.Provider value={dxContext}>
                 <MuiThemeProvider theme={theme}>
-                    <MockedProvider mocks={mocks} cache={new InMemoryCache({fragmentMatcher})}>
+                    <MockedProvider mocks={mocks}>
                         <ImageEditorContainer {...props}/>
                     </MockedProvider>
                 </MuiThemeProvider>

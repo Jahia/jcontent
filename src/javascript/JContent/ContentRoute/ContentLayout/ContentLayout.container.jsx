@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose, Query, withApollo} from 'react-apollo';
+import {compose} from '~/utils';
+import {Query, withApollo} from 'react-apollo';
 import {
     ContentQueryHandler,
     FilesQueryHandler,
@@ -156,7 +157,7 @@ export class ContentLayoutContainer extends React.Component {
     render() {
         const {
             notificationContext, t, mode, path, uilang, lang, siteKey, params, pagination, sort, pathsToRefetch,
-            removePathsToRefetch, setPath, treeState, filesMode, previewState, previewSelection
+            removePathsToRefetch, setPath, filesMode, previewState, previewSelection
         } = this.props;
 
         let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
@@ -196,7 +197,6 @@ export class ContentLayoutContainer extends React.Component {
                                            mode={mode}
                                            path={path}
                                            filesMode={filesMode}
-                                           treeState={treeState}
                                            previewState={previewState}
                                            previewSelection={previewSelection}
                                            rows={[]}
@@ -241,7 +241,6 @@ export class ContentLayoutContainer extends React.Component {
                             <ContentLayout mode={mode}
                                            path={path}
                                            filesMode={filesMode}
-                                           treeState={treeState}
                                            previewState={previewState}
                                            previewSelection={previewSelection}
                                            rows={rows}
@@ -272,7 +271,6 @@ const mapStateToProps = state => ({
     sort: state.jcontent.sort,
     openedPaths: state.jcontent.openPaths,
     pathsToRefetch: state.jcontent.pathsToRefetch,
-    treeState: state.jcontent.treeState,
     selection: state.jcontent.selection
 });
 
@@ -306,7 +304,6 @@ ContentLayoutContainer.propTypes = {
     sort: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
     uilang: PropTypes.string.isRequired,
-    treeState: PropTypes.number.isRequired,
     previewState: PropTypes.number.isRequired,
     filesMode: PropTypes.string.isRequired,
     selection: PropTypes.array.isRequired,

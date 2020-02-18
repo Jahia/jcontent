@@ -58,9 +58,8 @@ registry.add('callback', 'jContent', {
         paginationRedux(registry);
         sortRedux(registry);
         contentSelectionRedux(registry);
-        jContentRedux(registry);
-
         jContentAccordionItems(registry);
+        jContentRedux(registry);
         jContentAppRoot(registry);
     }
 });

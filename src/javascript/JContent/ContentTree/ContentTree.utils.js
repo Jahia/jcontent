@@ -29,7 +29,7 @@ function convertPathsToTree(pickerEntries, mode, registryItem) {
         return tree;
     }
 
-    for (let i = 1; i < pickerEntries.length; i++) {
+    for (let i = 0; i < pickerEntries.length; i++) {
         let parentPath = getParentPath(pickerEntries[i].path);
         let element = {
             id: pickerEntries[i].path,

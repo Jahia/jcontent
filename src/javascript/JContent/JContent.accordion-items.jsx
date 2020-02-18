@@ -6,8 +6,16 @@ import JContentConstants from './JContent.constants';
 export const jContentAccordionItems = registry => {
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: item => (
-            <ContentTree config={item.config}/>
-        )
+            <ContentTree item={item}/>
+        ),
+        getPath: (site, pathElements, registryItem) => {
+            let path = '/sites/' + site + ('/' + pathElements.join('/'));
+            if (!path.startsWith('/sites/' + site + registryItem.config.rootPath)) {
+                return registryItem.defaultUrl(site);
+            }
+
+            return path;
+        }
     });
 
     registry.add('accordionItem', JContentConstants.mode.PAGES, renderDefaultContentTrees, {
@@ -16,6 +24,7 @@ export const jContentAccordionItems = registry => {
         label: 'label.contentManager.navigation.pages',
         defaultUrl: siteKey => '/sites/' + siteKey,
         config: {
+            hideRoot: true,
             rootPath: '',
             selectableTypes: ['jnt:page', 'jnt:virtualsite'],
             type: 'pages',

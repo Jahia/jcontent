@@ -18,7 +18,7 @@ export class ContentTree extends React.Component {
     render() {
         const {
             lang, siteKey, path, openPaths, setPath, openPath,
-            closePath, mode, item
+            closePath, item
         } = this.props;
 
         const rootPath = '/sites/' + siteKey + item.config.rootPath;
@@ -45,7 +45,7 @@ export class ContentTree extends React.Component {
                 {({pickerEntries}) => {
                     return (
                         <TreeView isReversed
-                                  data={convertPathsToTree(pickerEntries, mode, item)}
+                                  data={convertPathsToTree(pickerEntries)}
                                   openedItems={openPaths}
                                   selectedItems={[path]}
                                   onClickItem={object => setPath(object.id, {sub: false})}
@@ -63,7 +63,6 @@ const mapStateToProps = state => ({
     siteKey: state.site,
     lang: state.language,
     path: state.jcontent.path,
-    mode: state.jcontent.mode,
     openPaths: state.jcontent.openPaths,
     previewSelection: state.jcontent.previewSelection
 });
@@ -75,7 +74,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 ContentTree.propTypes = {
-    mode: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired,
     siteKey: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,

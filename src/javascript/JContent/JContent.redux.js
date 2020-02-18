@@ -18,20 +18,9 @@ const DEFAULT_MODE_PATHS = {browse: '/contents', media: '/files'};
 const extractParamsFromUrl = (pathname, search) => {
     if (pathname.startsWith('/jcontent')) {
         let [, , site, language, mode, ...pathElements] = pathname.split('/');
+        let registryItem = registry.get('accordionItem', mode);
 
-        let path;
-        if (mode === JContentConstants.mode.APPS) {
-            path = pathElements.join('/');
-        } else {
-            path = '/sites/' + site;
-            if (_.isEmpty(pathElements)) {
-                if (mode === JContentConstants.mode.MEDIA) {
-                    path += '/files';
-                }
-            } else {
-                path += ('/' + pathElements.join('/'));
-            }
-        }
+        let path = registryItem.getPath(site, pathElements, registryItem);
 
         path = decodeURIComponent(path);
         let params = deserializeQueryString(search);

@@ -1,3 +1,3 @@
-import ContentTree from './ContentTree.container';
+import ContentTree from './ContentTree';
 
 export default ContentTree;

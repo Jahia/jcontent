@@ -20,7 +20,7 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', JContentConstants.mode.PAGES, renderDefaultContentTrees, {
         targets: ['jcontent:50'],
-        icon: <File/>,
+        icon: <File size="big"/>,
         label: 'label.contentManager.navigation.pages',
         defaultUrl: siteKey => '/sites/' + siteKey,
         config: {
@@ -36,7 +36,7 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', JContentConstants.mode.CONTENT_FOLDERS, renderDefaultContentTrees, {
         targets: ['jcontent:60'],
-        icon: <FolderSpecial/>,
+        icon: <FolderSpecial size="big"/>,
         label: 'label.contentManager.navigation.contentFolders',
         defaultUrl: siteKey => '/sites/' + siteKey + '/contents',
         config: {
@@ -51,7 +51,7 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', JContentConstants.mode.MEDIA, renderDefaultContentTrees, {
         targets: ['jcontent:70'],
-        icon: <Collections/>,
+        icon: <Collections size="big"/>,
         label: 'label.contentManager.navigation.media',
         defaultUrl: siteKey => '/sites/' + siteKey + '/files',
         config: {
@@ -66,7 +66,7 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', JContentConstants.mode.APPS, {
         targets: ['jcontent:80'],
-        icon: <Setting/>,
+        icon: <Setting size="big"/>,
         label: 'label.contentManager.navigation.apps',
         defaultUrl: siteKey => '/sites/' + siteKey,
         render: () => <div>HELLO</div>

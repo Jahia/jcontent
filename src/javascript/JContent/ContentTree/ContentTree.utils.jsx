@@ -3,7 +3,7 @@ import React from 'react';
 
 function displayIcon(node) {
     const Icon = getIcon(node.primaryNodeType.name);
-    return <Icon size="small"/>;
+    return <Icon/>;
 }
 
 function getParentPath(path) {

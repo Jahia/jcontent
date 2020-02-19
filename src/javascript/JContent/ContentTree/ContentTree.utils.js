@@ -1,9 +1,9 @@
-import {File} from '@jahia/moonstone/dist/icons';
+import {getIcon} from '@jahia/icons';
 import React from 'react';
 
-function getIcon(mode, registryItem) {
-    const Icon = registryItem ? registryItem.icon : <File/>;
-    return <Icon.type {...Icon.props} size="small"/>;
+function displayIcon(node) {
+    const Icon = getIcon(node.primaryNodeType.name);
+    return <Icon size="small"/>;
 }
 
 function getParentPath(path) {
@@ -11,7 +11,7 @@ function getParentPath(path) {
 }
 
 function findInTree(tree, id) {
-    for (var i = 0; i < tree.length; i++) {
+    for (let i = 0; i < tree.length; i++) {
         if (tree[i].id === id) {
             return tree[i];
         }
@@ -23,7 +23,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(pickerEntries, mode, registryItem) {
+function convertPathsToTree(pickerEntries) {
     let tree = [];
     if (pickerEntries.length === 0) {
         return tree;
@@ -36,7 +36,7 @@ function convertPathsToTree(pickerEntries, mode, registryItem) {
             label: pickerEntries[i].node.displayName,
             hasChildren: pickerEntries[i].hasChildren,
             parent: parentPath,
-            iconStart: getIcon(mode, registryItem),
+            iconStart: displayIcon(pickerEntries[i].node),
             children: []
         };
         let parent = findInTree(tree, parentPath);

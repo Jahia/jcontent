@@ -41,7 +41,7 @@ describe('convertPathsToTree', () => {
             primaryNodeType: {
                 name: 'jnt:vitrualSite'
             },
-            displayName: 'Digitall'
+            displayName: 'Testsite'
         },
         hasChildren: true
     }, {

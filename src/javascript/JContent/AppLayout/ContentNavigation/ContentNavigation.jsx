@@ -8,13 +8,15 @@ const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation}) =>
     const {t} = useTranslation('jcontent');
     return (
         <SecondaryNav header={<NavigationHeader/>}>
-            <Accordion isReversed openByDefault={mode}>
+            <Accordion isReversed
+                       openedItem={mode}
+                       onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).defaultUrl(siteKey))}
+            >
                 {accordionItems.map(accordionItem => (
                     <AccordionItem key={accordionItem.key}
                                    id={accordionItem.key}
                                    label={t(accordionItem.label)}
                                    icon={accordionItem.icon}
-                                   onClickToOpen={() => handleNavigation(accordionItem.key, accordionItem.defaultUrl(siteKey))}
                     >
                         {accordionItem.render(accordionItem)}
                     </AccordionItem>

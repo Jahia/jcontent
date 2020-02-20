@@ -1,5 +1,10 @@
 import {getIcon} from '@jahia/icons';
 import React from 'react';
+import JContentConstants from '../JContent.constants';
+import {isMarkedForDeletion} from '../JContent.utils';
+import {Lock, NoCloud} from '@jahia/moonstone/dist/icons';
+import classNames from 'clsx';
+import styles from './ContentTree.scss';
 
 function displayIcon(node) {
     const Icon = getIcon(node.primaryNodeType.name);
@@ -23,13 +28,19 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(pickerEntries) {
+function convertPathsToTree(pickerEntries, selected) {
     let tree = [];
     if (pickerEntries.length === 0) {
         return tree;
     }
 
     pickerEntries.forEach(pickerEntry => {
+        const notPublished = pickerEntry.node.publicationStatus && (
+            pickerEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED ||
+            pickerEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.UNPUBLISHED);
+        const locked = Boolean(pickerEntry.node.lockOwner);
+        const markedForDeletion = isMarkedForDeletion(pickerEntry.node);
+
         let parentPath = getParentPath(pickerEntry.path);
         let element = {
             id: pickerEntry.path,
@@ -38,6 +49,14 @@ function convertPathsToTree(pickerEntries) {
             parent: parentPath,
             isClosable: pickerEntry.depth > 0,
             iconStart: displayIcon(pickerEntry.node),
+            iconEnd: (locked && <Lock/>) || (notPublished && <NoCloud/>),
+            typographyOptions: {
+                hasLineThrough: markedForDeletion,
+                isItalic: notPublished
+            },
+            className: classNames(styles.ContentTree_Item, {
+                [styles.notPublished]: notPublished && selected !== pickerEntry.path
+            }),
             children: []
         };
         let parent = findInTree(tree, parentPath);

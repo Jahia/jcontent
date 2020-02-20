@@ -50,4 +50,4 @@ function convertPathsToTree(pickerEntries) {
     return tree;
 }
 
-export {convertPathsToTree};
+export {convertPathsToTree, getParentPath, findInTree};

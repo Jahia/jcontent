@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const MenuRenderer = ({isSubMenu, anchor, isOpen, onClose, onExited, onMouseEnter, onMouseLeave, children}) => {
+export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children}) => {
     const outsideBottom = (anchor.top + (isSubMenu ? 100 : 300)) > window.document.body.clientHeight;
     const top = outsideBottom ? {bottom: 0} : {top: anchor.top};
     const outsideRight = (anchor.left + 150) > window.document.body.clientWidth;
@@ -17,8 +17,9 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, onClose, onExited, onMo
                     height: '100vh',
                     top: 0,
                     left: 0,
-                    opacity: isOpen ? 0.1 : 0,
-                    transition: 'opacity 0.2s',
+                    pointerEvents: isOpen ? 'auto' : 'none',
+                    opacity: isOpen ? 0.5 : 0,
+                    transition: 'opacity 0.5s',
                     zIndex: 2000,
                     backgroundColor: 'black'
                 }}
@@ -35,8 +36,8 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, onClose, onExited, onMo
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                opacity: isOpen ? 1 : 0,
-                transition: 'opacity 0.2s',
+                opacity: (isOpen && !isLoading) ? 1 : 0,
+                transition: 'opacity 0.5s',
                 zIndex: 2100
             }}
                  onMouseEnter={onMouseEnter}
@@ -61,6 +62,11 @@ MenuRenderer.propTypes = {
      * Is the menu open
      */
     isOpen: PropTypes.bool.isRequired,
+
+    /**
+     * Is the menu loading
+     */
+    isLoading: PropTypes.bool.isRequired,
 
     /**
      * Where to display the menu ( object of shape `{ left: number, top:number}`)

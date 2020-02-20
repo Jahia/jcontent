@@ -2,9 +2,9 @@ import {getParentPath, findInTree, convertPathsToTree} from './ContentTree.utils
 
 describe('getParentPath', () => {
     it('should return parent path', () => {
-        expect(getParentPath('/sites/digitall/home')).toEqual('/sites/digitall');
-        expect(getParentPath('/sites/digitall/home/about')).toEqual('/sites/digitall/home');
-        expect(getParentPath('/sites/digitall')).toEqual('/sites');
+        expect(getParentPath('/sites/testsite/home')).toEqual('/sites/testsite');
+        expect(getParentPath('/sites/testsite/home/about')).toEqual('/sites/testsite/home');
+        expect(getParentPath('/sites/testsite')).toEqual('/sites');
         expect(getParentPath('/a/b/c/d')).toEqual('/a/b/c');
     });
 });
@@ -36,7 +36,7 @@ describe('findInTree', () => {
 
 describe('convertPathsToTree', () => {
     let entries = [{
-        path: '/sites/digitall',
+        path: '/sites/testsite',
         node: {
             primaryNodeType: {
                 name: 'jnt:vitrualSite'
@@ -45,7 +45,7 @@ describe('convertPathsToTree', () => {
         },
         hasChildren: true
     }, {
-        path: '/sites/digitall/home',
+        path: '/sites/testsite/home',
         node: {
             primaryNodeType: {
                 name: 'jnt:page'
@@ -54,7 +54,7 @@ describe('convertPathsToTree', () => {
         },
         hasChildren: true
     }, {
-        path: '/sites/digitall/home/about',
+        path: '/sites/testsite/home/about',
         node: {
             primaryNodeType: {
                 name: 'jnt:page'
@@ -63,7 +63,7 @@ describe('convertPathsToTree', () => {
         },
         hasChildren: true
     }, {
-        path: '/sites/digitall/home/about/history',
+        path: '/sites/testsite/home/about/history',
         node: {
             primaryNodeType: {
                 name: 'jnt:page'
@@ -75,8 +75,8 @@ describe('convertPathsToTree', () => {
 
     let tree = convertPathsToTree(entries);
     expect(tree.length).toEqual(1);
-    expect(tree[0].id).toEqual('/sites/digitall');
-    expect(tree[0].children[0].id).toEqual('/sites/digitall/home');
-    expect(tree[0].children[0].children[0].id).toEqual('/sites/digitall/home/about');
-    expect(tree[0].children[0].children[0].children[0].id).toEqual('/sites/digitall/home/about/history');
+    expect(tree[0].id).toEqual('/sites/testsite');
+    expect(tree[0].children[0].id).toEqual('/sites/testsite/home');
+    expect(tree[0].children[0].children[0].id).toEqual('/sites/testsite/home/about');
+    expect(tree[0].children[0].children[0].children[0].id).toEqual('/sites/testsite/home/about/history');
 });

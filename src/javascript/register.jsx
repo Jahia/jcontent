@@ -29,7 +29,7 @@ const CmmNavItem = () => {
         <PrimaryNavItem key={ROUTE}
                         isSelected={history.location.pathname.startsWith(ROUTE) && history.location.pathname.split('/').length > 3}
                         label={t('label.name')}
-                        icon={<Collections size="big"/>}
+                        icon={<Collections/>}
                         onClick={() => history.push(SYSTEM_SITE_ROUTE)}/>
     );
 };

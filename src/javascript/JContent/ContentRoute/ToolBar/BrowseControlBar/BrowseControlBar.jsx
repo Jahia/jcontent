@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withTranslation} from 'react-i18next';
+import {useTranslation, withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 import {compose} from '~/utils';
-import {buttonRenderer} from '@jahia/react-material';
 import {DisplayActions} from '@jahia/ui-extender';
 import FileModeSelector from '../FileModeSelector';
 import JContentConstants from '../../../JContent.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
 import {refetchContentTreeAndListData} from '../../../JContent.refetches';
+import {toIconComponent} from '@jahia/react-material';
 
 const styles = theme => ({
     grow: {
@@ -22,6 +22,28 @@ const styles = theme => ({
         }
     }
 });
+
+const ButtonRenderer = ({context}) => {
+    const {t} = useTranslation(context.buttonLabelNamespace);
+
+    return (
+        <Button data-sel-role={context.key}
+                label={t(context.buttonLabel, context.buttonLabelParams)}
+                icon={context.buttonIcon && toIconComponent(context.buttonIcon)}
+                size="small"
+                variant="ghost"
+                disabled={context.enabled === false || context.visible === false}
+                onClick={e => {
+                    e.stopPropagation();
+                    context.onClick(context, e);
+                }}
+        />
+    );
+};
+
+ButtonRenderer.propTypes = {
+    context: PropTypes.object.isRequired
+};
 
 export class BrowseControlBar extends React.Component {
     isRootNode() {
@@ -42,15 +64,17 @@ export class BrowseControlBar extends React.Component {
             <React.Fragment>
                 <div className={classes.grow}/>
                 {showActions && mode === JContentConstants.mode.MEDIA &&
-                    <FileModeSelector/>}
+                <FileModeSelector/>}
                 {showActions && !this.isRootNode() &&
-                    <DisplayActions
-                        target="tableHeaderActions"
-                        context={{path: path}}
-                        render={buttonRenderer({variant: 'ghost'}, true)}
-                    />}
+                <DisplayActions target="tableHeaderActions" context={{path: path}} render={ButtonRenderer} />}
                 {showActions &&
-                <Button variant="ghost" icon={<Refresh/>} data-cm-role="content-list-refresh-button" onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}><span>{t('jcontent:label.contentManager.refresh')}</span></Button>}
+                <Button variant="ghost"
+                        size="small"
+                        label={t('jcontent:label.contentManager.refresh')}
+                        icon={<Refresh/>}
+                        data-cm-role="content-list-refresh-button"
+                        onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}
+                />}
             </React.Fragment>
         );
     }

@@ -6,7 +6,7 @@ import styles from './ContentTitle.scss';
 
 const ContentTitle = ({title}) => (
     <div className={classnames(styles.root, 'alignCenter')}>
-        <Typography variant="page">
+        <Typography variant="title">
             {title}
         </Typography>
     </div>

@@ -93,8 +93,8 @@ export const Preview = props => {
         return <MultipleSelection {...props}/>;
     }
 
-    if (Object.keys(previewSelection).length === 0) {
-        return <NoPreviewComponent {...props}/>;
+    if (!previewSelection || previewSelection.length === 0) {
+        return <NoPreviewComponent {...props} t={t}/>;
     }
 
     if (error) {

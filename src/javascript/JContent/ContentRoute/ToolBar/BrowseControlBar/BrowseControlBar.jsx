@@ -66,7 +66,7 @@ export class BrowseControlBar extends React.Component {
                 {showActions && mode === JContentConstants.mode.MEDIA &&
                 <FileModeSelector/>}
                 {showActions && !this.isRootNode() &&
-                <DisplayActions target="tableHeaderActions" context={{path: path}} render={ButtonRenderer} />}
+                <DisplayActions target="tableHeaderActions" context={{path: path}} render={ButtonRenderer}/>}
                 {showActions &&
                 <Button variant="ghost"
                         size="small"

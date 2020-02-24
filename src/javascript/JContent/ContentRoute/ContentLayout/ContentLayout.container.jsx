@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {compose} from '~/utils';
-import {Query, withApollo} from 'react-apollo';
+import {useApolloClient, useQuery} from 'react-apollo';
 import {
     ContentQueryHandler,
     FilesQueryHandler,
@@ -10,12 +9,12 @@ import {
     Sql2SearchQueryHandler
 } from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
-import {ProgressOverlay, withNotifications} from '@jahia/react-material';
+import {ProgressOverlay} from '@jahia/react-material';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
 } from '../../eventHandlerRegistry';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../JContent.redux';
 import JContentConstants from '../../JContent.constants';
@@ -39,24 +38,35 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
-export class ContentLayoutContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onGwtContentModification = this.onGwtContentModification.bind(this);
-    }
+let currentResult;
 
-    componentDidMount() {
-        registerContentModificationEventHandler(this.onGwtContentModification);
-        setModificationHook(args => this.onGwtContentModification(...args));
-    }
+export const ContentLayoutContainer = (
+    {
+        mode,
+        siteKey,
+        path,
+        lang,
+        previewSelection,
+        previewState,
+        uilang,
+        params,
+        filesMode,
+        pagination,
+        sort,
+        openedPaths,
+        pathsToRefetch,
+        selection, setPath,
+        setPreviewSelection,
+        openPaths,
+        closePaths,
+        removePathsToRefetch,
+        removeSelection,
+        switchSelection
+    }) => {
+    const t = useTranslation();
+    const client = useApolloClient();
 
-    componentWillUnmount() {
-        unregisterContentModificationEventHandler(this.onGwtContentModification);
-    }
-
-    async onGwtContentModification(nodeUuid, nodePath, nodeName, operation) {
-        let {client, path, previewSelection, openedPaths, setPath, setPreviewSelection,
-            openPaths, closePaths, selection, removeSelection, switchSelection} = this.props;
+    const onGwtContentModification = async (nodeUuid, nodePath, nodeName, operation) => {
         let refetchObservableQueries = true;
 
         if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
@@ -152,110 +162,106 @@ export class ContentLayoutContainer extends React.Component {
         if (refetchObservableQueries) {
             client.reFetchObservableQueries();
         }
+    };
+
+    useEffect(() => {
+        registerContentModificationEventHandler(onGwtContentModification);
+        setModificationHook(args => onGwtContentModification(...args));
+
+        return () => {
+            unregisterContentModificationEventHandler(onGwtContentModification);
+        };
+    });
+
+    let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
+
+    // If the path to display is part of the paths to refetch then refetch
+    if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
+        removePathsToRefetch([path]);
+        fetchPolicy = 'network-only';
     }
 
-    render() {
-        const {
-            notificationContext, t, mode, path, uilang, lang, siteKey, params, pagination, sort, pathsToRefetch,
-            removePathsToRefetch, setPath, filesMode, previewState, previewSelection
-        } = this.props;
+    let queryHandler = contentQueryHandlerByMode(mode);
+    const layoutQuery = queryHandler.getQuery();
+    const rootPath = `/sites/${siteKey}`;
 
-        let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
-        // If the path to display is part of the paths to refetch then refetch
-        if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
-            removePathsToRefetch([path]);
-            fetchPolicy = 'network-only';
-        }
+    const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
-        let queryHandler = contentQueryHandlerByMode(mode);
-        const layoutQuery = queryHandler.getQuery();
-        const rootPath = `/sites/${siteKey}`;
+    const {loading, error, data, refetch} = useQuery(layoutQuery, {
+        variables: layoutQueryParams,
+        fetchPolicy: fetchPolicy
+    });
 
-        const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
+    queryHandler = contentQueryHandlerByMode(mode);
 
-        // Workaround to prevent QA-11390
-        // See https://github.com/apollographql/react-apollo/issues/2658
-        // FIXME To be removed once the issue has been resolved in react-apollo
-        const key = JSON.stringify(layoutQueryParams);
+    setContentListDataRefetcher({
+        query: layoutQuery,
+        queryParams: layoutQueryParams,
+        refetch: refetch
+    });
 
+    if (error) {
+        let message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+        console.error(message);
         return (
-            <Query key={key} query={layoutQuery} variables={layoutQueryParams} fetchPolicy={fetchPolicy}>
-                {({loading, error, data, refetch}) => {
-                    let queryHandler = contentQueryHandlerByMode(mode);
-
-                    setContentListDataRefetcher({
-                        query: layoutQuery,
-                        queryParams: layoutQueryParams,
-                        refetch: refetch
-                    });
-
-                    if (error) {
-                        let message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-                        console.error(message);
-                        return (
-                            <ContentLayout contentNotFound
-                                           mode={mode}
-                                           path={path}
-                                           filesMode={filesMode}
-                                           previewState={previewState}
-                                           previewSelection={previewSelection}
-                                           rows={[]}
-                                           loading={loading}
-                                           totalCount={0}
-                                           layoutQuery={layoutQuery}
-                                           layoutQueryParams={layoutQueryParams}
-                            />
-                        );
-                    }
-
-                    if (loading) {
-                        // While loading new results, render current ones loaded during previous render invocation (if any).
-                    } else {
-                        if (data.jcr && data.jcr.nodeByPath) {
-                            // When new results have been loaded, use them for rendering.
-                            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
-                            let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
-                            if (!isSub && params.sub && params.sub === true) {
-                                setPath(path, {sub: false});
-                            } else if (isSub && (!params.sub || params.sub === false)) {
-                                setPath(path, {sub: true});
-                            }
-                        }
-
-                        this.currentResult = queryHandler.getResultsPath(data);
-                    }
-
-                    let rows = [];
-                    let totalCount = 0;
-                    notificationContext.closeNotification();
-
-                    if (this.currentResult) {
-                        totalCount = this.currentResult.pageInfo.totalCount;
-                        rows = this.currentResult.nodes;
-                    }
-
-                    return (
-                        <React.Fragment>
-                            {loading &&
-                            <ProgressOverlay/>}
-                            <ContentLayout mode={mode}
-                                           path={path}
-                                           filesMode={filesMode}
-                                           previewState={previewState}
-                                           previewSelection={previewSelection}
-                                           rows={rows}
-                                           loading={loading}
-                                           totalCount={totalCount}
-                                           layoutQuery={layoutQuery}
-                                           layoutQueryParams={layoutQueryParams}
-                            />
-                        </React.Fragment>
-                    );
-                }}
-            </Query>
+            <ContentLayout contentNotFound
+                           mode={mode}
+                           path={path}
+                           filesMode={filesMode}
+                           previewState={previewState}
+                           previewSelection={previewSelection}
+                           rows={[]}
+                           loading={loading}
+                           totalCount={0}
+                           layoutQuery={layoutQuery}
+                           layoutQueryParams={layoutQueryParams}
+            />
         );
     }
-}
+
+    if (loading) {
+        // While loading new results, render current ones loaded during previous render invocation (if any).
+    } else {
+        if (data.jcr && data.jcr.nodeByPath) {
+            // When new results have been loaded, use them for rendering.
+            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+            let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
+            if (!isSub && params.sub && params.sub === true) {
+                setPath(path, {sub: false});
+            } else if (isSub && (!params.sub || params.sub === false)) {
+                setPath(path, {sub: true});
+            }
+        }
+
+        currentResult = queryHandler.getResultsPath(data);
+    }
+
+    let rows = [];
+    let totalCount = 0;
+
+    if (currentResult) {
+        totalCount = currentResult.pageInfo.totalCount;
+        rows = currentResult.nodes;
+    }
+
+    return (
+        <React.Fragment>
+            {loading &&
+            <ProgressOverlay/>}
+            <ContentLayout mode={mode}
+                           path={path}
+                           filesMode={filesMode}
+                           previewState={previewState}
+                           previewSelection={previewSelection}
+                           rows={rows}
+                           loading={loading}
+                           totalCount={totalCount}
+                           layoutQuery={layoutQuery}
+                           layoutQueryParams={layoutQueryParams}
+            />
+        </React.Fragment>
+    );
+};
 
 const mapStateToProps = state => ({
     mode: state.jcontent.mode,
@@ -285,11 +291,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 ContentLayoutContainer.propTypes = {
-    client: PropTypes.object.isRequired,
     closePaths: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
-    notificationContext: PropTypes.object.isRequired,
     openPaths: PropTypes.func.isRequired,
     openedPaths: PropTypes.array.isRequired,
     pagination: PropTypes.object.isRequired,
@@ -302,7 +306,6 @@ ContentLayoutContainer.propTypes = {
     setPreviewSelection: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     sort: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired,
     uilang: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     filesMode: PropTypes.string.isRequired,
@@ -311,9 +314,4 @@ ContentLayoutContainer.propTypes = {
     switchSelection: PropTypes.func.isRequired
 };
 
-export default compose(
-    withNotifications(),
-    withTranslation(),
-    withApollo,
-    connect(mapStateToProps, mapDispatchToProps)
-)(ContentLayoutContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);

@@ -5,11 +5,10 @@ import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
-import {cmSetAvailableLanguages} from '../../../JContent.redux';
 import {registry} from '@jahia/ui-extender';
 import {Dropdown} from '@jahia/moonstone';
 
-function createDataObject(languages) {
+function createDataObjects(languages) {
     let data = [];
     languages.forEach(language => {
         let element = {
@@ -25,7 +24,6 @@ export const LanguageSwitcher = ({
     notificationContext,
     siteKey,
     lang,
-    setAvailableLanguages,
     onSelectLanguage
 }) => {
     const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: lang});
@@ -49,14 +47,11 @@ export const LanguageSwitcher = ({
         return <ProgressOverlay/>;
     }
 
-    // Update redux
-    setAvailableLanguages(siteInfo.languages);
-
     return (
         <Dropdown
             label={lang}
             value={lang}
-            data={createDataObject(siteInfo.languages)}
+            data={createDataObjects(siteInfo.languages)}
             onChange={(e, item) => {
                 onSelectLanguageHandler(item.label);
                 return true;
@@ -73,15 +68,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onSelectLanguage: lang => {
         dispatch(registry.get('redux-reducer', 'language').actions.setLanguage(lang));
-    },
-    setAvailableLanguages: availableLanguages => {
-        dispatch(cmSetAvailableLanguages(availableLanguages));
     }
 });
 
 LanguageSwitcher.propTypes = {
     onSelectLanguage: PropTypes.func.isRequired,
-    setAvailableLanguages: PropTypes.func.isRequired,
     notificationContext: PropTypes.object.isRequired,
     siteKey: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired

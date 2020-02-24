@@ -8,10 +8,24 @@ import gql from 'graphql-tag';
 import {connect} from 'react-redux';
 import {withTranslation} from 'react-i18next';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '../JContent.redux';
-import SiteSwitcherDisplay from './SiteSwitcherDisplay';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '../../../JContent.redux';
+import {Dropdown} from '@jahia/moonstone';
 import {batchActions} from 'redux-batched-actions';
-import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '../preview.redux';
+import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '../../../preview.redux';
+
+function createDataObjects(sites) {
+    let data = [];
+    sites.forEach(site => {
+        let element = {
+            label: site.displayName,
+            value: site.path,
+            name: site.name,
+            site: site.site
+        };
+        data.push(element);
+    });
+    return data;
+}
 
 class SiteSwitcher extends React.Component {
     constructor(props) {
@@ -101,18 +115,20 @@ class SiteSwitcher extends React.Component {
 
                     let sites = this.getSites(data);
                     return (
-                        <SiteSwitcherDisplay
-                            siteKey={siteKey}
-                            siteNodes={sites}
-                            onSelectSite={siteNode => {
+                        <Dropdown
+                            label={siteKey}
+                            value={siteKey}
+                            data={createDataObjects(sites)}
+                            onChange={(e, siteNode) => {
                                 this.onSelectSite(siteNode, currentLang);
                                 this.props.dispatchBatch([
                                     cmSetPreviewMode(CM_PREVIEW_MODES.EDIT),
                                     cmSetPreviewState(CM_DRAWER_STATES.HIDE),
                                     cmSetPreviewSelection(null)
                                 ]);
+                                return true;
                             }}
-                    />
+                        />
 );
                 }
             }

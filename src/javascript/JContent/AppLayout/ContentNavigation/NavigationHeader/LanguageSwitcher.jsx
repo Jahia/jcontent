@@ -5,11 +5,23 @@ import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
-import {cmSetAvailableLanguages} from '../JContent.redux';
-import {LanguageSwitcher} from '@jahia/design-system-kit';
+import {cmSetAvailableLanguages} from '../../../JContent.redux';
 import {registry} from '@jahia/ui-extender';
+import {Dropdown} from '@jahia/moonstone';
 
-export const SiteLanguageSwitcher = ({
+function createDataObject(languages) {
+    let data = [];
+    languages.forEach(language => {
+        let element = {
+            label: language.language,
+            value: language.language
+        };
+        data.push(element);
+    });
+    return data;
+}
+
+export const LanguageSwitcher = ({
     notificationContext,
     siteKey,
     lang,
@@ -41,11 +53,14 @@ export const SiteLanguageSwitcher = ({
     setAvailableLanguages(siteInfo.languages);
 
     return (
-        <LanguageSwitcher
-            lang={lang}
-            languages={siteInfo.languages}
-            color="inverted"
-            onSelectLanguage={lang => onSelectLanguageHandler(lang)}
+        <Dropdown
+            label={lang}
+            value={lang}
+            data={createDataObject(siteInfo.languages)}
+            onChange={(e, item) => {
+                onSelectLanguageHandler(item.label);
+                return true;
+            }}
         />
     );
 };
@@ -64,7 +79,7 @@ const mapDispatchToProps = dispatch => ({
     }
 });
 
-SiteLanguageSwitcher.propTypes = {
+LanguageSwitcher.propTypes = {
     onSelectLanguage: PropTypes.func.isRequired,
     setAvailableLanguages: PropTypes.func.isRequired,
     notificationContext: PropTypes.object.isRequired,
@@ -75,4 +90,4 @@ SiteLanguageSwitcher.propTypes = {
 export default compose(
     withNotifications(),
     connect(mapStateToProps, mapDispatchToProps)
-)(SiteLanguageSwitcher);
+)(LanguageSwitcher);

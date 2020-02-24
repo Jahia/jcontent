@@ -38,14 +38,14 @@ export class ContentTree extends React.Component {
                 queryVariables={{lang: lang}}
                 selectedPaths={[path]}
                 setRefetch={refetchingData => setRefetcher(item.config.key, refetchingData)}
-                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PredefinedFragments.displayName]}
+                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.lock, PredefinedFragments.displayName]}
                 onOpenItem={(openedPath, open) => (open ? openPath(openedPath) : closePath(openedPath))}
                 onSelectItem={selectedPath => setPath(selectedPath, {sub: false})}
             >
                 {({pickerEntries}) => {
                     return (
                         <TreeView isReversed
-                                  data={convertPathsToTree(pickerEntries)}
+                                  data={convertPathsToTree(pickerEntries, path)}
                                   openedItems={openPaths}
                                   selectedItems={[path]}
                                   onClickItem={object => setPath(object.id, {sub: false})}

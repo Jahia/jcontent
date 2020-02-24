@@ -30,6 +30,14 @@ const PickerItemsFragment = {
                 name
             }
         }`
+    },
+    lock: {
+        applyFor: 'node',
+        gql: gql`fragment LockInfo on JCRNode {
+            lockOwner: property(name: "jcr:lockOwner") {
+                value
+            }
+        }`
     }
 };
 

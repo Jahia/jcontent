@@ -1,4 +1,5 @@
 import React from 'react';
+import {useSelector} from 'react-redux';
 import {FullWidthContent} from '@jahia/design-system-kit';
 import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
@@ -9,6 +10,8 @@ import Breadcrumb from './Breadcrumb';
 import ContentTitle from './ContentTitle';
 
 const ContentRoute = () => {
+    const mode = useSelector(state => state.jcontent.mode);
+
     return (
         <MainLayout
             header={
@@ -21,7 +24,7 @@ const ContentRoute = () => {
             }
         >
             <FullWidthContent>
-                <ContentLayout/>
+                { mode.length > 0 && <ContentLayout/> }
             </FullWidthContent>
         </MainLayout>
     );

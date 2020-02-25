@@ -2,28 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu} from '@jahia/moonstone';
 
-export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children}) => {
-    const outsideBottom = (anchor.top + (isSubMenu ? 100 : 300)) > window.document.body.clientHeight;
-    const top = (outsideBottom ? {bottom: 0} : {top: anchor.top});
-    const outsideRight = (anchor.left + 150) > window.document.body.clientWidth;
-    const left = (outsideRight ? {right: 0} : {left: anchor.left}) + 'px';
-
-    return (
-        <>
-            <Menu
-                anchorPosition={anchor}
-                hasOverlay={isOpen && !isLoading && !isSubMenu}
-                isDisplayed={isOpen && !isLoading}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                onClose={onClose}
-                onExited={onExited}
-            >
-                {children}
-            </Menu>
-        </>
-    );
-};
+export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children}) => (
+    <Menu
+        anchorPosition={anchor}
+        hasOverlay={isOpen && !isLoading && !isSubMenu}
+        isDisplayed={isOpen && !isLoading}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClose={onClose}
+        onExited={onExited}
+    >
+        {children}
+    </Menu>
+);
 
 MenuRenderer.propTypes = {
     /**

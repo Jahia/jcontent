@@ -8,10 +8,10 @@ import gql from 'graphql-tag';
 import {connect} from 'react-redux';
 import {withTranslation} from 'react-i18next';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '../../../../JContent.redux';
+import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '~/JContent/JContent.redux';
 import {Dropdown} from '@jahia/moonstone';
 import {batchActions} from 'redux-batched-actions';
-import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '../../../../preview.redux';
+import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/preview.redux';
 import styles from './SiteSwitcher.scss';
 
 class SiteSwitcher extends React.Component {

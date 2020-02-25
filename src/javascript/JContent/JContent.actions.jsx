@@ -15,7 +15,6 @@ import {
     Lock,
     LockOpen,
     SubdirectoryArrowRight,
-    Translate,
     Visibility
 } from '@material-ui/icons';
 import {
@@ -50,8 +49,6 @@ import openInEditModeAction from './actions/openInEditModeAction';
 import unlockAction from './actions/unlockAction';
 import clearAllLocksAction from './actions/clearAllLocksAction';
 import locateAction from './actions/locateAction';
-import translateAction from './actions/translateAction';
-import translateMenuAction from './actions/translateMenuAction';
 import subContentsAction from './actions/subContentsAction';
 import exportAction from './actions/exportAction';
 import downloadFileAction from './actions/downloadFileAction';
@@ -111,16 +108,6 @@ export const jContentActions = registry => {
         contentType: 'jnt:file',
         showOnNodeTypes: ['jnt:folder'],
         requiredPermission: 'jcr:addChildNodes'
-    });
-    registry.add('action', 'translateMenu', translateMenuAction, {
-        buttonIcon: <Translate/>,
-        buttonLabel: 'jcontent:label.contentManager.contentPreview.translate',
-        targets: ['contentActions:4.5'],
-        menu: 'translateMenu'
-    });
-    registry.add('action', 'translateAction', translateAction, {
-        buttonIcon: <Translate/>,
-        targets: ['translateMenu']
     });
     registry.add('action', 'publish', publishAction, {
         buttonIcon: <CloudUpload/>,

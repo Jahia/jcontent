@@ -1,6 +1,6 @@
 import JContentLogo from './JContentLogo';
-import SiteSwitcher from '../../../SiteSwitcher';
-import SiteLanguageSwitcher from '../../../SiteLanguageSwitcher';
+import SiteSwitcher from './SiteSwitcher';
+import LanguageSwitcher from './LanguageSwitcher';
 import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -12,8 +12,7 @@ const styles = () => ({
         alignItems: 'center'
     },
     switchersContainer: {
-        display: 'flex',
-        margin: '20px'
+        display: 'flex'
     }
 });
 
@@ -23,7 +22,7 @@ const NavigationHeader = ({classes}) => {
             <JContentLogo/>
             <div className={classes.switchersContainer}>
                 <SiteSwitcher/>
-                <SiteLanguageSwitcher/>
+                <LanguageSwitcher/>
             </div>
         </div>
     );

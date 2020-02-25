@@ -17,11 +17,6 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
         setHover(false);
     };
 
-    if (context.enabled === false) {
-        // TODO: This should actually render a disabled button
-        return false;
-    }
-
     let h = hover;
     if (context.menuContext) {
         h = h || context.menuContext.inMenu;
@@ -32,6 +27,7 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
             data-sel-role={context.key}
             label={t(context.buttonLabel, context.buttonLabelParams)}
             isHover={h}
+            isDisabled={context.enabled === false}
             onClick={onClick}
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}

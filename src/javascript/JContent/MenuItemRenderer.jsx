@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Typography} from '@jahia/design-system-kit';
+import {MenuItem} from '@jahia/moonstone';
 
 export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) => {
     const {t} = useTranslation();
@@ -28,16 +28,14 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
     }
 
     return (
-        <div style={{padding: '8 24', color: '#131C21', backgroundColor: h ? '#E0E6EA' : 'inherit'}}
-             data-sel-role={context.key}
-             onClick={onClick}
-             onMouseEnter={onEnter}
-             onMouseLeave={onLeave}
-        >
-            <Typography variant="zeta"
-                        color="inherit"
-                        dangerouslySetInnerHTML={{__html: t(context.buttonLabel, context.buttonLabelParams)}}/>
-        </div>
+        <MenuItem
+            data-sel-role={context.key}
+            label={t(context.buttonLabel, context.buttonLabelParams)}
+            isHover={h}
+            onClick={onClick}
+            onMouseEnter={onEnter}
+            onMouseLeave={onLeave}
+        />
     );
 };
 
@@ -54,9 +52,9 @@ MenuItemRenderer.propTypes = {
     /**
      * Function to call when the menu item is hovered
      */
-    onMouseEnter: PropTypes.func.isRequired,
+    onMouseEnter: PropTypes.func,
     /**
      * Function to call when the menu item is left
      */
-    onMouseLeave: PropTypes.func.isRequired
+    onMouseLeave: PropTypes.func
 };

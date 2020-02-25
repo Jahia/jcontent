@@ -102,6 +102,7 @@ class SiteSwitcher extends React.Component {
                     let sites = this.getSites(data);
                     return (
                         <Dropdown
+                            data-cm-role="site-switcher"
                             label={siteKey}
                             value={siteKey}
                             data={sites.map(s => ({label: s.displayName, value: s.path, name: s.name, site: s.site}))}

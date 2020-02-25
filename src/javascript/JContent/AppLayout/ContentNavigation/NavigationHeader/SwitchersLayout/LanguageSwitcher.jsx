@@ -7,6 +7,7 @@ import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
 import {registry} from '@jahia/ui-extender';
 import {Dropdown} from '@jahia/moonstone';
+import styles from './LanguageSwitcher.scss';
 
 export const LanguageSwitcher = ({
     notificationContext,
@@ -38,6 +39,7 @@ export const LanguageSwitcher = ({
     return (
         <Dropdown
             data-cm-role="language-switcher"
+            className={styles.languageSwitcher}
             label={lang}
             value={lang}
             data={siteInfo.languages.map(l => ({label: l.language, value: l.language}))}

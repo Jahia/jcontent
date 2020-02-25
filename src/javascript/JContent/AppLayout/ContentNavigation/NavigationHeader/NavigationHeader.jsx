@@ -1,29 +1,26 @@
 import JContentLogo from './JContentLogo';
-import SiteSwitcher from './SiteSwitcher';
-import LanguageSwitcher from './LanguageSwitcher';
 import React from 'react';
 import {withStyles} from '@material-ui/core';
 import PropTypes from 'prop-types';
+import SwitchersLayout from './SwitchersLayout';
+import styles from './NavigationHeader.scss';
 
-const styles = () => ({
-    logoContainer: {
+const style = () => ({
+    header: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
-    },
-    switchersContainer: {
-        display: 'flex'
+        alignItems: 'center',
+        width: '100%'
     }
 });
 
 const NavigationHeader = ({classes}) => {
     return (
-        <div className={classes.logoContainer}>
-            <JContentLogo/>
-            <div className={classes.switchersContainer}>
-                <SiteSwitcher/>
-                <LanguageSwitcher/>
+        <div className={classes.header}>
+            <div className={styles.logo}>
+                <JContentLogo/>
             </div>
+            <SwitchersLayout/>
         </div>
     );
 };
@@ -32,4 +29,4 @@ NavigationHeader.propTypes = {
     classes: PropTypes.object
 };
 
-export default withStyles(styles)(NavigationHeader);
+export default withStyles(style)(NavigationHeader);

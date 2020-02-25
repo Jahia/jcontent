@@ -13,20 +13,6 @@ import {Dropdown} from '@jahia/moonstone';
 import {batchActions} from 'redux-batched-actions';
 import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '../../../preview.redux';
 
-function createDataObjects(sites) {
-    let data = [];
-    sites.forEach(site => {
-        let element = {
-            label: site.displayName,
-            value: site.path,
-            name: site.name,
-            site: site.site
-        };
-        data.push(element);
-    });
-    return data;
-}
-
 class SiteSwitcher extends React.Component {
     constructor(props) {
         super(props);
@@ -118,7 +104,7 @@ class SiteSwitcher extends React.Component {
                         <Dropdown
                             label={siteKey}
                             value={siteKey}
-                            data={createDataObjects(sites)}
+                            data={sites.map(s => ({label: s.displayName, value: s.path, name: s.name, site: s.site}))}
                             onChange={(e, siteNode) => {
                                 this.onSelectSite(siteNode, currentLang);
                                 this.props.dispatchBatch([

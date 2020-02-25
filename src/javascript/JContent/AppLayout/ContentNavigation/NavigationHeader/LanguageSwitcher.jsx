@@ -8,18 +8,6 @@ import {useSiteInfo} from '@jahia/data-helper';
 import {registry} from '@jahia/ui-extender';
 import {Dropdown} from '@jahia/moonstone';
 
-function createDataObjects(languages) {
-    let data = [];
-    languages.forEach(language => {
-        let element = {
-            label: language.language,
-            value: language.language
-        };
-        data.push(element);
-    });
-    return data;
-}
-
 export const LanguageSwitcher = ({
     notificationContext,
     siteKey,
@@ -51,7 +39,7 @@ export const LanguageSwitcher = ({
         <Dropdown
             label={lang}
             value={lang}
-            data={createDataObjects(siteInfo.languages)}
+            data={siteInfo.languages.map(l => ({label: l.language, value: l.language}))}
             onChange={(e, item) => {
                 onSelectLanguageHandler(item.label);
                 return true;

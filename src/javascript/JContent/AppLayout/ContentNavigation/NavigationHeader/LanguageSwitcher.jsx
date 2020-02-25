@@ -37,6 +37,7 @@ export const LanguageSwitcher = ({
 
     return (
         <Dropdown
+            data-cm-role="language-switcher"
             label={lang}
             value={lang}
             data={siteInfo.languages.map(l => ({label: l.language, value: l.language}))}

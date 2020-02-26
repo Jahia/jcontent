@@ -1011,13 +1011,14 @@
     react-select "^2.4.2"
     recompose "^0.30.0"
 
-"@jahia/test-framework@^1.1.4":
-  version "1.1.4"
-  resolved "https://npm.jahia.com/@jahia%2ftest-framework/-/test-framework-1.1.4.tgz#ef3ad33d4ad2c9396fccaf194efbfee08af4265d"
-  integrity sha512-5v4s6YbjYZxWrGndAvEkCU7gt0Xnq6YN9ItcfIJpS+Lq+Op2ZUpawEt5kTI6CIjcauKU4jC249utm408e4jfeg==
+"@jahia/test-framework@^1.1.5":
+  version "1.1.5"
+  resolved "https://npm.jahia.com/@jahia%2ftest-framework/-/test-framework-1.1.5.tgz#ae6d252d9b619c4d0e30ef4807ffaa2e7637ac52"
+  integrity sha512-x1HglLPYv048wr+YOJz8UCx+v7imehpQvGxRHz+chFuALfXn03FXHff7lBgBLLmFujn/JMxUF1QDM4CHRJmeOg==
   dependencies:
     enzyme "^3.9.0"
     enzyme-adapter-react-16 "^1.12.1"
+    identity-obj-proxy "^3.0.0"
 
 "@jahia/ui-extender@^0.2.0":
   version "0.2.0"
@@ -4602,7 +4603,7 @@ har-validator@~5.1.0, har-validator@~5.1.3:
 
 harmony-reflect@^1.4.6:
   version "1.6.1"
-  resolved "https://npm.jahia.com/harmony-reflect/-/harmony-reflect-1.6.1.tgz#c108d4f2bb451efef7a37861fdbdae72c9bdefa9"
+  resolved "https://registry.yarnpkg.com/harmony-reflect/-/harmony-reflect-1.6.1.tgz#c108d4f2bb451efef7a37861fdbdae72c9bdefa9"
   integrity sha512-WJTeyp0JzGtHcuMsi7rw2VwtkvLa+JyfEKJCFyfcS0+CDkjQ5lHPu7zEhFZP+PDSRrEgXa5Ah0l1MbgbE41XjA==
 
 has-ansi@^2.0.0:
@@ -4850,7 +4851,7 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
 
 identity-obj-proxy@^3.0.0:
   version "3.0.0"
-  resolved "https://npm.jahia.com/identity-obj-proxy/-/identity-obj-proxy-3.0.0.tgz#94d2bda96084453ef36fbc5aaec37e0f79f1fc14"
+  resolved "https://registry.yarnpkg.com/identity-obj-proxy/-/identity-obj-proxy-3.0.0.tgz#94d2bda96084453ef36fbc5aaec37e0f79f1fc14"
   integrity sha1-lNK9qWCERT7zb7xarsN+D3nx/BQ=
   dependencies:
     harmony-reflect "^1.4.6"

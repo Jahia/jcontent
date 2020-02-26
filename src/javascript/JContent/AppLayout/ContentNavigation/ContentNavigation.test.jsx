@@ -1,6 +1,6 @@
 import React from 'react';
 import {File, FolderSpecial, Collections} from '@jahia/moonstone/dist/icons';
-import {mount} from '@jahia/test-framework';
+import {shallow} from '@jahia/test-framework';
 import ContentNavigation from './ContentNavigation';
 import JContentConstants from '../../JContent.constants';
 import {Accordion, AccordionItem} from '@jahia/moonstone';
@@ -49,7 +49,7 @@ describe('Accordion with 3 accordion items', () => {
     };
 
     beforeAll(() => {
-        wrapper = mount(<ContentNavigation {...props}/>);
+        wrapper = shallow(<ContentNavigation {...props}/>);
     });
 
     it('Should render', async () => {
@@ -62,7 +62,7 @@ describe('Accordion with 3 accordion items', () => {
     });
 
     it('Second and Third accordion item should be closed', async () => {
-        expect(wrapper.find(AccordionItem).at(1).contains(<div>Content Folders</div>)).toBe(false);
-        expect(wrapper.find(AccordionItem).at(2).contains(<div>Files</div>)).toBe(false);
+        expect(wrapper.find(AccordionItem).at(1).contains(<div>Content Folders</div>)).toBe(true);
+        expect(wrapper.find(AccordionItem).at(2).contains(<div>Media</div>)).toBe(false);
     });
 });

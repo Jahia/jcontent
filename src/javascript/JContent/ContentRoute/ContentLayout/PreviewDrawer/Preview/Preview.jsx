@@ -1,17 +1,15 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {connect} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import {useContentPreview} from '@jahia/data-helper';
-import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {PreviewComponent} from '@jahia/react-material';
+import {withNotifications} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
-import {cmSetPreviewMode, cmSetPreviewState} from '../../../../preview.redux';
+import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/preview.redux';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
-import {cmClearSelection} from '../../contentSelection.redux';
-import {CM_DRAWER_STATES} from '../../../../JContent.redux';
+import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {withStyles} from '@material-ui/core';
+import PreviewContainer from './Preview.container';
 
 const styles = theme => ({
     root: {
@@ -74,44 +72,21 @@ export const Preview = props => {
     } = props;
     const {t} = useTranslation();
 
-    const {data, loading, error, refetch} = useContentPreview({
-        path: previewSelection && previewSelection.path,
-        templateType: 'html',
-        view: 'cm',
-        contextConfiguration: 'preview',
-        language,
-        workspace: previewMode
-    });
-
-    useEffect(() => {
-        if (!loading && !error) {
-            refetch();
-        }
-    });
-
     if (selection.length > 0) {
-        return <MultipleSelection {...props}/>;
+        return <MultipleSelection {...props} t={t}/>;
     }
 
     if (!previewSelection || previewSelection.length === 0) {
         return <NoPreviewComponent {...props} t={t}/>;
     }
 
-    if (error) {
-        console.error('Error when fetching data: ', error);
-        const message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
-        return null;
-    }
-
-    if (loading || Object.keys(data).length === 0) {
-        return <ProgressOverlay/>;
-    }
-
     return (
-        <PreviewComponent data={data.jcr ? data.jcr : {}}
-                          workspace={previewMode}
-                          fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
+        <PreviewContainer previewMode={previewMode}
+                          t={t}
+                          previewState={previewState}
+                          previewSelection={previewSelection}
+                          language={language}
+                          notificationContext={notificationContext}
         />
     );
 };

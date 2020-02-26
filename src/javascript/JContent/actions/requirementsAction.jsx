@@ -80,6 +80,9 @@ let requirementsAction = composeActions(withApolloAction, reduxAction(state => (
                 context.enabled = combineLatest(contexts.map(ctx => ctx.enabled)).pipe(map(enableds => enableds.reduce((acc, val) => acc && val, true)));
                 context.loading = combineLatest(contexts.map(ctx => ctx.loading)).pipe(map(loadings => loadings.reduce((acc, val) => acc || val, false)));
             }
+
+            // TODO More granular switch between isVisible / isEnabled
+            context.isVisible = context.enabled;
         };
     }
 });

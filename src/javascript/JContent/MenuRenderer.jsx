@@ -1,56 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Menu} from '@jahia/moonstone';
 
-export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children}) => {
-    const outsideBottom = (anchor.top + (isSubMenu ? 100 : 300)) > window.document.body.clientHeight;
-    const top = outsideBottom ? {bottom: 0} : {top: anchor.top};
-    const outsideRight = (anchor.left + 150) > window.document.body.clientWidth;
-    const left = outsideRight ? {right: 0} : {left: anchor.left};
-
-    return (
-        <>
-            {
-                !isSubMenu &&
-                <div style={{
-                    position: 'fixed',
-                    width: '100vw',
-                    height: '100vh',
-                    top: 0,
-                    left: 0,
-                    pointerEvents: isOpen ? 'auto' : 'none',
-                    opacity: isOpen ? 0.5 : 0,
-                    transition: 'opacity 0.5s',
-                    zIndex: 2000,
-                    backgroundColor: 'black'
-                }}
-                     onClick={onClose}
-                />
-            }
-            <div style={{
-                position: 'fixed',
-                ...top,
-                ...left,
-                borderRadius: '2px',
-                boxShadow: '0px 4px 8px rgba(19, 28, 33, 0.2)',
-                backgroundColor: '#FDFDFD',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: (isOpen && !isLoading) ? 1 : 0,
-                transition: 'opacity 0.5s',
-                zIndex: 2100
-            }}
-                 onMouseEnter={onMouseEnter}
-                 onMouseLeave={onMouseLeave}
-                 onTransitionEnd={() => !isOpen && onExited()}
-            >
-                <div style={{flex: '0 1 auto'}} data-sel-role="cmm-context-menu">
-                    {children}
-                </div>
-            </div>
-        </>
-    );
-};
+export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children}) => (
+    <Menu
+        anchorPosition={anchor}
+        style={{zIndex: isSubMenu ? 9001 : 9000}}
+        hasOverlay={isOpen && !isLoading && !isSubMenu}
+        isDisplayed={isOpen && !isLoading}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClose={onClose}
+        onExited={onExited}
+    >
+        {children}
+    </Menu>
+);
 
 MenuRenderer.propTypes = {
     /**
@@ -76,17 +41,17 @@ MenuRenderer.propTypes = {
     /**
      * Function to call when the menu has been completely closed,
      */
-    onExited: PropTypes.func.isRequired,
+    onExited: PropTypes.func,
 
     /**
      * Function to call when the menu is hovered,
      */
-    onMouseEnter: PropTypes.func.isRequired,
+    onMouseEnter: PropTypes.func,
 
     /**
      * Function to call when the menu is left
      */
-    onMouseLeave: PropTypes.func.isRequired,
+    onMouseLeave: PropTypes.func,
 
     /**
      * Function to call to close the menu

@@ -47,12 +47,15 @@ export const jContentAppRoot = registry => {
                     uploadUpdateCallback={status => {
                         if (status && status.uploading === 0) {
                             const refetchCallbacks = registry.find({type: 'refetch-upload'});
-                            refetchCallbacks.forEach(refetchCallback => {
-                                if (refetchCallback.refetch) {
-                                    refetchCallback.refetch();
-                                }
-                            });
-                            refetchContentTreeAndListData();
+                            if (refetchCallbacks.length > 0) {
+                                refetchCallbacks.forEach(refetchCallback => {
+                                    if (refetchCallback.refetch) {
+                                        refetchCallback.refetch();
+                                    }
+                                });
+                            } else {
+                                refetchContentTreeAndListData();
+                            }
                         }
                     }}
                 />

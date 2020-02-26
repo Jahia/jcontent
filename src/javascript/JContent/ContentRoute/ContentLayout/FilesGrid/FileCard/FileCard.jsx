@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
@@ -27,6 +27,11 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
         '& $fileCardContentContainer': {
             width: 'calc(100% - 160px)'
+        }
+    },
+    card: {
+        '&:hover $actions': {
+            display: 'block'
         }
     },
     thumbCard: {
@@ -98,6 +103,16 @@ const styles = theme => ({
     },
     publicationInfoDetailed: {
         minWidth: 400 - (theme.spacing.unit * 4) - 6
+    },
+    actions: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        '& button': {
+            padding: '8px',
+            margin: '0px'
+        },
+        display: 'none'
     }
 });
 
@@ -115,7 +130,6 @@ export const FileCard = ({gridMode,
     index
 }) => {
     const {t} = useTranslation();
-    const [isHovered, setHovered] = useState(false);
 
     let contextualMenu = React.createRef();
 
@@ -152,6 +166,7 @@ export const FileCard = ({gridMode,
             <Card
                     style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
                     className={classNames(
+                        classes.card,
                         isThumbCard && classes.thumbCard,
                         isDetailedCard && classes.detailedCard,
                         isPreviewSelected && classes.selectedCard
@@ -167,8 +182,6 @@ export const FileCard = ({gridMode,
                         }
                     }}
                     onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
-                    onMouseEnter={() => setHovered(true)}
-                    onMouseLeave={() => setHovered(false)}
             >
                 {!isThumbCard &&
                 <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
@@ -194,7 +207,7 @@ export const FileCard = ({gridMode,
                     {isThumbCard &&
                     <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
 
-                    <Actions node={node} isHovered={isHovered}/>
+                    <Actions node={node} className={classes.actions}/>
 
                     <CardContent classes={{root: classes.cardContent}}>
                         <div>

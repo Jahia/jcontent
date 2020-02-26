@@ -37,9 +37,9 @@ const CmmNavItem = () => {
 registry.add('callback', 'jContent', {
     targets: ['jahiaApp-init:1'],
     callback: () => {
-        registry.add('topNavGroup', 'jcontentGroupItem', {
+        registry.add('primary-nav-item', 'jcontentGroupItem', {
             targets: ['nav-root-top:2'],
-            render: () => <CmmNavItem key="jcontentGroupItem"/>
+            render: () => <CmmNavItem/>
         });
         registry.add('route', 'route-jcontent', {
             targets: ['nav-root-top:2'],

@@ -12,8 +12,12 @@
     "clean:all": "yarn clean && rimraf node_modules node",
     "test": "jest --coverage",
     "tdd": "jest --watch",
-    "lint": "eslint --ext js,jsx .",
-    "lint:fix": "eslint --ext js,jsx --fix ."
+    "lint:js": "eslint --ext js,jsx .",
+    "lint:js:fix": "yarn lint:js --fix .",
+    "lint:scss": "stylelint './src/**/*.scss'",
+    "lint:scss:fix": "yarn lint:scss --fix",
+    "lint": "yarn lint:js && yarn lint:scss",
+    "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix"
   },
   "husky": {
     "hooks": {
@@ -87,6 +91,7 @@
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
     "@jahia/eslint-config": "^1.1.0",
+    "@jahia/stylelint-config": "^0.0.3",
     "@jahia/test-framework": "^1.1.5",
     "@types/jest": "^24.0.11",
     "apollo-cache-inmemory": "^1.6.5",
@@ -111,6 +116,7 @@
     "rimraf": "^2.6.2",
     "sass-loader": "^8.0.2",
     "style-loader": "^0.23.1",
+    "stylelint": "^13.2.0",
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.1.2",

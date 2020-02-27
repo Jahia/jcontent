@@ -1,19 +1,45 @@
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
+import React from 'react';
 import {CM_DRAWER_STATES} from '../JContent.redux';
-import {reduxAction} from './reduxAction';
 import {cmSetPreviewSelection, cmSetPreviewState} from '../preview.redux';
+import {useDispatch} from 'react-redux';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
 
-export default composeActions(requirementsAction, reduxAction(() => ({}), dispatch => ({
-    setPreviewState: state => dispatch(cmSetPreviewState(state)),
-    setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection))
-})), {
-    init: context => {
-        context.initRequirements({hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']});
-    },
-    onClick: context => {
-        let {setPreviewState, setPreviewSelection} = context;
-        setPreviewSelection(context.path);
-        setPreviewState(CM_DRAWER_STATES.SHOW);
+export const PreviewActionComponent = ({context, render: Render, loading: Loading}) => {
+    const dispatch = useDispatch();
+
+    const res = useNodeChecks(
+        {path: context.path},
+        {hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']}
+    );
+
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible: res.checksResult,
+            enabled: res.checksResult,
+            onClick: () => {
+                dispatch(cmSetPreviewSelection(context.path));
+                dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
+            }
+        }}/>
+    );
+};
+
+PreviewActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const previewAction = {
+    component: PreviewActionComponent
+};
+
+export default previewAction;

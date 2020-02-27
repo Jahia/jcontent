@@ -8,6 +8,7 @@ import SearchBar from './SearchBar';
 import ToolBar from './ToolBar';
 import Breadcrumb from './Breadcrumb';
 import ContentTitle from './ContentTitle';
+import ContentStatuses from './ContentStatuses';
 
 const ContentRoute = () => {
     const mode = useSelector(state => state.jcontent.mode);
@@ -20,6 +21,7 @@ const ContentRoute = () => {
                     mainAction={<SearchBar/>}
                     breadcrumb={<Breadcrumb/>}
                     toolbar={<ToolBar/>}
+                    information={<ContentStatuses/>}
                 />
             }
         >

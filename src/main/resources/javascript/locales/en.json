@@ -133,6 +133,7 @@
         "content": "New content"
       },
       "locked": "Content is locked",
+      "lockedBy": "Content is locked by {{userName}}",
       "saveAsWip": "Mark as work in progress",
       "browseFiles": "Browse Files",
       "tree": {
@@ -305,6 +306,16 @@
         "ok": "OK",
         "cancel": "Cancel",
         "exists": "A folder with this name already exists"
+      },
+      "contentStatus": {
+        "locked": "Locked",
+        "markedForDeletion": "Marked for deletion",
+        "modified": "Modified",
+        "new": "New",
+        "notPublished": "Not published",
+        "published": "Live",
+        "warning": "Warning",
+        "workInProgress": "Work in progress"
       }
     }
   }

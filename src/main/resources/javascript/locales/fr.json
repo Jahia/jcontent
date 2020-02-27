@@ -305,6 +305,16 @@
         "ok": "OK",
         "cancel": "Annuler",
         "exists": "Un dossier de ce nom existe déjà"
+      },
+      "contentStatus": {
+        "locked": "Verrouillé",
+        "markedForDeletion": "Marqué pour suppression",
+        "modified": "Modifié",
+        "new": "Nouveau",
+        "notPublished": "Non publié",
+        "published": "Live",
+        "warning": "Attention",
+        "workInProgress": "Travail en cours"
       }
     }
   }

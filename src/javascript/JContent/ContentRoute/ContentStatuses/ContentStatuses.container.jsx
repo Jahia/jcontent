@@ -1,12 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 
 import ContentStatuses from './ContentStatuses';
 import {GetContentStatuses} from './ContentStatuses.gql-queries';
 
-const ContentStatusesContainer = ({path, isDisabled, language, uilang}) => {
+const ContentStatusesContainer = () => {
+    const {path, isDisabled, language, uilang} = useSelector(state => ({
+        language: state.language,
+        path: state.jcontent.path,
+        isDisabled: state.jcontent.selection.length > 0,
+        uilang: state.uilang
+    }));
+
     const {data, error} = useQuery(GetContentStatuses, {
         variables: {
             path: path,
@@ -24,22 +30,4 @@ const ContentStatusesContainer = ({path, isDisabled, language, uilang}) => {
     );
 };
 
-ContentStatusesContainer.propTypes = {
-    language: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-    uilang: PropTypes.string.isRequired,
-    isDisabled: PropTypes.bool
-};
-
-ContentStatusesContainer.defaultProps = {
-    isDisabled: false
-};
-
-const mapStateToProps = state => ({
-    language: state.language,
-    path: state.jcontent.path,
-    isDisabled: state.jcontent.selection.length > 0,
-    uilang: state.uilang
-});
-
-export default connect(mapStateToProps)(ContentStatusesContainer);
+export default ContentStatusesContainer;

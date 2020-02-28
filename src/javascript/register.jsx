@@ -27,6 +27,7 @@ const CmmNavItem = () => {
     const {t} = useTranslation('jcontent');
     return (
         <PrimaryNavItem key={ROUTE}
+                        role="jcontent-menu-item"
                         isSelected={history.location.pathname.startsWith(ROUTE) && history.location.pathname.split('/').length > 3}
                         label={t('label.name')}
                         icon={<Collections/>}

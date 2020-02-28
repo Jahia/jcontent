@@ -82,6 +82,104 @@ export const ContentLayoutContainer = ({
         fetchPolicy: fetchPolicy
     });
 
+    const onGwtContentModification = async (nodeUuid, nodePath, nodeName, operation) => {
+        let refetchObservableQueries = true;
+
+        if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
+            operation = 'rename';
+        }
+
+        if (operation === 'create') {
+            let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
+            client.cache.flushNodeEntryByPath(parentPath);
+            if (path !== parentPath) {
+                // Make sure the created content is visible in the main panel.
+                setPath(parentPath);
+            }
+        } else if (operation === 'delete') {
+            // Clear cache entries for subnodes
+            Object.keys(client.cache.idByPath)
+                .filter(p => isDescendantOrSelf(p, nodePath))
+                .forEach(p => client.cache.flushNodeEntryByPath(p));
+
+            // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
+            if (isDescendantOrSelf(path, nodePath)) {
+                setPath(nodePath.substring(0, nodePath.lastIndexOf('/')));
+            }
+
+            // Close any expanded nodes that have been just removed.
+            let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
+            if (!_.isEmpty(pathsToClose)) {
+                closePaths(pathsToClose);
+            }
+
+            // De-select any removed nodes.
+            if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
+                setPreviewSelection(null);
+            }
+        } else if (operation === 'rename') {
+            let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
+            let newPath = parentPath + '/' + nodeName;
+
+            // Clear cache entries for subnodes
+            Object.keys(client.cache.idByPath)
+                .filter(p => isDescendantOrSelf(p, nodePath))
+                .forEach(p => client.cache.flushNodeEntryByPath(p));
+
+            // Switch to the new renamed node
+            if (isDescendantOrSelf(path, nodePath)) {
+                setPath(getNewNodePath(path, nodePath, newPath));
+            }
+
+            let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
+            if (!_.isEmpty(pathsToReopen)) {
+                closePaths(pathsToReopen);
+                pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, nodePath, newPath));
+                openPaths(pathsToReopen);
+            }
+
+            // De-select any removed nodes.
+            if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
+                setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
+            }
+        } else if (operation === 'update') {
+            // If we're modifying the contribute settings we need to flush also node descendants
+            // so we fetch the node in cache and we search for contribute mixin
+            let node;
+            try {
+                node = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+            } catch (e) {
+                console.log(e);
+            }
+
+            client.cache.flushNodeEntryById(nodeUuid);
+            await client.reFetchObservableQueries();
+            refetchObservableQueries = false;
+            let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+            if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
+                !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
+                Object.keys(client.cache.idByPath)
+                    .filter(p => isDescendantOrSelf(p, nodePath))
+                    .forEach(p => client.cache.flushNodeEntryByPath(p));
+            }
+
+            if (selection.length > 0) {
+                // Modification when using multiple selection actions
+                let selectedNodes = _.clone(selection);
+                setTimeout(function () {
+                    if (_.includes(selectedNodes, nodePath)) {
+                        removeSelection(nodePath);
+                        switchSelection(nodePath);
+                    }
+                });
+            }
+        }
+
+        if (refetchObservableQueries) {
+            client.reFetchObservableQueries();
+        }
+    };
+
     useEffect(() => {
         setContentListDataRefetcher({
             query: layoutQuery,
@@ -89,110 +187,12 @@ export const ContentLayoutContainer = ({
             refetch: refetch
         });
 
-        const onGwtContentModification = async (nodeUuid, nodePath, nodeName, operation) => {
-            let refetchObservableQueries = true;
-
-            if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
-                operation = 'rename';
-            }
-
-            if (operation === 'create') {
-                let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-                client.cache.flushNodeEntryByPath(parentPath);
-                if (path !== parentPath) {
-                    // Make sure the created content is visible in the main panel.
-                    setPath(parentPath);
-                }
-            } else if (operation === 'delete') {
-                // Clear cache entries for subnodes
-                Object.keys(client.cache.idByPath)
-                    .filter(p => isDescendantOrSelf(p, nodePath))
-                    .forEach(p => client.cache.flushNodeEntryByPath(p));
-
-                // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
-                if (isDescendantOrSelf(path, nodePath)) {
-                    setPath(nodePath.substring(0, nodePath.lastIndexOf('/')));
-                }
-
-                // Close any expanded nodes that have been just removed.
-                let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
-                if (!_.isEmpty(pathsToClose)) {
-                    closePaths(pathsToClose);
-                }
-
-                // De-select any removed nodes.
-                if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-                    setPreviewSelection(null);
-                }
-            } else if (operation === 'rename') {
-                let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-                let newPath = parentPath + '/' + nodeName;
-
-                // Clear cache entries for subnodes
-                Object.keys(client.cache.idByPath)
-                    .filter(p => isDescendantOrSelf(p, nodePath))
-                    .forEach(p => client.cache.flushNodeEntryByPath(p));
-
-                // Switch to the new renamed node
-                if (isDescendantOrSelf(path, nodePath)) {
-                    setPath(getNewNodePath(path, nodePath, newPath));
-                }
-
-                let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
-                if (!_.isEmpty(pathsToReopen)) {
-                    closePaths(pathsToReopen);
-                    pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, nodePath, newPath));
-                    openPaths(pathsToReopen);
-                }
-
-                // De-select any removed nodes.
-                if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-                    setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
-                }
-            } else if (operation === 'update') {
-                // If we're modifying the contribute settings we need to flush also node descendants
-                // so we fetch the node in cache and we search for contribute mixin
-                let node;
-                try {
-                    node = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
-                } catch (e) {
-                    console.log(e);
-                }
-
-                client.cache.flushNodeEntryById(nodeUuid);
-                await client.reFetchObservableQueries();
-                refetchObservableQueries = false;
-                let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
-                if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
-                    !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
-                    Object.keys(client.cache.idByPath)
-                        .filter(p => isDescendantOrSelf(p, nodePath))
-                        .forEach(p => client.cache.flushNodeEntryByPath(p));
-                }
-
-                if (selection.length > 0) {
-                    // Modification when using multiple selection actions
-                    let selectedNodes = _.clone(selection);
-                    setTimeout(function () {
-                        if (_.includes(selectedNodes, nodePath)) {
-                            removeSelection(nodePath);
-                            switchSelection(nodePath);
-                        }
-                    });
-                }
-            }
-
-            if (refetchObservableQueries) {
-                client.reFetchObservableQueries();
-            }
-        };
-
-        registerContentModificationEventHandler(onGwtContentModification());
+        registerContentModificationEventHandler(onGwtContentModification);
         setModificationHook(args => onGwtContentModification(...args));
 
-        return (
-            unregisterContentModificationEventHandler(onGwtContentModification())
-        );
+        return () => {
+            unregisterContentModificationEventHandler(onGwtContentModification);
+        };
     });
 
     if (error) {

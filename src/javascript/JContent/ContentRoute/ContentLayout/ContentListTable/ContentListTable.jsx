@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux';
-import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion} from '../../../JContent.utils';
+import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion, isWorkInProgress} from '../../../JContent.utils';
 import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -256,21 +256,6 @@ const getCellClasses = (node, classes, column, isSelected, isPreviewOpened) => {
             }
         )
     };
-};
-
-const isWip = (node, lang) => {
-    if (node.wipStatus) {
-        switch (node.wipStatus.value) {
-            case 'ALL_CONTENT':
-                return true;
-            case 'LANGUAGES':
-                return _.includes(node.wipLangs.values, lang);
-            default:
-                return false;
-        }
-    }
-
-    return false;
 };
 
 const addIconSuffix = icon => {
@@ -525,7 +510,7 @@ export const ContentListTable = ({
                                                                             classes={getCellClasses(node, classes, column.id, isSelected, isPreviewOpened)}
                                                                             padding="none"
                                                                         >
-                                                                            {isWip(node, lang) &&
+                                                                            {isWorkInProgress(node, lang) &&
                                                                             <Tooltip
                                                                                 title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}
                                                                             >

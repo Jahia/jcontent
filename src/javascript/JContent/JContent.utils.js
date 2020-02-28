@@ -41,6 +41,21 @@ function isMarkedForDeletion(node) {
     return hasMixin(node, 'jmix:markedForDeletion');
 }
 
+function isWorkInProgress(node, lang) {
+    if (node.wipStatus) {
+        switch (node.wipStatus.value) {
+            case 'ALL_CONTENT':
+                return true;
+            case 'LANGUAGES':
+                return _.includes(node.wipLangs.values, lang);
+            default:
+                return false;
+        }
+    }
+
+    return false;
+}
+
 function extractPaths(siteKey, path, mode) {
     let pathBase = '/sites/' + siteKey + (mode === JContentConstants.mode.MEDIA ? '/files' : '');
     let pathParts = path.replace(pathBase, '').split('/');
@@ -103,6 +118,7 @@ export {
     isDescendant,
     isDescendantOrSelf,
     isMarkedForDeletion,
+    isWorkInProgress,
     extractPaths,
     ellipsizeText,
     hasProperty,

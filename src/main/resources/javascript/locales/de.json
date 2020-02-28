@@ -305,6 +305,16 @@
         "ok": "OK",
         "cancel": "Abbrechen",
         "exists": "Ein Ordner mit diesem Namen existiert bereits"
+      },
+      "contentStatus": {
+        "locked": "Gesperrt",
+        "markedForDeletion": "Zur Löschung markiert",
+        "modified": "Geändert",
+        "new": "Neu",
+        "notPublished": "Nicht veröffentlicht",
+        "published": "Live",
+        "warning": "Achtung",
+        "workInProgress": "In Arbeit"
       }
     }
   }

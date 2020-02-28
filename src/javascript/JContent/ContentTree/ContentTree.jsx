@@ -3,61 +3,40 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
 import {compose} from '~/utils';
-import {setRefetcher} from '../JContent.refetches';
-import {Picker, PredefinedFragments} from '@jahia/data-helper';
+import {PredefinedFragments, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {convertPathsToTree} from './ContentTree.utils';
 
-export class ContentTree extends React.Component {
-    constructor(props) {
-        super(props);
-        this.container = React.createRef();
+export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, closePath, item}) => {
+    const rootPath = '/sites/' + siteKey + item.config.rootPath;
+
+    if (openPaths.findIndex(p => p === rootPath) === -1) {
+        openPaths.push(rootPath);
     }
 
-    render() {
-        const {
-            lang, siteKey, path, openPaths, setPath, openPath,
-            closePath, item
-        } = this.props;
+    const {treeEntries} = useTreeEntries({
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.lock, PredefinedFragments.displayName],
+        rootPaths: [rootPath],
+        openPaths: openPaths,
+        selectedPaths: [path],
+        openableTypes: item.config.openableTypes,
+        selectableTypes: item.config.selectableTypes,
+        queryVariables: {lang: lang},
+        hideRoot: item.config.hideRoot
+    });
 
-        const rootPath = '/sites/' + siteKey + item.config.rootPath;
-
-        if (openPaths.findIndex(p => p === rootPath) === -1) {
-            openPaths.push(rootPath);
-        }
-
-        return (
-            <Picker
-                openSelection
-                hideRoot={item.config.hideRoot}
-                rootPaths={[rootPath]}
-                openPaths={openPaths}
-                openableTypes={item.config.openableTypes}
-                selectableTypes={item.config.selectableTypes}
-                queryVariables={{lang: lang}}
-                selectedPaths={[path]}
-                setRefetch={refetchingData => setRefetcher(item.config.key, refetchingData)}
-                fragments={[PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.lock, PredefinedFragments.displayName]}
-                onOpenItem={(openedPath, open) => (open ? openPath(openedPath) : closePath(openedPath))}
-                onSelectItem={selectedPath => setPath(selectedPath, {sub: false})}
-            >
-                {({pickerEntries}) => {
-                    return (
-                        <TreeView isReversed
-                                  data={convertPathsToTree(pickerEntries, path)}
-                                  openedItems={openPaths}
-                                  selectedItems={[path]}
-                                  onClickItem={object => setPath(object.id, {sub: false})}
-                                  onOpenItem={object => openPath(object.id)}
-                                  onCloseItem={object => closePath(object.id)}
-                        />
-                    );
-                }}
-            </Picker>
-        );
-    }
-}
+    return (
+        <TreeView isReversed
+                  data={convertPathsToTree(treeEntries, path)}
+                  openedItems={openPaths}
+                  selectedItems={[path]}
+                  onClickItem={object => setPath(object.id, {sub: false})}
+                  onOpenItem={object => openPath(object.id)}
+                  onCloseItem={object => closePath(object.id)}
+        />
+    );
+};
 
 const mapStateToProps = state => ({
     siteKey: state.site,

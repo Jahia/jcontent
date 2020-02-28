@@ -4,7 +4,7 @@ import {Menu} from '@jahia/moonstone';
 
 export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children}) => (
     <Menu
-        anchorPosition={anchor}
+        {...anchor}
         style={{zIndex: isSubMenu ? 9001 : 9000}}
         hasOverlay={isOpen && !isLoading && !isSubMenu}
         isDisplayed={isOpen && !isLoading}

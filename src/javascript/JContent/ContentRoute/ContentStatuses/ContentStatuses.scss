@@ -1,8 +1,8 @@
 .contentStatuses {
-  display: inline-flex;
-  flex-direction: row;
+    display: inline-flex;
+    flex-direction: row;
 
-  & > *:not(:first-child) {
-    margin-left: var(--spacing-nano);
-  }
+    & > *:not(:first-child) {
+        margin-left: var(--spacing-nano);
+    }
 }

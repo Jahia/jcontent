@@ -28,34 +28,34 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(pickerEntries, selected) {
+function convertPathsToTree(treeEntries, selected) {
     let tree = [];
-    if (pickerEntries.length === 0) {
+    if (treeEntries.length === 0) {
         return tree;
     }
 
-    pickerEntries.forEach(pickerEntry => {
-        const notPublished = pickerEntry.node.publicationStatus && (
-            pickerEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED ||
-            pickerEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.UNPUBLISHED);
-        const locked = Boolean(pickerEntry.node.lockOwner);
-        const markedForDeletion = isMarkedForDeletion(pickerEntry.node);
+    treeEntries.forEach(treeEntry => {
+        const notPublished = treeEntry.node.publicationStatus && (
+            treeEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED ||
+            treeEntry.node.publicationStatus.publicationStatus === JContentConstants.availablePublicationStatuses.UNPUBLISHED);
+        const locked = Boolean(treeEntry.node.lockOwner);
+        const markedForDeletion = isMarkedForDeletion(treeEntry.node);
 
-        let parentPath = getParentPath(pickerEntry.path);
+        let parentPath = getParentPath(treeEntry.path);
         let element = {
-            id: pickerEntry.path,
-            label: pickerEntry.node.displayName,
-            hasChildren: pickerEntry.hasChildren,
+            id: treeEntry.path,
+            label: treeEntry.node.displayName,
+            hasChildren: treeEntry.hasChildren,
             parent: parentPath,
-            isClosable: pickerEntry.depth > 0,
-            iconStart: displayIcon(pickerEntry.node),
+            isClosable: treeEntry.depth > 0,
+            iconStart: displayIcon(treeEntry.node),
             iconEnd: (locked && <Lock/>) || (notPublished && <NoCloud/>),
             typographyOptions: {
                 hasLineThrough: markedForDeletion,
                 isItalic: notPublished
             },
             className: classNames(styles.ContentTree_Item, {
-                [styles.notPublished]: notPublished && selected !== pickerEntry.path
+                [styles.notPublished]: notPublished && selected !== treeEntry.path
             }),
             children: []
         };

@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@jahia/data-helper": "^0.0.5",
+    "@jahia/data-helper": "^0.0.7",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
     "@jahia/moonstone": "^0.11.0",

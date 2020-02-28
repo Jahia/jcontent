@@ -32,7 +32,7 @@ const ButtonRenderer = ({context}) => {
                 icon={context.buttonIcon && toIconComponent(context.buttonIcon)}
                 size="small"
                 variant="ghost"
-                disabled={context.enabled === false || context.visible === false}
+                disabled={context.enabled === false || context.isVisible === false}
                 onClick={e => {
                     e.stopPropagation();
                     context.onClick(context, e);

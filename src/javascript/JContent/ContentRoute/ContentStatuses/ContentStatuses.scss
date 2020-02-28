@@ -1,6 +1,7 @@
 .contentStatuses {
     display: inline-flex;
     flex-direction: row;
+    align-items: center;
 
     & > *:not(:first-child) {
         margin-left: var(--spacing-nano);

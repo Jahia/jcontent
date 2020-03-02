@@ -33,6 +33,11 @@
   "dx-extends": {
     "@jahia/jahia-ui-root": "0.0.1"
   },
+  "jahia": {
+    "apps": {
+      "jahia": "javascript/apps/jahia.bundle.js"
+    }
+  },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@jahia/data-helper": "^0.0.7",

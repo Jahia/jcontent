@@ -1,4 +1,6 @@
-import('./register')
-    .then(() => {
-        console.debug('%c jContent is activated', 'color: #6B5CA5');
-    });
+import {registry} from '@jahia/ui-extender';
+
+registry.add('callback', 'jContent', {
+    targets: ['jahiaApp-init:1'],
+    callback: () => import('./JContent.register')
+});

@@ -18,50 +18,45 @@ import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import JContentConstants from './JContent/JContent.constants';
+import {useSelector} from 'react-redux';
 
 const ROUTE = '/jcontent';
-const SYSTEM_SITE_ROUTE = `${ROUTE}/${window.contextJsParameters.siteKey}/${window.contextJsParameters.locale}/${JContentConstants.mode.PAGES}`;
 
 const CmmNavItem = () => {
     const history = useHistory();
     const {t} = useTranslation('jcontent');
+    const {site, language} = useSelector(state => ({language: state.language, site: state.site}));
     return (
         <PrimaryNavItem key={ROUTE}
                         role="jcontent-menu-item"
                         isSelected={history.location.pathname.startsWith(ROUTE) && history.location.pathname.split('/').length > 3}
                         label={t('label.name')}
                         icon={<Collections/>}
-                        onClick={() => history.push(SYSTEM_SITE_ROUTE)}/>
+                        onClick={() => history.push(`${ROUTE}/${site}/${language}/${JContentConstants.mode.PAGES}`)}/>
     );
 };
 
-registry.add('callback', 'jContent', {
-    targets: ['jahiaApp-init:1'],
-    callback: () => {
-        registry.add('primary-nav-item', 'jcontentGroupItem', {
-            targets: ['nav-root-top:2'],
-            render: () => <CmmNavItem/>
-        });
-        registry.add('route', 'route-jcontent', {
-            targets: ['nav-root-top:2'],
-            path: `${ROUTE}/:siteKey/:lang/:mode`, // Catch everything that's jcontent and let the app resolve correct view
-            defaultPath: SYSTEM_SITE_ROUTE,
-            render: () => <JContentApp/>
-        });
-
-        jContentRoutes(registry);
-        jContentActions(registry);
-
-        fileuploadRedux(registry);
-        previewRedux(registry);
-        copypasteRedux(registry);
-        filesGridRedux(registry);
-        paginationRedux(registry);
-        sortRedux(registry);
-        contentSelectionRedux(registry);
-        jContentAccordionItems(registry);
-        jContentRedux(registry);
-        jContentAppRoot(registry);
-    }
+registry.add('primary-nav-item', 'jcontentGroupItem', {
+    targets: ['nav-root-top:2'],
+    render: () => <CmmNavItem/>
 });
+registry.add('route', 'route-jcontent', {
+    targets: ['nav-root-top:2'],
+    path: `${ROUTE}/:siteKey/:lang/:mode`, // Catch everything that's jcontent and let the app resolve correct view
+    render: () => <JContentApp/>
+});
+
+jContentRoutes(registry);
+jContentActions(registry);
+
+fileuploadRedux(registry);
+previewRedux(registry);
+copypasteRedux(registry);
+filesGridRedux(registry);
+paginationRedux(registry);
+sortRedux(registry);
+contentSelectionRedux(registry);
+jContentAccordionItems(registry);
+jContentRedux(registry);
+jContentAppRoot(registry);
 console.debug('%c jContent is activated', 'color: #3c8cba');

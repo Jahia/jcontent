@@ -6,6 +6,7 @@ import {compose} from '~/utils';
 import {PredefinedFragments, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
+import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
 
 export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, closePath, item}) => {
@@ -26,15 +27,24 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         hideRoot: item.config.hideRoot
     });
 
+    let contextualMenu = React.createRef();
+
     return (
-        <TreeView isReversed
-                  data={convertPathsToTree(treeEntries, path)}
-                  openedItems={openPaths}
-                  selectedItems={[path]}
-                  onClickItem={object => setPath(object.id, {sub: false})}
-                  onOpenItem={object => openPath(object.id)}
-                  onCloseItem={object => closePath(object.id)}
-        />
+        <React.Fragment>
+            <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{}}/>
+            <TreeView isReversed
+                      data={convertPathsToTree(treeEntries, path)}
+                      openedItems={openPaths}
+                      selectedItems={[path]}
+                      onContextMenuItem={(object, event) => {
+                          event.stopPropagation();
+                          contextualMenu.current.open(event, {path: object.id});
+                      }}
+                      onClickItem={object => setPath(object.id, {sub: false})}
+                      onOpenItem={object => openPath(object.id)}
+                      onCloseItem={object => closePath(object.id)}
+            />
+        </React.Fragment>
     );
 };
 

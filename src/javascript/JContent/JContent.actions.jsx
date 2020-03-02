@@ -11,7 +11,6 @@ import {
     DeleteForever,
     Edit,
     FindInPage,
-    LibraryAdd,
     Lock,
     LockOpen,
     SubdirectoryArrowRight,
@@ -32,7 +31,6 @@ import {
     TagMultiple,
     Web
 } from 'mdi-material-ui';
-import createContentAction from './actions/createContentAction';
 import fileUploadAction from './actions/fileUploadAction';
 import deleteAction from './actions/deleteAction';
 import undeleteAction from './actions/undeleteAction';
@@ -88,12 +86,6 @@ export const jContentActions = registry => {
         targets: ['createMenuActions:3', 'contentActions:2'],
         contentType: 'jnt:contentFolder',
         showOnNodeTypes: ['jnt:contentFolder']
-    });
-    registry.add('action', 'createContent', createContentAction, {
-        buttonIcon: <LibraryAdd/>,
-        buttonLabel: 'jcontent:label.contentManager.create.content',
-        targets: ['createMenuActions:3.1', 'contentActions:3'],
-        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content']
     });
     registry.add('action', 'createFolder', createFolderAction, {
         buttonIcon: <CreateNewFolder/>,

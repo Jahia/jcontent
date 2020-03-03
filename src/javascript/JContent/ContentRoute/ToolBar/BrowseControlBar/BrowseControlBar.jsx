@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useTranslation, withTranslation} from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import {compose} from '~/utils';
@@ -10,7 +10,7 @@ import JContentConstants from '../../../JContent.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Refresh} from '@material-ui/icons';
 import {refetchContentTreeAndListData} from '../../../JContent.refetches';
-import {toIconComponent} from '@jahia/react-material';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
 
 const styles = theme => ({
     grow: {
@@ -23,27 +23,7 @@ const styles = theme => ({
     }
 });
 
-const ButtonRenderer = ({context}) => {
-    const {t} = useTranslation(context.buttonLabelNamespace);
-
-    return (
-        <Button data-sel-role={context.key}
-                label={t(context.buttonLabel, context.buttonLabelParams)}
-                icon={context.buttonIcon && toIconComponent(context.buttonIcon)}
-                size="small"
-                variant="ghost"
-                disabled={context.enabled === false || context.isVisible === false}
-                onClick={e => {
-                    e.stopPropagation();
-                    context.onClick(context, e);
-                }}
-        />
-    );
-};
-
-ButtonRenderer.propTypes = {
-    context: PropTypes.object.isRequired
-};
+const ButtonRenderer = getButtonRenderer({size: 'small', variant: 'ghost'});
 
 export class BrowseControlBar extends React.Component {
     isRootNode() {

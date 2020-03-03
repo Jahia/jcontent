@@ -1,0 +1,9 @@
+.root {
+    display: flex;
+}
+
+.item {
+    & + & {
+        margin-left: var(--spacing-small);
+    }
+}

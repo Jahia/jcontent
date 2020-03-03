@@ -221,6 +221,7 @@
         "copyUUIDToClipboard": "Copy UUID to clipboard",
         "expand": "Expand",
         "publish": "Publish <em>{{displayName}}</em> - {{language}}",
+        "publishShort": "Publish",
         "undelete": "Undelete",
         "publishDeletion": "Publish deletion",
         "markedForDeletionBy": "Marked for deletion by {{userName}} on",
@@ -244,7 +245,7 @@
         "error": "An error occurred when pasting the element"
       },
       "actions": {
-        "openInEditMode": "Open in edit mode",
+        "pageComposer": "Page composer",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

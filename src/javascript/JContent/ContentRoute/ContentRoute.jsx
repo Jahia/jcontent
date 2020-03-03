@@ -4,11 +4,11 @@ import {FullWidthContent} from '@jahia/design-system-kit';
 import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
 import ContentHeader from './ContentHeader';
-import SearchBar from './SearchBar';
 import ToolBar from './ToolBar';
 import Breadcrumb from './Breadcrumb';
 import ContentTitle from './ContentTitle';
 import ContentStatuses from './ContentStatuses';
+import {MainActionBar} from './MainActionBar';
 
 const ContentRoute = () => {
     const mode = useSelector(state => state.jcontent.mode);
@@ -18,7 +18,7 @@ const ContentRoute = () => {
             header={
                 <ContentHeader
                     title={<ContentTitle/>}
-                    mainAction={<SearchBar/>}
+                    mainAction={<MainActionBar/>}
                     breadcrumb={<Breadcrumb/>}
                     toolbar={<ToolBar/>}
                     information={<ContentStatuses/>}

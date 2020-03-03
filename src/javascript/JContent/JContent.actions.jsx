@@ -4,18 +4,17 @@ import {UnzipIcon, ZipIcon} from './actions/icons';
 import {
     Add,
     Autorenew,
-    CloudDownload,
-    CloudUpload,
     CreateNewFolder,
     Delete,
     DeleteForever,
-    Edit,
     FindInPage,
-    Lock,
     LockOpen,
     SubdirectoryArrowRight,
     Visibility
 } from '@material-ui/icons';
+
+import {ChevronDown, CloudDownload, CloudUpload, Edit, Lock, OpenInBrowser} from '@jahia/moonstone/dist/icons';
+
 import {
     Account,
     AccountGroup,
@@ -43,7 +42,7 @@ import copyAction from './actions/copyPaste/copyAction';
 import cutAction from './actions/copyPaste/cutAction';
 import lockAction from './actions/lockAction';
 import {routerAction} from './actions/routerAction';
-import openInEditModeAction from './actions/openInEditModeAction';
+import pageComposerAction from './actions/pageComposerAction';
 import unlockAction from './actions/unlockAction';
 import clearAllLocksAction from './actions/clearAllLocksAction';
 import locateAction from './actions/locateAction';
@@ -71,6 +70,7 @@ export const jContentActions = registry => {
     registry.add('action', 'router', routerAction);
 
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
+        buttonIcon: <ChevronDown/>,
         menuRenderer: MenuRenderer,
         menuItemRenderer: MenuItemRenderer
     });
@@ -104,6 +104,7 @@ export const jContentActions = registry => {
     registry.add('action', 'publish', publishAction, {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publish',
+        buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
         targets: ['publishMenu:1'],
         allSubtree: false,
         allLanguages: false,
@@ -112,7 +113,6 @@ export const jContentActions = registry => {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
-        buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         targets: ['contentActions:6', 'selectedContentActions:5'],
         menuTarget: 'publishMenu',
@@ -294,9 +294,9 @@ export const jContentActions = registry => {
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html',
         requiredPermission: 'tagManager'
     });
-    registry.add('action', 'openInEditMode', openInEditModeAction, {
-        buttonLabel: 'jcontent:label.contentManager.actions.openInEditMode',
-        buttonIcon: <Edit/>,
+    registry.add('action', 'pageComposer', pageComposerAction, {
+        buttonLabel: 'jcontent:label.contentManager.actions.pageComposer',
+        buttonIcon: <OpenInBrowser/>,
         targets: ['contentActions'],
         hideForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS, PATH_SYSTEM_SITE_AND_DESCENDANTS]
     });

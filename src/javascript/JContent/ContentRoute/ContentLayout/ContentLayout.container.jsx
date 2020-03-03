@@ -38,6 +38,8 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
+let currentResult;
+
 export const ContentLayoutContainer = ({
     mode,
     path,
@@ -214,39 +216,47 @@ export const ContentLayoutContainer = ({
         );
     }
 
-    if (loading || !data.jcr || !data.jcr.nodeByPath) {
-        return <ProgressOverlay/>;
-    }
+    if (loading) {
+        // While loading new results, render current ones loaded during previous render invocation (if any).
+    } else {
+        if (data.jcr && data.jcr.nodeByPath) {
+            // When new results have been loaded, use them for rendering.
+            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+            let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
+            if (!isSub && params.sub && params.sub === true) {
+                setPath(path, {sub: false});
+            } else if (isSub && (!params.sub || params.sub === false)) {
+                setPath(path, {sub: true});
+            }
+        }
 
-    const nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
-    const isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
-    if (!isSub && params.sub && params.sub === true) {
-        setPath(path, {sub: false});
-    } else if (isSub && (!params.sub || params.sub === false)) {
-        setPath(path, {sub: true});
+        currentResult = queryHandler.getResultsPath(data);
     }
 
     let rows = [];
     let totalCount = 0;
 
-    const currentResult = queryHandler.getResultsPath(data);
     if (currentResult) {
-        rows = currentResult.nodes;
         totalCount = currentResult.pageInfo.totalCount;
+        rows = currentResult.nodes;
     }
 
     return (
-        <ContentLayout mode={mode}
-                       path={path}
-                       filesMode={filesMode}
-                       previewState={previewState}
-                       previewSelection={previewSelection}
-                       rows={rows}
-                       loading={loading}
-                       totalCount={totalCount}
-                       layoutQuery={layoutQuery}
-                       layoutQueryParams={layoutQueryParams}
-        />
+        <React.Fragment>
+            {loading &&
+            <ProgressOverlay/>}
+            <ContentLayout mode={mode}
+                           path={path}
+                           filesMode={filesMode}
+                           previewState={previewState}
+                           previewSelection={previewSelection}
+                           rows={rows}
+                           loading={loading}
+                           totalCount={totalCount}
+                           layoutQuery={layoutQuery}
+                           layoutQueryParams={layoutQueryParams}
+            />
+        </React.Fragment>
     );
 };
 

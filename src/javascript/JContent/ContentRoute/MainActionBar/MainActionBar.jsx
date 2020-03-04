@@ -5,7 +5,6 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {useSelector} from 'react-redux';
 import styles from './MainActionBar.scss';
 
-const ButtonRenderer = getButtonRenderer();
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 
@@ -16,7 +15,7 @@ export const MainActionBar = () => {
     return (
         <div className={styles.root}>
             <Separator variant="vertical"/>
-            <DisplayAction actionKey="pageComposer" context={{path: editPath}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
+            <DisplayAction actionKey="pageComposer" context={{path: editPath}} render={getButtonRenderer({enabled: enabled})} size="big" variant="ghost" color="accent" className={styles.item}/>
             <DisplayAction actionKey="edit" context={{path: editPath, enabled: enabled}} render={getButtonRenderer({enabled: enabled})} size="big" variant="outlined" className={styles.item}/>
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction actionKey="publish" context={{path}} render={ButtonRendererShortLabel}/>

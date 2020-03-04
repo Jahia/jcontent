@@ -42,9 +42,6 @@ export class BrowseControlBar extends React.Component {
 
         return (
             <React.Fragment>
-                <div className={classes.grow}/>
-                {showActions && mode === JContentConstants.mode.MEDIA &&
-                <FileModeSelector/>}
                 {showActions && !this.isRootNode() &&
                 <DisplayActions target="tableHeaderActions" context={{path: path}} render={ButtonRenderer}/>}
                 {showActions &&
@@ -55,6 +52,9 @@ export class BrowseControlBar extends React.Component {
                         data-cm-role="content-list-refresh-button"
                         onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}
                 />}
+                <div className={classes.grow}/>
+                {showActions && mode === JContentConstants.mode.MEDIA &&
+                <FileModeSelector/>}
             </React.Fragment>
         );
     }

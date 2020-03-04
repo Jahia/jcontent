@@ -29,9 +29,8 @@ const JContentConstants = {
     },
     gridMode: {
         THUMBNAIL: 'thumbnail',
-        DETAILED_VIEW: 'detailed-view',
         DETAILED: 'detailed',
-        LIST: 'list-view'
+        LIST: 'listview'
     }
 };
 

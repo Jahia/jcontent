@@ -104,9 +104,9 @@
         "publish": "Publier",
         "name": "Nom:",
         "fileInfo": "Taille:",
-        "selectListView": "Liste",
-        "selectThumbnailView": "Vignettes",
-        "selectDetailedView": "Vue detaillée"
+        "listview": "Liste",
+        "thumbnail": "Vignettes",
+        "detailed": "Vue detaillée"
       },
       "search": {
         "sql2": "Recherche avancée",

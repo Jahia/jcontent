@@ -104,9 +104,9 @@
         "publish": "Publish",
         "name": "Name:",
         "fileInfo": "Size:",
-        "selectListView": "List view",
-        "selectThumbnailView": "Thumbnail",
-        "selectDetailedView": "Detailed view"
+        "listview": "List view",
+        "thumbnail": "Thumbnail",
+        "detailed": "Detailed view"
       },
       "search": {
         "sql2": "Advanced",

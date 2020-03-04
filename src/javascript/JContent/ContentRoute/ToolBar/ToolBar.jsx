@@ -1,64 +1,41 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {Toolbar, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
-import {connect} from 'react-redux';
-import {compose} from '~/utils';
+import {useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
 import {DisplayActions} from '@jahia/ui-extender';
-import {iconButtonRenderer} from '@jahia/react-material';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import styles from './Toolbar.scss';
 
-const styles = theme => ({
-    spacer: {
-        width: theme.spacing.unit * 2
-    }
-});
+export const ToolBar = () => {
+    const {t} = useTranslation();
 
-export class ToolBar extends React.Component {
-    render() {
-        const {classes, mode, selection, t} = this.props;
+    const {mode, selection} = useSelector(state => ({
+        mode: state.jcontent.mode,
+        selection: state.jcontent.selection
+    }));
 
-        return (
-            <Toolbar variant="dense">
-                {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?
-                    <SearchControlBar showActions={selection.length === 0}/> :
-                    <React.Fragment>
-                        <BrowseControlBar showActions={selection.length === 0}/>
-                    </React.Fragment>}
-                {selection.length > 0 &&
-                    <React.Fragment>
-                        <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
-                            {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
-                        </Typography>
-                        <div className={classes.spacer}/>
-                        <DisplayActions
-                            target="selectedContentActions"
-                            context={{paths: selection}}
-                            render={iconButtonRenderer({color: 'inherit', size: 'compact'})}
-                        />
-                    </React.Fragment>}
-            </Toolbar>
-        );
-    }
-}
-
-const mapStateToProps = state => ({
-    mode: state.jcontent.mode,
-    selection: state.jcontent.selection
-});
-
-ToolBar.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
-    mode: PropTypes.string.isRequired,
-    selection: PropTypes.array.isRequired
+    return (
+        <div className={`flexRow ${styles.root}`}>
+            {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?
+                <SearchControlBar showActions={selection.length === 0}/> :
+                <BrowseControlBar showActions={selection.length === 0}/>}
+            {selection.length > 0 &&
+            <React.Fragment>
+                <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
+                    {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
+                </Typography>
+                <div className={styles.spacer}/>
+                <DisplayActions
+                    target="selectedContentActions"
+                    context={{paths: selection}}
+                    render={getButtonRenderer({size: 'small', variant: 'ghost'})}
+                />
+            </React.Fragment>}
+        </div>
+    );
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles),
-    connect(mapStateToProps)
-)(ToolBar);
+export default ToolBar;

@@ -1,27 +1,41 @@
 import React from 'react';
-import {MenuItem} from '@material-ui/core';
-import {Select} from '@jahia/design-system-kit';
-import {compose} from '~/utils';
-import {connect} from 'react-redux';
-import {withTranslation} from 'react-i18next';
-import {filesgridSetMode, filesgridSetGridMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
-import PropTypes from 'prop-types';
+import {useDispatch, useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {filesgridSetGridMode, filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
 import JContentConstants from '../../../JContent.constants';
+import {ViewComfy, ViewGrid, ViewList} from '@jahia/moonstone/dist/icons';
+import {Button} from '@jahia/moonstone';
 
 const localStorage = window.localStorage;
 
 const GRID = JContentConstants.mode.GRID;
 const LIST = JContentConstants.mode.LIST;
-const DETAILED_VIEW = JContentConstants.gridMode.DETAILED_VIEW;
 const DETAILED = JContentConstants.gridMode.DETAILED;
 const LIST_VIEW = JContentConstants.gridMode.LIST;
 const THUMBNAIL = JContentConstants.gridMode.THUMBNAIL;
 const FILE_SELECTOR_MODE = JContentConstants.localStorageKeys.filesSelectorMode;
 const FILE_SELECTOR_GRID_MODE = JContentConstants.localStorageKeys.filesSelectorGridMode;
 
-export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
-    const handleChange = e => {
-        let selectedMode = e.target.value;
+const buttons = [THUMBNAIL, DETAILED, LIST_VIEW];
+const icons = {
+    [THUMBNAIL]: <ViewComfy/>,
+    [DETAILED]: <ViewGrid/>,
+    [LIST_VIEW]: <ViewList/>
+};
+
+export const FileModeSelector = () => {
+    const {t} = useTranslation();
+
+    const {mode, gridMode} = useSelector(state => ({
+        mode: state.jcontent.filesGrid.mode,
+        gridMode: state.jcontent.filesGrid.gridMode
+    }));
+
+    const dispatch = useDispatch();
+    const onChange = mode => dispatch(filesgridSetMode(mode));
+    const onGridMode = gridMode => dispatch(filesgridSetGridMode(gridMode));
+
+    const handleChange = selectedMode => {
         switch (selectedMode) {
             case LIST_VIEW:
                 onChange(LIST);
@@ -36,7 +50,7 @@ export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
                 }
 
                 break;
-            case DETAILED_VIEW:
+            case DETAILED:
                 onChange(GRID);
                 localStorage.setItem(FILE_SELECTOR_MODE, GRID);
                 if (gridMode !== DETAILED) {
@@ -52,43 +66,21 @@ export const FileModeSelector = ({t, mode, gridMode, onChange, onGridMode}) => {
         }
     };
 
-    let select = mode === GRID && gridMode === THUMBNAIL ? THUMBNAIL : (mode === GRID ? DETAILED_VIEW : LIST_VIEW);
+    let select = mode === GRID && gridMode === THUMBNAIL ? THUMBNAIL : (mode === GRID ? DETAILED : LIST_VIEW);
 
     return (
-        <Select
-            autoWidth
-            data-cm-role={'view-mode-' + select}
-            value={select}
-            variant="ghost"
-            onChange={e => handleChange(e)}
-        >
-            <MenuItem value={THUMBNAIL}>{t('jcontent:label.contentManager.filesGrid.selectThumbnailView')}</MenuItem>
-            <MenuItem value={LIST_VIEW}>{t('jcontent:label.contentManager.filesGrid.selectListView')}</MenuItem>
-            <MenuItem value={DETAILED_VIEW}>{t('jcontent:label.contentManager.filesGrid.selectDetailedView')}</MenuItem>
-        </Select>
+        buttons.map(v => (
+            <Button key={v}
+                    color={select === v ? 'accent' : 'default'}
+                    title={t('jcontent:label.contentManager.filesGrid.' + v)}
+                    size="big"
+                    variant="ghost"
+                    icon={icons[v]}
+                    onClick={() => handleChange(v)}
+            />
+        ))
     );
 };
 
-FileModeSelector.propTypes = {
-    t: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onGridMode: PropTypes.func.isRequired,
-    mode: PropTypes.string.isRequired,
-    gridMode: PropTypes.string.isRequired
-};
-
-let mapStateToProps = state => ({
-    mode: state.jcontent.filesGrid.mode,
-    gridMode: state.jcontent.filesGrid.gridMode
-});
-
-let mapDispatchToProps = dispatch => ({
-    onChange: mode => dispatch(filesgridSetMode(mode)),
-    onGridMode: gridMode => dispatch(filesgridSetGridMode(gridMode))
-});
-
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withTranslation()
-)(FileModeSelector);
+export default FileModeSelector;
 

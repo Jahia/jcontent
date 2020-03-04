@@ -234,6 +234,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.create.create',
         targets: ['tableHeaderActions:10'],
         menuTarget: 'createMenuActions',
+        menuUseElementAnchor: true,
         showIcons: true,
         menuPreload: true
     });

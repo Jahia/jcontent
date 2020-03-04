@@ -104,9 +104,9 @@
         "publish": "Veröffentlichen",
         "name": "Name:",
         "fileInfo": "Größe:",
-        "selectListView": "Listenansicht",
-        "selectThumbnailView": "Miniaturansicht",
-        "selectDetailedView": "Detailansicht"
+        "listview": "Listenansicht",
+        "thumbnail": "Miniaturansicht",
+        "detailed": "Detailansicht"
       },
       "search": {
         "sql2": "Erweiterte Suche",

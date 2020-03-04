@@ -121,7 +121,7 @@ export const jContentActions = registry => {
     registry.add('action', 'publishInAllLanguages', publishAction, {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishInAllLanguages',
-        targets: ['publishMenu'],
+        targets: ['publishMenu:2'],
         hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
         allSubTree: false,
         allLanguages: true,
@@ -131,7 +131,8 @@ export const jContentActions = registry => {
     registry.add('action', 'publishAll', publishAction, {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishAll',
-        targets: ['publishMenu'],
+        buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
+        targets: ['publishMenu:3'],
         showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
         allSubTree: true,
         allLanguages: false,
@@ -141,7 +142,7 @@ export const jContentActions = registry => {
     registry.add('action', 'publishAllInAllLanguages', publishAction, {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishAllInAllLanguages',
-        targets: ['publishMenu'],
+        targets: ['publishMenu:4'],
         showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page'],
         allSubTree: true,
         allLanguages: true,
@@ -157,7 +158,7 @@ export const jContentActions = registry => {
     registry.add('action', 'unpublish', publishAction, {
         buttonIcon: <CloudDownload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublish',
-        targets: ['publishMenu'],
+        targets: ['publishMenu:5'],
         hideOnNodeTypes: ['jnt:virtualsite'],
         allSubTree: false,
         allLanguages: false,
@@ -167,7 +168,7 @@ export const jContentActions = registry => {
     registry.add('action', 'unpublishInAllLanguages', publishAction, {
         buttonIcon: <CloudDownload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublishInAllLanguages',
-        targets: ['publishMenu'],
+        targets: ['publishMenu:6'],
         hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
         allSubTree: false,
         allLanguages: true,

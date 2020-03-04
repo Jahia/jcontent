@@ -19,7 +19,7 @@ export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
             <Button data-sel-role={context.key}
                     label={t(label, context.buttonLabelParams)}
                     icon={context.buttonIcon && toIconComponent(context.buttonIcon)}
-                    disabled={context.enabled === false || context.isVisible === false}
+                    disabled={context.enabled === false || context.isVisible === false || context.disabled}
                     onClick={e => {
                         e.stopPropagation();
                         context.onClick(context, e);

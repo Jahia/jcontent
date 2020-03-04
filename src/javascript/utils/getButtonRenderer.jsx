@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
+    let enabled = props.enabled;
     const ButtonRenderer = ({context}) => {
         const {t} = useTranslation(context.buttonLabelNamespace);
 
@@ -19,7 +20,7 @@ export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
             <Button data-sel-role={context.key}
                     label={t(label, context.buttonLabelParams)}
                     icon={context.buttonIcon && toIconComponent(context.buttonIcon)}
-                    disabled={context.enabled === false || context.isVisible === false}
+                    disabled={(context.enabled === false || enabled === false) || context.isVisible === false}
                     onClick={e => {
                         e.stopPropagation();
                         context.onClick(context, e);

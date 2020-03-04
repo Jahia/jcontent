@@ -19,7 +19,7 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
 
     let h = hover;
     if (context.menuContext) {
-        h = h || context.menuContext.inMenu;
+        h = h || context.menuState.isInMenu;
     }
 
     // eslint-disable-next-line react/no-danger

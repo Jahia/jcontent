@@ -25,13 +25,13 @@ export const MainActionBar = () => {
         action = 'publishAll';
     }
 
-    let disabled = selection.length > 0;
+    let disabled = selection && selection.length > 0;
 
     return (
         <div className={styles.root}>
             <Separator variant="vertical"/>
-            <DisplayAction actionKey="pageComposer" context={{path}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
-            <DisplayAction actionKey="edit" context={{path}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
+            <DisplayAction actionKey="pageComposer" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
+            <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction actionKey={action} context={{path, disabled}} render={ButtonRendererShortLabel}/>
                 <DisplayAction actionKey="publishMenu" context={{path, disabled, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>

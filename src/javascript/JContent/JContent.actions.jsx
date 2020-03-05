@@ -13,7 +13,7 @@ import {
     Visibility
 } from '@material-ui/icons';
 
-import {ChevronDown, CloudDownload, CloudUpload, Edit, Lock, OpenInBrowser} from '@jahia/moonstone/dist/icons';
+import {ChevronDown, CloudDownload, CloudUpload, Edit, Lock} from '@jahia/moonstone/dist/icons';
 
 import {
     Account,
@@ -42,7 +42,6 @@ import copyAction from './actions/copyPaste/copyAction';
 import cutAction from './actions/copyPaste/cutAction';
 import lockAction from './actions/lockAction';
 import {routerAction} from './actions/routerAction';
-import pageComposerAction from './actions/pageComposerAction';
 import unlockAction from './actions/unlockAction';
 import clearAllLocksAction from './actions/clearAllLocksAction';
 import locateAction from './actions/locateAction';
@@ -58,13 +57,9 @@ import JContentConstants from './JContent.constants';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
-const PATH_CONTENTS_AND_DESCENDANTS = '^/sites/((?!/).)+/contents/?';
 
 const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
 const PATH_FILES_DESCENDANTS = '^/sites/((?!/).)+/files/.+';
-const PATH_FILES_AND_DESCENDANTS = '^/sites/((?!/).)+/files/?';
-
-const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
 
 export const jContentActions = registry => {
     registry.add('action', 'router', routerAction);
@@ -295,12 +290,6 @@ export const jContentActions = registry => {
         mode: JContentConstants.mode.APPS,
         iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html',
         requiredPermission: 'tagManager'
-    });
-    registry.add('action', 'pageComposer', pageComposerAction, {
-        buttonLabel: 'jcontent:label.contentManager.actions.pageComposer',
-        buttonIcon: <OpenInBrowser/>,
-        targets: ['contentActions'],
-        hideForPaths: [PATH_FILES_AND_DESCENDANTS, PATH_CONTENTS_AND_DESCENDANTS, PATH_SYSTEM_SITE_AND_DESCENDANTS]
     });
     registry.add('action', 'locate', locateAction, {
         buttonLabel: 'jcontent:label.contentManager.actions.locate',

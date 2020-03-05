@@ -71,6 +71,7 @@ export const FileModeSelector = () => {
     return (
         buttons.map(v => (
             <Button key={v}
+                    data-sel-role={'set-view-mode-' + v}
                     color={select === v ? 'accent' : 'default'}
                     title={t('jcontent:label.contentManager.filesGrid.' + v)}
                     size="big"

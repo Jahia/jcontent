@@ -35,7 +35,7 @@ describe('MainActionBar', () => {
         expect(wrapper.findWhere(node => node.props().actionKey === 'publishAll').exists()).toBeFalsy();
     });
 
-    it('Should show disabled buttons when there s a selection', async () => {
+    it('Should show disabled buttons when there is a selection', async () => {
         useSelector.mockImplementation(() => ({
             path: 'testPath',
             language: 'en',

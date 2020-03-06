@@ -220,6 +220,7 @@
         "copyUUIDToClipboard": "UUID in Zwischenablage kopieren",
         "expand": "Erweitern",
         "publish": "Veröffentlichen <em>{{displayName}}</em> - {{language}}",
+        "publishShort": "Veröffentlichen",
         "undelete": "Wiederherstellen",
         "publishDeletion": "Löschen veröffentlichen",
         "markedForDeletionBy": "Zur Löschung markiert von {{userName}} am",

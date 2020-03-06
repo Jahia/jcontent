@@ -220,6 +220,7 @@
         "copyUUIDToClipboard": "Copier l'UUID dans le presse-papier",
         "expand": "Agrandir",
         "publish": "Publier <em>{{displayName}}</em> - {{language}}",
+        "publishShort": "Publier",
         "undelete": "Annuler la suppresion",
         "publishDeletion": "Publier la suppression",
         "markedForDeletionBy": "Marqué pour la suppression par {{userName}} le",

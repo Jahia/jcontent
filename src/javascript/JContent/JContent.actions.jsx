@@ -78,20 +78,21 @@ export const jContentActions = registry => {
     registry.add('action', 'createContentFolder', createFolderAction, {
         buttonIcon: <CreateNewFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.contentFolder',
-        targets: ['createMenuActions:3', 'contentActions:2'],
+        targets: ['createMenuActions:3', 'contentActions:2', 'headerPrimaryActions:2'],
         contentType: 'jnt:contentFolder',
         showOnNodeTypes: ['jnt:contentFolder']
     });
     registry.add('action', 'createFolder', createFolderAction, {
         buttonIcon: <CreateNewFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.folder',
-        targets: ['createMenuActions:3', 'contentActions:3'],
-        contentType: 'jnt:folder'
+        targets: ['createMenuActions:3', 'contentActions:3', 'headerPrimaryActions:2.5'],
+        contentType: 'jnt:folder',
+        showOnNodeTypes: ['jnt:folder']
     });
     registry.add('action', 'fileUpload', fileUploadAction, {
         buttonIcon: <FileUpload/>,
         buttonLabel: 'jcontent:label.contentManager.fileUpload.uploadButtonLabel',
-        targets: ['createMenuActions:4', 'contentActions:4'],
+        targets: ['createMenuActions:4', 'contentActions:4', 'headerPrimaryActions:3'],
         contentType: 'jnt:file',
         showOnNodeTypes: ['jnt:folder'],
         requiredPermission: 'jcr:addChildNodes'
@@ -193,7 +194,7 @@ export const jContentActions = registry => {
     registry.add('action', 'paste', pasteAction, {
         buttonIcon: <ContentPaste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.paste',
-        targets: ['tableHeaderActions:1', 'contentActions:3.91'],
+        targets: ['headerPrimaryActions:10', 'contentActions:3.91'],
         hideOnNodeTypes: ['jnt:page']
     });
     registry.add('action', 'cut', cutAction, {
@@ -227,7 +228,7 @@ export const jContentActions = registry => {
     registry.add('action', 'createMenu', menuActionWithRenderer, {
         buttonIcon: <Add/>,
         buttonLabel: 'jcontent:label.contentManager.create.create',
-        targets: ['tableHeaderActions:10'],
+        /*targets: ['headerPrimaryActions:10'],*/
         menuTarget: 'createMenuActions',
         menuUseElementAnchor: true,
         showIcons: true,

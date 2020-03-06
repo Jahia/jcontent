@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
-import {Button} from '@jahia/moonstone';
+import {Button, Separator} from '@jahia/moonstone';
 import {compose} from '~/utils';
-import {DisplayActions} from '@jahia/ui-extender';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import FileModeSelector from '../FileModeSelector';
 import JContentConstants from '../../../JContent.constants';
 import connect from 'react-redux/es/connect/connect';
@@ -43,7 +43,12 @@ export class BrowseControlBar extends React.Component {
         return (
             <React.Fragment>
                 {showActions && !this.isRootNode() &&
-                <DisplayActions target="tableHeaderActions" context={{path: path}} render={ButtonRenderer}/>}
+                <React.Fragment>
+                    <DisplayAction actionKey="createContent" context={{path: path}} render={ButtonRenderer}/>
+                    <DisplayActions target="headerPrimaryActions" context={{path: path}} render={ButtonRenderer}/>
+                    <Separator variant="vertical"/>
+                    <DisplayActions target="headerExternalActions" context={{path: path}} render={ButtonRenderer}/>
+                </React.Fragment>}
                 {showActions &&
                 <Button variant="ghost"
                         size="small"

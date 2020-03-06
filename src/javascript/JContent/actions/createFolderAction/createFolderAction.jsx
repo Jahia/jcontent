@@ -1,21 +1,54 @@
-import React from 'react';
-import {composeActions, componentRendererAction} from '@jahia/react-material';
-import requirementsAction from '../requirementsAction';
+import React, {useContext} from 'react';
 import CreateFolderDialog from './CreateFolderDialog';
+import {useNodeChecks} from '@jahia/data-helper';
+import {ComponentRendererContext} from '@jahia/ui-extender';
+import PropTypes from 'prop-types';
 
-export default composeActions(requirementsAction, componentRendererAction, {
-    init: context => {
-        context.initRequirements({requiredPermission: 'jcr:addChildNodes'});
-    },
-    onClick: context => {
-        const onExit = () => {
-            handler.destroy();
-        };
+export const CreateFolderAction = ({context, render: Render, loading: Loading}) => {
+    const componentRenderer = useContext(ComponentRendererContext);
+    const res = useNodeChecks(
+        {path: context.path},
+        {requiredPermission: ['jcr:addChildNodes'], ...context}
+    );
 
-        let handler = context.renderComponent(
-            <CreateFolderDialog node={context.node}
-                                contentType={context.contentType}
-                                onExit={onExit}/>
-        );
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
+
+    const onExit = () => {
+        componentRenderer.destroy('createFolderDialog');
+    };
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible: res.checksResult,
+            enabled: res.checksResult,
+            onClick: () => {
+                componentRenderer.render('createFolderDialog', Dialog, {path: context.path, contentType: context.contentType, onExit: onExit});
+            }
+        }}/>
+    );
+};
+
+const Dialog = ({path, contentType, onExit}) => {
+    return <CreateFolderDialog path={path} contentType={contentType} onExit={onExit}/>;
+};
+
+Dialog.propTypes = {
+    path: PropTypes.string.isRequired,
+    contentType: PropTypes.string.isRequired,
+    onExit: PropTypes.func.isRequired
+};
+
+CreateFolderAction.propTypes = {
+    context: PropTypes.object.isRequired,
+    render: PropTypes.func.isRequired,
+    loading: PropTypes.func
+};
+
+const createFolderAction = {
+    component: CreateFolderAction
+};
+
+export default createFolderAction;

@@ -1,3 +1,3 @@
-import ContentTitle from './ContentTitle.container';
+import ContentTitle from './ContentTitle';
 
 export default ContentTitle;

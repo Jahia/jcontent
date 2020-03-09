@@ -34,6 +34,8 @@ export const MainActionBar = () => {
             <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction actionKey={action} context={{path, disabled}} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="publishDeletion" context={{path, disabled}} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="deletePermanently" context={{path, disabled}} render={ButtonRendererShortLabel}/>
                 <DisplayAction actionKey="publishMenu" context={{path, disabled, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
             </ButtonGroup>
         </div>

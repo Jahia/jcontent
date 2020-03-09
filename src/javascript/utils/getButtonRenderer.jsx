@@ -15,11 +15,7 @@ export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
             label = context.buttonLabelShort;
         }
 
-        if (context.isVisible === false) {
-            return null;
-        }
-
-        return (
+        return (context.isVisible !== false &&
             <Button data-sel-role={context.key}
                     label={t(label, context.buttonLabelParams)}
                     icon={context.buttonIcon && toIconComponent(context.buttonIcon)}

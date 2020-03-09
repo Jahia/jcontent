@@ -1,17 +1,18 @@
 import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
 import {UnzipIcon, ZipIcon} from './actions/icons';
-import {
-    Autorenew,
-    Delete,
-    DeleteForever,
-    FindInPage,
-    LockOpen,
-    SubdirectoryArrowRight,
-    Visibility
-} from '@material-ui/icons';
+import {Autorenew, FindInPage, LockOpen, SubdirectoryArrowRight, Visibility} from '@material-ui/icons';
 
-import {ChevronDown, CloudDownload, CloudUpload, Edit, Lock, Publish, AddFolder} from '@jahia/moonstone/dist/icons';
+import {
+    AddFolder,
+    ChevronDown,
+    CloudDownload,
+    CloudUpload,
+    Delete,
+    Edit,
+    Lock,
+    Publish
+} from '@jahia/moonstone/dist/icons';
 
 import {
     Account,
@@ -115,11 +116,11 @@ export const jContentActions = registry => {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishInAllLanguages',
         targets: ['publishMenu:2'],
-        hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
         allSubTree: false,
         allLanguages: true,
         checkForUnpublication: false,
-        checkIfLanguagesMoreThanOne: true
+        checkIfLanguagesMoreThanOne: true,
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
     });
     registry.add('action', 'publishAll', publishAction, {
         buttonIcon: <CloudUpload/>,
@@ -143,7 +144,7 @@ export const jContentActions = registry => {
         checkIfLanguagesMoreThanOne: true
     });
     registry.add('action', 'publishDeletion', publishDeletionAction, {
-        buttonIcon: <DeleteForever/>,
+        buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishDeletion',
         targets: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
@@ -162,7 +163,7 @@ export const jContentActions = registry => {
         buttonIcon: <CloudDownload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublishInAllLanguages',
         targets: ['publishMenu:6'],
-        hideOnNodeTypes: ['nt:file', 'jnt:contentFolder', 'nt:folder'],
+        hideOnNodeTypes: ['jnt:virtualsite'],
         allSubTree: false,
         allLanguages: true,
         checkForUnpublication: true,
@@ -209,7 +210,7 @@ export const jContentActions = registry => {
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     registry.add('action', 'deletePermanently', deletePermanentlyAction, {
-        buttonIcon: <DeleteForever/>,
+        buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.deletePermanently',
         targets: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],

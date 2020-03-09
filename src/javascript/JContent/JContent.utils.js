@@ -112,6 +112,18 @@ function getDefaultLocale(lang) {
     return ['en', 'fr', 'de'].indexOf(lang) > -1 ? lang : 'en';
 }
 
+function getLanguageLabel(languages, currentLang) {
+    return _.find(languages, function (language) {
+        if (language.language === currentLang) {
+            return language;
+        }
+    });
+}
+
+function uppercaseFirst(string) {
+    return string.charAt(0).toUpperCase() + string.substr(1);
+}
+
 export {
     getNewNodePath,
     hasMixin,
@@ -125,5 +137,7 @@ export {
     getDefaultLocale,
     getNewCounter,
     removeFileExtension,
-    allowDoubleClickNavigation
+    allowDoubleClickNavigation,
+    getLanguageLabel,
+    uppercaseFirst
 };

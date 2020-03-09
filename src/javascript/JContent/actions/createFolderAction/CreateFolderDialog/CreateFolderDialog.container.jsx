@@ -5,7 +5,7 @@ import {CreateFolderMutation} from './CreateFolderDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import CreateFolderDialog from './CreateFolderDialog';
 
-const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
+const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
     const [open, updateIsDialogOpen] = useState(true);
     const [name, updateName] = useState('');
     const [isNameValid, updateIsNameValid] = useState(true);
@@ -15,11 +15,11 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
     const invalidRegex = /[\\/:*?"<>|]/g;
     const gqlParams = {
         mutation: {
-            parentPath: node.path,
+            parentPath: path,
             primaryNodeType: contentType
         },
         query: {
-            path: node.path,
+            path: path,
             typesFilter: {
                 types: [contentType]
             }
@@ -81,7 +81,7 @@ const CreateFolderDialogContainer = ({node, contentType, onExit}) => {
 };
 
 CreateFolderDialogContainer.propTypes = {
-    node: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired,
     contentType: PropTypes.string.isRequired,
     onExit: PropTypes.func.isRequired
 };

@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
-import {Button} from '@jahia/moonstone';
+import {Button, Separator} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {DisplayActions} from '@jahia/ui-extender';
 import FileModeSelector from '../FileModeSelector';
 import JContentConstants from '../../../JContent.constants';
 import connect from 'react-redux/es/connect/connect';
-import {Refresh} from '@material-ui/icons';
+import {Reload} from '@jahia/moonstone/dist/icons';
 import {refetchContentTreeAndListData} from '../../../JContent.refetches';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 
@@ -43,12 +43,16 @@ export class BrowseControlBar extends React.Component {
         return (
             <React.Fragment>
                 {showActions && !this.isRootNode() &&
-                <DisplayActions target="tableHeaderActions" context={{path: path}} render={ButtonRenderer}/>}
+                <React.Fragment>
+                    <DisplayActions target="headerPrimaryActions" context={{path: path}} render={ButtonRenderer}/>
+                    <Separator variant="vertical"/>
+                    <DisplayActions target="headerExternalActions" context={{path: path}} render={ButtonRenderer}/>
+                </React.Fragment>}
                 {showActions &&
                 <Button variant="ghost"
                         size="small"
                         label={t('jcontent:label.contentManager.refresh')}
-                        icon={<Refresh/>}
+                        icon={<Reload/>}
                         data-cm-role="content-list-refresh-button"
                         onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}
                 />}

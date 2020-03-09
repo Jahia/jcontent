@@ -2,7 +2,6 @@ import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
 import {UnzipIcon, ZipIcon} from './actions/icons';
 import {
-    Add,
     Autorenew,
     Delete,
     DeleteForever,
@@ -222,15 +221,6 @@ export const jContentActions = registry => {
         targets: ['contentActions:4.1', 'selectedContentActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
-    });
-    registry.add('action', 'createMenu', menuActionWithRenderer, {
-        buttonIcon: <Add/>,
-        buttonLabel: 'jcontent:label.contentManager.create.create',
-        /* Targets: ['headerPrimaryActions:1.5'], */
-        menuTarget: 'createMenuActions',
-        menuUseElementAnchor: true,
-        showIcons: true,
-        menuPreload: true
     });
     registry.add('action', 'lock', lockAction, {
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.lock',

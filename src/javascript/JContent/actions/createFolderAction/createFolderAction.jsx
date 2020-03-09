@@ -23,22 +23,11 @@ export const CreateFolderAction = ({context, render: Render, loading: Loading}) 
         <Render context={{
             ...context,
             isVisible: res.checksResult,
-            enabled: res.checksResult,
             onClick: () => {
-                componentRenderer.render('createFolderDialog', Dialog, {path: context.path, contentType: context.contentType, onExit: onExit});
+                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path: context.path, contentType: context.contentType, onExit: onExit});
             }
         }}/>
     );
-};
-
-const Dialog = ({path, contentType, onExit}) => {
-    return <CreateFolderDialog path={path} contentType={contentType} onExit={onExit}/>;
-};
-
-Dialog.propTypes = {
-    path: PropTypes.string.isRequired,
-    contentType: PropTypes.string.isRequired,
-    onExit: PropTypes.func.isRequired
 };
 
 CreateFolderAction.propTypes = {

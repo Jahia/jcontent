@@ -4,7 +4,6 @@ import {UnzipIcon, ZipIcon} from './actions/icons';
 import {
     Add,
     Autorenew,
-    CreateNewFolder,
     Delete,
     DeleteForever,
     FindInPage,
@@ -13,7 +12,7 @@ import {
     Visibility
 } from '@material-ui/icons';
 
-import {ChevronDown, CloudDownload, CloudUpload, Edit, Lock} from '@jahia/moonstone/dist/icons';
+import {ChevronDown, CloudDownload, CloudUpload, Edit, Lock, Publish, AddFolder} from '@jahia/moonstone/dist/icons';
 
 import {
     Account,
@@ -25,7 +24,6 @@ import {
     ContentPaste,
     DeleteRestore,
     DotsVertical,
-    FileUpload,
     ShieldKey,
     TagMultiple,
     Web
@@ -76,21 +74,21 @@ export const jContentActions = registry => {
         targets: ['contentActions:1']
     });
     registry.add('action', 'createContentFolder', createFolderAction, {
-        buttonIcon: <CreateNewFolder/>,
+        buttonIcon: <AddFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.contentFolder',
         targets: ['createMenuActions:3', 'contentActions:2', 'headerPrimaryActions:2'],
         contentType: 'jnt:contentFolder',
         showOnNodeTypes: ['jnt:contentFolder']
     });
     registry.add('action', 'createFolder', createFolderAction, {
-        buttonIcon: <CreateNewFolder/>,
+        buttonIcon: <AddFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.folder',
         targets: ['createMenuActions:3', 'contentActions:3', 'headerPrimaryActions:2.5'],
         contentType: 'jnt:folder',
         showOnNodeTypes: ['jnt:folder']
     });
     registry.add('action', 'fileUpload', fileUploadAction, {
-        buttonIcon: <FileUpload/>,
+        buttonIcon: <Publish/>,
         buttonLabel: 'jcontent:label.contentManager.fileUpload.uploadButtonLabel',
         targets: ['createMenuActions:4', 'contentActions:4', 'headerPrimaryActions:3'],
         contentType: 'jnt:file',
@@ -228,7 +226,7 @@ export const jContentActions = registry => {
     registry.add('action', 'createMenu', menuActionWithRenderer, {
         buttonIcon: <Add/>,
         buttonLabel: 'jcontent:label.contentManager.create.create',
-        /*targets: ['headerPrimaryActions:10'],*/
+        /* Targets: ['headerPrimaryActions:1.5'], */
         menuTarget: 'createMenuActions',
         menuUseElementAnchor: true,
         showIcons: true,

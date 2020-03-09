@@ -84,6 +84,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 }));
             }
         });
+        context.isVisible = true;
     },
 
     onClick: context => {

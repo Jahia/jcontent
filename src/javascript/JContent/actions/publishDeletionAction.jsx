@@ -1,20 +1,62 @@
-import {hasMixin} from '../JContent.utils';
-import {map} from 'rxjs/operators';
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
+import React from 'react';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
+import {isMarkedForDeletion} from '../JContent.utils';
+import {useSelector} from 'react-redux';
 
-export default composeActions(requirementsAction, {
-    init: context => {
-        context.initRequirements({
-            retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
-            enabled: context => context.node.pipe(map(node => hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED'))
-        });
-    },
-    onClick: context => {
-        if (context.node) {
-            window.authoringApi.openPublicationWorkflow([context.node.uuid], true, false, false);
-        } else if (context.nodes) {
-            window.authoringApi.openPublicationWorkflow(context.nodes.map(node => node.uuid), true, false, false);
-        }
+const checkAction = node => node.operationsSupport.publication &&
+    isMarkedForDeletion(node) &&
+    node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED';
+
+export const PublishDeletionActionComponent = ({context, render: Render, loading: Loading}) => {
+    const {language} = useSelector(state => ({language: state.language}));
+
+    const res = useNodeChecks({path: context.path, paths: context.paths, language}, {
+        getProperties: ['jcr:mixinTypes'],
+        getAggregatedPublicationInfo: true,
+        getOperationSupport: true,
+        ...context
+    });
+
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
+
+    if (!res.node && !res.nodes) {
+        return false;
+    }
+
+    let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible,
+            displayActionProps: {
+                ...context.displayActionProps,
+                color: 'danger'
+            },
+            onClick: () => {
+                if (context.path) {
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
+                } else if (context.paths) {
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), context.allSubTree, context.allLanguages, context.checkForUnpublication);
+                }
+            }
+        }}/>
+    );
+};
+
+PublishDeletionActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const publishDeletionAction = {
+    component: PublishDeletionActionComponent
+};
+
+export default publishDeletionAction;

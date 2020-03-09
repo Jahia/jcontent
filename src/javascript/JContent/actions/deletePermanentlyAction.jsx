@@ -1,22 +1,64 @@
-import {hasMixin} from '../JContent.utils';
-import {map} from 'rxjs/operators';
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
+import React from 'react';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
+import {isMarkedForDeletion} from '../JContent.utils';
+import {useSelector} from 'react-redux';
 
-export default composeActions(requirementsAction, {
-    init: context => {
-        context.initRequirements({
-            retrieveProperties: {retrievePropertiesNames: ['jcr:mixinTypes']},
-            requiredPermission: 'jcr:removeNode',
-            retrieveDisplayName: true,
-            enabled: context => context.node.pipe(map(node => !node.operationsSupport.markForDeletion || (hasMixin(node, 'jmix:markedForDeletionRoot') && node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED')))
-        });
-    },
-    onClick: context => {
-        if (context.node) {
-            window.authoringApi.deleteContent(context.node.uuid, context.node.path, context.node.displayName, ['jnt:content'], ['nt:base'], false, true);
-        } else if (context.nodes) {
-            window.authoringApi.deleteContents(context.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})), false, true);
-        }
+const checkAction = node => node.operationsSupport.markForDeletion &&
+    isMarkedForDeletion(node) &&
+    node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED';
+
+export const DeletePermanentlyActionComponent = ({context, render: Render, loading: Loading}) => {
+    const {language} = useSelector(state => ({language: state.language}));
+
+    const res = useNodeChecks({path: context.path, paths: context.paths, language}, {
+        getDisplayName: true,
+        getProperties: ['jcr:mixinTypes'],
+        getAggregatedPublicationInfo: true,
+        getOperationSupport: true,
+        requiredPermission: ['jcr:removeNode'],
+        ...context
+    });
+
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
+
+    if (!res.node && !res.nodes) {
+        return false;
+    }
+
+    let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible,
+            displayActionProps: {
+                ...context.displayActionProps,
+                color: 'danger'
+            },
+            onClick: () => {
+                if (context.path) {
+                    window.authoringApi.deleteContent(res.node.uuid, res.node.path, res.node.displayName, ['jnt:content'], ['nt:base'], false, true);
+                } else if (context.paths) {
+                    window.authoringApi.deleteContents(res.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})), false, true);
+                }
+            }
+        }}/>
+    );
+};
+
+DeletePermanentlyActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const deletePermanentlyAction = {
+    component: DeletePermanentlyActionComponent
+};
+
+export default deletePermanentlyAction;

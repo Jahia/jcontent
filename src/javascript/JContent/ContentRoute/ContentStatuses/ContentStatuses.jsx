@@ -29,6 +29,8 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
             statuses.new = true;
         } else if (publicationStatus === JContentConstants.availablePublicationStatuses.PUBLISHED) {
             statuses.published = true;
+        } else if (publicationStatus === JContentConstants.availablePublicationStatuses.UNPUBLISHED) {
+            statuses.published = false;
         } else if (publicationStatus && publicationStatus !== JContentConstants.availablePublicationStatuses.MARKED_FOR_DELETION) {
             statuses.warning = true;
         }

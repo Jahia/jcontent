@@ -17,6 +17,18 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
+    it('should only render a \'Not Published\' status when content is unpublished', () => {
+        const node = {
+            aggregatedPublicationInfo: {
+                publicationStatus: 'UNPUBLISHED'
+            }
+        };
+        const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
+
+        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.find('Status')).toHaveLength(1);
+    });
+
     it('should only render a \'Published\' status', () => {
         const node = {
             aggregatedPublicationInfo: {

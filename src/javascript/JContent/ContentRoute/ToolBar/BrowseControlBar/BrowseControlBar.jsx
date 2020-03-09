@@ -10,6 +10,7 @@ import JContentConstants from '../../../JContent.constants';
 import connect from 'react-redux/es/connect/connect';
 import {Reload} from '@jahia/moonstone/dist/icons';
 import {refetchContentTreeAndListData} from '../../../JContent.refetches';
+import {registry} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 
 const styles = theme => ({
@@ -31,6 +32,11 @@ export class BrowseControlBar extends React.Component {
         return (path === ('/sites/' + siteKey));
     }
 
+    isThereExternalActions() {
+        let actions = registry.find({type: 'action'}).filter(action => action.targets && action.targets.find(target => target.id === 'headerExternalActions'));
+        return actions && actions.length > 0;
+    }
+
     refreshContentsAndTree(contentTreeConfigs) {
         refetchContentTreeAndListData(contentTreeConfigs);
     }
@@ -45,17 +51,16 @@ export class BrowseControlBar extends React.Component {
                 {showActions && !this.isRootNode() &&
                 <React.Fragment>
                     <DisplayActions target="headerPrimaryActions" context={{path: path}} render={ButtonRenderer}/>
-                    <Separator variant="vertical"/>
+                    <Button variant="ghost"
+                            size="small"
+                            label={t('jcontent:label.contentManager.refresh')}
+                            icon={<Reload/>}
+                            data-cm-role="content-list-refresh-button"
+                            onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}
+                    />
+                    {this.isThereExternalActions() && <Separator variant="vertical"/>}
                     <DisplayActions target="headerExternalActions" context={{path: path}} render={ButtonRenderer}/>
                 </React.Fragment>}
-                {showActions &&
-                <Button variant="ghost"
-                        size="small"
-                        label={t('jcontent:label.contentManager.refresh')}
-                        icon={<Reload/>}
-                        data-cm-role="content-list-refresh-button"
-                        onClick={() => this.refreshContentsAndTree(contentTreeConfigs)}
-                />}
                 <div className={classes.grow}/>
                 {showActions && mode === JContentConstants.mode.MEDIA &&
                 <FileModeSelector/>}

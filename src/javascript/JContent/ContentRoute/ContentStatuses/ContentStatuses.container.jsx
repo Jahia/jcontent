@@ -16,7 +16,7 @@ const ContentStatusesContainer = () => {
     const {data, error} = useQuery(GetContentStatuses, {
         variables: {
             path: path,
-            language: uilang
+            language: language
         }
     });
 

@@ -106,14 +106,14 @@
 
         <dependency>
             <groupId>org.jahia.modules</groupId>
-            <artifactId>dx-commons-webpack</artifactId>
+            <artifactId>app-shell</artifactId>
             <version>1.4.0-SNAPSHOT</version>
             <type>json</type>
             <classifier>manifest</classifier>
         </dependency>
         <dependency>
             <groupId>org.jahia.modules</groupId>
-            <artifactId>dx-commons-webpack</artifactId>
+            <artifactId>app-shell</artifactId>
             <version>1.4.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -176,7 +176,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Jahia-Depends>dx-commons-webpack,jahia-ui-root</Jahia-Depends>
+                        <Jahia-Depends>jahia-ui-root</Jahia-Depends>
                         <Import-Package>org.jahia.modules.graphql.provider.dxm;version="1.1.0",${jahia.plugin.projectPackageImport},*</Import-Package>
                     </instructions>
                 </configuration>
@@ -198,7 +198,7 @@
                     <artifactItems>
                         <artifactItem>
                             <groupId>org.jahia.modules</groupId>
-                            <artifactId>dx-commons-webpack</artifactId>
+                            <artifactId>app-shell</artifactId>
                             <type>json</type>
                             <classifier>manifest</classifier>
                         </artifactItem>

@@ -11,7 +11,8 @@ import {
     Delete,
     Edit,
     Lock,
-    Publish
+    Publish,
+    Paste
 } from '@jahia/moonstone/dist/icons';
 
 import {
@@ -21,7 +22,6 @@ import {
     ApplicationImport,
     ContentCopy,
     ContentCut,
-    ContentPaste,
     DeleteRestore,
     DotsVertical,
     ShieldKey,
@@ -190,7 +190,7 @@ export const jContentActions = registry => {
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     registry.add('action', 'paste', pasteAction, {
-        buttonIcon: <ContentPaste/>,
+        buttonIcon: <Paste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.paste',
         targets: ['headerPrimaryActions:10', 'contentActions:3.91'],
         hideOnNodeTypes: ['jnt:page']

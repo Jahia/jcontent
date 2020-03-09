@@ -65,5 +65,5 @@ MenuRenderer.propTypes = {
     /**
      * Context
      */
-    context: PropTypes.node
+    context: PropTypes.object
 };

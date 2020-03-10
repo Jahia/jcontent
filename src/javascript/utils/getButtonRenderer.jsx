@@ -1,6 +1,5 @@
 import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
-import {toIconComponent} from '@jahia/react-material';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,7 +17,7 @@ export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
         return (context.isVisible !== false &&
             <Button data-sel-role={context.key}
                     label={t(label, context.buttonLabelParams)}
-                    icon={context.buttonIcon && toIconComponent(context.buttonIcon)}
+                    icon={context.buttonIcon && context.buttonIcon}
                     disabled={context.enabled === false || context.disabled}
                     onClick={e => {
                         e.stopPropagation();

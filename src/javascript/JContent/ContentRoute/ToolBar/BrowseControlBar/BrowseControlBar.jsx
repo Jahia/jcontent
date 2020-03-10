@@ -24,7 +24,7 @@ const styles = theme => ({
     }
 });
 
-const ButtonRenderer = getButtonRenderer({size: 'small', variant: 'ghost'});
+const ButtonRenderer = getButtonRenderer({size: 'default', variant: 'ghost'});
 
 export class BrowseControlBar extends React.Component {
     isRootNode() {
@@ -52,7 +52,7 @@ export class BrowseControlBar extends React.Component {
                 <React.Fragment>
                     <DisplayActions target="headerPrimaryActions" context={{path: path}} render={ButtonRenderer}/>
                     <Button variant="ghost"
-                            size="small"
+                            size="default"
                             label={t('jcontent:label.contentManager.refresh')}
                             icon={<Reload/>}
                             data-cm-role="content-list-refresh-button"

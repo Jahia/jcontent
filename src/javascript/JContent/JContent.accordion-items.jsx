@@ -2,20 +2,23 @@ import React from 'react';
 import {File, FolderSpecial, Collections, Setting} from '@jahia/moonstone/dist/icons';
 import ContentTree from './ContentTree';
 import JContentConstants from './JContent.constants';
+import AdditionnalApps from './AdditionnalApps';
 
 export const jContentAccordionItems = registry => {
+    const getPath = (site, pathElements, registryItem) => {
+        let path = '/sites/' + site + ('/' + pathElements.join('/'));
+        if (!path.startsWith('/sites/' + site + registryItem.config.rootPath)) {
+            return registryItem.defaultUrl(site);
+        }
+
+        return path;
+    };
+
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: item => (
             <ContentTree item={item}/>
         ),
-        getPath: (site, pathElements, registryItem) => {
-            let path = '/sites/' + site + ('/' + pathElements.join('/'));
-            if (!path.startsWith('/sites/' + site + registryItem.config.rootPath)) {
-                return registryItem.defaultUrl(site);
-            }
-
-            return path;
-        }
+        getPath: getPath
     });
 
     registry.add('accordionItem', JContentConstants.mode.PAGES, renderDefaultContentTrees, {
@@ -68,7 +71,13 @@ export const jContentAccordionItems = registry => {
         targets: ['jcontent:80'],
         icon: <Setting/>,
         label: 'label.contentManager.navigation.apps',
-        defaultUrl: siteKey => '/sites/' + siteKey,
-        render: () => <div>HELLO</div>
+        defaultUrl: () => '',
+        render: () => (
+            <AdditionnalApps/>
+        ),
+        getPath: getPath,
+        config: {
+            rootPath: ''
+        }
     });
 };

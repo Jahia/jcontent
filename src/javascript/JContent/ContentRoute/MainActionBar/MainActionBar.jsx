@@ -15,7 +15,7 @@ export const MainActionBar = () => {
 
     const {node, loading} = useNodeInfo({path, language}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 
-    if (loading) {
+    if (loading || !node) {
         return false;
     }
 

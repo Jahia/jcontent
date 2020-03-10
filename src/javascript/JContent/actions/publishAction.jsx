@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {ellipsizeText, isMarkedForDeletion, uppercaseFirst, getLanguageLabel} from '../JContent.utils';
+import {ellipsizeText, getLanguageLabel, isMarkedForDeletion, uppercaseFirst} from '../JContent.utils';
 import * as _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -60,7 +60,10 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         return false;
     }
 
-    let {enabled, isVisible} = res.node ? checkAction(res, res.node, context) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), {enabled: true, isVisible: true});
+    let {enabled, isVisible} = res.node ? checkAction(res, res.node, context) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), {
+        enabled: true,
+        isVisible: true
+    });
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),

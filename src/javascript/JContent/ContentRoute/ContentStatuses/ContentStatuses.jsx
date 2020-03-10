@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 
 import JContentConstants from '../../JContent.constants';
 import {isMarkedForDeletion, isWorkInProgress} from '../../JContent.utils';
-import {tooltip} from './ContentStatuses.utils';
+import {getTooltip} from './ContentStatuses.utils';
 import styles from './ContentStatuses.scss';
 import Status from './Status';
 
@@ -37,7 +37,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
     }
 
     const renderStatus = type => (
-        <Status type={type} isDisabled={isDisabled} tooltip={tooltip(type, node, uilang, t)}/>
+        <Status type={type} isDisabled={isDisabled} tooltip={getTooltip(node, type, t, uilang)}/>
     );
     return (
         <div className={styles.contentStatuses}>
@@ -86,6 +86,14 @@ ContentStatuses.propTypes = {
         }),
         wipLangs: PropTypes.shape({
             values: PropTypes.arrayOf(PropTypes.string)
+        }),
+        ancestors: PropTypes.shape({
+            deleted: PropTypes.shape({
+                value: PropTypes.string
+            }),
+            deletedBy: PropTypes.shape({
+                value: PropTypes.string
+            })
         })
     }).isRequired,
     language: PropTypes.string.isRequired,

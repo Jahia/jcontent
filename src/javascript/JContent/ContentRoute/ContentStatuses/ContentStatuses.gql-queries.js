@@ -42,6 +42,14 @@ export const GetContentStatuses = gql`
                 wipLangs: property(name: "j:workInProgressLanguages") {
                     values
                 }
+                ancestors(fieldFilter: {filters: {fieldName: "deleted", evaluation: NOT_EMPTY}}) {
+                    deleted:property(name: "j:deletionDate") {
+                        value
+                    }
+                    deletedBy: property(name: "j:deletionUser") {
+                        value
+                    }
+                }
             }
         }
     }

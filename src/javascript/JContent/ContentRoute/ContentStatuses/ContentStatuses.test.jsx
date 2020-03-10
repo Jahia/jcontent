@@ -17,7 +17,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
-    it('should only render a \'Not Published\' status when content is unpublished', () => {
+    it('should render a \'Not Published\' status when unpublished', () => {
         const node = {
             aggregatedPublicationInfo: {
                 publicationStatus: 'UNPUBLISHED'
@@ -29,7 +29,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
-    it('should only render a \'Published\' status', () => {
+    it('should only render a \'Published\' status when published', () => {
         const node = {
             aggregatedPublicationInfo: {
                 publicationStatus: 'PUBLISHED'
@@ -42,7 +42,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(1);
     });
 
-    it('should render a \'Locked\' status', () => {
+    it('should render a \'Locked\' status when locked', () => {
         const node = {
             lockOwner: {
                 value: 'me'
@@ -56,7 +56,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
-    it('should render a \'Marked for deletion\' status', () => {
+    it('should render a \'Marked for deletion\' status when deleted', () => {
         const node = {
             mixinTypes: [{
                 name: 'jmix:markedForDeletion'
@@ -70,7 +70,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
-    it('should render a \'Modified\' status', () => {
+    it('should render a \'Modified\' status when modified', () => {
         const node = {
             aggregatedPublicationInfo: {
                 publicationStatus: 'MODIFIED'
@@ -84,7 +84,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
-    it('should render a \'New\' status', () => {
+    it('should render a \'New\' status when never published', () => {
         const node = {
             aggregatedPublicationInfo: {
                 publicationStatus: 'NOT_PUBLISHED'
@@ -112,7 +112,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
-    it('should render a \'Work in progress\' status', () => {
+    it('should render a \'Work in progress\' status when is work in progress in all languages', () => {
         const node = {
             wipStatus: {value: 'ALL_CONTENT'}
         };
@@ -124,7 +124,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
-    it('should also render a \'Work in progress\' status', () => {
+    it('should render a \'Work in progress\' status when is work in progress in current language', () => {
         const node = {
             wipStatus: {value: 'LANGUAGES'},
             wipLangs: {values: ['fr']}
@@ -137,7 +137,7 @@ describe('ContentStatuses', () => {
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 
-    it('should not render a \'Work in progress\' status', () => {
+    it('should not render a \'Work in progress\' status when is work in progress in another language', () => {
         const node = {
             wipStatus: {value: 'LANGUAGES'},
             wipLangs: {values: ['fr', 'gr']}

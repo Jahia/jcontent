@@ -1,62 +1,99 @@
 import dayjs from 'dayjs';
-import * as _ from 'lodash';
 
 import {getDefaultLocale} from '../../JContent.utils';
 import JContentConstants from '../../JContent.constants';
 
-function tooltip(status, node, uilang, t) {
-    const dateFormat = 'LLL';
-    const locale = getDefaultLocale(uilang);
+function formatDate(date, locale = 'en', format = 'LLL') {
+    return dayjs(date).locale(locale).format(format);
+}
 
-    if (status === 'locked') {
-        const userName = (node.lockOwner && node.lockOwner.value) || '?';
-        return t('label.contentManager.lockedBy', {userName});
-    }
+const tooltips = {
+    locked: node => {
+        return {
+            key: 'label.contentManager.lockedBy',
+            args: {
+                userName: node?.lockOwner?.value || '?'
+            }
+        };
+    },
+    markedForDeletion: (node, locale) => {
+        const ancestor = node.ancestors && (node.ancestors.length !== 0) && node.ancestors[0];
+        const deletedBy = node?.deletedBy?.value || ancestor?.deletedBy?.value;
+        const date = node?.deleted?.value || ancestor?.deleted?.value;
+        return {
+            key: 'label.contentManager.publicationStatus.markedForDeletion',
+            args: {
+                userName: deletedBy || '?',
+                timestamp: formatDate(date, locale)
+            }
+        };
+    },
+    modified: (node, locale) => {
+        return {
+            key: 'label.contentManager.publicationStatus.modified',
+            args: {
+                userName: node?.lastModifiedBy?.value || '?',
+                timestamp: formatDate(node?.lastModified?.value, locale)
+            }
+        };
+    },
+    new: () => {
+        return {
+            key: 'label.contentManager.publicationStatus.notPublished'
+        };
+    },
+    published: (node, locale) => {
+        return {
+            key: 'label.contentManager.publicationStatus.published',
+            args: {
+                userName: node?.lastPublishedBy?.value || '?',
+                timestamp: formatDate(node?.lastPublished?.value, locale)
+            }
+        };
+    },
+    warning: node => {
+        const resolveKey = status => {
+            switch (status) {
+                case JContentConstants.availablePublicationStatuses.CONFLICT:
+                    return 'label.contentManager.publicationStatus.conflict.description';
+                case JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
+                    return 'label.contentManager.publicationStatus.mandatoryLanguageValid.description';
+                case JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
+                    return 'label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description';
+                default:
+                    return 'label.contentManager.publicationStatus.unknown';
+            }
+        };
 
-    if (status === 'markedForDeletion') {
-        const userName = (node.deletedBy && node.deletedBy.value) || '?';
-        const timestamp = dayjs(_.get(node, 'deleted.value', '')).locale(locale).format(dateFormat);
-        return t('label.contentManager.publicationStatus.markedForDeletion', {userName, timestamp});
-    }
+        return {
+            key: resolveKey(node?.aggregatedPublicationInfo?.publicationStatus)
+        };
+    },
+    workInProgress: node => {
+        const tooltip = {
+            key: 'label.contentManager.workInProgressAll'
+        };
 
-    if (status === 'modified') {
-        const userName = (node.lastModifiedBy && node.lastModifiedBy.value) || '?';
-        const timestamp = dayjs(_.get(node, 'lastModified.value', '')).locale(locale).format(dateFormat);
-        return t('label.contentManager.publicationStatus.modified', {userName, timestamp});
-    }
-
-    if (status === 'new') {
-        return t('label.contentManager.publicationStatus.notPublished');
-    }
-
-    if (status === 'published') {
-        const userName = (node.lastPublishedBy && node.lastPublishedBy.value) || '?';
-        const timestamp = dayjs(_.get(node, 'lastPublished.value', '')).locale(locale).format(dateFormat);
-        return t('label.contentManager.publicationStatus.published', {userName, timestamp});
-    }
-
-    if (status === 'warning') {
-        switch (node.aggregatedPublicationInfo.publicationStatus) {
-            case JContentConstants.availablePublicationStatuses.CONFLICT:
-                return t('label.contentManager.publicationStatus.conflict.description');
-            case JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
-                return t('label.contentManager.publicationStatus.conflict.description');
-            case JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
-                return t('label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description');
-            default:
-                return t('label.contentManager.publicationStatus.unknown');
+        const wipLangs = node?.wipLangs?.values;
+        if (wipLangs) {
+            tooltip.key = 'label.contentManager.workInProgress';
+            tooltip.args = {wipLangs: wipLangs};
         }
+
+        return tooltip;
     }
+};
 
-    if (status === 'workInProgress') {
-        if (node.wipLangs) {
-            return t('label.contentManager.workInProgress', {wipLang: node.wipLangs.values});
-        }
+function getTooltip(node, status, t, lang = 'en') {
+    const locale = getDefaultLocale(lang);
+    const provider = tooltips[status];
 
-        return t('label.contentManager.workInProgressAll');
+    if (provider) {
+        const tooltip = provider(node, locale);
+        return t(tooltip.key, tooltip.args);
     }
 
     return '';
 }
 
-export {tooltip};
+export {getTooltip};

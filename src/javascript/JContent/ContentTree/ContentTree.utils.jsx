@@ -50,7 +50,7 @@ function convertPathsToTree(treeEntries, selected) {
             parent: parentPath,
             isClosable: treeEntry.depth > 0,
             iconStart: displayIcon(treeEntry.node),
-            iconEnd: <StatusIcon path={treeEntry.path} locked={locked} notPublished={notPublished}/>,
+            iconEnd: <StatusIcon path={treeEntry.path} isLocked={locked} isNotPublished={notPublished}/>,
             typographyOptions: {
                 hasLineThrough: markedForDeletion,
                 isItalic: notPublished

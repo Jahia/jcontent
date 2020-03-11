@@ -2,7 +2,7 @@ import {getIcon} from '@jahia/icons';
 import React from 'react';
 import JContentConstants from '../JContent.constants';
 import {isMarkedForDeletion} from '../JContent.utils';
-import {Lock, NoCloud} from '@jahia/moonstone/dist/icons';
+import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
 
@@ -41,15 +41,16 @@ function convertPathsToTree(treeEntries, selected) {
         const locked = Boolean(treeEntry.node.lockOwner);
         const markedForDeletion = isMarkedForDeletion(treeEntry.node);
 
-        let parentPath = getParentPath(treeEntry.path);
-        let element = {
+        const parentPath = getParentPath(treeEntry.path);
+
+        const element = {
             id: treeEntry.path,
             label: treeEntry.node.displayName,
             hasChildren: treeEntry.hasChildren,
             parent: parentPath,
             isClosable: treeEntry.depth > 0,
             iconStart: displayIcon(treeEntry.node),
-            iconEnd: (locked && <Lock/>) || (notPublished && <NoCloud/>),
+            iconEnd: <StatusIcon path={treeEntry.path} locked={locked} notPublished={notPublished}/>,
             typographyOptions: {
                 hasLineThrough: markedForDeletion,
                 isItalic: notPublished
@@ -59,7 +60,7 @@ function convertPathsToTree(treeEntries, selected) {
             }),
             children: []
         };
-        let parent = findInTree(tree, parentPath);
+        const parent = findInTree(tree, parentPath);
         if (parent !== undefined && !findInTree(parent, element.id)) {
             parent.children.push(element);
         } else if (!findInTree(tree, element.id)) {

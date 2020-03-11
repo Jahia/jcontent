@@ -1,19 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Badge, Checkbox, Table, TableBody, TableCell, TableRow, Tooltip, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {Lock} from '@material-ui/icons';
 import {Folder, Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
-import {ContextualMenu} from '@jahia/ui-extender';
+import {ContextualMenu, DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {iconButtonRenderer, Pagination} from '@jahia/react-material';
-import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux';
-import {allowDoubleClickNavigation, extractPaths, getDefaultLocale, isMarkedForDeletion, isWorkInProgress} from '../../../JContent.utils';
+import {
+    allowDoubleClickNavigation,
+    extractPaths,
+    getDefaultLocale,
+    isMarkedForDeletion,
+    isWorkInProgress
+} from '../../../JContent.utils';
 import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -311,7 +316,6 @@ export const ContentListTable = ({
     addSelection,
     loading}) => {
     const {t} = useTranslation();
-    const [contextualMenuOpen, setContextualMenuOpen] = useState(null);
 
     const {
         mainPanelRef,
@@ -352,12 +356,6 @@ export const ContentListTable = ({
 
     let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
-
-    const onContextualMenuExit = ctx => {
-        if (ctx.actionKey === 'contentMenu' || ctx.actionKey === 'selectedContentMenu') {
-            setContextualMenuOpen(null);
-        }
-    };
 
     return (
         <>
@@ -403,7 +401,6 @@ export const ContentListTable = ({
 
                                                     const openContextualMenu = event => {
                                                         contextualMenu.current.open(event);
-                                                        setContextualMenuOpen(contextualMenu.current.props.context.path ? [contextualMenu.current.props.context.path] : contextualMenu.current.props.context.paths);
                                                     };
 
                                                     return (
@@ -413,8 +410,7 @@ export const ContentListTable = ({
                                                             classes={{
                                                                 root: classNames(classes.row, {
                                                                     [classes.rowCursor]: isPreviewOpened,
-                                                                    [classes.rowShowActions]: showActions,
-                                                                    [classes.contextualMenuOpen]: contextualMenuOpen && contextualMenuOpen.indexOf(node.path) > -1
+                                                                    [classes.rowShowActions]: showActions
                                                                 }),
                                                                 selected: classes.selectedRow
                                                             }}
@@ -441,7 +437,7 @@ export const ContentListTable = ({
                                                             <ContextualMenu
                                                                 ref={contextualMenu}
                                                                 actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                                                context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path, onExit: onContextualMenuExit} : {paths: selection, onExit: onContextualMenuExit}}
+                                                                context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
                                                             />
                                                             <TableCell
                                                                 padding="none"

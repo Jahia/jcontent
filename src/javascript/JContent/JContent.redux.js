@@ -148,31 +148,33 @@ export const jContentRedux = registry => {
         setTimeout(() => {
             let previousValue = currentValue || {};
             currentValue = select(store.getState());
-            let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search);
-            if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
-                if (currentValueFromUrl.site !== previousValue.site ||
-                    currentValueFromUrl.language !== previousValue.language ||
-                    currentValueFromUrl.mode !== previousValue.mode ||
-                    currentValueFromUrl.path !== previousValue.path ||
-                    !_.isEqual(currentValueFromUrl.params, previousValue.params)
+            if (currentValue.pathname.startsWith('/jcontent/')) {
+                let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search);
+                if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
+                    if (currentValueFromUrl.site !== previousValue.site ||
+                        currentValueFromUrl.language !== previousValue.language ||
+                        currentValueFromUrl.mode !== previousValue.mode ||
+                        currentValueFromUrl.path !== previousValue.path ||
+                        !_.isEqual(currentValueFromUrl.params, previousValue.params)
+                    ) {
+                        let data = {};
+                        Object.assign(data,
+                            currentValueFromUrl.site === previousValue.site ? {} : {site: currentValueFromUrl.site},
+                            currentValueFromUrl.language === previousValue.language ? {} : {language: currentValueFromUrl.language},
+                            currentValueFromUrl.mode === previousValue.mode ? {} : {mode: currentValueFromUrl.mode},
+                            currentValueFromUrl.path === previousValue.path ? {} : {path: currentValueFromUrl.path},
+                            _.isEqual(currentValueFromUrl.params, previousValue.params) ? {} : {params: currentValueFromUrl.params}
+                        );
+                        store.dispatch(cmGoto(data));
+                    }
+                } else if ((previousValue.site !== currentValue.site && currentValueFromUrl.site !== currentValue.site) ||
+                    (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
+                    (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
+                    (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
+                    (!_.isEqual(currentValueFromUrl.params, currentValue.params))
                 ) {
-                    let data = {};
-                    Object.assign(data,
-                        currentValueFromUrl.site === previousValue.site ? {} : {site: currentValueFromUrl.site},
-                        currentValueFromUrl.language === previousValue.language ? {} : {language: currentValueFromUrl.language},
-                        currentValueFromUrl.mode === previousValue.mode ? {} : {mode: currentValueFromUrl.mode},
-                        currentValueFromUrl.path === previousValue.path ? {} : {path: currentValueFromUrl.path},
-                        _.isEqual(currentValueFromUrl.params, previousValue.params) ? {} : {params: currentValueFromUrl.params}
-                    );
-                    store.dispatch(cmGoto(data));
+                    store.dispatch(push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params)));
                 }
-            } else if ((previousValue.site !== currentValue.site && currentValueFromUrl.site !== currentValue.site) ||
-                (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
-                (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
-                (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
-                (!_.isEqual(currentValueFromUrl.params, currentValue.params))
-            ) {
-                store.dispatch(push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params)));
             }
         });
     };

@@ -75,7 +75,7 @@ export const FileModeSelector = () => {
                     aria-selected={select === v}
                     color={select === v ? 'accent' : 'default'}
                     title={t('jcontent:label.contentManager.filesGrid.' + v)}
-                    size="big"
+                    size="default"
                     variant="ghost"
                     icon={icons[v]}
                     onClick={() => handleChange(v)}

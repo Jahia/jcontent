@@ -3,7 +3,7 @@ import {ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia
 import PushEventHandler from './PushEventHandler';
 import {ComponentRendererProvider as NewComponentRendererProvider} from '@jahia/ui-extender';
 import React from 'react';
-import {refetchContentTreeAndListData} from './JContent.refetches';
+import {triggerRefetchAll} from './JContent.refetches';
 import Upload from './ContentRoute/ContentLayout/Upload';
 
 export const jContentAppRoot = registry => {
@@ -54,7 +54,7 @@ export const jContentAppRoot = registry => {
                                     }
                                 });
                             } else {
-                                refetchContentTreeAndListData();
+                                triggerRefetchAll();
                             }
                         }
                     }}

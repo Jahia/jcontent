@@ -1,7 +1,7 @@
-import {refetchContentTreeAndListData} from '../JContent.refetches';
+import {triggerRefetchAll} from '../JContent.refetches';
 
 export default {
     onClick: () => {
-        refetchContentTreeAndListData();
+        triggerRefetchAll();
     }
 };

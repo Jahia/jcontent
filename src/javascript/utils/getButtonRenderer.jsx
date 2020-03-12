@@ -15,7 +15,8 @@ export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
         }
 
         return (context.isVisible !== false &&
-            <Button data-sel-role={context.key}
+            <Button isHtml
+                    data-sel-role={context.key}
                     label={t(label, context.buttonLabelParams)}
                     icon={context.buttonIcon}
                     disabled={context.enabled === false || context.disabled}

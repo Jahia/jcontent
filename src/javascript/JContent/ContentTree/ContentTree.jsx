@@ -27,6 +27,14 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         hideRoot: item.config.hideRoot
     });
 
+    // If path is root one but root is hidden, then select its first child
+    if (((path === rootPath) || (path === rootPath + '/')) && item.config.hideRoot && treeEntries.length > 0) {
+        const first = treeEntries[0];
+        first.selected = true;
+        path = first.path;
+        setPath(path);
+    }
+
     let contextualMenu = React.createRef();
 
     return (

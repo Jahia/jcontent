@@ -87,14 +87,14 @@ ContentStatuses.propTypes = {
         wipLangs: PropTypes.shape({
             values: PropTypes.arrayOf(PropTypes.string)
         }),
-        ancestors: PropTypes.shape({
+        ancestors: PropTypes.arrayOf(PropTypes.shape({
             deleted: PropTypes.shape({
                 value: PropTypes.string
             }),
             deletedBy: PropTypes.shape({
                 value: PropTypes.string
             })
-        })
+        }))
     }).isRequired,
     language: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,

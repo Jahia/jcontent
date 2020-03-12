@@ -2,18 +2,8 @@
     color: var(--color-gray_light60);
 }
 
-.ContentTree_Item .ContentTree_ItemIcon {
-    position: relative;
-
-    width: 32px;
-    height: 32px;
-}
-
 .ContentTree_Item .ContentTree_ItemStatusIcon {
-    position: absolute;
-
-    top: 8px;
-    left: 8px;
+    padding: 7px;
 }
 
 .ContentTree_Item:hover .ContentTree_ItemStatusIcon {
@@ -21,10 +11,6 @@
 }
 
 .ContentTree_Item .ContentTree_ItemMenuIcon {
-    position: absolute;
-    top: 1px;
-    left: 1px;
-
     display: none;
 }
 

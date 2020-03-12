@@ -1,3 +1,19 @@
 .ContentTree_Item.notPublished {
     color: var(--color-gray_light60);
 }
+
+.ContentTree_Item .ContentTree_ItemStatusIcon {
+    padding: 7px;
+}
+
+.ContentTree_Item:hover .ContentTree_ItemStatusIcon {
+    display: none;
+}
+
+.ContentTree_Item .ContentTree_ItemMenuIcon {
+    display: none;
+}
+
+.ContentTree_Item:hover .ContentTree_ItemMenuIcon {
+    display: block;
+}

@@ -21,8 +21,7 @@ describe('MainActionBar', () => {
         }));
 
         useNodeInfo.mockImplementation(() => ({
-            node: {
-            },
+            node: {},
             loading: false
         }));
 
@@ -43,8 +42,7 @@ describe('MainActionBar', () => {
         }));
 
         useNodeInfo.mockImplementation(() => ({
-            node: {
-            },
+            node: {},
             loading: false
         }));
 
@@ -66,7 +64,7 @@ describe('MainActionBar', () => {
 
         useNodeInfo.mockImplementation(() => ({
             node: {
-                jnt_contentFolder: true // eslint-disable-line camelcase
+                'jnt:contentFolder': true
             },
             loading: false
         }));

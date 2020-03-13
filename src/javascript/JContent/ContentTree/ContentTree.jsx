@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
 import {compose} from '~/utils';
-import {PredefinedFragments, useTreeEntries} from '@jahia/data-helper';
+import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
@@ -17,13 +17,13 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
     }
 
     const {treeEntries} = useTreeEntries({
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.lock, PredefinedFragments.displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
         openableTypes: item.config.openableTypes,
         selectableTypes: item.config.selectableTypes,
-        queryVariables: {lang: lang},
+        queryVariables: {language: lang},
         hideRoot: item.config.hideRoot
     });
 

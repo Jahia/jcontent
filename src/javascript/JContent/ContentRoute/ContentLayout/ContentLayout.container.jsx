@@ -23,7 +23,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {setModificationHook} from './ContentLayout.utils';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
-import {setContentListDataRefetcher} from '../../JContent.refetches';
+import {setRefetcher, refetchTypes, unsetRefetcher} from '../../JContent.refetches';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -183,7 +183,7 @@ export const ContentLayoutContainer = ({
     };
 
     useEffect(() => {
-        setContentListDataRefetcher({
+        setRefetcher(refetchTypes.CONTENT_DATA, {
             query: layoutQuery,
             queryParams: layoutQueryParams,
             refetch: refetch
@@ -193,6 +193,7 @@ export const ContentLayoutContainer = ({
         setModificationHook(args => onGwtContentModification(...args));
 
         return () => {
+            unsetRefetcher(refetchTypes.CONTENT_DATA);
             unregisterContentModificationEventHandler(onGwtContentModification);
         };
     });

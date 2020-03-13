@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
-import {Mutation} from 'react-apollo';
+import {Mutation, withApollo} from 'react-apollo';
 import {connect} from 'react-redux';
 import ImageEditor from './ImageEditor';
 import {getImageMutation} from './ImageEditor.gql-mutations';
@@ -10,7 +10,7 @@ import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import {DxContext} from '@jahia/react-material';
 import {cmGoto} from '../JContent.redux';
-import {refetchContentListData} from '../JContent.refetches';
+import {triggerRefetch, refetchTypes} from '../JContent.refetches';
 import Feedback from './Feedback';
 
 export class ImageEditorContainer extends React.Component {
@@ -243,7 +243,7 @@ export class ImageEditorContainer extends React.Component {
     }
 
     onCompleted(result) {
-        let {path, site, language, editImage, refreshData} = this.props;
+        let {path, site, language, editImage, client} = this.props;
         let newPath = result.jcr.mutateNode.transformImage.node.path;
         this.undoChanges();
         if (newPath === path) {
@@ -256,7 +256,8 @@ export class ImageEditorContainer extends React.Component {
         }
 
         this.handleClose();
-        refreshData();
+        triggerRefetch(refetchTypes.CONTENT_DATA);
+        client.cache.flushNodeEntryByPath(path);
     }
 
     render() {
@@ -352,8 +353,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    editImage: (site, language, path) => dispatch(cmGoto({site, language, mode: 'image-edit', path})),
-    refreshData: () => dispatch(refetchContentListData)
+    editImage: (site, language, path) => dispatch(cmGoto({site, language, mode: 'image-edit', path}))
 });
 
 ImageEditorContainer.propTypes = {
@@ -361,9 +361,10 @@ ImageEditorContainer.propTypes = {
     site: PropTypes.string.isRequired,
     language: PropTypes.string.isRequired,
     editImage: PropTypes.func.isRequired,
-    refreshData: PropTypes.func.isRequired
+    client: PropTypes.object.isRequired
 };
 
 export default compose(
+    withApollo,
     connect(mapStateToProps, mapDispatchToProps)
 )(ImageEditorContainer);

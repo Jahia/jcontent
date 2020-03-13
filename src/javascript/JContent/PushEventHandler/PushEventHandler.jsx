@@ -1,6 +1,6 @@
 import React from 'react';
 import {registerPushEventHandler, unregisterPushEventHandler} from '../eventHandlerRegistry';
-import {refetchContentTreeAndListData, refetchActiveWorkflowTasks} from '../JContent.refetches';
+import {triggerRefetchAll} from '../JContent.refetches';
 
 /**
  * Renderless component that registers listeners for push events, sent by the Atmosphere Framework after content actions
@@ -24,10 +24,6 @@ export default class PushEventHandler extends React.Component {
         if (eventData) {
             let evtType = eventData.type;
             if (evtType === 'workflowTask') {
-                if (window.contextJsParameters.displayWorkflowCounter) {
-                    refetchActiveWorkflowTasks();
-                }
-
                 if (eventData.endedWorkflow !== null) {
                     this.refetchData();
                 }
@@ -53,7 +49,7 @@ export default class PushEventHandler extends React.Component {
     }
 
     refetchData() {
-        refetchContentTreeAndListData();
+        triggerRefetchAll();
     }
 
     render() {

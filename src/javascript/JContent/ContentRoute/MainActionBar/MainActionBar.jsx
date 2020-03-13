@@ -21,7 +21,7 @@ export const MainActionBar = () => {
 
     let action = 'publish';
 
-    if (node.jnt_folder || node.jnt_contentFolder) {
+    if (node['jnt:folder'] || node['jnt:contentFolder']) {
         action = 'publishAll';
     }
 

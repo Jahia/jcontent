@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
@@ -8,6 +8,7 @@ import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
+import {setRefetcher, refetchTypes, unsetRefetcher} from '../JContent.refetches';
 
 export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, closePath, item}) => {
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
@@ -16,7 +17,7 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         openPaths.push(rootPath);
     }
 
-    const {treeEntries} = useTreeEntries({
+    const {treeEntries, refetch} = useTreeEntries({
         fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
@@ -25,6 +26,15 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         selectableTypes: item.config.selectableTypes,
         queryVariables: {language: lang},
         hideRoot: item.config.hideRoot
+    });
+
+    useEffect(() => {
+        setRefetcher(refetchTypes.CONTENT_TREE, {
+            refetch: refetch
+        });
+        return () => {
+            unsetRefetcher(refetchTypes.CONTENT_TREE);
+        };
     });
 
     // If path is root one but root is hidden, then select its first child

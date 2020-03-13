@@ -11,8 +11,9 @@ import {
     Delete,
     Edit,
     Lock,
+    Paste,
     Publish,
-    Paste
+    Reload
 } from '@jahia/moonstone/dist/icons';
 
 import {
@@ -45,6 +46,7 @@ import clearAllLocksAction from './actions/clearAllLocksAction';
 import locateAction from './actions/locateAction';
 import subContentsAction from './actions/subContentsAction';
 import exportAction from './actions/exportAction';
+import refreshAction from './actions/refreshAction';
 import downloadFileAction from './actions/downloadFileAction';
 import createFolderAction from './actions/createFolderAction';
 import zipAction from './actions/zipUnzip/zipAction';
@@ -52,6 +54,7 @@ import unzipAction from './actions/zipUnzip/unzipAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import JContentConstants from './JContent.constants';
+import {Separator} from '@jahia/moonstone';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
@@ -86,6 +89,15 @@ export const jContentActions = registry => {
         targets: ['createMenuActions:3', 'contentActions:3', 'headerPrimaryActions:2.5'],
         contentType: 'jnt:folder',
         showOnNodeTypes: ['jnt:folder']
+    });
+    registry.add('action', 'refresh', refreshAction, {
+        buttonIcon: <Reload/>,
+        buttonLabel: 'jcontent:label.contentManager.refresh',
+        targets: ['headerPrimaryActions:15']
+    });
+    registry.add('action', 'separator', createFolderAction, {
+        component: () => <Separator variant="vertical" invisible="firstOrLastChild"/>,
+        targets: ['headerPrimaryActions:20']
     });
     registry.add('action', 'fileUpload', fileUploadAction, {
         buttonIcon: <Publish/>,

@@ -5,7 +5,7 @@ import {withNotificationContextAction} from '../withNotificationContextAction';
 import {map} from 'rxjs/operators';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {isMarkedForDeletion} from '../../JContent.utils';
-import {refetchContentTreeAndListData} from '../../JContent.refetches';
+import {triggerRefetchAll} from '../../JContent.refetches';
 
 export default composeActions(requirementsAction, withNotificationContextAction, componentRendererAction, {
     init: context => {
@@ -22,7 +22,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
             variables: {pathOrId: context.node.path, path: context.node.parent.path},
             mutation: zipUnzipMutations.unzip
         }).then(() => {
-            refetchContentTreeAndListData();
+            triggerRefetchAll();
             handler.destroy();
         }).catch((reason => {
             handler.destroy();

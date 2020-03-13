@@ -2,7 +2,7 @@ import React from 'react';
 import {componentRendererAction, composeActions, ProgressOverlay} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
 import {withNotificationContextAction} from '../withNotificationContextAction';
-import {refetchContentTreeAndListData} from '../../JContent.refetches';
+import {triggerRefetchAll} from '../../JContent.refetches';
 import zipUnzipQueries from './zipUnzip.gql-queries';
 import zipUnzipMutation from './zipUnzip.gql-mutations';
 import {getNewCounter, removeFileExtension} from '../../JContent.utils';
@@ -51,7 +51,7 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 }]
             }).then(() => {
                 context.clearSelection();
-                refetchContentTreeAndListData();
+                triggerRefetchAll();
                 handler.destroy();
             }).catch((reason => {
                 handler.destroy();

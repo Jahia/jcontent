@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import pasteMutations from './copyPaste.gql-mutations';
-import {refetchContentTreeAndListData} from '../../JContent.refetches';
+import {triggerRefetchAll} from '../../JContent.refetches';
 import {copypasteClear} from './copyPaste.redux';
 import {composeActions} from '@jahia/react-material';
 import requirementsAction from '../requirementsAction';
@@ -10,8 +10,8 @@ import {withNotificationContextAction} from '../withNotificationContextAction';
 import {withI18nAction} from '../withI18nAction';
 import {ContentTypesQuery} from '../actions.gql-queries';
 import {from, of} from 'rxjs';
-import {isDescendantOrSelf, getNewNodePath} from '../../JContent.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmAddPathsToRefetch} from '../../JContent.redux';
+import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
+import {cmAddPathsToRefetch, cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
@@ -132,12 +132,12 @@ export default composeActions(requirementsAction, withNotificationContextAction,
                 }
             });
 
-            refetchContentTreeAndListData();
+            triggerRefetchAll();
         }, error => {
             console.error(error);
             context.clear();
             context.notificationContext.notify(context.t('jcontent:label.contentManager.copyPaste.error'), ['closeButton']);
-            refetchContentTreeAndListData();
+            triggerRefetchAll();
         });
     }
 });

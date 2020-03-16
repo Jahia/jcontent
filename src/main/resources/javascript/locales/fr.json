@@ -112,12 +112,20 @@
         "sql2": "Recherche avancée",
         "normal": "Recherche simple",
         "search": "Chercher",
+        "type": "Type",
+        "searchKeyword": "Recherche par mot-clé",
+        "searchLocation": "Lieu de recherche",
+        "searchInWebsite": "dans le site \"{{siteName}}\"",
+        "searchInCurrentLocation": "dans l'emplacement actuel \"{{nodeName}}\"",
         "searchEverywhere": "Rechercher sur tout {{site}}",
         "searchPath": "<0>Recherche sous: </0> <1>{{path}}</1>",
         "clear": "Effacer la recherche",
         "refresh": "Rafraîchir les résultats",
         "normalPrompt": "Que cherchez-vous?",
-        "sql2Prompt": "Vous utilisez des requêtes SQL2. Consultez l'<0>Academy</0> pour plus d'informations."
+        "sql2Prompt": "Vous utilisez des requêtes SQL2. Consultez l'<0>Academy</0> pour plus d'informations.",
+        "modal": {
+          "cancel": "Annuler"
+        }
       },
       "workInProgressAll": "Travail en cours: Tout le contenu (propriétés communes et internationalisées)",
       "unpublish": "Dépublier",

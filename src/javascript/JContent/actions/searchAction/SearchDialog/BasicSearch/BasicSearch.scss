@@ -1,0 +1,15 @@
+.fieldset {
+    margin-right: 0;
+    margin-bottom: calc(var(--spacing-small) * 4);
+    padding: 0;
+
+    border-bottom: none;
+
+    .label {
+        color: var(--color-gray);
+    }
+}
+
+.dropdown {
+    border: 1px solid #e0e6ea;
+}

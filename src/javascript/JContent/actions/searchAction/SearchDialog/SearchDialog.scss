@@ -1,0 +1,17 @@
+.dialogTitle {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-large) var(--spacing-large) var(--spacing-small) var(--spacing-large);
+}
+
+.dialogContent {
+    width: 600px;
+    padding: var(--spacing-large) calc(var(--spacing-small) * 4);
+}
+
+.dialogActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--spacing-small) var(--spacing-large) var(--spacing-medium) var(--spacing-large);
+}

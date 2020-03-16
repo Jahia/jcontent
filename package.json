@@ -40,10 +40,10 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "@jahia/data-helper": "^0.0.7",
+    "@jahia/data-helper": "^0.0.14",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
-    "@jahia/moonstone": "^0.11.2",
+    "@jahia/moonstone": "^0.14.2",
     "@jahia/react-material": "^2.1.1",
     "@jahia/ui-extender": "^0.3.7",
     "@material-ui/core": "^3.6.2",

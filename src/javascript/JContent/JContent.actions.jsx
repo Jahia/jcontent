@@ -13,7 +13,8 @@ import {
     Lock,
     Paste,
     Publish,
-    Reload
+    Reload,
+    Search
 } from '@jahia/moonstone/dist/icons';
 
 import {
@@ -51,6 +52,7 @@ import downloadFileAction from './actions/downloadFileAction';
 import createFolderAction from './actions/createFolderAction';
 import zipAction from './actions/zipUnzip/zipAction';
 import unzipAction from './actions/zipUnzip/unzipAction';
+import searchAction from './actions/searchAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import JContentConstants from './JContent.constants';
@@ -352,5 +354,10 @@ export const jContentActions = registry => {
         targets: ['contentActions:2.2'],
         showOnNodeTypes: ['jnt:file'],
         hideForPaths: [PATH_FILES_ITSELF]
+    });
+    registry.add('action', 'search', searchAction, {
+        buttonIcon: <Search/>,
+        buttonLabel: 'jcontent:label.contentManager.search.search',
+        targets: []
     });
 };

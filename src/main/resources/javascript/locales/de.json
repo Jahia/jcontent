@@ -112,12 +112,20 @@
         "sql2": "Erweiterte Suche",
         "normal": "Einfache Suche",
         "search": "Suchen",
+        "type": "Typ",
+        "searchKeyword": "Suchwort",
+        "searchLocation": "Hier suchen",
+        "searchInWebsite": "in der Website \"{{siteName}}\"",
+        "searchInCurrentLocation": "suche in \"{{nodeName}}\"",
         "searchEverywhere": "Suche alles von {{site}}",
         "searchPath": "<0>Suche unter: </0> <1>{{path}}</1>",
         "clear": "Suche zurücksetzen",
         "refresh": "Ergebnis aktualisieren",
         "normalPrompt": "Wonach suchen Sie?",
-        "sql2Prompt": "Sie verwenden SQL2-Queries. Bitte besuchen Sie die <0>Academy</0> für mehr Infos."
+        "sql2Prompt": "Sie verwenden SQL2-Queries. Bitte besuchen Sie die <0>Academy</0> für mehr Infos.",
+        "modal": {
+          "cancel": "Abbrechen"
+        }
       },
       "workInProgressAll": "In Arbeit: Gesamter Inhalt (gemeinsame und sprachabhängige Eigenschaften)",
       "unpublish": "Veröffentlichung rückgängig machen",

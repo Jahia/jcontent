@@ -71,7 +71,7 @@ export const fileuploadRedux = registry => {
         },
         [fileuploadSetOverlayTarget]: (state, action) => ({
             ...state,
-            overlayTarget: action.overlayTarget
+            overlayTarget: action.payload
         })
     }, initialState);
 

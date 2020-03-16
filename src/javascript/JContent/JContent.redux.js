@@ -60,14 +60,9 @@ const select = state => {
 };
 
 const buildUrl = (site, language, mode, path, params) => {
-    let sitePath = '/sites/' + site;
-    if (path.startsWith(sitePath + '/')) {
-        path = path.substring(('/sites/' + site).length);
-    } else if (mode === JContentConstants.mode.APPS) {
-        // Path is an action key
-        path = path.startsWith('/') ? path : '/' + path;
-    } else {
-        path = '';
+    let registryItem = registry.get('accordionItem', mode);
+    if (registryItem.getUrlPathPart) {
+        path = registryItem.getUrlPathPart(site, path, registryItem);
     }
 
     // Special chars in folder naming

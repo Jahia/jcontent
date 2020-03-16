@@ -10,7 +10,7 @@ const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation}) =>
         <SecondaryNav header={<NavigationHeader/>}>
             <Accordion isReversed
                        openedItem={mode}
-                       onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).defaultUrl(siteKey))}
+                       onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).defaultPath(siteKey))}
             >
                 {accordionItems.map(accordionItem => (
                     <AccordionItem key={accordionItem.key}

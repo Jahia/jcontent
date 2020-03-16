@@ -45,7 +45,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
 
     let contentTypeSelectData;
     let selectedContentType;
-    if (!loading && data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
+    if (!loading && data?.jcr?.nodeTypes?.nodes) {
         contentTypeSelectData = data.jcr.nodeTypes.nodes.map(item => {
             return {
                 label: `${item.displayName} (${item.name})`,

@@ -44,6 +44,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
     }
 
     let contentTypeSelectData;
+    let selectedContentType;
     if (!loading && data && data.jcr && data.jcr.nodeTypes && data.jcr.nodeTypes.nodes) {
         contentTypeSelectData = data.jcr.nodeTypes.nodes.map(item => {
             return {
@@ -52,6 +53,16 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
                 iconStart: <ImgWrapper src={item.icon + '.png'}/>
             };
         });
+
+        if (searchContentType) {
+            selectedContentType = contentTypeSelectData.find(item => {
+                if (item.value === searchContentType) {
+                    return item;
+                }
+
+                return null;
+            });
+        }
     }
 
     return (
@@ -67,9 +78,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
                        inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
                        value={searchTerms}
                        placeholder={t('label.contentManager.search.normalPrompt')}
-                       onChange={event => {
-                           handleSearchChanges('searchTerms', event.target.value);
-                       }}
+                       onChange={event => handleSearchChanges('searchTerms', event.target.value)}
                 />
             </div>
             <div className={styles.fieldset}>
@@ -80,11 +89,11 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
                         </Typography>
                         <Dropdown data={contentTypeSelectData}
                                   size="medium"
+                                  icon={selectedContentType && selectedContentType.iconStart}
+                                  label={selectedContentType && selectedContentType.label}
                                   value={searchContentType}
                                   className={styles.dropdown}
-                                  onChange={(e, item) => {
-                                      handleSearchChanges('searchContentType', item.value);
-                                  }}
+                                  onChange={(e, item) => handleSearchChanges('searchContentType', item.value)}
                         />
                     </>}
             </div>

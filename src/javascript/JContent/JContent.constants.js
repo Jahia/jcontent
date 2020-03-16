@@ -23,6 +23,10 @@ const JContentConstants = {
         IMPORT: 'import',
         APPS: 'apps'
     },
+    searchMode: {
+        BASIC: 'normal',
+        ADVANCED: 'sql2'
+    },
     localStorageKeys: {
         filesSelectorMode: 'jcontent_files_selector_mode',
         filesSelectorGridMode: 'jcontent_files_selector_grid_mode'

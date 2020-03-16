@@ -30,9 +30,7 @@ const SearchLocation = ({searchPath, handleSearchChanges}) => {
                 <RadioGroup aria-label="Search path"
                             name="searchPath"
                             value={searchPath}
-                            onChange={event => {
-                                handleSearchChanges('searchPath', event.target.value);
-                            }}
+                            onChange={event => handleSearchChanges('searchPath', event.target.value)}
                 >
                     <FormControlLabel
                         className={styles.radioLabel}

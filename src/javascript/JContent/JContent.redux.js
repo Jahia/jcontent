@@ -134,7 +134,7 @@ export const jContentRedux = registry => {
         [cmRemovePathsToRefetch]: (state, action) => _.difference(state, action.payload)
     }, []);
 
-    const searchModeReducer = handleAction(cmSetSearchMode, (state, action) => action.payload, (currentValueFromUrl.params.sql2SearchFrom ? 'sql2' : 'normal'));
+    const searchModeReducer = handleAction(cmSetSearchMode, (state, action) => action.payload, (currentValueFromUrl.params.sql2SearchFrom ? JContentConstants.searchMode.ADVANCED : JContentConstants.searchMode.BASIC));
 
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});

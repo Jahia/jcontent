@@ -14,6 +14,8 @@ import {
 import {BasicSearch} from './BasicSearch/BasicSearch';
 import JContentConstants from '~/JContent/JContent.constants';
 
+const isAdvancedSearch = searchMode => searchMode === JContentConstants.searchMode.ADVANCED;
+
 const SearchDialog = ({open, handleClose}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
@@ -24,7 +26,6 @@ const SearchDialog = ({open, handleClose}) => {
         path: state.jcontent.path
     }));
 
-    const [isAdvancedSearch, setIsAdvancedSearch] = useState(false);
     const [searchPath, setSearchPath] = useState(searchPath ? searchPath : path);
     const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
     const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
@@ -48,7 +49,7 @@ const SearchDialog = ({open, handleClose}) => {
     const performSearch = () => {
         let mode;
         let searchParams;
-        if (isAdvancedSearch) {
+        if (isAdvancedSearch(searchMode)) {
             searchParams = {};
             mode = JContentConstants.mode.SQL2SEARCH;
         } else {
@@ -64,8 +65,7 @@ const SearchDialog = ({open, handleClose}) => {
     };
 
     const toggleAdvancedSearch = () => {
-        setIsAdvancedSearch(!isAdvancedSearch);
-        dispatch(cmSetSearchMode(isAdvancedSearch ? 'normal' : 'sql2'));
+        dispatch(cmSetSearchMode(isAdvancedSearch(searchMode) ? JContentConstants.searchMode.BASIC : JContentConstants.searchMode.ADVANCED));
     };
 
     return (
@@ -82,12 +82,12 @@ const SearchDialog = ({open, handleClose}) => {
             </div>
             <Separator/>
             <div className={styles.dialogContent}>
-                {(searchMode === 'normal') &&
+                {!isAdvancedSearch(searchMode) &&
                 <BasicSearch searchPath={searchPath}
                              searchTerms={searchTerms}
                              searchContentType={searchContentType}
                              handleSearchChanges={handleSearchChanges}/>}
-                {(searchMode === 'sql2') &&
+                {isAdvancedSearch(searchMode) &&
                 <AdvancedSearch searchPath={searchPath}
                                 handleSearchChanges={handleSearchChanges}/>}
             </div>

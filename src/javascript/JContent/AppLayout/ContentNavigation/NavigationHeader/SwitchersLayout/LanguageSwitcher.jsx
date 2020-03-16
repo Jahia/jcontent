@@ -42,9 +42,9 @@ export const LanguageSwitcher = ({
             className={styles.languageSwitcher}
             label={lang}
             value={lang}
-            data={siteInfo.languages.map(l => ({label: l.language, value: l.language}))}
+            data={siteInfo.languages.filter(l => l.activeInEdit).map(l => ({label: l.language, value: l.language}))}
             onChange={(e, item) => {
-                onSelectLanguageHandler(item.label);
+                onSelectLanguageHandler(item.value);
                 return true;
             }}
         />

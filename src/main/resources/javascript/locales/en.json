@@ -109,15 +109,23 @@
         "detailed": "Detailed view"
       },
       "search": {
-        "sql2": "Advanced",
-        "normal": "Basic",
+        "sql2": "Advanced search",
+        "normal": "Basic search",
         "search": "Search",
+        "type": "Type",
+        "searchKeyword": "Search keyword",
+        "searchLocation": "Search location",
+        "searchInWebsite": "in Website \"{{siteName}}\"",
+        "searchInCurrentLocation": "in Current Location \"{{nodeName}}\"",
         "searchEverywhere": "Search all of {{site}}",
         "searchPath": "<0>Searching under: </0> <1>{{path}}<1>",
         "clear": "Clear search",
         "refresh": "Refresh results",
         "normalPrompt": "What are you looking for?",
-        "sql2Prompt": "You are using SQL2 queries. Please visit the <0>Academy</0> for more info."
+        "sql2Prompt": "You are using SQL2 queries. Please visit the <0>Academy</0> for more info.",
+        "modal": {
+          "cancel": "Cancel"
+        }
       },
       "workInProgressAll": "Work in progress: All Content (localised & non localised properties)",
       "unpublish": "Unpublish",

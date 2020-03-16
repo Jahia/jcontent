@@ -15,7 +15,6 @@ describe('Content header', () => {
         expect(contentHeader.contains(<div>breadcrumb</div>)).toBeTruthy();
         expect(contentHeader.contains(<div>information</div>)).toBeTruthy();
         expect(contentHeader.contains(<div>toolbar</div>)).toBeTruthy();
-        expect(contentHeader.find('Separator')).toHaveLength(1);
     });
 
     it('Should render with title and mainAction only', async () => {
@@ -27,7 +26,6 @@ describe('Content header', () => {
         expect(contentHeader.contains(<div>breadcrumb</div>)).toBeFalsy();
         expect(contentHeader.contains(<div>information</div>)).toBeFalsy();
         expect(contentHeader.contains(<div>toolbar</div>)).toBeFalsy();
-        expect(contentHeader.find('Separator')).toHaveLength(0);
     });
 
     it('Should render without breadcrumb', async () => {
@@ -41,7 +39,6 @@ describe('Content header', () => {
         expect(contentHeader.contains(<div>breadcrumb</div>)).toBeFalsy();
         expect(contentHeader.contains(<div>information</div>)).toBeTruthy();
         expect(contentHeader.contains(<div>toolbar</div>)).toBeTruthy();
-        expect(contentHeader.find('Separator')).toHaveLength(1);
     });
 
     it('Should render without information', async () => {
@@ -55,7 +52,6 @@ describe('Content header', () => {
         expect(contentHeader.contains(<div>breadcrumb</div>)).toBeTruthy();
         expect(contentHeader.contains(<div>information</div>)).toBeFalsy();
         expect(contentHeader.contains(<div>toolbar</div>)).toBeTruthy();
-        expect(contentHeader.find('Separator')).toHaveLength(1);
     });
 
     it('Should render without toolbar', async () => {
@@ -69,6 +65,5 @@ describe('Content header', () => {
         expect(contentHeader.contains(<div>breadcrumb</div>)).toBeTruthy();
         expect(contentHeader.contains(<div>information</div>)).toBeTruthy();
         expect(contentHeader.contains(<div>toolbar</div>)).toBeFalsy();
-        expect(contentHeader.find('Separator')).toHaveLength(0);
     });
 });

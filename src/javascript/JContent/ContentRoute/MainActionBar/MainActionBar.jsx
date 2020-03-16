@@ -29,7 +29,8 @@ export const MainActionBar = () => {
 
     return (
         <div className={styles.root}>
-            <Separator variant="vertical"/>
+            <DisplayAction actionKey="search" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost"/>
+            <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
             <DisplayAction actionKey="pageComposer" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
             <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>

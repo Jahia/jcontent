@@ -63,7 +63,7 @@ export const ContentLayoutContainer = ({
     previewState,
     previewSelection
 }) => {
-    const t = useTranslation();
+    const {t} = useTranslation();
     const client = useApolloClient();
 
     let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';

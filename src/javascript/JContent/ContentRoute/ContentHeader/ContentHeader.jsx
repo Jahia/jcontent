@@ -15,11 +15,9 @@ const ContentHeader = ({title, mainAction, breadcrumb, information, toolbar}) =>
             {information &&
             information}
         </div>
+        <Separator invisible="firstOrLastChild"/>
         {toolbar &&
-            <>
-                <Separator/>
-                {toolbar}
-            </>}
+        toolbar}
     </header>
 );
 

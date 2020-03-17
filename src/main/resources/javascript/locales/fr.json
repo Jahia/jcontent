@@ -113,6 +113,7 @@
         "basic": "Recherche simple",
         "search": "Chercher",
         "type": "Type",
+        "allType": "Tous",
         "searchKeyword": "Recherche par mot-clé",
         "searchLocation": "Lieu de recherche",
         "searchInWebsite": "dans le site \"{{siteName}}\"",

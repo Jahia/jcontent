@@ -29,7 +29,7 @@ const SearchDialog = ({open, handleClose}) => {
     const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
     const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
 
-    const searchLabel = t('label.contentManager.search.search');
+    const searchLabel = t('label.contentManager.title.search');
 
     const handleSearchChanges = (key, value) => {
         if (key === 'searchPath') {
@@ -75,7 +75,7 @@ const SearchDialog = ({open, handleClose}) => {
                     {searchLabel}
                 </Typography>
 
-                <Button label={isAdvancedSearch ? t('label.contentManager.search.normal') : t('label.contentManager.search.sql2')}
+                <Button label={isAdvancedSearch ? t('label.contentManager.search.basic') : t('label.contentManager.search.advanced')}
                         variant="ghost"
                         data-cm-role="search-type-sql2search"
                         onClick={toggleAdvancedSearch}/>

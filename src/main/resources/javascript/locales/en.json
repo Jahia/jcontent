@@ -109,8 +109,8 @@
         "detailed": "Detailed view"
       },
       "search": {
-        "sql2": "Advanced search",
-        "normal": "Basic search",
+        "advanced": "Advanced search",
+        "basic": "Basic search",
         "search": "Search",
         "type": "Type",
         "searchKeyword": "Search keyword",

@@ -109,8 +109,8 @@
         "detailed": "Vue detaillée"
       },
       "search": {
-        "sql2": "Recherche avancée",
-        "normal": "Recherche simple",
+        "advanced": "Recherche avancée",
+        "basic": "Recherche simple",
         "search": "Chercher",
         "type": "Type",
         "searchKeyword": "Recherche par mot-clé",

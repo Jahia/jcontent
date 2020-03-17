@@ -1,17 +1,11 @@
 import {useMemo} from 'react';
-import {useHistory} from 'react-router';
-import {useTranslation} from 'react-i18next';
 import {registry} from '@jahia/ui-extender';
-import {useNodeInfo} from '@jahia/data-helper';
+import {Tree} from './Tree';
 
-export const useAdminRouteTreeStructure = function (target, permissionsContextNodePath) {
-    const history = useHistory();
-    const {t} = useTranslation();
-
-    let selected = history.location.pathname.split('/').pop();
+export const useAdminRouteTreeStructure = function (target, selected) {
     let defaultOpened = [];
 
-    const allRoutes = useMemo(() => {
+    const routes = useMemo(() => {
         const getAllRoutes = (baseTarget, parent = '') => registry.find({type: 'adminRoute', target: baseTarget + parent})
             .flatMap(route => {
                 return [route, ...getAllRoutes(baseTarget, '-' + route.key)];
@@ -19,8 +13,7 @@ export const useAdminRouteTreeStructure = function (target, permissionsContextNo
         return getAllRoutes(target);
     });
 
-    const requiredPermissions = useMemo(() => allRoutes
-        .filter(route => !route.omitFromTree)
+    const requiredPermissions = useMemo(() => routes
         .flatMap(route => {
             const permission = route.requiredPermission;
             if (permission) {
@@ -36,48 +29,27 @@ export const useAdminRouteTreeStructure = function (target, permissionsContextNo
         .filter((item, pos, self) => self.indexOf(item) === pos)
     );
 
-    const permissions = useNodeInfo({path: permissionsContextNodePath}, {getPermissions: requiredPermissions});
-
-    if (permissions.loading || permissions.error) {
-        return {
-            loading: permissions.loading,
-            error: permissions.error
-        };
-    }
-
     const createTree = (baseTarget, parent = '') => registry.find({type: 'adminRoute', target: baseTarget + parent})
         .filter(route => !route.omitFromTree)
-        .filter(route => route.requiredPermission === undefined || permissions.node[route.requiredPermission] !== false)
-        .map(route => {
-            let treeEntry = {
-                id: route.key,
-                label: t(route.label),
-                isSelectable: route.isSelectable
-            };
-            if (route.icon !== null) {
-                treeEntry.iconStart = route.icon;
+        .map(route => ({
+            ...route,
+            children: createTree(baseTarget, '-' + route.key)
+        }));
+
+    if (selected) {
+        let selectedItem = registry.get('adminRoute', selected);
+        if (selectedItem) {
+            while (selectedItem.parent) {
+                selectedItem = registry.get('adminRoute', selectedItem.parent);
+                defaultOpened.push(selectedItem.key);
             }
-
-            treeEntry.children = createTree(baseTarget, '-' + route.key);
-
-            return treeEntry;
-        });
-
-    let selectedItem = registry.get('adminRoute', selected);
-    if (selectedItem) {
-        while (selectedItem.parent) {
-            selectedItem = registry.get('adminRoute', selectedItem.parent);
-            defaultOpened.push(selectedItem.key);
         }
     }
 
-    const routes = allRoutes.filter(route => route.requiredPermission === undefined || permissions.node[route.requiredPermission] !== false);
-
     return {
-        tree: createTree(target),
-        selectedItem: selected,
+        tree: new Tree(createTree(target)),
         defaultOpenedItems: defaultOpened,
-        routes: routes,
-        loading: false
+        routes,
+        requiredPermissions
     };
 };

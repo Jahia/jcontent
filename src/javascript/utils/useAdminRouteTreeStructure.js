@@ -1,7 +1,6 @@
 import {useMemo} from 'react';
-import {registry} from '@jahia/ui-extender';
+import {registry, getIframeRenderer} from '@jahia/ui-extender';
 import {Tree} from './Tree';
-
 export const useAdminRouteTreeStructure = function (target, selected) {
     let defaultOpened = [];
 
@@ -9,7 +8,11 @@ export const useAdminRouteTreeStructure = function (target, selected) {
         const getAllRoutes = (baseTarget, parent = '') => registry.find({type: 'adminRoute', target: baseTarget + parent})
             .flatMap(route => {
                 return [route, ...getAllRoutes(baseTarget, '-' + route.key)];
-            });
+            })
+            .map(route => ({
+                ...route,
+                render: route.render || (route.iframeUrl && (() => getIframeRenderer(route.iframeUrl)))
+            }));
         return getAllRoutes(target);
     });
 

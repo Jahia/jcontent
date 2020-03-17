@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './SearchDialog.scss';
 import AdvancedSearch from './AdvancedSearch';
-import {cmSetSearchMode, cmGoto} from '~/JContent/JContent.redux';
+import {cmGoto} from '~/JContent/JContent.redux';
 import {
     Close,
     Search
@@ -14,18 +14,17 @@ import {
 import {BasicSearch} from './BasicSearch/BasicSearch';
 import JContentConstants from '~/JContent/JContent.constants';
 
-const isAdvancedSearch = searchMode => searchMode === JContentConstants.searchMode.ADVANCED;
-
 const SearchDialog = ({open, handleClose}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {params, searchMode, path} = useSelector(state => ({
+    const {params, mode, path} = useSelector(state => ({
         params: state.jcontent.params,
-        searchMode: state.jcontent.searchMode,
+        mode: state.jcontent.mode,
         path: state.jcontent.path
     }));
 
+    const [isAdvancedSearch, setIsAdvancedSearch] = useState(mode === JContentConstants.mode.SQL2SEARCH);
     const [searchPath, setSearchPath] = useState(searchPath ? searchPath : (params.searchPath ? params.searchPath : path));
     const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
     const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
@@ -49,7 +48,7 @@ const SearchDialog = ({open, handleClose}) => {
     const performSearch = () => {
         let mode;
         let searchParams;
-        if (isAdvancedSearch(searchMode)) {
+        if (isAdvancedSearch) {
             searchParams = {};
             mode = JContentConstants.mode.SQL2SEARCH;
         } else {
@@ -66,7 +65,7 @@ const SearchDialog = ({open, handleClose}) => {
     };
 
     const toggleAdvancedSearch = () => {
-        dispatch(cmSetSearchMode(isAdvancedSearch(searchMode) ? JContentConstants.searchMode.BASIC : JContentConstants.searchMode.ADVANCED));
+        setIsAdvancedSearch(!isAdvancedSearch);
     };
 
     return (
@@ -76,21 +75,21 @@ const SearchDialog = ({open, handleClose}) => {
                     {searchLabel}
                 </Typography>
 
-                <Button label={isAdvancedSearch(searchMode) ? t('label.contentManager.search.normal') : t('label.contentManager.search.sql2')}
+                <Button label={isAdvancedSearch ? t('label.contentManager.search.normal') : t('label.contentManager.search.sql2')}
                         variant="ghost"
                         data-cm-role="search-type-sql2search"
                         onClick={toggleAdvancedSearch}/>
             </div>
             <Separator/>
             <div className={styles.dialogContent}>
-                {!isAdvancedSearch(searchMode) &&
+                {!isAdvancedSearch &&
                 <BasicSearch searchPath={searchPath}
                              searchTerms={searchTerms}
                              searchContentType={searchContentType}
                              handleSearchChanges={handleSearchChanges}
                              performSearch={performSearch}
                 />}
-                {isAdvancedSearch(searchMode) &&
+                {isAdvancedSearch &&
                 <AdvancedSearch searchPath={searchPath}
                                 handleSearchChanges={handleSearchChanges}
                 />}

@@ -86,8 +86,8 @@ const pathResolver = (currentValue, currentValueFromUrl) => {
     return currentValue.path;
 };
 
-export const {cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetMode, cmSetPath, cmSetParams, cmSetSearchMode} =
-    createActions('CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS', 'CM_SET_SEARCH_MODE');
+export const {cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetMode, cmSetPath, cmSetParams} =
+    createActions('CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS');
 
 export const cmGoto = data => (
     dispatch => {
@@ -134,14 +134,11 @@ export const jContentRedux = registry => {
         [cmRemovePathsToRefetch]: (state, action) => _.difference(state, action.payload)
     }, []);
 
-    const searchModeReducer = handleAction(cmSetSearchMode, (state, action) => action.payload, (currentValueFromUrl.params.sql2SearchFrom ? JContentConstants.searchMode.ADVANCED : JContentConstants.searchMode.BASIC));
-
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
     registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
     registry.add('redux-reducer', 'pathsToRefetch', {targets: ['jcontent'], reducer: pathsToRefetchReducer});
-    registry.add('redux-reducer', 'searchMode', {targets: ['jcontent'], reducer: searchModeReducer});
 
     let currentValue;
     let getSyncListener = store => () => {

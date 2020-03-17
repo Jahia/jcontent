@@ -33,7 +33,7 @@ const SearchLocation = ({searchPath, handleSearchChanges}) => {
                             onChange={event => handleSearchChanges('searchPath', event.target.value)}
                 >
                     <FormControlLabel
-                        className={styles.radioLabel}
+                        className={styles.radio}
                         value={siteInfo.path}
                         control={<Radio color="primary"/>}
                         label={t('label.contentManager.search.searchInWebsite', {siteName: siteInfo.displayName})}
@@ -41,7 +41,7 @@ const SearchLocation = ({searchPath, handleSearchChanges}) => {
                         color="alpha"
                     />
                     <FormControlLabel
-                        className={styles.radioLabel}
+                        className={styles.radio}
                         value={path}
                         control={<Radio color="primary"/>}
                         label={t('label.contentManager.search.searchInCurrentLocation', {nodeName: node.displayName})}

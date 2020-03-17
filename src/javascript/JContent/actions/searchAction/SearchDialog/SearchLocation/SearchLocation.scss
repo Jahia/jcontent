@@ -1,5 +1,10 @@
-.radioLabel {
+.radio {
+    > span:first-child {
+        padding: var(--spacing-small) var(--spacing-small) var(--spacing-small) 12px;
+    }
+
     > span:last-child {
+        font-size: 0.875rem;
         color: var(--color-dark);
     }
 }

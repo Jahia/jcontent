@@ -23,7 +23,7 @@ const SiteContentTypesQuery = gql`
     }
 `;
 
-export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleSearchChanges}) => {
+export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleSearchChanges, performSearch}) => {
     const {t} = useTranslation('jcontent');
 
     const {siteKey, language} = useSelector(state => ({
@@ -75,10 +75,18 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
                     {t('label.contentManager.search.searchKeyword')}
                 </Typography>
                 <Input fullWidth
+                       autoFocus
                        inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
                        value={searchTerms}
                        placeholder={t('label.contentManager.search.normalPrompt')}
                        onChange={event => handleSearchChanges('searchTerms', event.target.value)}
+                       onKeyPress={event => {
+                           const code = event.keyCode || event.which;
+
+                           if (code === 13) {
+                               performSearch();
+                           }
+                       }}
                 />
             </div>
             <div className={styles.fieldset}>
@@ -105,7 +113,8 @@ BasicSearch.propTypes = {
     searchPath: PropTypes.string.isRequired,
     searchTerms: PropTypes.string.isRequired,
     searchContentType: PropTypes.string.isRequired,
-    handleSearchChanges: PropTypes.func.isRequired
+    handleSearchChanges: PropTypes.func.isRequired,
+    performSearch: PropTypes.func.isRequired
 };
 
 export default BasicSearch;

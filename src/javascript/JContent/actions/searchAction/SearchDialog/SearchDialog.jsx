@@ -29,8 +29,6 @@ const SearchDialog = ({open, handleClose}) => {
     const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
     const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
 
-    const searchLabel = t('label.contentManager.title.search');
-
     const handleSearchChanges = (key, value) => {
         if (key === 'searchPath') {
             setSearchPath(value);
@@ -72,7 +70,7 @@ const SearchDialog = ({open, handleClose}) => {
         <Dialog open={open} onClose={handleClose}>
             <div className={styles.dialogTitle}>
                 <Typography isUpperCase variant="subheading">
-                    {searchLabel}
+                    {t('label.contentManager.title.search')}
                 </Typography>
 
                 <Button label={isAdvancedSearch ? t('label.contentManager.search.basic') : t('label.contentManager.search.advanced')}
@@ -104,7 +102,7 @@ const SearchDialog = ({open, handleClose}) => {
                 <Button size="big"
                         icon={<Search/>}
                         color="accent"
-                        label={searchLabel}
+                        label={t('label.contentManager.search.search')}
                         onClick={() => performSearch()}/>
             </div>
         </Dialog>

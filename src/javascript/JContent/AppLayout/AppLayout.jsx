@@ -5,10 +5,14 @@ import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
 import {Route, Switch} from 'react-router';
 import {registry} from '@jahia/ui-extender';
+import {useAdminRouteTreeStructure} from '../AdditionnalApps/useAdminRouteTreeStructure';
+import {useSelector} from 'react-redux';
 
 const AppLayout = ({dxContext}) => {
     const routes = registry.find({type: 'route', target: 'jcontent'});
-    const adminRoutes = registry.find({type: 'adminRoute', target: 'jcontent'});
+
+    const site = useSelector(state => state.site);
+    const {routes: adminRoutes} = useAdminRouteTreeStructure('jcontent', '/sites/' + site);
 
     const {t} = useTranslation('jcontent');
     return (
@@ -16,7 +20,7 @@ const AppLayout = ({dxContext}) => {
             navigation={<ContentNavigation/>}
             content={
                 <Switch>
-                    {adminRoutes.filter(route => route.isSelectable && route.render).map(r =>
+                    {adminRoutes && adminRoutes.filter(route => route.isSelectable && route.render).map(r =>
                         <Route key={r.key} path={'/jcontent/:siteKey/:lang/apps/' + r.key} render={props => r.render(props, {dxContext, t})}/>
                     )}
                     {routes.map(r =>

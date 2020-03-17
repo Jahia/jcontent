@@ -43,16 +43,21 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, handleS
         console.log(error);
     }
 
+    const defaultContentType = {
+        label: t('label.contentManager.search.allType'),
+        value: ''
+    };
+
     let contentTypeSelectData;
-    let selectedContentType;
+    let selectedContentType = defaultContentType;
     if (!loading && data?.jcr?.nodeTypes?.nodes) {
-        contentTypeSelectData = data.jcr.nodeTypes.nodes.map(item => {
+        contentTypeSelectData = [defaultContentType].concat(data.jcr.nodeTypes.nodes.map(item => {
             return {
                 label: `${item.displayName} (${item.name})`,
                 value: item.name,
                 iconStart: <ImgWrapper src={item.icon + '.png'}/>
             };
-        });
+        }));
 
         if (searchContentType) {
             selectedContentType = contentTypeSelectData.find(item => {

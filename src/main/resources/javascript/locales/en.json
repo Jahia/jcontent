@@ -113,7 +113,7 @@
         "basic": "Basic search",
         "search": "Search",
         "type": "Type",
-        "allType": "All",
+        "anyContent": "Any content",
         "searchKeyword": "Search keyword",
         "searchLocation": "Search location",
         "searchInWebsite": "in Website \"{{siteName}}\"",
@@ -242,12 +242,6 @@
         "collapse": "Collapse",
         "unPublishedBy": "Unpublished by {{userName}} on",
         "moreOptions": "More Options"
-      },
-      "contentTypes": {
-        "error": {
-          "loading": "Error retrieving content types: {{details}}"
-        },
-        "any": "Any content"
       },
       "copyPaste": {
         "success": "Item successfully pasted",

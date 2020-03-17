@@ -11,7 +11,7 @@ import {
     Close,
     Search
 } from '@jahia/moonstone/dist/icons';
-import {BasicSearch} from './BasicSearch/BasicSearch';
+import BasicSearch from './BasicSearch';
 import JContentConstants from '~/JContent/JContent.constants';
 
 const SearchDialog = ({open, handleClose}) => {

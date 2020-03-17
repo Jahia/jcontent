@@ -113,7 +113,7 @@
         "basic": "Einfache Suche",
         "search": "Suchen",
         "type": "Typ",
-        "allType": "Alle",
+        "anyContent": "Jeglicher Content",
         "searchKeyword": "Suchwort",
         "searchLocation": "Hier suchen",
         "searchInWebsite": "in der Website \"{{siteName}}\"",
@@ -241,12 +241,6 @@
         "collapse": "Verkleinern",
         "unPublishedBy": "Veröffentlichung wurde rückgängig gemacht von {{userName}} am",
         "moreOptions": "Mehr Optionen"
-      },
-      "contentTypes": {
-        "error": {
-          "loading": "Fehler während Content-Typen-Abfrage: {{details}}"
-        },
-        "any": "Jeglicher Content"
       },
       "copyPaste": {
         "success": "Element erfolgreich kopiert",

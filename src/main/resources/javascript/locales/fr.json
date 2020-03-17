@@ -113,7 +113,7 @@
         "basic": "Recherche simple",
         "search": "Chercher",
         "type": "Type",
-        "allType": "Tous",
+        "anyContent": "Tout contenu",
         "searchKeyword": "Recherche par mot-clé",
         "searchLocation": "Lieu de recherche",
         "searchInWebsite": "dans le site \"{{siteName}}\"",
@@ -241,12 +241,6 @@
         "collapse": "Réduire",
         "unPublishedBy": "Dépublié par {{userName}} le",
         "moreOptions": "Plus d'options"
-      },
-      "contentTypes": {
-        "error": {
-          "loading": "Erreur lors de la récupération des types de contenu: {{details}}"
-        },
-        "any": "Tout contenu"
       },
       "copyPaste": {
         "success": "L'élément a été collé avec succès",

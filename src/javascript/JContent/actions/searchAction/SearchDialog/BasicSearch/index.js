@@ -1,3 +1,3 @@
-import BasicSearch from './BasicSearch';
+import BasicSearch from './BasicSearch.container';
 
 export default BasicSearch;

@@ -26,7 +26,7 @@ const SearchDialog = ({open, handleClose}) => {
         path: state.jcontent.path
     }));
 
-    const [searchPath, setSearchPath] = useState(searchPath ? searchPath : path);
+    const [searchPath, setSearchPath] = useState(searchPath ? searchPath : (params.searchPath ? params.searchPath : path));
     const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
     const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
 
@@ -54,13 +54,14 @@ const SearchDialog = ({open, handleClose}) => {
             mode = JContentConstants.mode.SQL2SEARCH;
         } else {
             searchParams = {
+                searchPath: searchPath,
                 searchTerms: searchTerms,
                 searchContentType: searchContentType
             };
             mode = JContentConstants.mode.SEARCH;
         }
 
-        dispatch(cmGoto({mode, searchPath, searchParams}));
+        dispatch(cmGoto({mode, params: searchParams}));
         handleClose();
     };
 
@@ -75,7 +76,7 @@ const SearchDialog = ({open, handleClose}) => {
                     {searchLabel}
                 </Typography>
 
-                <Button label={isAdvancedSearch ? t('label.contentManager.search.normal') : t('label.contentManager.search.sql2')}
+                <Button label={isAdvancedSearch(searchMode) ? t('label.contentManager.search.normal') : t('label.contentManager.search.sql2')}
                         variant="ghost"
                         data-cm-role="search-type-sql2search"
                         onClick={toggleAdvancedSearch}/>
@@ -86,10 +87,13 @@ const SearchDialog = ({open, handleClose}) => {
                 <BasicSearch searchPath={searchPath}
                              searchTerms={searchTerms}
                              searchContentType={searchContentType}
-                             handleSearchChanges={handleSearchChanges}/>}
+                             handleSearchChanges={handleSearchChanges}
+                             performSearch={performSearch}
+                />}
                 {isAdvancedSearch(searchMode) &&
                 <AdvancedSearch searchPath={searchPath}
-                                handleSearchChanges={handleSearchChanges}/>}
+                                handleSearchChanges={handleSearchChanges}
+                />}
             </div>
             <Separator/>
             <div className={styles.dialogActions}>

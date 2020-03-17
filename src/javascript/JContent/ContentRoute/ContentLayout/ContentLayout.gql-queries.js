@@ -227,13 +227,13 @@ class FilesQueryHandler {
 class SearchQueryHandler {
     getQuery() {
         return gql`
-            query searchContentQuery($path:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
+            query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
                 jcr {
                     nodesByCriteria(
                         criteria: {
                             language: $language,
                             nodeType: $nodeType,
-                            paths: [$path],
+                            paths: [$searchPath],
                             nodeConstraint: {
                                 any: [
                                     {contains: $searchTerms}
@@ -261,7 +261,7 @@ class SearchQueryHandler {
 
     getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
         return {
-            path: path,
+            searchPath: urlParams.searchPath,
             nodeType: (urlParams.searchContentType || 'jmix:searchable'),
             searchTerms: urlParams.searchTerms,
             language: lang,
@@ -302,7 +302,7 @@ class Sql2SearchQueryHandler {
 
     getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
-        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${path}')`;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${urlParams.searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
             query += ` AND (${sql2SearchWhere})`;
         }

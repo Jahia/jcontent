@@ -5,7 +5,7 @@ import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
 import {Route, Switch} from 'react-router';
 import {registry} from '@jahia/ui-extender';
-import {useAdminRouteTreeStructure} from '../AdditionnalApps/useAdminRouteTreeStructure';
+import {useAdminRouteTreeStructure} from '../../utils/useAdminRouteTreeStructure';
 import {useSelector} from 'react-redux';
 
 const AppLayout = ({dxContext}) => {

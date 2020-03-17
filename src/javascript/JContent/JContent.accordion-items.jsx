@@ -2,7 +2,7 @@ import React from 'react';
 import {Collections, File, FolderSpecial, Setting} from '@jahia/moonstone/dist/icons';
 import ContentTree from './ContentTree';
 import JContentConstants from './JContent.constants';
-import AdditionnalApps from './AdditionnalApps';
+import AdditionalApps from './AdditionalApps';
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {
@@ -89,7 +89,7 @@ export const jContentAccordionItems = registry => {
             return '/' + availableRoutes[0].key;
         },
         render: () => (
-            <AdditionnalApps/>
+            <AdditionalApps/>
         ),
         getPath: getPath,
         config: {

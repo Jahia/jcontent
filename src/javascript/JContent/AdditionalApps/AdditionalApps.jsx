@@ -2,9 +2,9 @@ import React from 'react';
 import {TreeView} from '@jahia/moonstone';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '../JContent.redux';
-import {useAdminRouteTreeStructure} from './useAdminRouteTreeStructure';
+import {useAdminRouteTreeStructure} from '../../utils/useAdminRouteTreeStructure';
 
-const AdditionnalApps = () => {
+const AdditionalApps = () => {
     const site = useSelector(state => state.site);
     const dispatch = useDispatch();
     const {tree, selectedItem, defaultOpenedItems, loading, error} = useAdminRouteTreeStructure('jcontent', '/sites/' + site);
@@ -26,4 +26,4 @@ const AdditionnalApps = () => {
     return null;
 };
 
-export default AdditionnalApps;
+export default AdditionalApps;

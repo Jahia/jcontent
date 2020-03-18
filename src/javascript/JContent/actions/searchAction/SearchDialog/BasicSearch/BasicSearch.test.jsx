@@ -98,7 +98,7 @@ describe('BasicSearch', () => {
         expect(hasHandledSearchChanges).toBeTruthy();
     });
 
-    it('Dropdown should return search terms', async () => {
+    it('Dropdown should return selected content type', async () => {
         let hasHandledSearchChanges = false;
         const handleSearchChanges = (key, value) => {
             hasHandledSearchChanges = true;

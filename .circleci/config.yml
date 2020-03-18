@@ -15,12 +15,12 @@ references:
       at: .
 
 jobs:
-  initialize:
-    <<: *workdir
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - checkout
+  #initialize:
+  #  <<: *workdir
+  #  docker:
+  #    - image: circleci/node:latest
+  #  steps:
+  #    - checkout
 
   build:
     <<: *workdir
@@ -30,6 +30,7 @@ jobs:
 
     steps:
       - *attach-workspace
+      - checkout
       - restore_cache:
           keys:
             - v2-dependencies-{{ checksum "pom.xml" }}
@@ -54,6 +55,7 @@ workflows:
   version: 2
   on-code-change:
     jobs:
-      -build:
-          requires:
-            - initialize
+      #- initialize
+      - build
+      #    requires:
+      #      - initialize

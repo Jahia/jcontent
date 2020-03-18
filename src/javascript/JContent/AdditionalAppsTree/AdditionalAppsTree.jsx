@@ -2,12 +2,13 @@ import React from 'react';
 import {TreeView} from '@jahia/moonstone';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '../JContent.redux';
-import {useAdminRouteTreeStructure} from '../../utils/useAdminRouteTreeStructure';
+import {useAdminRouteTreeStructure} from '@jahia/ui-extender';
 import {useHistory} from 'react-router';
 import {useNodeInfo} from '@jahia/data-helper';
 import {useTranslation} from 'react-i18next';
+import PropTypes from 'prop-types';
 
-const AdditionalApps = () => {
+export const AdditionalAppsTree = ({item, target}) => {
     const site = useSelector(state => state.site);
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -15,8 +16,9 @@ const AdditionalApps = () => {
 
     let selected = history.location.pathname.split('/').pop();
 
-    const {tree, defaultOpenedItems, requiredPermissions} = useAdminRouteTreeStructure('jcontent', selected);
-    const {node, loading, error} = useNodeInfo({path: '/sites/' + site}, {getPermissions: requiredPermissions});
+    const {tree, defaultOpenedItems, allPermissions} = useAdminRouteTreeStructure(target, selected);
+
+    const {node, loading, error} = useNodeInfo({path: '/sites/' + site}, {getPermissions: allPermissions, getSiteInstalledModules: true});
 
     if (loading || error) {
         return false;
@@ -24,13 +26,14 @@ const AdditionalApps = () => {
 
     const data = tree
         .filter(route => route.requiredPermission === undefined || node[route.requiredPermission] !== false)
+        .filter(route => route.requireModuleInstalledOnSite === undefined || node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) > -1)
         .map(route => ({
             id: route.key,
             label: t(route.label),
             isSelectable: route.isSelectable,
             iconStart: route.icon
         }))
-        .data;
+        .getData();
 
     if (tree && tree.length !== 0) {
         return (
@@ -38,11 +41,14 @@ const AdditionalApps = () => {
                       data={data}
                       selectedItems={[selected]}
                       defaultOpenedItems={defaultOpenedItems}
-                      onClickItem={app => app.isSelectable ? dispatch(cmGoto({mode: 'apps', path: '/' + app.id})) : false}/>
+                      onClickItem={app => app.isSelectable ? dispatch(cmGoto({mode: item.key, path: '/' + app.id})) : false}/>
         );
     }
 
     return null;
 };
 
-export default AdditionalApps;
+AdditionalAppsTree.propTypes = {
+    target: PropTypes.string.isRequired,
+    item: PropTypes.object.isRequired
+};

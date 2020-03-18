@@ -18,7 +18,7 @@ const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation}) =>
                                    label={t(accordionItem.label)}
                                    icon={accordionItem.icon}
                     >
-                        {accordionItem.render(accordionItem)}
+                        {accordionItem.component ? <accordionItem.component item={accordionItem}/> : accordionItem.render({item: accordionItem})}
                     </AccordionItem>
                 ))}
             </Accordion>

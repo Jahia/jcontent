@@ -1,8 +1,9 @@
 import React from 'react';
 import {Collections, File, FolderSpecial, Setting} from '@jahia/moonstone/dist/icons';
 import ContentTree from './ContentTree';
-import JContentConstants from './JContent.constants';
-import AdditionalApps from './AdditionalApps';
+import ContentRoute from './ContentRoute';
+import AdditionalAppsTree from './AdditionalAppsTree';
+import AdditionalAppsRoute from './AdditionalAppsRoute';
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {
@@ -27,14 +28,13 @@ export const jContentAccordionItems = registry => {
     };
 
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
-        render: item => (
-            <ContentTree item={item}/>
-        ),
+        component: ContentTree,
+        routeComponent: ContentRoute,
         getPath,
         getUrlPathPart
     });
 
-    registry.add('accordionItem', JContentConstants.mode.PAGES, renderDefaultContentTrees, {
+    registry.add('accordionItem', 'pages', renderDefaultContentTrees, {
         targets: ['jcontent:50'],
         icon: <File/>,
         label: 'label.contentManager.navigation.pages',
@@ -50,7 +50,7 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', JContentConstants.mode.CONTENT_FOLDERS, renderDefaultContentTrees, {
+    registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders',
@@ -65,7 +65,7 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', JContentConstants.mode.MEDIA, renderDefaultContentTrees, {
+    registry.add('accordionItem', 'media', renderDefaultContentTrees, {
         targets: ['jcontent:70'],
         icon: <Collections/>,
         label: 'label.contentManager.navigation.media',
@@ -80,7 +80,7 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', JContentConstants.mode.APPS, {
+    registry.add('accordionItem', 'apps', {
         targets: ['jcontent:80'],
         icon: <Setting/>,
         label: 'label.contentManager.navigation.apps',
@@ -88,10 +88,8 @@ export const jContentAccordionItems = registry => {
             const availableRoutes = registry.find({type: 'adminRoute', target: 'jcontent'});
             return '/' + availableRoutes[0].key;
         },
-        render: () => (
-            <AdditionalApps/>
-        ),
-        getPath: getPath,
+        render: v => <AdditionalAppsTree target="jcontent" item={v.item}/>,
+        routeRender: v => <AdditionalAppsRoute target="jcontent" match={v.match}/>,
         config: {
             rootPath: ''
         }

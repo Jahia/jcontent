@@ -2,7 +2,7 @@ import React from 'react';
 import {File, FolderSpecial, Collections} from '@jahia/moonstone/dist/icons';
 import {shallow} from '@jahia/test-framework';
 import ContentNavigation from './ContentNavigation';
-import JContentConstants from '../../JContent.constants';
+import JContentConstants from '../JContent.constants';
 import {Accordion, AccordionItem} from '@jahia/moonstone';
 
 jest.mock('./NavigationHeader');

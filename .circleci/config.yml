@@ -42,3 +42,9 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts/
       - *persist-workspace
+
+workflows:
+  version: 2
+  on-code-change:
+    jobs:
+      -build

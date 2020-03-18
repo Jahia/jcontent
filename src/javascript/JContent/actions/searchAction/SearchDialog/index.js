@@ -1,3 +1,3 @@
-import SearchDialog from './SearchDialog';
+import SearchDialog from './SearchDialog.container';
 
 export default SearchDialog;

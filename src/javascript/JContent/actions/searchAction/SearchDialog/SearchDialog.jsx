@@ -1,73 +1,21 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, Separator, Typography} from '@jahia/moonstone';
 import {Dialog} from '@material-ui/core';
-import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './SearchDialog.scss';
 import AdvancedSearch from './AdvancedSearch';
-import {cmGoto} from '~/JContent/JContent.redux';
 import {
     Close,
     Search
 } from '@jahia/moonstone/dist/icons';
 import BasicSearch from './BasicSearch';
-import JContentConstants from '~/JContent/JContent.constants';
 
-const SearchDialog = ({open, handleClose}) => {
+const SearchDialog = ({searchPath, searchTerms, searchContentType, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleSearchChanges, handleClose}) => {
     const {t} = useTranslation('jcontent');
-    const dispatch = useDispatch();
-
-    const {params, mode, path} = useSelector(state => ({
-        params: state.jcontent.params,
-        mode: state.jcontent.mode,
-        path: state.jcontent.path
-    }));
-
-    const [isAdvancedSearch, setIsAdvancedSearch] = useState(mode === JContentConstants.mode.SQL2SEARCH);
-    const [searchPath, setSearchPath] = useState(searchPath ? searchPath : (params.searchPath ? params.searchPath : path));
-    const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
-    const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
-
-    const handleSearchChanges = (key, value) => {
-        if (key === 'searchPath') {
-            setSearchPath(value);
-        }
-
-        if (key === 'searchTerms') {
-            setSearchTerms(value);
-        }
-
-        if (key === 'searchContentType') {
-            setSearchContentType(value);
-        }
-    };
-
-    const performSearch = () => {
-        let mode;
-        let searchParams;
-        if (isAdvancedSearch) {
-            searchParams = {};
-            mode = JContentConstants.mode.SQL2SEARCH;
-        } else {
-            searchParams = {
-                searchPath: searchPath,
-                searchTerms: searchTerms,
-                searchContentType: searchContentType
-            };
-            mode = JContentConstants.mode.SEARCH;
-        }
-
-        dispatch(cmGoto({mode, params: searchParams}));
-        handleClose();
-    };
-
-    const toggleAdvancedSearch = () => {
-        setIsAdvancedSearch(!isAdvancedSearch);
-    };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={isOpen} onClose={handleClose}>
             <div className={styles.dialogTitle}>
                 <Typography isUpperCase variant="subheading">
                     {t('label.contentManager.title.search')}
@@ -110,7 +58,14 @@ const SearchDialog = ({open, handleClose}) => {
 };
 
 SearchDialog.propTypes = {
-    open: PropTypes.bool.isRequired,
+    searchPath: PropTypes.string.isRequired,
+    searchTerms: PropTypes.string.isRequired,
+    searchContentType: PropTypes.string.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    isAdvancedSearch: PropTypes.bool.isRequired,
+    toggleAdvancedSearch: PropTypes.func.isRequired,
+    performSearch: PropTypes.func.isRequired,
+    handleSearchChanges: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired
 };
 

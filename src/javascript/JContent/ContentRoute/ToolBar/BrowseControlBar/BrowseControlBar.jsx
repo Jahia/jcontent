@@ -19,10 +19,11 @@ export const BrowseControlBar = ({showActions}) => {
 
     return (
         <React.Fragment>
-            {showActions && !isRootNode &&
-            <React.Fragment>
-                <DisplayActions target="headerPrimaryActions" context={{path: path}} render={ButtonRenderer} loading={() => false}/>
-            </React.Fragment>}
+            {showActions && !isRootNode && (
+                <div className="flexRow">
+                    <DisplayActions target="headerPrimaryActions" context={{path: path}} render={ButtonRenderer} loading={() => false}/>
+                </div>
+            )}
             <div className="flexFluid"/>
             {showActions && mode === JContentConstants.mode.MEDIA &&
             <FileModeSelector/>}

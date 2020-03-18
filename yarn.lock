@@ -1091,13 +1091,16 @@
     enzyme-adapter-react-16 "^1.12.1"
     identity-obj-proxy "^3.0.0"
 
-"@jahia/ui-extender@^0.3.7":
-  version "0.3.7"
-  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-0.3.7.tgz#fd3014a4e161cf4a874ab83230273ec6771eeca2"
-  integrity sha512-2EsB3hduHw6tkjNbOBu3W4I3hJs+gMQiOP0cBVI0Kcq5RaGIL6LS94h1CU/JiuFxbWJXJgQQKKd/PlscXB0tQQ==
+"@jahia/ui-extender@^0.4.9":
+  version "0.4.9"
+  resolved "https://npm.jahia.com/@jahia%2fui-extender/-/ui-extender-0.4.9.tgz#6927cdf37aaacf93c6a52385d56be8e5525a6cc1"
+  integrity sha512-PtcIL2Kp4GLCzqWmaVj/xdpqnl6AFy4x5ceBJvsBkI3IwIgq2+NLYLc1/1Ge7s0v4HRS0kqWjC6LsOJ2QdrnrA==
   dependencies:
     prop-types "^15.6.1"
     react "^16.12.0"
+    react-iframe "^1.8.0"
+    react-redux "^7.2.0"
+    redux "^4.0.5"
     rxjs "^6.5.3"
 
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
@@ -8259,7 +8262,7 @@ react-i18next@^11.2.7:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"
 
-react-iframe@^1.2.0:
+react-iframe@^1.2.0, react-iframe@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/react-iframe/-/react-iframe-1.8.0.tgz#8c78f2c59b894ca5605fa7e45e61e27e57e96091"
   integrity sha512-NYi89+rEqREwQxW9sDf+akh6/dtwWd3bOjByoVEIQ7SicOxVawRMer3pLdWjFaHXpuxTB9NqobPf/Ohj2iAKkg==
@@ -8559,7 +8562,7 @@ redux-thunk@^2.3.0:
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
   integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
 
-redux@^4.0.0:
+redux@^4.0.0, redux@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
   integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==

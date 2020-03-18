@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import {extractPaths} from './JContent.utils';
-import JContentConstants from './JContent.constants';
 import {createActions, handleAction, handleActions} from 'redux-actions';
 import {batch} from 'react-redux';
 import {registry} from '@jahia/ui-extender';
@@ -13,14 +12,13 @@ export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
 const PARAMS_KEY = '?params=';
-const DEFAULT_MODE_PATHS = {browse: '/contents', media: '/files'};
 
 const extractParamsFromUrl = (pathname, search) => {
     if (pathname.startsWith('/jcontent')) {
         let [, , site, language, mode, ...pathElements] = pathname.split('/');
         let registryItem = registry.get('accordionItem', mode);
 
-        let path = (registryItem && registryItem.getPath(site, pathElements, registryItem)) || ('/sites/' + site + '/' + pathElements.join('/'));
+        let path = (registryItem && registryItem.getPath && registryItem.getPath(site, pathElements, registryItem)) || ('/' + pathElements.join('/'));
 
         path = decodeURIComponent(path);
         let params = deserializeQueryString(search);
@@ -60,14 +58,9 @@ const select = state => {
 };
 
 const buildUrl = (site, language, mode, path, params) => {
-    let sitePath = '/sites/' + site;
-    if (path.startsWith(sitePath + '/')) {
-        path = path.substring(('/sites/' + site).length);
-    } else if (mode === JContentConstants.mode.APPS) {
-        // Path is an action key
-        path = path.startsWith('/') ? path : '/' + path;
-    } else {
-        path = '';
+    let registryItem = registry.get('accordionItem', mode);
+    if (registryItem && registryItem.getUrlPathPart) {
+        path = registryItem.getUrlPathPart(site, path, registryItem);
     }
 
     // Special chars in folder naming
@@ -78,9 +71,11 @@ const buildUrl = (site, language, mode, path, params) => {
 };
 
 const pathResolver = (currentValue, currentValueFromUrl) => {
-    if (currentValue.site !== currentValueFromUrl.site && currentValue.mode !== JContentConstants.mode.APPS) {
-        // Switched sites, we have to set default path based on mode: browse -> /content-folders | media -> /files
-        return currentValueFromUrl.path.substr(0, currentValueFromUrl.path.indexOf(currentValueFromUrl.site)) + currentValue.site + DEFAULT_MODE_PATHS[currentValue.mode];
+    if (currentValue.site !== currentValueFromUrl.site) {
+        let registryItem = registry.get('accordionItem', currentValue.mode);
+        if (registryItem && registryItem.defaultPath) {
+            return registryItem.defaultPath(currentValue.site);
+        }
     }
 
     return currentValue.path;
@@ -127,7 +122,7 @@ export const jContentRedux = registry => {
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),
         [cmClosePaths]: (state, action) => _.difference(state, action.payload)
-    }, (currentValueFromUrl.mode === JContentConstants.mode.APPS) ? [] : _.dropRight(extractPaths(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode), 1));
+    }, _.dropRight(extractPaths(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode), 1));
 
     const pathsToRefetchReducer = handleActions({
         [cmAddPathsToRefetch]: (state, action) => _.union(state, action.payload),

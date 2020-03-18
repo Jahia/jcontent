@@ -18,17 +18,12 @@ import {
 } from '@jahia/moonstone/dist/icons';
 
 import {
-    Account,
-    AccountGroup,
     ApplicationExport,
     ApplicationImport,
     ContentCopy,
     ContentCut,
     DeleteRestore,
-    DotsVertical,
-    ShieldKey,
-    TagMultiple,
-    Web
+    DotsVertical
 } from 'mdi-material-ui';
 import fileUploadAction from './actions/fileUploadAction';
 import deleteAction from './actions/deleteAction';
@@ -55,7 +50,6 @@ import unzipAction from './actions/zipUnzip/unzipAction';
 import searchAction from './actions/searchAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
-import JContentConstants from './JContent.constants';
 import {Separator} from '@jahia/moonstone';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
@@ -254,46 +248,6 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.clearAllLocks',
         targets: ['contentActions:5.5'],
         hideOnNodeTypes: ['jnt:page']
-    });
-    registry.add('action', 'groups', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.navigation.manage.groups.title',
-        targets: ['leftMenuManageActions:10'],
-        buttonIcon: <AccountGroup/>,
-        mode: JContentConstants.mode.APPS,
-        iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageGroups.html',
-        requiredPermission: 'siteAdminGroups'
-    });
-    registry.add('action', 'languages', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.navigation.manage.languages.title',
-        targets: ['leftMenuManageActions:20'],
-        buttonIcon: <Web/>,
-        mode: JContentConstants.mode.APPS,
-        iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageLanguages.html',
-        requiredPermission: 'siteAdminLanguages'
-    });
-    registry.add('action', 'roles', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.navigation.manage.roles.title',
-        targets: ['leftMenuManageActions:30'],
-        buttonIcon: <ShieldKey/>,
-        mode: JContentConstants.mode.APPS,
-        iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageSiteRoles.html',
-        requiredPermission: 'siteAdminSiteRoles'
-    });
-    registry.add('action', 'users', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.navigation.manage.users.title',
-        targets: ['leftMenuManageActions:40'],
-        buttonIcon: <Account/>,
-        mode: JContentConstants.mode.APPS,
-        iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.manageUsers.html',
-        requiredPermission: 'siteAdminUsers'
-    });
-    registry.add('action', 'tags', routerAction, {
-        buttonLabel: 'jcontent:label.contentManager.navigation.manage.tags.title',
-        targets: ['leftMenuManageActions:50'],
-        buttonIcon: <TagMultiple/>,
-        mode: JContentConstants.mode.APPS,
-        iframeUrl: ':context/cms/:frame/:workspace/:lang/sites/:site.tagsManager.html',
-        requiredPermission: 'tagManager'
     });
     registry.add('action', 'locate', locateAction, {
         buttonLabel: 'jcontent:label.contentManager.actions.locate',

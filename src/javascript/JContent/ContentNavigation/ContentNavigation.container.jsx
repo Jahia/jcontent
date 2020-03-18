@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {cmGoto} from '../../JContent.redux';
+import {cmGoto} from '../JContent.redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';

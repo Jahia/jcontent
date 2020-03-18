@@ -20,8 +20,7 @@ const JContentConstants = {
         LIST: 'list',
         GRID: 'grid',
         UPLOAD: 'upload',
-        IMPORT: 'import',
-        APPS: 'apps'
+        IMPORT: 'import'
     },
     localStorageKeys: {
         filesSelectorMode: 'jcontent_files_selector_mode',

@@ -2,7 +2,7 @@ import React from 'react';
 import {File, FolderSpecial, Collections} from '@jahia/moonstone/dist/icons';
 import {shallow} from '@jahia/test-framework';
 import ContentNavigation from './ContentNavigation';
-import JContentConstants from '../../JContent.constants';
+import JContentConstants from '../JContent.constants';
 import {Accordion, AccordionItem} from '@jahia/moonstone';
 
 jest.mock('./NavigationHeader');
@@ -17,7 +17,7 @@ describe('Accordion with 3 accordion items', () => {
                 key: JContentConstants.mode.PAGES,
                 icon: <File/>,
                 label: 'label.contentManager.navigation.pages',
-                defaultUrl: siteKey => '/sites/' + siteKey,
+                defaultPath: siteKey => '/sites/' + siteKey,
                 render: () => (
                     <div>Pages</div>
                 )
@@ -26,7 +26,7 @@ describe('Accordion with 3 accordion items', () => {
                 key: JContentConstants.mode.CONTENT_FOLDERS,
                 icon: <FolderSpecial/>,
                 label: 'label.contentManager.navigation.contentFolders',
-                defaultUrl: siteKey => '/sites/' + siteKey + '/contents',
+                defaultPath: siteKey => '/sites/' + siteKey + '/contents',
                 render: () => (
                     <div>Content Folders</div>
                 )
@@ -35,7 +35,7 @@ describe('Accordion with 3 accordion items', () => {
                 key: JContentConstants.mode.MEDIA,
                 icon: <Collections/>,
                 label: 'label.contentManager.navigation.media',
-                defaultUrl: siteKey => '/sites/' + siteKey + '/files',
+                defaultPath: siteKey => '/sites/' + siteKey + '/files',
                 render: () => (
                     <div>Files</div>
                 )

@@ -1,38 +1,25 @@
 import React from 'react';
-import Loadable from 'react-loadable';
-import AppRoute from './AppRoute';
 import ContentRoute from './ContentRoute';
-import {ProgressPaper} from '@jahia/design-system-kit';
 
-// eslint-disable-next-line
-const ImageEditor = Loadable({
-    loader: () => import(/* webpackChunkName: "imageEditor" */ './ImageEditor'),
-    loading: ProgressPaper
-});
+const ImageEditor = React.lazy(() => import(/* webpackChunkName: "imageEditor" */ './ImageEditor'));
 
 export const jContentRoutes = registry => {
-    registry.add('route', 'app-route', {
-        targets: ['jcontent:50'],
-        path: '/jcontent/:siteKey/:lang/apps/:menu/:entry',
-        render: (props, {dxContext}) => (
-            <AppRoute dxContext={dxContext} {...props}/>
-        )
-    });
-
     registry.add('route', 'image-edit-route', {
         targets: ['jcontent:60'],
         path: '/jcontent/:siteKey/:lang/image-edit',
-        render: props => (
-            <ImageEditor {...props}/>
-        )
+        component: ImageEditor
     });
 
-    registry.add('route', 'jcontent-default-route', {
+    registry.add('route', 'jcontent-search-route', {
         targets: ['jcontent:99'],
-        path: '/jcontent/:siteKey/:lang/:mode',
-        render: props => (
-            <ContentRoute {...props}/>
-        )
+        path: '/jcontent/:siteKey/:lang/search',
+        component: ContentRoute
+    });
+
+    registry.add('route', 'jcontent-sql2Search-route', {
+        targets: ['jcontent:99'],
+        path: '/jcontent/:siteKey/:lang/sql2Search',
+        component: ContentRoute
     });
 };
 

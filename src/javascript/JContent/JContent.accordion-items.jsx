@@ -1,28 +1,44 @@
 import React from 'react';
-import {File, FolderSpecial, Collections, Setting} from '@jahia/moonstone/dist/icons';
+import {Collections, File, FolderSpecial, Setting} from '@jahia/moonstone/dist/icons';
 import ContentTree from './ContentTree';
-import JContentConstants from './JContent.constants';
+import ContentRoute from './ContentRoute';
+import AdditionalAppsTree from './AdditionalAppsTree';
+import AdditionalAppsRoute from './AdditionalAppsRoute';
 
 export const jContentAccordionItems = registry => {
-    const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
-        render: item => (
-            <ContentTree item={item}/>
-        ),
-        getPath: (site, pathElements, registryItem) => {
-            let path = '/sites/' + site + ('/' + pathElements.join('/'));
-            if (!path.startsWith('/sites/' + site + registryItem.config.rootPath)) {
-                return registryItem.defaultUrl(site);
-            }
-
-            return path;
+    const getPath = (site, pathElements, registryItem) => {
+        let path = '/sites/' + site + ('/' + pathElements.join('/'));
+        if (!path.startsWith('/sites/' + site + registryItem.config.rootPath)) {
+            return registryItem.defaultPath(site);
         }
+
+        return path;
+    };
+
+    const getUrlPathPart = (site, path) => {
+        let sitePath = '/sites/' + site;
+
+        if (path.startsWith(sitePath + '/')) {
+            path = path.substring(('/sites/' + site).length);
+        } else {
+            path = '';
+        }
+
+        return path;
+    };
+
+    const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
+        component: ContentTree,
+        routeComponent: ContentRoute,
+        getPath,
+        getUrlPathPart
     });
 
-    registry.add('accordionItem', JContentConstants.mode.PAGES, renderDefaultContentTrees, {
+    registry.add('accordionItem', 'pages', renderDefaultContentTrees, {
         targets: ['jcontent:50'],
         icon: <File/>,
         label: 'label.contentManager.navigation.pages',
-        defaultUrl: siteKey => '/sites/' + siteKey,
+        defaultPath: siteKey => '/sites/' + siteKey,
         config: {
             hideRoot: true,
             rootPath: '',
@@ -34,11 +50,11 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', JContentConstants.mode.CONTENT_FOLDERS, renderDefaultContentTrees, {
+    registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders',
-        defaultUrl: siteKey => '/sites/' + siteKey + '/contents',
+        defaultPath: siteKey => '/sites/' + siteKey + '/contents',
         config: {
             rootPath: '/contents',
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
@@ -49,11 +65,11 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', JContentConstants.mode.MEDIA, renderDefaultContentTrees, {
+    registry.add('accordionItem', 'media', renderDefaultContentTrees, {
         targets: ['jcontent:70'],
         icon: <Collections/>,
         label: 'label.contentManager.navigation.media',
-        defaultUrl: siteKey => '/sites/' + siteKey + '/files',
+        defaultPath: siteKey => '/sites/' + siteKey + '/files',
         config: {
             rootPath: '/files',
             selectableTypes: ['jnt:folder'],
@@ -64,11 +80,18 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', JContentConstants.mode.APPS, {
+    registry.add('accordionItem', 'apps', {
         targets: ['jcontent:80'],
         icon: <Setting/>,
         label: 'label.contentManager.navigation.apps',
-        defaultUrl: siteKey => '/sites/' + siteKey,
-        render: () => <div>HELLO</div>
+        defaultPath: () => {
+            const availableRoutes = registry.find({type: 'adminRoute', target: 'jcontent'});
+            return '/' + availableRoutes[0].key;
+        },
+        render: v => <AdditionalAppsTree target="jcontent" item={v.item}/>,
+        routeRender: v => <AdditionalAppsRoute target="jcontent" match={v.match}/>,
+        config: {
+            rootPath: ''
+        }
     });
 };

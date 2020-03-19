@@ -5,7 +5,7 @@ import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
 import ContentHeader from './ContentHeader';
 import ToolBar from './ToolBar';
-import Breadcrumb from './Breadcrumb';
+import Breadcrumb from './ContentBreadcrumb';
 import ContentTitle from './ContentTitle';
 import ContentStatuses from './ContentStatuses';
 import {MainActionBar} from './MainActionBar';

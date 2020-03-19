@@ -34,7 +34,7 @@ export const SearchActionComponent = ({context, render: Render, loading: Loading
                     setIsDialogOpen(true);
                 }
             }}/>
-            <SearchDialog open={isDialogOpen} handleClose={() => handleClose()}/>
+            <SearchDialog isOpen={isDialogOpen} handleClose={() => handleClose()}/>
         </>
     );
 };

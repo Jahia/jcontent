@@ -1,3 +1,3 @@
-import SearchLocation from './SearchLocation';
+import SearchLocation from './SearchLocation.container';
 
 export default SearchLocation;

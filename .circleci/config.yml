@@ -15,13 +15,6 @@ references:
       at: .
 
 jobs:
-  #initialize:
-  #  <<: *workdir
-  #  docker:
-  #    - image: circleci/node:latest
-  #  steps:
-  #    - checkout
-
   build:
     <<: *workdir
 
@@ -29,7 +22,6 @@ jobs:
       - image: circleci/openjdk:8-jdk-stretch
 
     steps:
-      - *attach-workspace
       - checkout
       - restore_cache:
           keys:
@@ -51,7 +43,13 @@ jobs:
           path: /tmp/artifacts/
       - *persist-workspace
   deploy:
+    <<: *workdir
+
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:8-jdk-stretch
+    
     steps:
+      - *attach-workspace
       - run: mvn -s .circleci/.circleci.settings.xml deploy
 
 workflows:

@@ -312,7 +312,6 @@ export const jContentActions = registry => {
     registry.add('action', 'search', searchAction, {
         buttonIcon: <Search/>,
         buttonLabel: 'jcontent:label.contentManager.search.search',
-        targets: [],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_FILES_DESCENDANTS]
+        targets: []
     });
 };

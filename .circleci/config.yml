@@ -50,12 +50,18 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts/
       - *persist-workspace
+  deploy:
+    steps:
+      - run: mvn -s .circleci/.circleci.settings.xml deploy
 
 workflows:
   version: 2
-  on-code-change:
+  build:
     jobs:
-      #- initialize
       - build
-      #    requires:
-      #      - initialize
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

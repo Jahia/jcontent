@@ -33,7 +33,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, content
                 </Typography>
                 <Input fullWidth
                        autoFocus
-                       inputProps={{maxLength: 2000, 'data-cm-role': 'search-input-term'}}
+                       inputProps={{maxLength: 2000, 'data-sel-role': 'search-input-terms'}}
                        value={searchTerms}
                        placeholder={t('label.contentManager.search.normalPrompt')}
                        onChange={event => handleSearchChanges('searchTerms', event.target.value)}
@@ -56,6 +56,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, content
                           label={selectedContentType && selectedContentType.label}
                           value={searchContentType}
                           className={styles.dropdown}
+                          data-sel-role="content-type-dropdown"
                           onChange={(e, item) => handleSearchChanges('searchContentType', item.value)}
                 />
             </div>

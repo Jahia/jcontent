@@ -23,7 +23,7 @@ const SearchDialog = ({searchPath, searchTerms, searchContentType, isOpen, isAdv
 
                 <Button label={isAdvancedSearch ? t('label.contentManager.search.basic') : t('label.contentManager.search.advanced')}
                         variant="ghost"
-                        data-cm-role="search-type-sql2search"
+                        data-sel-role="toggle-search-type"
                         onClick={toggleAdvancedSearch}/>
             </div>
             <Separator/>
@@ -50,6 +50,7 @@ const SearchDialog = ({searchPath, searchTerms, searchContentType, isOpen, isAdv
                 <Button size="big"
                         icon={<Search/>}
                         color="accent"
+                        data-sel-role="search-submit"
                         label={t('label.contentManager.search.search')}
                         onClick={() => performSearch()}/>
             </div>

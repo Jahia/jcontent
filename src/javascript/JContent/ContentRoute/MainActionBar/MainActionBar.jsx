@@ -29,7 +29,7 @@ export const MainActionBar = () => {
 
     return (
         <div className={styles.root}>
-            <DisplayAction actionKey="search" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost"/>
+            <DisplayAction actionKey="search" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" data-sel-role="open-search-dialog"/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
             <DisplayAction actionKey="pageComposer" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
             <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>

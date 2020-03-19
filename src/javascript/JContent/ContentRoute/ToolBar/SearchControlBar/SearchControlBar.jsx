@@ -51,7 +51,7 @@ export class SearchControlBar extends React.Component {
                     </Button>}
                 {showActions &&
                     <Button
-                        data-cm-role="search-clear"
+                        data-sel-role="search-clear"
                         variant="ghost"
                         onClick={() => clearSearch(params)}
                     >

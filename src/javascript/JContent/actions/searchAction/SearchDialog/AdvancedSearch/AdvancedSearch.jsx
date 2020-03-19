@@ -59,7 +59,7 @@ export class AdvancedSearch extends React.Component {
                         maxLength={100}
                         size={15}
                         value={sql2SearchFrom}
-                        cmRole="sql2search-input-from"
+                        selRole="search-input-from"
                         onChange={event => {
                             this.setState({sql2SearchFrom: event.target.value});
                         }}
@@ -71,7 +71,7 @@ export class AdvancedSearch extends React.Component {
                     <Sql2Input
                         maxLength={2000}
                         value={sql2SearchWhere}
-                        cmRole="sql2search-input-where"
+                        selRole="search-input-where"
                         onChange={event => {
                             this.setState({sql2SearchWhere: event.target.value});
                         }}

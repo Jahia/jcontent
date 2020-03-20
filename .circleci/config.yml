@@ -15,7 +15,7 @@ references:
       at: .
 
 jobs:
-  build:
+  install:
     <<: *workdir
 
     docker: # run the steps with Docker
@@ -56,10 +56,10 @@ workflows:
   version: 2
   build:
     jobs:
-      - build
+      - install
       - deploy:
           requires:
-            - build
+            - install
           filters:
             branches:
               only: master

@@ -8,7 +8,7 @@ import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
-import {setRefetcher, refetchTypes, unsetRefetcher} from '../JContent.refetches';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 
 export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, closePath, item}) => {
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
@@ -28,6 +28,20 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         hideRoot: item.config.hideRoot
     });
 
+    let switchPath;
+    // If path is root one but root is hidden, then select its first child
+    if (((path === rootPath) || (path === rootPath + '/')) && item.config.hideRoot && treeEntries.length > 0) {
+        const first = treeEntries[0];
+        first.selected = true;
+        switchPath = first.path;
+    }
+
+    useEffect(() => {
+        if (switchPath) {
+            setPath(switchPath);
+        }
+    }, [setPath, switchPath]);
+
     useEffect(() => {
         setRefetcher(refetchTypes.CONTENT_TREE, {
             refetch: refetch
@@ -36,14 +50,6 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
             unsetRefetcher(refetchTypes.CONTENT_TREE);
         };
     });
-
-    // If path is root one but root is hidden, then select its first child
-    if (((path === rootPath) || (path === rootPath + '/')) && item.config.hideRoot && treeEntries.length > 0) {
-        const first = treeEntries[0];
-        first.selected = true;
-        path = first.path;
-        setPath(path);
-    }
 
     let contextualMenu = React.createRef();
 

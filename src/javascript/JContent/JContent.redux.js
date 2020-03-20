@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {extractPaths} from './JContent.utils';
-import {createActions, handleAction, handleActions} from 'redux-actions';
+import {createActions, handleActions} from 'redux-actions';
 import {batch} from 'react-redux';
 import {registry} from '@jahia/ui-extender';
 import rison from 'rison';
@@ -81,8 +81,8 @@ const pathResolver = (currentValue, currentValueFromUrl) => {
     return currentValue.path;
 };
 
-export const {cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetMode, cmSetPath, cmSetParams} =
-    createActions('CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS');
+export const {cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetMode, cmSetPath, cmSetParams, cmSetModePathParams} =
+    createActions('CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS', 'CM_SET_MODE_PATH_PARAMS');
 
 export const cmGoto = data => (
     dispatch => {
@@ -95,16 +95,8 @@ export const cmGoto = data => (
                 dispatch(registry.get('redux-reducer', 'language').actions.setLanguage(data.language));
             }
 
-            if (data.mode) {
-                dispatch(cmSetMode(data.mode));
-            }
-
-            if (data.path) {
-                dispatch(cmSetPath(data.path));
-            }
-
-            if (data.params) {
-                dispatch(cmSetParams(data.params));
+            if (data.mode || data.path || data.params) {
+                dispatch(cmSetModePathParams({mode: data.mode, path: data.path, params: data.params}));
             }
         });
     }
@@ -115,9 +107,18 @@ export const jContentRedux = registry => {
     const pathName = window.location.pathname.substring((jahiaCtx.contextPath + jahiaCtx.urlbase).length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
-    const modeReducer = handleAction(cmSetMode, (state, action) => action.payload, currentValueFromUrl.mode);
-    const pathReducer = handleAction(cmSetPath, (state, action) => action.payload, currentValueFromUrl.path);
-    const paramsReducer = handleAction(cmSetParams, (state, action) => action.payload, currentValueFromUrl.params);
+    const modeReducer = handleActions({
+        [cmSetMode]: (state, action) => action.payload,
+        [cmSetModePathParams]: (state, action) => action.payload.mode ? action.payload.mode : state
+    }, currentValueFromUrl.mode);
+    const pathReducer = handleActions({
+        [cmSetPath]: (state, action) => action.payload,
+        [cmSetModePathParams]: (state, action) => action.payload.path ? action.payload.path : state
+    }, currentValueFromUrl.path);
+    const paramsReducer = handleActions({
+        [cmSetParams]: (state, action) => action.payload,
+        [cmSetModePathParams]: (state, action) => action.payload.params ? action.payload.params : state
+    }, currentValueFromUrl.params);
 
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),

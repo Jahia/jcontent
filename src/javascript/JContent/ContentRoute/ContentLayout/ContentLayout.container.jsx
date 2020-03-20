@@ -23,7 +23,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {setModificationHook} from './ContentLayout.utils';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
-import {setRefetcher, refetchTypes, unsetRefetcher} from '../../JContent.refetches';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -183,6 +183,17 @@ export const ContentLayoutContainer = ({
     };
 
     useEffect(() => {
+        if (data && data.jcr && data.jcr.nodeByPath) {
+            // When new results have been loaded, use them for rendering.
+            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+            let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
+            if (!isSub && params.sub && params.sub === true) {
+                setPath(path, {sub: false});
+            } else if (isSub && (!params.sub || params.sub === false)) {
+                setPath(path, {sub: true});
+            }
+        }
+
         setRefetcher(refetchTypes.CONTENT_DATA, {
             query: layoutQuery,
             queryParams: layoutQueryParams,
@@ -220,17 +231,6 @@ export const ContentLayoutContainer = ({
     if (loading) {
         // While loading new results, render current ones loaded during previous render invocation (if any).
     } else {
-        if (data.jcr && data.jcr.nodeByPath) {
-            // When new results have been loaded, use them for rendering.
-            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
-            let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
-            if (!isSub && params.sub && params.sub === true) {
-                setPath(path, {sub: false});
-            } else if (isSub && (!params.sub || params.sub === false)) {
-                setPath(path, {sub: true});
-            }
-        }
-
         currentResult = queryHandler.getResultsPath(data);
     }
 

@@ -84,10 +84,7 @@ export const jContentAccordionItems = registry => {
         targets: ['jcontent:80'],
         icon: <Setting/>,
         label: 'label.contentManager.navigation.apps',
-        defaultPath: () => {
-            const availableRoutes = registry.find({type: 'adminRoute', target: 'jcontent'});
-            return '/' + availableRoutes[0].key;
-        },
+        defaultPath: () => '/',
         render: v => <AdditionalAppsTree target="jcontent" item={v.item}/>,
         routeRender: v => <AdditionalAppsRoute target="jcontent" match={v.match}/>,
         config: {

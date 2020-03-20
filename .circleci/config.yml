@@ -56,8 +56,10 @@ workflows:
   version: 2
   build:
     jobs:
-      - install
+      - install:
+          context: QA_ENVIRONMENT
       - deploy:
+          context: QA_ENVIRONMENT
           requires:
             - install
           filters:

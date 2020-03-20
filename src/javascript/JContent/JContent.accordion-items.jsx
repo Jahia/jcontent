@@ -1,5 +1,5 @@
 import React from 'react';
-import {Collections, File, FolderSpecial, Setting} from '@jahia/moonstone/dist/icons';
+import {Collections, File, FolderSpecial, Grain} from '@jahia/moonstone/dist/icons';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
@@ -82,7 +82,7 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', 'apps', {
         targets: ['jcontent:80'],
-        icon: <Setting/>,
+        icon: <Grain/>,
         label: 'label.contentManager.navigation.apps',
         defaultPath: () => {
             const availableRoutes = registry.find({type: 'adminRoute', target: 'jcontent'});

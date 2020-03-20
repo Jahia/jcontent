@@ -15,11 +15,11 @@ export class Sql2Input extends React.Component {
     }
 
     render() {
-        let {maxLength, size, value, onChange, style, cmRole} = this.props;
+        let {maxLength, size, value, onChange, style, selRole} = this.props;
 
         return (
             <Input fullWidth
-                   inputProps={{maxLength: maxLength, size: size, 'data-cm-role': cmRole}}
+                   inputProps={{maxLength: maxLength, size: size, 'data-sel-role': selRole}}
                    value={value}
                    style={style}
                    onChange={onChange}
@@ -30,7 +30,7 @@ export class Sql2Input extends React.Component {
 }
 
 Sql2Input.propTypes = {
-    cmRole: PropTypes.string.isRequired,
+    selRole: PropTypes.string.isRequired,
     maxLength: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
     onSearch: PropTypes.func.isRequired,

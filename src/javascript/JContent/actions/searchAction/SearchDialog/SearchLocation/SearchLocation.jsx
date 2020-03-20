@@ -26,6 +26,7 @@ const SearchLocation = ({searchPath, nodePath, nodeDisplayName, siteInfo, handle
                     label={t('label.contentManager.search.searchInWebsite', {siteName: siteInfo.displayName})}
                     labelPlacement="end"
                     color="alpha"
+                    data-sel-role="search-whole-website"
                 />
                 <FormControlLabel
                     className={styles.radio}
@@ -34,6 +35,7 @@ const SearchLocation = ({searchPath, nodePath, nodeDisplayName, siteInfo, handle
                     label={t('label.contentManager.search.searchInCurrentLocation', {nodeName: nodeDisplayName})}
                     labelPlacement="end"
                     color="alpha"
+                    data-sel-role="search-current-path"
                 />
             </RadioGroup>
         </>

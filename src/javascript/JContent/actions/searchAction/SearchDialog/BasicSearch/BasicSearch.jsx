@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Input} from '@jahia/design-system-kit';
-import {Typography, Dropdown} from '@jahia/moonstone';
+import {Dropdown, Typography} from '@jahia/moonstone';
 import styles from './BasicSearch.scss';
 import SearchLocation from '../SearchLocation';
 import {findSelectedContentType} from './BasicSearch.utils';
 
-export const BasicSearch = ({searchPath, searchTerms, searchContentType, contentTypeData, handleSearchChanges, performSearch}) => {
+export const BasicSearch = ({searchForm: {searchPath, searchTerms, searchContentType}, searchFormSetters: {setSearchPath, setSearchTerms, setSearchContentType}, contentTypeData, performSearch}) => {
     const {t} = useTranslation('jcontent');
 
     const defaultContentType = {
@@ -25,7 +25,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, content
     return (
         <>
             <div className={styles.fieldset}>
-                <SearchLocation searchPath={searchPath} handleSearchChanges={handleSearchChanges}/>
+                <SearchLocation searchPath={searchPath} setSearchPath={setSearchPath}/>
             </div>
             <div className={styles.fieldset}>
                 <Typography variant="caption" weight="semiBold" className={styles.label}>
@@ -36,7 +36,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, content
                        inputProps={{maxLength: 2000, 'data-sel-role': 'search-input-terms'}}
                        value={searchTerms}
                        placeholder={t('label.contentManager.search.normalPrompt')}
-                       onChange={event => handleSearchChanges('searchTerms', event.target.value)}
+                       onChange={event => setSearchTerms(event.target.value)}
                        onKeyPress={event => {
                            const code = event.keyCode || event.which;
 
@@ -57,7 +57,7 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, content
                           value={searchContentType}
                           className={styles.dropdown}
                           data-sel-role="content-type-dropdown"
-                          onChange={(e, item) => handleSearchChanges('searchContentType', item.value)}
+                          onChange={(e, item) => setSearchContentType(item.value)}
                 />
             </div>
         </>
@@ -65,11 +65,9 @@ export const BasicSearch = ({searchPath, searchTerms, searchContentType, content
 };
 
 BasicSearch.propTypes = {
-    searchPath: PropTypes.string.isRequired,
-    searchTerms: PropTypes.string.isRequired,
-    searchContentType: PropTypes.string.isRequired,
+    searchForm: PropTypes.object.isRequired,
+    searchFormSetters: PropTypes.object.isRequired,
     contentTypeData: PropTypes.array.isRequired,
-    handleSearchChanges: PropTypes.func.isRequired,
     performSearch: PropTypes.func.isRequired
 };
 

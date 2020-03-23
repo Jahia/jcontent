@@ -15,29 +15,37 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
     }));
 
     const [isAdvancedSearch, setIsAdvancedSearch] = useState(mode === JContentConstants.mode.SQL2SEARCH);
-    const [searchPath, setSearchPath] = useState(searchPath ? searchPath : (params.searchPath ? params.searchPath : path));
-    const [searchTerms, setSearchTerms] = useState(searchTerms ? searchTerms : (params.searchTerms ? params.searchTerms : ''));
-    const [searchContentType, setSearchContentType] = useState(searchContentType ? searchContentType : (params.searchContentType ? params.searchContentType : ''));
+    const [searchPath, setSearchPath] = useState(params.searchPath ? params.searchPath : path);
+    const [searchTerms, setSearchTerms] = useState(params.searchTerms ? params.searchTerms : '');
+    const [searchContentType, setSearchContentType] = useState(params.searchContentType ? params.searchContentType : '');
+    const [sql2SearchFrom, setSql2SearchFrom] = useState(params.sql2SearchFrom ? params.sql2SearchFrom : '');
+    const [sql2SearchWhere, setSql2SearchWhere] = useState(params.sql2SearchWhere ? params.sql2SearchWhere : '');
 
-    const handleSearchChanges = (key, value) => {
-        if (key === 'searchPath') {
-            setSearchPath(value);
-        }
+    const searchForm = {
+        searchPath,
+        searchTerms,
+        searchContentType,
+        sql2SearchFrom,
+        sql2SearchWhere
+    };
 
-        if (key === 'searchTerms') {
-            setSearchTerms(value);
-        }
-
-        if (key === 'searchContentType') {
-            setSearchContentType(value);
-        }
+    const searchFormSetters = {
+        setSearchPath,
+        setSearchTerms,
+        setSearchContentType,
+        setSql2SearchFrom,
+        setSql2SearchWhere
     };
 
     const performSearch = () => {
         let mode;
         let searchParams;
         if (isAdvancedSearch) {
-            searchParams = {};
+            searchParams = {
+                searchPath: searchPath,
+                sql2SearchFrom: sql2SearchFrom,
+                sql2SearchWhere: sql2SearchWhere
+            };
             mode = JContentConstants.mode.SQL2SEARCH;
         } else {
             searchParams = {
@@ -57,14 +65,12 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
     };
 
     return (
-        <SearchDialog searchPath={searchPath}
-                      searchTerms={searchTerms}
-                      searchContentType={searchContentType}
+        <SearchDialog searchForm={searchForm}
+                      searchFormSetters={searchFormSetters}
                       isOpen={isOpen}
                       isAdvancedSearch={isAdvancedSearch}
                       toggleAdvancedSearch={toggleAdvancedSearch}
                       performSearch={performSearch}
-                      handleSearchChanges={handleSearchChanges}
                       handleClose={handleClose}/>
     );
 };

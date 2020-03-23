@@ -6,7 +6,7 @@ import SiteContentTypesQuery from './BasicSearch.gql-queries';
 import {extractAndFormatContentTypeData} from './BasicSearch.utils';
 import BasicSearch from './BasicSearch';
 
-export const BasicSearchContainer = ({searchPath, searchTerms, searchContentType, handleSearchChanges, performSearch}) => {
+export const BasicSearchContainer = props => {
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
         language: state.language
@@ -27,12 +27,7 @@ export const BasicSearchContainer = ({searchPath, searchTerms, searchContentType
         const contentTypeData = extractAndFormatContentTypeData(data);
 
         return (
-            <BasicSearch searchPath={searchPath}
-                         searchTerms={searchTerms}
-                         searchContentType={searchContentType}
-                         contentTypeData={contentTypeData}
-                         handleSearchChanges={handleSearchChanges}
-                         performSearch={performSearch}/>
+            <BasicSearch {...props} contentTypeData={contentTypeData}/>
         );
     }
 
@@ -40,10 +35,8 @@ export const BasicSearchContainer = ({searchPath, searchTerms, searchContentType
 };
 
 BasicSearchContainer.propTypes = {
-    searchPath: PropTypes.string.isRequired,
-    searchTerms: PropTypes.string.isRequired,
-    searchContentType: PropTypes.string.isRequired,
-    handleSearchChanges: PropTypes.func.isRequired,
+    searchForm: PropTypes.object.isRequired,
+    searchFormSetters: PropTypes.object.isRequired,
     performSearch: PropTypes.func.isRequired
 };
 

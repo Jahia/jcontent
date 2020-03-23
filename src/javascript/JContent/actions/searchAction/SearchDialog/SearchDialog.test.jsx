@@ -6,12 +6,10 @@ describe('SearchDialog', () => {
     it('Should render', async () => {
         const wrapper = shallow(<SearchDialog isOpen
                                               isAdvancedSearch={false}
-                                              searchTerms=""
-                                              searchContentType=""
-                                              searchPath="/sites/test/home"
+                                              searchForm={{}}
+                                              searchFormSetters={{}}
                                               toggleAdvancedSearch={() => {}}
                                               performSearch={() => {}}
-                                              handleSearchChanges={() => {}}
                                               handleClose={() => {}}/>);
 
         const dialogTitle = wrapper.find('Typography');
@@ -26,12 +24,10 @@ describe('SearchDialog', () => {
 
         const wrapper = shallow(<SearchDialog isOpen
                                               isAdvancedSearch={false}
-                                              searchTerms=""
-                                              searchContentType=""
-                                              searchPath="/sites/test/home"
+                                              searchForm={{}}
+                                              searchFormSetters={{}}
                                               toggleAdvancedSearch={() => {}}
                                               performSearch={performSearch}
-                                              handleSearchChanges={() => {}}
                                               handleClose={() => {}}/>);
 
         const buttons = wrapper.find('Button');
@@ -70,12 +66,10 @@ describe('SearchDialog', () => {
 
         const wrapper = shallow(<SearchDialog isOpen
                                               isAdvancedSearch={false}
-                                              searchTerms=""
-                                              searchContentType=""
-                                              searchPath="/sites/test/home"
+                                              searchForm={{}}
+                                              searchFormSetters={{}}
                                               toggleAdvancedSearch={toggleAdvancedSearch}
                                               performSearch={() => {}}
-                                              handleSearchChanges={() => {}}
                                               handleClose={() => {}}/>);
 
         const buttons = wrapper.find('Button');

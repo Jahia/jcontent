@@ -16,7 +16,7 @@ describe('SearchLocation', () => {
                                               nodePath={nodePath}
                                               nodeDisplayName={nodeDisplayName}
                                               siteInfo={siteInfo}
-                                              handleSearchChanges={() => {}}/>);
+                                              setSearchPath={() => {}}/>);
 
         const formControlLabels = wrapper.find('FormControlLabel');
         expect(formControlLabels).toHaveLength(2);
@@ -31,7 +31,7 @@ describe('SearchLocation', () => {
                                               nodePath={nodePath}
                                               nodeDisplayName={nodeDisplayName}
                                               siteInfo={siteInfo}
-                                              handleSearchChanges={() => {}}/>);
+                                              setSearchPath={() => {}}/>);
 
         const formControlLabels = wrapper.find('FormControlLabel');
         formControlLabels.forEach(node => {
@@ -47,7 +47,7 @@ describe('SearchLocation', () => {
                                               nodePath={nodePath}
                                               nodeDisplayName={nodeDisplayName}
                                               siteInfo={siteInfo}
-                                              handleSearchChanges={() => {}}/>);
+                                              setSearchPath={() => {}}/>);
 
         const formControlLabels = wrapper.find('FormControlLabel');
         formControlLabels.forEach(node => {
@@ -59,7 +59,7 @@ describe('SearchLocation', () => {
 
     it('Should return selected path', async () => {
         let hasHandledSearchChanges = false;
-        const handleSearchChanges = (key, value) => {
+        const setSearchPath = value => {
             hasHandledSearchChanges = true;
             expect(value).toBe(siteInfo.path);
         };
@@ -68,7 +68,7 @@ describe('SearchLocation', () => {
                                               nodePath={nodePath}
                                               nodeDisplayName={nodeDisplayName}
                                               siteInfo={siteInfo}
-                                              handleSearchChanges={handleSearchChanges}/>);
+                                              setSearchPath={setSearchPath}/>);
 
         const formControlLabels = wrapper.find('FormControlLabel');
         if (!formControlLabels.at(0).props().checked) {

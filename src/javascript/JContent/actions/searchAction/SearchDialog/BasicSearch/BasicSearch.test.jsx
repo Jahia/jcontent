@@ -7,6 +7,20 @@ import {ImgWrapper} from '@jahia/moonstone';
 const searchPath = '/sites/test/home/about';
 const searchTerms = '';
 const searchContentType = '';
+const searchForm = {
+    searchPath,
+    searchTerms,
+    searchContentType
+};
+const searchFormSetters = {
+    setSearchPath: () => {
+    },
+    setSearchTerms: () => {
+    },
+    setSearchContentType: () => {
+    }
+};
+
 const contentTypeData = [
     {
         label: 'Content type 1',
@@ -22,24 +36,22 @@ const contentTypeData = [
 
 describe('BasicSearch', () => {
     it('Should Render', async () => {
-        const wrapper = shallow(<BasicSearch searchPath={searchPath}
-                                             searchTerms={searchTerms}
-                                             searchContentType={searchContentType}
+        const wrapper = shallow(<BasicSearch searchForm={searchForm}
+                                             searchFormSetters={searchFormSetters}
                                              contentTypeData={contentTypeData}
-                                             handleSearchChanges={() => {}}
-                                             performSearch={() => {}}/>);
+                                             performSearch={() => {
+                                             }}/>);
 
         const dropdown = wrapper.find('Dropdown');
         expect(dropdown).toHaveLength(1);
     });
 
     it('Dropdown should have any content as default value', async () => {
-        const wrapper = shallow(<BasicSearch searchPath={searchPath}
-                                             searchTerms={searchTerms}
-                                             searchContentType={searchContentType}
+        const wrapper = shallow(<BasicSearch searchForm={searchForm}
+                                             searchFormSetters={searchFormSetters}
                                              contentTypeData={contentTypeData}
-                                             handleSearchChanges={() => {}}
-                                             performSearch={() => {}}/>);
+                                             performSearch={() => {
+                                             }}/>);
 
         const dropdown = wrapper.find('Dropdown').at(0);
         expect(dropdown.props().label).toBe('translated_label.contentManager.search.anyContent');
@@ -47,12 +59,11 @@ describe('BasicSearch', () => {
     });
 
     it('Dropdown should have Content type 2 as default value', async () => {
-        const wrapper = shallow(<BasicSearch searchPath={searchPath}
-                                             searchTerms={searchTerms}
-                                             searchContentType={contentTypeData[1].value}
+        const wrapper = shallow(<BasicSearch searchForm={{...searchForm, searchContentType: contentTypeData[1].value}}
+                                             searchFormSetters={searchFormSetters}
                                              contentTypeData={contentTypeData}
-                                             handleSearchChanges={() => {}}
-                                             performSearch={() => {}}/>);
+                                             performSearch={() => {
+                                             }}/>);
 
         const dropdown = wrapper.find('Dropdown').at(0);
         expect(dropdown.props().label).toBe(contentTypeData[1].label);
@@ -65,11 +76,9 @@ describe('BasicSearch', () => {
             hasPerformSearch = true;
         };
 
-        const wrapper = shallow(<BasicSearch searchPath={searchPath}
-                                             searchTerms={searchTerms}
-                                             searchContentType={searchContentType}
+        const wrapper = shallow(<BasicSearch searchForm={searchForm}
+                                             searchFormSetters={searchFormSetters}
                                              contentTypeData={contentTypeData}
-                                             handleSearchChanges={() => {}}
                                              performSearch={performSearch}/>);
 
         const input = wrapper.find('Input').at(0);
@@ -81,17 +90,16 @@ describe('BasicSearch', () => {
         const newSearchTerms = 'Hello';
 
         let hasHandledSearchChanges = false;
-        const handleSearchChanges = (key, value) => {
+        const setSearchTerms = value => {
             hasHandledSearchChanges = true;
             expect(value).toBe(newSearchTerms);
         };
 
-        const wrapper = shallow(<BasicSearch searchPath={searchPath}
-                                             searchTerms={searchTerms}
-                                             searchContentType={searchContentType}
+        const wrapper = shallow(<BasicSearch searchForm={searchForm}
+                                             searchFormSetters={{...searchFormSetters, setSearchTerms}}
                                              contentTypeData={contentTypeData}
-                                             handleSearchChanges={handleSearchChanges}
-                                             performSearch={() => {}}/>);
+                                             performSearch={() => {
+                                             }}/>);
 
         const input = wrapper.find('Input').at(0);
         input.prop('onChange')({target: {value: newSearchTerms}});
@@ -100,17 +108,16 @@ describe('BasicSearch', () => {
 
     it('Dropdown should return selected content type', async () => {
         let hasHandledSearchChanges = false;
-        const handleSearchChanges = (key, value) => {
+        const setSearchContentType = value => {
             hasHandledSearchChanges = true;
             expect(value).toBe(contentTypeData[1].value);
         };
 
-        const wrapper = shallow(<BasicSearch searchPath={searchPath}
-                                             searchTerms={searchTerms}
-                                             searchContentType={searchContentType}
+        const wrapper = shallow(<BasicSearch searchForm={searchForm}
+                                             searchFormSetters={{...searchFormSetters, setSearchContentType}}
                                              contentTypeData={contentTypeData}
-                                             handleSearchChanges={handleSearchChanges}
-                                             performSearch={() => {}}/>);
+                                             performSearch={() => {
+                                             }}/>);
 
         const dropdown = wrapper.find('Dropdown').at(0);
         dropdown.prop('onChange')({}, contentTypeData[1]);

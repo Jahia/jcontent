@@ -6,7 +6,7 @@ import styles from './SearchLocation.scss';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 
-const SearchLocation = ({searchPath, nodePath, nodeDisplayName, siteInfo, handleSearchChanges}) => {
+const SearchLocation = ({searchPath, nodePath, nodeDisplayName, siteInfo, setSearchPath}) => {
     const {t} = useTranslation('jcontent');
 
     return (
@@ -17,7 +17,7 @@ const SearchLocation = ({searchPath, nodePath, nodeDisplayName, siteInfo, handle
             <RadioGroup aria-label="Search path"
                         name="searchPath"
                         value={searchPath}
-                        onChange={event => handleSearchChanges('searchPath', event.target.value)}
+                        onChange={event => setSearchPath(event.target.value)}
             >
                 <FormControlLabel
                     className={styles.radio}
@@ -47,7 +47,7 @@ SearchLocation.propTypes = {
     nodePath: PropTypes.string.isRequired,
     nodeDisplayName: PropTypes.string.isRequired,
     siteInfo: PropTypes.object.isRequired,
-    handleSearchChanges: PropTypes.func.isRequired
+    setSearchPath: PropTypes.func.isRequired
 };
 
 export default SearchLocation;

@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchLocation from './SearchLocation';
 
-const SearchLocationContainer = ({searchPath, handleSearchChanges}) => {
+const SearchLocationContainer = ({searchPath, setSearchPath}) => {
     const {path, siteKey, language} = useSelector(state => ({
         path: state.jcontent.path,
         siteKey: state.site,
@@ -20,7 +20,7 @@ const SearchLocationContainer = ({searchPath, handleSearchChanges}) => {
                             nodePath={path}
                             nodeDisplayName={node.displayName}
                             siteInfo={siteInfo}
-                            handleSearchChanges={handleSearchChanges}/>
+                            setSearchPath={setSearchPath}/>
         );
     }
 
@@ -29,7 +29,7 @@ const SearchLocationContainer = ({searchPath, handleSearchChanges}) => {
 
 SearchLocationContainer.propTypes = {
     searchPath: PropTypes.string.isRequired,
-    handleSearchChanges: PropTypes.func.isRequired
+    setSearchPath: PropTypes.func.isRequired
 };
 
 export default SearchLocationContainer;

@@ -11,7 +11,7 @@ import {
 } from '@jahia/moonstone/dist/icons';
 import BasicSearch from './BasicSearch';
 
-const SearchDialog = ({searchPath, searchTerms, searchContentType, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleSearchChanges, handleClose}) => {
+const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleClose}) => {
     const {t} = useTranslation('jcontent');
 
     return (
@@ -28,17 +28,15 @@ const SearchDialog = ({searchPath, searchTerms, searchContentType, isOpen, isAdv
             </div>
             <Separator/>
             <div className={styles.dialogContent}>
-                {!isAdvancedSearch &&
-                <BasicSearch searchPath={searchPath}
-                             searchTerms={searchTerms}
-                             searchContentType={searchContentType}
-                             handleSearchChanges={handleSearchChanges}
-                             performSearch={performSearch}
-                />}
-                {isAdvancedSearch &&
-                <AdvancedSearch searchPath={searchPath}
-                                handleSearchChanges={handleSearchChanges}
-                />}
+                {isAdvancedSearch ?
+                    <AdvancedSearch searchForm={searchForm}
+                                    searchFormSetters={searchFormSetters}
+                                    performSearch={performSearch}
+                    /> :
+                    <BasicSearch searchForm={searchForm}
+                                 searchFormSetters={searchFormSetters}
+                                 performSearch={performSearch}
+                    />}
             </div>
             <Separator/>
             <div className={styles.dialogActions}>
@@ -59,14 +57,12 @@ const SearchDialog = ({searchPath, searchTerms, searchContentType, isOpen, isAdv
 };
 
 SearchDialog.propTypes = {
-    searchPath: PropTypes.string.isRequired,
-    searchTerms: PropTypes.string.isRequired,
-    searchContentType: PropTypes.string.isRequired,
+    searchForm: PropTypes.object.isRequired,
+    searchFormSetters: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
     isAdvancedSearch: PropTypes.bool.isRequired,
     toggleAdvancedSearch: PropTypes.func.isRequired,
     performSearch: PropTypes.func.isRequired,
-    handleSearchChanges: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired
 };
 

@@ -23,7 +23,7 @@ export const CopyCutActionComponent = ({context, render: Render, loading: Loadin
             getPrimaryNodeType: true,
             getDisplayName: true,
             requiredPermission: type === copyPasteConstants.CUT ? ['jcr:removeNode'] : ['jcr:read'],
-            getProperties: ['jcr:mixinTypes'],
+            getProperties: ['jcr:mixinTypes']
         }
     );
 

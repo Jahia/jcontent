@@ -4,10 +4,12 @@ import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
 import {Route, Switch} from 'react-router';
 import {ProgressPaper} from '@jahia/design-system-kit';
+import {useSelector} from 'react-redux';
 
 export const JContent = () => {
     const routes = registry.find({type: 'route', target: 'jcontent'});
-    const accordionItems = registry.find({type: 'accordionItem', target: 'jcontent'});
+    const mode = useSelector(state => state.jcontent.mode);
+    const item = registry.get('accordionItem', mode);
 
     return (
         <LayoutModule
@@ -22,13 +24,13 @@ export const JContent = () => {
                                    component={r.component}
                             />
                         ))}
-                        {accordionItems.map(item => (
+                        {item && (
                             <Route key={item.key}
                                    path={'/jcontent/:siteKey/:lang/' + item.key}
                                    render={item.routeRender}
                                    component={item.routeComponent}
                             />
-                        ))}
+                        )}
                     </Switch>
                 </Suspense>
             }

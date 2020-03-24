@@ -29,8 +29,6 @@ export const UnzipActionComponent = ({context, render: Render, loading: Loading,
         return <Loading context={context}/>;
     }
 
-    console.log(res.node);
-
     if (!res.node && !res.nodes) {
         return false;
     }

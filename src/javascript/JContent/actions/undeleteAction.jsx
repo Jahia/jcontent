@@ -30,7 +30,7 @@ export const UndeleteActionComponent = ({context, render: Render, loading: Loadi
         return false;
     }
 
-    const isVisible = res.checksResult && res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
+    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
         <Render context={{

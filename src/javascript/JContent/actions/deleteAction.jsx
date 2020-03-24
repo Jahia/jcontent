@@ -30,7 +30,7 @@ export const DeleteActionComponent = ({context, render: Render, loading: Loading
         return false;
     }
 
-    const isVisible = res.checksResult && res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
+    const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
         <Render context={{

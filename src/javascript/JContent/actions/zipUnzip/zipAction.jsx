@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {triggerRefetchAll} from '../../JContent.refetches';
 import zipUnzipQueries from './zipUnzip.gql-queries';
-import zipUnzipMutation from './zipUnzip.gql-mutations';
+import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {getNewCounter, removeFileExtension} from '../../JContent.utils';
 import {cmClearSelection} from '../../ContentRoute/ContentLayout/contentSelection.redux';
 import {useDispatch} from 'react-redux';
@@ -67,7 +67,7 @@ export const ZipActionComponent = ({context, render: Render, loading: Loading, n
                     // Zip mutation after calculating the new name of zip file
                     client.mutate({
                         variables: {parentPathOrId: parentPath, name: newName, paths: paths},
-                        mutation: zipUnzipMutation.zip,
+                        mutation: zipUnzipMutations.zip,
                         refetchQueries: [{
                             query: zipUnzipQueries.siblingsWithSameNameQuery,
                             variables: {uuid: uuid, name: nameWithoutExtension, extension: '.zip'}

@@ -69,7 +69,7 @@ jobs:
       - checkout
       - run_pre_mvn_tasks
       - run_maven:
-        deploy_at_the_end: false
+          deploy_at_the_end: false
       - run_post_mvn_tasks
       
   install_and_deploy:
@@ -84,7 +84,7 @@ jobs:
       - checkout
       - run_pre_mvn_tasks
       - run_maven:
-        deploy_at_the_end: true
+          deploy_at_the_end: true
       - run_post_mvn_tasks
 
 workflows:

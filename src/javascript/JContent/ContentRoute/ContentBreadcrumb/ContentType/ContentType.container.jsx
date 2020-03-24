@@ -11,9 +11,9 @@ const ContentTypeContainer = () => {
     }));
 
     const {node} = useNodeInfo({path, displayLanguage}, {getPrimaryNodeType: true});
-    const nodeType = node?.primaryNodeType || {};
+    const nodeType = node?.primaryNodeType;
 
-    return <ContentType name={nodeType.name} displayName={nodeType.displayName}/>;
+    return nodeType ? <ContentType name={nodeType.name} displayName={nodeType.displayName}/> : null;
 };
 
 export default ContentTypeContainer;

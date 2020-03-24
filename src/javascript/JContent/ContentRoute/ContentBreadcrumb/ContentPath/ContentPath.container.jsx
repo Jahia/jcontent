@@ -27,7 +27,7 @@ const ContentPathContainer = () => {
         console.log(error);
     }
 
-    const ancestors = data?.jcr?.node?.ancestors || {};
+    const ancestors = data?.jcr?.node?.ancestors || [];
     return <ContentPath items={ancestors} onItemClick={handleNavigation}/>;
 };
 

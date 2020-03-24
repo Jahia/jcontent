@@ -14,24 +14,35 @@ references:
     attach_workspace:
       at: .
 
-jobs:
-  install:
-    <<: *workdir
-
-    docker: # run the steps with Docker
-      - image: circleci/openjdk:8-jdk-stretch
-   
-    resource_class: large
-
+commands:
+  run_pre_mvn_tasks:
+    description:
     steps:
-      - checkout
       - restore_cache:
           keys:
             - v2-dependencies-{{ checksum "pom.xml" }}
             # fallback to using the latest cache if no exact match is found
             - v2-dependencies-
-      - run: mvn -s .circleci/.circleci.settings.xml clean install
+  run_maven:
+    description:
+    parameters:
+        deploy_at_the_end:
+          type: boolean
+          default: false
+    steps:
       # Built module is stored in: /home/circleci/source/repo/repo/api/target/jcontent-2.0.0-SNAPSHOT.jar
+      - when:
+          condition: << parameters.deploy_at_the_end >>
+          steps:
+            - run: mvn -s .circleci/.circleci.settings.xml clean install deploy
+      - unless:
+          condition: << parameters.deploy_at_the_end >>
+          steps:
+            - run: mvn -s .circleci/.circleci.settings.xml clean install
+
+  run_post_mvn_tasks:
+    description:
+    steps:
       - save_cache:
           paths:
             - ~/.m2
@@ -44,15 +55,37 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts/
       - *persist-workspace
-  deploy:
+
+jobs:
+  install:
     <<: *workdir
 
     docker: # run the steps with Docker
       - image: circleci/openjdk:8-jdk-stretch
-    
+   
+    resource_class: large
+
     steps:
-      - *attach-workspace
-      - run: mvn -s .circleci/.circleci.settings.xml deploy
+      - checkout
+      - run_pre_mvn_tasks
+      - run_maven:
+        deploy_at_the_end: false
+      - run_post_mvn_tasks
+      
+  install_and_deploy:
+    <<: *workdir
+
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:8-jdk-stretch
+   
+    resource_class: large
+
+    steps:
+      - checkout
+      - run_pre_mvn_tasks
+      - run_maven:
+        deploy_at_the_end: true
+      - run_post_mvn_tasks
 
 workflows:
   version: 2
@@ -60,10 +93,11 @@ workflows:
     jobs:
       - install:
           context: QA_ENVIRONMENT
-      - deploy:
+          filters:
+            branches:
+              ignore: master
+      - install_and_deploy:
           context: QA_ENVIRONMENT
-          requires:
-            - install
           filters:
             branches:
               only: master

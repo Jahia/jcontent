@@ -26,7 +26,7 @@ commands:
       - run:
           name: Maven call
           command: |
-          if [[ "${CIRCLE_BRANCH}" == "<< parameters.branch_to_deploy >>" ]]
+          if [[ "${CIRCLE_BRANCH}" == "<< parameters.branch_to_deploy >>" ]];
           then
             mvn -s .circleci/.circleci.settings.xml clean install deploy
           else

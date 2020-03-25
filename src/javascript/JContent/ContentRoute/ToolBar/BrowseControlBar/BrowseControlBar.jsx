@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 const ButtonRenderer = getButtonRenderer({size: 'default', variant: 'ghost'});
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none', size: 'default', variant: 'ghost'});
 
-const excludedActions = ['pageComposer', 'subContents', 'edit', 'publishMenu', 'cut', 'lock', 'export', 'deletePermanently', 'publishDeletion', 'copy', 'paste', 'createFolder', 'createContentFolder', 'createContent', 'fileUpload'];
+const excludedActions = ['pageComposer', 'subContents', 'edit', 'publishMenu', 'cut', 'deletePermanently', 'publishDeletion', 'copy', 'paste', 'createFolder', 'createContentFolder', 'createContent', 'fileUpload'];
 
 export const BrowseControlBar = ({showActions}) => {
     const {path, mode, siteKey} = useSelector(state => ({

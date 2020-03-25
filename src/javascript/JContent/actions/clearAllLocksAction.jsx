@@ -1,6 +1,5 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import * as _ from 'lodash';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/react-hooks';
@@ -11,6 +10,7 @@ export const ClearAllLockActionComponent = ({context, render: Render, loading: L
         {path: context.path},
         {
             getLockInfo: true,
+            getOperationSupport: true,
             requiredPermission: ['clearLock'],
             ...context
         }
@@ -24,7 +24,7 @@ export const ClearAllLockActionComponent = ({context, render: Render, loading: L
         return false;
     }
 
-    const isVisible = res.checksResult && res.node.lockTypes !== null && !_.includes(res.node.lockTypes.values, ' deletion :deletion');
+    const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes !== null && res.node.lockTypes.values.indexOf(' deletion :deletion') === -1;
 
     return (
         <Render context={{

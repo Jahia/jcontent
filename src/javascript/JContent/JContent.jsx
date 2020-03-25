@@ -8,8 +8,9 @@ import {useSelector} from 'react-redux';
 
 export const JContent = () => {
     const routes = registry.find({type: 'route', target: 'jcontent'});
-    const mode = useSelector(state => state.jcontent.mode);
+    const {site, mode} = useSelector(state => ({site: state.jcontent.site, mode: state.jcontent.mode}));
     const item = registry.get('accordionItem', mode);
+    const itemEnabled = item && (!item.isEnabled || item.isEnabled(site));
 
     return (
         <LayoutModule
@@ -24,7 +25,7 @@ export const JContent = () => {
                                    component={r.component}
                             />
                         ))}
-                        {item && (
+                        {item && itemEnabled && (
                             <Route key={item.key}
                                    path={'/jcontent/:siteKey/:lang/' + item.key}
                                    render={item.routeRender}

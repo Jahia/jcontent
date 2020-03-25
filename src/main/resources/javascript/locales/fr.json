@@ -215,7 +215,7 @@
         "emptyMessage": "Chargement en cours...",
         "download": "Télecharger",
         "publishMenu": "Publier...",
-        "MultipleSelectionPublishMenu": "Publier {{menuDisplayName}}",
+        "MultipleSelectionPublishMenu": "Publier {{multipleSelectionDisplayName}}",
         "unpublish": "Dépublier <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Modifié par {{userName}} le",
         "share": "Copier chemin/UUID",

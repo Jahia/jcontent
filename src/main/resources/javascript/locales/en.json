@@ -216,7 +216,7 @@
         "emptyMessage": "Loading...",
         "download": "Download",
         "publishMenu": "Publish...",
-        "MultipleSelectionPublishMenu": "Publish {{menuDisplayName}}",
+        "MultipleSelectionPublishMenu": "Publish {{multipleSelectionDisplayName}}",
         "unpublish": "Unpublish <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Modified by {{userName}} on",
         "share": "Get path/UUID",

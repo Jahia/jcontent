@@ -8,24 +8,19 @@ import {
     ChevronDown,
     CloudDownload,
     CloudUpload,
+    Copy,
     Delete,
     Edit,
+    FileZip,
     Lock,
+    MoreVert,
     Paste,
     Publish,
     Reload,
-    Search,
-    FileZip,
-    Copy
+    Search
 } from '@jahia/moonstone/dist/icons';
 
-import {
-    ApplicationExport,
-    ApplicationImport,
-    ContentCut,
-    DeleteRestore,
-    DotsVertical
-} from 'mdi-material-ui';
+import {ApplicationExport, ApplicationImport, ContentCut, DeleteRestore} from 'mdi-material-ui';
 import fileUploadAction from './actions/fileUploadAction';
 import deleteAction from './actions/deleteAction';
 import undeleteAction from './actions/undeleteAction';
@@ -180,13 +175,13 @@ export const jContentActions = registry => {
         checkIfLanguagesMoreThanOne: true
     });
     registry.add('action', 'contentMenu', menuActionWithRenderer, {
-        buttonIcon: <DotsVertical/>,
+        buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'contentActions',
         showIcons: true
     });
     registry.add('action', 'selectedContentMenu', menuActionWithRenderer, {
-        buttonIcon: <DotsVertical/>,
+        buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'selectedContentActions',
         menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',

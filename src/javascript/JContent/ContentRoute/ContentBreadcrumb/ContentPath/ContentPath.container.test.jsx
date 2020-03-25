@@ -87,4 +87,34 @@ describe('ContentPathContainer', () => {
         expect(dispatch).toHaveBeenCalledTimes(1);
         expect(cmGoto).toHaveBeenCalledWith({mode: 'foo', path: '/x/y/z'});
     });
+
+    it('starts from the closest ancestor visible in Content tree if node is not visible Content tree', () => {
+        const ancestors = [{
+            uuid: 'x',
+            path: '/x',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'y',
+            path: '/x/y',
+            isVisibleInContentTree: true
+        }, {
+            uuid: 'z',
+            path: '/x/y/z',
+            isVisibleInContentTree: false
+        }];
+
+        useQuery.mockImplementation(() => ({
+            data: {
+                jcr: {
+                    node: {
+                        isVisibleInContentTree: false,
+                        ancestors: ancestors
+                    }
+                }
+            }
+        }));
+
+        const wrapper = shallow(<ContentPathContainer/>);
+        expect(wrapper.prop('items')).toEqual(ancestors.slice(1));
+    });
 });

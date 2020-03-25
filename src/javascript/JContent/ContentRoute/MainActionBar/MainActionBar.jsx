@@ -19,13 +19,8 @@ export const MainActionBar = () => {
         return false;
     }
 
-    let action = 'publish';
-
-    if (node['jnt:folder'] || node['jnt:contentFolder']) {
-        action = 'publishAll';
-    }
-
-    let disabled = selection && selection.length > 0;
+    const publishAction = node['jnt:folder'] || node['jnt:contentFolder'] ? 'publishAll' : 'publish';
+    const disabled = selection && selection.length > 0;
 
     return (
         <div className={styles.root}>
@@ -33,12 +28,13 @@ export const MainActionBar = () => {
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
             <DisplayAction actionKey="pageComposer" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
             <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
+
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
-                <DisplayAction actionKey={action} context={{path, disabled}} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="publishDeletion" context={{path, disabled}} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="deletePermanently" context={{path, disabled}} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey={publishAction} context={{path, disabled}} render={ButtonRendererShortLabel}/>
                 <DisplayAction actionKey="publishMenu" context={{path, disabled, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
             </ButtonGroup>
+            <DisplayAction actionKey="publishDeletion" context={{path, disabled}} render={ButtonRendererShortLabel}/>
+            <DisplayAction actionKey="deletePermanently" context={{path, disabled}} render={ButtonRendererShortLabel}/>
         </div>
     );
 };

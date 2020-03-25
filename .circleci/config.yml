@@ -14,6 +14,25 @@ references:
     attach_workspace:
       at: .
 
+commands:
+  run_maven:
+    description:
+    parameters:
+        branch_to_deploy:
+          type: string
+          default: "master"
+    steps:
+      # Built module is stored in: /home/circleci/source/repo/repo/api/target/jcontent-2.0.0-SNAPSHOT.jar
+      - run:
+          name: Maven call
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "<< parameters.branch_to_deploy >>" ]];
+            then
+              mvn -s .circleci/.circleci.settings.xml clean install deploy
+            else
+              mvn -s .circleci/.circleci.settings.xml clean install
+            fi
+
 jobs:
   install:
     <<: *workdir
@@ -30,8 +49,7 @@ jobs:
             - v2-dependencies-{{ checksum "pom.xml" }}
             # fallback to using the latest cache if no exact match is found
             - v2-dependencies-
-      - run: mvn -s .circleci/.circleci.settings.xml clean install
-      # Built module is stored in: /home/circleci/source/repo/repo/api/target/jcontent-2.0.0-SNAPSHOT.jar
+      - run_maven
       - save_cache:
           paths:
             - ~/.m2
@@ -44,15 +62,6 @@ jobs:
       - store_artifacts:
           path: /tmp/artifacts/
       - *persist-workspace
-  deploy:
-    <<: *workdir
-
-    docker: # run the steps with Docker
-      - image: circleci/openjdk:8-jdk-stretch
-    
-    steps:
-      - *attach-workspace
-      - run: mvn -s .circleci/.circleci.settings.xml deploy
 
 workflows:
   version: 2
@@ -60,10 +69,3 @@ workflows:
     jobs:
       - install:
           context: QA_ENVIRONMENT
-      - deploy:
-          context: QA_ENVIRONMENT
-          requires:
-            - install
-          filters:
-            branches:
-              only: master

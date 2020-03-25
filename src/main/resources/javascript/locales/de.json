@@ -215,6 +215,7 @@
         "emptyMessage": "Laden...",
         "download": "Herunterladen",
         "publishMenu": "Veröffentlichen...",
+        "MultipleSelectionPublishMenu": "Veröffentlichen {{menuDisplayName}}",
         "unpublish": "Veröffentlichung rückgängig machen <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Geändert von {{userName}} am",
         "share": "Pfad/UUID kopieren",
@@ -257,6 +258,8 @@
       "selection": {
         "itemsSelected": "{{count}} Element ausgewählt",
         "itemsSelected_plural": "{{count}} Elemente ausgewählt",
+        "items": "{{count}} Element",
+        "items_plural": "{{count}} Elemente",
         "clearMultipleSelection": "Auswahl aufheben",
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
       },

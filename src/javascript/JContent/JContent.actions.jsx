@@ -1,6 +1,6 @@
 import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
-import {UnzipIcon, ZipIcon} from './actions/icons';
+import {UnzipIcon} from './actions/icons';
 import {Autorenew, FindInPage, LockOpen, SubdirectoryArrowRight, Visibility} from '@material-ui/icons';
 
 import {
@@ -14,13 +14,14 @@ import {
     Paste,
     Publish,
     Reload,
-    Search
+    Search,
+    FileZip,
+    Copy
 } from '@jahia/moonstone/dist/icons';
 
 import {
     ApplicationExport,
     ApplicationImport,
-    ContentCopy,
     ContentCut,
     DeleteRestore,
     DotsVertical
@@ -107,6 +108,7 @@ export const jContentActions = registry => {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publish',
         buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
+        buttonLabelMultiple: 'jcontent:label.contentManager.contentPreview.MultipleSelectionPublishMenu',
         targets: ['publishMenu:1'],
         allSubtree: false,
         allLanguages: false,
@@ -116,7 +118,7 @@ export const jContentActions = registry => {
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
-        targets: ['contentActions:6', 'selectedContentActions:5'],
+        targets: ['contentActions:6'],
         menuTarget: 'publishMenu',
         menuPreload: true
     });
@@ -191,7 +193,7 @@ export const jContentActions = registry => {
         showIcons: true
     });
     registry.add('action', 'copy', copyAction, {
-        buttonIcon: <ContentCopy/>,
+        buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.copy',
         targets: ['contentActions:3.8', 'selectedContentActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
@@ -296,7 +298,7 @@ export const jContentActions = registry => {
         uploadType: 'replaceWith'
     });
     registry.add('action', 'zip', zipAction, {
-        buttonIcon: <ZipIcon/>,
+        buttonIcon: <FileZip/>,
         buttonLabel: 'jcontent:label.contentManager.zipUnzip.zip',
         targets: ['contentActions:2.1', 'selectedContentActions'],
         showOnNodeTypes: ['jnt:file', 'jnt:folder'],

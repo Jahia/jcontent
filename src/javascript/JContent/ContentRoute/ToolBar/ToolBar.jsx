@@ -1,16 +1,24 @@
 import React from 'react';
 import {Typography} from '@jahia/design-system-kit';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
-import {DisplayActions} from '@jahia/ui-extender';
+import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import styles from './Toolbar.scss';
+import {Separator, Button, ButtonGroup} from '@jahia/moonstone';
+import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
+import {Cancel} from '@jahia/moonstone/dist/icons';
+
+const ButtonRendererMultiple = getButtonRenderer({labelStyle: 'multiple'});
+const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
+const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 
 export const ToolBar = () => {
     const {t} = useTranslation();
+    const dispatch = useDispatch();
 
     const {mode, selection} = useSelector(state => ({
         mode: state.jcontent.mode,
@@ -28,11 +36,20 @@ export const ToolBar = () => {
                     {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
                 </Typography>
                 <div className={styles.spacer}/>
+                <Button icon={<Cancel/>} variant="ghost" size="small" onClick={() => dispatch(cmClearSelection())}/>
+                <Separator variant="vertical"/>
                 <DisplayActions
                     target="selectedContentActions"
                     context={{paths: selection}}
                     render={getButtonRenderer({size: 'small', variant: 'ghost'})}
                 />
+                <Separator variant="vertical"/>
+                <ButtonGroup size="small" variant="outlined" color="accent">
+                    <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRendererMultiple}/>
+                    <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>
+                    <DisplayAction actionKey="deletePermanently" context={{paths: selection}} render={ButtonRendererShortLabel}/>
+                    <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
+                </ButtonGroup>
             </React.Fragment>}
         </div>
     );

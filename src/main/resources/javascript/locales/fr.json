@@ -215,6 +215,7 @@
         "emptyMessage": "Chargement en cours...",
         "download": "Télecharger",
         "publishMenu": "Publier...",
+        "MultipleSelectionPublishMenu": "Publier {{menuDisplayName}}",
         "unpublish": "Dépublier <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Modifié par {{userName}} le",
         "share": "Copier chemin/UUID",
@@ -257,6 +258,8 @@
       "selection": {
         "itemsSelected": "{{count}} élément sélectionné",
         "itemsSelected_plural": "{{count}} éléments sélectionnés",
+        "items": "{{count}} éléments",
+        "items_plural": "{{count}} éléments",
         "clearMultipleSelection": "Vider la sélection",
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments"
       },

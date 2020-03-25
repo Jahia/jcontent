@@ -216,6 +216,7 @@
         "emptyMessage": "Loading...",
         "download": "Download",
         "publishMenu": "Publish...",
+        "MultipleSelectionPublishMenu": "Publish {{menuDisplayName}}",
         "unpublish": "Unpublish <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Modified by {{userName}} on",
         "share": "Get path/UUID",
@@ -258,6 +259,8 @@
       "selection": {
         "itemsSelected": "{{count}} item selected",
         "itemsSelected_plural": "{{count}} items selected",
+        "items": "{{count}} item",
+        "items_plural": "{{count}} items",
         "clearMultipleSelection": "Clear selection",
         "emptyContextMenu": "No actions available for those items"
       },

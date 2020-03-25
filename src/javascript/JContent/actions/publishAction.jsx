@@ -70,7 +70,8 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, language).displayName)) : null
     } : {
         displayName: t('jcontent:label.contentManager.selection.itemsSelected', {count: context.paths.length}),
-        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
+        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null,
+        multipleSelectionDisplayName: t('jcontent:label.contentManager.selection.items', {count: context.paths.length})
     };
 
     return (

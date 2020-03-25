@@ -28,6 +28,7 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
     return (
         <MenuItem
             isHtml
+            iconStart={context.showIcons && context.buttonIcon}
             data-sel-role={context.key}
             label={label}
             isHover={h}

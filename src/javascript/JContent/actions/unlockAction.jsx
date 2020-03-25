@@ -1,33 +1,68 @@
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
-import {map} from 'rxjs/operators';
-import * as _ from 'lodash';
+import React from 'react';
 import gql from 'graphql-tag';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
+import {useApolloClient} from '@apollo/react-hooks';
 
-export default composeActions(requirementsAction, {
-    init: context => {
-        context.initRequirements({
+export const UnlockActionComponent = ({context, render: Render, loading: Loading}) => {
+    const client = useApolloClient();
+    const res = useNodeChecks(
+        {path: context.path},
+        {
             getLockInfo: true,
+            getOperationSupport: true,
             requiredPermission: 'jcr:lockManagement',
-            enabled: context => context.node.pipe(map(node => node.operationsSupport.lock && node.lockTypes !== null && !_.includes(node.lockTypes.values, ' deletion :deletion')))
-        });
-    },
-    onClick: context => {
-        context.client.mutate({
-            variables: {pathOrId: context.path},
-            mutation: gql`mutation unlockNode($pathOrId: String!) {
-                jcr {
-                    mutateNode(pathOrId: $pathOrId) {
-                        unlock
-                    }
-                }
-            }`,
-            refetchQueries: [
-                {
-                    query: context.requirementQueryHandler.getQuery(),
-                    variables: context.requirementQueryHandler.getVariables()
-                }
-            ]
-        });
+            ...context
+        }
+    );
+
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
+
+    if (!res.node) {
+        return false;
+    }
+
+    const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes !== null && res.node.lockTypes.values.indexOf(' deletion :deletion') === -1;
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible: isVisible,
+            enabled: isVisible,
+            onClick: () => {
+                client.mutate({
+                    variables: {pathOrId: context.path},
+                    mutation: gql`mutation unlockNode($pathOrId: String!) {
+                        jcr {
+                            mutateNode(pathOrId: $pathOrId) {
+                                unlock
+                            }
+                        }
+                    }`,
+                    refetchQueries: [
+                        {
+                            query: res.query,
+                            variables: res.variables
+                        }
+                    ]
+                });
+            }
+        }}/>
+    );
+};
+
+UnlockActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const unlockAction = {
+    component: UnlockActionComponent
+};
+
+export default unlockAction;

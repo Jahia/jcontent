@@ -85,6 +85,7 @@ export const jContentAccordionItems = registry => {
         icon: <Grain/>,
         label: 'label.contentManager.navigation.apps',
         defaultPath: () => '/',
+        isEnabled: siteKey => siteKey !== 'systemsite',
         render: v => <AdditionalAppsTree target="jcontent" item={v.item}/>,
         routeRender: v => <AdditionalAppsRoute target="jcontent" match={v.match}/>,
         config: {

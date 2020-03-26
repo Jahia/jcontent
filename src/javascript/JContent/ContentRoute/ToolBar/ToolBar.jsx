@@ -1,5 +1,4 @@
 import React from 'react';
-import {Typography} from '@jahia/design-system-kit';
 import {useSelector, useDispatch} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchControlBar from './SearchControlBar';
@@ -8,7 +7,7 @@ import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import styles from './Toolbar.scss';
-import {Separator, Button, ButtonGroup} from '@jahia/moonstone';
+import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {Cancel} from '@jahia/moonstone/dist/icons';
 

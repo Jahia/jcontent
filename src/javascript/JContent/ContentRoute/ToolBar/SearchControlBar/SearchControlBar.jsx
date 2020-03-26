@@ -1,107 +1,74 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Trans, withTranslation} from 'react-i18next';
-import {connect} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 import {cmGoto, cmSetPath} from '../../../JContent.redux';
-import {withStyles} from '@material-ui/core';
-import {Button, Typography} from '@jahia/design-system-kit';
+import {Button} from '@jahia/design-system-kit';
 import {Close, Search} from '@material-ui/icons';
-import {compose} from '~/utils';
 import * as _ from 'lodash';
 import {VirtualsiteIcon} from '@jahia/icons';
 import JContentConstants from '~/JContent/JContent.constants';
+import {useSelector, useDispatch} from 'react-redux';
+import styles from './SearchControlBar.scss';
+import {Typography} from '@jahia/moonstone';
 
-const styles = theme => ({
-    grow: {
-        flex: 1
-    },
-    infoSearchPathValue: {
-        color: theme.palette.text.primary
-    }
-});
+export const SearchControlBar = ({showActions}) => {
+    const {t} = useTranslation('jcontent');
+    const dispatch = useDispatch();
 
-export class SearchControlBar extends React.Component {
-    render() {
-        let {
-            siteKey, path, setPath, t, classes, clearSearch, searchContentType, sql2SearchFrom, sql2SearchWhere, searchTerms, showActions
-        } = this.props;
-        let siteRootPath = '/sites/' + siteKey;
-        const params = {
-            searchContentType: searchContentType,
-            searchTerms: searchTerms,
-            sql2SearchFrom: sql2SearchFrom,
-            sql2SearchWhere: sql2SearchWhere
-        };
+    const clearSearch = searchParams => {
+        searchParams = _.clone(searchParams);
+        _.unset(searchParams, 'searchContentType');
+        _.unset(searchParams, 'searchTerms');
+        _.unset(searchParams, 'sql2SearchFrom');
+        _.unset(searchParams, 'sql2SearchWhere');
+        dispatch(cmGoto({mode: JContentConstants.mode.PAGES, params: searchParams}));
+    };
 
-        return (
-            <React.Fragment>
-                <Search fontSize="small"/>
-                <Trans i18nKey="label.contentManager.search.searchPath" values={{path: path}}>
-                    <Typography key="searchPath" variant="zeta">Searching under: </Typography><Typography key="searchPath" variant="zeta">{path}</Typography>
-                </Trans>
-                <div className={classes.grow}/>
-                {showActions && (path !== siteRootPath) &&
-                    <Button
-                        data-cm-role="search-all"
-                        variant="ghost"
-                        onClick={() => setPath(siteRootPath)}
-                    >
-                        <VirtualsiteIcon/>
-                        {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteKey})}
-                    </Button>}
-                {showActions &&
-                    <Button
-                        data-sel-role="search-clear"
-                        variant="ghost"
-                        onClick={() => clearSearch(params)}
-                    >
-                        <Close/>
-                        {t('jcontent:label.contentManager.search.clear')}
-                    </Button>}
-            </React.Fragment>
-        );
-    }
-}
-
-const mapStateToProps = state => {
-    return {
+    const {siteKey, path, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere} = useSelector(state => ({
         siteKey: state.site,
         path: state.jcontent.path,
         searchTerms: state.jcontent.params.searchTerms,
         searchContentType: state.jcontent.params.searchContentType,
         sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
         sql2SearchWhere: state.jcontent.params.sql2SearchWhere
+    }));
+    let siteRootPath = '/sites/' + siteKey;
+    const params = {
+        searchContentType: searchContentType,
+        searchTerms: searchTerms,
+        sql2SearchFrom: sql2SearchFrom,
+        sql2SearchWhere: sql2SearchWhere
     };
-};
 
-const mapDispatchToProps = dispatch => ({
-    setPath: path => dispatch(cmSetPath(path)),
-    clearSearch: params => {
-        params = _.clone(params);
-        _.unset(params, 'searchContentType');
-        _.unset(params, 'searchTerms');
-        _.unset(params, 'sql2SearchFrom');
-        _.unset(params, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: JContentConstants.mode.PAGES, params: params}));
-    }
-});
+    return (
+        <React.Fragment>
+            <Search fontSize="small"/>
+            <Typography variant="body">{t('jcontent:label.contentManager.search.searchPath', {path: path})}</Typography>
+            <div className={`${styles.grow}`}/>
+            {showActions && (path !== siteRootPath) &&
+            <Button
+                data-cm-role="search-all"
+                variant="ghost"
+                onClick={() => dispatch(cmSetPath(siteRootPath))}
+            >
+                <VirtualsiteIcon/>
+                {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteKey})}
+            </Button>}
+            {showActions &&
+            <Button
+                data-sel-role="search-clear"
+                variant="ghost"
+                onClick={() => clearSearch(params)}
+            >
+                <Close/>
+                {t('jcontent:label.contentManager.search.clear')}
+            </Button>}
+        </React.Fragment>
+    );
+};
 
 SearchControlBar.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
-    clearSearch: PropTypes.func.isRequired,
-    path: PropTypes.string.isRequired,
-    searchContentType: PropTypes.string,
-    searchTerms: PropTypes.string,
-    setPath: PropTypes.func.isRequired,
-    showActions: PropTypes.bool.isRequired,
-    siteKey: PropTypes.string.isRequired,
-    sql2SearchFrom: PropTypes.string,
-    sql2SearchWhere: PropTypes.string
+    showActions: PropTypes.bool.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles),
-    connect(mapStateToProps, mapDispatchToProps)
-)(SearchControlBar);
+export default SearchControlBar;

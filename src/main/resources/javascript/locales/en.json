@@ -119,7 +119,7 @@
         "searchInWebsite": "in Website \"{{siteName}}\"",
         "searchInCurrentLocation": "in Current Location \"{{nodeName}}\"",
         "searchEverywhere": "Search all of {{site}}",
-        "searchPath": "<0>Searching under: </0> <1>{{path}}<1>",
+        "searchPath": "Searching under: {{path}}",
         "clear": "Clear search",
         "refresh": "Refresh results",
         "normalPrompt": "What are you looking for?",

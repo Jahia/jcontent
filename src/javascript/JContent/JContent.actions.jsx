@@ -113,7 +113,7 @@ export const jContentActions = registry => {
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
-        targets: ['contentActions:6'],
+        targets: ['contentActions:6', 'selectedContentActions:1'],
         menuTarget: 'publishMenu',
         menuPreload: true
     });
@@ -151,7 +151,7 @@ export const jContentActions = registry => {
     registry.add('action', 'publishDeletion', publishDeletionAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishDeletion',
-        targets: ['contentActions:4', 'selectedContentActions:4'],
+        targets: ['contentActions:4', 'selectedContentActions:4', 'toolbarSelectionActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
     });
     registry.add('action', 'unpublish', publishAction, {
@@ -190,7 +190,7 @@ export const jContentActions = registry => {
     registry.add('action', 'copy', copyAction, {
         buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.copy',
-        targets: ['contentActions:3.8', 'selectedContentActions:3.8'],
+        targets: ['contentActions:3.8', 'selectedContentActions:3.8', 'toolbarSelectionActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -203,28 +203,28 @@ export const jContentActions = registry => {
     registry.add('action', 'cut', cutAction, {
         buttonIcon: <ContentCut/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.cut',
-        targets: ['contentActions:3.9', 'selectedContentActions:3.9'],
+        targets: ['contentActions:3.9', 'selectedContentActions:3.9', 'toolbarSelectionActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
         showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
     });
     registry.add('action', 'delete', deleteAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',
-        targets: ['contentActions:4', 'selectedContentActions:4'],
+        targets: ['contentActions:4', 'selectedContentActions:4', 'toolbarSelectionActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     registry.add('action', 'deletePermanently', deletePermanentlyAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.deletePermanently',
-        targets: ['contentActions:4', 'selectedContentActions:4'],
+        targets: ['contentActions:4', 'selectedContentActions:4', 'toolbarSelectionActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     registry.add('action', 'undelete', undeleteAction, {
         buttonIcon: <DeleteRestore/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.undelete',
-        targets: ['contentActions:4.1', 'selectedContentActions:4.1'],
+        targets: ['contentActions:4.1', 'selectedContentActions:4.1', 'toolbarSelectionActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
@@ -295,7 +295,7 @@ export const jContentActions = registry => {
     registry.add('action', 'zip', zipAction, {
         buttonIcon: <FileZip/>,
         buttonLabel: 'jcontent:label.contentManager.zipUnzip.zip',
-        targets: ['contentActions:2.1', 'selectedContentActions'],
+        targets: ['contentActions:2.1', 'selectedContentActions', 'toolbarSelectionActions'],
         showOnNodeTypes: ['jnt:file', 'jnt:folder'],
         hideForPaths: [PATH_FILES_ITSELF]
     });

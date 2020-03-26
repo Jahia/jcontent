@@ -151,7 +151,7 @@ export const jContentActions = registry => {
     registry.add('action', 'publishDeletion', publishDeletionAction, {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishDeletion',
-        targets: ['contentActions:4', 'selectedContentActions:4', 'toolbarSelectionActions:4'],
+        targets: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
     });
     registry.add('action', 'unpublish', publishAction, {

@@ -1,0 +1,51 @@
+import React from 'react';
+import {shallow} from '@jahia/test-framework';
+import ToolBar from './ToolBar';
+import {useSelector} from 'react-redux';
+
+jest.mock('react-redux', () => ({
+    useDispatch: jest.fn(),
+    useSelector: jest.fn()
+}));
+
+jest.mock('~/JContent/JContent.redux', () => ({
+    cmClearSelection: jest.fn()
+}));
+
+jest.mock('connected-react-router', () => jest.fn(() => {}));
+
+describe('Toolbar', () => {
+    it('should not render multiple selection actions', () => {
+        useSelector.mockImplementation(() => ({
+            selection: []
+        }));
+
+        const toolbar = shallow(<ToolBar/>);
+        expect(toolbar.find('Typography').length).toEqual(0);
+        expect(toolbar.find('Button').length).toEqual(0);
+    });
+
+    it('should render multiple selection actions for 1 item', () => {
+        useSelector.mockImplementation(() => ({
+            selection: ['/test']
+        }));
+
+        const toolbar = shallow(<ToolBar/>);
+        expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
+        expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
+        expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(1);
+        expect(toolbar.find('ButtonGroup').prop('children').length).toBe(4);
+    });
+
+    it('should render multiple selection actions for 2 items', () => {
+        useSelector.mockImplementation(() => ({
+            selection: ['/test', '/test/child']
+        }));
+
+        const toolbar = shallow(<ToolBar/>);
+        expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
+        expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
+        expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(2);
+        expect(toolbar.find('ButtonGroup').prop('children').length).toBe(4);
+    });
+});

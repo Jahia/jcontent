@@ -15,7 +15,7 @@ jest.mock('~/JContent/JContent.redux', () => ({
 jest.mock('connected-react-router', () => jest.fn(() => {}));
 
 describe('Toolbar', () => {
-    it('should not render multiple selection actions', () => {
+    it('should not render selection infos when there is no selection', () => {
         useSelector.mockImplementation(() => ({
             selection: []
         }));
@@ -23,6 +23,17 @@ describe('Toolbar', () => {
         const toolbar = shallow(<ToolBar/>);
         expect(toolbar.find('Typography').length).toEqual(0);
         expect(toolbar.find('Button').length).toEqual(0);
+    });
+
+    it('should render selection infos when there is selection', () => {
+        useSelector.mockImplementation(() => ({
+            selection: ['/test']
+        }));
+
+        const toolbar = shallow(<ToolBar/>);
+        expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
+        expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
+        expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(1);
     });
 
     it('should render multiple selection actions for 1 item', () => {
@@ -34,7 +45,7 @@ describe('Toolbar', () => {
         expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
         expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
         expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(1);
-        expect(toolbar.find('ButtonGroup').prop('children').length).toBe(4);
+        expect(toolbar.find('ButtonGroup').children()).toHaveLength(4);
     });
 
     it('should render multiple selection actions for 2 items', () => {
@@ -46,6 +57,6 @@ describe('Toolbar', () => {
         expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
         expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
         expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(2);
-        expect(toolbar.find('ButtonGroup').prop('children').length).toBe(4);
+        expect(toolbar.find('ButtonGroup').children()).toHaveLength(4);
     });
 });

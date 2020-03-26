@@ -25,6 +25,8 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
     // eslint-disable-next-line react/no-danger
     const label = <span dangerouslySetInnerHTML={{__html: t(context.buttonLabel, context.buttonLabelParams)}}/>;
 
+    const isDisabled = context.enabled === false;
+
     return (
         <MenuItem
             isHtml
@@ -32,8 +34,8 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
             data-sel-role={context.key}
             label={label}
             isHover={h}
-            isDisabled={context.enabled === false}
-            onClick={onClick}
+            isDisabled={isDisabled}
+            onClick={isDisabled ? null : onClick}
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
         />

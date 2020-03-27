@@ -16,10 +16,10 @@ import {
     Paste,
     Publish,
     Reload,
-    Search
+    Search,
+    Cut
 } from '@jahia/moonstone/dist/icons';
-
-import {ApplicationExport, ApplicationImport, ContentCut, DeleteRestore} from 'mdi-material-ui';
+import {ApplicationExport, ApplicationImport, DeleteRestore} from 'mdi-material-ui';
 import {FileUploadActionComponent} from './actions/fileUploadAction';
 import {DeleteActionComponent} from './actions/deleteAction';
 import {UndeleteActionComponent} from './actions/undeleteAction';
@@ -213,7 +213,7 @@ export const jContentActions = registry => {
         component: PasteActionComponent
     });
     registry.add('action', 'cut', {
-        buttonIcon: <ContentCut/>,
+        buttonIcon: <Cut/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.cut',
         targets: ['contentActions:3.9', 'selectedContentActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],

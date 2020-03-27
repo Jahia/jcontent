@@ -110,6 +110,9 @@
       },
       "search": {
         "advanced": "Advanced search",
+        "advancedOn": "Advanced search = On",
+        "location": "Location = {{siteName}}",
+        "advancedSearchOnType": "Type = {{type}}",
         "basic": "Basic search",
         "search": "Search",
         "type": "Type",

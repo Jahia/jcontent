@@ -113,7 +113,7 @@ export const jContentActions = registry => {
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
-        targets: ['contentActions:6'],
+        targets: ['contentActions:6', 'selectedContentActions:1'],
         menuTarget: 'publishMenu',
         menuPreload: true
     });

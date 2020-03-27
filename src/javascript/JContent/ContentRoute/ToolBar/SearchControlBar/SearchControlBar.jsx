@@ -6,11 +6,13 @@ import {useSelector} from 'react-redux';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import JContentConstants from '../../../JContent.constants';
+import {useTranslation} from 'react-i18next';
 
 const ButtonRenderer = getButtonRenderer();
 
 export const SearchControlBar = () => {
-    const {path, site, mode} = useSelector(state => ({
+    const {t} = useTranslation();
+    const {path, mode} = useSelector(state => ({
         path: state.jcontent.path,
         site: state.site,
         mode: state.jcontent.mode
@@ -24,10 +26,10 @@ export const SearchControlBar = () => {
             <Separator variant="vertical" invisible="firstOrLastChild"/>
             {advancedSearchMode &&
             <>
-                <Chip className={styles.chipMargin} label="Advanced Search = On"/>
-                <Chip className={styles.chipMargin} label="Type = Designer"/>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedOn')}/>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: 'Designer'})}/>
             </>}
-            <Chip className={styles.chipMargin} label={`Location = ${site}`}/>
+            <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: window.contextJsParameters.siteName})}/>
             <div className={`${styles.grow}`}/>
         </React.Fragment>
     );

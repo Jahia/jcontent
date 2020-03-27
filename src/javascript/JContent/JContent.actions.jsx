@@ -32,7 +32,7 @@ import pasteAction from './actions/copyPaste/pasteAction';
 import copyAction from './actions/copyPaste/copyAction';
 import cutAction from './actions/copyPaste/cutAction';
 import lockAction from './actions/lockAction';
-import {routerAction} from './actions/routerAction';
+import routerAction from './actions/routerAction';
 import unlockAction from './actions/unlockAction';
 import clearAllLocksAction from './actions/clearAllLocksAction';
 import locateAction from './actions/locateAction';
@@ -55,8 +55,6 @@ const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
 const PATH_FILES_DESCENDANTS = '^/sites/((?!/).)+/files/.+';
 
 export const jContentActions = registry => {
-    registry.add('action', 'router', routerAction);
-
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
         buttonIcon: <ChevronDown/>,
         menuRenderer: MenuRenderer,

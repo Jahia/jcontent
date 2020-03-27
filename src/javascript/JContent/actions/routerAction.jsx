@@ -1,28 +1,46 @@
 import {cmGoto} from '../JContent.redux';
-import {composeActions} from '@jahia/react-material';
-import {reduxAction} from './reduxAction';
-import requirementsAction from './requirementsAction';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
 
-const mapDispatchToProps = dispatch => ({
-    setUrl: (site, language, mode, path, params) => dispatch(cmGoto({site, language, mode, path, params}))
-});
+export const RouterActionComponent = ({context, render: Render, loading: Loading}) => {
+    const dispatch = useDispatch();
+    const {language, site} = useSelector(state => ({language: state.language, site: state.site}));
 
-const mapStateToProps = state => ({
-    language: state.language,
-    siteKey: state.site
-});
+    const res = useNodeChecks(
+        {path: context.path},
+        context
+    );
 
-let routerAction = composeActions(requirementsAction, reduxAction(mapStateToProps, mapDispatchToProps), {
-    init: context => {
-        context.initRequirements();
-    },
-
-    onClick: context => {
-        const {mode, siteKey, language, setUrl, path} = context;
-
-        setUrl(siteKey, language, mode, path, context.urlParams ? context.urlParams : {});
-        return null;
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
 
-export {routerAction};
+    return (
+        <Render context={{
+            ...context,
+            isVisible: res.checksResult,
+            enabled: res.checksResult,
+            onClick: () => {
+                const {mode, path} = context;
+                dispatch(cmGoto({site, language, mode, path, params: context.urlParams ? context.urlParams : {}}));
+                return null;
+            }
+        }}/>
+    );
+};
+
+RouterActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const routerAction = {
+    component: RouterActionComponent
+};
+
+export default routerAction;

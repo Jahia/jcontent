@@ -39,8 +39,11 @@ export const ToolBar = () => {
                 <Button icon={<Cancel/>} variant="ghost" size="small" onClick={() => dispatch(cmClearSelection())}/>
                 <Separator variant="vertical"/>
                 <DisplayActions
-                    target="toolbarSelectionActions"
-                    context={{paths: selection}}
+                    target="selectedContentActions"
+                    context={{paths: selection,
+                        menuFilter: value => {
+                            return value.key.indexOf('publish') === -1;
+                        }}}
                     render={getButtonRenderer({size: 'small', variant: 'ghost'})}
                 />
                 <Separator variant="vertical"/>

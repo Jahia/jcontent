@@ -36,7 +36,7 @@ export const ToolBar = () => {
                 </Typography>
                 <div className={styles.spacer}/>
                 <Button icon={<Cancel/>} variant="ghost" size="small" onClick={() => dispatch(cmClearSelection())}/>
-                <div>
+                <div className="flexRow">
                     <Separator variant="vertical" invisible="onlyChild"/>
                     <DisplayActions
                         target="selectedContentActions"

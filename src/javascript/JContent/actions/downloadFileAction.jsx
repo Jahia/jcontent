@@ -2,7 +2,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export const DownloadActionComponent = ({context, render: Render, loading: Loading}) => {
+export const DownloadFileActionComponent = ({context, render: Render, loading: Loading}) => {
     const res = useNodeChecks({path: context.path}, context);
 
     if (res.loading) {
@@ -29,16 +29,10 @@ export const DownloadActionComponent = ({context, render: Render, loading: Loadi
     );
 };
 
-DownloadActionComponent.propTypes = {
+DownloadFileActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
 
     render: PropTypes.func.isRequired,
 
     loading: PropTypes.func
 };
-
-const downloadAction = {
-    component: DownloadActionComponent
-};
-
-export default downloadAction;

@@ -8,7 +8,7 @@ import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export const CopyCutActionComponent = ({context, render: Render, loading: Loading, type}) => {
+export const CopyCutActionComponent = ({context, render: Render, loading: Loading}) => {
     const {language, displayLanguage} = useSelector(state => ({
         language: state.language,
         displayLanguage: state.uilang
@@ -16,13 +16,15 @@ export const CopyCutActionComponent = ({context, render: Render, loading: Loadin
     const client = useApolloClient();
     const dispatch = useDispatch();
 
+    const type = context.copyCutType || copyPasteConstants.COPY;
+
     const res = useNodeChecks(
         {path: context.path, paths: context.paths, language, displayLanguage},
         {
             ...context,
             getPrimaryNodeType: true,
             getDisplayName: true,
-            requiredPermission: type === copyPasteConstants.CUT ? ['jcr:removeNode'] : ['jcr:read'],
+            requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
             getProperties: ['jcr:mixinTypes']
         }
     );
@@ -52,11 +54,5 @@ CopyCutActionComponent.propTypes = {
 
     render: PropTypes.func.isRequired,
 
-    loading: PropTypes.func,
-
-    type: PropTypes.string
-};
-
-CopyCutActionComponent.defaultProps = {
-    type: copyPasteConstants.COPY
+    loading: PropTypes.func
 };

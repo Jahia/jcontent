@@ -11,7 +11,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 
-export const ZipActionComponent = ({context, render: Render, loading: Loading, notificationContext}) => {
+export const ZipActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const client = useApolloClient();
     const dispatch = useDispatch();
@@ -80,7 +80,7 @@ export const ZipActionComponent = ({context, render: Render, loading: Loading, n
             }
         }}/>
     );
-};
+});
 
 ZipActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
@@ -88,9 +88,3 @@ ZipActionComponent.propTypes = {
     loading: PropTypes.func,
     notificationContext: PropTypes.object.isRequired
 };
-
-const zipAction = {
-    component: withNotifications()(ZipActionComponent)
-};
-
-export default zipAction;

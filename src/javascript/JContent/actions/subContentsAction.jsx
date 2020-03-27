@@ -53,9 +53,3 @@ SubContentsActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const subContentsAction = {
-    component: SubContentsActionComponent
-};
-
-export default subContentsAction;

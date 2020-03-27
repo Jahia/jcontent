@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux';
 import {isMarkedForDeletion} from '../../JContent.utils';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
 
-export const UnzipActionComponent = ({context, render: Render, loading: Loading, notificationContext}) => {
+export const UnzipActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
     const language = useSelector(state => state.language);
     const componentRenderer = useContext(ComponentRendererContext);
     const client = useApolloClient();
@@ -51,7 +51,7 @@ export const UnzipActionComponent = ({context, render: Render, loading: Loading,
             }
         }}/>
     );
-};
+});
 
 UnzipActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
@@ -59,9 +59,3 @@ UnzipActionComponent.propTypes = {
     loading: PropTypes.func,
     notificationContext: PropTypes.object.isRequired
 };
-
-const unzipAction = {
-    component: withNotifications()(UnzipActionComponent)
-};
-
-export default unzipAction;

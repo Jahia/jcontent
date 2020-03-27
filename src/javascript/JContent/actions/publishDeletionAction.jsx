@@ -50,9 +50,3 @@ PublishDeletionActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const publishDeletionAction = {
-    component: PublishDeletionActionComponent
-};
-
-export default publishDeletionAction;

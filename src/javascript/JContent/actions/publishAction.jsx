@@ -94,9 +94,3 @@ PublishActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const publishAction = {
-    component: PublishActionComponent
-};
-
-export default publishAction;

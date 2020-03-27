@@ -57,9 +57,3 @@ DeleteActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const deleteAction = {
-    component: DeleteActionComponent
-};
-
-export default deleteAction;

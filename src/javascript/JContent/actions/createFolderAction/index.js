@@ -1,3 +1,1 @@
-import createFolderAction from './createFolderAction';
-
-export default createFolderAction;
+export * from './createFolderAction';

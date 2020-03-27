@@ -52,9 +52,3 @@ DeletePermanentlyActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const deletePermanentlyAction = {
-    component: DeletePermanentlyActionComponent
-};
-
-export default deletePermanentlyAction;

@@ -40,9 +40,3 @@ ExportActionComponent.propTypes = {
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };
-
-const exportAction = {
-    component: ExportActionComponent
-};
-
-export default exportAction;

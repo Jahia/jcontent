@@ -56,9 +56,3 @@ UnlockActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const unlockAction = {
-    component: UnlockActionComponent
-};
-
-export default unlockAction;

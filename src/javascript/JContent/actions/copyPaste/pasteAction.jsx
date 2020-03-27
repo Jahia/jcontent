@@ -16,7 +16,7 @@ import {useTranslation} from 'react-i18next';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 
-export const PasteActionComponent = ({context, render: Render, loading: Loading, notificationContext}) => {
+export const PasteActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -156,7 +156,7 @@ export const PasteActionComponent = ({context, render: Render, loading: Loading,
             }
         }}/>
     );
-};
+});
 
 PasteActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
@@ -167,9 +167,3 @@ PasteActionComponent.propTypes = {
 
     notificationContext: PropTypes.object.isRequired
 };
-
-const pasteAction = {
-    component: withNotifications()(PasteActionComponent)
-};
-
-export default pasteAction;

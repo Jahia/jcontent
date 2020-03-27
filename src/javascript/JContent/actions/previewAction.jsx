@@ -37,9 +37,3 @@ PreviewActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const previewAction = {
-    component: PreviewActionComponent
-};
-
-export default previewAction;

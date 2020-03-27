@@ -4,7 +4,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/react-hooks';
 
-export const ClearAllLockActionComponent = ({context, render: Render, loading: Loading}) => {
+export const ClearAllLocksActionComponent = ({context, render: Render, loading: Loading}) => {
     const client = useApolloClient();
     const res = useNodeChecks(
         {path: context.path},
@@ -49,16 +49,10 @@ export const ClearAllLockActionComponent = ({context, render: Render, loading: L
     );
 };
 
-ClearAllLockActionComponent.propTypes = {
+ClearAllLocksActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
 
     render: PropTypes.func.isRequired,
 
     loading: PropTypes.func
 };
-
-const clearAllLocksAction = {
-    component: ClearAllLockActionComponent
-};
-
-export default clearAllLocksAction;

@@ -38,9 +38,3 @@ RouterActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const routerAction = {
-    component: RouterActionComponent
-};
-
-export default routerAction;

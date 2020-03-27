@@ -56,9 +56,3 @@ LockActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const lockAction = {
-    component: LockActionComponent
-};
-
-export default lockAction;

@@ -44,9 +44,3 @@ LocateActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const locateAction = {
-    component: LocateActionComponent
-};
-
-export default locateAction;

@@ -51,9 +51,3 @@ UndeleteActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const undeleteAction = {
-    component: UndeleteActionComponent
-};
-
-export default undeleteAction;

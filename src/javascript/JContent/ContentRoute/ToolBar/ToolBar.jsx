@@ -40,10 +40,8 @@ export const ToolBar = () => {
                 <Separator variant="vertical"/>
                 <DisplayActions
                     target="selectedContentActions"
-                    context={{paths: selection,
-                        menuFilter: value => {
-                            return value.key.indexOf('publish') === -1;
-                        }}}
+                    context={{paths: selection}}
+                    filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
                     render={getButtonRenderer({size: 'small', variant: 'ghost'})}
                 />
                 <Separator variant="vertical"/>

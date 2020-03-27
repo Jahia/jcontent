@@ -4,7 +4,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
 import {hasMixin} from '../../JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
-import {copypasteCopy} from './copyPaste.redux';
+import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -45,7 +45,7 @@ export const CopyCutActionComponent = ({context, render: Render, loading: Loadin
             onClick: () => {
                 let nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);
-                dispatch(copypasteCopy(nodes));
+                dispatch(type === 'copy' ? copypasteCopy(nodes) : copypasteCut(nodes));
             }
         }}/>
     );

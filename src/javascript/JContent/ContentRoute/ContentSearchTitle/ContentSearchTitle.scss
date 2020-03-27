@@ -1,7 +1,8 @@
-.grow {
+.root {
+    display: inline-flex;
     flex: 1;
 }
 
-.chipMargin {
+.buttonMargin {
     margin-right: var(--spacing-small);
 }

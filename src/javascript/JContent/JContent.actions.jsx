@@ -106,7 +106,6 @@ export const jContentActions = registry => {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publish',
         buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
-        buttonLabelMultiple: 'jcontent:label.contentManager.contentPreview.MultipleSelectionPublishMenu',
         targets: ['publishMenu:1'],
         allSubtree: false,
         allLanguages: false,

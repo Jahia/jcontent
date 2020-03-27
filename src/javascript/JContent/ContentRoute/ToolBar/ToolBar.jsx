@@ -11,7 +11,7 @@ import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {Cancel} from '@jahia/moonstone/dist/icons';
 
-const ButtonRendererMultiple = getButtonRenderer({labelStyle: 'multiple'});
+const ButtonRenderer = getButtonRenderer();
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 
@@ -49,7 +49,7 @@ export const ToolBar = () => {
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRendererMultiple}/>
+                    <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRenderer}/>
                     <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
                 <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>

@@ -48,10 +48,10 @@ export const ToolBar = () => {
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="small" variant="outlined" color="accent">
                     <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRendererMultiple}/>
-                    <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>
-                    <DisplayAction actionKey="deletePermanently" context={{paths: selection}} render={ButtonRendererShortLabel}/>
                     <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
+                <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="deletePermanently" context={{paths: selection}} render={ButtonRendererShortLabel}/>
             </React.Fragment>}
         </div>
     );

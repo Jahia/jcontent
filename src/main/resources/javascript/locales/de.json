@@ -215,7 +215,7 @@
         "emptyMessage": "Laden...",
         "download": "Herunterladen",
         "publishMenu": "Veröffentlichen...",
-        "MultipleSelectionPublishMenu": "Veröffentlichen {{multipleSelectionDisplayName}}",
+        "MultipleSelectionPublishMenu": "Veröffentlichen {{displayName}}",
         "unpublish": "Veröffentlichung rückgängig machen <em>{{displayName}}</em> - {{language}}",
         "modifiedBy": "Geändert von {{userName}} am",
         "share": "Pfad/UUID kopieren",

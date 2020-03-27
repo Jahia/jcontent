@@ -45,7 +45,7 @@ describe('Toolbar', () => {
         expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
         expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
         expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(1);
-        expect(toolbar.find('ButtonGroup').children()).toHaveLength(4);
+        expect(toolbar.find('ButtonGroup').children()).toHaveLength(2);
     });
 
     it('should render multiple selection actions for 2 items', () => {
@@ -57,6 +57,6 @@ describe('Toolbar', () => {
         expect(toolbar.find('Typography').prop('children')).toContain('itemsSelected');
         expect(toolbar.find('Button').prop('icon').type('SvgCancel')).toBeDefined();
         expect(toolbar.find('Typography').prop('data-cm-selection-size')).toBe(2);
-        expect(toolbar.find('ButtonGroup').children()).toHaveLength(4);
+        expect(toolbar.find('ButtonGroup').children()).toHaveLength(2);
     });
 });

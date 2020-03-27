@@ -36,20 +36,22 @@ export const ToolBar = () => {
                 </Typography>
                 <div className={styles.spacer}/>
                 <Button icon={<Cancel/>} variant="ghost" size="small" onClick={() => dispatch(cmClearSelection())}/>
-                <Separator variant="vertical"/>
-                <DisplayActions
-                    target="selectedContentActions"
-                    context={{paths: selection}}
-                    filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
-                    render={getButtonRenderer({size: 'small', variant: 'ghost'})}
-                />
-                <Separator variant="vertical"/>
+                <div className="flexRow">
+                    <Separator variant="vertical" invisible="onlyChild"/>
+                    <DisplayActions
+                        target="selectedContentActions"
+                        context={{paths: selection}}
+                        filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
+                        render={getButtonRenderer({size: 'small', variant: 'ghost'})}
+                    />
+                </div>
+                <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="small" variant="outlined" color="accent">
                     <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRendererMultiple}/>
-                    <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>
-                    <DisplayAction actionKey="deletePermanently" context={{paths: selection}} render={ButtonRendererShortLabel}/>
                     <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
+                <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="deletePermanently" context={{paths: selection}} render={ButtonRendererShortLabel}/>
             </React.Fragment>}
         </div>
     );

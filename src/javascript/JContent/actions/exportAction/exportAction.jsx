@@ -10,12 +10,8 @@ export const ExportActionComponent = ({context, render: Render, loading: Loading
         {path: context.path}
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node && !res.nodes) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     return (

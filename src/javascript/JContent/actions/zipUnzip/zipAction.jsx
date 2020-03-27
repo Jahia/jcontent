@@ -25,12 +25,8 @@ export const ZipActionComponent = ({context, render: Render, loading: Loading, n
         }
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node && !res.nodes) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     let isVisible = res.checksResult;

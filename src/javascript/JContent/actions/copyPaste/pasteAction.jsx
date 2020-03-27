@@ -48,12 +48,8 @@ export const PasteActionComponent = ({context, render: Render, loading: Loading,
         }
     `);
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     const {nodes, type} = copyPaste;

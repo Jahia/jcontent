@@ -52,12 +52,8 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         ...context
     });
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node && !res.nodes) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     let {enabled, isVisible} = res.node ? checkAction(res, res.node, context) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), {

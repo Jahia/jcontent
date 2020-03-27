@@ -20,12 +20,8 @@ export const DeletePermanentlyActionComponent = ({context, render: Render, loadi
         ...context
     });
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node && !res.nodes) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);

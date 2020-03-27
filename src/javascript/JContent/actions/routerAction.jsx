@@ -13,8 +13,8 @@ export const RouterActionComponent = ({context, render: Render, loading: Loading
         context
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     return (

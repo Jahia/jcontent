@@ -16,12 +16,8 @@ export const LockActionComponent = ({context, render: Render, loading: Loading})
         }
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes === null;

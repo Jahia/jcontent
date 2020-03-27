@@ -16,8 +16,8 @@ export const FileUploadActionComponent = ({context, render: Render, loading: Loa
         context
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     const isVisible = res.checksResult;

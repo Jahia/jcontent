@@ -11,8 +11,8 @@ export const CreateFolderAction = ({context, render: Render, loading: Loading}) 
         {requiredPermission: ['jcr:addChildNodes'], ...context}
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     const onExit = () => {

@@ -5,12 +5,8 @@ import React from 'react';
 export const DownloadActionComponent = ({context, render: Render, loading: Loading}) => {
     const res = useNodeChecks({path: context.path}, context);
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
-    }
-
-    if (!res.node && !res.nodes) {
-        return false;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     const isVisible = res.checksResult;

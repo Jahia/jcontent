@@ -1,44 +1,70 @@
+import React, {useRef} from 'react';
+import {useDispatch} from 'react-redux';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
 import {batchActions} from 'redux-batched-actions';
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
-import {reduxAction} from './reduxAction';
 import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils';
-import {fileuploadSetPath} from '../ContentRoute/ContentLayout/Upload/Upload.redux';
 
-export default composeActions(requirementsAction, reduxAction(null, dispatch => ({dispatchBatch: actions => dispatch(batchActions(actions))})), {
-    init: context => {
-        context.initRequirements({
-        });
-        let element = document.getElementById('file-upload-input-' + context.key);
-        if (element !== null) {
-            element.setAttribute('context-path', context.path);
-            element.value = null;
-            return;
-        }
+export const FileUploadActionComponent = ({context, render: Render, loading: Loading}) => {
+    const dispatch = useDispatch();
+    const dispatchBatch = actions => dispatch(batchActions(actions));
 
-        let input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        if (context.uploadType !== 'replaceWith') {
-            input.setAttribute('multiple', 'true');
-        }
+    const inputRef = useRef();
 
-        input.setAttribute('id', 'file-upload-input-' + context.key);
-        input.setAttribute('context-path', context.path);
-        document.body.appendChild(input);
-        input.addEventListener('change', e => {
-            const path = input.getAttribute('context-path');
-            fileuploadSetPath(path);
-            onFilesSelected(
-                [...e.target.files],
-                context.dispatchBatch,
-                {path},
-                context.uploadType
-            );
-        });
-    },
+    const res = useNodeChecks(
+        {path: context.path},
+        context
+    );
 
-    onClick: context => {
-        let input = document.getElementById('file-upload-input-' + context.key);
-        input.click();
+    if (res.loading && Loading) {
+        return <Loading context={context}/>;
     }
-});
+
+    const isVisible = res.checksResult;
+
+    const onChange = e => {
+        const path = inputRef.current.getAttribute('context-path');
+        onFilesSelected(
+            [...e.target.files],
+            dispatchBatch,
+            {path},
+            context.uploadType
+        );
+    };
+
+    return (
+        <>
+            <input ref={inputRef}
+                   id={'file-upload-input-' + context.key}
+                   type="file"
+                   multiple={context.uploadType !== 'replaceWith'}
+                   context-path={context.path}
+                   style={{position: 'fixed', top: -3000, left: -3000}}
+                   onChange={onChange}
+            />
+
+            <Render context={{
+                ...context,
+                isVisible: isVisible,
+                enabled: isVisible,
+                onClick: () => {
+                    inputRef.current.click();
+                }
+            }}/>
+        </>
+    );
+};
+
+FileUploadActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const fileUploadAction = {
+    component: FileUploadActionComponent
+};
+
+export default fileUploadAction;

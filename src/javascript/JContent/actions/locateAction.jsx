@@ -1,41 +1,52 @@
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
 import {cmGoto, cmOpenPaths} from '../JContent.redux';
-import {reduxAction} from './reduxAction';
-import treeExpanderAction from './treeExpanderAction';
-import {of} from 'rxjs';
-import * as _ from 'lodash';
+import {expandTree} from './expandTree';
 import {cmSetPreviewSelection} from '../preview.redux';
 import JContentConstants from '../JContent.constants';
+import React from 'react';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
+import {useApolloClient} from '@apollo/react-hooks';
+import {useDispatch, useSelector} from 'react-redux';
 
-export default composeActions(
-    requirementsAction,
+export const LocateActionComponent = ({context, render: Render, loading: Loading}) => {
+    const client = useApolloClient();
+    const dispatch = useDispatch();
+    const mode = useSelector(state => state.jcontent.mode);
 
-    reduxAction(state => ({mode: state.jcontent.mode}), dispatch => ({
-        setOpenPaths: state => dispatch(cmOpenPaths(state)),
-        setPreviewSelection: state => dispatch(cmSetPreviewSelection(state)),
-        navigateToPath: (mode, path, params) => {
-            params = _.clone(params);
-            _.unset(params, 'searchContentType');
-            _.unset(params, 'searchTerms');
-            _.unset(params, 'sql2SearchFrom');
-            _.unset(params, 'sql2SearchWhere');
-            dispatch(cmGoto({mode: mode, path: path, params: params}));
-        }
-    })),
+    const res = useNodeChecks({path: context.path}, context);
 
-    treeExpanderAction((mode, ancestorPaths, context) => {
-        let {navigateToPath, setOpenPaths, setPreviewSelection, path, params} = context;
-        navigateToPath(mode, ancestorPaths[ancestorPaths.length - 1], params);
-        setOpenPaths(ancestorPaths);
-        setPreviewSelection(path);
-    }),
-
-    {
-        init: context => {
-            context.initRequirements({
-                enabled: context => of(context.mode === JContentConstants.mode.SEARCH || context.mode === JContentConstants.mode.SQL2SEARCH)
-            });
-        }
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
-);
+
+    const isVisible = res.checksResult && (mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH);
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible: isVisible,
+            enabled: isVisible,
+            onClick: () => {
+                expandTree(context.path, client).then(({mode, ancestorPaths}) => {
+                    dispatch(cmGoto({mode: mode, path: ancestorPaths[ancestorPaths.length - 1]}));
+                    dispatch(cmOpenPaths(ancestorPaths));
+                    dispatch(cmSetPreviewSelection(context.path));
+                });
+            }
+        }}/>
+    );
+};
+
+LocateActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};
+
+const locateAction = {
+    component: LocateActionComponent
+};
+
+export default locateAction;

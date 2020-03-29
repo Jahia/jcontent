@@ -55,7 +55,6 @@ const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
     });
 
     useEffect(() => {
-        console.log('updating', data);
         if (data && data.jcr && data.jcr.nodeByPath) {
             updateChildNodes(data.jcr.nodeByPath.children.nodes);
         }

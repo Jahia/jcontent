@@ -16,7 +16,7 @@ import {
 } from '../../eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmRemovePathsToRefetch} from '../../JContent.redux';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
 import JContentConstants from '../../JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
@@ -56,8 +56,6 @@ export const ContentLayoutContainer = ({
     removeSelection,
     switchSelection,
     setPreviewSelection,
-    pathsToRefetch,
-    removePathsToRefetch,
     setPath,
     filesMode,
     previewState,
@@ -67,11 +65,6 @@ export const ContentLayoutContainer = ({
     const client = useApolloClient();
 
     let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
-    // If the path to display is part of the paths to refetch then refetch
-    if (!_.isEmpty(pathsToRefetch) && pathsToRefetch.indexOf(path) !== -1) {
-        removePathsToRefetch([path]);
-        fetchPolicy = 'network-only';
-    }
 
     const queryHandler = contentQueryHandlerByMode(mode);
     const layoutQuery = queryHandler.getQuery();
@@ -274,7 +267,6 @@ const mapStateToProps = state => ({
     pagination: state.jcontent.pagination,
     sort: state.jcontent.sort,
     openedPaths: state.jcontent.openPaths,
-    pathsToRefetch: state.jcontent.pathsToRefetch,
     selection: state.jcontent.selection
 });
 
@@ -283,7 +275,6 @@ const mapDispatchToProps = dispatch => ({
     setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     openPaths: paths => dispatch(cmOpenPaths(paths)),
     closePaths: paths => dispatch(cmClosePaths(paths)),
-    removePathsToRefetch: paths => dispatch(cmRemovePathsToRefetch(paths)),
     removeSelection: path => dispatch(cmRemoveSelection(path)),
     switchSelection: path => dispatch(cmSwitchSelection(path))
 });
@@ -297,9 +288,7 @@ ContentLayoutContainer.propTypes = {
     pagination: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     path: PropTypes.string.isRequired,
-    pathsToRefetch: PropTypes.array.isRequired,
     previewSelection: PropTypes.string,
-    removePathsToRefetch: PropTypes.func.isRequired,
     setPath: PropTypes.func.isRequired,
     setPreviewSelection: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,

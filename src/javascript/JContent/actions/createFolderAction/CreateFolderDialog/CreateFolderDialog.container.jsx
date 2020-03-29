@@ -1,9 +1,10 @@
-import {Mutation, Query} from 'react-apollo';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CreateFolderQuery} from './CreateFolderDialog.gql-queries';
 import {CreateFolderMutation} from './CreateFolderDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import CreateFolderDialog from './CreateFolderDialog';
+import {triggerRefetchAll} from '../../../JContent.refetches';
+import {useApolloClient, useQuery, useMutation} from '@apollo/react-hooks';
 
 const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
     const [open, updateIsDialogOpen] = useState(true);
@@ -19,19 +20,9 @@ const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
             primaryNodeType: contentType
         },
         query: {
-            path: path,
-            typesFilter: {
-                types: [contentType]
-            }
+            path: path
         }
     };
-
-    const refetchQueries = ['PickerQuery'];
-    if (contentType === 'jnt:folder') {
-        refetchQueries.push('getFiles');
-    } else if (contentType === 'jnt:contentFolder') {
-        refetchQueries.push('getNodeSubTree');
-    }
 
     const onChangeName = e => {
         // Handle validation for name change
@@ -54,29 +45,31 @@ const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
         onExit();
     };
 
-    return (
-        <Query query={CreateFolderQuery} variables={gqlParams.query} fetchPolicy="network-only">
-            {({loading, data}) => {
-                if (data && data.jcr && data.jcr.nodeByPath) {
-                    updateChildNodes(data.jcr.nodeByPath.children.nodes);
-                }
+    const client = useApolloClient();
+    const {loading, data} = useQuery(CreateFolderQuery, {variables: gqlParams.query, fetchPolicy: 'network-only'});
+    const [mutation] = useMutation(CreateFolderMutation, {
+        onCompleted: () => {
+            client.cache.flushNodeEntryByPath(path);
+            triggerRefetchAll();
+        }
+    });
 
-                return (
-                    <Mutation mutation={CreateFolderMutation} refetchQueries={() => refetchQueries}>
-                        {mutation => (
-                            <CreateFolderDialog open={open}
-                                                name={name}
-                                                loading={loading}
-                                                isNameValid={isNameValid}
-                                                isNameAvailable={isNameAvailable}
-                                                handleCancel={handleCancel}
-                                                handleCreate={() => handleCreate(mutation)}
-                                                onChangeName={onChangeName}/>
-                        )}
-                    </Mutation>
-                );
-            }}
-        </Query>
+    useEffect(() => {
+        console.log('updating', data);
+        if (data && data.jcr && data.jcr.nodeByPath) {
+            updateChildNodes(data.jcr.nodeByPath.children.nodes);
+        }
+    }, [data, updateChildNodes]);
+
+    return (
+        <CreateFolderDialog open={open}
+                            name={name}
+                            loading={loading}
+                            isNameValid={isNameValid}
+                            isNameAvailable={isNameAvailable}
+                            handleCancel={handleCancel}
+                            handleCreate={() => handleCreate(mutation)}
+                            onChangeName={onChangeName}/>
     );
 };
 

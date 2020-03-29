@@ -4,7 +4,7 @@ import {triggerRefetchAll} from '../../JContent.refetches';
 import {copypasteClear} from './copyPaste.redux';
 import {withNotifications} from '@jahia/react-material';
 import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
-import {cmAddPathsToRefetch, cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
@@ -120,7 +120,8 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
                     notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton']);
 
                     // Let's make sure the content table will be refreshed when displayed
-                    dispatch(cmAddPathsToRefetch([context.path, ...nodes.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/')))]));
+                    client.cache.flushNodeEntryByPath(context.path);
+                    nodes.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/'))).forEach(p => client.cache.flushNodeEntryByPath(p));
 
                     // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the preview selection
                     let pastedNodes = _.merge(nodes, datas.map(({data}) => ({newPath: data.jcr.pasteNode.node.path})));

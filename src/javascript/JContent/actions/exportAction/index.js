@@ -1,3 +1,1 @@
-import exportAction from './exportAction';
-
-export default exportAction;
+export * from './exportAction';

@@ -35,7 +35,6 @@ const styles = theme => ({
 export class Export extends React.Component {
     constructor(props) {
         super(props);
-        this.contextPath = props.contextPath;
         this.state = {
             workspace: 'default',
             xml: false
@@ -56,7 +55,7 @@ export class Export extends React.Component {
     }
 
     triggerExport(path) {
-        let contextPath = this.contextPath;
+        let contextPath = window.contextJsParameters.contextPath;
         let format = (this.state.xml ? 'xml' : 'zip');
         let live = (this.state.workspace === 'live');
         window.open(`${contextPath}/cms/export/default${path}.${format}?exportformat=${format}&live=${live}`);
@@ -129,7 +128,6 @@ export class Export extends React.Component {
 
 Export.propTypes = {
     classes: PropTypes.object.isRequired,
-    contextPath: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onExited: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,

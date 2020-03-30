@@ -13,8 +13,8 @@ export const PreviewActionComponent = ({context, render: Render, loading: Loadin
         {hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder']}
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     return (
@@ -37,9 +37,3 @@ PreviewActionComponent.propTypes = {
 
     loading: PropTypes.func
 };
-
-const previewAction = {
-    component: PreviewActionComponent
-};
-
-export default previewAction;

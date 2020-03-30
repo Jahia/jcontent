@@ -1,6 +1,5 @@
 import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
-import {UnzipIcon} from './actions/icons';
 import {Autorenew, FindInPage, LockOpen, SubdirectoryArrowRight, Visibility} from '@material-ui/icons';
 
 import {
@@ -21,32 +20,31 @@ import {
 } from '@jahia/moonstone/dist/icons';
 
 import {ApplicationExport, ApplicationImport, ContentCut, DeleteRestore} from 'mdi-material-ui';
-import fileUploadAction from './actions/fileUploadAction';
-import deleteAction from './actions/deleteAction';
-import undeleteAction from './actions/undeleteAction';
-import deletePermanentlyAction from './actions/deletePermanentlyAction';
-import publishAction from './actions/publishAction';
-import publishDeletionAction from './actions/publishDeletionAction';
-import previewAction from './actions/previewAction';
-import pasteAction from './actions/copyPaste/pasteAction';
-import copyAction from './actions/copyPaste/copyAction';
-import cutAction from './actions/copyPaste/cutAction';
-import lockAction from './actions/lockAction';
-import {routerAction} from './actions/routerAction';
-import unlockAction from './actions/unlockAction';
-import clearAllLocksAction from './actions/clearAllLocksAction';
-import locateAction from './actions/locateAction';
-import subContentsAction from './actions/subContentsAction';
-import exportAction from './actions/exportAction';
-import refreshAction from './actions/refreshAction';
-import downloadFileAction from './actions/downloadFileAction';
-import createFolderAction from './actions/createFolderAction';
-import zipAction from './actions/zipUnzip/zipAction';
-import unzipAction from './actions/zipUnzip/unzipAction';
-import searchAction from './actions/searchAction';
+import {FileUploadActionComponent} from './actions/fileUploadAction';
+import {DeleteActionComponent} from './actions/deleteAction';
+import {UndeleteActionComponent} from './actions/undeleteAction';
+import {DeletePermanentlyActionComponent} from './actions/deletePermanentlyAction';
+import {PublishActionComponent} from './actions/publishAction';
+import {PublishDeletionActionComponent} from './actions/publishDeletionAction';
+import {PreviewActionComponent} from './actions/previewAction';
+import {PasteActionComponent} from './actions/copyPaste/pasteAction';
+import {CopyCutActionComponent} from './actions/copyPaste/CopyCutActionComponent';
+import {LockActionComponent} from './actions/lockAction';
+import {RouterActionComponent} from './actions/routerAction';
+import {UnlockActionComponent} from './actions/unlockAction';
+import {ClearAllLocksActionComponent} from './actions/clearAllLocksAction';
+import {LocateActionComponent} from './actions/locateAction';
+import {SubContentsActionComponent} from './actions/subContentsAction';
+import {ExportActionComponent} from './actions/exportAction';
+import {DownloadFileActionComponent} from './actions/downloadFileAction';
+import {CreateFolderActionComponent} from './actions/createFolderAction';
+import {ZipActionComponent} from './actions/zipUnzip/zipAction';
+import {UnzipActionComponent} from './actions/zipUnzip/unzipAction';
+import {SearchActionComponent} from './actions/searchAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {Separator} from '@jahia/moonstone';
+import {triggerRefetchAll} from './JContent.refetches';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
@@ -55,51 +53,56 @@ const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
 const PATH_FILES_DESCENDANTS = '^/sites/((?!/).)+/files/.+';
 
 export const jContentActions = registry => {
-    registry.add('action', 'router', routerAction);
-
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
         buttonIcon: <ChevronDown/>,
         menuRenderer: MenuRenderer,
         menuItemRenderer: MenuItemRenderer
     });
-    registry.add('action', 'preview', previewAction, {
+    registry.add('action', 'preview', {
         buttonIcon: <Visibility/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.preview',
         hideOnNodeTypes: ['jnt:page', 'jnt:virtualsite'],
-        targets: ['contentActions:1']
+        targets: ['contentActions:1'],
+        component: PreviewActionComponent
     });
-    registry.add('action', 'createContentFolder', createFolderAction, {
+    registry.add('action', 'createContentFolder', {
         buttonIcon: <AddFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.contentFolder',
         targets: ['createMenuActions:3', 'contentActions:2', 'headerPrimaryActions:2'],
         contentType: 'jnt:contentFolder',
-        showOnNodeTypes: ['jnt:contentFolder']
+        showOnNodeTypes: ['jnt:contentFolder'],
+        component: CreateFolderActionComponent
     });
-    registry.add('action', 'createFolder', createFolderAction, {
+    registry.add('action', 'createFolder', {
         buttonIcon: <AddFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.folder',
         targets: ['createMenuActions:3', 'contentActions:3', 'headerPrimaryActions:2.5'],
         contentType: 'jnt:folder',
-        showOnNodeTypes: ['jnt:folder']
+        showOnNodeTypes: ['jnt:folder'],
+        component: CreateFolderActionComponent
     });
-    registry.add('action', 'refresh', refreshAction, {
+    registry.add('action', 'refresh', {
         buttonIcon: <Reload/>,
         buttonLabel: 'jcontent:label.contentManager.refresh',
-        targets: ['headerPrimaryActions:15']
+        targets: ['headerPrimaryActions:15'],
+        onClick: () => {
+            triggerRefetchAll();
+        }
     });
-    registry.add('action', 'separator', createFolderAction, {
+    registry.add('action', 'separator', {
         component: () => <Separator variant="vertical" invisible="firstOrLastChild"/>,
         targets: ['headerPrimaryActions:20']
     });
-    registry.add('action', 'fileUpload', fileUploadAction, {
+    registry.add('action', 'fileUpload', {
         buttonIcon: <Publish/>,
         buttonLabel: 'jcontent:label.contentManager.fileUpload.uploadButtonLabel',
         targets: ['createMenuActions:4', 'contentActions:4', 'headerPrimaryActions:3'],
         contentType: 'jnt:file',
         showOnNodeTypes: ['jnt:folder'],
-        requiredPermission: 'jcr:addChildNodes'
+        requiredPermission: 'jcr:addChildNodes',
+        component: FileUploadActionComponent
     });
-    registry.add('action', 'publish', publishAction, {
+    registry.add('action', 'publish', {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publish',
         buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
@@ -109,7 +112,8 @@ export const jContentActions = registry => {
         allLanguages: false,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: false,
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder'],
+        component: PublishActionComponent
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
@@ -117,7 +121,7 @@ export const jContentActions = registry => {
         menuTarget: 'publishMenu',
         menuPreload: true
     });
-    registry.add('action', 'publishInAllLanguages', publishAction, {
+    registry.add('action', 'publishInAllLanguages', {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishInAllLanguages',
         targets: ['publishMenu:2'],
@@ -125,9 +129,10 @@ export const jContentActions = registry => {
         allLanguages: true,
         checkForUnpublication: false,
         checkIfLanguagesMoreThanOne: true,
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder'],
+        component: PublishActionComponent
     });
-    registry.add('action', 'publishAll', publishAction, {
+    registry.add('action', 'publishAll', {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishAll',
         buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
@@ -136,9 +141,10 @@ export const jContentActions = registry => {
         allSubTree: true,
         allLanguages: false,
         checkForUnpublication: false,
-        checkIfLanguagesMoreThanOne: false
+        checkIfLanguagesMoreThanOne: false,
+        component: PublishActionComponent
     });
-    registry.add('action', 'publishAllInAllLanguages', publishAction, {
+    registry.add('action', 'publishAllInAllLanguages', {
         buttonIcon: <CloudUpload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishAllInAllLanguages',
         targets: ['publishMenu:4'],
@@ -146,15 +152,17 @@ export const jContentActions = registry => {
         allSubTree: true,
         allLanguages: true,
         checkForUnpublication: false,
-        checkIfLanguagesMoreThanOne: true
+        checkIfLanguagesMoreThanOne: true,
+        component: PublishActionComponent
     });
-    registry.add('action', 'publishDeletion', publishDeletionAction, {
+    registry.add('action', 'publishDeletion', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishDeletion',
         targets: ['contentActions:4', 'selectedContentActions:4'],
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        component: PublishDeletionActionComponent
     });
-    registry.add('action', 'unpublish', publishAction, {
+    registry.add('action', 'unpublish', {
         buttonIcon: <CloudDownload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublish',
         targets: ['publishMenu:5'],
@@ -162,9 +170,10 @@ export const jContentActions = registry => {
         allSubTree: false,
         allLanguages: false,
         checkForUnpublication: true,
-        checkIfLanguagesMoreThanOne: false
+        checkIfLanguagesMoreThanOne: false,
+        component: PublishActionComponent
     });
-    registry.add('action', 'unpublishInAllLanguages', publishAction, {
+    registry.add('action', 'unpublishInAllLanguages', {
         buttonIcon: <CloudDownload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublishInAllLanguages',
         targets: ['publishMenu:6'],
@@ -172,7 +181,8 @@ export const jContentActions = registry => {
         allSubTree: false,
         allLanguages: true,
         checkForUnpublication: true,
-        checkIfLanguagesMoreThanOne: true
+        checkIfLanguagesMoreThanOne: true,
+        component: PublishActionComponent
     });
     registry.add('action', 'contentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
@@ -187,128 +197,148 @@ export const jContentActions = registry => {
         menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',
         showIcons: true
     });
-    registry.add('action', 'copy', copyAction, {
+    registry.add('action', 'copy', {
         buttonIcon: <Copy/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.copy',
         targets: ['contentActions:3.8', 'selectedContentActions:3.8'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        component: CopyCutActionComponent
     });
-    registry.add('action', 'paste', pasteAction, {
+    registry.add('action', 'paste', {
         buttonIcon: <Paste/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.paste',
         targets: ['headerPrimaryActions:10', 'contentActions:3.91'],
-        hideOnNodeTypes: ['jnt:page']
+        hideOnNodeTypes: ['jnt:page'],
+        component: PasteActionComponent
     });
-    registry.add('action', 'cut', cutAction, {
+    registry.add('action', 'cut', {
         buttonIcon: <ContentCut/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.cut',
         targets: ['contentActions:3.9', 'selectedContentActions:3.9'],
         hideOnNodeTypes: ['jnt:page'],
-        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
+        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS],
+        copyCutType: 'cut',
+        component: CopyCutActionComponent
     });
-    registry.add('action', 'delete', deleteAction, {
+    registry.add('action', 'delete', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.delete',
         targets: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        component: DeleteActionComponent
     });
-    registry.add('action', 'deletePermanently', deletePermanentlyAction, {
+    registry.add('action', 'deletePermanently', {
         buttonIcon: <Delete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.deletePermanently',
         targets: ['contentActions:4', 'selectedContentActions:4'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        component: DeletePermanentlyActionComponent
     });
-    registry.add('action', 'undelete', undeleteAction, {
+    registry.add('action', 'undelete', {
         buttonIcon: <DeleteRestore/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.undelete',
         targets: ['contentActions:4.1', 'selectedContentActions:4.1'],
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
-        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF],
+        component: UndeleteActionComponent
     });
-    registry.add('action', 'lock', lockAction, {
+    registry.add('action', 'lock', {
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.lock',
         targets: ['contentActions:5'],
         hideOnNodeTypes: ['jnt:page'],
-        buttonIcon: <Lock/>
+        buttonIcon: <Lock/>,
+        component: LockActionComponent
     });
-    registry.add('action', 'unlock', unlockAction, {
+    registry.add('action', 'unlock', {
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.unlock',
         targets: ['contentActions:5'],
         hideOnNodeTypes: ['jnt:page'],
-        buttonIcon: <LockOpen/>
+        buttonIcon: <LockOpen/>,
+        component: UnlockActionComponent
     });
-    registry.add('action', 'clearAllLocks', clearAllLocksAction, {
+    registry.add('action', 'clearAllLocks', {
         buttonIcon: <Lock/>,
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.clearAllLocks',
         targets: ['contentActions:5.5'],
-        hideOnNodeTypes: ['jnt:page']
+        hideOnNodeTypes: ['jnt:page'],
+        component: ClearAllLocksActionComponent
     });
-    registry.add('action', 'locate', locateAction, {
+    registry.add('action', 'locate', {
         buttonLabel: 'jcontent:label.contentManager.actions.locate',
         buttonIcon: <FindInPage/>,
-        targets: ['contentActions:0.5']
+        targets: ['contentActions:0.5'],
+        component: LocateActionComponent
     });
-    registry.add('action', 'subContents', subContentsAction, {
+    registry.add('action', 'subContents', {
         buttonIcon: <SubdirectoryArrowRight/>,
         buttonLabel: 'jcontent:label.contentManager.subContentsAction',
         targets: ['contentActions:0.1'],
-        hideOnNodeTypes: ['jnt:virtualsite']
+        hideOnNodeTypes: ['jnt:virtualsite'],
+        component: SubContentsActionComponent
     });
-    registry.add('action', 'export', exportAction, {
+    registry.add('action', 'export', {
         buttonIcon: <ApplicationExport/>,
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
         targets: ['contentActions:4.2'],
-        showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content']
+        showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content'],
+        component: ExportActionComponent
     });
-    registry.add('action', 'import', fileUploadAction, {
+    registry.add('action', 'import', {
         buttonIcon: <ApplicationImport/>,
         buttonLabel: 'jcontent:label.contentManager.import.action',
         targets: ['contentActions:4.3', 'createMenuActions:3.5'],
         showOnNodeTypes: ['jnt:contentFolder'],
         requiredPermission: 'jcr:addChildNodes',
-        uploadType: 'import'
+        uploadType: 'import',
+        component: FileUploadActionComponent
     });
-    registry.add('action', 'editImage', routerAction, {
+    registry.add('action', 'editImage', {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentManager.editImage.action',
         targets: ['contentActions:2.5'],
         requiredPermission: 'jcr:write',
         showOnNodeTypes: ['jmix:image'],
-        mode: 'image-edit'
+        mode: 'image-edit',
+        component: RouterActionComponent
     });
-    registry.add('action', 'downloadFile', downloadFileAction, {
+    registry.add('action', 'downloadFile', {
         buttonIcon: <CloudDownload/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.download',
         showOnNodeTypes: ['jnt:file'],
-        targets: ['contentActions:3.7']
+        targets: ['contentActions:3.7'],
+        component: DownloadFileActionComponent
     });
-    registry.add('action', 'replaceFile', fileUploadAction, {
+    registry.add('action', 'replaceFile', {
         buttonIcon: <Autorenew/>,
         buttonLabel: 'jcontent:label.contentManager.fileUpload.replaceWith',
         targets: ['contentActions:0.2'],
         showOnNodeTypes: ['jnt:file'],
-        uploadType: 'replaceWith'
+        uploadType: 'replaceWith',
+        component: FileUploadActionComponent
     });
-    registry.add('action', 'zip', zipAction, {
+    registry.add('action', 'zip', {
         buttonIcon: <FileZip/>,
         buttonLabel: 'jcontent:label.contentManager.zipUnzip.zip',
         targets: ['contentActions:2.1', 'selectedContentActions'],
         showOnNodeTypes: ['jnt:file', 'jnt:folder'],
-        hideForPaths: [PATH_FILES_ITSELF]
+        hideForPaths: [PATH_FILES_ITSELF],
+        component: ZipActionComponent
     });
-    registry.add('action', 'unzip', unzipAction, {
-        buttonIcon: <UnzipIcon/>,
+    registry.add('action', 'unzip', {
+        buttonIcon: <FileZip/>,
         buttonLabel: 'jcontent:label.contentManager.zipUnzip.unzip',
         targets: ['contentActions:2.2'],
         showOnNodeTypes: ['jnt:file'],
-        hideForPaths: [PATH_FILES_ITSELF]
+        hideForPaths: [PATH_FILES_ITSELF],
+        component: UnzipActionComponent
     });
-    registry.add('action', 'search', searchAction, {
+    registry.add('action', 'search', {
         buttonIcon: <Search/>,
         buttonLabel: 'jcontent:label.contentManager.search.search',
-        targets: []
+        targets: [],
+        component: SearchActionComponent
     });
 };

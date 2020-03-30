@@ -1,3 +1,1 @@
-import searchAction from './searchAction';
-
-export default searchAction;
+export * from './searchAction';

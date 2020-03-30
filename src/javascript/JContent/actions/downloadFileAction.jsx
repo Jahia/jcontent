@@ -1,21 +1,38 @@
-import {composeActions} from '@jahia/react-material';
-import requirementsAction from './requirementsAction';
-import {withDxContextAction} from './withDxContextAction';
-import {reduxAction} from './reduxAction';
+import {useNodeChecks} from '@jahia/data-helper';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-export default composeActions(requirementsAction, withDxContextAction, reduxAction(state => ({previewMode: state.jcontent.previewMode}), null), {
+export const DownloadFileActionComponent = ({context, render: Render, loading: Loading}) => {
+    const res = useNodeChecks({path: context.path}, context);
 
-    init: context => {
-        context.initRequirements({});
-    },
-
-    onClick: context => {
-        let a = document.createElement('a');
-        a.setAttribute('title', 'download');
-        a.setAttribute('href', context.dxContext.contextPath + '/files/' + (context.previewMode === 'edit' ? 'default' : 'live') + context.originalContext.path);
-        a.setAttribute('download', context.originalContext.path.split('/').pop());
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
-});
+
+    const isVisible = res.checksResult;
+
+    return (
+        <Render context={{
+            ...context,
+            isVisible: isVisible,
+            enabled: isVisible,
+            onClick: () => {
+                let a = document.createElement('a');
+                a.setAttribute('title', 'download');
+                a.setAttribute('href', window.contextJsParameters.contextPath + '/files/' + (context.previewMode === 'edit' ? 'default' : 'live') + context.originalContext.path);
+                a.setAttribute('download', context.originalContext.path.split('/').pop());
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }}/>
+    );
+};
+
+DownloadFileActionComponent.propTypes = {
+    context: PropTypes.object.isRequired,
+
+    render: PropTypes.func.isRequired,
+
+    loading: PropTypes.func
+};

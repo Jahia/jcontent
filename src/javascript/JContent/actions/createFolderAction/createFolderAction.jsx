@@ -4,15 +4,15 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 
-export const CreateFolderAction = ({context, render: Render, loading: Loading}) => {
+export const CreateFolderActionComponent = ({context, render: Render, loading: Loading}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const res = useNodeChecks(
         {path: context.path},
         {requiredPermission: ['jcr:addChildNodes'], ...context}
     );
 
-    if (res.loading && Loading) {
-        return <Loading context={context}/>;
+    if (res.loading) {
+        return (Loading && <Loading context={context}/>) || false;
     }
 
     const onExit = () => {
@@ -30,14 +30,8 @@ export const CreateFolderAction = ({context, render: Render, loading: Loading}) 
     );
 };
 
-CreateFolderAction.propTypes = {
+CreateFolderActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };
-
-const createFolderAction = {
-    component: CreateFolderAction
-};
-
-export default createFolderAction;

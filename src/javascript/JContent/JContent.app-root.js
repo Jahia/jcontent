@@ -1,7 +1,6 @@
 import {DSProvider} from '@jahia/design-system-kit';
-import {ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia/react-material';
+import {DxContext, NotificationProvider} from '@jahia/react-material';
 import {PushEventHandler} from './PushEventHandler';
-import {ComponentRendererProvider as NewComponentRendererProvider} from '@jahia/ui-extender';
 import React from 'react';
 import {triggerRefetchAll} from './JContent.refetches';
 import Upload from './ContentRoute/ContentLayout/Upload';
@@ -29,14 +28,6 @@ export const jContentAppRoot = registry => {
                 {next}
             </>
         )
-    });
-    registry.add('app', 'jcontent-renderer', {
-        targets: ['root:15'],
-        render: next => (<ComponentRendererProvider>{next}</ComponentRendererProvider>)
-    });
-    registry.add('app', 'jcontent-new-renderer', {
-        targets: ['root:16'],
-        render: next => (<NewComponentRendererProvider>{next}</NewComponentRendererProvider>)
     });
     registry.add('app', 'jcontent-upload', {
         targets: ['root:17'],

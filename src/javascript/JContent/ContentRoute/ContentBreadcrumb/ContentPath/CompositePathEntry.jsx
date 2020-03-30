@@ -18,14 +18,15 @@ const CompositePathEntry = ({items, onItemClick}) => {
     };
 
     return (items.length > 0) &&
-        <div ref={menuContainerEl}>
+        <div ref={menuContainerEl} data-role="breadcrumb-item">
             <BreadcrumbItem icon={<MoreHoriz/>} onClick={handleButtonClick}/>
             <Menu isDisplayed={isMenuDisplayed}
+                  data-role="breadcrumb-menu"
                   anchorEl={anchorEl}
                   transformElOrigin={{vertical: 'top', horizontal: 'left'}}
                   onClose={handleMenuClose}
             >
-                {items.map(item => <MenuItem key={item.uuid} label={item.displayName || item.uuid} onClick={() => onItemClick(item.path)}/>)}
+                {items.map(item => <MenuItem key={item.uuid} label={item.displayName || item.uuid} data-role="breadcrumb-menu-item" onClick={() => onItemClick(item.path)}/>)}
             </Menu>
         </div>;
 };

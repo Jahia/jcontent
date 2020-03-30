@@ -47,7 +47,7 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
-        getAggregatedPublicationInfo: true,
+        getAggregatedPublicationInfo: {subNodes: true},
         getOperationSupport: true,
         ...context
     });

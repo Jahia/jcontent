@@ -125,16 +125,10 @@ export const jContentRedux = registry => {
         [cmClosePaths]: (state, action) => _.difference(state, action.payload)
     }, _.dropRight(extractPaths(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode), 1));
 
-    const pathsToRefetchReducer = handleActions({
-        [cmAddPathsToRefetch]: (state, action) => _.union(state, action.payload),
-        [cmRemovePathsToRefetch]: (state, action) => _.difference(state, action.payload)
-    }, []);
-
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
     registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
-    registry.add('redux-reducer', 'pathsToRefetch', {targets: ['jcontent'], reducer: pathsToRefetchReducer});
 
     let currentValue;
     let getSyncListener = store => () => {

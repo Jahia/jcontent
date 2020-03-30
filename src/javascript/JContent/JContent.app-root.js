@@ -1,6 +1,6 @@
 import {DSProvider} from '@jahia/design-system-kit';
 import {ComponentRendererProvider, DxContext, NotificationProvider} from '@jahia/react-material';
-import PushEventHandler from './PushEventHandler';
+import {PushEventHandler} from './PushEventHandler';
 import {ComponentRendererProvider as NewComponentRendererProvider} from '@jahia/ui-extender';
 import React from 'react';
 import {triggerRefetchAll} from './JContent.refetches';

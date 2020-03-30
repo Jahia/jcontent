@@ -1,58 +1,48 @@
-import React from 'react';
+import {useEffect} from 'react';
 import {registerPushEventHandler, unregisterPushEventHandler} from '../eventHandlerRegistry';
 import {triggerRefetchAll} from '../JContent.refetches';
+import {useApolloClient} from 'react-apollo';
 
 /**
  * Renderless component that registers listeners for push events, sent by the Atmosphere Framework after content actions
  * or background / workflow task completion. This component then triggers the refetch of the data to "update" the data set.
  */
-export default class PushEventHandler extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onPushEvent = this.onPushEvent.bind(this);
-    }
+export const PushEventHandler = () => {
+    const client = useApolloClient();
+    useEffect(() => {
+        registerPushEventHandler(onPushEvent);
+        return () => {
+            unregisterPushEventHandler(onPushEvent);
+        };
+    });
 
-    componentDidMount() {
-        registerPushEventHandler(this.onPushEvent);
-    }
+    const hasProcessJob = jobs => {
+        return jobs && jobs.some(job => job.group === 'StartProcessJob' || job.group === 'PublicationJob');
+    };
 
-    componentWillUnmount() {
-        unregisterPushEventHandler(this.onPushEvent);
-    }
-
-    onPushEvent(eventData) {
+    const onPushEvent = eventData => {
         if (eventData) {
             let evtType = eventData.type;
             if (evtType === 'workflowTask') {
                 if (eventData.endedWorkflow !== null) {
-                    this.refetchData();
+                    triggerRefetchAll();
                 }
             } else if (evtType === 'job') {
-                if (this.hasProcessJob(eventData.startedJobs) || this.hasProcessJob(eventData.endedJobs)) {
-                    this.refetchData();
+                if (hasProcessJob(eventData.endedJobs)) {
+                    eventData.endedJobs.forEach(job => {
+                        if (job.targetPaths) {
+                            job.targetPaths.forEach(path => {
+                                client.cache.flushNodeEntryByPath(path);
+                            });
+                        }
+                    });
+                    triggerRefetchAll();
                 }
             } else if (evtType === 'contentUnpublished') {
-                this.refetchData();
+                triggerRefetchAll();
             }
         }
-    }
+    };
 
-    hasProcessJob(jobs) {
-        let found = false;
-        if (jobs) {
-            found = jobs.some(function (job) {
-                return (job.group === 'StartProcessJob' || job.group === 'PublicationJob');
-            });
-        }
-
-        return found;
-    }
-
-    refetchData() {
-        triggerRefetchAll();
-    }
-
-    render() {
-        return null;
-    }
-}
+    return false;
+};

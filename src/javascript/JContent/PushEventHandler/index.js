@@ -1,3 +1,1 @@
-import PushEventHandler from './PushEventHandler';
-
-export default PushEventHandler;
+export * from './PushEventHandler';

@@ -57,7 +57,7 @@ const select = state => {
     };
 };
 
-const buildUrl = (site, language, mode, path, params) => {
+export const buildUrl = (site, language, mode, path, params) => {
     let registryItem = registry.get('accordionItem', mode);
     if (registryItem && registryItem.getUrlPathPart) {
         path = registryItem.getUrlPathPart(site, path, registryItem);

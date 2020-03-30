@@ -28,7 +28,7 @@ export const JContent = () => {
                         {item && itemEnabled && (
                             <Route key={item.key}
                                    path={'/jcontent/:siteKey/:lang/' + item.key}
-                                   render={item.routeRender}
+                                   render={props => item.routeRender(props, item)}
                                    component={item.routeComponent}
                             />
                         )}

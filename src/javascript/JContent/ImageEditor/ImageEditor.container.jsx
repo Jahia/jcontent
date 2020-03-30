@@ -8,9 +8,8 @@ import {getImageMutation} from './ImageEditor.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
-import {DxContext} from '@jahia/react-material';
 import {cmGoto} from '../JContent.redux';
-import {triggerRefetch, refetchTypes} from '../JContent.refetches';
+import {refetchTypes, triggerRefetch} from '../JContent.refetches';
 import Feedback from './Feedback';
 
 export class ImageEditorContainer extends React.Component {
@@ -273,75 +272,73 @@ export class ImageEditorContainer extends React.Component {
         }
 
         return (
-            <DxContext.Consumer>
-                {dxContext => (
-                    <Mutation mutation={getImageMutation(transforms)}
-                              refetchQueries={() => ['ImageQuery']}
-                              onCompleted={this.onCompleted}
-                    >
-                        {mutation => (
-                            <>
-                                <ImageEditor
-                                    dxContext={dxContext}
-                                    ts={ts}
-                                    path={path}
-                                    originalWidth={originalWidth}
-                                    originalHeight={originalHeight}
-                                    rotationParams={rotationParams}
-                                    resizeParams={resizeParams}
-                                    cropParams={cropParams}
-                                    undoChanges={this.undoChanges}
-                                    saveChanges={withName => this.setState({
-                                        confirmSaveOpen: !withName,
-                                        saveAsOpen: withName
-                                    })}
-                                    onImageLoaded={this.onImageLoaded}
-                                    onRotate={this.rotate}
-                                    onResize={this.resize}
-                                    onCrop={this.crop}
-                                    onBackNavigation={this.onBackNavigation}
-                                />
-                                <ConfirmSaveDialog
-                                    open={confirmSaveOpen}
-                                    handleSave={() => mutation({variables: {path}})}
-                                    handleClose={this.handleClose}
-                                />
-                                <SaveAsDialog
-                                    open={saveAsOpen}
-                                    name={newName}
-                                    isNameValid={isNameValid}
-                                    handleSave={() => {
-                                        mutation({variables: {path, name: newName.trim()}});
-                                        this.setState({
-                                            snackBarMessage: {key: 'label.contentManager.editImage.editingMessage', params: {imageName: newName}}
-                                        });
-                                    }}
-                                    handleClose={this.handleClose}
-                                    onChangeName={this.handleChangeName}
-                                />
-                                <UnsavedChangesDialog
-                                    open={confirmCloseOpen}
-                                    onBack={() => {
-                                        this.undoChanges();
-                                        this.handleClose();
-                                        window.history.back();
-                                    }}
-                                    onClose={this.handleClose}
-                                />
+            <Mutation mutation={getImageMutation(transforms)}
+                      refetchQueries={() => ['ImageQuery']}
+                      onCompleted={this.onCompleted}
+            >
+                {mutation => (
+                    <>
+                        <ImageEditor
+                            ts={ts}
+                            path={path}
+                            originalWidth={originalWidth}
+                            originalHeight={originalHeight}
+                            rotationParams={rotationParams}
+                            resizeParams={resizeParams}
+                            cropParams={cropParams}
+                            undoChanges={this.undoChanges}
+                            saveChanges={withName => this.setState({
+                                confirmSaveOpen: !withName,
+                                saveAsOpen: withName
+                            })}
+                            onImageLoaded={this.onImageLoaded}
+                            onRotate={this.rotate}
+                            onResize={this.resize}
+                            onCrop={this.crop}
+                            onBackNavigation={this.onBackNavigation}
+                        />
+                        <ConfirmSaveDialog
+                            open={confirmSaveOpen}
+                            handleSave={() => mutation({variables: {path}})}
+                            handleClose={this.handleClose}
+                        />
+                        <SaveAsDialog
+                            open={saveAsOpen}
+                            name={newName}
+                            isNameValid={isNameValid}
+                            handleSave={() => {
+                                mutation({variables: {path, name: newName.trim()}});
+                                this.setState({
+                                    snackBarMessage: {
+                                        key: 'label.contentManager.editImage.editingMessage',
+                                        params: {imageName: newName}
+                                    }
+                                });
+                            }}
+                            handleClose={this.handleClose}
+                            onChangeName={this.handleChangeName}
+                        />
+                        <UnsavedChangesDialog
+                            open={confirmCloseOpen}
+                            onBack={() => {
+                                this.undoChanges();
+                                this.handleClose();
+                                window.history.back();
+                            }}
+                            onClose={this.handleClose}
+                        />
 
-                                <Feedback open={Boolean(snackBarMessage)}
-                                          messageKey={snackBarMessage}
-                                          anchorOrigin={{
-                                              vertical: 'bottom',
-                                              horizontal: 'center'
-                                          }}
-                                          onClose={() => this.setState({snackBarMessage: null})}
-                                />
-                            </>
-                        )}
-                    </Mutation>
+                        <Feedback open={Boolean(snackBarMessage)}
+                                  messageKey={snackBarMessage}
+                                  anchorOrigin={{
+                                      vertical: 'bottom',
+                                      horizontal: 'center'
+                                  }}
+                                  onClose={() => this.setState({snackBarMessage: null})}
+                        />
+                    </>
                 )}
-            </DxContext.Consumer>
+            </Mutation>
         );
     }
 }

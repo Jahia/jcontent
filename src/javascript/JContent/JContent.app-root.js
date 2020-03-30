@@ -1,5 +1,5 @@
 import {DSProvider} from '@jahia/design-system-kit';
-import {DxContext, NotificationProvider} from '@jahia/react-material';
+import {NotificationProvider} from '@jahia/react-material';
 import {PushEventHandler} from './PushEventHandler';
 import React from 'react';
 import {triggerRefetchAll} from './JContent.refetches';
@@ -16,10 +16,6 @@ export const jContentAppRoot = registry => {
         render: next => (<NotificationProvider notificationContext={{}}>{next}</NotificationProvider>)
     });
 
-    registry.add('app', 'jcontent-context', {
-        targets: ['root:13'],
-        render: next => (<DxContext.Provider value={window.contextJsParameters}>{next}</DxContext.Provider>)
-    });
     registry.add('app', 'jcontent-push-event-handler', {
         targets: ['root:14'],
         render: next => (
@@ -34,7 +30,6 @@ export const jContentAppRoot = registry => {
         render: next => (
             <>
                 <Upload
-                    dxContext={window.contextJsParameters}
                     uploadUpdateCallback={status => {
                         if (status && status.uploading === 0) {
                             const refetchCallbacks = registry.find({type: 'refetch-upload'});

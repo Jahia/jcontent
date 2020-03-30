@@ -76,7 +76,7 @@ export const AdvancedSearch = ({searchForm: {searchPath, sql2SearchFrom, sql2Sea
                     <Trans i18nKey="jcontent:label.contentManager.search.sql2Prompt"
                            components={[
                                <a key="sql2Prompt"
-                                  href={window.contextJsParameters.config.links.sql2CheatSheetUrl}
+                                  href={window.contextJsParameters.config.links.sql2CheatSheet}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                >

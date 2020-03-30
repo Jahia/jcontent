@@ -7,7 +7,6 @@ import {getImageMutation} from './ImageEditor.gql-mutations';
 import {MuiThemeProvider} from '@material-ui/core';
 import ImageEditor from './ImageEditor';
 import {dsGenericTheme as theme} from '@jahia/design-system-kit';
-import {DxContext} from '@jahia/react-material';
 
 let result = {
     data: {
@@ -69,13 +68,11 @@ describe('Image Edition', () => {
     let props;
     let wrapper;
 
-    let dxContext = {
-        config: {
-        }
-    };
-
     beforeEach(() => {
-        global.contextJsParameters = dxContext;
+        global.contextJsParameters = {
+            config: {
+            }
+        };
 
         props = {
             path: '/toto.jpg',
@@ -86,13 +83,11 @@ describe('Image Edition', () => {
         };
 
         wrapper = mount(
-            <DxContext.Provider value={dxContext}>
-                <MuiThemeProvider theme={theme}>
-                    <MockedProvider mocks={mocks}>
-                        <ImageEditorContainer {...props}/>
-                    </MockedProvider>
-                </MuiThemeProvider>
-            </DxContext.Provider>
+            <MuiThemeProvider theme={theme}>
+                <MockedProvider mocks={mocks}>
+                    <ImageEditorContainer {...props}/>
+                </MockedProvider>
+            </MuiThemeProvider>
         );
     });
 

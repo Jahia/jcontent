@@ -119,7 +119,6 @@ const styles = theme => ({
 export const FileCard = ({gridMode,
     classes,
     node,
-    dxContext,
     uilang,
     setPath,
     previewSelection,
@@ -192,14 +191,14 @@ export const FileCard = ({gridMode,
                                 isDetailedCard && classes.detailedCover,
                                 isThumbCard && classes.thumbCover
                             )}
-                            image={`${dxContext.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
+                            image={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
                             title={node.name}
                         /> :
                     <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>
                         {node.primaryNodeType.name === 'jnt:folder' ?
                             <Folder color="action"/> :
                                 isPdf ?
-                                    <img src={`${dxContext.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
+                                    <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
                                     <FileIcon filename={node.path} color="disabled"/>}
                     </div>}
 
@@ -245,7 +244,6 @@ export const FileCard = ({gridMode,
 
 FileCard.propTypes = {
     classes: PropTypes.object.isRequired,
-    dxContext: PropTypes.object.isRequired,
     mode: PropTypes.string.isRequired,
     node: PropTypes.object.isRequired,
     onPreviewSelect: PropTypes.func.isRequired,

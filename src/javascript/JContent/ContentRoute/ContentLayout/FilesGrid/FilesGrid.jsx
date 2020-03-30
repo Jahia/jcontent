@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
-import {Pagination, DxContext} from '@jahia/react-material';
+import {Pagination} from '@jahia/react-material';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
@@ -128,26 +128,21 @@ export const FilesGrid = ({
                                               gridMode === 'detailed' && classes.detailedGrid)}
                 >
                     {rows.map((node, index) => (
-                        <DxContext.Consumer key={node.uuid}>
-                            {dxContext => (
-                                <FileCard
-                                    gridMode={gridMode}
-                                    mode={mode}
-                                    uilang={uilang}
-                                    siteKey={siteKey}
-                                    previewSelection={previewSelection}
-                                    previewState={previewState}
-                                    index={index}
-                                    node={node}
-                                    dxContext={dxContext}
-                                    setPath={setPath}
-                                    onPreviewSelect={(...args) => {
-                                        setSelectedItemIndex(index);
-                                        onPreviewSelect(...args);
-                                    }}
-                                />
-                            )}
-                        </DxContext.Consumer>
+                        <FileCard key={node.uuid}
+                                  gridMode={gridMode}
+                                  mode={mode}
+                                  uilang={uilang}
+                                  siteKey={siteKey}
+                                  previewSelection={previewSelection}
+                                  previewState={previewState}
+                                  index={index}
+                                  node={node}
+                                  setPath={setPath}
+                                  onPreviewSelect={(...args) => {
+                                      setSelectedItemIndex(index);
+                                      onPreviewSelect(...args);
+                                  }}
+                        />
                     ))}
                     {/* please keep this divs to handle the grid layout when there is less than 6 elements */}
                     <div/>

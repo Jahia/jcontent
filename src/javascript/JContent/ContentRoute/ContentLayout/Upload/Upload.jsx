@@ -67,13 +67,13 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {classes, uploads, updateUpload, uploadFile, removeUploadFromQueue, dxContext} = this.props;
+        let {classes, uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
 
         return (
             <React.Fragment>
                 <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}}>
                     <React.Fragment>
-                        <UploadHeader dxContext={dxContext} status={this.uploadStatus()}/>
+                        <UploadHeader status={this.uploadStatus()}/>
                         <div className={classes.snackBarScroll}>
                             {uploads.map((upload, index) => (
                                 <UploadItem
@@ -201,7 +201,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 Upload.propTypes = {
-    dxContext: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     setStatus: PropTypes.func.isRequired,

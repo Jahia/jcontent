@@ -18,7 +18,7 @@ const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation}) =>
                         label: t(accordionItem.label),
                         icon: accordionItem.icon
                     };
-                    return accordionItem.component ? <accordionItem.component {...props}/> : accordionItem.render(props, accordionItem);
+                    return accordionItem.component ? <accordionItem.component key={accordionItem.key} {...props}/> : accordionItem.render(props, accordionItem);
                 })}
             </Accordion>
         </SecondaryNav>

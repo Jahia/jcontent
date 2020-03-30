@@ -18,8 +18,8 @@ describe('Accordion with 3 accordion items', () => {
                 icon: <File/>,
                 label: 'label.contentManager.navigation.pages',
                 defaultPath: siteKey => '/sites/' + siteKey,
-                render: () => (
-                    <div>Pages</div>
+                render: v => (
+                    <AccordionItem key={v.id} id={v.id} label={v.label}><div>Pages</div></AccordionItem>
                 )
             },
             {
@@ -27,8 +27,8 @@ describe('Accordion with 3 accordion items', () => {
                 icon: <FolderSpecial/>,
                 label: 'label.contentManager.navigation.contentFolders',
                 defaultPath: siteKey => '/sites/' + siteKey + '/contents',
-                render: () => (
-                    <div>Content Folders</div>
+                render: v => (
+                    <AccordionItem key={v.id} id={v.id} label={v.label}><div>Content Folders</div></AccordionItem>
                 )
             },
             {
@@ -36,8 +36,8 @@ describe('Accordion with 3 accordion items', () => {
                 icon: <Collections/>,
                 label: 'label.contentManager.navigation.media',
                 defaultPath: siteKey => '/sites/' + siteKey + '/files',
-                render: () => (
-                    <div>Files</div>
+                render: v => (
+                    <AccordionItem key={v.id} id={v.id} label={v.label}><div>Files</div></AccordionItem>
                 )
             }
         ],

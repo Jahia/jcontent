@@ -36,7 +36,7 @@ export const ToolBar = () => {
                         {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
                     </Typography>
                     <div className={styles.spacer}/>
-                    <Button icon={<Cancel/>} variant="ghost" size="small" onClick={() => dispatch(cmClearSelection())}/>
+                    <Button icon={<Cancel/>} variant="ghost" size="default" onClick={() => dispatch(cmClearSelection())}/>
                 </div>
                 <div className="flexRow">
                     <Separator variant="vertical" invisible="onlyChild"/>

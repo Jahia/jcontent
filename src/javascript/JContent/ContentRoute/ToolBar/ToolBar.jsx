@@ -31,8 +31,8 @@ export const ToolBar = () => {
                 <BrowseControlBar showActions={selection.length === 0}/>}
             {selection.length > 0 &&
             <React.Fragment>
-                <div className={`flexRow ${styles.selection}`}>
-                    <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
+                <div className="flexRow">
+                    <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length} className={`${styles.selection}`}>
                         {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
                     </Typography>
                     <div className={styles.spacer}/>

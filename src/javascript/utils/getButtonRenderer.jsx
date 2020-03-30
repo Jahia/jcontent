@@ -12,8 +12,6 @@ export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
             label = null;
         } else if (labelStyle === 'short' && context.buttonLabelShort) {
             label = context.buttonLabelShort;
-        } else if (labelStyle === 'multiple' && context.buttonLabelMultiple) {
-            label = context.buttonLabelMultiple;
         }
 
         return (context.isVisible !== false &&

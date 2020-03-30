@@ -11,7 +11,7 @@ import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {Cancel} from '@jahia/moonstone/dist/icons';
 
-const ButtonRendererMultiple = getButtonRenderer({labelStyle: 'multiple'});
+const ButtonRenderer = getButtonRenderer();
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 
@@ -31,23 +31,25 @@ export const ToolBar = () => {
                 <BrowseControlBar showActions={selection.length === 0}/>}
             {selection.length > 0 &&
             <React.Fragment>
-                <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length}>
-                    {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
-                </Typography>
-                <div className={styles.spacer}/>
-                <Button icon={<Cancel/>} variant="ghost" size="small" onClick={() => dispatch(cmClearSelection())}/>
+                <div className="flexRow">
+                    <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length} className={`${styles.selection}`}>
+                        {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
+                    </Typography>
+                    <div className={styles.spacer}/>
+                    <Button icon={<Cancel/>} variant="ghost" size="default" onClick={() => dispatch(cmClearSelection())}/>
+                </div>
                 <div className="flexRow">
                     <Separator variant="vertical" invisible="onlyChild"/>
                     <DisplayActions
                         target="selectedContentActions"
                         context={{paths: selection}}
                         filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
-                        render={getButtonRenderer({size: 'small', variant: 'ghost'})}
+                        render={getButtonRenderer({size: 'default', variant: 'ghost'})}
                     />
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
-                <ButtonGroup size="small" variant="outlined" color="accent">
-                    <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRendererMultiple}/>
+                <ButtonGroup size="default" variant="outlined" color="accent">
+                    <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRenderer}/>
                     <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
                 <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>

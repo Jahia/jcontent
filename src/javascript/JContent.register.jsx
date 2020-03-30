@@ -23,14 +23,14 @@ import {useSelector} from 'react-redux';
 const CmmNavItem = () => {
     const history = useHistory();
     const {t} = useTranslation('jcontent');
-    const {site, language, path, mode} = useSelector(state => ({language: state.language, site: state.site, path: state.jcontent.path, mode: state.jcontent.mode}));
+    const {site, language, path, mode, params} = useSelector(state => ({language: state.language, site: state.site, path: state.jcontent.path, mode: state.jcontent.mode, params: state.jcontent.params}));
     return (
         <PrimaryNavItem key="/jcontent"
                         role="jcontent-menu-item"
                         isSelected={history.location.pathname.startsWith('/jcontent') && history.location.pathname.split('/').length > 3}
                         label={t('label.name')}
                         icon={<Collections/>}
-                        onClick={() => history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path))}/>
+                        onClick={() => history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params))}/>
     );
 };
 

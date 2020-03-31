@@ -26,24 +26,22 @@ const SearchInput = function ({clearSearch}) {
         }
     }, [searchTerms]);
 
-    const performSearchDebounced = () => {
-        return e => {
+    const performSearchDebounced = e => {
+        clearTimeout(timeOut);
+        const st = e.target.value;
+        setT(st);
+        timeOut = setTimeout(() => {
             clearTimeout(timeOut);
-            const st = e.target.value;
-            setT(st);
-            timeOut = setTimeout(() => {
-                clearTimeout(timeOut);
-                let mode = JContentConstants.mode.SEARCH;
-                let searchParams;
-                searchParams = {
-                    searchPath: searchPath,
-                    searchTerms: st,
-                    searchContentType: searchContentType
-                };
+            let mode = JContentConstants.mode.SEARCH;
+            let searchParams;
+            searchParams = {
+                searchPath: searchPath,
+                searchTerms: st,
+                searchContentType: searchContentType
+            };
 
-                dispatch(cmGoto({mode, params: searchParams}));
-            }, 500);
-        };
+            dispatch(cmGoto({mode, params: searchParams}));
+        }, 500);
     };
 
     return (
@@ -55,9 +53,9 @@ const SearchInput = function ({clearSearch}) {
                 className={styles.input}
                 value={t}
                 inputProps={{'aria-label': 'search'}}
-                onChange={performSearchDebounced()}
+                onChange={performSearchDebounced}
             />
-            <IconButton className={styles.iconButton} aria-label="directions" onClick={clearSearch}>
+            <IconButton className={styles.iconButton} onClick={clearSearch}>
                 <CloseIcon/>
             </IconButton>
         </div>

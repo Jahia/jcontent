@@ -8,7 +8,7 @@ const SimplePathEntry = ({item, onItemClick}) => {
     const type = item.primaryNodeType?.name;
     const icon = getNodeTypeIcon(type);
     return (
-        <BreadcrumbItem label={item.displayName} icon={icon} onClick={() => onItemClick(item.path)}/>
+        <BreadcrumbItem data-sel-role="breadcrumb-item" label={item.displayName} icon={icon} onClick={() => onItemClick(item.path)}/>
     );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import styles from './SearchControlBar.scss';
 import {Separator, Chip} from '@jahia/moonstone';
 import Edit from '@jahia/moonstone/dist/icons/Edit';
@@ -7,16 +7,39 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import JContentConstants from '../../../JContent.constants';
 import {useTranslation} from 'react-i18next';
+import {useNodeInfo} from '@jahia/data-helper';
 
 const ButtonRenderer = getButtonRenderer();
 
+const extractJCRType = function (from) {
+    if (from) {
+        const match = from.match(/(\[.*\])/);
+
+        if (match) {
+            return match[0].replace(/[\[|\]]/g, '');
+        }
+    }
+
+    return '';
+};
+
 export const SearchControlBar = () => {
     const {t} = useTranslation();
-    const {path, mode} = useSelector(state => ({
+    const {path, mode, from, language, searchPath} = useSelector(state => ({
         path: state.jcontent.path,
         site: state.site,
-        mode: state.jcontent.mode
+        mode: state.jcontent.mode,
+        from: state.jcontent.params.sql2SearchFrom,
+        searchPath: state.jcontent.params.searchPath,
+        language: state.language
     }));
+
+    const type = useMemo(() => {
+        return extractJCRType(from);
+    }, [from]);
+
+    const nodeInfo = useNodeInfo({path: searchPath, language: language}, {getDisplayName: true});
+    const location = nodeInfo.node ? nodeInfo.node.displayName : '';
 
     const advancedSearchMode = mode === JContentConstants.mode.SQL2SEARCH;
 
@@ -27,9 +50,9 @@ export const SearchControlBar = () => {
             {advancedSearchMode &&
             <>
                 <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedOn')}/>
-                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: 'Designer'})}/>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: type})}/>
             </>}
-            <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: window.contextJsParameters.siteName})}/>
+            <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: location})}/>
             <div className={`${styles.grow}`}/>
         </React.Fragment>
     );

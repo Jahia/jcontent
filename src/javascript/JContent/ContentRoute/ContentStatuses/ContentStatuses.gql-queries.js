@@ -6,7 +6,7 @@ export const GetContentStatuses = gql`
         jcr {
             result: nodeByPath(path: $path) {
                 ...NodeCacheRequiredFields
-                aggregatedPublicationInfo(language: $language) {
+                aggregatedPublicationInfo(language: $language, subNodes: true) {
                     publicationStatus
                 }
                 lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {

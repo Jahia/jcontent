@@ -10,6 +10,7 @@ import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
+import {PATH_FILES_ITSELF} from '../actions.constants';
 
 export const ZipActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
     const componentRenderer = useContext(ComponentRendererContext);
@@ -19,9 +20,10 @@ export const ZipActionComponent = withNotifications()(({context, render: Render,
     const res = useNodeChecks(
         {path: context.path, paths: context.paths},
         {
-            ...context,
             getParent: true,
-            requiredPermission: ['jcr:addChildNodes']
+            requiredPermission: ['jcr:addChildNodes'],
+            showOnNodeTypes: ['jnt:file', 'jnt:folder'],
+            hideForPaths: [PATH_FILES_ITSELF]
         }
     );
 

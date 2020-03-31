@@ -10,7 +10,7 @@ function checkAction(res, node, context) {
     let enabled = true;
     let isVisible = res.checksResult && node.operationsSupport.publication;
 
-    if (context.checkForUnpublication) {
+    if (context.publishType === 'unpublish') {
         isVisible = isVisible &&
             !isMarkedForDeletion(node);
         enabled = enabled &&
@@ -21,11 +21,11 @@ function checkAction(res, node, context) {
         isVisible = isVisible &&
             !isMarkedForDeletion(node);
         enabled = enabled &&
-            (context.allSubTree || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
+            (context.publishType === 'publishAll' || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
     }
 
-    if (context.checkIfLanguagesMoreThanOne) {
-        enabled = enabled && node.site.languages.length > 1;
+    if (context.allLanguages) {
+        isVisible = isVisible && node.site.languages.length > 1;
     }
 
     return {enabled, isVisible};
@@ -39,6 +39,18 @@ const mergeChecks = (v1, v2) => {
     return res;
 };
 
+const constraintsByType = {
+    publish: {
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
+    },
+    publishAll: {
+        showOnNodeTypes: ['jnt:folder', 'jnt:contentFolder', 'jnt:page']
+    },
+    unpublish: {
+        hideOnNodeTypes: ['jnt:virtualsite']
+    }
+};
+
 export const PublishActionComponent = ({context, render: Render, loading: Loading}) => {
     const {language} = useSelector(state => ({language: state.language}));
     const {t} = useTranslation();
@@ -49,8 +61,8 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         getSiteLanguages: true,
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
-        requiredPermission: ['publish'],
-        ...context
+        requiredPermission: ['publish', 'publication-start'],
+        ...constraintsByType[context.publishType]
     });
 
     if (res.loading) {
@@ -78,9 +90,9 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
             enabled,
             onClick: () => {
                 if (context.path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], context.publishType === 'publishAll', context.allLanguages, context.publishType === 'unpublish');
                 } else if (context.paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), context.allSubTree, context.allLanguages, context.checkForUnpublication);
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), context.publishType === 'publishAll', context.allLanguages, context.publishType === 'unpublish');
                 }
             }
         }}/>

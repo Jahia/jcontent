@@ -12,7 +12,7 @@ export const UnlockActionComponent = ({context, render: Render, loading: Loading
             getLockInfo: true,
             getOperationSupport: true,
             requiredPermission: 'jcr:lockManagement',
-            ...context
+            hideOnNodeTypes: ['jnt:page']
         }
     );
 

@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
 
 function checkAction(node) {
     return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node);
@@ -18,7 +19,8 @@ export const DeleteActionComponent = ({context, render: Render, loading: Loading
             getDisplayName: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            ...context
+            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );
 

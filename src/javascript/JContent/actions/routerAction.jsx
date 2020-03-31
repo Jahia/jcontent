@@ -8,10 +8,7 @@ export const RouterActionComponent = ({context, render: Render, loading: Loading
     const dispatch = useDispatch();
     const {language, site} = useSelector(state => ({language: state.language, site: state.site}));
 
-    const res = useNodeChecks(
-        {path: context.path},
-        context
-    );
+    const res = useNodeChecks({path: context.path}, context);
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;

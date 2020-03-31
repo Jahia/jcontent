@@ -8,7 +8,10 @@ export const CreateFolderActionComponent = ({context, render: Render, loading: L
     const componentRenderer = useContext(ComponentRendererContext);
     const res = useNodeChecks(
         {path: context.path},
-        {requiredPermission: ['jcr:addChildNodes'], ...context}
+        {
+            requiredPermission: ['jcr:addChildNodes'],
+            showOnNodeTypes: [context.createFolderType]
+        }
     );
 
     if (res.loading) {
@@ -24,7 +27,7 @@ export const CreateFolderActionComponent = ({context, render: Render, loading: L
             ...context,
             isVisible: res.checksResult,
             onClick: () => {
-                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path: context.path, contentType: context.contentType, onExit: onExit});
+                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path: context.path, contentType: context.createFolderType, onExit: onExit});
             }
         }}/>
     );

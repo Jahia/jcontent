@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,8 +18,13 @@ const SearchInput = function ({clearSearch}) {
         searchPath: state.jcontent.params.searchPath,
         searchContentType: state.jcontent.params.searchContentType
     }));
-
     const [t, setT] = useState(searchTerms);
+    // This updates component state when use changes search via dialog
+    useEffect(() => {
+        if (searchTerms !== t) {
+            setT(searchTerms);
+        }
+    }, [searchTerms]);
 
     const performSearchDebounced = () => {
         return e => {

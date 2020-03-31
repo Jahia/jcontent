@@ -5,7 +5,7 @@ import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
 import ContentHeader from './ContentHeader';
 import ToolBar from './ToolBar';
-import Breadcrumb from './ContentBreadcrumb';
+import ContentBreadcrumb from './ContentBreadcrumb';
 import ContentTitle from './ContentTitle';
 import ContentStatuses from './ContentStatuses';
 import {MainActionBar} from './MainActionBar';
@@ -19,7 +19,7 @@ const ContentRoute = () => {
                 <ContentHeader
                     title={<ContentTitle/>}
                     mainAction={<MainActionBar/>}
-                    breadcrumb={<Breadcrumb/>}
+                    breadcrumb={<ContentBreadcrumb/>}
                     toolbar={<ToolBar/>}
                     information={<ContentStatuses/>}
                 />

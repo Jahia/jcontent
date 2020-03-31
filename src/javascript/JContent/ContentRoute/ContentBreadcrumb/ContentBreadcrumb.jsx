@@ -6,7 +6,7 @@ import ContentType from './ContentType';
 
 const ContentBreadcrumb = () => {
     return (
-        <div className={styles.contentBreadcrumb} data-role="breadcrumb">
+        <div className={styles.contentBreadcrumb} data-sel-role="breadcrumb">
             <ContentPath/>
             <ContentType/>
         </div>

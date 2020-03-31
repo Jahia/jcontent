@@ -54,19 +54,20 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
 
     const {nodes, type} = copyPaste;
 
-    let isVisible = res.checksResult;
+    let isVisible = res.checksResult && res.node.allowedChildNodeTypes.length > 0;
+    let isEnabled = true;
 
-    if (isVisible && nodes.length === 0) {
-        isVisible = false;
+    if (nodes.length === 0) {
+        isEnabled = false;
     }
 
-    if (isVisible && nodes.reduce((acc, nodeToPaste) => acc ||
+    if (isVisible && isEnabled && nodes.reduce((acc, nodeToPaste) => acc ||
         (type === copyPasteConstants.CUT && nodeToPaste.path === res.node.path + '/' + nodeToPaste.name) ||
         (isDescendantOrSelf(res.node.path, nodeToPaste.path)), false)) {
-        isVisible = false;
+        isEnabled = false;
     }
 
-    if (isVisible) {
+    if (isVisible && isEnabled) {
         const primaryNodeTypesToPaste = _.uniq(nodes.map(n => n.primaryNodeType.name));
         const childNodeTypes = res.node.allowedChildNodeTypes.map(t => t.name);
         const contributeTypesProperty = res.node.contributeTypes ||
@@ -89,7 +90,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
             return <Loading context={context}/>;
         }
 
-        isVisible = contentTypesResult.data.jcr.nodeTypesByNames.reduce((acc, val) => {
+        isEnabled = contentTypesResult.data.jcr.nodeTypesByNames.reduce((acc, val) => {
             return (
                 acc &&
                 (contributeTypes.length === 0 || val.contributeTypes) &&
@@ -102,7 +103,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
         <Render context={{
             ...context,
             isVisible: isVisible,
-            enabled: isVisible,
+            enabled: isEnabled,
             onClick: () => {
                 const mutation = type === copyPasteConstants.CUT ? pasteMutations.moveNode : pasteMutations.pasteNode;
 

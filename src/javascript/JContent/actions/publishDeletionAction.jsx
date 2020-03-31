@@ -15,6 +15,7 @@ export const PublishDeletionActionComponent = ({context, render: Render, loading
         getProperties: ['jcr:mixinTypes'],
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
+        requiredPermission: ['publish'],
         ...context
     });
 

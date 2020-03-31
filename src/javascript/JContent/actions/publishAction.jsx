@@ -49,6 +49,7 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         getSiteLanguages: true,
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
+        requiredPermission: ['publish'],
         ...context
     });
 

@@ -10,9 +10,8 @@ import styles from './Toolbar.scss';
 import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {Cancel} from '@jahia/moonstone/dist/icons';
-import {useNodeInfo} from "@jahia/data-helper";
+import {useNodeInfo} from '@jahia/data-helper';
 
-const ButtonRenderer = getButtonRenderer();
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 

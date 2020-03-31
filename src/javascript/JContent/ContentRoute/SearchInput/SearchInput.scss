@@ -1,0 +1,22 @@
+.searchInput {
+    display: flex;
+    align-items: center;
+    width: 500px;
+    padding: 2px 4px;
+
+    border: 1px solid #eee;
+}
+
+.input {
+    flex: 1;
+    margin-left: var(--spacing-small);
+}
+
+.iconButton {
+    padding: 10px;
+}
+
+.divider {
+    height: 28px;
+    margin: 4px;
+}

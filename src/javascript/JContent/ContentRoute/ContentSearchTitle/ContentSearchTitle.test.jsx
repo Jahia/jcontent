@@ -3,7 +3,10 @@ import {shallow} from '@jahia/test-framework';
 import ContentSearchTitle from './ContentSearchTitle';
 
 jest.mock('react-redux', () => ({
-    useDispatch: jest.fn()
+    useDispatch: jest.fn(),
+    useSelector: jest.fn(() => ({
+        mode: 'pages'
+    }))
 }));
 
 jest.mock('connected-react-router', () => jest.fn(() => {}));

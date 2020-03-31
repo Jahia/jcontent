@@ -52,6 +52,7 @@ export const SearchControlBar = () => {
                 <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedOn')}/>
                 <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: type})}/>
             </>}
+            {!advancedSearchMode && <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: 'Designer'})}/>}
             <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: location})}/>
             <div className={`${styles.grow}`}/>
         </React.Fragment>

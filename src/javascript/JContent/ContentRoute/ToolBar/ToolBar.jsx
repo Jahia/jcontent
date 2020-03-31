@@ -10,6 +10,7 @@ import styles from './Toolbar.scss';
 import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {Cancel} from '@jahia/moonstone/dist/icons';
+import {useNodeInfo} from "@jahia/data-helper";
 
 const ButtonRenderer = getButtonRenderer();
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
@@ -23,6 +24,16 @@ export const ToolBar = () => {
         mode: state.jcontent.mode,
         selection: state.jcontent.selection
     }));
+
+    const {nodes, loading} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
+
+    if (loading || !nodes) {
+        return false;
+    }
+
+    const canPublish = nodes.map(n => n['jnt:page'] || !(n['jnt:contentFolder'] || n['jnt:folder'])).reduce((v, a) => v && a, true);
+
+    let publishAction = canPublish ? 'publish' : 'publishAll';
 
     return (
         <div className={`flexRow ${styles.root}`}>
@@ -49,7 +60,7 @@ export const ToolBar = () => {
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    <DisplayAction actionKey="publish" context={{paths: selection}} render={ButtonRenderer}/>
+                    <DisplayAction actionKey={publishAction} context={{paths: selection}} render={ButtonRendererShortLabel}/>
                     <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
                 <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>

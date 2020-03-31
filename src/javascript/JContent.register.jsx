@@ -23,7 +23,13 @@ import {useSelector} from 'react-redux';
 const CmmNavItem = () => {
     const history = useHistory();
     const {t} = useTranslation('jcontent');
-    const {site, language, path, mode, params} = useSelector(state => ({language: state.language, site: state.site, path: state.jcontent.path, mode: state.jcontent.mode, params: state.jcontent.params}));
+    const {site, language, path, mode, params} = useSelector(state => ({
+        language: state.language,
+        site: state.site,
+        path: state.jcontent.path,
+        mode: state.jcontent.mode,
+        params: state.jcontent.params
+    }));
     return (
         <PrimaryNavItem key="/jcontent"
                         role="jcontent-menu-item"
@@ -57,4 +63,4 @@ contentSelectionRedux(registry);
 jContentAccordionItems(registry);
 jContentRedux(registry);
 jContentAppRoot(registry);
-console.debug('%c jContent is activated', 'color: #3c8cba');
+

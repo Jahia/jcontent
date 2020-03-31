@@ -115,7 +115,6 @@ export class ImageEditor extends React.Component {
                                    rightCol={<ImageEditorPreview cropExpanded={expanded === PANELS.CROP}
                                                                  path={this.props.path}
                                                                  ts={this.props.ts}
-                                                                 dxContext={this.props.dxContext}
                                                                  cropParams={this.props.cropParams}
                                                                  rotationParams={this.props.rotationParams}
                                                                  resizeParams={this.props.resizeParams}
@@ -190,7 +189,6 @@ ImageEditor.propTypes = {
     ts: PropTypes.number.isRequired,
     originalWidth: PropTypes.number,
     originalHeight: PropTypes.number,
-    dxContext: PropTypes.object.isRequired,
     resizeParams: PropTypes.object.isRequired,
     rotationParams: PropTypes.object.isRequired,
     cropParams: PropTypes.object,

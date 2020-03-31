@@ -23,8 +23,8 @@ function getCropValue(cropParams, originalWidth, originalHeight) {
     };
 }
 
-export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, dxContext, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams, theme}) => {
-    let filepath = dxContext.contextPath + '/files/default' + path.replace(/[^/]/g, encodeURIComponent) + '?ts=' + ts;
+export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams, theme}) => {
+    let filepath = window.contextJsParameters.contextPath + '/files/default' + path.replace(/[^/]/g, encodeURIComponent) + '?ts=' + ts;
     let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - (theme.spacing.unit * 4) : 0;
     let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - (theme.spacing.unit * 4) : 0;
     let keepOrientation = rotationParams.rotations % 2 === 0;
@@ -77,7 +77,6 @@ ImageEditorPreview.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     ts: PropTypes.number.isRequired,
-    dxContext: PropTypes.object.isRequired,
     cropExpanded: PropTypes.bool.isRequired,
     onCrop: PropTypes.func.isRequired,
     cropParams: PropTypes.object,

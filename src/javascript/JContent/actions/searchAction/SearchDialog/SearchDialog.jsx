@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Separator, Typography} from '@jahia/moonstone';
-import {Dialog} from '@material-ui/core';
+import {Dialog, Switch, FormControlLabel} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './SearchDialog.scss';
@@ -10,8 +10,6 @@ import {
     Search
 } from '@jahia/moonstone/dist/icons';
 import BasicSearch from './BasicSearch';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleClose}) => {
     const {t} = useTranslation('jcontent');

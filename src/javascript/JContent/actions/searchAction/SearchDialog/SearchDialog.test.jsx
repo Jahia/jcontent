@@ -1,6 +1,7 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import SearchDialog from './SearchDialog';
+import {FormControlLabel} from '@material-ui/core';
 
 describe('SearchDialog', () => {
     it('Should render', async () => {
@@ -13,7 +14,7 @@ describe('SearchDialog', () => {
                                               handleClose={() => {}}/>);
 
         const dialogTitle = wrapper.find('Typography');
-        expect(dialogTitle).toHaveLength(1);
+        expect(dialogTitle).toHaveLength(2);
     });
 
     it('Should trigger performSearch', async () => {
@@ -31,8 +32,8 @@ describe('SearchDialog', () => {
                                               handleClose={() => {}}/>);
 
         const buttons = wrapper.find('Button');
-        expect(buttons).toHaveLength(3);
-        buttons.at(2).prop('onClick')();
+        expect(buttons).toHaveLength(2);
+        buttons.at(1).prop('onClick')();
         expect(hasPerformSearch).toBeTruthy();
     });
 
@@ -53,8 +54,8 @@ describe('SearchDialog', () => {
                                               handleClose={handleClose}/>);
 
         const buttons = wrapper.find('Button');
-        expect(buttons).toHaveLength(3);
-        buttons.at(1).prop('onClick')();
+        expect(buttons).toHaveLength(2);
+        buttons.at(0).prop('onClick')();
         expect(hasHandleClose).toBeTruthy();
     });
 
@@ -72,9 +73,9 @@ describe('SearchDialog', () => {
                                               performSearch={() => {}}
                                               handleClose={() => {}}/>);
 
-        const buttons = wrapper.find('Button');
-        expect(buttons).toHaveLength(3);
-        buttons.at(0).prop('onClick')();
+        const controlLabel = wrapper.find(FormControlLabel);
+        expect(controlLabel).toHaveLength(1);
+        controlLabel.prop('control').props.onChange();
         expect(hasToggleAdvancedSearch).toBeTruthy();
     });
 });

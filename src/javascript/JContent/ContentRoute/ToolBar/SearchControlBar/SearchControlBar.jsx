@@ -1,74 +1,45 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {useTranslation} from 'react-i18next';
-import {cmGoto, cmSetPath} from '../../../JContent.redux';
-import {Button} from '@jahia/design-system-kit';
-import {Close, Search} from '@material-ui/icons';
-import * as _ from 'lodash';
-import {VirtualsiteIcon} from '@jahia/icons';
-import JContentConstants from '~/JContent/JContent.constants';
-import {useSelector, useDispatch} from 'react-redux';
 import styles from './SearchControlBar.scss';
-import {Typography} from '@jahia/moonstone';
+import {Separator, Chip} from '@jahia/moonstone';
+import Edit from '@jahia/moonstone/dist/icons/Edit';
+import {useSelector} from 'react-redux';
+import {DisplayAction} from '@jahia/ui-extender';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import JContentConstants from '../../../JContent.constants';
+import {useTranslation} from 'react-i18next';
+import {useNodeInfo} from '@jahia/data-helper';
 
-export const SearchControlBar = ({showActions}) => {
-    const {t} = useTranslation('jcontent');
-    const dispatch = useDispatch();
+const ButtonRenderer = getButtonRenderer();
 
-    const clearSearch = searchParams => {
-        searchParams = _.clone(searchParams);
-        _.unset(searchParams, 'searchContentType');
-        _.unset(searchParams, 'searchTerms');
-        _.unset(searchParams, 'sql2SearchFrom');
-        _.unset(searchParams, 'sql2SearchWhere');
-        dispatch(cmGoto({mode: JContentConstants.mode.PAGES, params: searchParams}));
-    };
-
-    const {siteKey, path, searchTerms, searchContentType, sql2SearchFrom, sql2SearchWhere} = useSelector(state => ({
-        siteKey: state.site,
+export const SearchControlBar = () => {
+    const {t} = useTranslation();
+    const {path, mode, from, language, searchPath} = useSelector(state => ({
         path: state.jcontent.path,
-        searchTerms: state.jcontent.params.searchTerms,
-        searchContentType: state.jcontent.params.searchContentType,
-        sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
-        sql2SearchWhere: state.jcontent.params.sql2SearchWhere
+        site: state.site,
+        mode: state.jcontent.mode,
+        from: state.jcontent.params.sql2SearchFrom,
+        searchPath: state.jcontent.params.searchPath,
+        language: state.language
     }));
-    let siteRootPath = '/sites/' + siteKey;
-    const params = {
-        searchContentType: searchContentType,
-        searchTerms: searchTerms,
-        sql2SearchFrom: sql2SearchFrom,
-        sql2SearchWhere: sql2SearchWhere
-    };
+
+    const nodeInfo = useNodeInfo({path: searchPath, language: language}, {getDisplayName: true});
+    const location = nodeInfo.node ? nodeInfo.node.displayName : '';
+
+    const advancedSearchMode = mode === JContentConstants.mode.SQL2SEARCH;
 
     return (
         <React.Fragment>
-            <Search fontSize="small"/>
-            <Typography variant="body">{t('jcontent:label.contentManager.search.searchPath', {path: path})}</Typography>
+            <DisplayAction actionKey="search" context={{path, buttonLabel: 'Edit query', buttonIcon: <Edit/>}} render={ButtonRenderer} variant="ghost" data-sel-role="open-search-dialog"/>
+            <Separator variant="vertical" invisible="firstOrLastChild"/>
+            {advancedSearchMode &&
+            <>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedOn')}/>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: from})}/>
+            </>}
+            <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: location})}/>
             <div className={`${styles.grow}`}/>
-            {showActions && (path !== siteRootPath) &&
-            <Button
-                data-cm-role="search-all"
-                variant="ghost"
-                onClick={() => dispatch(cmSetPath(siteRootPath))}
-            >
-                <VirtualsiteIcon/>
-                {t('jcontent:label.contentManager.search.searchEverywhere', {site: siteKey})}
-            </Button>}
-            {showActions &&
-            <Button
-                data-sel-role="search-clear"
-                variant="ghost"
-                onClick={() => clearSearch(params)}
-            >
-                <Close/>
-                {t('jcontent:label.contentManager.search.clear')}
-            </Button>}
         </React.Fragment>
     );
-};
-
-SearchControlBar.propTypes = {
-    showActions: PropTypes.bool.isRequired
 };
 
 export default SearchControlBar;

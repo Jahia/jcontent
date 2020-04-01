@@ -1,0 +1,14 @@
+.root {
+    display: inline-flex;
+    flex: 1;
+}
+
+.rightPanel {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.buttonMargin {
+    margin-right: var(--spacing-small);
+}

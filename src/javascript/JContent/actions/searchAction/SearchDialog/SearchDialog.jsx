@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Separator, Typography} from '@jahia/moonstone';
-import {Dialog} from '@material-ui/core';
+import {Dialog, Switch, FormControlLabel} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import styles from './SearchDialog.scss';
@@ -20,11 +20,18 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                 <Typography isUpperCase variant="subheading">
                     {t('label.contentManager.title.search')}
                 </Typography>
-
-                <Button label={isAdvancedSearch ? t('label.contentManager.search.basic') : t('label.contentManager.search.advanced')}
-                        variant="ghost"
-                        data-sel-role="toggle-search-type"
-                        onClick={toggleAdvancedSearch}/>
+                <div>
+                    <Typography variant="caption">
+                        {t('label.contentManager.search.advanced')}
+                    </Typography>
+                    <FormControlLabel control={<Switch
+                        checked={isAdvancedSearch}
+                        color="primary"
+                        inputProps={{'aria-label': 'advancedSearchSwitch'}}
+                        onChange={toggleAdvancedSearch}
+                    />}
+                                      label={isAdvancedSearch ? 'On' : 'Off'}/>
+                </div>
             </div>
             <Separator/>
             <div className={styles.dialogContent}>

@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import ToolBar from './ToolBar';
 import {useSelector} from 'react-redux';
-import {useNodeInfo} from "@jahia/data-helper";
+import {useNodeInfo} from '@jahia/data-helper';
 
 jest.mock('react-redux', () => ({
     useDispatch: jest.fn(),

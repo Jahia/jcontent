@@ -14,7 +14,7 @@ const ContentTitle = () => {
     const {loading, node} = useNodeInfo({path: path, language: language}, {getDisplayName: true});
 
     return (
-        <div className={classnames(styles.root, 'alignCenter')}>
+        <div className={classnames(styles.root, 'alignCenter')} data-sel-role="title">
             <Typography variant="title" style={{opacity: loading ? 0 : 1}}>
                 {(!loading && node && node.displayName) || 'Loading ...'}
             </Typography>

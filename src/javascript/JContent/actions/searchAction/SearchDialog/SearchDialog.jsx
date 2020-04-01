@@ -10,6 +10,8 @@ import {
     Search
 } from '@jahia/moonstone/dist/icons';
 import BasicSearch from './BasicSearch';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, toggleAdvancedSearch, performSearch, handleClose}) => {
     const {t} = useTranslation('jcontent');
@@ -20,11 +22,18 @@ const SearchDialog = ({searchForm, searchFormSetters, isOpen, isAdvancedSearch, 
                 <Typography isUpperCase variant="subheading">
                     {t('label.contentManager.title.search')}
                 </Typography>
-
-                <Button label={isAdvancedSearch ? t('label.contentManager.search.basic') : t('label.contentManager.search.advanced')}
-                        variant="ghost"
-                        data-sel-role="toggle-search-type"
-                        onClick={toggleAdvancedSearch}/>
+                <div>
+                    <Typography variant="caption">
+                        {t('label.contentManager.search.advanced')}
+                    </Typography>
+                    <FormControlLabel control={<Switch
+                        checked={isAdvancedSearch}
+                        color="primary"
+                        inputProps={{'aria-label': 'advancedSearchSwitch'}}
+                        onChange={toggleAdvancedSearch}
+                    />}
+                                      label={isAdvancedSearch ? 'On' : 'Off'}/>
+                </div>
             </div>
             <Separator/>
             <div className={styles.dialogContent}>

@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {isMarkedForDeletion} from '../../JContent.utils';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
+import {PATH_FILES_ITSELF} from '../actions.constants';
 
 export const UnzipActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
     const language = useSelector(state => state.language);
@@ -17,11 +18,12 @@ export const UnzipActionComponent = withNotifications()(({context, render: Rende
     const res = useNodeChecks(
         {path: context.path, paths: context.paths, language},
         {
-            ...context,
             getParent: true,
             getMimeType: true,
             getProperties: ['jcr:mixinTypes'],
-            requiredPermission: ['jcr:addChildNodes']
+            requiredPermission: ['jcr:addChildNodes'],
+            showOnNodeTypes: ['jnt:file'],
+            hideForPaths: [PATH_FILES_ITSELF]
         }
     );
 

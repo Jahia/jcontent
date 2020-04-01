@@ -3,6 +3,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../JContent.utils';
 import {useSelector} from 'react-redux';
+import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
 
 const checkAction = node => node.operationsSupport.markForDeletion &&
     isMarkedForDeletion(node) &&
@@ -11,14 +12,18 @@ const checkAction = node => node.operationsSupport.markForDeletion &&
 export const DeletePermanentlyActionComponent = ({context, render: Render, loading: Loading}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
-    const res = useNodeChecks({path: context.path, paths: context.paths, language}, {
-        getDisplayName: true,
-        getProperties: ['jcr:mixinTypes'],
-        getAggregatedPublicationInfo: true,
-        getOperationSupport: true,
-        requiredPermission: ['jcr:removeNode'],
-        ...context
-    });
+    const res = useNodeChecks(
+        {path: context.path, paths: context.paths, language},
+        {
+            getDisplayName: true,
+            getProperties: ['jcr:mixinTypes'],
+            getAggregatedPublicationInfo: true,
+            getOperationSupport: true,
+            requiredPermission: ['jcr:removeNode'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+            hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
+        }
+    );
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;
@@ -38,7 +43,13 @@ export const DeletePermanentlyActionComponent = ({context, render: Render, loadi
                 if (context.path) {
                     window.authoringApi.deleteContent(res.node.uuid, res.node.path, res.node.displayName, ['jnt:content'], ['nt:base'], false, true);
                 } else if (context.paths) {
-                    window.authoringApi.deleteContents(res.nodes.map(node => ({uuid: node.uuid, path: node.path, displayName: node.displayName, nodeTypes: ['jnt:content'], inheritedNodeTypes: ['nt:base']})), false, true);
+                    window.authoringApi.deleteContents(res.nodes.map(node => ({
+                        uuid: node.uuid,
+                        path: node.path,
+                        displayName: node.displayName,
+                        nodeTypes: ['jnt:content'],
+                        inheritedNodeTypes: ['nt:base']
+                    })), false, true);
                 }
             }
         }}/>

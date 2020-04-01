@@ -1,13 +1,14 @@
 import React, {useContext} from 'react';
 import Export from './Export';
 import {ComponentRendererContext} from '@jahia/ui-extender';
-import {useNodeInfo} from '@jahia/data-helper';
+import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 
 export const ExportActionComponent = ({context, render: Render, loading: Loading}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    const res = useNodeInfo(
-        {path: context.path}
+    const res = useNodeChecks(
+        {path: context.path},
+        {showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content']}
     );
 
     if (res.loading) {

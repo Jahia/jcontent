@@ -37,13 +37,30 @@ Upload.propTypes = {
     context: PropTypes.object.isRequired
 };
 
+const constraintsByType = {
+    upload: {
+        showOnNodeTypes: ['jnt:folder'],
+        requiredPermission: 'jcr:addChildNodes'
+    },
+    replaceWith: {
+        showOnNodeTypes: ['jnt:file'],
+        requiredPermission: 'jcr:write'
+    },
+    import: {
+        showOnNodeTypes: ['jnt:contentFolder'],
+        requiredPermission: 'jcr:addChildNodes'
+    }
+};
+
 export const FileUploadActionComponent = ({context, render: Render, loading: Loading}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const inputRef = useRef();
 
     const res = useNodeChecks(
         {path: context.path},
-        context
+        {
+            ...constraintsByType[context.uploadType || 'upload']
+        }
     );
 
     useEffect(() => {

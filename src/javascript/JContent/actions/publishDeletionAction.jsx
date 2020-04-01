@@ -16,7 +16,7 @@ export const PublishDeletionActionComponent = ({context, render: Render, loading
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
         requiredPermission: ['publish'],
-        ...context
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
     });
 
     if (res.loading) {

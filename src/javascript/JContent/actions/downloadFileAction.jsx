@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export const DownloadFileActionComponent = ({context, render: Render, loading: Loading}) => {
-    const res = useNodeChecks({path: context.path}, context);
+    const res = useNodeChecks({path: context.path}, {showOnNodeTypes: ['jnt:file']});
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;

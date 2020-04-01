@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import styles from './SearchControlBar.scss';
 import {Separator, Chip} from '@jahia/moonstone';
 import Edit from '@jahia/moonstone/dist/icons/Edit';
@@ -11,18 +11,6 @@ import {useNodeInfo} from '@jahia/data-helper';
 
 const ButtonRenderer = getButtonRenderer();
 
-const extractJCRType = function (from) {
-    if (from) {
-        const match = from.match(/(\[.*\])/);
-
-        if (match) {
-            return match[0].replace(/[\[|\]]/g, '');
-        }
-    }
-
-    return '';
-};
-
 export const SearchControlBar = () => {
     const {t} = useTranslation();
     const {path, mode, from, language, searchPath} = useSelector(state => ({
@@ -33,10 +21,6 @@ export const SearchControlBar = () => {
         searchPath: state.jcontent.params.searchPath,
         language: state.language
     }));
-
-    const type = useMemo(() => {
-        return extractJCRType(from);
-    }, [from]);
 
     const nodeInfo = useNodeInfo({path: searchPath, language: language}, {getDisplayName: true});
     const location = nodeInfo.node ? nodeInfo.node.displayName : '';
@@ -50,7 +34,7 @@ export const SearchControlBar = () => {
             {advancedSearchMode &&
             <>
                 <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedOn')}/>
-                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: type})}/>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: from})}/>
             </>}
             <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: location})}/>
             <div className={`${styles.grow}`}/>

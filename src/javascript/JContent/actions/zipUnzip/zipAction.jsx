@@ -87,6 +87,5 @@ export const ZipActionComponent = withNotifications()(({context, render: Render,
 ZipActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
-    loading: PropTypes.func,
-    notificationContext: PropTypes.object.isRequired
+    loading: PropTypes.func
 };

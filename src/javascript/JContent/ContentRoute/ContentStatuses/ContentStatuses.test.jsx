@@ -80,21 +80,7 @@ describe('ContentStatuses', () => {
         const expectedTooltip = 'translated_label.contentManager.publicationStatus.modified';
 
         expect(wrapper.containsMatchingElement(<Status type="modified" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
-        expect(wrapper.find('Status')).toHaveLength(2);
-    });
-
-    it('should render a \'New\' status when never published', () => {
-        const node = {
-            aggregatedPublicationInfo: {
-                publicationStatus: 'NOT_PUBLISHED'
-            }
-        };
-        const wrapper = shallow(<ContentStatuses {...defaultProps} node={node}/>);
-        const expectedTooltip = 'translated_label.contentManager.publicationStatus.notPublished';
-
-        expect(wrapper.containsMatchingElement(<Status type="new" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
+        expect(wrapper.containsMatchingElement(<Status type="published"/>)).toBeTruthy();
         expect(wrapper.find('Status')).toHaveLength(2);
     });
 

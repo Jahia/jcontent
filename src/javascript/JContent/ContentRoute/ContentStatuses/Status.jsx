@@ -17,10 +17,6 @@ const config = {
         color: 'default',
         icon: <File/>
     },
-    new: {
-        color: 'success',
-        icon: <File/>
-    },
     notPublished: {
         color: 'warning',
         icon: <NoCloud/>

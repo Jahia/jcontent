@@ -15,7 +15,6 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
         locked: node.lockOwner,
         markedForDeletion: isMarkedForDeletion(node),
         modified: false,
-        new: false,
         published: false,
         warning: false,
         workInProgress: isWorkInProgress(node, language)
@@ -25,8 +24,9 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
         const {publicationStatus} = node.aggregatedPublicationInfo;
         if (publicationStatus === JContentConstants.availablePublicationStatuses.MODIFIED) {
             statuses.modified = true;
+            statuses.published = true;
         } else if (publicationStatus === JContentConstants.availablePublicationStatuses.NOT_PUBLISHED) {
-            statuses.new = true;
+            statuses.published = false;
         } else if (publicationStatus === JContentConstants.availablePublicationStatuses.PUBLISHED) {
             statuses.published = true;
         } else if (publicationStatus === JContentConstants.availablePublicationStatuses.UNPUBLISHED) {
@@ -41,7 +41,6 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
     );
     return (
         <div className={styles.contentStatuses}>
-            {statuses.new && renderStatus('new')}
             {statuses.modified && renderStatus('modified')}
             {statuses.markedForDeletion && renderStatus('markedForDeletion')}
             {statuses.workInProgress && renderStatus('workInProgress')}

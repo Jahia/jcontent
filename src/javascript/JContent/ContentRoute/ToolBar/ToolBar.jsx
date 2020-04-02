@@ -24,15 +24,10 @@ export const ToolBar = () => {
         selection: state.jcontent.selection
     }));
 
-    const {nodes, loading} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
+    const {nodes} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 
-    if (loading || !nodes) {
-        return false;
-    }
-
-    const canPublish = nodes.map(n => n['jnt:page'] || !(n['jnt:contentFolder'] || n['jnt:folder'])).reduce((v, a) => v && a, true);
-
-    let publishAction = canPublish ? 'publish' : 'publishAll';
+    const canPublish = nodes && nodes.map(n => n['jnt:page'] || !(n['jnt:contentFolder'] || n['jnt:folder'])).reduce((v, a) => v && a, true);
+    const publishAction = canPublish ? 'publish' : 'publishAll';
 
     return (
         <div className={`flexRow ${styles.root}`}>

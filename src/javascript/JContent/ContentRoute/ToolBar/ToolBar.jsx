@@ -24,10 +24,13 @@ export const ToolBar = () => {
         selection: state.jcontent.selection
     }));
 
-    const {nodes} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
+    const {nodes, loading} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 
-    const canPublish = nodes && nodes.map(n => n['jnt:page'] || !(n['jnt:contentFolder'] || n['jnt:folder'])).reduce((v, a) => v && a, true);
-    const publishAction = canPublish ? 'publish' : 'publishAll';
+    let publishAction;
+    if (!loading) {
+        const canPublish = nodes && nodes.map(n => n['jnt:page'] || !(n['jnt:contentFolder'] || n['jnt:folder'])).reduce((v, a) => v && a, true);
+        publishAction = canPublish ? 'publish' : 'publishAll';
+    }
 
     return (
         <div className={`flexRow ${styles.root}`}>
@@ -54,7 +57,7 @@ export const ToolBar = () => {
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    <DisplayAction actionKey={publishAction} context={{paths: selection}} render={ButtonRendererShortLabel}/>
+                    {publishAction && <DisplayAction actionKey={publishAction} context={{paths: selection}} render={ButtonRendererShortLabel}/>}
                     <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
                 <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>

@@ -32,15 +32,6 @@ describe('Status', () => {
         expect(wrapper.props().icon).toStrictEqual(<File/>);
     });
 
-    it('should be \'New\'', () => {
-        const wrapper = shallow(<Status type="new"/>);
-
-        expect(wrapper.find('Chip').exists()).toBeTruthy();
-        expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.new');
-        expect(wrapper.props().color).toBe('success');
-        expect(wrapper.props().icon).toStrictEqual(<File/>);
-    });
-
     it('should be \'Not published\'', () => {
         const wrapper = shallow(<Status type="notPublished"/>);
 

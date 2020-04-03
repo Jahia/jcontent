@@ -17,9 +17,10 @@ import {
     Paste,
     Publish,
     Reload,
-    Search
+    Search,
+    Undelete
 } from '@jahia/moonstone/dist/icons';
-import {ApplicationExport, ApplicationImport, DeleteRestore} from 'mdi-material-ui';
+import {ApplicationExport, ApplicationImport} from 'mdi-material-ui';
 import {FileUploadActionComponent} from './actions/fileUploadAction';
 import {DeleteActionComponent} from './actions/deleteAction';
 import {UndeleteActionComponent} from './actions/undeleteAction';
@@ -198,7 +199,7 @@ export const jContentActions = registry => {
         component: DeletePermanentlyActionComponent
     });
     registry.add('action', 'undelete', {
-        buttonIcon: <DeleteRestore/>,
+        buttonIcon: <Undelete/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.undelete',
         targets: ['contentActions:4.1', 'selectedContentActions:4.1'],
         component: UndeleteActionComponent

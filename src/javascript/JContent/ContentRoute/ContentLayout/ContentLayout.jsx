@@ -19,7 +19,9 @@ const styles = theme => ({
         flexDirection: 'row',
         position: 'relative',
         overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
+        minHeight: 0,
+        width: '100%'
     },
     content: {
         flex: '1 2 0%',
@@ -62,6 +64,7 @@ const styles = theme => ({
     previewDrawerPaper: {
         position: 'relative',
         display: 'flex',
+        width: '100%',
         zIndex: 'auto',
         height: 'unset',
         transition: '.15s !important',

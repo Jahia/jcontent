@@ -165,7 +165,5 @@ PasteActionComponent.propTypes = {
 
     render: PropTypes.func.isRequired,
 
-    loading: PropTypes.func,
-
-    notificationContext: PropTypes.object.isRequired
+    loading: PropTypes.func
 };

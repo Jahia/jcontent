@@ -58,6 +58,5 @@ export const UnzipActionComponent = withNotifications()(({context, render: Rende
 UnzipActionComponent.propTypes = {
     context: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
-    loading: PropTypes.func,
-    notificationContext: PropTypes.object.isRequired
+    loading: PropTypes.func
 };

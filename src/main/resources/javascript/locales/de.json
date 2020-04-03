@@ -145,6 +145,7 @@
         "content": "Neuer Content"
       },
       "locked": "Content ist gesperrt",
+      "lockedBy": "Content ist gesperrt von {{userName}}",
       "saveAsWip": "Als \"in Arbeit\" markieren",
       "browseFiles": "Dateien durchsuchen",
       "tree": {

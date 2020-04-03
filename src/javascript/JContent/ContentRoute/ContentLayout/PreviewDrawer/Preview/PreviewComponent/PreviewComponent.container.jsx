@@ -1,10 +1,13 @@
 import React, {useEffect} from 'react';
 import {useContentPreview} from '@jahia/data-helper';
-import {PreviewComponent, ProgressOverlay} from '@jahia/react-material';
+import {ProgressOverlay} from '@jahia/react-material';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
+import PreviewComponent from './PreviewComponent';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 
-export const PreviewContainer = ({previewMode, previewSelection, language, previewState, notificationContext, t}) => {
+export const PreviewComponentContainer = ({previewMode, previewSelection, language, previewState, notificationContext}) => {
+    const {t} = useTranslation();
     const {data, loading, error, refetch} = useContentPreview({
         path: previewSelection && previewSelection.path,
         templateType: 'html',
@@ -39,13 +42,12 @@ export const PreviewContainer = ({previewMode, previewSelection, language, previ
     );
 };
 
-PreviewContainer.propTypes = {
+PreviewComponentContainer.propTypes = {
     language: PropTypes.string.isRequired,
     previewMode: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     notificationContext: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired,
     previewSelection: PropTypes.object
 };
 
-export default PreviewContainer;
+export default PreviewComponentContainer;

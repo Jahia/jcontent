@@ -20,7 +20,6 @@ import {cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
 import JContentConstants from '../../JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
-import {setModificationHook} from './ContentLayout.utils';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
@@ -194,7 +193,6 @@ export const ContentLayoutContainer = ({
         });
 
         registerContentModificationEventHandler(onGwtContentModification);
-        setModificationHook(args => onGwtContentModification(...args));
 
         return () => {
             unsetRefetcher(refetchTypes.CONTENT_DATA);

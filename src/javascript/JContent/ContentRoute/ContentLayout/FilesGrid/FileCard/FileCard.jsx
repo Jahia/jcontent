@@ -5,7 +5,7 @@ import {Typography} from '@jahia/design-system-kit';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
-import {isBrowserImage} from '../FilesGrid.utils';
+import {isBrowserImage} from '../../ContentLayout.utils';
 import FileIcon from '../FileIcon';
 import {CM_DRAWER_STATES} from '../../../../JContent.redux';
 import {allowDoubleClickNavigation, getDefaultLocale} from '../../../../JContent.utils';

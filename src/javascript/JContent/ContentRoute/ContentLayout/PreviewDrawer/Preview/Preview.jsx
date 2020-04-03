@@ -5,11 +5,11 @@ import {connect} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {withNotifications} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
+import PreviewComponent from './PreviewComponent';
 import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/preview.redux';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {withStyles} from '@material-ui/core';
-import PreviewContainer from './Preview.container';
 
 const styles = theme => ({
     root: {
@@ -81,8 +81,7 @@ export const Preview = props => {
     }
 
     return (
-        <PreviewContainer previewMode={previewMode}
-                          t={t}
+        <PreviewComponent previewMode={previewMode}
                           previewState={previewState}
                           previewSelection={previewSelection}
                           language={language}

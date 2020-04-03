@@ -1,6 +1,5 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {FullWidthContent} from '@jahia/design-system-kit';
 import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
 import ContentHeader from './ContentHeader';
@@ -31,9 +30,7 @@ const ContentRoute = () => {
                 />
             }
         >
-            <FullWidthContent>
-                { mode.length > 0 && <ContentLayout/> }
-            </FullWidthContent>
+            { mode.length > 0 && <ContentLayout/> }
         </MainLayout>
     );
 };

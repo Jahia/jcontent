@@ -94,8 +94,7 @@ describe('ContentStatuses', () => {
         const expectedTooltip = 'translated_label.contentManager.publicationStatus.unknown';
 
         expect(wrapper.containsMatchingElement(<Status type="warning" tooltip={expectedTooltip}/>)).toBeTruthy();
-        expect(wrapper.containsMatchingElement(<Status type="notPublished"/>)).toBeTruthy();
-        expect(wrapper.find('Status')).toHaveLength(2);
+        expect(wrapper.find('Status')).toHaveLength(1);
     });
 
     it('should render a \'Work in progress\' status when is work in progress in all languages', () => {

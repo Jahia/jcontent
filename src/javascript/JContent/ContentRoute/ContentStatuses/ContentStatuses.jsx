@@ -45,7 +45,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
             {statuses.markedForDeletion && renderStatus('markedForDeletion')}
             {statuses.workInProgress && renderStatus('workInProgress')}
             {statuses.locked && renderStatus('locked')}
-            {renderStatus(statuses.published ? 'published' : 'notPublished')}
+            {!statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished')}
             {statuses.warning && renderStatus('warning')}
         </div>
     );

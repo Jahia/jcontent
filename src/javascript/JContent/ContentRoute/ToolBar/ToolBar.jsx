@@ -11,6 +11,8 @@ import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {Cancel} from '@jahia/moonstone/dist/icons';
 import {useNodeInfo} from '@jahia/data-helper';
+import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
+import {cmSetPreviewState} from '../../preview.redux';
 
 const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
 const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
@@ -19,9 +21,10 @@ export const ToolBar = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
-    const {mode, selection} = useSelector(state => ({
+    const {mode, selection, previewSelection} = useSelector(state => ({
         mode: state.jcontent.mode,
-        selection: state.jcontent.selection
+        selection: state.jcontent.selection,
+        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection
     }));
 
     const {nodes, loading} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
@@ -32,36 +35,40 @@ export const ToolBar = () => {
         publishAction = canPublish ? 'publish' : 'publishAll';
     }
 
+    const paths = selection.length > 0 ? selection : (previewSelection ? [previewSelection] : []);
+    let context = paths.length === 1 ? {path: paths[0]} : {paths};
+
+    let clear = () => selection.length > 0 ? dispatch(cmClearSelection()) : dispatch(dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE)));
     return (
         <div className={`flexRow ${styles.root}`}>
             {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?
                 <SearchControlBar showActions={selection.length === 0}/> :
                 <BrowseControlBar showActions={selection.length === 0}/>}
-            {selection.length > 0 &&
+            {paths.length > 0 &&
             <React.Fragment>
                 <div className="flexRow">
-                    <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={selection.length} className={`${styles.selection}`}>
-                        {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
+                    <Typography variant="caption" data-cm-role="selection-infos" data-cm-selection-size={paths.length} className={`${styles.selection}`}>
+                        {t('jcontent:label.contentManager.selection.itemsSelected', {count: paths.length})}
                     </Typography>
                     <div className={styles.spacer}/>
-                    <Button icon={<Cancel/>} variant="ghost" size="default" onClick={() => dispatch(cmClearSelection())}/>
+                    <Button icon={<Cancel/>} variant="ghost" size="default" onClick={clear}/>
                 </div>
                 <div className="flexRow">
                     <Separator variant="vertical" invisible="onlyChild"/>
                     <DisplayActions
                         target="selectedContentActions"
-                        context={{paths: selection}}
+                        context={context}
                         filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
                         render={getButtonRenderer({size: 'default', variant: 'ghost'})}
                     />
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    {publishAction && <DisplayAction actionKey={publishAction} context={{paths: selection}} render={ButtonRendererShortLabel}/>}
-                    <DisplayAction actionKey="publishMenu" context={{paths: selection, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
+                    {publishAction && <DisplayAction actionKey={publishAction} context={context} render={ButtonRendererShortLabel}/>}
+                    <DisplayAction actionKey="publishMenu" context={{...context, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
-                <DisplayAction actionKey="publishDeletion" context={{paths: selection}} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="deletePermanently" context={{paths: selection}} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="publishDeletion" context={context} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="deletePermanently" context={context} render={ButtonRendererShortLabel}/>
             </React.Fragment>}
         </div>
     );

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
-import {AppBar, Card, CardActions, CardContent, Grid, Toolbar, Tooltip, withStyles} from '@material-ui/core';
+import {AppBar, Card, CardContent, Grid, Toolbar, Tooltip, withStyles} from '@material-ui/core';
 import {IconButton, Typography} from '@jahia/design-system-kit';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import Preview from './Preview';
@@ -9,10 +9,7 @@ import {Close, Fullscreen, FullscreenExit} from '@material-ui/icons';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES} from '../../../JContent.redux';
 import {compose} from '~/utils';
-import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {iconButtonRenderer} from '@jahia/react-material';
 import PublicationStatus from './PublicationStatus';
-import * as _ from 'lodash';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../preview.redux';
 
 const styles = theme => ({
@@ -29,88 +26,82 @@ const styles = theme => ({
     }
 });
 
-export class PreviewDrawer extends React.Component {
-    componentDidUpdate() {
-        // Set preview mode to 'edit' when content is never published/unpublished
-        if (this.props.previewMode !== 'edit' && this.props.previewSelection && (this.props.previewSelection.publicationStatus === 'NOT_PUBLISHED' || this.props.previewSelection.publicationStatus === 'UNPUBLISHED')) {
-            this.props.setPreviewMode('edit');
+const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, classes}) => {
+    const notPublished = previewSelection && (previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE');
+    const disabledToggle = !previewSelection;
+    const disabledLive = !previewSelection || notPublished;
+
+    useEffect(() => {
+        if (disabledLive && previewMode !== 'edit') {
+            setPreviewMode('edit');
         }
+    });
+
+    if (disabledLive && previewMode !== 'edit') {
+        return false;
     }
 
-    render() {
-        const {previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, classes} = this.props;
-        const disabledToggle = !previewSelection;
-        const disabledLive = !previewSelection || previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE';
-        return (
-            <React.Fragment>
-                <AppBar position="relative" color="default">
-                    <Toolbar variant="dense">
-                        <IconButton data-cm-role="preview-drawer-close" icon={<Close fontSize="small"/>} onClick={closePreview}/>
-                        <Typography variant="zeta" color="inherit">
-                            {t('jcontent:label.contentManager.contentPreview.preview')}
-                        </Typography>
-                        <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
-                            <ToggleButtonGroup exclusive
-                                               value={disabledToggle ? '' : previewMode}
-                                               onChange={(event, value) => setPreviewMode(value)}
+    return (
+        <React.Fragment>
+            <AppBar position="relative" color="default">
+                <Toolbar variant="dense">
+                    <IconButton data-cm-role="preview-drawer-close"
+                                icon={<Close fontSize="small"/>}
+                                onClick={closePreview}/>
+                    <Typography variant="zeta" color="inherit">
+                        {t('jcontent:label.contentManager.contentPreview.preview')}
+                    </Typography>
+                    <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
+                        <ToggleButtonGroup exclusive
+                                           value={disabledToggle ? '' : previewMode}
+                                           onChange={(event, value) => setPreviewMode(value)}
+                        >
+                            <ToggleButton value="edit"
+                                          disabled={previewMode === 'edit' || disabledToggle}
+                                          data-cm-role="edit-preview-button"
                             >
-                                <ToggleButton value="edit" disabled={previewMode === 'edit' || disabledToggle} data-cm-role="edit-preview-button">
-                                    <Typography variant="caption" color="inherit">
-                                        {t('jcontent:label.contentManager.contentPreview.staging')}
-                                    </Typography>
-                                </ToggleButton>
-                                <ToggleButton value="live" disabled={previewMode === 'live' || disabledLive} data-cm-role="live-preview-button">
-                                    <Typography variant="caption" color="inherit">
-                                        {t('jcontent:label.contentManager.contentPreview.live')}
-                                    </Typography>
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                            {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
-                                <Tooltip title={t('jcontent:label.contentManager.contentPreview.collapse')}>
-                                    <IconButton variant="ghost" color="inherit" icon={<FullscreenExit/>} onClick={closeFullScreen}/>
-                                </Tooltip> :
-                                <Tooltip title={t('jcontent:label.contentManager.contentPreview.expand')}>
-                                    <IconButton variant="ghost" color="inherit" icon={<Fullscreen/>} onClick={openFullScreen}/>
-                                </Tooltip>}
-                        </Grid>
-                    </Toolbar>
-                </AppBar>
-                <Preview previewSelection={previewSelection}/>
-                {previewSelection &&
-                    <Card>
-                        <CardContent data-cm-role="preview-name" className={classes.leftGutter}>
-                            <Typography gutterBottom noWrap variant="gamma">
-                                {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
-                            </Typography>
-                            <PublicationStatus previewSelection={previewSelection}/>
-                        </CardContent>
-                        <CardActions disableActionSpacing={false}>
-                            <div className={classes.leftButtons}>
-                                <DisplayActions
-                                    target="contentActions"
-                                    filter={value => {
-                                        return _.includes(['edit', 'publishMenu'], value.key);
-                                    }}
-                                    context={{path: previewSelection.path}}
-                                    render={iconButtonRenderer({disableRipple: true}, {}, true)}
-                                />
-                                <DisplayAction
-                                    actionKey="contentMenu"
-                                    context={{
-                                        path: previewSelection.path,
-                                        menuFilter: value => {
-                                            return !_.includes(['edit', 'publishMenu', 'preview'], value.key);
-                                        }
-                                    }}
-                                    render={iconButtonRenderer({disableRipple: true}, {}, true)}
-                                />
-                            </div>
-                        </CardActions>
-                    </Card>}
-            </React.Fragment>
-        );
-    }
-}
+                                <Typography variant="caption" color="inherit">
+                                    {t('jcontent:label.contentManager.contentPreview.staging')}
+                                </Typography>
+                            </ToggleButton>
+                            <ToggleButton value="live"
+                                          disabled={previewMode === 'live' || disabledLive}
+                                          data-cm-role="live-preview-button"
+                            >
+                                <Typography variant="caption" color="inherit">
+                                    {t('jcontent:label.contentManager.contentPreview.live')}
+                                </Typography>
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                        {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
+                            <Tooltip title={t('jcontent:label.contentManager.contentPreview.collapse')}>
+                                <IconButton variant="ghost"
+                                            color="inherit"
+                                            icon={<FullscreenExit/>}
+                                            onClick={closeFullScreen}/>
+                            </Tooltip> :
+                            <Tooltip title={t('jcontent:label.contentManager.contentPreview.expand')}>
+                                <IconButton variant="ghost"
+                                            color="inherit"
+                                            icon={<Fullscreen/>}
+                                            onClick={openFullScreen}/>
+                            </Tooltip>}
+                    </Grid>
+                </Toolbar>
+            </AppBar>
+            <Preview previewSelection={previewSelection}/>
+            {previewSelection &&
+            <Card>
+                <CardContent data-cm-role="preview-name" className={classes.leftGutter}>
+                    <Typography gutterBottom noWrap variant="gamma">
+                        {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
+                    </Typography>
+                    <PublicationStatus previewSelection={previewSelection}/>
+                </CardContent>
+            </Card>}
+        </React.Fragment>
+    );
+};
 
 const mapStateToProps = state => {
     return {

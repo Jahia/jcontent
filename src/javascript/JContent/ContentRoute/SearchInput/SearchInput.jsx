@@ -24,7 +24,7 @@ const SearchInput = function ({clearSearch}) {
         if (searchTerms !== t) {
             setT(searchTerms);
         }
-    }, [searchTerms]);
+    }, [searchTerms, t]);
 
     const performSearchDebounced = e => {
         clearTimeout(timeOut);

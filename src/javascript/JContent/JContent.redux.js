@@ -177,14 +177,4 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'jcontent', {targets: ['root'], reducer: jcontentReducer});
     registry.add('redux-listener', 'jcontent', {targets: ['root'], createListener: getSyncListener});
     registry.add('redux-action', 'jcontentGoto', {action: cmGoto});
-
-    registry.add('redux-reducer', 'siteJContent', {
-        targets: ['site:2'],
-        reducer: handleActions({
-            '@@router/LOCATION_CHANGE': (state, action) => {
-                console.log(action);
-                return 'digitall';
-            }
-        }, '')
-    });
 };

@@ -25,7 +25,7 @@ const getGWTNode = n => {
 
 let currentValue = '';
 
-const initClipboardWatcher = (store, client) => {
+const initClipboardWatcher = (dispatch, client) => {
     setInterval(() => {
         let previousValue = currentValue;
         currentValue = localStorage.getItem('jahia-clipboard');
@@ -43,9 +43,9 @@ const initClipboardWatcher = (store, client) => {
                 const nodesWithData = data.jcr.nodesById;
 
                 if (cb.type === copyPasteConstants.CUT) {
-                    store.dispatch(copypasteCut(nodesWithData));
+                    dispatch(copypasteCut(nodesWithData));
                 } else {
-                    store.dispatch(copypasteCopy(nodesWithData));
+                    dispatch(copypasteCopy(nodesWithData));
                 }
             });
         }

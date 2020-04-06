@@ -5,9 +5,11 @@ import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import PreviewComponent from './PreviewComponent';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
 
-export const PreviewComponentContainer = ({previewMode, previewSelection, language, previewState, notificationContext}) => {
+export const PreviewComponentContainer = ({previewMode, previewSelection, previewState, notificationContext}) => {
     const {t} = useTranslation();
+    const language = useSelector(state => state.language);
     const {data, loading, error, refetch} = useContentPreview({
         path: previewSelection && previewSelection.path,
         templateType: 'html',
@@ -43,7 +45,6 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, langua
 };
 
 PreviewComponentContainer.propTypes = {
-    language: PropTypes.string.isRequired,
     previewMode: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     notificationContext: PropTypes.object.isRequired,

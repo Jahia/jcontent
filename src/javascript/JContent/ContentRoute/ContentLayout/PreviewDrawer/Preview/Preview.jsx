@@ -1,14 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
-import {connect} from 'react-redux';
-import {useTranslation} from 'react-i18next';
 import {withNotifications} from '@jahia/react-material';
 import NoPreviewComponent from './NoPreviewComponent';
 import PreviewComponent from './PreviewComponent';
-import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/preview.redux';
 import MultipleSelection from './MultipleSelection/MultipleSelection';
-import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {withStyles} from '@material-ui/core';
 
 const styles = theme => ({
@@ -67,50 +63,27 @@ export const Preview = props => {
         previewMode,
         previewState,
         selection,
-        language,
         notificationContext
     } = props;
-    const {t} = useTranslation();
 
     if (selection.length > 0) {
-        return <MultipleSelection {...props} t={t}/>;
+        return <MultipleSelection {...props}/>;
     }
 
     if (!previewSelection || previewSelection.length === 0) {
-        return <NoPreviewComponent {...props} t={t}/>;
+        return <NoPreviewComponent {...props}/>;
     }
 
     return (
         <PreviewComponent previewMode={previewMode}
                           previewState={previewState}
                           previewSelection={previewSelection}
-                          language={language}
                           notificationContext={notificationContext}
         />
     );
 };
 
-const mapStateToProps = state => {
-    return {
-        previewMode: state.jcontent.previewMode,
-        previewState: state.jcontent.previewState,
-        language: state.language,
-        selection: state.jcontent.selection
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    setPreviewMode: mode => {
-        dispatch(cmSetPreviewMode(mode));
-    },
-    setPreviewState: state => {
-        dispatch(cmSetPreviewState(state));
-    },
-    clearSelection: () => dispatch(cmClearSelection())
-});
-
 Preview.propTypes = {
-    language: PropTypes.string.isRequired,
     previewMode: PropTypes.string.isRequired,
     previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.object,
@@ -120,6 +93,5 @@ Preview.propTypes = {
 
 export default compose(
     withStyles(styles),
-    withNotifications(),
-    connect(mapStateToProps, mapDispatchToProps)
+    withNotifications()
 )(Preview);

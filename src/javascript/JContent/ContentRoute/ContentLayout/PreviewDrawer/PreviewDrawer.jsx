@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {AppBar, Card, CardContent, Grid, Toolbar, Tooltip, withStyles} from '@material-ui/core';
@@ -26,19 +26,18 @@ const styles = theme => ({
     }
 });
 
-const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, classes}) => {
+const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, selection, classes}) => {
     const notPublished = previewSelection && (previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE');
+    const deleted = previewSelection && previewSelection.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION';
     const disabledToggle = !previewSelection;
+    const disabledEdit = !previewSelection || deleted;
     const disabledLive = !previewSelection || notPublished;
 
-    useEffect(() => {
-        if (disabledLive && previewMode !== 'edit') {
-            setPreviewMode('edit');
-        }
-    });
-
+    let effectiveMode = previewMode;
     if (disabledLive && previewMode !== 'edit') {
-        return false;
+        effectiveMode = 'edit';
+    } else if (disabledEdit && previewMode !== 'live') {
+        effectiveMode = 'live';
     }
 
     return (
@@ -53,11 +52,11 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
                     </Typography>
                     <Grid container direction="row" justify="flex-end" alignContent="center" alignItems="center">
                         <ToggleButtonGroup exclusive
-                                           value={disabledToggle ? '' : previewMode}
+                                           value={disabledToggle ? '' : effectiveMode}
                                            onChange={(event, value) => setPreviewMode(value)}
                         >
                             <ToggleButton value="edit"
-                                          disabled={previewMode === 'edit' || disabledToggle}
+                                          disabled={effectiveMode === 'edit' || disabledEdit || disabledToggle}
                                           data-cm-role="edit-preview-button"
                             >
                                 <Typography variant="caption" color="inherit">
@@ -65,7 +64,7 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
                                 </Typography>
                             </ToggleButton>
                             <ToggleButton value="live"
-                                          disabled={previewMode === 'live' || disabledLive}
+                                          disabled={effectiveMode === 'live' || disabledLive || disabledToggle}
                                           data-cm-role="live-preview-button"
                             >
                                 <Typography variant="caption" color="inherit">
@@ -89,7 +88,7 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
                     </Grid>
                 </Toolbar>
             </AppBar>
-            <Preview previewSelection={previewSelection}/>
+            <Preview previewSelection={previewSelection} selection={selection} previewMode={effectiveMode} previewState={previewState}/>
             {previewSelection &&
             <Card>
                 <CardContent data-cm-role="preview-name" className={classes.leftGutter}>
@@ -106,7 +105,8 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
 const mapStateToProps = state => {
     return {
         previewMode: state.jcontent.previewMode,
-        previewState: state.jcontent.previewState
+        previewState: state.jcontent.previewState,
+        selection: state.jcontent.selection
     };
 };
 
@@ -131,6 +131,7 @@ PreviewDrawer.propTypes = {
     closePreview: PropTypes.func.isRequired,
     openFullScreen: PropTypes.func.isRequired,
     previewMode: PropTypes.string.isRequired,
+    selection: PropTypes.array.isRequired,
     previewSelection: PropTypes.object,
     previewState: PropTypes.number.isRequired,
     setPreviewMode: PropTypes.func.isRequired,

@@ -8,7 +8,7 @@ import {getNodeTypeIcon} from '../ContentBreadcrumb.utils';
 describe('ContentType', () => {
     it('should render one Chip', () => {
         const wrapper = shallow(<ContentType name="foo" displayName="bar"/>);
-        expect(wrapper.matchesElement(
+        expect(wrapper.containsMatchingElement(
             <Chip color="accent" label="bar" icon={getNodeTypeIcon('bar')}/>
         )).toBeTruthy();
     });

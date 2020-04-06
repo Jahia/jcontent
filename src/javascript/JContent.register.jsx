@@ -18,11 +18,15 @@ import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import JContentConstants from './JContent/JContent.constants';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {useApolloClient} from 'react-apollo';
+import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
 
 const CmmNavItem = () => {
     const history = useHistory();
     const {t} = useTranslation('jcontent');
+    const client = useApolloClient();
+    const dispatch = useDispatch();
     const {site, language, path, mode, params} = useSelector(state => ({
         language: state.language,
         site: state.site,
@@ -36,7 +40,10 @@ const CmmNavItem = () => {
                         isSelected={history.location.pathname.startsWith('/jcontent') && history.location.pathname.split('/').length > 3}
                         label={t('label.name')}
                         icon={<Collections/>}
-                        onClick={() => history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params))}/>
+                        onClick={() => {
+                            history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params));
+                            initClipboardWatcher(dispatch, client);
+                        }}/>
     );
 };
 

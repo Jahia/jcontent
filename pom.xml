@@ -68,7 +68,6 @@
         <jahia-deploy-on-site>all</jahia-deploy-on-site>
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
-        <jahia-module-signature>MCwCFFv6LYXbVfm0DDtUDGdkdZ74xzhbAhQrFm3X87DSERUyJd3Wfd7KeakWqw==</jahia-module-signature>
     </properties>
 
     <repositories>
@@ -177,6 +176,9 @@
                 <configuration>
                     <instructions>
                         <Import-Package>org.jahia.modules.graphql.provider.dxm;version="1.1.0",${jahia.plugin.projectPackageImport},*</Import-Package>
+                        <Jahia-Key>org.jahia.core</Jahia-Key>
+                        <Jahia-Signature>MC0CFQCG3Pgrbiy9Jqgl0FnVLA+iUshMhwIUGQueMoZwdXB/lWgGKY5fETVuGJM=</Jahia-Signature>
+                        <Require-Capability>org.jahia.license;filter:="(key=org.jahia.core)",${jahia.plugin.requiredNodeTypes}${jahia.plugin.requiredModulesCapabilities}</Require-Capability>
                     </instructions>
                 </configuration>
             </plugin>

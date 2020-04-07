@@ -248,7 +248,7 @@ export class ImageEditorContainer extends React.Component {
         if (newPath === path) {
             this.setState(() => ({
                 ts: new Date().getTime(),
-                snackBarMessage: 'label.contentManager.editImage.savedMessage'
+                snackBarMessage: 'jcontent:label.contentManager.editImage.savedMessage'
             }));
         } else {
             editImage(site, language, newPath);

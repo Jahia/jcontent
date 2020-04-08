@@ -52,7 +52,7 @@ registry.add('primary-nav-item', 'jcontentGroupItem', {
     render: () => <CmmNavItem/>
 });
 registry.add('route', 'route-jcontent', {
-    targets: ['nav-root-top:2'],
+    targets: ['main:2'],
     path: '/jcontent/:siteKey/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
     render: () => <JContentApp/>
 });

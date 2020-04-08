@@ -58,7 +58,10 @@ function convertPathsToTree(treeEntries, selected) {
             className: classNames(styles.ContentTree_Item, {
                 [styles.notPublished]: notPublished && selected !== treeEntry.path
             }),
-            children: []
+            children: [],
+            treeItemProps: {
+                'data-sel-role': treeEntry.node.name
+            }
         };
         const parent = findInTree(tree, parentPath);
         if (parent !== undefined && !findInTree(parent, element.id)) {

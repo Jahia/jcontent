@@ -35,7 +35,10 @@
   },
   "jahia": {
     "apps": {
-      "jahia": ["javascript/apps/jahia.bundle.js", "/cms/render/default/en/settings.jcontent.js"]
+      "jahia": [
+        "javascript/apps/jahia.bundle.js",
+        "/cms/render/default/en/settings.jcontent.js"
+      ]
     }
   },
   "dependencies": {
@@ -43,7 +46,7 @@
     "@jahia/data-helper": "^0.0.14",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
-    "@jahia/moonstone": "^0.15.7",
+    "@jahia/moonstone": "^0.15.8",
     "@jahia/react-material": "^2.1.1",
     "@jahia/ui-extender": "^0.4.9",
     "@material-ui/core": "^3.6.2",

@@ -49,7 +49,10 @@ export const AdditionalAppsTree = ({item, target}) => {
             id: route.key,
             label: t(route.label),
             isSelectable: route.isSelectable,
-            iconStart: route.icon
+            iconStart: route.icon,
+            treeItemProps: {
+                'data-sel-role': route.key
+            }
         }))
         .getData();
 

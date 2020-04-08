@@ -23,12 +23,31 @@ const styles = theme => ({
     }
 });
 
-const EmptyDropZone = ({component: Component, t, classes, mode}) => (
-    <Component className={classes.dropZone}>
-        <Typography variant="gamma" color="inherit">{t(mode === JContentConstants.mode.MEDIA ? 'jcontent:label.contentManager.fileUpload.dropMessage' : 'jcontent:label.contentManager.import.dropMessage')}</Typography>
-        <Publish/>
-    </Component>
-);
+const EmptyDropZone = ({component: Component, t, classes, mode}) => {
+    if (mode === JContentConstants.mode.MEDIA) {
+        return (
+            <Component className={classes.dropZone}>
+                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
+                <Publish/>
+            </Component>
+        );
+    }
+
+    if (mode === JContentConstants.mode.PAGES) {
+        return (
+            <Component className={classes.dropZone}>
+                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
+            </Component>
+        );
+    }
+
+    return (
+        <Component className={classes.dropZone}>
+            <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
+            <Publish/>
+        </Component>
+    );
+};
 
 EmptyDropZone.propTypes = {
     classes: PropTypes.object.isRequired,

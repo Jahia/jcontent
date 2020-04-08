@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@jahia/moonstone/dist/icons/Search';
@@ -11,7 +10,7 @@ import styles from './SearchInput.scss';
 
 let timeOut;
 
-const SearchInput = function ({clearSearch}) {
+const SearchInput = function () {
     const dispatch = useDispatch();
     const {searchTerms, searchContentType, searchPath} = useSelector(state => ({
         searchTerms: state.jcontent.params.searchTerms,
@@ -19,29 +18,29 @@ const SearchInput = function ({clearSearch}) {
         searchContentType: state.jcontent.params.searchContentType
     }));
     const [t, setT] = useState(searchTerms);
-    // This updates component state when use changes search via dialog
+    // This updates component state when user changes search via dialog
     useEffect(() => {
         if (searchTerms !== t) {
             setT(searchTerms);
         }
-    }, [searchTerms, t]);
+    }, [searchTerms]);
 
-    const performSearchDebounced = e => {
+    const performSearchDebounced = (time, value) => e => {
         clearTimeout(timeOut);
-        const st = e.target.value;
-        setT(st);
+        const searchForValue = value !== undefined ? value : e.target.value;
+        setT(searchForValue);
         timeOut = setTimeout(() => {
             clearTimeout(timeOut);
             let mode = JContentConstants.mode.SEARCH;
             let searchParams;
             searchParams = {
                 searchPath: searchPath,
-                searchTerms: st,
+                searchTerms: searchForValue,
                 searchContentType: searchContentType
             };
 
             dispatch(cmGoto({mode, params: searchParams}));
-        }, 500);
+        }, time);
     };
 
     return (
@@ -53,17 +52,13 @@ const SearchInput = function ({clearSearch}) {
                 className={styles.input}
                 value={t}
                 inputProps={{'aria-label': 'search'}}
-                onChange={performSearchDebounced}
+                onChange={performSearchDebounced(500)}
             />
-            <IconButton className={styles.iconButton} onClick={clearSearch}>
+            <IconButton className={styles.iconButton} onClick={performSearchDebounced(0, '')}>
                 <CloseIcon/>
             </IconButton>
         </div>
     );
-};
-
-SearchInput.propTypes = {
-    clearSearch: PropTypes.func.isRequired
 };
 
 export default SearchInput;

@@ -5,9 +5,9 @@ import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
 import {ProgressOverlay, withNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
-import {registry} from '@jahia/ui-extender';
 import {Dropdown} from '@jahia/moonstone';
 import styles from './LanguageSwitcher.scss';
+import {cmGoto} from '../../../JContent.redux';
 
 export const LanguageSwitcher = ({
     notificationContext,
@@ -21,8 +21,6 @@ export const LanguageSwitcher = ({
     const onSelectLanguageHandler = lang => {
         console.debug(`%c  Switching language to: ${lang}`, 'color: #6B5CA5');
         onSelectLanguage(lang);
-        // Switch edit mode linker language
-        window.authoringApi.switchLanguage(lang);
     };
 
     if (error) {
@@ -58,7 +56,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSelectLanguage: lang => {
-        dispatch(registry.get('redux-reducer', 'language').actions.setLanguage(lang));
+        dispatch(cmGoto({language: lang}));
     }
 });
 

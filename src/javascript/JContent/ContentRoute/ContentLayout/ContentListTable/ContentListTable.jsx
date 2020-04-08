@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
 import dayjs from 'dayjs';
-import {CM_DRAWER_STATES, cmGoto, cmOpenPaths, cmSetMode} from '../../../JContent.redux';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../JContent.redux';
 import {
     allowDoubleClickNavigation,
     extractPaths,
@@ -648,7 +648,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
         dispatch(cmGoto({path, params}));
     },
-    setMode: mode => dispatch(cmSetMode(mode)),
+    setMode: mode => dispatch(cmGoto({mode})),
     setCurrentPage: page => dispatch(cmSetPage(page)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
     setSort: state => dispatch(cmSetSort(state)),

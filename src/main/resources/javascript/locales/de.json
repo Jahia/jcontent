@@ -41,7 +41,7 @@
         "selectMessage": "Datei von meinem Computer wählen",
         "uploadingActionMessage": "Es gibt Fehler, die Ihre Aufmerksamkeit benötigen",
         "or": "oder",
-        "dropMessage": "Datei mit Drag & Drop hier einfügen oder den Button \"Inhalt hinzufügen\" verwenden",
+        "dropMessage": "Datei mit Drag & Drop hier einfügen oder den Button \"Datei(en) hochladen\" verwenden",
         "queued": "In Warteschlange",
         "errorMessage": "Es gab Probleme beim Hochladen einiger Dateien",
         "importErrorMessage": "Während des Imports ist ein Fehler aufgetreten. <0>Erfahren Sie mehr zu Export und Import hier</0>",

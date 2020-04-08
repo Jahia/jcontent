@@ -41,7 +41,7 @@
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
         "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
         "or": "ou",
-        "dropMessage": "Déposez les fichiers ici pour les télécharger ou utilisez le menu \"Créer\"",
+        "dropMessage": "Déposez les fichiers ici pour les télécharger ou utilisez le bouton \"Importer des fichiers\"",
         "queued": "Mis en file d'attente",
         "errorMessage": "Il y a eu des problèmes lors du téléchargement de certains fichiers",
         "importErrorMessage": "Un problème s'est produit durant l'import. <0>En savoir plus sur l'export/import</0>",
@@ -251,6 +251,7 @@
       },
       "actions": {
         "openInEditMode": "Ouvrir en mode édition",
+        "pageComposer": "Ouvrir dans Page composer",
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
         },

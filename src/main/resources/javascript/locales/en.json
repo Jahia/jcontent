@@ -41,7 +41,7 @@
         "selectMessage": "Select files from my computer",
         "uploadingActionMessage": "There are error(s) which need your attention",
         "or": "or",
-        "dropMessage": "Drag and drop a file here or use the \"Create\" button",
+        "dropMessage": "Drag and drop a file here or use the \"Upload file(s)\" button",
         "queued": "Queued",
         "errorMessage": "There were problems uploading some files",
         "importErrorMessage": "There were problems importing some files. <0>Read more about export and import</0>",
@@ -251,7 +251,7 @@
         "error": "An error occurred when pasting the element"
       },
       "actions": {
-        "pageComposer": "Page composer",
+        "pageComposer": "Open in Page composer",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

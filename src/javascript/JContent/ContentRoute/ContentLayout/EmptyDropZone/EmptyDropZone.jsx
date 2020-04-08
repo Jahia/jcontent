@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
-import {CloudUpload} from '@material-ui/icons';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import JContentConstants from '../../../JContent.constants';
+import {Publish} from '@jahia/moonstone/dist/icons';
 
 const styles = theme => ({
     dropZone: {
@@ -26,7 +26,7 @@ const styles = theme => ({
 const EmptyDropZone = ({component: Component, t, classes, mode}) => (
     <Component className={classes.dropZone}>
         <Typography variant="gamma" color="inherit">{t(mode === JContentConstants.mode.MEDIA ? 'jcontent:label.contentManager.fileUpload.dropMessage' : 'jcontent:label.contentManager.import.dropMessage')}</Typography>
-        <CloudUpload/>
+        <Publish/>
     </Component>
 );
 

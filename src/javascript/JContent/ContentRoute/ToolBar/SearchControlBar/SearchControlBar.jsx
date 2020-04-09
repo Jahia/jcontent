@@ -13,11 +13,12 @@ const ButtonRenderer = getButtonRenderer();
 
 export const SearchControlBar = () => {
     const {t} = useTranslation();
-    const {path, mode, from, language, searchPath} = useSelector(state => ({
+    const {path, mode, from, language, searchPath, searchContentType} = useSelector(state => ({
         path: state.jcontent.path,
         site: state.site,
         mode: state.jcontent.mode,
         from: state.jcontent.params.sql2SearchFrom,
+        searchContentType: state.jcontent.params.searchContentType,
         searchPath: state.jcontent.params.searchPath,
         language: state.language
     }));
@@ -27,6 +28,13 @@ export const SearchControlBar = () => {
 
     const advancedSearchMode = mode === JContentConstants.mode.SQL2SEARCH;
 
+    let typeInfo;
+    if (advancedSearchMode) {
+        typeInfo = from;
+    } else {
+        typeInfo = searchContentType !== '' ? searchContentType : t('jcontent:label.contentManager.search.anyContent');
+    }
+
     return (
         <React.Fragment>
             <DisplayAction actionKey="search" context={{path, buttonLabel: 'Edit query', buttonIcon: <Edit/>}} render={ButtonRenderer} variant="ghost" data-sel-role="open-search-dialog"/>
@@ -34,8 +42,9 @@ export const SearchControlBar = () => {
             {advancedSearchMode &&
             <>
                 <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedOn')}/>
-                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: from})}/>
+                <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: typeInfo})}/>
             </>}
+            {!advancedSearchMode && <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.advancedSearchOnType', {type: typeInfo})}/>}
             <Chip className={styles.chipMargin} label={t('jcontent:label.contentManager.search.location', {siteName: location})}/>
             <div className={`${styles.grow}`}/>
         </React.Fragment>

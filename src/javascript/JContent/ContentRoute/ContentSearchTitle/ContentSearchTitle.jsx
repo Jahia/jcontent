@@ -27,7 +27,7 @@ const ContentSearchTitle = () => {
                 {t('jcontent:label.contentManager.title.search')}
             </Typography>
             <div className={classnames(styles.rightPanel)}>
-                {JContentConstants.mode.SEARCH === mode && <SearchInput clearSearch={clearSearchFunc}/>}
+                {JContentConstants.mode.SEARCH === mode && <SearchInput/>}
             </div>
         </div>
     );

@@ -33,7 +33,7 @@ export const LanguageSwitcher = ({
     }
 
     if (loading) {
-        return false;
+        return <Dropdown isDisabled data={[{label: 'none', value: 'none'}]}/>;
     }
 
     return (

@@ -97,8 +97,12 @@ class SiteSwitcher extends React.Component {
                     }
 
                     if (loading) {
-                        return <Dropdown isDisabled data={[{label: 'none', value: 'none', name: 'none', site: 'none'}]}/>;
-                    }
+                        return (
+                            <Dropdown isDisabled
+                                      data={[{label: 'none', value: 'none', name: 'none', site: 'none'}]}
+                                      className={styles.siteSwitcher}
+                                />
+                    );}
 
                     let sites = this.getSites(data);
                     return (

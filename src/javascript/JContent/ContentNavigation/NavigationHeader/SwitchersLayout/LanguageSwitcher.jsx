@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {ProgressOverlay, withNotifications} from '@jahia/react-material';
+import {withNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
 import {registry} from '@jahia/ui-extender';
 import {Dropdown} from '@jahia/moonstone';
@@ -33,7 +33,12 @@ export const LanguageSwitcher = ({
     }
 
     if (loading) {
-        return <ProgressOverlay/>;
+        return (
+            <Dropdown isDisabled
+                      data={[{label: 'none', value: 'none'}]}
+                      className={styles.languageSwitcher}
+            />
+        );
     }
 
     return (

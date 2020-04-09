@@ -102,7 +102,8 @@ class SiteSwitcher extends React.Component {
                                       data={[{label: 'none', value: 'none', name: 'none', site: 'none'}]}
                                       className={styles.siteSwitcher}
                                 />
-                    );}
+                        );
+                    }
 
                     let sites = this.getSites(data);
                     return (

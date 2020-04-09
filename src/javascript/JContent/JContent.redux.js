@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import {extractPaths} from './JContent.utils';
 import {createActions, handleActions} from 'redux-actions';
-import {batch} from 'react-redux';
 import {registry} from '@jahia/ui-extender';
 import rison from 'rison';
 import queryString from 'query-string';
@@ -44,19 +43,6 @@ const deserializeQueryString = search => {
     return {};
 };
 
-const select = state => {
-    let {router: {location: {pathname, search}}, site, language, jcontent: {mode, path, params}} = state;
-    return {
-        pathname,
-        search,
-        site,
-        language,
-        mode,
-        path,
-        params
-    };
-};
-
 export const buildUrl = (site, language, mode, path, params) => {
     let registryItem = registry.get('accordionItem', mode);
     if (registryItem && registryItem.getUrlPathPart) {
@@ -70,35 +56,18 @@ export const buildUrl = (site, language, mode, path, params) => {
     return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
 };
 
-const pathResolver = (currentValue, currentValueFromUrl) => {
-    if (currentValue.site !== currentValueFromUrl.site) {
-        let registryItem = registry.get('accordionItem', currentValue.mode);
-        if (registryItem && registryItem.defaultPath) {
-            return registryItem.defaultPath(currentValue.site);
-        }
-    }
-
-    return currentValue.path;
-};
-
-export const {cmAddPathsToRefetch, cmRemovePathsToRefetch, cmOpenPaths, cmClosePaths, cmSetMode, cmSetPath, cmSetParams, cmSetModePathParams} =
-    createActions('CM_ADD_PATHS_TO_REFETCH', 'CM_REMOVE_PATHS_TO_REFETCH', 'CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_SET_MODE', 'CM_SET_PATH', 'CM_SET_PARAMS', 'CM_SET_MODE_PATH_PARAMS');
+export const {cmOpenPaths, cmClosePaths} =
+    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS');
 
 export const cmGoto = data => (
-    dispatch => {
-        batch(() => {
-            if (data.site) {
-                dispatch(registry.get('redux-reducer', 'site').actions.setSite(data.site));
-            }
+    (dispatch, getStore) => {
+        const {site, language, jcontent: {mode, path, params}} = getStore();
 
-            if (data.language) {
-                dispatch(registry.get('redux-reducer', 'language').actions.setLanguage(data.language));
-            }
-
-            if (data.mode || data.path || data.params) {
-                dispatch(cmSetModePathParams({mode: data.mode, path: data.path, params: data.params}));
-            }
-        });
+        dispatch(push(buildUrl(data.site || site,
+            data.language || language,
+            data.mode || mode,
+            data.path || path,
+            data.params || params)));
     }
 );
 
@@ -108,17 +77,20 @@ export const jContentRedux = registry => {
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
     const modeReducer = handleActions({
-        [cmSetMode]: (state, action) => action.payload,
-        [cmSetModePathParams]: (state, action) => action.payload.mode ? action.payload.mode : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).mode : state
     }, currentValueFromUrl.mode);
     const pathReducer = handleActions({
-        [cmSetPath]: (state, action) => action.payload,
-        [cmSetModePathParams]: (state, action) => action.payload.path ? action.payload.path : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).path : state
     }, currentValueFromUrl.path);
     const paramsReducer = handleActions({
-        [cmSetParams]: (state, action) => action.payload,
-        [cmSetModePathParams]: (state, action) => action.payload.params ? action.payload.params : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).params : state
     }, currentValueFromUrl.params);
+    let siteReducer = handleActions({
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).site : state
+    }, '');
+    let languageReducer = handleActions({
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).language : state
+    }, '');
 
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),
@@ -129,42 +101,8 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
     registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
-
-    let currentValue;
-    let getSyncListener = store => () => {
-        setTimeout(() => {
-            let previousValue = currentValue || {};
-            currentValue = select(store.getState());
-            if (currentValue.pathname.startsWith('/jcontent/')) {
-                let currentValueFromUrl = extractParamsFromUrl(currentValue.pathname, currentValue.search);
-                if (previousValue.pathname !== currentValue.pathname || previousValue.search !== currentValue.search) {
-                    if (currentValueFromUrl.site !== previousValue.site ||
-                        currentValueFromUrl.language !== previousValue.language ||
-                        currentValueFromUrl.mode !== previousValue.mode ||
-                        currentValueFromUrl.path !== previousValue.path ||
-                        !_.isEqual(currentValueFromUrl.params, previousValue.params)
-                    ) {
-                        let data = {};
-                        Object.assign(data,
-                            currentValueFromUrl.site === previousValue.site ? {} : {site: currentValueFromUrl.site},
-                            currentValueFromUrl.language === previousValue.language ? {} : {language: currentValueFromUrl.language},
-                            currentValueFromUrl.mode === previousValue.mode ? {} : {mode: currentValueFromUrl.mode},
-                            currentValueFromUrl.path === previousValue.path ? {} : {path: currentValueFromUrl.path},
-                            _.isEqual(currentValueFromUrl.params, previousValue.params) ? {} : {params: currentValueFromUrl.params}
-                        );
-                        store.dispatch(cmGoto(data));
-                    }
-                } else if ((previousValue.site !== currentValue.site && currentValueFromUrl.site !== currentValue.site) ||
-                    (previousValue.language !== currentValue.language && currentValueFromUrl.language !== currentValue.language) ||
-                    (previousValue.mode !== currentValue.mode && currentValueFromUrl.mode !== currentValue.mode) ||
-                    (previousValue.path !== currentValue.path && currentValueFromUrl.path !== currentValue.path) ||
-                    (!_.isEqual(currentValueFromUrl.params, currentValue.params))
-                ) {
-                    store.dispatch(push(buildUrl(currentValue.site, currentValue.language, currentValue.mode, encodeURI(pathResolver(currentValue, currentValueFromUrl)), currentValue.params)));
-                }
-            }
-        });
-    };
+    registry.add('redux-reducer', 'jContentSite', {targets: ['site:2'], reducer: siteReducer});
+    registry.add('redux-reducer', 'jContentLanguage', {targets: ['language:2'], reducer: languageReducer});
 
     const reducersArray = registry.find({type: 'redux-reducer', target: 'jcontent'});
     const reducerObj = {};
@@ -175,6 +113,5 @@ export const jContentRedux = registry => {
     const jcontentReducer = combineReducers(reducerObj);
 
     registry.add('redux-reducer', 'jcontent', {targets: ['root'], reducer: jcontentReducer});
-    registry.add('redux-listener', 'jcontent', {targets: ['root'], createListener: getSyncListener});
     registry.add('redux-action', 'jcontentGoto', {action: cmGoto});
 };

@@ -1,6 +1,5 @@
 import {cmSetPage, cmSetPageSize} from './pagination.redux';
 import {cmSetSort} from './sort.redux';
-import {cmSetPath, cmSetModePathParams} from '../../JContent.redux';
 import {createAction, handleActions} from 'redux-actions';
 import {cmSetPreviewSelection} from '../../preview.redux';
 
@@ -34,8 +33,6 @@ export const contentSelectionRedux = registry => {
         [cmRemoveSelection]: (state, action) => state.filter(path => toArray(action.payload).indexOf(path) === -1),
         [cmSwitchSelection]: (state, action) => (state.indexOf(action.payload) === -1) ? [...state, action.payload] : state.filter(path => action.payload !== path),
         [cmClearSelection]: () => ([]),
-        [cmSetPath]: () => ([]),
-        [cmSetModePathParams]: () => ([]),
         [cmSetSort]: () => ([]),
         [cmSetPage]: () => ([]),
         [cmSetPageSize]: () => ([])

@@ -20,7 +20,20 @@ const styles = theme => ({
         width: 'inherit',
         boxSizing: 'border-box',
         transitionDuration: '.1s'
+    },
+    emptyZone: {
+        flex: '1 1 0%',
+        color: theme.palette.text.disabled,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center', // This one is for Safari rendering
+        justifyContent: 'center',
+        width: 'inherit',
+        boxSizing: 'border-box',
+        transitionDuration: '.1s'
     }
+
 });
 
 const EmptyDropZone = ({component: Component, t, classes, mode}) => {
@@ -35,7 +48,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
 
     if (mode === JContentConstants.mode.PAGES) {
         return (
-            <Component className={classes.dropZone}>
+            <Component className={classes.emptyZone}>
                 <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
             </Component>
         );

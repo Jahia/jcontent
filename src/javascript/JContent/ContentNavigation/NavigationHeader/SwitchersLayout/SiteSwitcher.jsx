@@ -7,7 +7,7 @@ import {PredefinedFragments} from '@jahia/data-helper';
 import gql from 'graphql-tag';
 import {connect} from 'react-redux';
 import {withTranslation} from 'react-i18next';
-import {ProgressOverlay, withNotifications} from '@jahia/react-material';
+import {withNotifications} from '@jahia/react-material';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '~/JContent/JContent.redux';
 import {Dropdown} from '@jahia/moonstone';
 import {batchActions} from 'redux-batched-actions';
@@ -97,7 +97,7 @@ class SiteSwitcher extends React.Component {
                     }
 
                     if (loading) {
-                        return <ProgressOverlay/>;
+                        return false;
                     }
 
                     let sites = this.getSites(data);

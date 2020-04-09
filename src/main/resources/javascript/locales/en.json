@@ -38,6 +38,7 @@
       },
       "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",
       "fileUpload": {
+        "nothingToDisplay": "Nothing to display",
         "selectMessage": "Select files from my computer",
         "uploadingActionMessage": "There are error(s) which need your attention",
         "or": "or",

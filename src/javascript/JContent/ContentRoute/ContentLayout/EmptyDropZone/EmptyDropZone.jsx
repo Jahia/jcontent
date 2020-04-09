@@ -20,15 +20,47 @@ const styles = theme => ({
         width: 'inherit',
         boxSizing: 'border-box',
         transitionDuration: '.1s'
+    },
+    emptyZone: {
+        flex: '1 1 0%',
+        color: theme.palette.text.disabled,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center', // This one is for Safari rendering
+        justifyContent: 'center',
+        width: 'inherit',
+        boxSizing: 'border-box',
+        transitionDuration: '.1s'
     }
+
 });
 
-const EmptyDropZone = ({component: Component, t, classes, mode}) => (
-    <Component className={classes.dropZone}>
-        <Typography variant="gamma" color="inherit">{t(mode === JContentConstants.mode.MEDIA ? 'jcontent:label.contentManager.fileUpload.dropMessage' : 'jcontent:label.contentManager.import.dropMessage')}</Typography>
-        <Publish/>
-    </Component>
-);
+const EmptyDropZone = ({component: Component, t, classes, mode}) => {
+    if (mode === JContentConstants.mode.MEDIA) {
+        return (
+            <Component className={classes.dropZone}>
+                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
+                <Publish/>
+            </Component>
+        );
+    }
+
+    if (mode === JContentConstants.mode.PAGES) {
+        return (
+            <Component className={classes.emptyZone}>
+                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
+            </Component>
+        );
+    }
+
+    return (
+        <Component className={classes.dropZone}>
+            <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
+            <Publish/>
+        </Component>
+    );
+};
 
 EmptyDropZone.propTypes = {
     classes: PropTypes.object.isRequired,

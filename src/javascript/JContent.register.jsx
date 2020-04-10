@@ -18,7 +18,7 @@ import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import JContentConstants from './JContent/JContent.constants';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from 'react-apollo';
 import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
 
@@ -51,10 +51,11 @@ registry.add('primary-nav-item', 'jcontentGroupItem', {
     targets: ['nav-root-top:2'],
     render: () => <CmmNavItem/>
 });
+
 registry.add('route', 'route-jcontent', {
     targets: ['main:2'],
     path: '/jcontent/:siteKey/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
-    render: () => <JContentApp/>
+    render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
 });
 
 jContentRoutes(registry);

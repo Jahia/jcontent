@@ -77,19 +77,19 @@ export const jContentRedux = registry => {
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
     const modeReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).mode : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode : state
     }, currentValueFromUrl.mode);
     const pathReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).path : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
     }, currentValueFromUrl.path);
     const paramsReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).params : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params : state
     }, currentValueFromUrl.params);
     let siteReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).site : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site : state
     }, '');
     let languageReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname).language : state
+        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language : state
     }, '');
 
     const openPathsReducer = handleActions({

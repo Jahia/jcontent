@@ -12,12 +12,13 @@ import SearchInput from '../SearchInput';
 const ContentSearchTitle = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const {mode} = useSelector(state => ({
-        mode: state.jcontent.mode
+    const {mode, preSearchModeMemo} = useSelector(state => ({
+        mode: state.jcontent.mode,
+        preSearchModeMemo: state.jcontent.preSearchModeMemo
     }));
 
     const clearSearchFunc = () => {
-        dispatch(cmGoto({mode: JContentConstants.mode.PAGES, params: {}}));
+        dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : JContentConstants.mode.PAGES, params: {}}));
     };
 
     return (

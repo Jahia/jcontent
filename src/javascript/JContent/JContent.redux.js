@@ -11,6 +11,7 @@ export const CM_DRAWER_STATES = {HIDE: 0, TEMP: 1, SHOW: 2, FULL_SCREEN: 3};
 export const CM_PREVIEW_MODES = {EDIT: 'edit', LIVE: 'live'};
 
 const PARAMS_KEY = '?params=';
+const ROUTER_REDUX_ACTION = '@@router/LOCATION_CHANGE';
 
 const extractParamsFromUrl = (pathname, search) => {
     if (pathname.startsWith('/jcontent')) {
@@ -56,8 +57,8 @@ export const buildUrl = (site, language, mode, path, params) => {
     return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
 };
 
-export const {cmOpenPaths, cmClosePaths} =
-    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS');
+export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo} =
+    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO');
 
 export const cmGoto = data => (
     (dispatch, getStore) => {
@@ -76,20 +77,22 @@ export const jContentRedux = registry => {
     const pathName = window.location.pathname.substring((jahiaCtx.contextPath + jahiaCtx.urlbase).length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
+    const preSearchModeMemoReducer = handleActions({
+        [cmPreSearchModeMemo]: (state, action) => action.payload}, '');
     const modeReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode : state
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode : state
     }, currentValueFromUrl.mode);
     const pathReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).path : state
     }, currentValueFromUrl.path);
     const paramsReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params : state
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).params : state
     }, currentValueFromUrl.params);
     let siteReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site : state
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).site : state
     }, '');
     let languageReducer = handleActions({
-        '@@router/LOCATION_CHANGE': (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language : state
+        [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language : state
     }, '');
 
     const openPathsReducer = handleActions({
@@ -98,6 +101,7 @@ export const jContentRedux = registry => {
     }, _.dropRight(extractPaths(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode), 1));
 
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
+    registry.add('redux-reducer', 'preSearchModeMemo', {targets: ['jcontent'], reducer: preSearchModeMemoReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
     registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});

@@ -28,6 +28,10 @@ function checkAction(res, node, context) {
         isVisible = isVisible && node.site.languages.length > 1;
     }
 
+    if (enabled && !node.publish && !node['publication-start']) {
+        enabled = false;
+    }
+
     return {enabled, isVisible};
 }
 
@@ -61,7 +65,7 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         getSiteLanguages: true,
         getAggregatedPublicationInfo: {subNodes: true},
         getOperationSupport: true,
-        requiredPermission: ['publish', 'publication-start'],
+        getPermissions: ['publish', 'publication-start'],
         ...constraintsByType[context.publishType]
     });
 

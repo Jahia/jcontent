@@ -32,7 +32,7 @@ export function UploadHeader({classes, t, status}) {
             <div className={classNames(classes.headerText)}>
                 <CircularProgress size={20} color="inherit" className={classes.statusIcon}/>
                 <Typography color="inherit" data-cm-role="upload-status-uploading">
-                    {t(status.type === 'import' ? 'label.contentManager.fileUpload.importingMessage' : 'label.contentManager.fileUpload.uploadingMessage', {
+                    {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.importingMessage' : 'jcontent:label.contentManager.fileUpload.uploadingMessage', {
                         uploaded: status.uploaded,
                         total: status.total
                     })}

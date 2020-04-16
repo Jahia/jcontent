@@ -62,10 +62,9 @@ export const AdditionalAppsTree = ({item, target}) => {
                       data={data}
                       selectedItems={[selected]}
                       defaultOpenedItems={defaultOpenedItems}
-                      onClickItem={app => app.isSelectable ? dispatch(cmGoto({
-                          mode: item.key,
-                          path: '/' + app.id
-                      })) : false}/>
+                      onClickItem={(app, event, toggleNode) => app.isSelectable ?
+                        dispatch(cmGoto({mode: item.key, path: '/' + app.id})) :
+                        toggleNode(event)}/>
         );
     }
 

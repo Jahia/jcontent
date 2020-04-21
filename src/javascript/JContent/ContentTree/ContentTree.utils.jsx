@@ -5,8 +5,13 @@ import {isMarkedForDeletion} from '../JContent.utils';
 import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
+import {Section} from '@jahia/moonstone/dist/icons';
 
 function displayIcon(node) {
+    if (node.primaryNodeType.name === 'jnt:navMenuText') {
+        return <Section/>;
+    }
+
     const Icon = getIcon(node.primaryNodeType.name);
     return <Icon/>;
 }

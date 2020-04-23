@@ -49,6 +49,7 @@ const CmmNavItem = () => {
 
 registry.add('primary-nav-item', 'jcontentGroupItem', {
     targets: ['nav-root-top:2'],
+    requiredPermission: 'jContentAccess',
     render: () => <CmmNavItem/>
 });
 

@@ -19,7 +19,7 @@ export const DownloadFileActionComponent = ({context, render: Render, loading: L
             onClick: () => {
                 let a = document.createElement('a');
                 a.setAttribute('title', 'download');
-                a.setAttribute('href', window.contextJsParameters.contextPath + '/files/' + (context.previewMode === 'edit' ? 'default' : 'live') + context.originalContext.path);
+                a.setAttribute('href', window.contextJsParameters.contextPath + '/files/' + window.contextJsParameters.workspace + context.originalContext.path);
                 a.setAttribute('download', context.originalContext.path.split('/').pop());
                 document.body.appendChild(a);
                 a.click();

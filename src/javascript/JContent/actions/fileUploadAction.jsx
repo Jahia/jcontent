@@ -22,7 +22,7 @@ const Upload = ({context, inputRef}) => {
 
     return (
         <input ref={inputRef}
-               id={'file-upload-input-' + context.key}
+               id={'file-upload-input-' + context.id}
                type="file"
                multiple={context.uploadType !== 'replaceWith'}
                context-path={context.path}
@@ -64,8 +64,11 @@ export const FileUploadActionComponent = ({context, render: Render, loading: Loa
     );
 
     useEffect(() => {
-        componentRenderer.render('upload-' + context.key, Upload, {context, inputRef});
-    });
+        componentRenderer.render('upload-' + context.id, Upload, {context, inputRef});
+        return () => {
+            componentRenderer.destroy('upload-' + context.id);
+        };
+    }, [context.id, context.path, context.uploadType, componentRenderer]);
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;

@@ -5,7 +5,7 @@ import {isMarkedForDeletion} from '../JContent.utils';
 import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
-import {Section} from '@jahia/moonstone/dist/icons';
+import {Section, DefaultEntry} from '@jahia/moonstone/dist/icons';
 
 function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {
@@ -13,7 +13,7 @@ function displayIcon(node) {
     }
 
     const Icon = getIcon(node.primaryNodeType.name);
-    return <Icon/>;
+    return (Icon && <Icon/>) || <DefaultEntry/>;
 }
 
 function getParentPath(path) {

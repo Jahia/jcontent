@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
@@ -6,35 +6,22 @@ import {batchActions} from 'redux-batched-actions';
 import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 
-const Upload = ({context, inputRef}) => {
-    const dispatch = useDispatch();
-    const dispatchBatch = actions => dispatch(batchActions(actions));
+let currentUploadHandler = null;
 
-    const onChange = e => {
-        const path = inputRef.current.getAttribute('context-path');
-        onFilesSelected(
-            [...e.target.files],
-            dispatchBatch,
-            {path},
-            context.uploadType
-        );
-    };
+const Upload = React.memo(({actionKey, uploadType}) => (
+    <input id={'file-upload-input-' + actionKey}
+           type="file"
+           multiple={uploadType !== 'replaceWith'}
+           style={{position: 'fixed', top: -3000, left: -3000}}
+           onChange={e => currentUploadHandler && currentUploadHandler(e.target.files)}
+    />
+));
 
-    return (
-        <input ref={inputRef}
-               id={'file-upload-input-' + context.id}
-               type="file"
-               multiple={context.uploadType !== 'replaceWith'}
-               context-path={context.path}
-               style={{position: 'fixed', top: -3000, left: -3000}}
-               onChange={onChange}
-        />
-    );
-};
+Upload.displayName = 'Upload';
 
 Upload.propTypes = {
-    inputRef: PropTypes.object.isRequired,
-    context: PropTypes.object.isRequired
+    actionKey: PropTypes.string.isRequired,
+    uploadType: PropTypes.string
 };
 
 const constraintsByType = {
@@ -53,8 +40,10 @@ const constraintsByType = {
 };
 
 export const FileUploadActionComponent = ({context, render: Render, loading: Loading}) => {
+    const {key, path, uploadType} = context;
     const componentRenderer = useContext(ComponentRendererContext);
-    const inputRef = useRef();
+    const dispatch = useDispatch();
+    const dispatchBatch = actions => dispatch(batchActions(actions));
 
     const res = useNodeChecks(
         {path: context.path},
@@ -64,15 +53,25 @@ export const FileUploadActionComponent = ({context, render: Render, loading: Loa
     );
 
     useEffect(() => {
-        componentRenderer.render('upload-' + context.id, Upload, {context, inputRef});
-        return () => {
-            componentRenderer.destroy('upload-' + context.id);
-        };
-    }, [context.id, context.path, context.uploadType, componentRenderer]);
+        componentRenderer.render('upload-' + key, Upload, {actionKey: key, uploadType});
+    }, [key, componentRenderer]);
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;
     }
+
+    const handleClick = () => {
+        currentUploadHandler = files => {
+            onFilesSelected(
+                [...files],
+                dispatchBatch,
+                {path},
+                uploadType
+            );
+        };
+
+        document.getElementById('file-upload-input-' + key).click();
+    };
 
     const isVisible = res.checksResult;
 
@@ -81,9 +80,7 @@ export const FileUploadActionComponent = ({context, render: Render, loading: Loa
             ...context,
             isVisible: isVisible,
             enabled: isVisible,
-            onClick: () => {
-                inputRef.current.click();
-            }
+            onClick: handleClick
         }}/>
     );
 };

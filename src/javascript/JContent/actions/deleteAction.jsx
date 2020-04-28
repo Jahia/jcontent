@@ -19,7 +19,7 @@ export const DeleteActionComponent = ({context, render: Render, loading: Loading
             getDisplayName: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jnt:navMenutext'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jnt:navMenuText'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );

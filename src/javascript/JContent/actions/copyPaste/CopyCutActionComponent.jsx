@@ -31,7 +31,7 @@ export const CopyCutActionComponent = ({context, render: Render, loading: Loadin
             getDisplayName: true,
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
             getProperties: ['jcr:mixinTypes'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jnt:navMenuText'],
             showForPaths: type !== copyPasteConstants.COPY ? [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS] : null,
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }

@@ -33,7 +33,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
             requiredPermission: 'jcr:addChildNodes',
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
-            hideOnNodeTypes: ['jnt:page']
+            hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText']
         }
     );
 

@@ -62,9 +62,7 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
                           event.stopPropagation();
-                          if (object.treeItemProps['data-sel-role'] !== 'navigation-menu---text-separator') {
-                              contextualMenu.current.open(event, {path: object.id});
-                          }
+                          contextualMenu.current.open(event, {path: object.id});
                       }}
                       onClickItem={object => setPath(object.id, {sub: false})}
                       onOpenItem={object => openPath(object.id)}

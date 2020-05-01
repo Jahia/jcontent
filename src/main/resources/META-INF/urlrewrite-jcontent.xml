@@ -12,6 +12,27 @@
     </rule>
 
     <rule>
+        <name>jContent contents to V8</name>
+        <note>Redirects old cms/contentmanager urls</note>
+        <from>^/cms/contentmanager/([^/]+/[^/]+)/browse/contents/(.*)$</from>
+        <to type="redirect">%{context-path}/jahia/jcontent/$1/content-folders/contents/$2</to>
+    </rule>
+
+    <rule>
+        <name>jContent pages to V8</name>
+        <note>Redirects old cms/contentmanager urls</note>
+        <from>^/cms/contentmanager/([^/]+/[^/]+)/browse/(.*)$</from>
+        <to type="redirect">%{context-path}/jahia/jcontent/$1/pages/$2</to>
+    </rule>
+
+    <rule>
+        <name>jContent files to V8</name>
+        <note>Redirects old cms/contentmanager urls</note>
+        <from>^/cms/contentmanager/([^/]+/[^/]+)/browse-files/(.*)$</from>
+        <to type="redirect">%{context-path}/jahia/jcontent/$1/media/$2</to>
+    </rule>
+
+    <rule>
         <name>jContent to V8</name>
         <note>Redirects old cms/contentmanager urls</note>
         <from>^/cms/contentmanager/(.*)$</from>

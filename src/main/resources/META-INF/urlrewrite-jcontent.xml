@@ -15,7 +15,7 @@
         <name>jContent to V8</name>
         <note>Redirects old cms/contentmanager urls</note>
         <from>^/cms/contentmanager/(.*)$</from>
-        <to type="redirect">%{context-path}/modules/moonstone/jcontent/$1</to>
+        <to type="redirect">%{context-path}/jahia/jcontent/$1</to>
     </rule>
 
     <outbound-rule>

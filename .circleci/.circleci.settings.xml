@@ -1,5 +1,30 @@
 <?xml version="1.0"?>
 <settings>
+    <profiles>
+        <profile>
+            <id>jahia-internal-repository</id>
+            <repositories>
+                <repository>
+                    <id>jahia-internal</id>
+                    <name>Jahia Internal Repository</name>
+                    <url>https://devtools.jahia.com/nexus/content/groups/internal/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>jahia-internal-repository</activeProfile>
+    </activeProfiles>
+
     <servers>
         <server>
             <id>jahia-enterprise</id>

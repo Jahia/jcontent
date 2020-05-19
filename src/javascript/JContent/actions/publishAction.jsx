@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {ellipsizeText, getLanguageLabel, isMarkedForDeletion, uppercaseFirst} from '../JContent.utils';
 import * as _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
+import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
 
 function checkAction(res, node, context) {
     let enabled = true;
@@ -68,6 +69,14 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         getPermissions: ['publish', 'publication-start'],
         ...constraintsByType[context.publishType]
     });
+
+    useEffect(() => {
+        setRefetcher(context.id, {
+            refetch: res.refetch
+        });
+
+        return () => unsetRefetcher(context.id);
+    }, [res.refetch, context.id]);
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;

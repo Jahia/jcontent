@@ -39,6 +39,7 @@ export const PushEventHandler = () => {
                     triggerRefetchAll();
                 }
             } else if (evtType === 'contentUnpublished') {
+                // Should flush cache here, but need more data from gwt event
                 triggerRefetchAll();
             }
         }

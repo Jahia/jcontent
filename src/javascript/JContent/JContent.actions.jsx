@@ -18,8 +18,9 @@ import {
     Publish,
     Reload,
     Search,
+    Separator,
     Undelete
-} from '@jahia/moonstone/dist/icons';
+} from '@jahia/moonstone';
 import {ApplicationExport, ApplicationImport} from 'mdi-material-ui';
 import {FileUploadActionComponent} from './actions/fileUploadAction';
 import {DeleteActionComponent} from './actions/deleteAction';
@@ -44,7 +45,6 @@ import {UnzipActionComponent} from './actions/zipUnzip/unzipAction';
 import {SearchActionComponent} from './actions/searchAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
-import {Separator} from '@jahia/moonstone';
 import {triggerRefetchAll} from './JContent.refetches';
 
 export const jContentActions = registry => {

@@ -1,10 +1,9 @@
 import React from 'react';
 import {registry} from '@jahia/ui-extender';
 import {useHistory} from 'react-router-dom';
-import {PrimaryNavItem} from '@jahia/moonstone';
+import {Collections, PrimaryNavItem} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentApp from './JContentApp';
-import Collections from '@jahia/moonstone/dist/icons/Collections';
 import {jContentRoutes} from './JContent/JContent.routes';
 import {jContentActions} from './JContent/JContent.actions';
 import {jContentAccordionItems} from './JContent/JContent.accordion-items';

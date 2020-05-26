@@ -5,7 +5,7 @@ import {isMarkedForDeletion} from '../JContent.utils';
 import {StatusIcon} from './StatusIcon';
 import classNames from 'clsx';
 import styles from './ContentTree.scss';
-import {Section, DefaultEntry} from '@jahia/moonstone/dist/icons';
+import {DefaultEntry, Section} from '@jahia/moonstone';
 
 function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {

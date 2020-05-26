@@ -1,7 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {BreadcrumbItem, Menu, MenuItem} from '@jahia/moonstone';
-import {MoreHoriz} from '@jahia/moonstone/dist/icons';
+import {BreadcrumbItem, Menu, MenuItem, MoreHoriz} from '@jahia/moonstone';
 
 import CompositePathEntry from './CompositePathEntry';
 

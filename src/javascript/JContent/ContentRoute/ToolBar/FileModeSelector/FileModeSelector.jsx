@@ -3,8 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {filesgridSetGridMode, filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
 import JContentConstants from '../../../JContent.constants';
-import {ViewComfy, ViewGrid, ViewList} from '@jahia/moonstone/dist/icons';
-import {Button} from '@jahia/moonstone';
+import {Button, ViewComfy, ViewGrid, ViewList} from '@jahia/moonstone';
 
 const localStorage = window.localStorage;
 

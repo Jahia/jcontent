@@ -1,4 +1,4 @@
-import {Lock, NoCloud} from '@jahia/moonstone/dist/icons';
+import {Lock, NoCloud} from '@jahia/moonstone';
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './ContentTree.scss';

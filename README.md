@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/Jahia/jcontent/tree/master.svg?style=svg)](https://circleci.com/gh/Jahia/jcontent/tree/master)
+![GitHub tag (latest by version)](https://img.shields.io/github/v/tag/Jahia/jContent?sort=semver)
+
 # jContent
 
 jContent for Jahia. This module provides the main authoring UI for Jahia.

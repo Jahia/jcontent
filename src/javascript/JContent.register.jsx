@@ -16,6 +16,7 @@ import {filesGridRedux} from './JContent/ContentRoute/ContentLayout/FilesGrid/Fi
 import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.redux';
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
+import {pagesModeRedux} from './JContent/ContentRoute/ToolBar/PagesModeSelector/PagesModeSelector.redux';
 import JContentConstants from './JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from 'react-apollo';
@@ -98,6 +99,7 @@ export default function () {
     paginationRedux(registry);
     sortRedux(registry);
     contentSelectionRedux(registry);
+    pagesModeRedux(registry);
     jContentAccordionItems(registry);
     jContentRedux(registry);
     jContentAppRoot(registry);

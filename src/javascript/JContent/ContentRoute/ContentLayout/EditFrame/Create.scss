@@ -1,0 +1,10 @@
+.root {
+    position: absolute;
+
+    display: flex;
+
+    & > button {
+        flex: 1 0 0;
+        margin: 0 4px;
+    }
+}

@@ -11,14 +11,16 @@ import ContentStatuses from './ContentStatuses';
 import {MainActionBar} from './MainActionBar';
 import JContentConstants from '../JContent.constants';
 import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
+import {EditFrame} from './ContentLayout/EditFrame/EditFrame';
 
 const ContentRoute = () => {
-    const {mode} = useSelector(state => ({
-        mode: state.jcontent.mode
+    const {mode, pagesMode} = useSelector(state => ({
+        mode: state.jcontent.mode,
+        pagesMode: state.jcontent.pagesMode
     }));
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
-
+    const inEditMode = JContentConstants.mode.PAGES === mode && JContentConstants.pagesMode.VIEW === pagesMode;
     return (
         <MainLayout
             header={
@@ -33,7 +35,7 @@ const ContentRoute = () => {
         >
             <LoaderSuspense>
                 <ErrorBoundary>
-                    {mode.length > 0 && <ContentLayout/>}
+                    { mode.length > 0 && inEditMode ? <EditFrame/> : <ContentLayout/> }
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

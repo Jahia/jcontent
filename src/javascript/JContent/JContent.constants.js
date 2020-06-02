@@ -46,6 +46,10 @@ const JContentConstants = {
             PAGES: 'pages',
             ALL: 'all'
         }
+    },
+    pagesMode: {
+        LIST: 'list',
+        VIEW: 'view'
     }
 };
 

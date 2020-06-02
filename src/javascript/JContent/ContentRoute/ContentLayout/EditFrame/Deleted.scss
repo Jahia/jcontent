@@ -1,0 +1,16 @@
+.root {
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+
+    background: #eaeaea url('/gwt/resources/css/images/deleted-overlay.png') top left;
+    opacity: 0.5;
+
+    pointer-events: none;
+    justify-items: center;
+}
+
+.typo {
+    margin: auto;
+}

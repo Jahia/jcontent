@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
@@ -6,7 +6,30 @@ import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSe
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 
-export const Boxes = ({currentDocument}) => {
+const getModuleElement = (currentDocument, target) => {
+    let element = target;
+
+    while (element && !element.getAttribute('jahiatype') && !element.dataset?.jahiaParent) {
+        element = element.parentElement;
+    }
+
+    if (element?.dataset?.jahiaParent) {
+        element = currentDocument.getElementById(element.dataset.jahiaParent);
+    }
+
+    return element;
+};
+
+const getParentModule = e => {
+    let parent = e.parentElement;
+    while (parent && parent.getAttribute('jahiatype') !== 'module') {
+        parent = parent.parentElement;
+    }
+
+    return parent;
+};
+
+export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     const {language, selection, path} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
@@ -15,16 +38,20 @@ export const Boxes = ({currentDocument}) => {
 
     const dispatch = useDispatch();
 
-    const [currentElements, setCurrentElements] = useState([]);
+    const [currentElement, setCurrentElement] = useState();
     const [placeholders, setPlaceholders] = useState([]);
 
-    const addCurrentElement = element => {
-        setCurrentElements(elements => [...elements, element]);
-    };
+    const onMouseOver = useCallback(event => {
+        event.stopPropagation();
+        setCurrentElement(getModuleElement(currentDocument, event.currentTarget));
+    }, [setCurrentElement, currentDocument]);
 
-    const removeCurrentElement = element => {
-        setCurrentElements(elements => elements.filter(el => el !== element));
-    };
+    const onMouseOut = useCallback(event => {
+        event.stopPropagation();
+        if (event.relatedTarget && getModuleElement(event.currentTarget)?.getAttribute('path') !== getModuleElement(event.relatedTarget)?.getAttribute('path')) {
+            setCurrentElement(null);
+        }
+    }, [setCurrentElement]);
 
     const contextualMenu = useRef();
 
@@ -42,13 +69,13 @@ export const Boxes = ({currentDocument}) => {
             const type = elem.getAttribute('jahiatype');
             const path = elem.getAttribute('path');
             if (type === 'module' && path !== '*') {
-                elem.addEventListener('mouseenter', event => addCurrentElement(event.currentTarget));
-                elem.addEventListener('mouseleave', event => removeCurrentElement(event.currentTarget));
+                elem.addEventListener('mouseover', onMouseOver);
+                elem.addEventListener('mouseout', onMouseOut);
             }
         });
 
         currentDocument.documentElement.querySelector('body').addEventListener('contextmenu', event => {
-            const rect = window.frames['page-composer-frame'].getBoundingClientRect();
+            const rect = currentFrameRef.current.getBoundingClientRect();
             const dup = new MouseEvent(event.type, {
                 ...event,
                 clientX: event.clientX + rect.x,
@@ -58,13 +85,7 @@ export const Boxes = ({currentDocument}) => {
 
             event.preventDefault();
         });
-    }, [currentDocument]);
-
-    let currentElement = currentElements.length > 0 && currentElements[currentElements.length - 1];
-
-    if (currentElement?.dataset?.jahiaParent) {
-        currentElement = currentDocument.getElementById(currentElement.dataset.jahiaParent);
-    }
+    }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver]);
 
     const currentPath = currentElement ? currentElement.getAttribute('path') : path;
 
@@ -72,16 +93,17 @@ export const Boxes = ({currentDocument}) => {
         <>
             <ContextualMenu
                 ref={contextualMenu}
-                actionKey={selection.length === 0 || selection.indexOf(currentPath) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                context={selection.length === 0 || selection.indexOf(currentPath) === -1 ? {path: currentPath} : {paths: selection}}
+                actionKey={selection.length <= 1 || selection.indexOf(currentPath) === -1 ? 'contentMenu' : 'selectedContentMenu'}
+                context={selection.length === 0 || selection.indexOf(currentPath) === -1 ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
             {currentElement && selection.indexOf(currentPath === -1) && (
                 <Box element={currentElement}
                      language={language}
-                     color="Hover"
-                     onMouseEnter={addCurrentElement}
-                     onMouseLeave={removeCurrentElement}
+                     color="default"
+                     onMouseOver={onMouseOver}
+                     onMouseOut={onMouseOut}
+                     onSaved={onSaved}
                      onSelect={() => {
                          dispatch(cmSwitchSelection(currentPath));
                      }}
@@ -91,30 +113,30 @@ export const Boxes = ({currentDocument}) => {
                 <Box key={e.getAttribute('id')}
                      element={e}
                      language={language}
-                     color="Selection"
+                     color="accent"
+                     onMouseOver={onMouseOver}
+                     onMouseOut={onMouseOut}
+                     onSaved={onSaved}
                      onSelect={() => {
                          dispatch(cmSwitchSelection(e.getAttribute('path')));
                      }}
-                     onGoesUp={event => {
+                     onGoesUp={getParentModule(e) && (event => {
                          event.stopPropagation();
-                         let parent = e.parentElement;
-                         while (parent && parent.getAttribute('jahiatype') !== 'module') {
-                             parent = parent.parentElement;
-                         }
+                         let parent = getParentModule(e);
 
                          if (parent) {
                              dispatch(cmRemoveSelection(e.getAttribute('path')));
                              dispatch(cmAddSelection(parent.getAttribute('path')));
                          }
-                     }}
+                     })}
                 />
             ))}
             {placeholders.map(elem => (
                 <Create key={elem.getAttribute('id')}
                         element={elem}
                         parent={elem}
-                        onMouseEnter={addCurrentElement}
-                        onMouseLeave={removeCurrentElement}
+                        onMouseOver={onMouseOver}
+                        onMouseOut={onMouseOut}
                 />
             ))}
 
@@ -123,5 +145,7 @@ export const Boxes = ({currentDocument}) => {
 };
 
 Boxes.propTypes = {
-    currentDocument: PropTypes.any
+    currentDocument: PropTypes.any,
+    currentFrameRef: PropTypes.any,
+    onSaved: PropTypes.func
 };

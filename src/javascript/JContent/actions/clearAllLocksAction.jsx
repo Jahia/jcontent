@@ -11,8 +11,7 @@ export const ClearAllLocksActionComponent = ({path, render: Render, loading: Loa
         {
             getLockInfo: true,
             getOperationSupport: true,
-            requiredPermission: ['clearLock'],
-            hideOnNodeTypes: ['jnt:page']
+            requiredPermission: ['clearLock']
         }
     );
 

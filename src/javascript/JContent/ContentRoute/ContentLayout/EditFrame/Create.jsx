@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
 
-export const Create = ({element, onMouseEnter, onMouseLeave}) => {
+export const Create = ({element, onMouseOver, onMouseOut}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -38,8 +38,9 @@ export const Create = ({element, onMouseEnter, onMouseLeave}) => {
     return (
         <div className={styles.root}
              style={currentOffset}
-             onMouseEnter={() => onMouseEnter(element)}
-             onMouseLeave={() => onMouseLeave(element)}
+             data-jahia-parent={parent.getAttribute('id')}
+             onMouseOver={onMouseOver}
+             onMouseOut={onMouseOut}
              onDragOver={event => {
                 event.preventDefault();
              }}
@@ -52,6 +53,6 @@ export const Create = ({element, onMouseEnter, onMouseLeave}) => {
 
 Create.propTypes = {
     element: PropTypes.any,
-    onMouseEnter: PropTypes.func,
-    onMouseLeave: PropTypes.func
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func
 };

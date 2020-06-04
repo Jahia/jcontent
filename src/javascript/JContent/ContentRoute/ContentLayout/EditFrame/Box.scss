@@ -2,15 +2,19 @@
     position: absolute;
     z-index: 9999;
 
+    border-bottom-right-radius: 8px;
+
+    border-bottom-left-radius: 8px;
+
     pointer-events: none;
 
-    &.colorHover {
-        border: 2px solid var(--color-accent60);
+    &.color_default {
+        border: 2px solid var(--color-gray);
         border-top: 0;
     }
 
-    &.colorSelection {
-        border: 2px solid var(--color-danger60);
+    &.color_accent {
+        border: 2px solid var(--color-accent);
         border-top: 0;
     }
 }
@@ -46,15 +50,15 @@
 
     color: white;
 
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 
-    &.colorHover {
-        background: var(--color-accent60);
+    &.color_default {
+        background: var(--color-gray);
     }
 
-    &.colorSelection {
-        background: var(--color-danger60);
+    &.color_accent {
+        background: var(--color-accent);
     }
 }
 

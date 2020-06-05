@@ -137,6 +137,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                         parent={elem}
                         onMouseOver={onMouseOver}
                         onMouseOut={onMouseOut}
+                        onSaved={onSaved}
                 />
             ))}
 

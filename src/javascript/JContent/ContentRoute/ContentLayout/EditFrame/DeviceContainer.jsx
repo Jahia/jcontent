@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import styles from './DeviceContainer.scss';
-import {Dropdown, UnfoldMore, UnfoldLess, Button, ButtonGroup} from '@jahia/moonstone';
+import {Button, ButtonGroup, Dropdown, UnfoldLess, UnfoldMore} from '@jahia/moonstone';
 
 const devices = {
     appleIphoneVer1: {

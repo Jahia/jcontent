@@ -4,8 +4,10 @@ import styles from './Create.scss';
 import PropTypes from 'prop-types';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
+import classnames from 'clsx';
+import {useDropTarget} from './useDropTarget';
 
-export const Create = ({element, onMouseOver, onMouseOut}) => {
+export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -22,6 +24,8 @@ export const Create = ({element, onMouseOver, onMouseOut}) => {
         element.dataset.jahiaParent = parent.id;
     }
 
+    const {onDragEnter, onDragLeave, onDragOver, onDrop, dropClassName} = useDropTarget({parent, element, onSaved, enabledClassName: styles.dropTarget});
+
     useEffect(() => {
         element.style.height = '28px';
     });
@@ -36,14 +40,15 @@ export const Create = ({element, onMouseOver, onMouseOut}) => {
     };
 
     return (
-        <div className={styles.root}
+        <div className={classnames(styles.root, dropClassName)}
              style={currentOffset}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
-             onDragOver={event => {
-                event.preventDefault();
-             }}
+             onDragOver={onDragOver}
+             onDragEnter={onDragEnter}
+             onDragLeave={onDragLeave}
+             onDrop={onDrop}
         >
             <DisplayAction actionKey="createContent" context={{path}} render={buttonRenderer}/>
             <DisplayAction actionKey="paste" context={{path}} render={buttonRenderer}/>
@@ -54,5 +59,6 @@ export const Create = ({element, onMouseOver, onMouseOut}) => {
 Create.propTypes = {
     element: PropTypes.any,
     onMouseOver: PropTypes.func,
-    onMouseOut: PropTypes.func
+    onMouseOut: PropTypes.func,
+    onSaved: PropTypes.func
 };

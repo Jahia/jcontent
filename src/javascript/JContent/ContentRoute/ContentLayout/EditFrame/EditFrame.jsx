@@ -124,6 +124,13 @@ export const EditFrame = ({deviceView}) => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
+
+                const dnd = document.createElement('style');
+                dnd.textContent =
+                    'body.dragdrop.dragdrop.dragdrop) {pointer-events: none;}\n' +
+                    'body.dragdrop.dragdrop.dragdrop * {pointer-events: none;}\n' +
+                    'body.dragdrop.dragdrop.dragdrop *.dropTarget {pointer-events: all;}\n';
+                head.appendChild(dnd);
             } else {
                 iframe.current.contentWindow.location.href = window.contextJsParameters.contextPath + mainResourcePath;
             }

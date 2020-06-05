@@ -20,6 +20,7 @@
     transform-origin: top left;
     display: flex;
     flex: 1 0 0;
+    transition: transform 0.3s ease-in;
 }
 
 .device {

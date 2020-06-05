@@ -8,6 +8,7 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
 import {publicationStatusByName} from '../PublicationStatus/publicationStatusRenderer';
 import {useTranslation} from 'react-i18next';
+import {useDragSource} from './useDragSource';
 
 export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
@@ -20,7 +21,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
         getAggregatedPublicationInfo: true,
         getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy']
     });
-
+    const {onDragEnd, onDragStart, dragClassName} = useDragSource({element});
     const buttonRenderer = getButtonRenderer({color, variant: 'outlined', className: styles.button});
 
     const rootDiv = useRef();
@@ -52,17 +53,13 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                 <div className={styles.rel} style={{height: 24 + rect.height}}>
                     <div ref={div}
                          draggable
-                         className={styles.sticky}
+                         className={classnames(styles.sticky, dragClassName)}
                          data-jahia-parent={element.getAttribute('id')}
                          onClick={onSelect}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
-                         onDragStart={() => {
-                             element.style.display = 'none';
-                         }}
-                         onDragEnd={() => {
-                             element.style.display = 'block';
-                         }}
+                         onDragStart={onDragStart}
+                         onDragEnd={onDragEnd}
                     >
                         <div className={classnames(styles.header, styles['color_' + color])}>
                             {onGoesUp && (

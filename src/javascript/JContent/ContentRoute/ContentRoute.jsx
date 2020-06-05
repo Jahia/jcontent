@@ -20,7 +20,7 @@ const ContentRoute = () => {
     }));
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
-    const inEditMode = JContentConstants.mode.PAGES === mode && JContentConstants.pagesMode.VIEW === pagesMode;
+    const inEditMode = JContentConstants.mode.PAGES === mode && (JContentConstants.pagesMode.VIEW === pagesMode || JContentConstants.pagesMode.VIEW_DEVICE === pagesMode);
     return (
         <MainLayout
             header={
@@ -35,7 +35,7 @@ const ContentRoute = () => {
         >
             <LoaderSuspense>
                 <ErrorBoundary>
-                    { mode.length > 0 && inEditMode ? <EditFrame/> : <ContentLayout/> }
+                    { mode.length > 0 && inEditMode ? <EditFrame deviceView={JContentConstants.pagesMode.VIEW_DEVICE === pagesMode}/> : <ContentLayout/> }
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

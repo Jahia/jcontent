@@ -13,8 +13,10 @@ import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
 import {Portal} from './Portal';
 import {Infos} from './Infos';
+import {DeviceContainer} from './DeviceContainer';
+import PropTypes from 'prop-types';
 
-export const EditFrame = () => {
+export const EditFrame = ({deviceView}) => {
     const {path, site, language} = useSelector(state => ({
         language: state.language,
         site: state.site,
@@ -134,19 +136,21 @@ export const EditFrame = () => {
 
     return (
         <>
-            <iframe ref={iframe}
-                    width="100%"
-                    height="100%"
-                    id="page-composer-frame-1"
-                    onLoad={iFrameOnLoad}
-            />
-            <iframe ref={iframeSwap}
-                    width="100%"
-                    height="100%"
-                    id="page-composer-frame-2"
-                    style={{display: 'none'}}
-                    onLoad={iFrameOnLoad}
-            />
+            <DeviceContainer enabled={deviceView}>
+                <iframe ref={iframe}
+                        width="100%"
+                        height="100%"
+                        id="page-composer-frame-1"
+                        onLoad={iFrameOnLoad}
+                />
+                <iframe ref={iframeSwap}
+                        width="100%"
+                        height="100%"
+                        id="page-composer-frame-2"
+                        style={{display: 'none'}}
+                        onLoad={iFrameOnLoad}
+                />
+            </DeviceContainer>
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div id="portal--" className={styles.root}>
@@ -166,4 +170,8 @@ export const EditFrame = () => {
             )}
         </>
     );
+};
+
+EditFrame.propTypes = {
+    deviceView: PropTypes.bool
 };

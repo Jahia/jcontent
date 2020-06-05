@@ -8,11 +8,12 @@ import {setPagesMode} from './PagesModeSelector.redux';
 
 const LIST = JContentConstants.pagesMode.LIST;
 const VIEW = JContentConstants.pagesMode.VIEW;
+const VIEW_DEVICE = JContentConstants.pagesMode.VIEW_DEVICE;
 
-const buttons = [LIST, VIEW];
-const icons = {
+const buttons = {
     [LIST]: <ViewList/>,
-    [VIEW]: <WebPage/>
+    [VIEW]: <WebPage/>,
+    [VIEW_DEVICE]: <WebPage/>
 };
 
 export const PagesModeSelector = () => {
@@ -23,7 +24,7 @@ export const PagesModeSelector = () => {
     const dispatch = useDispatch();
 
     return (
-        buttons.map(v => (
+        Object.keys(buttons).map(v => (
             <Button key={v}
                     data-sel-role={'set-view-mode-' + v}
                     aria-selected={mode === v}
@@ -31,7 +32,7 @@ export const PagesModeSelector = () => {
                     title={t('jcontent:label.contentManager.pagesMode.' + v)}
                     size="default"
                     variant="ghost"
-                    icon={icons[v]}
+                    icon={buttons[v]}
                     onClick={() => dispatch(setPagesMode(v))}
             />
         ))

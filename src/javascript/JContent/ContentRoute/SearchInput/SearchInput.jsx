@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
-import {CloseIcon, SearchIcon} from '@jahia/moonstone';
+import {Close as CloseIcon, Search as SearchIcon} from '@jahia/moonstone';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/JContent.redux';
 import JContentConstants from '../../JContent.constants';

@@ -34,7 +34,10 @@ export const prefixCssSelectors = function (rules, className) {
         if (!isIn && nextChar !== '@' && nextChar !== '}' && (char === '}' || char === ',' || ((char === '{' || char === ';') && isAt))) {
             let before = rules.slice(0, i + 1);
             let after = rules.slice(i + 1).trim();
-            if (!after.startsWith(className)) {
+            if (after.startsWith('.noprefix')) {
+                after = after.substr(9);
+                rules = before + after;
+            } else if (!after.startsWith(className)) {
                 if (after.startsWith(':root')) {
                     after = after.substr(5);
                     i -= 5;

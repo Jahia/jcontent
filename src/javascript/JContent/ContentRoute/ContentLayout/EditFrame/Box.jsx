@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {ArrowUp, Button, Typography} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {useNodeInfo} from '@jahia/data-helper';
@@ -9,8 +9,9 @@ import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
 import {publicationStatusByName} from '../PublicationStatus/publicationStatusRenderer';
 import {useTranslation} from 'react-i18next';
 import {useDragSource} from './useDragSource';
+import {useDropTarget} from './useDropTarget';
 
-export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, onMouseOut, onSaved}) => {
+export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, onMouseOut, onSaved, rootElementRef}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -21,7 +22,46 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
         getAggregatedPublicationInfo: true,
         getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy']
     });
+
+    let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+    if (!parent) {
+        parent = element.parentElement;
+        while (parent && parent.getAttribute('jahiatype') !== 'module') {
+            parent = parent.parentElement;
+        }
+
+        if (parent) {
+            element.dataset.jahiaParent = parent.id;
+        }
+    }
+
     const {onDragEnd, onDragStart, dragClassName} = useDragSource({element});
+
+    const {onDragEnter, onDragLeave, onDragOver, onDrop, dropClassName} = useDropTarget({
+        parent,
+        element,
+        onSaved,
+        enabledClassName: styles.dropTarget
+    });
+
+    useEffect(() => {
+        if (parent) {
+            element.classList.add(dropClassName);
+            element.addEventListener('dragenter', onDragEnter);
+            element.addEventListener('dragleave', onDragLeave);
+            element.addEventListener('dragover', onDragOver);
+            element.addEventListener('drop', onDrop);
+        }
+
+        return () => {
+            element.classList.remove(dropClassName);
+            element.removeEventListener('dragenter', onDragEnter);
+            element.removeEventListener('dragleave', onDragLeave);
+            element.removeEventListener('dragover', onDragOver);
+            element.removeEventListener('drop', onDrop);
+        };
+    }, [dropClassName, element, onDragEnter, onDragLeave, onDragOver, onDrop, parent]);
+
     const buttonRenderer = getButtonRenderer({color, variant: 'outlined', className: styles.button});
 
     const rootDiv = useRef();
@@ -58,8 +98,14 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                          onClick={onSelect}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
-                         onDragStart={onDragStart}
-                         onDragEnd={onDragEnd}
+                         onDragStart={e => {
+                             rootElementRef.current.classList.add(styles.dragging);
+                             onDragStart(e);
+                         }}
+                         onDragEnd={e => {
+                             rootElementRef.current.classList.remove(styles.dragging);
+                             onDragEnd(e);
+                         }}
                     >
                         <div className={classnames(styles.header, styles['color_' + color])}>
                             {onGoesUp && (
@@ -107,5 +153,7 @@ Box.propTypes = {
 
     onMouseOver: PropTypes.func,
 
-    onMouseOut: PropTypes.func
+    onMouseOut: PropTypes.func,
+
+    rootElementRef: PropTypes.any
 };

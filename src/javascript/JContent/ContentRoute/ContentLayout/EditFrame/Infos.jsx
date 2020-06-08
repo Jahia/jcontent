@@ -13,7 +13,6 @@ export const Infos = ({currentDocument}) => {
     const [paths, setPaths] = useState([]);
 
     useEffect(() => {
-        console.log('get stuff');
         const paths = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(elem => {
             if (elem.getAttribute('path') !== '*') {
@@ -24,7 +23,12 @@ export const Infos = ({currentDocument}) => {
         setPaths(paths);
     }, [currentDocument]);
 
-    const {nodes} = useNodeInfo({paths, language}, {getDisplayName: true, getAggregatedPublicationInfo: true, getProperties: ['jcr:mixinTypes']});
+    const {nodes} = useNodeInfo({paths, language}, {
+        getDisplayName: true,
+        getAggregatedPublicationInfo: true,
+        getProperties: ['jcr:mixinTypes'],
+        getOperationSupport: true
+    });
 
     return Boolean(nodes) && nodes
         .filter(n => isMarkedForDeletion(n))

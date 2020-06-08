@@ -157,3 +157,15 @@
         widows: 0;
     }
 }
+
+:global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents {
+    pointer-events: none;
+}
+
+:global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents * {
+    pointer-events: none;
+}
+
+:global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents *.enablePointerEvents {
+    pointer-events: all;
+}

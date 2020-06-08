@@ -7,13 +7,13 @@ import {useTranslation} from 'react-i18next';
 import classNames from 'clsx';
 import styles from './PublicationStatus.scss';
 
-export const PublicationStatus = ({node, className}) => {
+export const PublicationStatus = ({node, className, style}) => {
     const {t, i18n} = useTranslation();
     const publicationStatus = publicationStatusByName.getStatus(node);
     const publicationStatusClass = publicationStatus.getContentClass(styles);
     if (node.operationsSupport.publication) {
         return (
-            <div className={classNames(styles.root, className)}>
+            <div className={classNames(styles.root, className)} style={style || {}}>
                 <div className={classNames(styles.border, publicationStatusClass)}/>
                 <div className={classNames(styles.publicationInfoWrapper, publicationStatusClass)}>
                     <div className={styles.publicationInfo}
@@ -36,6 +36,7 @@ export const PublicationStatus = ({node, className}) => {
 
 PublicationStatus.propTypes = {
     node: PropTypes.object.isRequired,
+    style: PropTypes.any,
     className: PropTypes.string
 };
 

@@ -17,6 +17,15 @@
         border: 2px solid var(--color-accent);
         border-top: 0;
     }
+
+    &.color_hidden {
+        display: none;
+    }
+
+    .dragging &.color_accent,
+    .dragging &.color_default {
+        border: 0;
+    }
 }
 
 .rel {
@@ -60,9 +69,18 @@
     &.color_accent {
         background: var(--color-accent);
     }
+
+    .dragging &.color_default,
+    .dragging &.color_accent {
+        display: none;
+    }
 }
 
 .button {
     flex: 0 0 auto;
     margin: 0 4px;
+}
+
+:global(.noprefix) .dropTarget {
+    border-top: 1px dashed gray;
 }

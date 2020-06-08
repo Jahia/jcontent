@@ -27,25 +27,27 @@ export const EditFrame = ({deviceView}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
 
-    const mainResourcePath = `/cms/editframe/default/${language}${path}.html?redirect=false`;
-
     const [currentDocument, setCurrentDocument] = useState(null);
+    const [device, setDevice] = useState(null);
+    const previousDevice = useRef();
 
     const iframe = useRef();
     const iframeSwap = useRef();
-    const scrollPos = useRef({scrollTop: 0, scrollLeft: 0});
 
     const iFrameOnLoad = event => {
         const loadedIframe = event.currentTarget;
         if (loadedIframe.contentWindow.location.href !== 'about:blank') {
             if (iframe.current !== loadedIframe) {
-                console.log('swapping ' + loadedIframe.getAttribute('id'));
                 iframeSwap.current = iframe.current;
                 iframe.current = loadedIframe;
                 setTimeout(() => {
+                    const pos = {
+                        scrollLeft: iframeSwap.current.contentWindow.pageXOffset || iframeSwap.current.contentDocument.documentElement.scrollLeft,
+                        scrollTop: iframeSwap.current.contentWindow.pageYOffset || iframeSwap.current.contentDocument.documentElement.scrollTop
+                    };
                     iframeSwap.current.style.display = 'none';
                     iframe.current.style.display = 'block';
-                    iframe.current.contentWindow.scrollTo(scrollPos.current.scrollLeft, scrollPos.current.scrollTop);
+                    iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
                 });
             }
         }
@@ -62,16 +64,9 @@ export const EditFrame = ({deviceView}) => {
     };
 
     function refresh() {
-        scrollPos.current = {
-            scrollLeft: iframe.current.contentWindow.pageXOffset || iframe.current.contentDocument.documentElement.scrollLeft,
-            scrollTop: iframe.current.contentWindow.pageYOffset || iframe.current.contentDocument.documentElement.scrollTop
-        };
-
         if (iframeSwap.current.contentWindow.location.href !== iframe.current.contentWindow.location.href) {
-            console.log('setting href for ' + iframeSwap.current.getAttribute('id') + ' to ' + iframe.current.contentWindow.location.href);
             iframeSwap.current.contentWindow.location.href = iframe.current.contentWindow.location.href;
         } else {
-            console.log('reloading ' + iframeSwap.current.getAttribute('id'));
             iframeSwap.current.contentWindow.location.reload();
         }
     }
@@ -112,10 +107,12 @@ export const EditFrame = ({deviceView}) => {
         };
     });
 
+    const deviceParam = (deviceView && device) ? ('&channel=' + device) : '';
+
     useEffect(() => {
         if (currentDocument) {
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            if (path === framePath) {
+            if (path === framePath && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 document.querySelectorAll('style[styleloader]').forEach(s => {
@@ -124,18 +121,12 @@ export const EditFrame = ({deviceView}) => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
-
-                const dnd = document.createElement('style');
-                dnd.textContent =
-                    'body.dragdrop.dragdrop.dragdrop) {pointer-events: none;}\n' +
-                    'body.dragdrop.dragdrop.dragdrop * {pointer-events: none;}\n' +
-                    'body.dragdrop.dragdrop.dragdrop *.dropTarget {pointer-events: all;}\n';
-                head.appendChild(dnd);
             } else {
-                iframe.current.contentWindow.location.href = window.contextJsParameters.contextPath + mainResourcePath;
+                iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+                previousDevice.current = deviceParam;
             }
         }
-    }, [currentDocument, mainResourcePath, path]);
+    }, [currentDocument, path, previousDevice, deviceParam, language]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
@@ -143,7 +134,7 @@ export const EditFrame = ({deviceView}) => {
 
     return (
         <>
-            <DeviceContainer enabled={deviceView}>
+            <DeviceContainer enabled={deviceView} device={device} setDevice={setDevice}>
                 <iframe ref={iframe}
                         width="100%"
                         height="100%"
@@ -160,7 +151,7 @@ export const EditFrame = ({deviceView}) => {
             </DeviceContainer>
             {currentDocument && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
-                    <div id="portal--" className={styles.root}>
+                    <div className={styles.root}>
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
                                onSaved={() => {

@@ -4,7 +4,8 @@ import styles from './DeviceContainer.scss';
 import {Button, ButtonGroup, Dropdown, UnfoldLess, UnfoldMore} from '@jahia/moonstone';
 
 const devices = {
-    appleIphoneVer1: {
+    // eslint-disable-next-line camelcase
+    apple_iphone_ver1: {
         label: 'Phone: iPhone',
         decoration: '/modules/channels/images/devices/template_375x667_portrait.png',
         decorationWidth: 495,
@@ -14,7 +15,8 @@ const devices = {
         width: 375,
         height: 667
     },
-    androidTablet: {
+    // eslint-disable-next-line camelcase
+    android_tablet: {
         label: 'Tablet: Android',
         decoration: '/modules/channels/images/devices/template_768x1024_portrait.png',
         decorationWidth: 888,
@@ -26,13 +28,16 @@ const devices = {
     }
 };
 
-export const DeviceContainer = ({enabled, children}) => {
+export const DeviceContainer = ({enabled, device, setDevice, children}) => {
     const ref = useRef();
-    const [device, setDevice] = useState('appleIphoneVer1');
     const [scale, setScale] = useState(1);
     const [scaled, setScaled] = useState(false);
 
     useEffect(() => {
+        if (enabled && !device) {
+            setDevice(Object.keys(devices)[0]);
+        }
+
         if (device && enabled) {
             if (scaled) {
                 const box = ref.current.getBoundingClientRect();
@@ -41,13 +46,11 @@ export const DeviceContainer = ({enabled, children}) => {
                 setScale(1);
             }
         }
-    }, [ref, device, scaled, enabled]);
+    }, [ref, device, scaled, enabled, setDevice]);
 
     if (!enabled || !device) {
         return children;
     }
-
-    console.log(Object.keys(devices).map(k => ({label: devices[k].label, value: k})));
 
     return (
         <>
@@ -102,5 +105,7 @@ export const DeviceContainer = ({enabled, children}) => {
 
 DeviceContainer.propTypes = {
     enabled: PropTypes.bool,
+    device: PropTypes.string,
+    setDevice: PropTypes.func,
     children: PropTypes.any
 };

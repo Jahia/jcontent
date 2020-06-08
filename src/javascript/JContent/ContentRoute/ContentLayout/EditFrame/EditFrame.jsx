@@ -100,7 +100,7 @@ export const EditFrame = ({deviceView}) => {
     useEffect(() => {
         setRefetcher(refetchTypes.CONTENT_DATA, {
             refetch: () => {
-                iframe.current.contentWindow.location.reload();
+                refresh();
             }
         });
 

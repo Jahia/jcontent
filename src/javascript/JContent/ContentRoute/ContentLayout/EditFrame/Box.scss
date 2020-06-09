@@ -14,6 +14,8 @@
     }
 
     &.color_accent {
+        z-index: 10000;
+
         border: 2px solid var(--color-accent);
         border-top: 0;
     }

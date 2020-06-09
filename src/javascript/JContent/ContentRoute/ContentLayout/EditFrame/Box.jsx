@@ -1,26 +1,26 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {ArrowUp, Button, Typography} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {useNodeInfo} from '@jahia/data-helper';
 import classnames from 'clsx';
 import styles from './Box.scss';
+import publicationStatusStyles from './PublicationStatus.scss';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
-import {publicationStatusByName} from '../PublicationStatus/publicationStatusRenderer';
-import {useTranslation} from 'react-i18next';
 import {useDragSource} from './useDragSource';
 import {useDropTarget} from './useDropTarget';
+import PublicationStatus from '../PublicationStatus/PublicationStatus';
 
 export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, onMouseOut, onSaved, rootElementRef}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
     const path = element.getAttribute('path');
-    const {t} = useTranslation();
     const {node} = useNodeInfo({path, language}, {
         getDisplayName: true,
         getAggregatedPublicationInfo: true,
-        getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy']
+        getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy'],
+        getOperationSupport: true
     });
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
@@ -82,8 +82,6 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
         });
     }
 
-    const status = node && publicationStatusByName.getStatus(nodeWithProps);
-
     return (
         <>
             <div ref={rootDiv}
@@ -108,6 +106,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                          }}
                     >
                         <div className={classnames(styles.header, styles['color_' + color])}>
+                            {node && <PublicationStatus node={nodeWithProps} classes={publicationStatusStyles}/>}
                             {onGoesUp && (
                                 <Button className={styles.button}
                                         variant="outlined"
@@ -123,11 +122,6 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                                         className="flexFluid"
                                         variant="caption"
                             >{node ? node.displayName : ''}
-                            </Typography>
-                            <Typography isNowrap
-                                        className={styles.button}
-                                        variant="caption"
-                            >{status ? status.geti18nDetailsMessage(nodeWithProps, t, language) : ''}
                             </Typography>
                         </div>
                     </div>

@@ -6,7 +6,8 @@ import {useSelector} from 'react-redux';
 
 const checkAction = node => node.operationsSupport.publication &&
     isMarkedForDeletion(node) &&
-    node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED';
+    (node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' ||
+        (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' && node.aggregatedPublicationInfo.existsInLive));
 
 export const PublishDeletionActionComponent = ({context, render: Render, loading: Loading}) => {
     const {language} = useSelector(state => ({language: state.language}));

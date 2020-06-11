@@ -7,7 +7,8 @@ import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
 
 const checkAction = node => node.operationsSupport.markForDeletion &&
     isMarkedForDeletion(node) &&
-    node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' && !node.aggregatedPublicationInfo.existsInLive;
+    node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
+    node.aggregatedPublicationInfo.existsInLive !== undefined && !node.aggregatedPublicationInfo.existsInLive;
 
 export const DeletePermanentlyActionComponent = ({context, render: Render, loading: Loading}) => {
     const {language} = useSelector(state => ({language: state.language}));

@@ -56,7 +56,7 @@ jobs:
             - ~/.m2
           key: v2-dependencies-{{ checksum "pom.xml" }}
       - run:
-          name: Copy artifacts if we built it
+          name: Copy artifacts
           command: |
             mkdir /tmp/artifacts/
             cp /home/circleci/source/target/*.jar /tmp/artifacts/

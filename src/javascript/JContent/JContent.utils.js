@@ -124,19 +124,6 @@ function uppercaseFirst(string) {
     return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
-const findField = (fieldName, types) => {
-    for (let i = 0; i < types.length; i++) {
-        let type = types[i];
-        for (let j = 0; j < types[i].fields.length; j++) {
-            if (type.fields[j].name === fieldName) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-};
-
 export {
     getNewNodePath,
     hasMixin,
@@ -152,6 +139,5 @@ export {
     removeFileExtension,
     allowDoubleClickNavigation,
     getLanguageLabel,
-    uppercaseFirst,
-    findField
+    uppercaseFirst
 };

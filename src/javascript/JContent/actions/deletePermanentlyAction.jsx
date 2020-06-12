@@ -1,11 +1,9 @@
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
-import {useSchemaFields} from './hooks/useSchemaFields';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../JContent.utils';
 import {useSelector} from 'react-redux';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
-import {findField} from '../JContent.utils';
 
 const checkAction = node => node.operationsSupport.markForDeletion &&
     isMarkedForDeletion(node) &&
@@ -15,16 +13,12 @@ const checkAction = node => node.operationsSupport.markForDeletion &&
 export const DeletePermanentlyActionComponent = ({context, render: Render, loading: Loading}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
-    let types = useSchemaFields();
-    let existsInLiveField = types === undefined ? false : findField('existsInLive', types);
-
     const res = useNodeChecks(
         {path: context.path, paths: context.paths, language},
         {
             getDisplayName: true,
             getProperties: ['jcr:mixinTypes'],
             getAggregatedPublicationInfo: true,
-            supportsExistsInLive: existsInLiveField,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
             hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],

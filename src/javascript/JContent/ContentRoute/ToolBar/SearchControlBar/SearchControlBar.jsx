@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './SearchControlBar.scss';
-import {Separator, Chip} from '@jahia/moonstone';
-import Edit from '@jahia/moonstone/dist/icons/Edit';
+import {Chip, Edit, Separator} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';

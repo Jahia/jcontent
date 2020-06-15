@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
@@ -7,9 +7,8 @@ import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import styles from './Toolbar.scss';
-import {Separator, Button, ButtonGroup, Typography} from '@jahia/moonstone';
+import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
-import {Cancel} from '@jahia/moonstone/dist/icons';
 import {useNodeInfo} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {cmSetPreviewState} from '../../preview.redux';

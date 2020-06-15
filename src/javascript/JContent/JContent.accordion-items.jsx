@@ -1,10 +1,9 @@
 import React from 'react';
-import {Collections, File, FolderSpecial, Grain} from '@jahia/moonstone/dist/icons';
+import {AccordionItem, Collections, File, FolderSpecial, Grain} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
-import {AccordionItem} from '@jahia/moonstone';
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {

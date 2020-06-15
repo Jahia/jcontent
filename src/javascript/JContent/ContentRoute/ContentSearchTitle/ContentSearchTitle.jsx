@@ -1,7 +1,6 @@
 import React from 'react';
 import classnames from 'clsx';
-import {Typography, Button} from '@jahia/moonstone';
-import ArrowLeft from '@jahia/moonstone/dist/icons/ArrowLeft';
+import {ArrowLeft, Button, Typography} from '@jahia/moonstone';
 import styles from './ContentSearchTitle.scss';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';

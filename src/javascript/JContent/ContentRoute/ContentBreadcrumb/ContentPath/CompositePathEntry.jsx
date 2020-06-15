@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {BreadcrumbItem, Menu, MenuItem} from '@jahia/moonstone';
-import {MoreHoriz} from '@jahia/moonstone/dist/icons';
+import {BreadcrumbItem, Menu, MenuItem, MoreHoriz} from '@jahia/moonstone';
 
 const CompositePathEntry = ({items, onItemClick}) => {
     const [isMenuDisplayed, setMenuDisplayed] = useState(false);

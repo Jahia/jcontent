@@ -5,7 +5,7 @@ import {Typography} from '@jahia/design-system-kit';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import JContentConstants from '../../../JContent.constants';
-import {Publish} from '@jahia/moonstone/dist/icons';
+import {Publish} from '@jahia/moonstone';
 
 const styles = theme => ({
     dropZone: {

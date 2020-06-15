@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {Cloud, Delete, File, Lock, NoCloud, Warning} from '@jahia/moonstone/dist/icons';
+import {Cloud, Delete, File, Lock, NoCloud, Warning} from '@jahia/moonstone';
 
 import Status from './Status';
 

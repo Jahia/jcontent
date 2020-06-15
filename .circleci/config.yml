@@ -128,17 +128,20 @@ workflows:
   pull_request:
     when: << pipeline.parameters.run_pull_request >>
     jobs:
-      - checkout
+      - checkout:
+          name: PR Checkout
       - build:
+          name: PR Build
           is_pull_request: true
           context: QA_ENVIRONMENT
           requires:
-            - checkout
+            - PR Checkout
       - sonar:
+          name: PR Sonar analysis
           is_pull_request: true
           context: QA_ENVIRONMENT
           requires:
-            - build
+            - PR Build
   on-code-change:
     jobs:
       - checkout:
@@ -154,6 +157,7 @@ workflows:
           requires:
             - checkout
       - sonar:
+          name: Sonar analysis
           is_pull_request: false
           context: QA_ENVIRONMENT
           requires:

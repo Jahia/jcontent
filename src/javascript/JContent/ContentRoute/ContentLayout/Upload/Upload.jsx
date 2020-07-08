@@ -20,6 +20,7 @@ const styles = theme => ({
         right: 0
     },
     snackBar: {
+        zIndex: 10013,
         backgroundColor: theme.palette.background.dark,
         bottom: theme.spacing.unit * 4,
         display: 'block',

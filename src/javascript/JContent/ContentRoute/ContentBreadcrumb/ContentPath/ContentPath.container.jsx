@@ -1,10 +1,12 @@
 import React, {useMemo} from 'react';
+import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 
 import {cmGoto} from '~/JContent/JContent.redux';
 import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPath from './ContentPath';
+import JContentConstants from '../../../JContent.constants';
 
 function findLastIndex(array, callback) {
     let lastIndex = -1;
@@ -16,10 +18,10 @@ function findLastIndex(array, callback) {
     return lastIndex;
 }
 
-function getItems(node = {}) {
+function getItems(externalPath, node = {}) {
     const ancestors = node.ancestors || [];
 
-    if ((ancestors.length === 0) || node.isVisibleInContentTree) {
+    if (ancestors.length === 0 || node.isVisibleInContentTree || externalPath) {
         return ancestors;
     }
 
@@ -37,7 +39,7 @@ function getItems(node = {}) {
     return ancestors;
 }
 
-const ContentPathContainer = () => {
+const ContentPathContainer = ({externalPath}) => {
     const dispatch = useDispatch();
 
     const {mode, language, path} = useSelector(state => ({
@@ -47,11 +49,17 @@ const ContentPathContainer = () => {
     }));
 
     const {data, error} = useQuery(GetContentPath, {
-        variables: {path, language}
+        variables: {
+            path: externalPath || path,
+            language
+        }
     });
 
     const handleNavigation = path => {
-        dispatch(cmGoto({mode, path}));
+        dispatch(cmGoto({
+            mode: mode || JContentConstants.mode.CONTENT_FOLDERS,
+            path
+        }));
     };
 
     if (error) {
@@ -59,8 +67,16 @@ const ContentPathContainer = () => {
     }
 
     const node = data?.jcr?.node || {};
-    const items = useMemo(() => getItems(node), [node]);
+    const items = useMemo(() => getItems(externalPath, node), [node, externalPath]);
     return <ContentPath items={items} onItemClick={handleNavigation}/>;
+};
+
+ContentPathContainer.defaultProps = {
+    externalPath: undefined
+};
+
+ContentPathContainer.propTypes = {
+    externalPath: PropTypes.string
 };
 
 export default ContentPathContainer;

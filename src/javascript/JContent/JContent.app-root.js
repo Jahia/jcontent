@@ -4,6 +4,7 @@ import {PushEventHandler} from './PushEventHandler';
 import React from 'react';
 import {triggerRefetchAll} from './JContent.refetches';
 import Upload from './ContentRoute/ContentLayout/Upload';
+import ContentBreadcrumb from './ContentRoute/ContentBreadcrumb';
 
 export const jContentAppRoot = registry => {
     registry.add('app', 'jcontent-ds-provider', {
@@ -48,5 +49,10 @@ export const jContentAppRoot = registry => {
                 {next}
             </>
         )
+    });
+
+    registry.add('app', 'jcontent-bread-crumb', {
+        targets: ['jcontent-bread-crumb:1'],
+        render: path => <ContentBreadcrumb externalPath={path}/>
     });
 };

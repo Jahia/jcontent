@@ -9,7 +9,7 @@ import {
     TextField,
     withStyles
 } from '@material-ui/core';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 
@@ -50,16 +50,20 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="secondary" data-cm-role="create-folder-as-cancel" onClick={handleCancel}>
-                    {t('jcontent:label.contentManager.createFolderAction.cancel')}
-                </Button>
-                <Button variant="primary"
-                        data-cm-role="create-folder-as-confirm"
-                        disabled={loading || !name || !isNameValid || !isNameAvailable}
-                        onClick={handleCreate}
-                >
-                    {t('jcontent:label.contentManager.createFolderAction.ok')}
-                </Button>
+                <Button
+                    size="big"
+                    data-cm-role="create-folder-as-cancel"
+                    label={t('jcontent:label.contentManager.createFolderAction.cancel')}
+                    onClick={handleCancel}
+                />
+                <Button
+                    color="accent"
+                    size="big"
+                    data-cm-role="create-folder-as-confirm"
+                    isDisabled={loading || !name || !isNameValid || !isNameAvailable}
+                    label={t('jcontent:label.contentManager.createFolderAction.ok')}
+                    onClick={handleCreate}
+                />
             </DialogActions>
         </Dialog>
     );

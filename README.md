@@ -1,6 +1,10 @@
 [![CircleCI](https://circleci.com/gh/Jahia/jcontent/tree/master.svg?style=svg)](https://circleci.com/gh/Jahia/jcontent/tree/master)
 ![GitHub tag (latest by version)](https://img.shields.io/github/v/tag/Jahia/jContent?sort=semver)
-![License](https://img.shields.io/badge/license-JAHIA'S%20DUAL%20LICENSING-yellow)
+![License](https://img.shields.io/github/license/jahia/jcontent)
+
+<a href="https://www.jahia.com/">
+    <img src="https://www.jahia.com/modules/jahiacom-templates/images/jahia-3x.png" alt="Jahia logo" title="Jahia" align="right" height="60" />
+</a>
 
 # jContent
 
@@ -55,3 +59,8 @@ are bookmarkeable.
 
 The main route contains the site key and the language of the content as well as the mode in which we are (pages, search,
 apps). The routing is done in the `ContentManager` component.
+
+## Open-Source
+
+This is an Open-Source module, you can find more details about Open-Source @ Jahia [in this repository](https://github.com/Jahia/open-source).
+

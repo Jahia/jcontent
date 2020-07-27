@@ -62,7 +62,7 @@
     "graphql-tag": "^2.9.1",
     "i18next": "^19.0.3",
     "image-extensions": "^1.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "mdi-material-ui": "^5.10.0",
     "prop-types": "latest",
     "query-string": "5",

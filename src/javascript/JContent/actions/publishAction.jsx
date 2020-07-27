@@ -57,7 +57,7 @@ const constraintsByType = {
 };
 
 export const PublishActionComponent = ({context, render: Render, loading: Loading}) => {
-    const {language} = useSelector(state => ({language: state.language}));
+    const {language} = useSelector(state => ({language: context.language ? context.language : state.language}));
     const {t} = useTranslation();
 
     const res = useNodeChecks({path: context.path, paths: context.paths, language}, {

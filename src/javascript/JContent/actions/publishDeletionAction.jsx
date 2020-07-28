@@ -10,10 +10,10 @@ const checkAction = node => node.operationsSupport.publication &&
         (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
             (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));
 
-export const PublishDeletionActionComponent = ({context, render: Render, loading: Loading}) => {
+export const PublishDeletionActionComponent = ({path, paths, allSubTree, allLanguages, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
-    const res = useNodeChecks({path: context.path, paths: context.paths, language}, {
+    const res = useNodeChecks({path, paths, language}, {
         getProperties: ['jcr:mixinTypes'],
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
@@ -22,32 +22,35 @@ export const PublishDeletionActionComponent = ({context, render: Render, loading
     });
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
 
     return (
-        <Render context={{
-            ...context,
-            isVisible,
-            displayActionProps: {
-                ...context.displayActionProps,
-                color: 'danger'
-            },
-            onClick: () => {
-                if (context.path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], context.allSubTree, context.allLanguages, context.checkForUnpublication);
-                } else if (context.paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), context.allSubTree, context.allLanguages, context.checkForUnpublication);
+        <Render
+            {...others}
+            isVisible={isVisible}
+            color="danger"
+            onClick={() => {
+                if (path) {
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], allSubTree, allLanguages);
+                } else if (paths) {
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), allSubTree, allLanguages);
                 }
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 PublishDeletionActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
+
+    paths: PropTypes.arrayOf(PropTypes.string),
+
+    allSubTree: PropTypes.bool,
+
+    allLanguages: PropTypes.bool,
 
     render: PropTypes.func.isRequired,
 

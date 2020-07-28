@@ -2,35 +2,35 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export const DownloadFileActionComponent = ({context, render: Render, loading: Loading}) => {
-    const res = useNodeChecks({path: context.path}, {showOnNodeTypes: ['jnt:file']});
+export const DownloadFileActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+    const res = useNodeChecks({path}, {showOnNodeTypes: ['jnt:file']});
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const isVisible = res.checksResult;
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: () => {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={() => {
                 let a = document.createElement('a');
                 a.setAttribute('title', 'download');
-                a.setAttribute('href', window.contextJsParameters.contextPath + '/files/' + window.contextJsParameters.workspace + context.originalContext.path);
-                a.setAttribute('download', context.originalContext.path.split('/').pop());
+                a.setAttribute('href', window.contextJsParameters.contextPath + '/files/' + window.contextJsParameters.workspace + path);
+                a.setAttribute('download', path.split('/').pop());
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 DownloadFileActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
 
     render: PropTypes.func.isRequired,
 

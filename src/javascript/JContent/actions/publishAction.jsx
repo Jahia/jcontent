@@ -7,11 +7,11 @@ import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
 
-function checkAction(res, node, context) {
+function checkAction(res, node, publishType, allLanguages) {
     let enabled = true;
     let isVisible = res.checksResult && node.operationsSupport.publication;
 
-    if (context.publishType === 'unpublish') {
+    if (publishType === 'unpublish') {
         isVisible = isVisible &&
             !isMarkedForDeletion(node);
         enabled = enabled &&
@@ -22,10 +22,10 @@ function checkAction(res, node, context) {
         isVisible = isVisible &&
             !isMarkedForDeletion(node);
         enabled = enabled &&
-            (context.publishType === 'publishAll' || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
+            (publishType === 'publishAll' || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
     }
 
-    if (context.allLanguages) {
+    if (allLanguages) {
         isVisible = isVisible && node.site.languages.length > 1;
     }
 
@@ -56,64 +56,74 @@ const constraintsByType = {
     }
 };
 
-export const PublishActionComponent = ({context, render: Render, loading: Loading}) => {
-    const {language} = useSelector(state => ({language: context.language ? context.language : state.language}));
+export const PublishActionComponent = ({id, path, paths, language, publishType, allLanguages, render: Render, loading: Loading, ...others}) => {
+    const {languageToUse} = useSelector(state => ({language: language ? language : state.language}));
     const {t} = useTranslation();
 
-    const res = useNodeChecks({path: context.path, paths: context.paths, language}, {
+    const res = useNodeChecks({path, paths, language: languageToUse}, {
         getDisplayName: true,
         getProperties: ['jcr:mixinTypes'],
         getSiteLanguages: true,
         getAggregatedPublicationInfo: {subNodes: true},
         getOperationSupport: true,
         getPermissions: ['publish', 'publication-start'],
-        ...constraintsByType[context.publishType]
+        ...constraintsByType[publishType]
     });
 
     useEffect(() => {
-        setRefetcher(context.id, {
+        setRefetcher(id, {
             refetch: res.refetch
         });
 
-        return () => unsetRefetcher(context.id);
-    }, [res.refetch, context.id]);
+        return () => unsetRefetcher(id);
+    }, [res.refetch, id]);
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
-    let {enabled, isVisible} = res.node ? checkAction(res, res.node, context) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), {
+    let {enabled, isVisible} = res.node ? checkAction(res, res.node, publishType, allLanguages) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, allLanguages)), {
         enabled: true,
         isVisible: true
     });
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
-        language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, language).displayName)) : null
+        language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
     } : {
-        displayName: t('jcontent:label.contentManager.selection.items', {count: context.paths.length}),
-        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
+        displayName: t('jcontent:label.contentManager.selection.items', {count: paths.length}),
+        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, languageToUse).displayName)) : null
     };
 
     return (
-        <Render context={{
-            ...context,
-            buttonLabelParams,
-            isVisible,
-            enabled,
-            onClick: () => {
-                if (context.path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], context.publishType === 'publishAll', context.allLanguages, context.publishType === 'unpublish');
-                } else if (context.paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), context.publishType === 'publishAll', context.allLanguages, context.publishType === 'unpublish');
+        <Render
+            {...others}
+            buttonLabelParams={buttonLabelParams}
+            isVisible={isVisible}
+            enabled={enabled}
+            onClick={() => {
+                if (path) {
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', allLanguages, publishType === 'unpublish');
+                } else if (paths) {
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), publishType === 'publishAll', allLanguages, publishType === 'unpublish');
                 }
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 PublishActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    id: PropTypes.string,
+
+    path: PropTypes.string,
+
+    paths: PropTypes.arrayOf(PropTypes.string),
+
+    language: PropTypes.string,
+
+    publishType: PropTypes.oneOf(['publish', 'publishAll', 'unpublish']),
+
+    allLanguages: PropTypes.bool,
 
     render: PropTypes.func.isRequired,
 

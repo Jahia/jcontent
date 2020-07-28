@@ -10,11 +10,11 @@ const checkAction = node => node.operationsSupport.markForDeletion &&
     node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
     (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
 
-export const DeletePermanentlyActionComponent = ({context, render: Render, loading: Loading}) => {
+export const DeletePermanentlyActionComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
     const res = useNodeChecks(
-        {path: context.path, paths: context.paths, language},
+        {path, paths, language},
         {
             getDisplayName: true,
             getProperties: ['jcr:mixinTypes'],
@@ -27,23 +27,20 @@ export const DeletePermanentlyActionComponent = ({context, render: Render, loadi
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
 
     return (
-        <Render context={{
-            ...context,
-            isVisible,
-            displayActionProps: {
-                ...context.displayActionProps,
-                color: 'danger'
-            },
-            onClick: () => {
-                if (context.path) {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            color="danger"
+            onClick={() => {
+                if (path) {
                     window.authoringApi.deleteContent(res.node.uuid, res.node.path, res.node.displayName, ['jnt:content'], ['nt:base'], false, true);
-                } else if (context.paths) {
+                } else if (paths) {
                     window.authoringApi.deleteContents(res.nodes.map(node => ({
                         uuid: node.uuid,
                         path: node.path,
@@ -52,13 +49,15 @@ export const DeletePermanentlyActionComponent = ({context, render: Render, loadi
                         inheritedNodeTypes: ['nt:base']
                     })), false, true);
                 }
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 DeletePermanentlyActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
+
+    paths: PropTypes.arrayOf(PropTypes.string),
 
     render: PropTypes.func.isRequired,
 

@@ -31,18 +31,16 @@ export const BrowseControlBar = ({showActions}) => {
                 <>
                     <div className="flexRow">
                         <DisplayActions target="headerPrimaryActions"
-                                        context={{path: path}}
+                                        path={path}
                                         render={ButtonRenderer}
                                         loading={() => false}/>
                     </div>
                     <div className="flexRow">
                         <Separator variant="vertical" invisible="onlyChild"/>
-                        <DisplayAction actionKey="contentMenu"
-                                       context={{
-                                           path: path,
-                                           menuPreload: true,
-                                           menuFilter: action => contentActions.indexOf(action.key) === -1
-                                       }}
+                        <DisplayAction menuPreload
+                                       actionKey="contentMenu"
+                                       path={path}
+                                       menuFilter={action => contentActions.indexOf(action.key) === -1}
                                        render={ButtonRendererNoLabel}
                                        loading={() => false}
                         />

@@ -24,17 +24,17 @@ export const MainActionBar = () => {
 
     return (
         <div className={styles.root}>
-            <DisplayAction actionKey="search" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" data-sel-role="open-search-dialog"/>
+            <DisplayAction actionKey="search" path={path} disabled={disabled} render={ButtonRenderer} size="big" variant="ghost" data-sel-role="open-search-dialog"/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
-            <DisplayAction actionKey="pageComposer" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
-            <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
+            <DisplayAction actionKey="pageComposer" path={path} disabled={disabled} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
+            <DisplayAction actionKey="edit" path={path} disabled={disabled} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
-                <DisplayAction actionKey={publishAction} context={{path, disabled}} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="publishMenu" context={{path, disabled, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
+                <DisplayAction actionKey={publishAction} path={path} disabled={disabled} render={ButtonRendererShortLabel}/>
+                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} disabled={disabled} render={ButtonRendererNoLabel}/>
             </ButtonGroup>
-            <DisplayAction actionKey="publishDeletion" context={{path, disabled}} render={ButtonRendererShortLabel}/>
-            <DisplayAction actionKey="deletePermanently" context={{path, disabled}} render={ButtonRendererShortLabel}/>
+            <DisplayAction actionKey="publishDeletion" path={path} disabled={disabled} render={ButtonRendererShortLabel}/>
+            <DisplayAction actionKey="deletePermanently" path={path} disabled={disabled} render={ButtonRendererShortLabel}/>
         </div>
     );
 };

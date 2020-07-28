@@ -8,20 +8,14 @@ export const Actions = ({className, node}) => (
     <div className={className}>
         <DisplayActions
             target="contentActions"
-            filter={value => {
-                return _.includes(['edit', 'preview'], value.key);
-            }}
-            context={{path: node.path}}
+            filter={value => _.includes(['edit', 'preview'], value.key)}
+            path={node.path}
             render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
         />
         <DisplayAction
             actionKey="contentMenu"
-            context={{
-                path: node.path,
-                menuFilter: value => {
-                    return !_.includes(['edit', 'preview'], value.key);
-                }
-            }}
+            path={node.path}
+            menuFilter={value => !_.includes(['edit', 'preview'], value.key)}
             render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
         />
     </div>

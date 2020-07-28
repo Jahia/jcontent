@@ -36,7 +36,7 @@ export const SearchControlBar = () => {
 
     return (
         <React.Fragment>
-            <DisplayAction actionKey="search" context={{path, buttonLabel: 'Edit query', buttonIcon: <Edit/>}} render={ButtonRenderer} variant="ghost" data-sel-role="open-search-dialog"/>
+            <DisplayAction actionKey="search" path={path} buttonLabel="Edit query" buttonIcon={<Edit/>} render={ButtonRenderer} variant="ghost" data-sel-role="open-search-dialog"/>
             <Separator variant="vertical" invisible="firstOrLastChild"/>
             {advancedSearchMode &&
             <>

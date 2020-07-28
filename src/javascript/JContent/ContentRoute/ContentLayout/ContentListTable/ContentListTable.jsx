@@ -559,7 +559,7 @@ export const ContentListTable = ({
                                                                                     filter={value => {
                                                                                         return _.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
                                                                                     }}
-                                                                                    context={{path: node.path}}
+                                                                                    path={node.path}
                                                                                     render={iconButtonRenderer({
                                                                                         color: 'inherit',
                                                                                         size: 'compact',
@@ -568,12 +568,8 @@ export const ContentListTable = ({
                                                                                 />
                                                                                 <DisplayAction
                                                                                     actionKey="contentMenu"
-                                                                                    context={{
-                                                                                        path: node.path,
-                                                                                        menuFilter: value => {
-                                                                                            return !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
-                                                                                        }
-                                                                                    }}
+                                                                                    path={node.path}
+                                                                                    menuFilter={value => !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key)}
                                                                                     render={iconButtonRenderer({
                                                                                         color: 'inherit',
                                                                                         size: 'compact',

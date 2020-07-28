@@ -56,18 +56,18 @@ export const ToolBar = () => {
                     <Separator variant="vertical" invisible="onlyChild"/>
                     <DisplayActions
                         target="selectedContentActions"
-                        context={context}
+                        {...context}
                         filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
                         render={getButtonRenderer({size: 'default', variant: 'ghost'})}
                     />
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    {publishAction && <DisplayAction actionKey={publishAction} context={context} render={ButtonRendererShortLabel}/>}
-                    <DisplayAction actionKey="publishMenu" context={{...context, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
+                    {publishAction && <DisplayAction actionKey={publishAction} {...context} render={ButtonRendererShortLabel}/>}
+                    <DisplayAction menuUseElementAnchor actionKey="publishMenu" {...context} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
-                <DisplayAction actionKey="publishDeletion" context={context} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="deletePermanently" context={context} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="publishDeletion" {...context} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="deletePermanently" {...context} render={ButtonRendererShortLabel}/>
             </React.Fragment>}
         </div>
     );

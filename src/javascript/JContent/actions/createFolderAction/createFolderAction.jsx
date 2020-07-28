@@ -4,18 +4,18 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 
-export const CreateFolderActionComponent = ({context, render: Render, loading: Loading}) => {
+export const CreateFolderActionComponent = ({path, createFolderType, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const res = useNodeChecks(
-        {path: context.path},
+        {path},
         {
             requiredPermission: ['jcr:addChildNodes'],
-            showOnNodeTypes: [context.createFolderType]
+            showOnNodeTypes: [createFolderType]
         }
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const onExit = () => {
@@ -23,18 +23,19 @@ export const CreateFolderActionComponent = ({context, render: Render, loading: L
     };
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: res.checksResult,
-            onClick: () => {
-                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path: context.path, contentType: context.createFolderType, onExit: onExit});
-            }
-        }}/>
+        <Render
+            {...others}
+            isVisible={res.checksResult}
+            onClick={() => {
+                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path, contentType: createFolderType, onExit});
+            }}
+        />
     );
 };
 
 CreateFolderActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
+    createFolderType: PropTypes.string.isRequired,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

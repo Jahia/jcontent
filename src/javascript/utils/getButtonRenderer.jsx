@@ -3,36 +3,50 @@ import {Button} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export const getButtonRenderer = ({labelStyle, ...props} = {}) => {
-    const ButtonRenderer = ({context}) => {
-        const {t} = useTranslation(context.buttonLabelNamespace);
+const getButtonRenderer = ({labelStyle} = {}) => {
+    const ButtonRenderer = props => {
+        const {buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, key, enabled, disabled, onClick, buttonProps} = props;
+        const {t} = useTranslation(buttonLabelNamespace);
 
-        let label = context.buttonLabel;
+        let label = buttonLabel;
         if (labelStyle === 'none') {
             label = null;
-        } else if (labelStyle === 'short' && context.buttonLabelShort) {
-            label = context.buttonLabelShort;
+        } else if (labelStyle === 'short' && buttonLabelShort) {
+            label = buttonLabelShort;
         }
 
-        return (context.isVisible !== false &&
+        return (isVisible !== false &&
             <Button isHtml
-                    data-sel-role={context.key}
-                    label={t(label, context.buttonLabelParams)}
-                    icon={context.buttonIcon}
-                    disabled={context.enabled === false || context.disabled}
+                    data-sel-role={key}
+                    label={t(label, buttonLabelParams)}
+                    icon={buttonIcon}
+                    disabled={enabled === false || disabled}
                     onClick={e => {
                         e.stopPropagation();
-                        context.onClick(context, e);
+                        onClick(props, e);
                     }}
-                    {...props}
-                    {...context.displayActionProps}
+                    {...buttonProps}
             />
         );
     };
 
     ButtonRenderer.propTypes = {
-        context: PropTypes.object.isRequired
+        buttonLabelNamespace: PropTypes.string,
+        buttonLabelShort: PropTypes.string,
+        buttonLabel: PropTypes.string,
+        isVisible: PropTypes.bool,
+        buttonLabelParams: PropTypes.object,
+        buttonIcon: PropTypes.node,
+        key: PropTypes.string,
+        enabled: PropTypes.bool,
+        disabled: PropTypes.bool,
+        onClick: PropTypes.func,
+        buttonProps: PropTypes.object
     };
 
     return ButtonRenderer;
 };
+
+export const ButtonRenderer = getButtonRenderer();
+export const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
+export const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});

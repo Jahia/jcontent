@@ -4,10 +4,10 @@ import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/react-hooks';
 
-export const LockActionComponent = ({context, render: Render, loading: Loading}) => {
+export const LockActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const res = useNodeChecks(
-        {path: context.path},
+        {path},
         {
             getLockInfo: true,
             getOperationSupport: true,
@@ -17,19 +17,19 @@ export const LockActionComponent = ({context, render: Render, loading: Loading})
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const isVisible = res.checksResult && res.node.operationsSupport.lock && res.node.lockTypes === null;
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: () => {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={() => {
                 client.mutate({
-                    variables: {pathOrId: context.path},
+                    variables: {pathOrId: path},
                     mutation: gql`mutation lockNode($pathOrId: String!) {
                         jcr {
                             mutateNode(pathOrId: $pathOrId) {
@@ -44,13 +44,13 @@ export const LockActionComponent = ({context, render: Render, loading: Loading})
                         }
                     ]
                 });
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 LockActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
 
     render: PropTypes.func.isRequired,
 

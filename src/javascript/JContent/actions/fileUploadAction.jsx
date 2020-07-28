@@ -39,25 +39,24 @@ const constraintsByType = {
     }
 };
 
-export const FileUploadActionComponent = ({context, render: Render, loading: Loading}) => {
-    const {key, path, uploadType} = context;
+export const FileUploadActionComponent = ({id, path, uploadType, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const dispatch = useDispatch();
     const dispatchBatch = actions => dispatch(batchActions(actions));
 
     const res = useNodeChecks(
-        {path: context.path},
+        {path},
         {
-            ...constraintsByType[context.uploadType || 'upload']
+            ...constraintsByType[uploadType || 'upload']
         }
     );
 
     useEffect(() => {
-        componentRenderer.render('upload-' + key, Upload, {actionKey: key, uploadType});
-    }, [key, componentRenderer]);
+        componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType});
+    }, [id, componentRenderer]);
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const handleClick = () => {
@@ -70,23 +69,27 @@ export const FileUploadActionComponent = ({context, render: Render, loading: Loa
             );
         };
 
-        document.getElementById('file-upload-input-' + key).click();
+        document.getElementById('file-upload-input-' + id).click();
     };
 
     const isVisible = res.checksResult;
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: handleClick
-        }}/>
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={handleClick}
+        />
     );
 };
 
 FileUploadActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    id: PropTypes.string,
+
+    path: PropTypes.string,
+
+    uploadType: PropTypes.string,
 
     render: PropTypes.func.isRequired,
 

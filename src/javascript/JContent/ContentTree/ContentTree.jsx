@@ -55,14 +55,14 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
 
     return (
         <React.Fragment>
-            <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{}}/>
+            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu"/>
             <TreeView isReversed
                       data={convertPathsToTree(treeEntries, path)}
                       openedItems={openPaths}
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
                           event.stopPropagation();
-                          contextualMenu.current.open(event, {path: object.id});
+                          contextualMenu.current(event, {path: object.id});
                       }}
                       onClickItem={object => setPath(object.id, {sub: false})}
                       onOpenItem={object => openPath(object.id)}

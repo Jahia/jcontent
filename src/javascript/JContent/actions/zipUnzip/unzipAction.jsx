@@ -10,13 +10,13 @@ import {isMarkedForDeletion} from '../../JContent.utils';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {PATH_FILES_ITSELF} from '../actions.constants';
 
-export const UnzipActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
+export const UnzipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
     const language = useSelector(state => state.language);
     const componentRenderer = useContext(ComponentRendererContext);
     const client = useApolloClient();
 
     const res = useNodeChecks(
-        {path: context.path, paths: context.paths, language},
+        {path, paths, language},
         {
             getParent: true,
             getMimeType: true,
@@ -28,17 +28,17 @@ export const UnzipActionComponent = withNotifications()(({context, render: Rende
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     let isVisible = res.checksResult && (res.node.mimeType === 'application/zip' || res.node.mimeType === 'application/x-zip-compressed') && !isMarkedForDeletion(res.node);
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: () => {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={() => {
                 componentRenderer.render('progressOverlay', ProgressOverlay);
                 client.mutate({
                     variables: {pathOrId: res.node.path, path: res.node.parent.path},
@@ -50,13 +50,17 @@ export const UnzipActionComponent = withNotifications()(({context, render: Rende
                     componentRenderer.destroy('progressOverlay');
                     notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose']);
                 }));
-            }
-        }}/>
+            }}
+        />
     );
 });
 
 UnzipActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
+
+    paths: PropTypes.arrayOf(PropTypes.string),
+
     render: PropTypes.func.isRequired,
+
     loading: PropTypes.func
 };

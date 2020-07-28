@@ -3,12 +3,10 @@ import styles from './SearchControlBar.scss';
 import {Chip, Edit, Separator} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import {ButtonRenderer} from '~/utils/getButtonRenderer';
 import JContentConstants from '../../../JContent.constants';
 import {useTranslation} from 'react-i18next';
 import {useNodeInfo} from '@jahia/data-helper';
-
-const ButtonRenderer = getButtonRenderer();
 
 export const SearchControlBar = () => {
     const {t} = useTranslation();
@@ -36,7 +34,7 @@ export const SearchControlBar = () => {
 
     return (
         <React.Fragment>
-            <DisplayAction actionKey="search" context={{path, buttonLabel: 'Edit query', buttonIcon: <Edit/>}} render={ButtonRenderer} variant="ghost" data-sel-role="open-search-dialog"/>
+            <DisplayAction actionKey="search" path={path} buttonLabel="Edit query" buttonIcon={<Edit/>} render={ButtonRenderer} buttonProps={{variant: 'ghost'}} data-sel-role="open-search-dialog"/>
             <Separator variant="vertical" invisible="firstOrLastChild"/>
             {advancedSearchMode &&
             <>

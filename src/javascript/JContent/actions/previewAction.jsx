@@ -5,35 +5,35 @@ import {useDispatch} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 
-export const PreviewActionComponent = ({context, render: Render, loading: Loading}) => {
+export const PreviewActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const dispatch = useDispatch();
 
     const res = useNodeChecks(
-        {path: context.path},
+        {path},
         {
             hideOnNodeTypes: ['jnt:page', 'jnt:folder', 'jnt:contentFolder', 'jnt:virtualsite', 'jnt:navMenuText']
         }
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: res.checksResult,
-            enabled: res.checksResult,
-            onClick: () => {
-                dispatch(cmSetPreviewSelection(context.path));
+        <Render
+            {...others}
+            isVisible={res.checksResult}
+            enabled={res.checksResult}
+            onClick={() => {
+                dispatch(cmSetPreviewSelection(path));
                 dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 PreviewActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
 
     render: PropTypes.func.isRequired,
 

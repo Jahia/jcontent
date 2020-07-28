@@ -108,13 +108,13 @@ export class ContentLayout extends React.Component {
                         {previewOpen &&
                         <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>}
                     </Drawer>
-                    <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: path}}/>
+                    <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
                     <div
                         className={classNames(classes.content)}
                         style={{
                             marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                         }}
-                        onContextMenu={event => contextualMenu.current.open(event)}
+                        onContextMenu={event => contextualMenu.current(event)}
                     >
                         <Paper className={classes.contentPaper}>
                             {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?

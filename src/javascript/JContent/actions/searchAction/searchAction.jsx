@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import SearchDialog from './SearchDialog';
 import PropTypes from 'prop-types';
 
-export const SearchActionComponent = ({context, render: Render}) => {
+export const SearchActionComponent = ({render: Render, ...others}) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleClose = () => {
@@ -11,18 +11,17 @@ export const SearchActionComponent = ({context, render: Render}) => {
 
     return (
         <>
-            <Render context={{
-                ...context,
-                onClick: () => {
+            <Render
+                {...others}
+                onClick={() => {
                     setIsDialogOpen(true);
-                }
-            }}/>
+                }}
+            />
             <SearchDialog isOpen={isDialogOpen} handleClose={handleClose}/>
         </>
     );
 };
 
 SearchActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired
 };

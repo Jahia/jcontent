@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {MenuItem} from '@jahia/moonstone';
 
-export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) => {
+export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
     const {t} = useTranslation();
     const [hover, setHover] = useState(false);
 
@@ -32,6 +32,7 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave}) =
             isHtml
             iconStart={context.showIcons && context.buttonIcon}
             data-sel-role={context.key}
+            {...buttonProps}
             label={label}
             isHover={h}
             isDisabled={isDisabled}
@@ -59,5 +60,10 @@ MenuItemRenderer.propTypes = {
     /**
      * Function to call when the menu item is left
      */
-    onMouseLeave: PropTypes.func
+    onMouseLeave: PropTypes.func,
+
+    /**
+     * Additional props to pass to the menu item element
+     */
+    buttonProps: PropTypes.object
 };

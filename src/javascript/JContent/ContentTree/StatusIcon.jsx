@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './ContentTree.scss';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '../../utils/getButtonRenderer';
+import {ButtonRendererNoLabel} from '../../utils/getButtonRenderer';
 
 export const StatusIcon = ({isLocked, isNotPublished, path, ...props}) => {
     return (
@@ -12,7 +12,7 @@ export const StatusIcon = ({isLocked, isNotPublished, path, ...props}) => {
                 {(isLocked && <Lock {...props}/>) || (isNotPublished && <NoCloud {...props}/>)}
             </span>
             <span className={styles.ContentTree_ItemMenuIcon}>
-                <DisplayAction actionKey="contentMenu" context={{path}} render={getButtonRenderer({labelStyle: 'none', variant: 'ghost', isReversed: true, size: 'small'})} {...props}/>
+                <DisplayAction isReversed actionKey="contentMenu" path={path} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'small'}} {...props}/>
             </span>
         </>
     );

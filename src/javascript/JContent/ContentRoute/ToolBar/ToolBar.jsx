@@ -58,7 +58,9 @@ export const ToolBar = () => {
                         target="selectedContentActions"
                         context={context}
                         filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
-                        render={getButtonRenderer({size: 'default', variant: 'ghost'})}
+                        size="default"
+                        variant="ghost"
+                        render={getButtonRenderer()}
                     />
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>

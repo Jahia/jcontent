@@ -7,9 +7,6 @@ import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
-const ButtonRenderer = getButtonRenderer({size: 'default', variant: 'ghost'});
-const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none', size: 'default', variant: 'ghost'});
-
 const excludedActions = ['pageComposer', 'subContents', 'edit', 'publishMenu', 'cut', 'deletePermanently', 'publishDeletion', 'copy', 'paste', 'createFolder', 'createContentFolder', 'createContent', 'fileUpload'];
 
 export const BrowseControlBar = ({showActions}) => {
@@ -32,7 +29,9 @@ export const BrowseControlBar = ({showActions}) => {
                     <div className="flexRow">
                         <DisplayActions target="headerPrimaryActions"
                                         context={{path: path}}
-                                        render={ButtonRenderer}
+                                        render={getButtonRenderer()}
+                                        size="default"
+                                        variant="ghost"
                                         loading={() => false}/>
                     </div>
                     <div className="flexRow">
@@ -43,7 +42,9 @@ export const BrowseControlBar = ({showActions}) => {
                                            menuPreload: true,
                                            menuFilter: action => contentActions.indexOf(action.key) === -1
                                        }}
-                                       render={ButtonRendererNoLabel}
+                                       size="default"
+                                       variant="ghost"
+                                       render={getButtonRenderer({labelStyle: 'none'})}
                                        loading={() => false}
                         />
                     </div>

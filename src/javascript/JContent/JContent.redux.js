@@ -57,8 +57,8 @@ export const buildUrl = (site, language, mode, path, params) => {
     return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
 };
 
-export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo} =
-    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO');
+export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo, cmReplaceOpenedPaths} =
+    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS');
 
 export const cmGoto = data => (
     (dispatch, getStore) => {
@@ -69,6 +69,12 @@ export const cmGoto = data => (
             data.mode || mode,
             data.path || path,
             data.params || params)));
+    }
+);
+
+export const replaceOpenedPath = data => (
+    dispatch => {
+        dispatch(cmReplaceOpenedPaths(data));
     }
 );
 
@@ -97,6 +103,7 @@ export const jContentRedux = registry => {
 
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),
+        [cmReplaceOpenedPaths]: (state, action) => action.payload,
         [cmClosePaths]: (state, action) => _.difference(state, action.payload)
     }, _.dropRight(extractPaths(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode), 1));
 
@@ -118,4 +125,5 @@ export const jContentRedux = registry => {
 
     registry.add('redux-reducer', 'jcontent', {targets: ['root'], reducer: jcontentReducer});
     registry.add('redux-action', 'jcontentGoto', {action: cmGoto});
+    registry.add('redux-action', 'jcontentReplaceOpenedPath', {action: replaceOpenedPath});
 };

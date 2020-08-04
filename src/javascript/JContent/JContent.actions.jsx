@@ -14,6 +14,7 @@ import {
     FileZip,
     Lock,
     MoreVert,
+    NoCloud,
     Paste,
     Publish,
     Reload,
@@ -138,7 +139,7 @@ export const jContentActions = registry => {
         component: PublishDeletionActionComponent
     });
     registry.add('action', 'unpublish', {
-        buttonIcon: <CloudDownload/>,
+        buttonIcon: <NoCloud/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublish',
         targets: ['publishMenu:5'],
         publishType: 'unpublish',
@@ -146,7 +147,7 @@ export const jContentActions = registry => {
         component: PublishActionComponent
     });
     registry.add('action', 'unpublishInAllLanguages', {
-        buttonIcon: <CloudDownload/>,
+        buttonIcon: <NoCloud/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublishInAllLanguages',
         targets: ['publishMenu:6'],
         publishType: 'unpublish',

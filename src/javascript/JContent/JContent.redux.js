@@ -84,7 +84,8 @@ export const jContentRedux = registry => {
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
     const preSearchModeMemoReducer = handleActions({
-        [cmPreSearchModeMemo]: (state, action) => action.payload}, '');
+        [cmPreSearchModeMemo]: (state, action) => action.payload
+    }, '');
     const modeReducer = handleActions({
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).mode : state
     }, currentValueFromUrl.mode);
@@ -126,4 +127,8 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'jcontent', {targets: ['root'], reducer: jcontentReducer});
     registry.add('redux-action', 'jcontentGoto', {action: cmGoto});
     registry.add('redux-action', 'jcontentReplaceOpenedPath', {action: replaceOpenedPath});
+    registry.add('jcontent', 'utils', {
+        extractParamsFromUrl: extractParamsFromUrl,
+        buildUrl: buildUrl
+    });
 };

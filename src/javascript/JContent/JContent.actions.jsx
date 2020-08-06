@@ -1,6 +1,5 @@
 import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
-import {Autorenew, FindInPage, LockOpen, SubdirectoryArrowRight, Visibility} from '@material-ui/icons';
 
 import {
     AddFolder,
@@ -10,6 +9,7 @@ import {
     Copy,
     Cut,
     Delete,
+    Download,
     Edit,
     FileZip,
     Lock,
@@ -20,9 +20,12 @@ import {
     Reload,
     Search,
     Separator,
-    Undelete
+    Subdirectory,
+    Undelete,
+    Unlock,
+    Upload,
+    Visibility
 } from '@jahia/moonstone';
-import {ApplicationExport, ApplicationImport} from 'mdi-material-ui';
 import {FileUploadActionComponent} from './actions/fileUploadAction';
 import {DeleteActionComponent} from './actions/deleteAction';
 import {UndeleteActionComponent} from './actions/undeleteAction';
@@ -214,7 +217,7 @@ export const jContentActions = registry => {
     registry.add('action', 'unlock', {
         buttonLabel: 'jcontent:label.contentManager.contextMenu.lockActions.unlock',
         targets: ['contentActions:5'],
-        buttonIcon: <LockOpen/>,
+        buttonIcon: <Unlock/>,
         component: UnlockActionComponent
     });
     registry.add('action', 'clearAllLocks', {
@@ -225,24 +228,24 @@ export const jContentActions = registry => {
     });
     registry.add('action', 'locate', {
         buttonLabel: 'jcontent:label.contentManager.actions.locate',
-        buttonIcon: <FindInPage/>,
+        buttonIcon: <Search/>,
         targets: ['contentActions:0.5'],
         component: LocateActionComponent
     });
     registry.add('action', 'subContents', {
-        buttonIcon: <SubdirectoryArrowRight/>,
+        buttonIcon: <Subdirectory/>,
         buttonLabel: 'jcontent:label.contentManager.subContentsAction',
         targets: ['contentActions:0.1'],
         component: SubContentsActionComponent
     });
     registry.add('action', 'export', {
-        buttonIcon: <ApplicationExport/>,
+        buttonIcon: <Upload/>,
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
         targets: ['contentActions:4.2'],
         component: ExportActionComponent
     });
     registry.add('action', 'import', {
-        buttonIcon: <ApplicationImport/>,
+        buttonIcon: <Download/>,
         buttonLabel: 'jcontent:label.contentManager.import.action',
         targets: ['contentActions:4.3', 'createMenuActions:3.5'],
         uploadType: 'import',
@@ -264,7 +267,7 @@ export const jContentActions = registry => {
         component: DownloadFileActionComponent
     });
     registry.add('action', 'replaceFile', {
-        buttonIcon: <Autorenew/>,
+        buttonIcon: <Reload/>,
         buttonLabel: 'jcontent:label.contentManager.fileUpload.replaceWith',
         targets: ['contentActions:0.2'],
         uploadType: 'replaceWith',

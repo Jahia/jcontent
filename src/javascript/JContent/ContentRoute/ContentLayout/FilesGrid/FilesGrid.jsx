@@ -96,7 +96,7 @@ export const FilesGrid = ({
             <React.Fragment>
                 <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
                     <Typography variant="epsilon" className={classes.empty}>
-                        {t('label.contentManager.contentNotFound')}
+                        {t('jcontent:label.contentManager.contentNotFound')}
                     </Typography>
                 </Grid>
             </React.Fragment>

@@ -177,7 +177,10 @@
         "pages": "Pages",
         "contentFolders": "Dossier de contenu",
         "forms": "Formulaires",
-        "apps": "Extensions",
+        "apps": {
+          "title": "Extensions",
+          "404": "Application introuvable"
+        },
         "content": "Contenu",
         "manage": {
           "languages": {

@@ -177,7 +177,10 @@
         "pages": "Seiten",
         "contentFolders": "Inhalts-Ordner",
         "forms": "Formulare",
-        "apps": "Zusätzlich",
+        "apps": {
+          "title": "Zusätzlich",
+          "404": "App nicht gefunden"
+        },
         "content": "Content",
         "manage": {
           "languages": {

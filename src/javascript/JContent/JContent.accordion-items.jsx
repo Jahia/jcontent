@@ -97,7 +97,7 @@ export const jContentAccordionItems = registry => {
     registry.add('accordionItem', 'apps', renderDefaultApps, {
         targets: ['jcontent:80'],
         icon: <Grain/>,
-        label: 'label.contentManager.navigation.apps',
+        label: 'label.contentManager.navigation.apps.title',
         appsTarget: 'jcontent',
         isEnabled: siteKey => siteKey !== 'systemsite'
     });

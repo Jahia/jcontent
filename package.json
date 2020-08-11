@@ -37,7 +37,7 @@
     "apps": {
       "jahia": [
         "javascript/apps/jahia.bundle.js",
-        "/cms/render/default/en/settings.jcontent.js"
+        "configs/jcontent.jsp"
       ]
     }
   },

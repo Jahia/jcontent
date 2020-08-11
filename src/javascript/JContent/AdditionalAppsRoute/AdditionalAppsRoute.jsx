@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 import {useAdminRouteTreeStructure} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
-import {Route} from 'react-router';
+import {Route, Switch} from 'react-router';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Typography} from '@jahia/moonstone';
@@ -24,7 +24,7 @@ export const AdditionalAppsRoute = ({match, target}) => {
         .filter(route => route.requireModuleInstalledOnSite === undefined || (node && node.site.installedModulesWithAllDependencies.indexOf(route.requireModuleInstalledOnSite) !== -1));
 
     return (
-        <>
+        <Switch>
             {filteredAdminRoutes && filteredAdminRoutes.map(r =>
                 <Route key={r.key} path={match.path + '/' + r.key} render={props => r.render(props)}/>
             )}
@@ -32,7 +32,7 @@ export const AdditionalAppsRoute = ({match, target}) => {
                    path={match.path}
                    render={() => <Typography variant="heading" weight="bold" className={styles.heading}>{t('label.contentManager.navigation.apps.404')}</Typography>}
             />
-        </>
+        </Switch>
     );
 };
 

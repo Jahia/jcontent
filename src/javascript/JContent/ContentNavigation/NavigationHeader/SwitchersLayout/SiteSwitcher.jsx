@@ -85,7 +85,7 @@ class SiteSwitcher extends React.Component {
     render() {
         const {siteKey, currentLang, notificationContext, t} = this.props;
         return (
-            <Query query={this.query} variables={{query: 'select * from [jnt:virtualsite] where ischildnode(\'/sites\')', displayLanguage: currentLang}}>
+            <Query fetchPolicy="network-only" query={this.query} variables={{query: 'select * from [jnt:virtualsite] where ischildnode(\'/sites\')', displayLanguage: currentLang}}>
                 {
                 ({error, loading, data}) => {
                     if (error) {
@@ -104,11 +104,18 @@ class SiteSwitcher extends React.Component {
                         );
                     }
 
-                    let sites = this.getSites(data);
+                    const sites = this.getSites(data);
+
+                    // Lookup current site, get First site in case not found. Avoid the component to break if not site found at all.
+                    let currentSite = sites.find(site => site.name === siteKey);
+                    if (!currentSite) {
+                        currentSite = sites.length > 0 ? sites[0] : {};
+                    }
+
                     return (
                         <Dropdown
                             data-cm-role="site-switcher"
-                            label={sites.find(site => site.name === siteKey).displayName}
+                            label={currentSite.displayName}
                             value={siteKey}
                             className={styles.siteSwitcher}
                             data={sites.map(s => ({label: s.displayName, value: s.path, name: s.name, site: s.site}))}

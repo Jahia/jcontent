@@ -85,7 +85,7 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         });
 
         return () => unsetRefetcher(context.id);
-    }, [res.refetch, context.id]);
+    });
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;

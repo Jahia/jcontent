@@ -36,6 +36,15 @@ function checkAction(res, node, context) {
     return {enabled, isVisible};
 }
 
+function checkActionOnNodes(res, context) {
+    const defaults = {
+        enabled: true,
+        isVisible: true
+    };
+
+    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), defaults) : defaults;
+}
+
 const mergeChecks = (v1, v2) => {
     const res = {};
     Object.keys(v1).forEach(key => {
@@ -76,16 +85,13 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
         });
 
         return () => unsetRefetcher(context.id);
-    }, [res.refetch, context.id]);
+    }, []);
 
     if (res.loading) {
         return (Loading && <Loading context={context}/>) || false;
     }
 
-    let {enabled, isVisible} = res.node ? checkAction(res, res.node, context) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), {
-        enabled: true,
-        isVisible: true
-    });
+    let {enabled, isVisible} = res.node ? checkAction(res, res.node, context) : checkActionOnNodes(res, context);
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),

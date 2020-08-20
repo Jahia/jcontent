@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../JContent.utils';
 import {useSelector} from 'react-redux';
 
+const checkActionOnNodes = res => {
+    return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
+};
+
 const checkAction = node => node.operationsSupport.publication &&
     isMarkedForDeletion(node) &&
     (node.aggregatedPublicationInfo.publicationStatus !== 'NOT_PUBLISHED' ||
@@ -25,7 +29,7 @@ export const PublishDeletionActionComponent = ({context, render: Render, loading
         return (Loading && <Loading context={context}/>) || false;
     }
 
-    let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
+    let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
 
     return (
         <Render context={{

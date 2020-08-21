@@ -5,6 +5,10 @@ import {isMarkedForDeletion} from '../JContent.utils';
 import {useSelector} from 'react-redux';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
 
+const checkActionOnNodes = res => {
+    return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
+};
+
 const checkAction = node => node.operationsSupport.markForDeletion &&
     isMarkedForDeletion(node) &&
     node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
@@ -30,7 +34,7 @@ export const DeletePermanentlyActionComponent = ({context, render: Render, loadi
         return (Loading && <Loading context={context}/>) || false;
     }
 
-    let isVisible = res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true);
+    let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
 
     return (
         <Render context={{

@@ -53,6 +53,20 @@ const mergeChecks = (v1, v2) => {
     return res;
 };
 
+function getButtonLabelParams(context, language, res, t) {
+    if (!res.nodes) {
+        return {
+            displayName: t('jcontent:label.contentManager.selection.items', {count: 0}),
+            language: language
+        };
+    }
+
+    return {
+        displayName: t('jcontent:label.contentManager.selection.items', {count: context.pages.length}),
+        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
+    };
+}
+
 const constraintsByType = {
     publish: {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:contentFolder', 'nt:folder']
@@ -96,10 +110,7 @@ export const PublishActionComponent = ({context, render: Render, loading: Loadin
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
         language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, language).displayName)) : null
-    } : {
-        displayName: t('jcontent:label.contentManager.selection.items', {count: context.paths.length}),
-        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
-    };
+    } : getButtonLabelParams(context, language, res, t);
 
     return (
         <Render context={{

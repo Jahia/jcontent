@@ -62,7 +62,7 @@ function getButtonLabelParams(context, language, res, t) {
     }
 
     return {
-        displayName: t('jcontent:label.contentManager.selection.items', {count: context.pages ? context.pages.length : 0}),
+        displayName: t('jcontent:label.contentManager.selection.items', {count: context.paths}),
         language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
     };
 }

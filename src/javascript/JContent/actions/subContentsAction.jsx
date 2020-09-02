@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useDispatch, useSelector} from 'react-redux';
 
-export const SubContentsActionComponent = ({context, render: Render, loading: Loading}) => {
+export const SubContentsActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const mode = useSelector(state => state.jcontent.mode);
 
-    const res = useNodeChecks({path: context.path}, {
+    const res = useNodeChecks({path}, {
         getSubNodesCount: {
             types: ['jnt:file', 'jnt:folder', 'jnt:content', 'jnt:contentFolder']
         },
@@ -22,7 +22,7 @@ export const SubContentsActionComponent = ({context, render: Render, loading: Lo
     });
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const isVisible = res.checksResult && mode !== JContentConstants.mode.SEARCH && mode !== JContentConstants.mode.SQL2SEARCH && (
@@ -31,23 +31,23 @@ export const SubContentsActionComponent = ({context, render: Render, loading: Lo
     );
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: () => {
-                expandTree(context.path, client).then(({mode, ancestorPaths}) => {
-                    dispatch(cmGoto({mode: mode, path: context.path, params: {sub: res.node.primaryNodeType.name !== 'jnt:page' && res.node.primaryNodeType.name !== 'jnt:contentFolder'}}));
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={() => {
+                expandTree(path, client).then(({mode, ancestorPaths}) => {
+                    dispatch(cmGoto({mode, path, params: {sub: res.node.primaryNodeType.name !== 'jnt:page' && res.node.primaryNodeType.name !== 'jnt:contentFolder'}}));
                     dispatch(cmOpenPaths(ancestorPaths));
-                    dispatch(cmSetPreviewSelection(context.path));
+                    dispatch(cmSetPreviewSelection(path));
                 });
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 SubContentsActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
 
     render: PropTypes.func.isRequired,
 

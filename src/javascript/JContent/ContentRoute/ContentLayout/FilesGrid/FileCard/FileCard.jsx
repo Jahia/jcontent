@@ -160,7 +160,7 @@ export const FileCard = ({gridMode,
     let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
     return (
         <React.Fragment>
-            <ContextualMenu ref={contextualMenu} actionKey="contentMenu" context={{path: node.path}}/>
+            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={node.path}/>
 
             <Card
                     style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
@@ -173,7 +173,7 @@ export const FileCard = ({gridMode,
                     data-cm-role="grid-content-list-card"
                     onContextMenu={event => {
                         event.stopPropagation();
-                        contextualMenu.current.open(event);
+                        contextualMenu.current(event);
                     }}
                     onClick={() => {
                         if (!node.notSelectableForPreview) {

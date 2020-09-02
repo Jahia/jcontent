@@ -400,7 +400,7 @@ export const ContentListTable = ({
                                                     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
 
                                                     const openContextualMenu = event => {
-                                                        contextualMenu.current.open(event);
+                                                        contextualMenu.current(event);
                                                     };
 
                                                     return (
@@ -435,9 +435,10 @@ export const ContentListTable = ({
                                                                 })}
                                                         >
                                                             <ContextualMenu
-                                                                ref={contextualMenu}
+                                                                setOpenRef={contextualMenu}
                                                                 actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                                                context={selection.length === 0 || selection.indexOf(node.path) === -1 ? {path: node.path} : {paths: selection}}
+                                                                path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
+                                                                paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
                                                             />
                                                             <TableCell
                                                                 padding="none"
@@ -559,7 +560,7 @@ export const ContentListTable = ({
                                                                                     filter={value => {
                                                                                         return _.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
                                                                                     }}
-                                                                                    context={{path: node.path}}
+                                                                                    path={node.path}
                                                                                     render={iconButtonRenderer({
                                                                                         color: 'inherit',
                                                                                         size: 'compact',
@@ -568,12 +569,8 @@ export const ContentListTable = ({
                                                                                 />
                                                                                 <DisplayAction
                                                                                     actionKey="contentMenu"
-                                                                                    context={{
-                                                                                        path: node.path,
-                                                                                        menuFilter: value => {
-                                                                                            return !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
-                                                                                        }
-                                                                                    }}
+                                                                                    path={node.path}
+                                                                                    menuFilter={value => !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key)}
                                                                                     render={iconButtonRenderer({
                                                                                         color: 'inherit',
                                                                                         size: 'compact',

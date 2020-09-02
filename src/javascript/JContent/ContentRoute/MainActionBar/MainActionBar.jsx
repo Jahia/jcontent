@@ -1,14 +1,10 @@
 import React from 'react';
 import {Separator, ButtonGroup} from '@jahia/moonstone';
-import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import {ButtonRenderer, ButtonRendererShortLabel, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
 import {useSelector} from 'react-redux';
 import styles from './MainActionBar.scss';
-
-const ButtonRenderer = getButtonRenderer();
-const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
-const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 
 export const MainActionBar = () => {
     const {path, language, selection} = useSelector(state => ({path: state.jcontent.path, language: state.language, selection: state.jcontent.selection}));
@@ -24,17 +20,17 @@ export const MainActionBar = () => {
 
     return (
         <div className={styles.root}>
-            <DisplayAction actionKey="search" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" data-sel-role="open-search-dialog"/>
+            <DisplayAction actionKey="search" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
-            <DisplayAction actionKey="pageComposer" context={{path, disabled}} render={ButtonRenderer} size="big" variant="ghost" color="accent" className={styles.item}/>
-            <DisplayAction actionKey="edit" context={{path, disabled}} render={ButtonRenderer} size="big" variant="outlined" className={styles.item}/>
+            <DisplayAction actionKey="pageComposer" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', color: 'accent'}} className={styles.item}/>
+            <DisplayAction actionKey="edit" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big'}} className={styles.item}/>
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
-                <DisplayAction actionKey={publishAction} context={{path, disabled}} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="publishMenu" context={{path, disabled, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
+                <DisplayAction actionKey={publishAction} path={path} disabled={disabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
+                <DisplayAction menuUseElementAnchor actionKey="publishMenu" path={path} disabled={disabled} render={ButtonRendererNoLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>
             </ButtonGroup>
-            <DisplayAction actionKey="publishDeletion" context={{path, disabled}} render={ButtonRendererShortLabel}/>
-            <DisplayAction actionKey="deletePermanently" context={{path, disabled}} render={ButtonRendererShortLabel}/>
+            <DisplayAction actionKey="publishDeletion" path={path} disabled={disabled} render={ButtonRendererShortLabel}/>
+            <DisplayAction actionKey="deletePermanently" path={path} disabled={disabled} render={ButtonRendererShortLabel}/>
         </div>
     );
 };

@@ -12,13 +12,13 @@ import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {PATH_FILES_ITSELF} from '../actions.constants';
 
-export const ZipActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
+export const ZipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const client = useApolloClient();
     const dispatch = useDispatch();
 
     const res = useNodeChecks(
-        {path: context.path, paths: context.paths},
+        {path, paths},
         {
             getParent: true,
             requiredPermission: ['jcr:addChildNodes'],
@@ -28,17 +28,17 @@ export const ZipActionComponent = withNotifications()(({context, render: Render,
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     let isVisible = res.checksResult;
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: () => {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={() => {
                 let name = res.node ? res.node.name : (res.nodes.length > 1 ? res.nodes[0].parent.name : res.nodes[0].name);
                 let nameWithoutExtension = removeFileExtension(name);
                 let paths = res.node ? [res.node.path] : res.nodes.map(n => n.path);
@@ -79,13 +79,17 @@ export const ZipActionComponent = withNotifications()(({context, render: Render,
                         notificationContext.notify(reason.toString(), ['closeButton', 'noAutomaticClose']);
                     }));
                 });
-            }
-        }}/>
+            }}
+        />
     );
 });
 
 ZipActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
+
+    paths: PropTypes.arrayOf(PropTypes.string),
+
     render: PropTypes.func.isRequired,
+
     loading: PropTypes.func
 };

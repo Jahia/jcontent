@@ -16,7 +16,7 @@ import {useTranslation} from 'react-i18next';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 
-export const PasteActionComponent = withNotifications()(({context, render: Render, loading: Loading, notificationContext}) => {
+export const PasteActionComponent = withNotifications()(({path, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -28,7 +28,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
     }));
 
     const res = useNodeChecks(
-        {path: context.path},
+        {path},
         {
             requiredPermission: 'jcr:addChildNodes',
             getChildNodeTypes: true,
@@ -49,7 +49,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
     `);
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const {nodes, type} = copyPaste;
@@ -87,7 +87,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
         }
 
         if (contentTypesResult.loading || shouldCallQuery) {
-            return <Loading context={context}/>;
+            return <Loading {...others}/>;
         }
 
         isEnabled = contentTypesResult.data.jcr.nodeTypesByNames.reduce((acc, val) => {
@@ -100,18 +100,18 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
     }
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isEnabled,
-            onClick: () => {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isEnabled}
+            onClick={() => {
                 const mutation = type === copyPasteConstants.CUT ? pasteMutations.moveNode : pasteMutations.pasteNode;
 
                 // Execute paste
                 Promise.all(nodes.map(nodeToPaste => client.mutate({
                     variables: {
                         pathOrId: nodeToPaste.path,
-                        destParentPathOrId: context.path,
+                        destParentPathOrId: path,
                         destName: nodeToPaste.name
                     },
                     mutation
@@ -121,7 +121,7 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
                     notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton']);
 
                     // Let's make sure the content table will be refreshed when displayed
-                    client.cache.flushNodeEntryByPath(context.path);
+                    client.cache.flushNodeEntryByPath(path);
                     nodes.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/'))).forEach(p => client.cache.flushNodeEntryByPath(p));
 
                     // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the preview selection
@@ -131,8 +131,8 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
                     if (pathsToClose.length > 0) {
                         dispatch(cmClosePaths(pathsToClose));
                         const pathsToReopen = pathsToClose.map(pathToReopen => pastedNodes.reduce((acc, pastedNode) => getNewNodePath(acc, pastedNode.path, pastedNode.newPath), pathToReopen));
-                        if (pathsToReopen.indexOf(context.path) === -1) {
-                            pathsToReopen.push(context.path);
+                        if (pathsToReopen.indexOf(path) === -1) {
+                            pathsToReopen.push(path);
                         }
 
                         dispatch(cmOpenPaths(pathsToReopen));
@@ -155,13 +155,13 @@ export const PasteActionComponent = withNotifications()(({context, render: Rende
                     notificationContext.notify(t('jcontent:label.contentManager.copyPaste.error'), ['closeButton']);
                     triggerRefetchAll();
                 });
-            }
-        }}/>
+            }}
+        />
     );
 });
 
 PasteActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
 
     render: PropTypes.func.isRequired,
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu} from '@jahia/moonstone';
 
-export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, context}) => (
+export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, context, ...otherProps}) => (
     <Menu
         {...anchor}
         data-sel-role={'jcontent-' + context.key}
@@ -13,6 +13,7 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onE
         onMouseLeave={onMouseLeave}
         onClose={onClose}
         onExited={onExited}
+        {...otherProps}
     >
         {children}
     </Menu>

@@ -9,11 +9,11 @@ function checkAction(node) {
     return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node);
 }
 
-export const DeleteActionComponent = ({context, render: Render, loading: Loading}) => {
+export const DeleteActionComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
     const res = useNodeChecks(
-        {path: context.path, paths: context.paths, language},
+        {path, paths, language},
         {
             getProperties: ['jcr:mixinTypes'],
             getDisplayName: true,
@@ -25,17 +25,17 @@ export const DeleteActionComponent = ({context, render: Render, loading: Loading
     );
 
     if (res.loading) {
-        return (Loading && <Loading context={context}/>) || false;
+        return (Loading && <Loading {...others}/>) || false;
     }
 
     const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
-        <Render context={{
-            ...context,
-            isVisible: isVisible,
-            enabled: isVisible,
-            onClick: () => {
+        <Render
+            {...others}
+            isVisible={isVisible}
+            enabled={isVisible}
+            onClick={() => {
                 if (res.node) {
                     window.authoringApi.deleteContent(res.node.uuid, res.node.path, res.node.displayName, ['jnt:content'], ['nt:base'], false, false);
                 } else if (res.nodes) {
@@ -47,13 +47,15 @@ export const DeleteActionComponent = ({context, render: Render, loading: Loading
                         inheritedNodeTypes: ['nt:base']
                     })), false, false);
                 }
-            }
-        }}/>
+            }}
+        />
     );
 };
 
 DeleteActionComponent.propTypes = {
-    context: PropTypes.object.isRequired,
+    path: PropTypes.string,
+
+    paths: PropTypes.arrayOf(PropTypes.string),
 
     render: PropTypes.func.isRequired,
 

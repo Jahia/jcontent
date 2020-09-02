@@ -5,16 +5,13 @@ import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
-import {getButtonRenderer} from '~/utils/getButtonRenderer';
+import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import styles from './Toolbar.scss';
 import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {cmSetPreviewState} from '../../preview.redux';
-
-const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short'});
-const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none'});
 
 export const ToolBar = () => {
     const {t} = useTranslation();
@@ -56,18 +53,19 @@ export const ToolBar = () => {
                     <Separator variant="vertical" invisible="onlyChild"/>
                     <DisplayActions
                         target="selectedContentActions"
-                        context={context}
+                        {...context}
                         filter={action => action.key !== 'deletePermanently' && action.key.indexOf('publish') === -1}
-                        render={getButtonRenderer({size: 'default', variant: 'ghost'})}
+                        buttonProps={{size: 'default', variant: 'ghost'}}
+                        render={ButtonRenderer}
                     />
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    {publishAction && <DisplayAction actionKey={publishAction} context={context} render={ButtonRendererShortLabel}/>}
-                    <DisplayAction actionKey="publishMenu" context={{...context, menuUseElementAnchor: true}} render={ButtonRendererNoLabel}/>
+                    {publishAction && <DisplayAction actionKey={publishAction} {...context} render={ButtonRendererShortLabel}/>}
+                    <DisplayAction menuUseElementAnchor actionKey="publishMenu" {...context} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
-                <DisplayAction actionKey="publishDeletion" context={context} render={ButtonRendererShortLabel}/>
-                <DisplayAction actionKey="deletePermanently" context={context} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="publishDeletion" {...context} render={ButtonRendererShortLabel}/>
+                <DisplayAction actionKey="deletePermanently" {...context} render={ButtonRendererShortLabel}/>
             </React.Fragment>}
         </div>
     );

@@ -36,13 +36,13 @@ function checkAction(res, node, publishType, allLanguages) {
     return {enabled, isVisible};
 }
 
-function checkActionOnNodes(res, context) {
+function checkActionOnNodes(res, publishType, allLanguages) {
     const defaults = {
         enabled: true,
         isVisible: true
     };
 
-    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, context)), defaults) : defaults;
+    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, allLanguages)), defaults) : defaults;
 }
 
 const mergeChecks = (v1, v2) => {
@@ -53,7 +53,7 @@ const mergeChecks = (v1, v2) => {
     return res;
 };
 
-function getButtonLabelParams(context, language, res, t) {
+function getButtonLabelParams(paths, language, res, t) {
     if (!res.nodes) {
         return {
             displayName: t('jcontent:label.contentManager.selection.items', {count: 0}),
@@ -62,7 +62,7 @@ function getButtonLabelParams(context, language, res, t) {
     }
 
     return {
-        displayName: t('jcontent:label.contentManager.selection.items', {count: context.paths.length}),
+        displayName: t('jcontent:label.contentManager.selection.items', {count: paths.length}),
         language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
     };
 }
@@ -105,18 +105,12 @@ export const PublishActionComponent = ({id, path, paths, language, publishType, 
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let {enabled, isVisible} = res.node ? checkAction(res, res.node, publishType, allLanguages) : res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, allLanguages)), {
-        enabled: true,
-        isVisible: true
-    });
+    let {enabled, isVisible} = res.node ? checkAction(res, res.node, publishType, allLanguages) : checkActionOnNodes(res, publishType, allLanguages);
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
         language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
-    } : {
-        displayName: t('jcontent:label.contentManager.selection.items', {count: paths.length}),
-        language: res.nodes[0].site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, languageToUse).displayName)) : null
-    };
+    } : getButtonLabelParams(paths, language, res, t);
 
     return (
         <Render

@@ -49,6 +49,7 @@ import org.jahia.api.Constants;
 import org.jahia.exceptions.JahiaRuntimeException;
 import org.jahia.registries.ServicesRegistry;
 import org.jahia.services.cache.ehcache.EhCacheProvider;
+import org.jahia.services.content.JCRSessionFactory;
 import org.jahia.services.render.RenderContext;
 import org.jahia.services.sites.JahiaSite;
 
@@ -102,6 +103,9 @@ public class URLResolverFactory extends org.jahia.services.render.URLResolverFac
         try {
             servlet =  pathParts[CM_SERVLET_IDX];
             JahiaSite jahiaSite = ServicesRegistry.getInstance().getJahiaSitesService().getSiteByKey(pathParts[SITE_KEY_IDX]);
+            if (jahiaSite == null) {
+                jahiaSite = ServicesRegistry.getInstance().getJahiaSitesService().getSiteByKey(pathParts[SITE_KEY_IDX], JCRSessionFactory.getInstance().getCurrentUserSession(Constants.EDIT_WORKSPACE));
+            }
             if (jahiaSite == null) {
                 throw new Exception("unable to resolve site " + pathParts[SITE_KEY_IDX]);
             }

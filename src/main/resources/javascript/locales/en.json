@@ -83,7 +83,8 @@
       },
       "error": {
         "contentUnavailable": "The requested content is unavailable",
-        "queryingContent": "Error querying content: {{details}}"
+        "queryingContent": "Error querying content: {{details}}",
+        "siteInfo": "Cannot read language information for site {{site}}"
       },
       "title": {
         "browse-files": "Media",

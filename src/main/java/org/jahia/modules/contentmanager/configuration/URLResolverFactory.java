@@ -102,10 +102,7 @@ public class URLResolverFactory extends org.jahia.services.render.URLResolverFac
 
         try {
             servlet =  pathParts[CM_SERVLET_IDX];
-            JahiaSite jahiaSite = ServicesRegistry.getInstance().getJahiaSitesService().getSiteByKey(pathParts[SITE_KEY_IDX]);
-            if (jahiaSite == null) {
-                jahiaSite = ServicesRegistry.getInstance().getJahiaSitesService().getSiteByKey(pathParts[SITE_KEY_IDX], JCRSessionFactory.getInstance().getCurrentUserSession(Constants.EDIT_WORKSPACE));
-            }
+            JahiaSite jahiaSite = ServicesRegistry.getInstance().getJahiaSitesService().getSiteByKey(pathParts[SITE_KEY_IDX], JCRSessionFactory.getInstance().getCurrentUserSession(Constants.EDIT_WORKSPACE));
             if (jahiaSite == null) {
                 throw new Exception("unable to resolve site " + pathParts[SITE_KEY_IDX]);
             }

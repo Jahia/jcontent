@@ -63,6 +63,7 @@ import downloadFileAction from './actions/downloadFileAction';
 import createFolderAction from './actions/createFolderAction';
 import zipAction from './actions/zipUnzip/zipAction';
 import unzipAction from './actions/zipUnzip/unzipAction';
+import requirementsAction from './actions/requirementsAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
@@ -78,6 +79,8 @@ function contentManagerActions(actionsRegistry) {
     actionsRegistry.add('router', routerAction);
     actionsRegistry.add('sideMenu', sideMenuAction);
     actionsRegistry.add('sideMenuList', sideMenuListAction);
+    actionsRegistry.add('requirementsAction', requirementsAction);
+    actionsRegistry.add('menuAction', menuAction);
 
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,

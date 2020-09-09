@@ -1,6 +1,6 @@
 import React from 'react';
-import {menuAction} from '@jahia/react-material';
-import {ContentIcon, ManageIcon, WorkflowIcon, ZipIcon, UnzipIcon} from './actions/icons';
+import {componentRendererAction, menuAction} from '@jahia/react-material';
+import {ContentIcon, ManageIcon, UnzipIcon, WorkflowIcon, ZipIcon} from './actions/icons';
 import {
     Add,
     Autorenew,
@@ -63,6 +63,9 @@ import downloadFileAction from './actions/downloadFileAction';
 import createFolderAction from './actions/createFolderAction';
 import zipAction from './actions/zipUnzip/zipAction';
 import unzipAction from './actions/zipUnzip/unzipAction';
+import requirementsAction from './actions/requirementsAction';
+import {withI18nAction} from './actions/withI18nAction';
+import {withApolloAction} from './actions/withApolloAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
 const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
@@ -78,6 +81,11 @@ function contentManagerActions(actionsRegistry) {
     actionsRegistry.add('router', routerAction);
     actionsRegistry.add('sideMenu', sideMenuAction);
     actionsRegistry.add('sideMenuList', sideMenuListAction);
+    actionsRegistry.add('componentRenderer', componentRendererAction);
+    actionsRegistry.add('requirements', requirementsAction);
+    actionsRegistry.add('menu', menuAction);
+    actionsRegistry.add('withI18n', withI18nAction);
+    actionsRegistry.add('withApollo', withApolloAction);
 
     actionsRegistry.add('edit', editAction, {
         buttonIcon: <Edit/>,

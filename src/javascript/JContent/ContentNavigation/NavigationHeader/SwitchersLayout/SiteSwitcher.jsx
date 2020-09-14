@@ -100,6 +100,7 @@ class SiteSwitcher extends React.Component {
                             <Dropdown isDisabled
                                       data={[{label: 'none', value: 'none', name: 'none', site: 'none'}]}
                                       className={styles.siteSwitcher}
+                                      onChange={() => {}}
                                 />
                         );
                     }

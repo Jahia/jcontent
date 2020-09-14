@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Menu} from '@jahia/moonstone';
 
-export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, context, ...otherProps}) => (
+export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onExited, onMouseEnter, onMouseLeave, children, menuKey, ...otherProps}) => (
     <Menu
         {...anchor}
-        data-sel-role={'jcontent-' + context.key}
+        data-sel-role={'jcontent-' + menuKey}
         style={{zIndex: isSubMenu ? 9001 : 9000}}
         hasOverlay={isOpen && !isLoading && !isSubMenu}
         isDisplayed={isOpen && !isLoading}
@@ -20,6 +20,11 @@ export const MenuRenderer = ({isSubMenu, anchor, isOpen, isLoading, onClose, onE
 );
 
 MenuRenderer.propTypes = {
+    /**
+     * Menu id
+     */
+    menuKey: PropTypes.string.isRequired,
+
     /**
      * Is the menu to display a submenu of another menu
      */

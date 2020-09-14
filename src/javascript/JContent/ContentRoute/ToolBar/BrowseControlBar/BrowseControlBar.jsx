@@ -35,7 +35,7 @@ export const BrowseControlBar = ({showActions}) => {
                     </div>
                     <div className="flexRow">
                         <Separator variant="vertical" invisible="onlyChild"/>
-                        <DisplayAction menuPreload
+                        <DisplayAction isMenuPreload
                                        actionKey="contentMenu"
                                        path={path}
                                        menuFilter={action => contentActions.indexOf(action.key) === -1}

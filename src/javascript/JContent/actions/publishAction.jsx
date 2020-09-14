@@ -79,7 +79,8 @@ const constraintsByType = {
     }
 };
 
-export const PublishActionComponent = ({id, path, paths, language, publishType, allLanguages, render: Render, loading: Loading, ...others}) => {
+export const PublishActionComponent = props => {
+    const {id, path, paths, language, publishType, allLanguages, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation();
 
@@ -102,7 +103,7 @@ export const PublishActionComponent = ({id, path, paths, language, publishType, 
     }, [res.refetch, id]);
 
     if (res.loading) {
-        return (Loading && <Loading {...others}/>) || false;
+        return (Loading && <Loading {...props}/>) || false;
     }
 
     let {enabled, isVisible} = res.node ? checkAction(res, res.node, publishType, allLanguages) : checkActionOnNodes(res, publishType, allLanguages);
@@ -114,7 +115,7 @@ export const PublishActionComponent = ({id, path, paths, language, publishType, 
 
     return (
         <Render
-            {...others}
+            {...props}
             buttonLabelParams={buttonLabelParams}
             isVisible={isVisible}
             enabled={enabled}

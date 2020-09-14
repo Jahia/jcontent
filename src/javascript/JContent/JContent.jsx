@@ -18,18 +18,26 @@ export const JContent = () => {
             content={
                 <Suspense fallback={<ProgressPaper/>}>
                     <Switch>
-                        {routes.map(r => (
+                        {routes.map(r => r.component ? (
+                            <Route key={r.key}
+                                   path={r.path}
+                                   component={r.component}
+                            />
+                        ) : (
                             <Route key={r.key}
                                    path={r.path}
                                    render={r.render}
-                                   component={r.component}
                             />
                         ))}
-                        {item && itemEnabled && (
+                        {item && itemEnabled && item.routeComponent ? (
+                            <Route key={item.key}
+                                   path={'/jcontent/:siteKey/:lang/' + item.key}
+                                   component={item.routeComponent}
+                            />
+                        ) : (
                             <Route key={item.key}
                                    path={'/jcontent/:siteKey/:lang/' + item.key}
                                    render={props => item.routeRender(props, item)}
-                                   component={item.routeComponent}
                             />
                         )}
                     </Switch>

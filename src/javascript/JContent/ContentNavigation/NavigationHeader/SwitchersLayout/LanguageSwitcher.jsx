@@ -35,6 +35,7 @@ export const LanguageSwitcher = ({
             <Dropdown isDisabled
                       data={[{label: 'none', value: 'none'}]}
                       className={styles.languageSwitcher}
+                      onChange={() => {}}
             />
         );
     }

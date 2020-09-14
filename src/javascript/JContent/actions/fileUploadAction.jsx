@@ -39,7 +39,8 @@ const constraintsByType = {
     }
 };
 
-export const FileUploadActionComponent = ({id, path, uploadType, render: Render, loading: Loading, ...others}) => {
+export const FileUploadActionComponent = props => {
+    const {id, path, uploadType, render: Render, loading: Loading} = props;
     const componentRenderer = useContext(ComponentRendererContext);
     const dispatch = useDispatch();
     const dispatchBatch = actions => dispatch(batchActions(actions));
@@ -56,7 +57,7 @@ export const FileUploadActionComponent = ({id, path, uploadType, render: Render,
     }, [id, componentRenderer]);
 
     if (res.loading) {
-        return (Loading && <Loading {...others}/>) || false;
+        return (Loading && <Loading {...props}/>) || false;
     }
 
     const handleClick = () => {
@@ -76,7 +77,7 @@ export const FileUploadActionComponent = ({id, path, uploadType, render: Render,
 
     return (
         <Render
-            {...others}
+            {...props}
             isVisible={isVisible}
             enabled={isVisible}
             onClick={handleClick}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {MenuItem} from '@jahia/moonstone';
 
-export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
+export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, actionKey, enabled, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
     const {t} = useTranslation();
     const [hover, setHover] = useState(false);
 
@@ -18,21 +18,22 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave, bu
     };
 
     let h = hover;
-    if (context.menuContext) {
-        h = h || context.menuState.isInMenu;
+    if (menuContext) {
+        h = h || menuState.isInMenu;
     }
 
     // eslint-disable-next-line react/no-danger
-    const label = <span dangerouslySetInnerHTML={{__html: t(context.buttonLabel, context.buttonLabelParams)}}/>;
+    const label = <span dangerouslySetInnerHTML={{__html: t(buttonLabel, buttonLabelParams)}}/>;
 
-    const isDisabled = context.enabled === false;
+    const isDisabled = enabled === false;
+
+    const {isShowIcons, ...otherButtonProps} = buttonProps || {};
 
     return (
         <MenuItem
-            isHtml
-            iconStart={context.showIcons && context.buttonIcon}
-            data-sel-role={context.key}
-            {...buttonProps}
+            iconStart={isShowIcons && buttonIcon}
+            data-sel-role={actionKey}
+            {...otherButtonProps}
             label={label}
             isHover={h}
             isDisabled={isDisabled}
@@ -44,10 +45,14 @@ export let MenuItemRenderer = ({context, onClick, onMouseEnter, onMouseLeave, bu
 };
 
 MenuItemRenderer.propTypes = {
-    /**
-     * The action context
-     */
-    context: PropTypes.object.isRequired,
+    actionKey: PropTypes.string.isRequired,
+    buttonLabel: PropTypes.string.isRequired,
+    buttonLabelParams: PropTypes.object,
+    menuContext: PropTypes.object,
+    menuState: PropTypes.object,
+    buttonIcon: PropTypes.object,
+    enabled: PropTypes.bool,
+
     /**
      * Function to call when the menu item is clicked
      */

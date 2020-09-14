@@ -16,8 +16,7 @@ const getButtonRenderer = ({labelStyle} = {}) => {
         }
 
         return (isVisible !== false &&
-            <Button isHtml
-                    data-sel-role={key}
+            <Button data-sel-role={key}
                     label={t(label, buttonLabelParams)}
                     icon={buttonIcon}
                     disabled={enabled === false || disabled}

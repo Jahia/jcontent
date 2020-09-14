@@ -99,7 +99,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishMenu',
         targets: ['contentActions:6', 'selectedContentActions:1'],
         menuTarget: 'publishMenu',
-        menuPreload: true
+        isMenuPreload: true
     });
     registry.add('action', 'publish', {
         buttonIcon: <CloudUpload/>,
@@ -161,14 +161,18 @@ export const jContentActions = registry => {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'contentActions',
-        showIcons: true
+        menuItemProps: {
+            isShowIcons: true
+        }
     });
     registry.add('action', 'selectedContentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'selectedContentActions',
         menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',
-        showIcons: true
+        menuItemProps: {
+            isShowIcons: true
+        }
     });
     registry.add('action', 'copy', {
         buttonIcon: <Copy/>,

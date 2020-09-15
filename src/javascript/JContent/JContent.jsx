@@ -29,16 +29,18 @@ export const JContent = () => {
                                    render={r.render}
                             />
                         ))}
-                        {item && itemEnabled && item.routeComponent ? (
-                            <Route key={item.key}
-                                   path={'/jcontent/:siteKey/:lang/' + item.key}
-                                   component={item.routeComponent}
-                            />
-                        ) : (
-                            <Route key={item.key}
-                                   path={'/jcontent/:siteKey/:lang/' + item.key}
-                                   render={props => item.routeRender(props, item)}
-                            />
+                        {item && itemEnabled && (
+                            item.routeComponent ? (
+                                <Route key={item.key}
+                                       path={'/jcontent/:siteKey/:lang/' + item.key}
+                                       component={item.routeComponent}
+                                />
+                            ) : (
+                                <Route key={item.key}
+                                       path={'/jcontent/:siteKey/:lang/' + item.key}
+                                       render={props => item.routeRender(props, item)}
+                                />
+                            )
                         )}
                     </Switch>
                 </Suspense>

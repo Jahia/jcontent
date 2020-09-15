@@ -1,8 +1,8 @@
 import React from 'react';
-import {iconButtonRenderer} from '@jahia/react-material';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import PropTypes from 'prop-types';
+import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 
 export const Actions = ({className, node}) => (
     <div className={className}>
@@ -10,13 +10,15 @@ export const Actions = ({className, node}) => (
             target="contentActions"
             filter={value => _.includes(['edit', 'preview'], value.key)}
             path={node.path}
-            render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
+            render={ButtonRendererNoLabel}
+            buttonProps={{variant: 'ghost', size: 'big'}}
         />
         <DisplayAction
             actionKey="contentMenu"
             path={node.path}
             menuFilter={value => !_.includes(['edit', 'preview'], value.key)}
-            render={iconButtonRenderer({disableRipple: true}, {fontSize: 'small'}, true)}
+            render={ButtonRendererNoLabel}
+            buttonProps={{variant: 'ghost', size: 'big'}}
         />
     </div>
 );

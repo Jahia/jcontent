@@ -62,7 +62,7 @@
         <connection>scm:git:git@github.com:Jahia/content-media-manager.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/content-media-manager.git</developerConnection>
         <url>https://github.com/Jahia/content-media-manager</url>
-        <tag>1_5_x</tag>
+        <tag>1_x</tag>
     </scm>
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>

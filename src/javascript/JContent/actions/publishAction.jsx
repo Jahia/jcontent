@@ -111,7 +111,7 @@ export const PublishActionComponent = props => {
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
         language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
-    } : getButtonLabelParams(paths, language, res, t);
+    } : getButtonLabelParams(paths, languageToUse, res, t);
 
     return (
         <Render

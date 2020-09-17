@@ -54,7 +54,7 @@
     </parent>
     <artifactId>content-media-manager</artifactId>
     <name>Content and Media Manager</name>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>This is the custom module (Content and Media Manager) for running on a Digital Experience Manager server.</description>
 
@@ -62,7 +62,7 @@
         <connection>scm:git:git@github.com:Jahia/content-media-manager.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/content-media-manager.git</developerConnection>
         <url>https://github.com/Jahia/content-media-manager</url>
-        <tag>1_6_0</tag>
+        <tag>1_x</tag>
     </scm>
     <properties>
         <jahia-deploy-on-site>all</jahia-deploy-on-site>

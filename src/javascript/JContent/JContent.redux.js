@@ -80,7 +80,7 @@ export const replaceOpenedPath = data => (
 
 export const jContentRedux = registry => {
     const jahiaCtx = window.contextJsParameters;
-    const pathName = window.location.pathname.substring((jahiaCtx.contextPath + jahiaCtx.urlbase).length);
+    const pathName = window.location.pathname.substring(jahiaCtx.urlbase.length);
     const currentValueFromUrl = extractParamsFromUrl(pathName, window.location.search);
 
     const preSearchModeMemoReducer = handleActions({

@@ -80,7 +80,7 @@ const constraintsByType = {
 };
 
 export const PublishActionComponent = props => {
-    const {id, path, paths, language, publishType, allLanguages, render: Render, loading: Loading} = props;
+    const {id, path, paths, language, publishType, allLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation();
 
@@ -106,7 +106,9 @@ export const PublishActionComponent = props => {
         return (Loading && <Loading {...props}/>) || false;
     }
 
-    let {enabled, isVisible} = res.node ? checkAction(res, res.node, publishType, allLanguages) : checkActionOnNodes(res, publishType, allLanguages);
+    let actionChecks = res.node ? checkAction(res, res.node, publishType, allLanguages) : checkActionOnNodes(res, publishType, allLanguages);
+    const actionEnabled = enabled !== undefined ? (enabled && actionChecks.enabled) : actionChecks.enabled;
+    const actionVisible = isVisible !== undefined ? (isVisible && actionChecks.isVisible) : actionChecks.isVisible;
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
@@ -117,8 +119,8 @@ export const PublishActionComponent = props => {
         <Render
             {...props}
             buttonLabelParams={buttonLabelParams}
-            isVisible={isVisible}
-            enabled={enabled}
+            isVisible={actionVisible}
+            enabled={actionEnabled}
             onClick={() => {
                 if (path) {
                     window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', allLanguages, publishType === 'unpublish');
@@ -138,6 +140,10 @@ PublishActionComponent.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
 
     language: PropTypes.string,
+
+    enabled: PropTypes.bool,
+
+    isVisible: PropTypes.bool,
 
     publishType: PropTypes.oneOf(['publish', 'publishAll', 'unpublish']),
 

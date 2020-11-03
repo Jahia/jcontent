@@ -34,7 +34,7 @@ let buildUrl = (site, language, mode, path, params) => {
     // Special chars in folder naming
     path = path.replace(/[^/]/g, encodeURIComponent);
 
-    let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + rison.encode_uri(params);
+    let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + btoa(rison.encode(params));
     return '/' + [site, language, mode].join('/') + path + queryString;
 };
 
@@ -65,7 +65,7 @@ let deserializeQueryString = search => {
         let params = queryString.parse(search).params;
         if (params) {
             try {
-                return rison.decode(params);
+                return rison.decode(atob(params));
             } catch (e) {
                 return {};
             }

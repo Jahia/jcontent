@@ -159,86 +159,84 @@ export const FileCard = ({gridMode,
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
     let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
     return (
-        <React.Fragment>
+        <Card
+                style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
+                className={classNames(
+                    classes.card,
+                    isThumbCard && classes.thumbCard,
+                    isDetailedCard && classes.detailedCard,
+                    isPreviewSelected && classes.selectedCard
+                )}
+                data-cm-role="grid-content-list-card"
+                onContextMenu={event => {
+                    event.stopPropagation();
+                    contextualMenu.current(event);
+                }}
+                onClick={() => {
+                    if (!node.notSelectableForPreview) {
+                        onPreviewSelect(node.path);
+                    }
+                }}
+                onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
+        >
             <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={node.path}/>
 
-            <Card
-                    style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
-                    className={classNames(
-                        classes.card,
-                        isThumbCard && classes.thumbCard,
-                        isDetailedCard && classes.detailedCard,
-                        isPreviewSelected && classes.selectedCard
-                    )}
-                    data-cm-role="grid-content-list-card"
-                    onContextMenu={event => {
-                        event.stopPropagation();
-                        contextualMenu.current(event);
-                    }}
-                    onClick={() => {
-                        if (!node.notSelectableForPreview) {
-                            onPreviewSelect(node.path);
-                        }
-                    }}
-                    onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
-            >
-                {!isThumbCard &&
-                <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
+            {!isThumbCard &&
+            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
 
-                {isImage ?
-                    <CardMedia
-                            className={classNames(
-                                isDetailedCard && classes.detailedCover,
-                                isThumbCard && classes.thumbCover
-                            )}
-                            image={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
-                            title={node.name}
-                        /> :
-                    <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>
-                        {node.primaryNodeType.name === 'jnt:folder' ?
-                            <Folder color="action"/> :
-                                isPdf ?
-                                    <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
-                                    <FileIcon filename={node.path} color="disabled"/>}
+            {isImage ?
+                <CardMedia
+                        className={classNames(
+                            isDetailedCard && classes.detailedCover,
+                            isThumbCard && classes.thumbCover
+                        )}
+                        image={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
+                        title={node.name}
+                    /> :
+                <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>
+                    {node.primaryNodeType.name === 'jnt:folder' ?
+                        <Folder color="action"/> :
+                            isPdf ?
+                                <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
+                                <FileIcon filename={node.path} color="disabled"/>}
+                </div>}
+
+            <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
+                {isThumbCard &&
+                <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
+
+                <Actions node={node} className={classes.actions}/>
+
+                <CardContent classes={{root: classes.cardContent}}>
+                    <div>
+                        <Typography variant="caption" component="p">
+                            {t('jcontent:label.contentManager.filesGrid.name')}
+                        </Typography>
+                        <FileName maxLength={maxLengthLabels} node={node}/>
+                    </div>
+                    {!isThumbCard &&
+                    <div>
+                        <Typography variant="caption" component="p">
+                            {t('jcontent:label.contentManager.filesGrid.createdBy')}
+                        </Typography>
+                        <Typography variant="iota" component="p">
+                            {t('jcontent:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
+                                    &nbsp;
+                            <time>{dayjs(node.created.value).locale(getDefaultLocale(uilang)).format('LLL')}</time>
+                        </Typography>
                     </div>}
-
-                <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
-                    {isThumbCard &&
-                    <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
-
-                    <Actions node={node} className={classes.actions}/>
-
-                    <CardContent classes={{root: classes.cardContent}}>
-                        <div>
-                            <Typography variant="caption" component="p">
-                                {t('jcontent:label.contentManager.filesGrid.name')}
-                            </Typography>
-                            <FileName maxLength={maxLengthLabels} node={node}/>
-                        </div>
-                        {!isThumbCard &&
-                        <div>
-                            <Typography variant="caption" component="p">
-                                {t('jcontent:label.contentManager.filesGrid.createdBy')}
-                            </Typography>
-                            <Typography variant="iota" component="p">
-                                {t('jcontent:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
-                                        &nbsp;
-                                <time>{dayjs(node.created.value).locale(getDefaultLocale(uilang)).format('LLL')}</time>
-                            </Typography>
-                        </div>}
-                        {(isDetailedCard) && node.width && node.height &&
-                        <div>
-                            <Typography variant="caption" component="p">
-                                {t('jcontent:label.contentManager.filesGrid.fileInfo')}
-                            </Typography>
-                            <Typography variant="iota" component="p">
-                                {`${node.width.value} x ${node.height.value}`}
-                            </Typography>
-                        </div>}
-                    </CardContent>
-                </div>
-            </Card>
-        </React.Fragment>
+                    {(isDetailedCard) && node.width && node.height &&
+                    <div>
+                        <Typography variant="caption" component="p">
+                            {t('jcontent:label.contentManager.filesGrid.fileInfo')}
+                        </Typography>
+                        <Typography variant="iota" component="p">
+                            {`${node.width.value} x ${node.height.value}`}
+                        </Typography>
+                    </div>}
+                </CardContent>
+            </div>
+        </Card>
     );
 };
 

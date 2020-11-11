@@ -3,22 +3,20 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {filesgridSetGridMode, filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
 import JContentConstants from '../../../JContent.constants';
-import {Button, ViewComfy, ViewGrid, ViewList} from '@jahia/moonstone';
+import {Button, ViewGrid, ViewList} from '@jahia/moonstone';
 
 const localStorage = window.localStorage;
 
 const GRID = JContentConstants.mode.GRID;
 const LIST = JContentConstants.mode.LIST;
-const DETAILED = JContentConstants.gridMode.DETAILED;
-const LIST_VIEW = JContentConstants.gridMode.LIST;
 const THUMBNAIL = JContentConstants.gridMode.THUMBNAIL;
+const LIST_VIEW = JContentConstants.gridMode.LIST;
 const FILE_SELECTOR_MODE = JContentConstants.localStorageKeys.filesSelectorMode;
 const FILE_SELECTOR_GRID_MODE = JContentConstants.localStorageKeys.filesSelectorGridMode;
 
-const buttons = [THUMBNAIL, DETAILED, LIST_VIEW];
+const buttons = [THUMBNAIL, LIST_VIEW];
 const icons = {
-    [THUMBNAIL]: <ViewComfy/>,
-    [DETAILED]: <ViewGrid/>,
+    [THUMBNAIL]: <ViewGrid/>,
     [LIST_VIEW]: <ViewList/>
 };
 
@@ -49,15 +47,6 @@ export const FileModeSelector = () => {
                 }
 
                 break;
-            case DETAILED:
-                onChange(GRID);
-                localStorage.setItem(FILE_SELECTOR_MODE, GRID);
-                if (gridMode !== DETAILED) {
-                    onGridMode(DETAILED);
-                    localStorage.setItem(FILE_SELECTOR_GRID_MODE, DETAILED);
-                }
-
-                break;
             default:
                 if (mode === LIST) {
                     onChange(GRID);
@@ -65,7 +54,7 @@ export const FileModeSelector = () => {
         }
     };
 
-    let select = mode === GRID && gridMode === THUMBNAIL ? THUMBNAIL : (mode === GRID ? DETAILED : LIST_VIEW);
+    let select = mode === GRID && gridMode === THUMBNAIL ? THUMBNAIL : (mode === GRID ? THUMBNAIL : LIST_VIEW);
 
     return (
         buttons.map(v => (

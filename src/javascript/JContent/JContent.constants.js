@@ -28,7 +28,6 @@ const JContentConstants = {
     },
     gridMode: {
         THUMBNAIL: 'thumbnail',
-        DETAILED: 'detailed',
         LIST: 'listview'
     }
 };

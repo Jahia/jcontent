@@ -14,6 +14,9 @@ import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
 import dayjs from 'dayjs';
+import JContentConstants from '../../../../JContent.constants';
+
+const THUMBNAIL = JContentConstants.gridMode.THUMBNAIL;
 
 const styles = theme => ({
     detailedCard: {
@@ -139,18 +142,12 @@ export const FileCard = ({gridMode,
     let isDetailedCard = false;
     let isThumbCard = false;
     let maxLengthLabels;
-    switch (gridMode) {
-        case 'thumbnail':
-            isThumbCard = true;
-            maxLengthLabels = 18;
-            break;
-        case 'detailed':
-            isDetailedCard = true;
-            maxLengthLabels = 28;
-            break;
-        default:
-            isThumbCard = true;
-            maxLengthLabels = 18;
+    if (gridMode === THUMBNAIL) {
+        isDetailedCard = true;
+        maxLengthLabels = 28;
+    } else {
+        isThumbCard = true;
+        maxLengthLabels = 18;
     }
 
     // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout

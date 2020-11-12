@@ -124,7 +124,7 @@ export const FilesGrid = ({
                                           uploadPath={path}
                                           mode="media"
                                           className={classNames(classes.defaultGrid,
-                                              gridMode === JContentConstants.gridMode.THUMBNAIL && classes.detailedGrid)}
+                                              gridMode === JContentConstants.THUMBNAILS && classes.detailedGrid)}
                 >
                     {rows.map((node, index) => (
                         <FileCard key={node.uuid}

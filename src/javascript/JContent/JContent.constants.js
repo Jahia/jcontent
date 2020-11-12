@@ -26,10 +26,8 @@ const JContentConstants = {
         filesSelectorMode: 'jcontent_files_selector_mode',
         filesSelectorGridMode: 'jcontent_files_selector_grid_mode'
     },
-    gridMode: {
-        THUMBNAIL: 'thumbnail',
-        LIST: 'listview'
-    }
+    THUMBNAILS: 'thumbnails',
+    LIST: 'listview'
 };
 
 export default JContentConstants;

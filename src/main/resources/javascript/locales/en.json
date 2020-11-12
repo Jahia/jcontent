@@ -106,7 +106,8 @@
         "name": "Name:",
         "fileInfo": "Size:",
         "listview": "List view",
-        "thumbnail": "Thumbnails",
+        "thumbnail": "Thumbnail",
+        "thumbnails": "Thumbnails",
         "detailed": "Detailed view"
       },
       "search": {

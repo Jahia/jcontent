@@ -105,10 +105,8 @@
         "publish": "Publier",
         "name": "Nom:",
         "fileInfo": "Taille:",
-        "listview": "Liste",
-        "thumbnail": "Vignette",
-        "thumbnails": "Vignettes",
-        "detailed": "Vue detaillée"
+        "list": "Liste",
+        "grid": "Vignettes"
       },
       "search": {
         "advanced": "Recherche avancée",

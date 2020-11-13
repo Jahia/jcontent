@@ -57,7 +57,6 @@ const styles = theme => ({
 });
 
 export const FilesGrid = ({
-    gridMode,
     contentNotFound,
     classes,
     path,
@@ -123,12 +122,10 @@ export const FilesGrid = ({
                 <UploadTransformComponent uploadTargetComponent={Paper}
                                           uploadPath={path}
                                           mode="media"
-                                          className={classNames(classes.defaultGrid,
-                                              gridMode === JContentConstants.THUMBNAILS && classes.detailedGrid)}
+                                          className={classNames(classes.defaultGrid, classes.detailedGrid)}
                 >
                     {rows.map((node, index) => (
                         <FileCard key={node.uuid}
-                                  gridMode={gridMode}
                                   mode={mode}
                                   uilang={uilang}
                                   siteKey={siteKey}
@@ -170,7 +167,6 @@ export const FilesGrid = ({
 let mapStateToProps = state => ({
     path: state.jcontent.path,
     pagination: state.jcontent.pagination,
-    gridMode: state.jcontent.filesGrid.gridMode,
     mode: state.jcontent.filesGrid.mode,
     siteKey: state.site,
     uilang: state.uilang,
@@ -197,7 +193,6 @@ FilesGrid.propTypes = {
     rows: PropTypes.array.isRequired,
     setCurrentPage: PropTypes.func.isRequired,
     setPageSize: PropTypes.func.isRequired,
-    gridMode: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,
     previewSelection: PropTypes.string,
     previewState: PropTypes.number.isRequired,

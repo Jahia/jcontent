@@ -105,10 +105,8 @@
         "publish": "Publish",
         "name": "Name:",
         "fileInfo": "Size:",
-        "listview": "List view",
-        "thumbnail": "Thumbnail",
-        "thumbnails": "Thumbnails",
-        "detailed": "Detailed view"
+        "list": "List view",
+        "grid": "Thumbnails"
       },
       "search": {
         "advanced": "Advanced search",

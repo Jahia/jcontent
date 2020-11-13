@@ -104,10 +104,8 @@
         "publish": "Veröffentlichen",
         "name": "Name:",
         "fileInfo": "Größe:",
-        "listview": "Listenansicht",
-        "thumbnail": "Miniaturansicht",
-        "thumbnails": "Miniaturansicht",
-        "detailed": "Detailansicht"
+        "list": "Listenansicht",
+        "grid": "Miniaturansicht"
       },
       "search": {
         "advanced": "Erweiterte Suche",

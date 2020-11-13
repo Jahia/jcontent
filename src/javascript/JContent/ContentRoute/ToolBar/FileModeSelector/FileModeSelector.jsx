@@ -9,14 +9,12 @@ const localStorage = window.localStorage;
 
 const GRID = JContentConstants.mode.GRID;
 const LIST = JContentConstants.mode.LIST;
-const THUMBNAILS = JContentConstants.THUMBNAILS;
-const LIST_VIEW = JContentConstants.LIST;
 const FILE_SELECTOR_MODE = JContentConstants.localStorageKeys.filesSelectorMode;
 
-const buttons = [THUMBNAILS, LIST_VIEW];
+const buttons = [GRID, LIST];
 const icons = {
-    [THUMBNAILS]: <ViewGrid/>,
-    [LIST_VIEW]: <ViewList/>
+    [GRID]: <ViewGrid/>,
+    [LIST]: <ViewList/>
 };
 
 export const FileModeSelector = () => {
@@ -30,30 +28,16 @@ export const FileModeSelector = () => {
     const onChange = mode => dispatch(filesgridSetMode(mode));
 
     const handleChange = selectedMode => {
-        switch (selectedMode) {
-            case LIST_VIEW:
-                onChange(LIST);
-                localStorage.setItem(FILE_SELECTOR_MODE, LIST);
-                break;
-            case THUMBNAILS:
-                onChange(GRID);
-                localStorage.setItem(FILE_SELECTOR_MODE, GRID);
-                break;
-            default:
-                if (mode === LIST) {
-                    onChange(GRID);
-                }
-        }
+        onChange(selectedMode);
+        localStorage.setItem(FILE_SELECTOR_MODE, selectedMode);
     };
-
-    const select = mode === GRID ? THUMBNAILS : LIST_VIEW;
 
     return (
         buttons.map(v => (
             <Button key={v}
                     data-sel-role={'set-view-mode-' + v}
-                    aria-selected={select === v}
-                    color={select === v ? 'accent' : 'default'}
+                    aria-selected={mode === v}
+                    color={mode === v ? 'accent' : 'default'}
                     title={t('jcontent:label.contentManager.filesGrid.' + v)}
                     size="default"
                     variant="ghost"

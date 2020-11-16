@@ -34,20 +34,6 @@ const styles = theme => ({
             display: 'block'
         }
     },
-    thumbCard: {
-        flexDirection: 'column',
-        flex: '1 1 0%',
-        margin: '0 16px 16px 0',
-        minHeight: 252,
-        minWidth: 150,
-        maxHeight: 252,
-        '& $mediaCardContentContainer': {
-            width: '100%'
-        },
-        '& $fileCardContentContainer': {
-            width: '100%'
-        }
-    },
     detailedIcon: {
         display: 'flex',
         alignItems: 'center',
@@ -57,22 +43,10 @@ const styles = theme => ({
             fontSize: 160
         }
     },
-    thumbIcon: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: 150,
-        '& svg': {
-            fontSize: 112
-        }
-    },
     detailedCover: {
         minWidth: 200,
         maxWidth: 200,
         minHeight: 200
-    },
-    thumbCover: {
-        height: 150
     },
     thumbCoverDetailed: {
         height: 200
@@ -98,9 +72,6 @@ const styles = theme => ({
     selectedCard: {
         boxShadow: '1px 0px 15px 4px ' + theme.palette.primary.main
     },
-    publicationInfoThumb: {
-        minWidth: 150 - (theme.spacing.unit * 4) - 6
-    },
     publicationInfoDetailed: {
         minWidth: 400 - (theme.spacing.unit * 4) - 6
     },
@@ -116,7 +87,7 @@ const styles = theme => ({
     }
 });
 
-export const FileCard = ({gridMode,
+export const FileCard = ({
     classes,
     node,
     uilang,
@@ -135,27 +106,12 @@ export const FileCard = ({gridMode,
     const isImage = isBrowserImage(node.path);
     const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
     const isPreviewSelected = (previewSelection && previewSelection === node.path) && isPreviewOpened;
-
-    let isDetailedCard = false;
-    let isThumbCard = false;
     let maxLengthLabels;
-    switch (gridMode) {
-        case 'thumbnail':
-            isThumbCard = true;
-            maxLengthLabels = 18;
-            break;
-        case 'detailed':
-            isDetailedCard = true;
-            maxLengthLabels = 28;
-            break;
-        default:
-            isThumbCard = true;
-            maxLengthLabels = 18;
-    }
+    maxLengthLabels = 28;
 
     // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
-    let rowNumber = isThumbCard ? Math.floor(index / 6) + 1 : Math.floor(index / 2) + 1;
-    let columnNumber = isThumbCard ? (index % 6) + 1 : (index % 2) + 1;
+    let rowNumber = Math.floor(index / 2) + 1;
+    let columnNumber = (index % 2) + 1;
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
     let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
     return (
@@ -163,8 +119,7 @@ export const FileCard = ({gridMode,
                 style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
                 className={classNames(
                     classes.card,
-                    isThumbCard && classes.thumbCard,
-                    isDetailedCard && classes.detailedCard,
+                    classes.detailedCard,
                     isPreviewSelected && classes.selectedCard
                 )}
                 data-cm-role="grid-content-list-card"
@@ -181,29 +136,23 @@ export const FileCard = ({gridMode,
         >
             <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={node.path}/>
 
-            {!isThumbCard &&
-            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>}
+            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>
 
             {isImage ?
                 <CardMedia
-                        className={classNames(
-                            isDetailedCard && classes.detailedCover,
-                            isThumbCard && classes.thumbCover
-                        )}
+                        className={classNames(classes.detailedCover)}
                         image={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
                         title={node.name}
                     /> :
-                <div className={isDetailedCard ? classes.detailedIcon : classes.thumbIcon}>
+                <div className={classes.detailedIcon}>
                     {node.primaryNodeType.name === 'jnt:folder' ?
                         <Folder color="action"/> :
                             isPdf ?
-                                <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={isDetailedCard ? classes.thumbCoverDetailed : classes.thumbCover}/> :
+                                <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={classes.thumbCoverDetailed}/> :
                                 <FileIcon filename={node.path} color="disabled"/>}
                 </div>}
 
             <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
-                {isThumbCard &&
-                <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoThumb}}/>}
 
                 <Actions node={node} className={classes.actions}/>
 
@@ -214,18 +163,17 @@ export const FileCard = ({gridMode,
                         </Typography>
                         <FileName maxLength={maxLengthLabels} node={node}/>
                     </div>
-                    {!isThumbCard &&
                     <div>
                         <Typography variant="caption" component="p">
                             {t('jcontent:label.contentManager.filesGrid.createdBy')}
                         </Typography>
                         <Typography variant="iota" component="p">
                             {t('jcontent:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
-                                    &nbsp;
+                            &nbsp;
                             <time>{dayjs(node.created.value).locale(getDefaultLocale(uilang)).format('LLL')}</time>
                         </Typography>
-                    </div>}
-                    {(isDetailedCard) && node.width && node.height &&
+                    </div>
+                    {node.width && node.height &&
                     <div>
                         <Typography variant="caption" component="p">
                             {t('jcontent:label.contentManager.filesGrid.fileInfo')}
@@ -250,8 +198,7 @@ FileCard.propTypes = {
     index: PropTypes.number.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    uilang: PropTypes.string.isRequired,
-    gridMode: PropTypes.string.isRequired
+    uilang: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FileCard);

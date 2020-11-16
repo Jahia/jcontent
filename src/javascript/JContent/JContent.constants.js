@@ -23,13 +23,7 @@ const JContentConstants = {
         IMPORT: 'import'
     },
     localStorageKeys: {
-        filesSelectorMode: 'jcontent_files_selector_mode',
-        filesSelectorGridMode: 'jcontent_files_selector_grid_mode'
-    },
-    gridMode: {
-        THUMBNAIL: 'thumbnail',
-        DETAILED: 'detailed',
-        LIST: 'listview'
+        filesSelectorMode: 'jcontent_files_selector_mode'
     }
 };
 

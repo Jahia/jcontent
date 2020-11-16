@@ -254,7 +254,7 @@
         "error": "An error occurred when pasting the element"
       },
       "actions": {
-        "pageComposer": "Open in Page composer",
+        "pageComposer": "Open Page composer",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

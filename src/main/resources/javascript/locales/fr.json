@@ -254,7 +254,7 @@
       },
       "actions": {
         "openInEditMode": "Ouvrir en mode édition",
-        "pageComposer": "Ouvrir dans Page composer",
+        "pageComposer": "Ouvrir Page composer",
         "error": {
           "loading": "Erreur lors de l'extraction des données d'action: {{details}}"
         },

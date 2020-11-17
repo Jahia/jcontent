@@ -254,7 +254,7 @@
       },
       "actions": {
         "openInEditMode": "Im Bearbeitungsmodus öffnen",
-        "pageComposer": "Page-Composer öffnen",
+        "pageComposer": "Im Page Composer öffnen",
         "error": {
           "loading": "Fehler beim Abrufen der Aktionsdaten: {{details}}"
         },

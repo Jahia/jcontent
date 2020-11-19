@@ -6,7 +6,7 @@ import {Lock} from '@material-ui/icons';
 import {Folder, Wrench} from 'mdi-material-ui';
 import ContentListHeader from './ContentListHeader';
 import {ContextualMenu, DisplayAction, DisplayActions} from '@jahia/ui-extender';
-import {iconButtonRenderer, Pagination} from '@jahia/react-material';
+import {Pagination} from '@jahia/react-material';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../PublicationStatus';
@@ -33,6 +33,7 @@ import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
 import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../icons';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
+import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 
 const allColumnData = [
     {
@@ -561,21 +562,15 @@ export const ContentListTable = ({
                                                                                         return _.includes(['edit', 'preview', 'subContents', 'locate'], value.key);
                                                                                     }}
                                                                                     path={node.path}
-                                                                                    render={iconButtonRenderer({
-                                                                                        color: 'inherit',
-                                                                                        size: 'compact',
-                                                                                        disableRipple: true
-                                                                                    }, true, true)}
+                                                                                    render={ButtonRendererNoLabel}
+                                                                                    buttonProps={{variant: 'ghost', size: 'big'}}
                                                                                 />
                                                                                 <DisplayAction
                                                                                     actionKey="contentMenu"
                                                                                     path={node.path}
                                                                                     menuFilter={value => !_.includes(['edit', 'preview', 'subContents', 'locate'], value.key)}
-                                                                                    render={iconButtonRenderer({
-                                                                                        color: 'inherit',
-                                                                                        size: 'compact',
-                                                                                        disableRipple: true
-                                                                                    }, true)}
+                                                                                    render={ButtonRendererNoLabel}
+                                                                                    buttonProps={{variant: 'ghost', size: 'big'}}
                                                                                 />
                                                                             </div>}
                                                                         </TableCell>

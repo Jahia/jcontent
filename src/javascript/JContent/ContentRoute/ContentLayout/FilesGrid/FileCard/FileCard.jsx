@@ -14,6 +14,7 @@ import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
 import dayjs from 'dayjs';
+import prettyBytes from 'pretty-bytes';
 
 const styles = theme => ({
     detailedCard: {
@@ -179,7 +180,7 @@ export const FileCard = ({
                             {t('jcontent:label.contentManager.filesGrid.fileInfo')}
                         </Typography>
                         <Typography variant="iota" component="p">
-                            {`${node.width.value} x ${node.height.value}`}
+                            {`${node.width.value} x ${node.height.value}`} { node.children.nodes.length > 0 && prettyBytes(node.children.nodes[0].data.value.length)}
                         </Typography>
                     </div>}
                 </CardContent>

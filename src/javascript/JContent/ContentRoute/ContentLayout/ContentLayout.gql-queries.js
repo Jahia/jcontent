@@ -183,6 +183,9 @@ class FilesQueryHandler {
                                 }
                                 children(typesFilter: {types: ["jnt:resource"]}) {
                                     nodes {
+                                        data: property(name: "jcr:data") {
+                                            value
+                                        }
                                         mimeType: property(name: "jcr:mimeType") {
                                             value
                                         }

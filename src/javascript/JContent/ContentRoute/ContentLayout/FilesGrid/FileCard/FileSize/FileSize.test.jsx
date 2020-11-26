@@ -16,7 +16,6 @@ describe('FileSize', () => {
             }
         };
         const wrapper = shallow(<FileSize node={mockNode}/>);
-        expect(wrapper).toBeTruthy();
         const text = wrapper.text();
         expect(text).toContain('100');
     });

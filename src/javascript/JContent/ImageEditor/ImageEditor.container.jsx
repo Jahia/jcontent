@@ -310,7 +310,7 @@ export class ImageEditorContainer extends React.Component {
                                 mutation({variables: {path, name: newName.trim()}});
                                 this.setState({
                                     snackBarMessage: {
-                                        key: 'label.contentManager.editImage.editingMessage',
+                                        key: 'jcontent:label.contentManager.editImage.editingMessage',
                                         params: {imageName: newName}
                                     }
                                 });

@@ -100,9 +100,9 @@ export class ImageEditorContainer extends React.Component {
         this.setState(({resizeParams, originalHeight, originalWidth}) => {
             let snackBarMessage = null;
             if (keepRatio === false) {
-                snackBarMessage = 'label.contentManager.editImage.ratioUnlocked';
+                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioUnlocked';
             } else if (keepRatio === true) {
-                snackBarMessage = 'label.contentManager.editImage.ratioLocked';
+                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioLocked';
             } else {
                 keepRatio = resizeParams.keepRatio;
             }
@@ -142,10 +142,10 @@ export class ImageEditorContainer extends React.Component {
             let snackBarMessage = null;
             if (aspect === true) {
                 aspect = (cropParams.width || originalWidth) / (cropParams.height || originalHeight);
-                snackBarMessage = 'label.contentManager.editImage.ratioLocked';
+                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioLocked';
             } else if (aspect === false) {
                 aspect = null;
-                snackBarMessage = 'label.contentManager.editImage.ratioUnlocked';
+                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioUnlocked';
             } else {
                 aspect = cropParams.aspect;
             }

@@ -48,6 +48,7 @@
     "image-extensions": "^1.1.0",
     "lodash": "^4.17.4",
     "mdi-material-ui": "^5.10.0",
+    "pretty-bytes": "^5.4.1",
     "prop-types": "latest",
     "query-string": "5",
     "react": "^16.8.4",

@@ -15,6 +15,7 @@ import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
 import dayjs from 'dayjs';
+import FileSize from './FileSize';
 
 const styles = theme => ({
     detailedCard: {
@@ -222,7 +223,7 @@ export class FileCard extends Component {
                                         {t('label.contentManager.filesGrid.fileInfo')}
                                     </Typography>
                                     <Typography variant="iota" component="p">
-                                        {`${node.width.value} x ${node.height.value}`}
+                                        {`${node.width.value} x ${node.height.value}`} <FileSize node={node}/>
                                     </Typography>
                                 </div>
                             }

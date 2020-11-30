@@ -44,7 +44,7 @@ describe('FileSize', () => {
                 nodes: [
                     {
                         data: {
-                            size: 1024
+                            size: 36585
                         }
                     }
                 ]
@@ -52,6 +52,6 @@ describe('FileSize', () => {
         };
         const wrapper = shallow(<FileSize node={mockNode}/>);
         const text = wrapper.text();
-        expect(text.toLowerCase()).toContain('kb');
+        expect(text.toUpperCase()).toContain('35.73 KB');
     });
 });

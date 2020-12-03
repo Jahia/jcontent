@@ -117,7 +117,10 @@ function getLanguageLabel(languages, currentLang) {
         if (language.language === currentLang) {
             return language;
         }
-    });
+    }) || {
+        language: currentLang,
+        displayName: new Intl.DisplayNames([contextJsParameters.language], {type: 'language'}).of(currentLang.split('_')[0])
+    };
 }
 
 function uppercaseFirst(string) {

@@ -11,6 +11,7 @@ import {CM_DRAWER_STATES} from '../../../JContent.redux';
 import {compose} from '~/utils';
 import PublicationStatus from './PublicationStatus';
 import {cmSetPreviewMode, cmSetPreviewState} from '../../../preview.redux';
+import PreviewSize from './PreviewSize';
 
 const styles = theme => ({
     leftButtons: {
@@ -94,6 +95,9 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
                 <CardContent data-cm-role="preview-name" className={classes.leftGutter}>
                     <Typography gutterBottom noWrap variant="gamma">
                         {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
+                    </Typography>
+                    <Typography gutterBottom noWrap variant="iota">
+                        <PreviewSize node={previewSelection}/>
                     </Typography>
                     <PublicationStatus previewSelection={previewSelection}/>
                 </CardContent>

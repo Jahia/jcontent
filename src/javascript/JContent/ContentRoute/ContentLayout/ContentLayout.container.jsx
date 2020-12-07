@@ -200,9 +200,12 @@ export const ContentLayoutContainer = ({
         };
     });
 
-    if (error) {
-        const message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-        console.error(message);
+    if (error || (!loading && !data?.jcr?.nodeByPath)) {
+        if (error) {
+            const message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
+            console.error(message);
+        }
+
         return (
             <ContentLayout contentNotFound
                            mode={mode}

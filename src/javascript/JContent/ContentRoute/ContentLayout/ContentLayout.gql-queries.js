@@ -157,7 +157,7 @@ class ContentQueryHandler {
     }
 
     getResultsPath(data) {
-        return data && data.jcr && data.jcr.nodeByPath.descendants;
+        return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.descendants;
     }
 }
 
@@ -223,7 +223,7 @@ class FilesQueryHandler {
     }
 
     getResultsPath(data) {
-        return data && data.jcr && data.jcr.nodeByPath.children;
+        return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.children;
     }
 }
 

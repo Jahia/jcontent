@@ -40,13 +40,14 @@ export const LanguageSwitcher = ({
         );
     }
 
-    return (
+    const data = siteInfo.languages.filter(l => l.activeInEdit).map(l => ({label: l.language, value: l.language}));
+    return data && (data.length > 0) && (
         <Dropdown
             data-cm-role="language-switcher"
             className={styles.languageSwitcher}
             label={lang}
             value={lang}
-            data={siteInfo.languages.filter(l => l.activeInEdit).map(l => ({label: l.language, value: l.language}))}
+            data={data}
             onChange={(e, item) => {
                 onSelectLanguageHandler(item.value);
                 return true;

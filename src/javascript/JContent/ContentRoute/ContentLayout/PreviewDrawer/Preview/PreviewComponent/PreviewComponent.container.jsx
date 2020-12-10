@@ -19,11 +19,16 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
         workspace: previewMode
     });
 
+    // Trigger manual refetch only on language change
     useEffect(() => {
         if (!loading && !error) {
             refetch();
         }
-    });
+    }, [language]);
+
+    if (!loading && Object.keys(data || {}).length === 0) {
+        refetch();
+    }
 
     if (error) {
         console.error('Error when fetching data: ', error);
@@ -32,7 +37,7 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
         return null;
     }
 
-    if (loading || Object.keys(data).length === 0) {
+    if (loading || Object.keys(data || {}).length === 0) {
         return <ProgressOverlay/>;
     }
 

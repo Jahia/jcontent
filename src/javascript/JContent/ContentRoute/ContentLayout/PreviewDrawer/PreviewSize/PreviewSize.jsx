@@ -2,7 +2,7 @@ import React from 'react';
 import bytes from 'bytes';
 import PropTypes from 'prop-types';
 
-const PreviewSize = ({node}) => {
+const PreviewSize = ({node = {}}) => {
     const width = node?.width?.value;
     const height = node?.height?.value;
 

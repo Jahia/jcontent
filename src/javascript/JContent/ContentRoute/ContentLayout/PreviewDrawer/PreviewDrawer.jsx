@@ -97,7 +97,7 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
                         {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                     </Typography>
                     <Typography gutterBottom noWrap variant="iota">
-                        <PreviewSize node={previewSelection}/>
+                        <PreviewSize node={previewSelection} previewMode={effectiveMode}/>
                     </Typography>
                     <PublicationStatus previewSelection={previewSelection}/>
                 </CardContent>

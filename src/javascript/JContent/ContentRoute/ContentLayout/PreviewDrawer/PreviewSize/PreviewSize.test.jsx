@@ -25,7 +25,7 @@ describe('PreviewSize', () => {
     });
 
     it('should render empty text with no node', () => {
-        let mockNode;
+        let mockNode = {};
         const wrapper = shallow(<PreviewSize node={mockNode}/>);
         expect(wrapper.text()).toBe('');
     });

@@ -5,6 +5,7 @@ const previewSizeQuery = gql`query getImageMetadata($workspace: Workspace!, $pat
         nodeByPath(path: $path) {
             id: uuid
             path
+            workspace
             width: property(name:"j:width") {
                 value
             }

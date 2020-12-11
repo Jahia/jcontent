@@ -12,15 +12,25 @@ const useMetadataPreview = variables => {
 };
 
 export const PreviewSizeContainer = ({node, previewMode}) => {
-    const {data, loading} = useMetadataPreview({
-        workspace: previewMode?.toUpperCase(),
+    previewMode = previewMode?.toUpperCase();
+    const {data, loading, refetch} = useMetadataPreview({
+        workspace: previewMode,
         path: node.path
     });
-    if (!loading) {
-        node = data?.jcr?.nodeByPath || {};
+
+    if (!loading && Object.keys(data || {}).length === 0) {
+        refetch();
     }
 
-    return (<PreviewSize node={node}/>);
+    /*
+     * Sometimes data that comes back doesn't match previewMode requested
+     * e.g. when requests are fired off one after the other.
+     * Wait until request matches
+     */
+    const dataWorkspace = data?.jcr?.nodeByPath?.workspace;
+    return (loading || dataWorkspace !== previewMode) ?
+        (<PreviewSize node={node}/>) :
+        (<PreviewSize node={data?.jcr?.nodeByPath || {}}/>);
 };
 
 PreviewSizeContainer.propTypes = {

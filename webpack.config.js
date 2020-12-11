@@ -8,6 +8,10 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 
 const deps = require("./package.json").dependencies;
 
+delete deps['@material-ui/icons'];
+delete deps['mdi-material-ui'];
+delete deps['react-file-viewer'];
+
 const singletonDeps = [
     'react',
     'react-dom',
@@ -120,7 +124,8 @@ module.exports = (env, argv) => {
                 library: { type: "assign", name: "appShell.remotes.jcontent" },
                 filename: "remoteEntry.js",
                 exposes: {
-                    './init': './src/javascript/init'
+                    './init': './src/javascript/init',
+                    './src/javascript/JContent/actions': './src/javascript/JContent/actions/index'
                 },
                 remotes: {
                     '@jahia/app-shell': 'appShellRemote'

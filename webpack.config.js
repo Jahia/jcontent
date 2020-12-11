@@ -7,7 +7,24 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 
 const deps = require("./package.json").dependencies;
-const notImported = ['@jahia/moonstone'];
+
+const singletonDeps = [
+    'react',
+    'react-dom',
+    'react-router',
+    'react-router-dom',
+    'react-i18next',
+    'i18next',
+    'react-apollo',
+    'react-redux',
+    'redux',
+    '@jahia/moonstone',
+    '@jahia/ui-extender',
+    '@apollo/react-common',
+    '@apollo/react-components',
+    '@apollo/react-hooks'
+];
+
 
 module.exports = (env, argv) => {
     let config = {
@@ -110,13 +127,13 @@ module.exports = (env, argv) => {
                 },
                 shared: {
                     ...deps,
-                    ...notImported.reduce((acc, item) => ({
+                    ...singletonDeps.reduce((acc, item) => (deps[item] ? {
                         ...acc,
                         [item]: {
-                            import: false,
+                            singleton: true,
                             requiredVersion: deps[item]
                         }
-                    }), {})
+                    } : acc), {}),
                 }
             }),
             new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),

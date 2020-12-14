@@ -1,34 +1,10 @@
 const path = require('path');
-const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
-
-const deps = require("./package.json").dependencies;
-
-delete deps['@material-ui/icons'];
-delete deps['mdi-material-ui'];
-delete deps['react-file-viewer'];
-
-const singletonDeps = [
-    'react',
-    'react-dom',
-    'react-router',
-    'react-router-dom',
-    'react-i18next',
-    'i18next',
-    'react-apollo',
-    'react-redux',
-    'redux',
-    '@jahia/moonstone',
-    '@jahia/ui-extender',
-    '@apollo/react-common',
-    '@apollo/react-components',
-    '@apollo/react-hooks'
-];
-
+const shared = require("./webpack.shared")
 
 module.exports = (env, argv) => {
     let config = {
@@ -130,16 +106,7 @@ module.exports = (env, argv) => {
                 remotes: {
                     '@jahia/app-shell': 'appShellRemote'
                 },
-                shared: {
-                    ...deps,
-                    ...singletonDeps.reduce((acc, item) => (deps[item] ? {
-                        ...acc,
-                        [item]: {
-                            singleton: true,
-                            requiredVersion: deps[item]
-                        }
-                    } : acc), {}),
-                }
+                shared
             }),
             new CleanWebpackPlugin(path.resolve(__dirname, 'src/main/resources/javascript/apps/'), {verbose: false}),
             new CopyWebpackPlugin([{from: './package.json', to: ''}]),

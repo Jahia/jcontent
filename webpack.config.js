@@ -101,7 +101,7 @@ module.exports = (env, argv) => {
                 filename: "remoteEntry.js",
                 exposes: {
                     './init': './src/javascript/init',
-                    './src/javascript/JContent/actions': './src/javascript/JContent/actions/index'
+                    './JContent/actions': './src/javascript/JContent/actions/index'
                 },
                 remotes: {
                     '@jahia/app-shell': 'appShellRemote'

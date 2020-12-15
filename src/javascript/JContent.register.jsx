@@ -21,54 +21,55 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from 'react-apollo';
 import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
 
-const CmmNavItem = () => {
-    const history = useHistory();
-    const {t} = useTranslation('jcontent');
-    const client = useApolloClient();
-    const dispatch = useDispatch();
-    const {site, language, path, mode, params} = useSelector(state => ({
-        language: state.language,
-        site: state.site,
-        path: state.jcontent.path,
-        mode: state.jcontent.mode,
-        params: state.jcontent.params
-    }));
-    return (
-        <PrimaryNavItem key="/jcontent"
-                        role="jcontent-menu-item"
-                        isSelected={history.location.pathname.startsWith('/jcontent') && history.location.pathname.split('/').length > 3}
-                        label={t('label.name')}
-                        icon={<Collections/>}
-                        onClick={() => {
-                            history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params));
-                            initClipboardWatcher(dispatch, client);
-                        }}/>
-    );
-};
+export default function () {
+    const CmmNavItem = () => {
+        const history = useHistory();
+        const {t} = useTranslation('jcontent');
+        const client = useApolloClient();
+        const dispatch = useDispatch();
+        const {site, language, path, mode, params} = useSelector(state => ({
+            language: state.language,
+            site: state.site,
+            path: state.jcontent.path,
+            mode: state.jcontent.mode,
+            params: state.jcontent.params
+        }));
+        return (
+            <PrimaryNavItem key="/jcontent"
+                            role="jcontent-menu-item"
+                            isSelected={history.location.pathname.startsWith('/jcontent') && history.location.pathname.split('/').length > 3}
+                            label={t('label.name')}
+                            icon={<Collections/>}
+                            onClick={() => {
+                                history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params));
+                                initClipboardWatcher(dispatch, client);
+                            }}/>
+        );
+    };
 
-registry.add('primary-nav-item', 'jcontentGroupItem', {
-    targets: ['nav-root-top:2'],
-    requiredPermission: 'jContentAccess',
-    render: () => <CmmNavItem/>
-});
+    registry.add('primary-nav-item', 'jcontentGroupItem', {
+        targets: ['nav-root-top:2'],
+        requiredPermission: 'jContentAccess',
+        render: () => <CmmNavItem/>
+    });
 
-registry.add('route', 'route-jcontent', {
-    targets: ['main:2'],
-    path: '/jcontent/:siteKey/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
-    render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
-});
+    registry.add('route', 'route-jcontent', {
+        targets: ['main:2'],
+        path: '/jcontent/:siteKey/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
+        render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
+    });
 
-jContentRoutes(registry);
-jContentActions(registry);
+    jContentRoutes(registry);
+    jContentActions(registry);
 
-fileuploadRedux(registry);
-previewRedux(registry);
-copypasteRedux(registry);
-filesGridRedux(registry);
-paginationRedux(registry);
-sortRedux(registry);
-contentSelectionRedux(registry);
-jContentAccordionItems(registry);
-jContentRedux(registry);
-jContentAppRoot(registry);
-
+    fileuploadRedux(registry);
+    previewRedux(registry);
+    copypasteRedux(registry);
+    filesGridRedux(registry);
+    paginationRedux(registry);
+    sortRedux(registry);
+    contentSelectionRedux(registry);
+    jContentAccordionItems(registry);
+    jContentRedux(registry);
+    jContentAppRoot(registry);
+}

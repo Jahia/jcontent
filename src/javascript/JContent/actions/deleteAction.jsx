@@ -9,7 +9,7 @@ function checkAction(node) {
     return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node);
 }
 
-export const DeleteActionComponent = ({path, paths, render: Render, loading: Loading, ...others}) => {
+export const DeleteActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
     const res = useNodeChecks(
@@ -34,6 +34,7 @@ export const DeleteActionComponent = ({path, paths, render: Render, loading: Loa
         <Render
             {...others}
             isVisible={isVisible}
+            buttonProps={{...buttonProps, color: 'danger'}}
             enabled={isVisible}
             onClick={() => {
                 if (res.node) {
@@ -56,6 +57,8 @@ DeleteActionComponent.propTypes = {
     path: PropTypes.string,
 
     paths: PropTypes.arrayOf(PropTypes.string),
+
+    buttonProps: PropTypes.object,
 
     render: PropTypes.func.isRequired,
 

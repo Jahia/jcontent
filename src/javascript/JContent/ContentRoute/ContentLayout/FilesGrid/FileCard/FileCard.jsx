@@ -47,7 +47,9 @@ const styles = theme => ({
     detailedCover: {
         minWidth: 200,
         maxWidth: 200,
-        minHeight: 200
+        minHeight: 200,
+        backgroundSize: 'contain',
+        backgroundColor: '#DADADA'
     },
     thumbCoverDetailed: {
         height: 200

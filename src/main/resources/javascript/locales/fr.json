@@ -106,7 +106,10 @@
         "name": "Nom:",
         "fileInfo": "Taille:",
         "list": "Liste",
-        "grid": "Vignettes"
+        "grid": "Vignettes",
+        "contains": "Contient:",
+        "element": "élément",
+        "elements": "éléments"
       },
       "search": {
         "advanced": "Recherche avancée",

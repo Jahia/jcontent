@@ -105,7 +105,10 @@
         "name": "Name:",
         "fileInfo": "Größe:",
         "list": "Listenansicht",
-        "grid": "Miniaturansicht"
+        "grid": "Miniaturansicht",
+        "contains": "Beinhaltet:",
+        "element": "Element",
+        "elements": "Elemente"
       },
       "search": {
         "advanced": "Erweiterte Suche",

@@ -269,10 +269,10 @@ const addIconSuffix = icon => {
 };
 
 const getMediaIcon = (node, classes) => {
-    switch (node.primaryNodeType.displayName) {
-        case 'Folder':
+    switch (node.primaryNodeType.name) {
+        case 'jnt:folder':
             return <Folder className={classes.icon}/>;
-        case 'File':
+        case 'jnt:file':
             if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:image'))) {
                 return <ImageIcon className={classes.icon}/>;
             }

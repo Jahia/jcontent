@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
+import {compose} from '~/utils';
+import {Card, CardContent, CardMedia, Checkbox, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
@@ -15,6 +16,8 @@ import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
 import dayjs from 'dayjs';
 import FileSize from './FileSize';
+import {cmSwitchSelection} from '../../contentSelection.redux';
+import {connect} from 'react-redux';
 
 const styles = theme => ({
     detailedCard: {
@@ -32,6 +35,9 @@ const styles = theme => ({
     },
     card: {
         '&:hover $actions': {
+            display: 'block'
+        },
+        '&:hover $selectBox': {
             display: 'block'
         }
     },
@@ -87,7 +93,25 @@ const styles = theme => ({
             margin: '0px'
         },
         display: 'none'
+    },
+    selectBox: {
+        position: 'absolute',
+        bottom: 15,
+        right: 8,
+        display: 'none'
+    },
+    selectBoxSelected: {
+        position: 'absolute',
+        bottom: 11,
+        right: 8,
+        '& svg': {
+            fill: theme.palette.primary.main
+        }
+    },
+    multiSelectedCard: {
+        boxShadow: '0px 0px 0px 2px ' + theme.palette.primary.main
     }
+
 });
 
 export const FileCard = ({
@@ -100,7 +124,9 @@ export const FileCard = ({
     previewState,
     siteKey,
     mode,
-    index
+    index,
+    selection,
+    switchSelection
 }) => {
     const {t} = useTranslation();
 
@@ -117,13 +143,16 @@ export const FileCard = ({
     let columnNumber = (index % 2) + 1;
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
     let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
+    let isCardSelected = selection ? selection.includes(node.path) : false;
+
     return (
         <Card
                 style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
                 className={classNames(
                     classes.card,
                     classes.detailedCard,
-                    isPreviewSelected && classes.selectedCard
+                    isPreviewSelected && classes.selectedCard,
+                    isCardSelected && classes.multiSelectedCard
                 )}
                 data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
@@ -186,6 +215,14 @@ export const FileCard = ({
                         </Typography>
                     </div>}
                 </CardContent>
+
+                <Checkbox
+                    className={isCardSelected ? classes.selectBoxSelected : classes.selectBox}
+                    checked={isCardSelected}
+                    onClick={() => {
+                        switchSelection(node.path);
+                    }}
+                />
             </div>
         </Card>
     );
@@ -201,7 +238,20 @@ FileCard.propTypes = {
     index: PropTypes.number.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    uilang: PropTypes.string.isRequired
+    uilang: PropTypes.string.isRequired,
+    selection: PropTypes.array.isRequired,
+    switchSelection: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(FileCard);
+const mapStateToProps = state => ({
+    selection: state.jcontent.selection
+});
+
+const mapDispatchToProps = dispatch => ({
+    switchSelection: path => dispatch(cmSwitchSelection(path))
+});
+
+export default compose(
+    withStyles(styles),
+    connect(mapStateToProps, mapDispatchToProps)
+)(FileCard);

@@ -224,8 +224,7 @@ export const FileCard = ({
                             {node?.subNodes?.pageInfo?.totalCount}
                             &nbsp;
                             {node?.subNodes?.pageInfo?.totalCount === 1 ?
-                                t('jcontent:label.contentManager.filesGrid.element')
-                                : t('jcontent:label.contentManager.filesGrid.elements')}
+                                t('jcontent:label.contentManager.filesGrid.element') : t('jcontent:label.contentManager.filesGrid.elements')}
                         </Typography>
                     </div>}
                 </CardContent>

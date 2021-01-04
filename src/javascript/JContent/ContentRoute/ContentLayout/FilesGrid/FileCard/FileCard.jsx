@@ -144,6 +144,7 @@ export const FileCard = ({
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
     let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
     let isCardSelected = selection ? selection.includes(node.path) : false;
+    let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
 
     return (
         <Card
@@ -212,6 +213,18 @@ export const FileCard = ({
                         </Typography>
                         <Typography variant="iota" component="p">
                             {`${node.width.value} x ${node.height.value}`} <FileSize node={node}/>
+                        </Typography>
+                    </div>}
+                    {showSubNodes &&
+                    <div>
+                        <Typography variant="caption" component="p">
+                            {t('jcontent:label.contentManager.filesGrid.contains')}
+                        </Typography>
+                        <Typography variant="iota" component="p">
+                            {node?.subNodes?.pageInfo?.totalCount}
+                            &nbsp;
+                            {node?.subNodes?.pageInfo?.totalCount === 1 ?
+                                t('jcontent:label.contentManager.filesGrid.element') : t('jcontent:label.contentManager.filesGrid.elements')}
                         </Typography>
                     </div>}
                 </CardContent>

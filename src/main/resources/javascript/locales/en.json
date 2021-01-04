@@ -106,7 +106,10 @@
         "name": "Name:",
         "fileInfo": "Size:",
         "list": "List view",
-        "grid": "Thumbnails"
+        "grid": "Thumbnails",
+        "contains": "Contains:",
+        "element": "item",
+        "elements": "items"
       },
       "search": {
         "advanced": "Advanced search",

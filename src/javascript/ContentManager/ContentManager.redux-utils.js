@@ -34,6 +34,10 @@ let buildUrl = (site, language, mode, path, params) => {
     // Special chars in folder naming
     path = path.replace(/[^/]/g, encodeURIComponent);
 
+    if (mode === 'sql2Search') {
+        params.sql2SearchFrom += ' ';
+    }
+
     let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + btoa(rison.encode(params));
     return '/' + [site, language, mode].join('/') + path + queryString;
 };

@@ -2,6 +2,7 @@ import {cmGoto} from './ContentManager.redux-actions';
 import _ from 'lodash';
 import rison from 'rison';
 import queryString from 'query-string';
+import base64url from 'base64url';
 
 const PARAMS_KEY = '?params=';
 const DEFAULT_MODE_PATHS = {browse: '/contents', 'browse-files': '/files'};
@@ -34,12 +35,8 @@ let buildUrl = (site, language, mode, path, params) => {
     // Special chars in folder naming
     path = path.replace(/[^/]/g, encodeURIComponent);
 
-    if (mode === 'sql2Search') {
-        params.sql2SearchFrom += ' ';
-    }
-
-    let queryString = _.isEmpty(params) ? '' : PARAMS_KEY + btoa(rison.encode(params));
-    return '/' + [site, language, mode].join('/') + path + queryString;
+    const queryParams = _.isEmpty(params) ? '' : PARAMS_KEY + base64url(rison.encode(params));
+    return '/' + [site, language, mode].join('/') + path + queryParams;
 };
 
 let extractParamsFromUrl = (pathname, search) => {
@@ -69,7 +66,7 @@ let deserializeQueryString = search => {
         let params = queryString.parse(search).params;
         if (params) {
             try {
-                return rison.decode(atob(params));
+                return rison.decode(base64url.decode(params));
             } catch (e) {
                 return {};
             }

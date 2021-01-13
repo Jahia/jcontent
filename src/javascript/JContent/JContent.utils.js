@@ -119,7 +119,7 @@ function getLanguageLabel(languages, currentLang) {
         }
     }) || {
         language: currentLang,
-        displayName: new Intl.DisplayNames([contextJsParameters.language], {type: 'language'}).of(currentLang.split('_')[0])
+        displayName: Intl.DisplayNames ? new Intl.DisplayNames([contextJsParameters.language], {type: 'language'}).of(currentLang.split('_')[0]) : currentLang.split('_')[0]
     };
 }
 

@@ -1,5 +1,5 @@
 import {useSelector} from 'react-redux';
-import {useAdminRouteTreeStructure} from '@jahia/ui-extender';
+import {useAdminRouteTreeStructure} from '@jahia/jahia-ui-root';
 import {useNodeInfo} from '@jahia/data-helper';
 import {Route, Switch} from 'react-router';
 import React from 'react';

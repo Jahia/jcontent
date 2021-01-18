@@ -5,7 +5,7 @@ import React from 'react';
 
 const getButtonRenderer = ({labelStyle} = {}) => {
     const ButtonRenderer = props => {
-        const {buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, actionKey, enabled, disabled, onClick, buttonProps} = props;
+        const {buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, actionKey, enabled, disabled, onClick, buttonProps, className} = props;
         const {t} = useTranslation(buttonLabelNamespace);
 
         let label = buttonLabel;
@@ -17,6 +17,7 @@ const getButtonRenderer = ({labelStyle} = {}) => {
 
         return (isVisible !== false &&
             <Button data-sel-role={actionKey}
+                    className={className}
                     label={t(label, buttonLabelParams)}
                     icon={buttonIcon}
                     disabled={enabled === false || disabled}
@@ -33,6 +34,7 @@ const getButtonRenderer = ({labelStyle} = {}) => {
         buttonLabelNamespace: PropTypes.string,
         buttonLabelShort: PropTypes.string,
         buttonLabel: PropTypes.string,
+        className: PropTypes.string,
         isVisible: PropTypes.bool,
         buttonLabelParams: PropTypes.object,
         buttonIcon: PropTypes.node,

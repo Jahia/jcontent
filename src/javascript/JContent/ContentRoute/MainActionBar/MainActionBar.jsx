@@ -22,8 +22,8 @@ export const MainActionBar = () => {
         <div className={styles.root}>
             <DisplayAction actionKey="search" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
-            <DisplayAction actionKey="pageComposer" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', color: 'accent'}} className={styles.item}/>
-            <DisplayAction actionKey="edit" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big'}} className={styles.item}/>
+            <DisplayAction actionKey="pageComposer" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', className: styles.item}}/>
+            <DisplayAction actionKey="edit" path={path} disabled={disabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', className: styles.item}}/>
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction actionKey={publishAction} path={path} disabled={disabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>

@@ -8,9 +8,7 @@ import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-    PATH_CONTENTS_DESCENDANTS,
     PATH_CONTENTS_ITSELF,
-    PATH_FILES_DESCENDANTS,
     PATH_FILES_ITSELF
 } from '../actions.constants';
 
@@ -32,7 +30,6 @@ export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
             getProperties: ['jcr:mixinTypes'],
             hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jnt:navMenuText'],
-            showForPaths: type !== copyPasteConstants.COPY ? [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS] : null,
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );

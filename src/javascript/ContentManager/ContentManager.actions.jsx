@@ -68,11 +68,9 @@ import {withI18nAction} from './actions/withI18nAction';
 import {withApolloAction} from './actions/withApolloAction';
 
 const PATH_CONTENTS_ITSELF = '^/sites/((?!/).)+/contents/?$';
-const PATH_CONTENTS_DESCENDANTS = '^/sites/((?!/).)+/contents/.+';
 const PATH_CONTENTS_AND_DESCENDANTS = '^/sites/((?!/).)+/contents/?';
 
 const PATH_FILES_ITSELF = '^/sites/((?!/).)+/files/?$';
-const PATH_FILES_DESCENDANTS = '^/sites/((?!/).)+/files/.+';
 const PATH_FILES_AND_DESCENDANTS = '^/sites/((?!/).)+/files/?';
 
 const PATH_SYSTEM_SITE_AND_DESCENDANTS = '^/sites/systemsite/?';
@@ -240,8 +238,8 @@ function contentManagerActions(actionsRegistry) {
         buttonIcon: <ContentCut/>,
         buttonLabel: 'label.contentManager.contentPreview.cut',
         target: ['contentActions:3.9', 'selectedContentActions:3.9'],
-        hideOnNodeTypes: ['jnt:page'],
-        showForPaths: [PATH_FILES_DESCENDANTS, PATH_CONTENTS_DESCENDANTS]
+        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+        hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
     });
     actionsRegistry.add('delete', deleteAction, {
         buttonIcon: <Delete/>,

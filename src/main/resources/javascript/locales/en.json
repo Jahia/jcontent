@@ -74,7 +74,10 @@
         "dialogRenameExample": "ex: filename",
         "dialogRenameCancel": "Cancel",
         "dialogRename": "Rename",
-        "replaceWith": "Replace with"
+        "replaceWith": "Replace with",
+        "tag": "tag",
+        "tags": "tags",
+        "edit": "Edit"
       },
       "import": {
         "dropMessage": "Drag and drop a file to import",

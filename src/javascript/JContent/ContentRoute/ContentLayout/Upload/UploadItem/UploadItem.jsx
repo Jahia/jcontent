@@ -17,6 +17,9 @@ import {uploadStatuses} from '../Upload.constants';
 import {withTranslation} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
+import EditButton from './EditButton';
+import Tags from './Tags';
+import {isImageFile} from '../../ContentLayout.utils';
 
 const styles = theme => ({
     listItem: {
@@ -26,7 +29,7 @@ const styles = theme => ({
         height: 32
     },
     grow: {
-        flex: 1
+        flexGrow: 1
     },
     fileNameText: {
         width: 220,
@@ -36,6 +39,10 @@ const styles = theme => ({
     },
     statusIcon: {
         marginRight: theme.spacing.unit
+    },
+    tagIcon: {
+        marginRight: theme.spacing.unit,
+        marginLeft: theme.spacing.unit
     },
     actionButton: {
         margin: '8 0'
@@ -53,7 +60,8 @@ export class UploadItem extends React.Component {
         this.client = null;
         this.state = {
             userChosenName: null,
-            anchorEl: null
+            anchorEl: null,
+            numTags: '-'
         };
 
         this.doUploadAndStatusUpdate = this.doUploadAndStatusUpdate.bind(this);
@@ -91,6 +99,8 @@ export class UploadItem extends React.Component {
                 />
                 <div className={classes.grow}/>
                 <Status {...this.props}/>
+                <Tags {...this.props} numTags={this.state.numTags}/>
+                <EditButton {...this.props}/>
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>
                         {t('jcontent:label.contentManager.fileUpload.dialogRenameTitle')}
@@ -122,7 +132,7 @@ export class UploadItem extends React.Component {
     }
 
     doUploadAndStatusUpdate(type = this.props.type) {
-        this.handleUpload(type).then(() => {
+        this.handleUpload(type).then(updateReturnObj => {
             const upload = {
                 id: this.props.id,
                 status: uploadStatuses.UPLOADED,
@@ -133,6 +143,10 @@ export class UploadItem extends React.Component {
             setTimeout(() => {
                 this.props.uploadFile(upload);
                 this.props.updateUploadsStatus();
+                const tagsList = updateReturnObj?.data?.jcr?.addNode?.awsRecognition?.tagImageSync;
+                if (typeof tagsList !== 'undefined' && tagsList !== null) {
+                    this.setState({numTags: tagsList.length});
+                }
             }, UPLOAD_DELAY);
         }).catch(e => {
             const upload = {
@@ -164,7 +178,6 @@ export class UploadItem extends React.Component {
 
     handleUpload(type) {
         const {file, path, client} = this.props;
-
         if (type === 'import') {
             return client.mutate({
                 mutation: importContent,
@@ -181,7 +194,8 @@ export class UploadItem extends React.Component {
                 variables: {
                     path: `${path}/${this.getFileName()}`,
                     mimeType: file.type,
-                    fileHandle: file
+                    fileHandle: file,
+                    isImage: isImageFile(file.name)
                 }
             });
         }
@@ -192,7 +206,8 @@ export class UploadItem extends React.Component {
                 variables: {
                     path: `${path}`,
                     mimeType: file.type,
-                    fileHandle: file
+                    fileHandle: file,
+                    isImage: isImageFile(file.name)
                 }
             });
         }
@@ -203,7 +218,8 @@ export class UploadItem extends React.Component {
                 fileHandle: file,
                 nameInJCR: this.getFileName(),
                 path: path,
-                mimeType: file.type
+                mimeType: file.type,
+                isImage: isImageFile(file.name)
             }
         });
     }

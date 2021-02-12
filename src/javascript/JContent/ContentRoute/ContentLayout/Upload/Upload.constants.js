@@ -12,4 +12,6 @@ export const uploadStatuses = {
     HAS_ERROR: 'HAS_ERROR'
 };
 
+export const TAG_ERROR = '-';
+
 export const NUMBER_OF_SIMULTANEOUS_UPLOADS = 1;

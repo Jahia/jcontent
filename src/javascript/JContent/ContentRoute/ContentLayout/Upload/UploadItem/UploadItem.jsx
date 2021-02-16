@@ -12,14 +12,12 @@ import {
 import {Button, Typography} from '@jahia/design-system-kit';
 import {compose} from '~/utils';
 import {withApollo} from 'react-apollo';
-import {importContent, updateFileContent, uploadFile} from './UploadItem.gql-mutations';
 import {uploadStatuses} from '../Upload.constants';
 import {withTranslation} from 'react-i18next';
 import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
 import EditButton from './EditButton';
-import Tags from './Tags';
-import {isImageFile} from '../../ContentLayout.utils';
+import {registry} from '@jahia/ui-extender';
 
 const styles = theme => ({
     listItem: {
@@ -61,7 +59,7 @@ export class UploadItem extends React.Component {
         this.state = {
             userChosenName: null,
             anchorEl: null,
-            numTags: '-'
+            component: null
         };
 
         this.doUploadAndStatusUpdate = this.doUploadAndStatusUpdate.bind(this);
@@ -99,7 +97,7 @@ export class UploadItem extends React.Component {
                 />
                 <div className={classes.grow}/>
                 <Status {...this.props}/>
-                <Tags {...this.props} numTags={this.state.numTags}/>
+                {this.state.component}
                 <EditButton {...this.props}/>
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>
@@ -132,7 +130,7 @@ export class UploadItem extends React.Component {
     }
 
     doUploadAndStatusUpdate(type = this.props.type) {
-        this.handleUpload(type).then(updateReturnObj => {
+        this.handleUpload(type).then(uploadReturnObj => {
             const upload = {
                 id: this.props.id,
                 status: uploadStatuses.UPLOADED,
@@ -143,9 +141,9 @@ export class UploadItem extends React.Component {
             setTimeout(() => {
                 this.props.uploadFile(upload);
                 this.props.updateUploadsStatus();
-                const tagsList = updateReturnObj?.data?.jcr?.addNode?.awsRecognition?.tagImageSync;
-                if (typeof tagsList !== 'undefined' && tagsList !== null) {
-                    this.setState({numTags: tagsList.length});
+                const component = uploadReturnObj.component;
+                if (typeof component !== 'undefined' && component !== null && React.isValidElement(component)) {
+                    this.setState({component: component});
                 }
             }, UPLOAD_DELAY);
         }).catch(e => {
@@ -179,49 +177,20 @@ export class UploadItem extends React.Component {
     handleUpload(type) {
         const {file, path, client} = this.props;
         if (type === 'import') {
-            return client.mutate({
-                mutation: importContent,
-                variables: {
-                    path: `${path}`,
-                    fileHandle: file
-                }
-            });
+            return registry.get('fileUpload', 'import').handleUpload({path, file, client});
         }
 
         if (type === 'replace') {
-            return client.mutate({
-                mutation: updateFileContent,
-                variables: {
-                    path: `${path}/${this.getFileName()}`,
-                    mimeType: file.type,
-                    fileHandle: file,
-                    isImage: isImageFile(file.name)
-                }
-            });
+            let newPath = `${path}/${this.getFileName()}`;
+            return registry.get('fileUpload', 'replace').handleUpload({path: newPath, file, client});
         }
 
         if (type === 'replaceWith') {
-            return client.mutate({
-                mutation: updateFileContent,
-                variables: {
-                    path: `${path}`,
-                    mimeType: file.type,
-                    fileHandle: file,
-                    isImage: isImageFile(file.name)
-                }
-            });
+            return registry.get('fileUpload', 'replace').handleUpload({path, file, client});
         }
 
-        return client.mutate({
-            mutation: uploadFile,
-            variables: {
-                fileHandle: file,
-                nameInJCR: this.getFileName(),
-                path: path,
-                mimeType: file.type,
-                isImage: isImageFile(file.name)
-            }
-        });
+        const filename = this.getFileName();
+        return registry.get('fileUpload', 'default').handleUpload({path, file, filename, client});
     }
 
     getFileName() {

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!, $isImage: Boolean!) {
+const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, $mimeType: String!, $fileHandle: String!) {
     jcr {
         addNode(name: $nameInJCR, parentPathOrId: $path, primaryNodeType: "jnt:file") {
             addChild(name: "jcr:content", primaryNodeType: "jnt:resource") {
@@ -12,15 +12,11 @@ const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, 
                 }
 
             }
-            addMixins(mixins: ["jmix:image"]) @include(if: $isImage)
-            awsRecognition @include(if: $isImage) {
-                tagImageSync
-            }
         }
     }
 }`;
 
-const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeType: String!, $fileHandle: String!, $isImage: Boolean!) {
+const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeType: String!, $fileHandle: String!) {
     jcr {
         mutateNode(pathOrId: $path) {
             mutateChildren(names: ["jcr:content"]) {
@@ -31,9 +27,6 @@ const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeTy
                     setValue(value: $mimeType)
                 }
             }
-            awsRecognition @include(if: $isImage) {
-                tagImageSync
-            }  
         }
     }
 }`;

@@ -9,7 +9,7 @@ import {isImageFile} from '../../ContentLayout.utils';
 const EditButton = props => {
     const {status, file, t, path} = props;
 
-    if (window.contextJsParameters.config.links.tagImageOnUpload && isImageFile(file.name)) {
+    if (isImageFile(file.name)) {
         if (status === uploadStatuses.UPLOADED) {
             return (
                 <DisplayActions

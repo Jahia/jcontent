@@ -1,5 +1,6 @@
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {createActions, handleActions} from 'redux-actions';
+import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
 
 export const {fileuploadSetPath, fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue, fileuploadSetOverlayTarget} =
     createActions('FILEUPLOAD_SET_PATH', 'FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE', 'FILEUPLOAD_SET_OVERLAY_TARGET');
@@ -76,4 +77,44 @@ export const fileuploadRedux = registry => {
     }, initialState);
 
     registry.add('redux-reducer', 'fileUpload', {targets: ['jcontent'], reducer: fileUpload});
+
+    // Add-in the default behaviour for upload
+    registry.add('fileUpload', 'import', {
+        handleUpload: ({path, file, client}) => {
+            return client.mutate({
+                mutation: importContent,
+                variables: {
+                    path: path,
+                    fileHandle: file
+                }
+            });
+        }
+    });
+
+    registry.add('fileUpload', 'replace', {
+        handleUpload: ({path, file, client}) => {
+            return client.mutate({
+                mutation: updateFileContent,
+                variables: {
+                    path: `${path}`,
+                    mimeType: file.type,
+                    fileHandle: file
+                }
+            });
+        }
+    });
+
+    registry.add('fileUpload', 'default', {
+        handleUpload: ({path, file, filename, client}) => {
+            return client.mutate({
+                mutation: uploadFile,
+                variables: {
+                    fileHandle: file,
+                    nameInJCR: filename,
+                    path: path,
+                    mimeType: file.type
+                }
+            });
+        }
+    });
 };

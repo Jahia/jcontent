@@ -59,7 +59,8 @@ export class UploadItem extends React.Component {
         this.state = {
             userChosenName: null,
             anchorEl: null,
-            component: null
+            component: null,
+            uuid: null
         };
 
         this.doUploadAndStatusUpdate = this.doUploadAndStatusUpdate.bind(this);
@@ -95,10 +96,10 @@ export class UploadItem extends React.Component {
                     })}
                     doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}
                 />
-                <div className={classes.grow}/>
+                <div className={classes.grow} doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}/>
                 <Status {...this.props}/>
                 {this.state.component}
-                <EditButton {...this.props}/>
+                <EditButton {...this.props} uuid={this.state.uuid}/>
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>
                         {t('jcontent:label.contentManager.fileUpload.dialogRenameTitle')}
@@ -141,9 +142,13 @@ export class UploadItem extends React.Component {
             setTimeout(() => {
                 this.props.uploadFile(upload);
                 this.props.updateUploadsStatus();
-                const component = uploadReturnObj.component;
+                const {component, uuid} = uploadReturnObj;
                 if (typeof component !== 'undefined' && component !== null && React.isValidElement(component)) {
                     this.setState({component: component});
+                }
+
+                if (typeof uuid !== 'undefined' && uuid !== null) {
+                    this.setState({uuid: uuid});
                 }
             }, UPLOAD_DELAY);
         }).catch(e => {

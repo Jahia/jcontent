@@ -100,6 +100,10 @@ export const fileuploadRedux = registry => {
                     mimeType: file.type,
                     fileHandle: file
                 }
+            }).then(data => {
+                return ({
+                    uuid: data?.data?.jcr?.mutateNode?.uuid
+                });
             });
         }
     });
@@ -114,6 +118,10 @@ export const fileuploadRedux = registry => {
                     path: path,
                     mimeType: file.type
                 }
+            }).then(data => {
+                return ({
+                    uuid: data?.data?.jcr?.addNode?.uuid
+                });
             });
         }
     });

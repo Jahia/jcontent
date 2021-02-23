@@ -10,8 +10,8 @@ const uploadFile = gql`mutation uploadFile($nameInJCR: String!, $path: String!, 
                 contentType: mutateProperty(name: "jcr:mimeType") {
                     setValue(value: $mimeType)
                 }
-
             }
+            uuid
         }
     }
 }`;
@@ -27,6 +27,7 @@ const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeTy
                     setValue(value: $mimeType)
                 }
             }
+            uuid
         }
     }
 }`;

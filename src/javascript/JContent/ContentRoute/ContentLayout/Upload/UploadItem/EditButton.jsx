@@ -1,28 +1,32 @@
 import React from 'react';
 import {uploadStatuses} from '../Upload.constants';
-import {DisplayActions} from '@jahia/ui-extender';
-import {ButtonRenderer} from '~/utils/getButtonRenderer';
 import {OpenInNew} from '@jahia/moonstone/dist/icons';
+import {Button} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
+import {useSelector} from 'react-redux';
 import {isImageFile} from '../../ContentLayout.utils';
 
 const EditButton = props => {
-    const {status, file, t, path} = props;
+    const {status, file, t, uuid} = props;
 
-    if (isImageFile(file.name)) {
-        if (status === uploadStatuses.UPLOADED) {
-            return (
-                <DisplayActions
-                    target="contentActions"
-                    filter={value => value.key === 'edit'}
-                    path={`${path}/${file.name}`}
-                    render={ButtonRenderer}
-                    buttonLabel={t('jcontent:label.contentManager.fileUpload.edit')}
-                    buttonIcon={<OpenInNew/>}
-                    buttonProps={{variant: 'ghost', size: 'big', isReversed: true}}
-                />
-            );
-        }
+    const {language} = useSelector(state => ({language: state.language}));
+    const windowLocationPathNames = window.location.pathname.split('/');
+    const location = (windowLocationPathNames.length > 1) ? `/${windowLocationPathNames[1]}` : '';
+    const url = `${location}/content-editor/${language}/edit/${uuid}`;
+
+    if (isImageFile(file.name) && uuid !== null && status === uploadStatuses.UPLOADED) {
+        return (
+            <Button
+                isReversed
+                label={t('jcontent:label.contentManager.fileUpload.edit')}
+                icon={<OpenInNew/>}
+                variant="ghost"
+                size="big"
+                onClick={() => {
+                    window.open(url, '_blank');
+                }}
+            />
+        );
     }
 
     return null; // If not uploaded yet or has error no need to display the edit button
@@ -30,9 +34,9 @@ const EditButton = props => {
 
 EditButton.propTypes = {
     status: PropTypes.string,
+    uuid: PropTypes.string,
     file: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired,
-    path: PropTypes.string.isRequired
+    t: PropTypes.func.isRequired
 };
 
 export default EditButton;

@@ -10,9 +10,7 @@ const EditButton = props => {
     const {status, file, t, uuid} = props;
 
     const {language} = useSelector(state => ({language: state.language}));
-    const windowLocationPathNames = window.location.pathname.split('/');
-    const location = (windowLocationPathNames.length > 1) ? `/${windowLocationPathNames[1]}` : '';
-    const url = `${location}/content-editor/${language}/edit/${uuid}`;
+    const url = `${window.contextJsParameters.urlbase}/content-editor/${language}/edit/${uuid}`;
 
     if (isImageFile(file.name) && uuid !== null && status === uploadStatuses.UPLOADED) {
         return (

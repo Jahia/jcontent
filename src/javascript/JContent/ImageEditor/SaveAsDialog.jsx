@@ -20,8 +20,6 @@ let styles = {
 };
 
 export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, onChangeName, isNameValid}) => {
-    let textField = React.createRef();
-
     return (
         <Dialog open={open}
                 aria-labelledby="form-dialog-title"
@@ -37,7 +35,6 @@ export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, o
                     autoFocus
                     fullWidth
                     error={!isNameValid}
-                    inputRef={textField}
                     value={name}
                     id="fileName"
                     margin="dense"

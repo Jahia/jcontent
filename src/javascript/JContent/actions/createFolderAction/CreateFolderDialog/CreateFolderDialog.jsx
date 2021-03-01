@@ -23,8 +23,6 @@ let styles = theme => ({
 });
 
 const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNameAvailable, handleCancel, handleCreate, onChangeName}) => {
-    let textField = React.createRef();
-
     return (
         <Dialog open={open}
                 aria-labelledby="form-dialog-title"
@@ -40,7 +38,6 @@ const CreateFolderDialog = ({classes, t, open, loading, name, isNameValid, isNam
                     fullWidth
                     autoFocus
                     error={!isNameValid || !isNameAvailable}
-                    inputRef={textField}
                     value={name}
                     id="folder-name"
                     aria-describedby="folder-name-error-text"

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Badge, Checkbox, Table, TableBody, TableCell, TableRow, Tooltip, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
@@ -338,6 +338,8 @@ export const ContentListTable = ({
         }
     }, [rows, selection, removeSelection]);
 
+    const contextualMenus = useRef({});
+
     const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
@@ -397,11 +399,12 @@ export const ContentListTable = ({
                                                     let isSelected = node.path === previewSelection && isPreviewOpened;
                                                     let icon = getMediaIcon(node, classes);
                                                     let showActions = !isPreviewOpened && selection.length === 0;
-                                                    let contextualMenu = React.createRef();
                                                     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
 
+                                                    contextualMenus.current[node.path] = contextualMenus.current[node.path] || React.createRef();
+
                                                     const openContextualMenu = event => {
-                                                        contextualMenu.current(event);
+                                                        contextualMenus.current[node.path].current(event);
                                                     };
 
                                                     return (
@@ -436,7 +439,7 @@ export const ContentListTable = ({
                                                                 })}
                                                         >
                                                             <ContextualMenu
-                                                                setOpenRef={contextualMenu}
+                                                                setOpenRef={contextualMenus.current[node.path]}
                                                                 actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
                                                                 path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
                                                                 paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}

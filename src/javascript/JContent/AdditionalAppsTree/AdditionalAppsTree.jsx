@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {TreeView} from '@jahia/moonstone';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '../JContent.redux';
-import {useAdminRouteTreeStructure} from '@jahia/ui-extender';
+import {useAdminRouteTreeStructure} from '@jahia/jahia-ui-root';
 import {useNodeInfo} from '@jahia/data-helper';
 import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';

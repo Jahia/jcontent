@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
@@ -104,7 +104,7 @@ export const FileCard = ({
 }) => {
     const {t} = useTranslation();
 
-    let contextualMenu = React.createRef();
+    let contextualMenu = useRef();
 
     const isImage = isBrowserImage(node.path);
     const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;

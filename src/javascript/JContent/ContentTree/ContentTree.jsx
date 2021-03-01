@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
@@ -51,7 +51,7 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         };
     });
 
-    let contextualMenu = React.createRef();
+    let contextualMenu = useRef();
 
     return (
         <React.Fragment>

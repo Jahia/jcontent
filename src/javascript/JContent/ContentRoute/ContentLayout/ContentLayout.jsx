@@ -81,13 +81,17 @@ const styles = theme => ({
 });
 
 export class ContentLayout extends React.Component {
+    constructor(props) {
+        super(props);
+        this.contextualMenu = React.createRef();
+    }
+
     render() {
         const {
             mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
             totalCount, loading
         } = this.props;
 
-        let contextualMenu = React.createRef();
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
         return (
             <>
@@ -108,13 +112,13 @@ export class ContentLayout extends React.Component {
                         {previewOpen &&
                         <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>}
                     </Drawer>
-                    <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={path}/>
+                    <ContextualMenu setOpenRef={this.contextualMenu} actionKey="contentMenu" path={path}/>
                     <div
                         className={classNames(classes.content)}
                         style={{
                             marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                         }}
-                        onContextMenu={event => contextualMenu.current(event)}
+                        onContextMenu={event => this.contextualMenu.current(event)}
                     >
                         <Paper className={classes.contentPaper}>
                             {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?

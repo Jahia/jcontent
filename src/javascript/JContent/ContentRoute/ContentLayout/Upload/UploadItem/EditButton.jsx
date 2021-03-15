@@ -1,7 +1,6 @@
 import React from 'react';
 import {uploadStatuses} from '../Upload.constants';
-import {OpenInNew} from '@jahia/moonstone/dist/icons';
-import {Button} from '@jahia/moonstone';
+import {OpenInNew, Button} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import {isImageFile} from '../../ContentLayout.utils';

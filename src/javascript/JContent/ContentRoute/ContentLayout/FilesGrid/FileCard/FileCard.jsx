@@ -52,7 +52,8 @@ const styles = theme => ({
         backgroundColor: '#DADADA'
     },
     thumbCoverDetailed: {
-        height: 200
+        maxHeight: 200,
+        maxWidth: 200
     },
     mediaCardContentContainer: {
         minWidth: 0,
@@ -153,7 +154,7 @@ export const FileCard = ({
                     {node.primaryNodeType.name === 'jnt:folder' ?
                         <Folder color="action"/> :
                             isPdf ?
-                                <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={classes.thumbCoverDetailed}/> :
+                                <embed src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={classes.thumbCoverDetailed}/> :
                                 <FileIcon filename={node.path} color="disabled"/>}
                 </div>}
 

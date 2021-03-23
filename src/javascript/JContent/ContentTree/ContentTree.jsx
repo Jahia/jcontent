@@ -9,6 +9,7 @@ import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
+import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
 
 export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, closePath, item}) => {
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
@@ -17,7 +18,7 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         openPaths.push(rootPath);
     }
 
-    const {treeEntries, refetch} = useTreeEntries({
+    const useTreeEntriesOptionsJson = {
         fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
@@ -26,7 +27,14 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         selectableTypes: item.config.selectableTypes,
         queryVariables: {language: lang},
         hideRoot: item.config.hideRoot
-    });
+    };
+
+    // For pages portion want to skip the sortBy
+    if (item.key !== 'pages') {
+        useTreeEntriesOptionsJson.sortBy = SORT_CONTENT_TREE_BY_NAME_ASC;
+    }
+
+    const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson);
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child

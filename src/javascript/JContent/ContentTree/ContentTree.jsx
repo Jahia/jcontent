@@ -18,7 +18,7 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
         openPaths.push(rootPath);
     }
 
-    const json = {
+    const useTreeEntriesOptionsJson = {
         fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
@@ -31,10 +31,10 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
 
     // For pages portion want to skip the sortBy
     if (item.key !== 'pages') {
-        json.sortBy = SORT_CONTENT_TREE_BY_NAME_ASC;
+        useTreeEntriesOptionsJson.sortBy = SORT_CONTENT_TREE_BY_NAME_ASC;
     }
 
-    const {treeEntries, refetch} = useTreeEntries(json);
+    const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson);
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child

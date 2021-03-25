@@ -117,7 +117,6 @@ export const FileCard = ({
     let rowNumber = Math.floor(index / 2) + 1;
     let columnNumber = (index % 2) + 1;
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
-    // Let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
 
     return (

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Loadable from 'react-loadable';
-import {withStyles, CircularProgress} from '@material-ui/core';
+import {withStyles} from '@material-ui/core';
 import {FileIcon} from '@jahia/icons';
 import classNames from 'classnames';
 
@@ -44,10 +43,7 @@ const styles = theme => ({
 });
 
 // eslint-disable-next-line
-const FileViewer = Loadable({
-    loader: () => import(/* webpackChunkName: "reactFileViewer" */ 'react-file-viewer'),
-    loading: () => <CircularProgress/>
-});
+const FileViewer = React.lazy(() => import('react-file-viewer'));
 
 export class DocumentViewer extends React.Component {
     constructor(props) {

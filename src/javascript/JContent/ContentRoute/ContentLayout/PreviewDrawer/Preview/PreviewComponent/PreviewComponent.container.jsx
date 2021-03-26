@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {useContentPreview} from '@jahia/data-helper';
-import {ProgressOverlay} from '@jahia/react-material';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import PreviewComponent from './PreviewComponent';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
+import {LoaderOverlay, LoaderSuspense} from '@jahia/jahia-ui-root';
 
 export const PreviewComponentContainer = ({previewMode, previewSelection, previewState, notificationContext}) => {
     const {t} = useTranslation();
@@ -38,14 +38,16 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
     }
 
     if (loading || Object.keys(data || {}).length === 0) {
-        return <ProgressOverlay/>;
+        return <LoaderOverlay/>;
     }
 
     return (
-        <PreviewComponent data={data.jcr ? data.jcr : {}}
-                          workspace={previewMode}
-                          fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
-        />
+        <LoaderSuspense>
+            <PreviewComponent data={data.jcr ? data.jcr : {}}
+                              workspace={previewMode}
+                              fullScreen={(previewState === CM_DRAWER_STATES.FULL_SCREEN)}
+            />
+        </LoaderSuspense>
     );
 };
 

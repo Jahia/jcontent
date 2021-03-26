@@ -10,6 +10,7 @@ import ContentSearchTitle from './ContentSearchTitle';
 import ContentStatuses from './ContentStatuses';
 import {MainActionBar} from './MainActionBar';
 import JContentConstants from '../JContent.constants';
+import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
 
 const ContentRoute = () => {
     const {mode} = useSelector(state => ({
@@ -30,7 +31,11 @@ const ContentRoute = () => {
                 />
             }
         >
-            { mode.length > 0 && <ContentLayout/> }
+            <LoaderSuspense>
+                <ErrorBoundary>
+                    {mode.length > 0 && <ContentLayout/>}
+                </ErrorBoundary>
+            </LoaderSuspense>
         </MainLayout>
     );
 };

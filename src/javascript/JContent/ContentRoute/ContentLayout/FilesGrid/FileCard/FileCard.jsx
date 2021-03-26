@@ -52,7 +52,8 @@ const styles = theme => ({
         backgroundColor: '#DADADA'
     },
     thumbCoverDetailed: {
-        height: 200
+        maxHeight: 200,
+        maxWidth: 200
     },
     mediaCardContentContainer: {
         minWidth: 0,
@@ -116,7 +117,6 @@ export const FileCard = ({
     let rowNumber = Math.floor(index / 2) + 1;
     let columnNumber = (index % 2) + 1;
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
-    let isPdf = node.children ? node.children.nodes.filter(node => node.mimeType.value === 'application/pdf').length !== 0 : false;
     let showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node?.subNodes?.pageInfo?.totalCount > 0;
 
     return (
@@ -151,10 +151,7 @@ export const FileCard = ({
                     /> :
                 <div className={classes.detailedIcon}>
                     {node.primaryNodeType.name === 'jnt:folder' ?
-                        <Folder color="action"/> :
-                            isPdf ?
-                                <img src={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?t=thumbnail`} className={classes.thumbCoverDetailed}/> :
-                                <FileIcon filename={node.path} color="disabled"/>}
+                        <Folder color="action"/> : <FileIcon filename={node.path} color="disabled"/>}
                 </div>}
 
             <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>

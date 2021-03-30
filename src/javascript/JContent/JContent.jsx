@@ -1,9 +1,9 @@
-import React, {Suspense} from 'react';
+import React from 'react';
 import {registry} from '@jahia/ui-extender';
+import {LoaderSuspense, ErrorBoundary} from '@jahia/jahia-ui-root';
 import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
 import {Route, Switch} from 'react-router';
-import {ProgressPaper} from '@jahia/design-system-kit';
 import {useSelector} from 'react-redux';
 
 export const JContent = () => {
@@ -16,34 +16,36 @@ export const JContent = () => {
         <LayoutModule
             navigation={<ContentNavigation/>}
             content={
-                <Suspense fallback={<ProgressPaper/>}>
-                    <Switch>
-                        {routes.map(r => r.component ? (
-                            <Route key={r.key}
-                                   path={r.path}
-                                   component={r.component}
-                            />
-                        ) : (
-                            <Route key={r.key}
-                                   path={r.path}
-                                   render={r.render}
-                            />
-                        ))}
-                        {item && itemEnabled && (
-                            item.routeComponent ? (
-                                <Route key={item.key}
-                                       path={'/jcontent/:siteKey/:lang/' + item.key}
-                                       component={item.routeComponent}
+                <LoaderSuspense>
+                    <ErrorBoundary>
+                        <Switch>
+                            {routes.map(r => r.component ? (
+                                <Route key={r.key}
+                                       path={r.path}
+                                       render={p => <ErrorBoundary>{React.createElement(r.component, p)}</ErrorBoundary>}
                                 />
                             ) : (
-                                <Route key={item.key}
-                                       path={'/jcontent/:siteKey/:lang/' + item.key}
-                                       render={props => item.routeRender(props, item)}
+                                <Route key={r.key}
+                                       path={r.path}
+                                       render={p => <ErrorBoundary>{r.render(p)}</ErrorBoundary>}
                                 />
-                            )
-                        )}
-                    </Switch>
-                </Suspense>
+                            ))}
+                            {item && itemEnabled && (
+                                item.routeComponent ? (
+                                    <Route key={item.key}
+                                           path={'/jcontent/:siteKey/:lang/' + item.key}
+                                           render={p => <ErrorBoundary>{React.createElement(item.routeComponent, p)}</ErrorBoundary>}
+                                    />
+                                ) : (
+                                    <Route key={item.key}
+                                           path={'/jcontent/:siteKey/:lang/' + item.key}
+                                           render={props => <ErrorBoundary>{item.routeRender(props, item)}</ErrorBoundary>}
+                                    />
+                                )
+                            )}
+                        </Switch>
+                    </ErrorBoundary>
+                </LoaderSuspense>
             }
         />
     );

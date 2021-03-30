@@ -11,6 +11,7 @@ import {CM_DRAWER_STATES} from '../../JContent.redux';
 import FilesGrid from './FilesGrid';
 import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
+import {ErrorBoundary} from '@jahia/jahia-ui-root';
 
 const styles = theme => ({
     root: {
@@ -109,8 +110,11 @@ export class ContentLayout extends React.Component {
                             })
                         }}
                     >
-                        {previewOpen &&
-                        <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>}
+                        {previewOpen && (
+                            <ErrorBoundary key={previewSelection}>
+                                <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
+                            </ErrorBoundary>
+                        )}
                     </Drawer>
                     <ContextualMenu setOpenRef={this.contextualMenu} actionKey="contentMenu" path={path}/>
                     <div
@@ -121,15 +125,17 @@ export class ContentLayout extends React.Component {
                         onContextMenu={event => this.contextualMenu.current(event)}
                     >
                         <Paper className={classes.contentPaper}>
-                            {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
-                                <FilesGrid totalCount={totalCount}
-                                           rows={rows}
-                                           contentNotFound={contentNotFound}
-                                           loading={loading}/> :
-                                <ContentListTable totalCount={totalCount}
-                                                  rows={rows}
-                                                  contentNotFound={contentNotFound}
-                                                  loading={loading}/>}
+                            <ErrorBoundary key={filesMode}>
+                                {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
+                                    <FilesGrid totalCount={totalCount}
+                                               rows={rows}
+                                               contentNotFound={contentNotFound}
+                                               loading={loading}/> :
+                                    <ContentListTable totalCount={totalCount}
+                                                      rows={rows}
+                                                      contentNotFound={contentNotFound}
+                                                      loading={loading}/>}
+                            </ErrorBoundary>
                         </Paper>
                     </div>
                 </div>

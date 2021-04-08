@@ -96,7 +96,7 @@ export class UploadItem extends React.Component {
                     })}
                     doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}
                 />
-                <div className={classes.grow} doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}/>
+                <div className={classes.grow}/>
                 <Status {...this.props}/>
                 {this.state.component}
                 <EditButton {...this.props} uuid={this.state.uuid}/>

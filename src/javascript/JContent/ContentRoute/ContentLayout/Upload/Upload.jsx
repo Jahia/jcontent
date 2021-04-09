@@ -91,7 +91,7 @@ export class Upload extends React.Component {
 
         return (
             <React.Fragment>
-                <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}} onClose={this.handleCloseSnackBar} onMouseEnter={this.clearCloseTimeout}>
+                <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}} onClose={this.handleCloseSnackBar}>
                     <React.Fragment>
                         <UploadHeader status={this.uploadStatus()}/>
                         <div className={classes.snackBarScroll}>

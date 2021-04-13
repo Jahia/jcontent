@@ -33,13 +33,17 @@ const styles = theme => ({
     }
 });
 
+const SNACKBAR_CLOSE_TIMEOUT = 5000;
+
 export class Upload extends React.Component {
     constructor(props) {
         super(props);
         this.client = null;
+        this.closeTimeout = null;
         this.removeFile = this.removeFile.bind(this);
         this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
         this.handleCloseSnackBar = this.handleCloseSnackBar.bind(this);
+        this.clearCloseTimeout = this.clearCloseTimeout.bind(this);
         this.overlayStyle = {
             active: {
                 display: 'block',
@@ -57,8 +61,23 @@ export class Upload extends React.Component {
 
     componentDidUpdate() {
         this.updateUploadsStatus();
+        const uploadStatus = this.uploadStatus();
         if (this.props.uploadUpdateCallback) {
-            this.props.uploadUpdateCallback(this.uploadStatus());
+            this.props.uploadUpdateCallback(uploadStatus);
+        }
+
+        if (uploadStatus && uploadStatus.error === 0 && uploadStatus.uploading === 0 && uploadStatus.uploaded > 0) {
+            this.closeTimeout = setTimeout(() => {
+                this.clearCloseTimeout();
+                this.handleCloseSnackBar();
+            }, SNACKBAR_CLOSE_TIMEOUT);
+        }
+    }
+
+    clearCloseTimeout() {
+        if (this.closeTimeout !== null) {
+            clearTimeout(this.closeTimeout);
+            this.closeTimeout = null;
         }
     }
 
@@ -72,7 +91,7 @@ export class Upload extends React.Component {
 
         return (
             <React.Fragment>
-                <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}}>
+                <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}} onClose={this.handleCloseSnackBar}>
                     <React.Fragment>
                         <UploadHeader status={this.uploadStatus()}/>
                         <div className={classes.snackBarScroll}>

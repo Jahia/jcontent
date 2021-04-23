@@ -53,7 +53,7 @@ export const jContentAccordionItems = registry => {
         icon: <File/>,
         label: 'label.contentManager.navigation.pages',
         defaultPath: siteKey => '/sites/' + siteKey,
-        RequiredPermission: 'pagesAccordionAccess',
+        requiredPermission: 'pagesAccordionAccess',
         config: {
             hideRoot: true,
             rootPath: '',
@@ -70,7 +70,7 @@ export const jContentAccordionItems = registry => {
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders',
         defaultPath: siteKey => '/sites/' + siteKey + '/contents',
-        RequiredPermission: 'contentFolderAccordionAccess',
+        requiredPermission: 'contentFolderAccordionAccess',
         config: {
             rootPath: '/contents',
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
@@ -86,7 +86,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
-        RequiredPermission: 'mediaAccordionAccess',
+        requiredPermission: 'mediaAccordionAccess',
         config: {
             rootPath: '/files',
             selectableTypes: ['jnt:folder'],
@@ -103,6 +103,6 @@ export const jContentAccordionItems = registry => {
         label: 'label.contentManager.navigation.apps.title',
         appsTarget: 'jcontent',
         isEnabled: siteKey => siteKey !== 'systemsite',
-        RequiredPermission: 'additionalAccordionAccess'
+        requiredPermission: 'additionalAccordionAccess'
     });
 };

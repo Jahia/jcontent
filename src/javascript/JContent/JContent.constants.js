@@ -15,6 +15,7 @@ const JContentConstants = {
         CONTENT_FOLDERS: 'content-folders',
         PAGES: 'pages',
         MEDIA: 'media',
+        APPS: 'apps',
         SEARCH: 'search',
         SQL2SEARCH: 'sql2Search',
         LIST: 'list',

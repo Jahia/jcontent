@@ -20,6 +20,7 @@ import JContentConstants from './JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from 'react-apollo';
 import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
+import {useNodeChecks} from '@jahia/data-helper';
 
 export default function () {
     const CmmNavItem = () => {
@@ -34,6 +35,29 @@ export default function () {
             mode: state.jcontent.mode,
             params: state.jcontent.params
         }));
+
+        const permissions = useNodeChecks({
+            path: `/sites/${site}`,
+            language: language
+        }, {
+            requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess']
+        });
+
+        if (permissions.loading) {
+            return 'Loading...';
+        }
+
+        let defaultMode = JContentConstants.mode.PAGES;
+
+        // FIXME if no permission what is the display
+        if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess) {
+            defaultMode = JContentConstants.mode.APPS;
+        } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess) {
+            defaultMode = JContentConstants.mode.MEDIA;
+        } else if (!permissions.node.pagesAccordionAccess) {
+            defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
+        }
+
         return (
             <PrimaryNavItem key="/jcontent"
                             role="jcontent-menu-item"
@@ -41,7 +65,7 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params));
+                                history.push(buildUrl(site, language, mode || defaultMode, path, params));
                                 initClipboardWatcher(dispatch, client);
                             }}/>
         );

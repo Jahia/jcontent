@@ -7,7 +7,7 @@ import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
-const excludedActions = ['pageComposer', 'subContents', 'edit', 'publishMenu', 'cut', 'deletePermanently', 'publishDeletion', 'copy', 'paste', 'createFolder', 'createContentFolder', 'createContent', 'fileUpload'];
+const excludedActions = ['subContents', 'edit', 'publishMenu', 'cut', 'deletePermanently', 'publishDeletion', 'copy', 'paste', 'createFolder', 'createContentFolder', 'createContent', 'fileUpload'];
 
 export const BrowseControlBar = ({showActions}) => {
     const {path, mode, siteKey} = useSelector(state => ({

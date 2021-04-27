@@ -22,6 +22,7 @@ export const ZipActionComponent = withNotifications()(({path, paths, render: Ren
         {
             getParent: true,
             requiredPermission: ['jcr:addChildNodes'],
+            requiredSitePermission: ['zipAction'],
             showOnNodeTypes: ['jnt:file', 'jnt:folder'],
             hideForPaths: [PATH_FILES_ITSELF]
         }

@@ -14,7 +14,7 @@
     "tdd": "jest --watch",
     "lint:js": "eslint --ext js,jsx .",
     "lint:js:fix": "yarn lint:js --fix .",
-    "lint:scss": "stylelint './src/**/*.scss'",
+    "lint:scss": "stylelint \"./src/**/*.scss\"",
     "lint:scss:fix": "yarn lint:scss --fix",
     "lint": "yarn lint:js && yarn lint:scss",
     "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix"

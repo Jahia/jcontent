@@ -22,6 +22,7 @@ export const UnzipActionComponent = withNotifications()(({path, paths, render: R
             getMimeType: true,
             getProperties: ['jcr:mixinTypes'],
             requiredPermission: ['jcr:addChildNodes'],
+            requiredSitePermission: ['unzipAction'],
             showOnNodeTypes: ['jnt:file'],
             hideForPaths: [PATH_FILES_ITSELF]
         }

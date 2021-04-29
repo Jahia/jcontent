@@ -31,11 +31,17 @@ const constraintsByType = {
     },
     replaceWith: {
         showOnNodeTypes: ['jnt:file'],
-        requiredPermission: 'jcr:write'
+        requiredPermission: ['jcr:write'],
+        requiredSitePermission: ['replaceWithAction']
     },
     import: {
         showOnNodeTypes: ['jnt:contentFolder'],
         requiredPermission: 'jcr:addChildNodes'
+    },
+    fileUpload: {
+        showOnNodeTypes: ['jnt:folder'],
+        requiredPermission: ['jcr:addChildNodes'],
+        requiredSitePermission: ['uploadFilesAction']
     }
 };
 

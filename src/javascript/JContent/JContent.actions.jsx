@@ -67,14 +67,14 @@ export const jContentActions = registry => {
         buttonIcon: <AddFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.contentFolder',
         targets: ['createMenuActions:3', 'contentActions:2', 'headerPrimaryActions:2'],
-        createFolderType: 'jnt:contentFolder',
+        createFolderType: 'contentFolder',
         component: CreateFolderActionComponent
     });
     registry.add('action', 'createFolder', {
         buttonIcon: <AddFolder/>,
         buttonLabel: 'jcontent:label.contentManager.create.folder',
         targets: ['createMenuActions:3', 'contentActions:3', 'headerPrimaryActions:2.5'],
-        createFolderType: 'jnt:folder',
+        createFolderType: 'folder',
         component: CreateFolderActionComponent
     });
     registry.add('action', 'refresh', {
@@ -93,6 +93,7 @@ export const jContentActions = registry => {
         buttonIcon: <Publish/>,
         buttonLabel: 'jcontent:label.contentManager.fileUpload.uploadButtonLabel',
         targets: ['createMenuActions:4', 'contentActions:4', 'headerPrimaryActions:3'],
+        uploadType: 'fileUpload',
         component: FileUploadActionComponent
     });
     registry.add('action', 'publishMenu', menuActionWithRenderer, {
@@ -259,7 +260,8 @@ export const jContentActions = registry => {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentManager.editImage.action',
         targets: ['contentActions:2.5'],
-        requiredPermission: 'jcr:write',
+        requiredPermission: ['jcr:write'],
+        requiredSitePermission: ['openImageEditorAction'],
         showOnNodeTypes: ['jmix:image'],
         mode: 'image-edit',
         component: RouterActionComponent

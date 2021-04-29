@@ -4,13 +4,30 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 
+const constraintsByType = {
+    contentFolder: {
+        requiredPermission: ['jcr:addChildNodes'],
+        requiredSitePermission: ['newContentFolderAction'],
+        showOnNodeTypes: ['jnt:contentFolder']
+    },
+    folder: {
+        requiredPermission: ['jcr:addChildNodes'],
+        requiredSitePermission: ['newMediaFolderAction'],
+        showOnNodeTypes: ['jnt:folder']
+    }
+};
+
+const nodeType = {
+    contentFolder: 'jnt:contentFolder',
+    folder: 'jnt:folder'
+};
+
 export const CreateFolderActionComponent = ({path, createFolderType, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
     const res = useNodeChecks(
         {path},
         {
-            requiredPermission: ['jcr:addChildNodes'],
-            showOnNodeTypes: [createFolderType]
+            ...constraintsByType[createFolderType || 'contentFolder']
         }
     );
 
@@ -27,7 +44,7 @@ export const CreateFolderActionComponent = ({path, createFolderType, render: Ren
             {...others}
             isVisible={res.checksResult}
             onClick={() => {
-                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path, contentType: createFolderType, onExit});
+                componentRenderer.render('createFolderDialog', CreateFolderDialog, {path, contentType: nodeType[createFolderType || 'contentFolder'], onExit});
             }}
         />
     );

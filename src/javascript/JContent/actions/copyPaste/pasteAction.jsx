@@ -31,6 +31,7 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
         {path},
         {
             requiredPermission: 'jcr:addChildNodes',
+            requiredSitePermission: ['pasteAction'],
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
             hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText']

@@ -37,7 +37,8 @@ const constraintsByType = {
     },
     import: {
         showOnNodeTypes: ['jnt:contentFolder'],
-        requiredPermission: 'jcr:addChildNodes'
+        requiredPermission: 'jcr:addChildNodes',
+        requiredSitePermission: ['importAction']
     },
     fileUpload: {
         showOnNodeTypes: ['jnt:folder'],

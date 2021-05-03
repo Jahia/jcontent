@@ -243,10 +243,19 @@ export const jContentActions = registry => {
         targets: ['contentActions:0.1'],
         component: SubContentsActionComponent
     });
+    registry.add('action', 'exportPage', {
+        buttonIcon: <Upload/>,
+        buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
+        targets: ['contentActions:4.2'],
+        showOnNodeTypes: ['jnt:page'],
+        requiredSitePermission: ['exportPageAction'],
+        component: ExportActionComponent
+    });
     registry.add('action', 'export', {
         buttonIcon: <Upload/>,
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
         targets: ['contentActions:4.2'],
+        showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
         component: ExportActionComponent
     });
     registry.add('action', 'import', {

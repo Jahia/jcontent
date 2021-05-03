@@ -6,10 +6,7 @@ import PropTypes from 'prop-types';
 
 export const ExportActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    const res = useNodeChecks(
-        {path},
-        {showOnNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:content']}
-    );
+    const res = useNodeChecks({path}, {...others});
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;

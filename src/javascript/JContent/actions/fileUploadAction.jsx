@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {batchActions} from 'redux-batched-actions';
 import {onFilesSelected} from '../ContentRoute/ContentLayout/Upload/Upload.utils';
 import {ComponentRendererContext} from '@jahia/ui-extender';
+import {UPLOAD_FILES_ACTION} from './actions.constants';
 
 let currentUploadHandler = null;
 
@@ -41,7 +42,7 @@ const constraintsByType = {
     fileUpload: {
         showOnNodeTypes: ['jnt:folder'],
         requiredPermission: ['jcr:addChildNodes'],
-        requiredSitePermission: ['uploadFilesAction']
+        requiredSitePermission: [UPLOAD_FILES_ACTION]
     }
 };
 

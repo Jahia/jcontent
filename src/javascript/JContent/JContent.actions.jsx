@@ -50,6 +50,7 @@ import {SearchActionComponent} from './actions/searchAction';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
+import {ACTION_PERMISSIONS} from './actions/actions.constants';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -248,7 +249,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
         targets: ['contentActions:4.2'],
         showOnNodeTypes: ['jnt:page'],
-        requiredSitePermission: ['exportPageAction'],
+        requiredSitePermission: [ACTION_PERMISSIONS.exportPageAction],
         component: ExportActionComponent
     });
     registry.add('action', 'export', {
@@ -256,6 +257,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.export.actionLabel',
         targets: ['contentActions:4.2'],
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
+        requiredSitePermission: [ACTION_PERMISSIONS.exportAction],
         component: ExportActionComponent
     });
     registry.add('action', 'import', {
@@ -270,7 +272,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.editImage.action',
         targets: ['contentActions:2.5'],
         requiredPermission: ['jcr:write'],
-        requiredSitePermission: ['openImageEditorAction'],
+        requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction],
         showOnNodeTypes: ['jmix:image'],
         mode: 'image-edit',
         component: RouterActionComponent

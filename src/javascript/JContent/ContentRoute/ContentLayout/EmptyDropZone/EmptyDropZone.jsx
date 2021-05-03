@@ -45,7 +45,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
         path: `/sites/${currentState.site}`,
         language: currentState.language
     }, {
-        requiredSitePermission: [ACTION_PERMISSIONS.uploadFilesAction]
+        requiredSitePermission: [ACTION_PERMISSIONS.uploadFilesAction, ACTION_PERMISSIONS.importAction]
     });
 
     if (permissions.loading) {
@@ -61,7 +61,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
         );
     }
 
-    if (mode === JContentConstants.mode.CONTENT_FOLDERS) {
+    if (mode === JContentConstants.mode.CONTENT_FOLDERS && permissions.node.site.importAction) {
         return (
             <Component className={classes.dropZone}>
                 <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>

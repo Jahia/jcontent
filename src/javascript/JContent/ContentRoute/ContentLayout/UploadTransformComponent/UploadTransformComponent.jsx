@@ -13,6 +13,7 @@ import {withApollo} from 'react-apollo';
 import {compose} from '~/utils';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 import JContentConstants from '../../../JContent.constants';
+import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
@@ -139,12 +140,13 @@ export class UploadTransformComponent extends React.Component {
                 variables: {
                     path: this.props.uploadPath,
                     permittedNodeTypes: ACCEPTING_NODE_TYPES,
-                    permission: 'jcr:addChildNodes'
+                    permission: 'jcr:addChildNodes',
+                    sitePermission: ACTION_PERMISSIONS.uploadFilesAction
                 },
                 query: UploadRequirementsQuery
             });
 
-            if (result.data.jcr.results.hasPermission && result.data.jcr.results.acceptsFiles && this._isMounted) {
+            if (result.data.jcr.results.hasPermission && result.data.jcr.results.site.hasPermission && result.data.jcr.results.acceptsFiles && this._isMounted) {
                 this.setState({
                     allowDrop: true
                 });

@@ -13,7 +13,7 @@ import {withApollo} from 'react-apollo';
 import {compose} from '~/utils';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 import JContentConstants from '../../../JContent.constants';
-import {UPLOAD_FILES_ACTION} from '../../../actions/actions.constants';
+import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
@@ -141,7 +141,7 @@ export class UploadTransformComponent extends React.Component {
                     path: this.props.uploadPath,
                     permittedNodeTypes: ACCEPTING_NODE_TYPES,
                     permission: 'jcr:addChildNodes',
-                    sitePermission: UPLOAD_FILES_ACTION
+                    sitePermission: ACTION_PERMISSIONS.uploadFilesAction
                 },
                 query: UploadRequirementsQuery
             });

@@ -8,7 +8,7 @@ import JContentConstants from '../../../JContent.constants';
 import {Publish} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
-import {UPLOAD_FILES_ACTION} from '../../../actions/actions.constants';
+import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 
 const styles = theme => ({
     dropZone: {
@@ -45,7 +45,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
         path: `/sites/${currentState.site}`,
         language: currentState.language
     }, {
-        requiredSitePermission: [UPLOAD_FILES_ACTION]
+        requiredSitePermission: [ACTION_PERMISSIONS.uploadFilesAction]
     });
 
     if (permissions.loading) {

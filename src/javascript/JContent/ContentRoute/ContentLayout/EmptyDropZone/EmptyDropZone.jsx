@@ -6,6 +6,8 @@ import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 import JContentConstants from '../../../JContent.constants';
 import {Publish} from '@jahia/moonstone';
+import {useSelector} from 'react-redux';
+import {useNodeChecks} from '@jahia/data-helper';
 
 const styles = theme => ({
     dropZone: {
@@ -37,7 +39,19 @@ const styles = theme => ({
 });
 
 const EmptyDropZone = ({component: Component, t, classes, mode}) => {
-    if (mode === JContentConstants.mode.MEDIA) {
+    const currentState = useSelector(state => ({site: state.site, language: state.language}));
+    const permissions = useNodeChecks({
+        path: `/sites/${currentState.site}`,
+        language: currentState.language
+    }, {
+        requiredSitePermission: ['uploadFilesAction']
+    });
+
+    if (permissions.loading) {
+        return 'Loading...';
+    }
+
+    if (mode === JContentConstants.mode.MEDIA && permissions.node.site.uploadFilesAction) {
         return (
             <Component className={classes.dropZone}>
                 <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
@@ -46,18 +60,18 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
         );
     }
 
-    if (mode === JContentConstants.mode.PAGES) {
+    if (mode === JContentConstants.mode.CONTENT_FOLDERS) {
         return (
-            <Component className={classes.emptyZone}>
-                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
+            <Component className={classes.dropZone}>
+                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
+                <Publish/>
             </Component>
         );
     }
 
     return (
-        <Component className={classes.dropZone}>
-            <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
-            <Publish/>
+        <Component className={classes.emptyZone}>
+            <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
         </Component>
     );
 };

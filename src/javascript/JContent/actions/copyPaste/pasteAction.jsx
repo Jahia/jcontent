@@ -15,6 +15,7 @@ import {useApolloClient, useLazyQuery} from '@apollo/react-hooks';
 import {useTranslation} from 'react-i18next';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
+import {ACTION_PERMISSIONS} from '../actions.constants';
 
 export const PasteActionComponent = withNotifications()(({path, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
@@ -31,6 +32,7 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
         {path},
         {
             requiredPermission: 'jcr:addChildNodes',
+            requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
             hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText']

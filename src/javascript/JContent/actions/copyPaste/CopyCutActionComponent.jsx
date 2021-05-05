@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {
     PATH_CONTENTS_ITSELF,
-    PATH_FILES_ITSELF
+    PATH_FILES_ITSELF,
+    ACTION_PERMISSIONS
 } from '../actions.constants';
 
 export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render, loading: Loading, ...others}) => {
@@ -28,6 +29,7 @@ export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render
             getPrimaryNodeType: true,
             getDisplayName: true,
             requiredPermission: type === copyPasteConstants.COPY ? ['jcr:read'] : ['jcr:removeNode'],
+            requiredSitePermission: type === copyPasteConstants.COPY ? [ACTION_PERMISSIONS.copyAction] : [ACTION_PERMISSIONS.cutAction],
             getProperties: ['jcr:mixinTypes'],
             hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jnt:navMenuText'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]

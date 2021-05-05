@@ -3,16 +3,17 @@ import CreateFolderDialog from './CreateFolderDialog';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
+import {ACTION_PERMISSIONS} from '../actions.constants';
 
 const constraintsByType = {
     contentFolder: {
         requiredPermission: ['jcr:addChildNodes'],
-        requiredSitePermission: ['newContentFolderAction'],
+        requiredSitePermission: [ACTION_PERMISSIONS.newContentFolderAction],
         showOnNodeTypes: ['jnt:contentFolder']
     },
     folder: {
         requiredPermission: ['jcr:addChildNodes'],
-        requiredSitePermission: ['newMediaFolderAction'],
+        requiredSitePermission: [ACTION_PERMISSIONS.newMediaFolderAction],
         showOnNodeTypes: ['jnt:folder']
     }
 };

@@ -48,7 +48,7 @@
     "graphql-tag": "^2.9.1",
     "history": "^4.7.2",
     "image-extensions": "^1.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "mdi-material-ui": "^5.10.0",
     "prop-types": "latest",
     "query-string": "5",
@@ -74,7 +74,8 @@
     "whatwg-fetch": "^3.0.0"
   },
   "resolutions": {
-    "three": "^0.125.0"
+    "three": "^0.125.0",
+    "underscore": "1.12.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",

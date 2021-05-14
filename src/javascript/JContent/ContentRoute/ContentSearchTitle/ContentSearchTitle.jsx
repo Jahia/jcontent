@@ -9,12 +9,13 @@ import JContentConstants from '../../JContent.constants';
 import SearchInput from '../SearchInput';
 
 const ContentSearchTitle = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {mode, preSearchModeMemo} = useSelector(state => ({
         mode: state.jcontent.mode,
         preSearchModeMemo: state.jcontent.preSearchModeMemo
     }));
+    const title = t('label.contentManager.title.search');
 
     const clearSearchFunc = () => {
         dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : JContentConstants.mode.PAGES, params: {}}));
@@ -24,7 +25,7 @@ const ContentSearchTitle = () => {
         <div className={classnames(styles.root, 'alignCenter')}>
             <Button className={styles.buttonMargin} icon={<ArrowLeft/>} onClick={clearSearchFunc}/>
             <Typography variant="title">
-                {t('jcontent:label.contentManager.title.search')}
+                {title}
             </Typography>
             <div className={classnames(styles.rightPanel)}>
                 {JContentConstants.mode.SEARCH === mode && <SearchInput/>}

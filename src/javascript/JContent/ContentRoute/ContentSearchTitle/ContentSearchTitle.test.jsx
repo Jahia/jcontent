@@ -14,6 +14,6 @@ jest.mock('connected-react-router', () => jest.fn(() => {}));
 describe('Content search title', () => {
     it('Should render', async () => {
         const contentTitle = shallow(<ContentSearchTitle onClickBack={() => {}}/>);
-        expect(contentTitle.contains('translated_jcontent:label.contentManager.title.search')).toBeTruthy();
+        expect(contentTitle.contains('translated_label.contentManager.title.search')).toBeTruthy();
     });
 });

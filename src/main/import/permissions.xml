@@ -4,7 +4,6 @@
              xmlns:j="http://www.jahia.org/jahia/1.0"
              xmlns:jnt="http://www.jahia.org/jahia/nt/1.0">
     <jContent jcr:primaryType="jnt:permission">
-        <pageComposerAccess jcr:primaryType="jnt:permission"/>
         <jContentActions jcr:primaryType="jnt:permission">
             <pageTreeActions jcr:primaryType="jnt:permission">
                 <orderPagesAction jcr:primaryType="jnt:permission"/>

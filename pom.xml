@@ -68,7 +68,7 @@
         <jahia-module-type>system</jahia-module-type>
         <yarn.arguments>build:production</yarn.arguments>
         <jahia-module-signature>MC0CFEeVkxdP08T9Yc5qKW8kYTvssLQcAhUAjH//m7uwNJiPzYLD0392bYPW4bg=</jahia-module-signature>
-        <jahia-depends>jahia-ui-root=1.3</jahia-depends>
+        <jahia-depends>jahia-ui-root</jahia-depends>
         <jahia-plugin-version>5.11</jahia-plugin-version>
     </properties>
 

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content jcr:primaryType="jnt:systemFolder"
-         jcr:mixinTypes="jmix:accessControlled jmix:workflowRulesable"
-         xmlns:jcr="http://www.jcp.org/jcr/1.0"
-         xmlns:j="http://www.jahia.org/jahia/1.0"
-         xmlns:jnt="http://www.jahia.org/jahia/nt/1.0">
-    <permissions jcr:primaryType="jnt:permission">
-        <jContent jcr:primaryType="jnt:permission">
-            <pageComposerAccess jcr:primaryType="jnt:permission"/>
-        </jContent>
+<permissions jcr:primaryType="jnt:permission"
+             xmlns:jcr="http://www.jcp.org/jcr/1.0"
+             xmlns:j="http://www.jahia.org/jahia/1.0"
+             xmlns:jnt="http://www.jahia.org/jahia/nt/1.0">
+    <jContent jcr:primaryType="jnt:permission">
+        <pageComposerAccess jcr:primaryType="jnt:permission"/>
         <jContentActions jcr:primaryType="jnt:permission">
             <pageTreeActions jcr:primaryType="jnt:permission">
                 <orderPagesAction jcr:primaryType="jnt:permission"/>
@@ -40,5 +37,5 @@
             <openImageEditorAction jcr:primaryType="jnt:permission"/>
             <downloadAction jcr:primaryType="jnt:permission"/>
         </jContentActions>
-    </permissions>
-</content>
+    </jContent>
+</permissions>

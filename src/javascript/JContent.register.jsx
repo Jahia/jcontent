@@ -49,8 +49,9 @@ export default function () {
 
         let defaultMode = JContentConstants.mode.PAGES;
 
-        // FIXME if no permission what is the display
-        if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess && !permissions.node.formAccordionAccess) {
+        if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess && !permissions.node.formAccordionAccess && !permissions.node.additionalAccordionAccess) {
+            defaultMode = '';
+        } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess && !permissions.node.formAccordionAccess) {
             defaultMode = JContentConstants.mode.APPS;
         } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess) {
             defaultMode = JContentConstants.mode.FORMS;

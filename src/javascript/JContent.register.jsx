@@ -40,7 +40,7 @@ export default function () {
             path: `/sites/${site}`,
             language: language
         }, {
-            requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess']
+            requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess', 'formAccordionAccess']
         });
 
         if (permissions.loading) {
@@ -50,8 +50,10 @@ export default function () {
         let defaultMode = JContentConstants.mode.PAGES;
 
         // FIXME if no permission what is the display
-        if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess) {
+        if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess && !permissions.node.formAccordionAccess) {
             defaultMode = JContentConstants.mode.APPS;
+        } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess) {
+            defaultMode = JContentConstants.mode.FORMS;
         } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess) {
             defaultMode = JContentConstants.mode.MEDIA;
         } else if (!permissions.node.pagesAccordionAccess) {

@@ -15,7 +15,7 @@ const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
         path: `/sites/${currentState.site}`,
         language: currentState.language
     }, {
-        requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess']
+        requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess', 'formAccordionAccess']
     });
 
     if (permissions.loading) {

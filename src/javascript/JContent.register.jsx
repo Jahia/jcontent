@@ -40,7 +40,7 @@ export default function () {
             path: `/sites/${site}`,
             language: language
         }, {
-            requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess', 'formAccordionAccess']
+            requiredSitePermission: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
         });
 
         if (permissions.loading) {
@@ -49,15 +49,15 @@ export default function () {
 
         let defaultMode = JContentConstants.mode.PAGES;
 
-        if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess && !permissions.node.formAccordionAccess && !permissions.node.additionalAccordionAccess) {
+        if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess && !permissions.node.site.mediaAccordionAccess && !permissions.node.site.formAccordionAccess && !permissions.node.site.additionalAccordionAccess) {
             defaultMode = '';
-        } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess && !permissions.node.formAccordionAccess) {
+        } else if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess && !permissions.node.site.mediaAccordionAccess && !permissions.node.site.formAccordionAccess) {
             defaultMode = JContentConstants.mode.APPS;
-        } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess && !permissions.node.mediaAccordionAccess) {
+        } else if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess && !permissions.node.site.mediaAccordionAccess) {
             defaultMode = JContentConstants.mode.FORMS;
-        } else if (!permissions.node.pagesAccordionAccess && !permissions.node.contentFolderAccordionAccess) {
+        } else if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess) {
             defaultMode = JContentConstants.mode.MEDIA;
-        } else if (!permissions.node.pagesAccordionAccess) {
+        } else if (!permissions.node.site.pagesAccordionAccess) {
             defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
         }
 

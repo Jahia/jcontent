@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
+import JContentConstants from '../JContent.constants';
 
 const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
     let accordionItems = registry.find({type: 'accordionItem', target: 'jcontent'});
@@ -15,7 +16,7 @@ const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
         path: `/sites/${currentState.site}`,
         language: currentState.language
     }, {
-        requiredPermission: ['pagesAccordionAccess', 'contentFolderAccordionAccess', 'mediaAccordionAccess', 'additionalAccordionAccess', 'formAccordionAccess']
+        requiredSitePermission: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
     });
 
     if (permissions.loading) {
@@ -23,7 +24,7 @@ const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
     }
 
     accordionItems = accordionItems.filter(accordionItem =>
-        Object.prototype.hasOwnProperty.call(permissions.node, accordionItem.requiredPermission) && permissions.node[accordionItem.requiredPermission]
+        Object.prototype.hasOwnProperty.call(permissions.node.site, accordionItem.requiredSitePermission) && permissions.node.site[accordionItem.requiredSitePermission]
     );
 
     return <ContentNavigation accordionItems={accordionItems} mode={mode} siteKey={siteKey} handleNavigation={handleNavigation}/>;

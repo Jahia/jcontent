@@ -26,6 +26,13 @@ const JContentConstants = {
     },
     localStorageKeys: {
         filesSelectorMode: 'jcontent_files_selector_mode'
+    },
+    accordionPermissions: {
+        pagesAccordionAccess: 'pagesAccordionAccess',
+        contentFolderAccordionAccess: 'contentFolderAccordionAccess',
+        mediaAccordionAccess: 'mediaAccordionAccess',
+        additionalAccordionAccess: 'additionalAccordionAccess',
+        formAccordionAccess: 'formAccordionAccess'
     }
 };
 

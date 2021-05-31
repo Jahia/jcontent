@@ -4,6 +4,7 @@ import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
+import JContentConstants from './JContent.constants';
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {
@@ -53,7 +54,7 @@ export const jContentAccordionItems = registry => {
         icon: <File/>,
         label: 'label.contentManager.navigation.pages',
         defaultPath: siteKey => '/sites/' + siteKey,
-        requiredPermission: 'pagesAccordionAccess',
+        requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         config: {
             hideRoot: true,
             rootPath: '',
@@ -70,7 +71,7 @@ export const jContentAccordionItems = registry => {
         icon: <FolderSpecial/>,
         label: 'label.contentManager.navigation.contentFolders',
         defaultPath: siteKey => '/sites/' + siteKey + '/contents',
-        requiredPermission: 'contentFolderAccordionAccess',
+        requiredSitePermission: JContentConstants.accordionPermissions.contentFolderAccordionAccess,
         config: {
             rootPath: '/contents',
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
@@ -86,7 +87,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
-        requiredPermission: 'mediaAccordionAccess',
+        requiredSitePermission: JContentConstants.accordionPermissions.mediaAccordionAccess,
         config: {
             rootPath: '/files',
             selectableTypes: ['jnt:folder'],
@@ -103,6 +104,6 @@ export const jContentAccordionItems = registry => {
         label: 'label.contentManager.navigation.apps.title',
         appsTarget: 'jcontent',
         isEnabled: siteKey => siteKey !== 'systemsite',
-        requiredPermission: 'additionalAccordionAccess'
+        requiredSitePermission: JContentConstants.accordionPermissions.additionalAccordionAccess
     });
 };

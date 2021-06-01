@@ -47,18 +47,18 @@ export default function () {
             return 'Loading...';
         }
 
-        let defaultMode = JContentConstants.mode.PAGES;
+        let defaultMode = '';
 
-        if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess && !permissions.node.site.mediaAccordionAccess && !permissions.node.site.formAccordionAccess && !permissions.node.site.additionalAccordionAccess) {
-            defaultMode = '';
-        } else if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess && !permissions.node.site.mediaAccordionAccess && !permissions.node.site.formAccordionAccess) {
-            defaultMode = JContentConstants.mode.APPS;
-        } else if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess && !permissions.node.site.mediaAccordionAccess) {
-            defaultMode = JContentConstants.mode.FORMS;
-        } else if (!permissions.node.site.pagesAccordionAccess && !permissions.node.site.contentFolderAccordionAccess) {
-            defaultMode = JContentConstants.mode.MEDIA;
-        } else if (!permissions.node.site.pagesAccordionAccess) {
+        if (permissions.node.site.pagesAccordionAccess) {
+            defaultMode = JContentConstants.mode.PAGES;
+        } else if (permissions.node.site.contentFolderAccordionAccess) {
             defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
+        } else if (permissions.node.site.mediaAccordionAccess) {
+            defaultMode = JContentConstants.mode.MEDIA;
+        } else if (permissions.node.site.formAccordionAccess) {
+            defaultMode = JContentConstants.mode.FORMS;
+        } else if (permissions.node.site.additionalAccordionAccess) {
+            defaultMode = JContentConstants.mode.APPS;
         }
 
         return (

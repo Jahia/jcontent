@@ -20,6 +20,7 @@ import JContentConstants from './JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from 'react-apollo';
 import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
+import {useNodeChecks} from '@jahia/data-helper';
 
 export default function () {
     const CmmNavItem = () => {
@@ -34,6 +35,32 @@ export default function () {
             mode: state.jcontent.mode,
             params: state.jcontent.params
         }));
+
+        const permissions = useNodeChecks({
+            path: `/sites/${site}`,
+            language: language
+        }, {
+            requiredSitePermission: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
+        });
+
+        if (permissions.loading) {
+            return 'Loading...';
+        }
+
+        let defaultMode = '';
+
+        if (permissions.node.site.pagesAccordionAccess) {
+            defaultMode = JContentConstants.mode.PAGES;
+        } else if (permissions.node.site.contentFolderAccordionAccess) {
+            defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
+        } else if (permissions.node.site.mediaAccordionAccess) {
+            defaultMode = JContentConstants.mode.MEDIA;
+        } else if (permissions.node.site.formAccordionAccess) {
+            defaultMode = JContentConstants.mode.FORMS;
+        } else if (permissions.node.site.additionalAccordionAccess) {
+            defaultMode = JContentConstants.mode.APPS;
+        }
+
         return (
             <PrimaryNavItem key="/jcontent"
                             role="jcontent-menu-item"
@@ -41,7 +68,7 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                history.push(buildUrl(site, language, mode || JContentConstants.mode.PAGES, path, params));
+                                history.push(buildUrl(site, language, mode || defaultMode, path, params));
                                 initClipboardWatcher(dispatch, client);
                             }}/>
         );

@@ -15,6 +15,8 @@ const JContentConstants = {
         CONTENT_FOLDERS: 'content-folders',
         PAGES: 'pages',
         MEDIA: 'media',
+        FORMS: 'forms',
+        APPS: 'apps',
         SEARCH: 'search',
         SQL2SEARCH: 'sql2Search',
         LIST: 'list',
@@ -24,6 +26,13 @@ const JContentConstants = {
     },
     localStorageKeys: {
         filesSelectorMode: 'jcontent_files_selector_mode'
+    },
+    accordionPermissions: {
+        pagesAccordionAccess: 'pagesAccordionAccess',
+        contentFolderAccordionAccess: 'contentFolderAccordionAccess',
+        mediaAccordionAccess: 'mediaAccordionAccess',
+        additionalAccordionAccess: 'additionalAccordionAccess',
+        formAccordionAccess: 'formAccordionAccess'
     }
 };
 

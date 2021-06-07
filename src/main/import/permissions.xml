@@ -34,5 +34,11 @@
             <openImageEditorAction jcr:primaryType="jnt:permission"/>
             <downloadAction jcr:primaryType="jnt:permission"/>
         </jContentActions>
+        <jContentAccordions jcr:primaryType="jnt:permission">
+            <pagesAccordionAccess jcr:primaryType="jnt:permission"/>
+            <contentFolderAccordionAccess jcr:primaryType="jnt:permission"/>
+            <mediaAccordionAccess jcr:primaryType="jnt:permission"/>
+            <additionalAccordionAccess jcr:primaryType="jnt:permission"/>
+        </jContentAccordions>
     </jContent>
 </permissions>

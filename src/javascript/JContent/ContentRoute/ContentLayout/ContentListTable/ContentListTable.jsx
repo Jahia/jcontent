@@ -360,6 +360,8 @@ export const ContentListTable = ({
     let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
+    console.log(columnData);
+    console.log(rows);
     return (
         <>
             <div ref={mainPanelRef}

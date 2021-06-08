@@ -2,7 +2,7 @@
   "name": "@jahia/jcontent",
   "version": "2.2.0",
   "scripts": {
-    "build": "yarn lint && yarn test && yarn webpack",
+    "build": "yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
@@ -18,12 +18,6 @@
     "lint:scss:fix": "yarn lint:scss --fix",
     "lint": "yarn lint:js && yarn lint:scss",
     "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint",
-      "pre-push": "yarn test"
-    }
   },
   "description": "jContent for Jahia",
   "main": "index.js",
@@ -47,7 +41,7 @@
     "@jahia/data-helper": "^1.0.3",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
-    "@jahia/moonstone": "^1.0.0",
+    "@jahia/moonstone": "^1.3.1",
     "@jahia/react-material": "^3.0.1",
     "@jahia/ui-extender": "^1.0.0",
     "@material-ui/core": "^3.6.2",
@@ -82,6 +76,7 @@
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-select": "^2.0.0",
+    "react-table": "^7.7.0",
     "redux": "^4.0.0",
     "redux-actions": "^2.6.5",
     "redux-batched-actions": "^0.4.0",

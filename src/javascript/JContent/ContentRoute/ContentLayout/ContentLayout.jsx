@@ -4,6 +4,7 @@ import {compose} from '~/utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper, withStyles} from '@material-ui/core';
 import ContentListTable from './ContentListTable';
+import ContentListTableMoon from './ContentListTable/ContentListTableMoon';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import {withTranslation} from 'react-i18next';
@@ -12,6 +13,7 @@ import FilesGrid from './FilesGrid';
 import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
+import {connect} from 'react-redux';
 
 const styles = theme => ({
     root: {
@@ -90,7 +92,7 @@ export class ContentLayout extends React.Component {
     render() {
         const {
             mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
-            totalCount, loading
+            totalCount, loading, tableType
         } = this.props;
 
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -131,10 +133,18 @@ export class ContentLayout extends React.Component {
                                                rows={rows}
                                                contentNotFound={contentNotFound}
                                                loading={loading}/> :
-                                    <ContentListTable totalCount={totalCount}
-                                                      rows={rows}
-                                                      contentNotFound={contentNotFound}
-                                                      loading={loading}/>}
+                                    <>
+                                        {tableType !== 'moon' &&
+                                            <ContentListTable totalCount={totalCount}
+                                                              rows={rows}
+                                                              contentNotFound={contentNotFound}
+                                                              loading={loading}/>}
+                                        {tableType === 'moon' &&
+                                            <ContentListTableMoon totalCount={totalCount}
+                                                                  rows={rows}
+                                                                  contentNotFound={contentNotFound}
+                                                                  loading={loading}/>}
+                                    </>}
                             </ErrorBoundary>
                         </Paper>
                     </div>
@@ -154,10 +164,14 @@ ContentLayout.propTypes = {
     rows: PropTypes.array.isRequired,
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    tableType: PropTypes.string
 };
 
 export default compose(
     withTranslation(),
-    withStyles(styles)
+    withStyles(styles),
+    connect(state => ({tableType: state.jcontent.tableType}), dispatch => ({setTableType: type => {
+        dispatch(type);
+    }}))
 )(ContentLayout);

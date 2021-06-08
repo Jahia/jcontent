@@ -101,6 +101,9 @@ export const jContentRedux = registry => {
     let languageReducer = handleActions({
         [ROUTER_REDUX_ACTION]: (state, action) => action.payload.location.pathname.startsWith('/jcontent/') ? extractParamsFromUrl(action.payload.location.pathname, action.payload.location.search).language : state
     }, '');
+    let tableType = handleActions({
+        tableType: (state, action) => action.payload
+    }, 'moon');
 
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),
@@ -115,6 +118,7 @@ export const jContentRedux = registry => {
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
     registry.add('redux-reducer', 'jContentSite', {targets: ['site:2'], reducer: siteReducer});
     registry.add('redux-reducer', 'jContentLanguage', {targets: ['language:2'], reducer: languageReducer});
+    registry.add('redux-reducer', 'tableType', {targets: ['jcontent'], reducer: tableType});
 
     const reducersArray = registry.find({type: 'redux-reducer', target: 'jcontent'});
     const reducerObj = {};

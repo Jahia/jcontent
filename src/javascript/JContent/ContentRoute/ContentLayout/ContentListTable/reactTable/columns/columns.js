@@ -1,4 +1,4 @@
-import {Cell, CellLastModified, CellPublicationStatus, CellSelection, CellVisibleActions} from '../components/cells';
+import {Cell, CellLastModified, CellPublicationStatus, CellSelection, CellVisibleActions, CellName} from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 
 export const allColumnData = [
@@ -18,7 +18,7 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName',
-        Cell: Cell,
+        Cell: CellName,
         Header: Header
     },
     // {
@@ -64,5 +64,38 @@ export const allColumnData = [
         id: 'visibleActions',
         Header: '',
         Cell: CellVisibleActions
+    }
+];
+
+export const reducedColumnData = [
+    {
+        id: 'name',
+        label: 'jcontent:label.contentManager.listColumns.name',
+        sortable: true,
+        property: 'displayName'
+    },
+    {
+        id: 'wip',
+        label: '',
+        sortable: false,
+        property: ''
+    },
+    {
+        id: 'lock',
+        label: '',
+        sortable: false,
+        property: ''
+    },
+    {
+        id: 'createdBy',
+        label: 'jcontent:label.contentManager.listColumns.createdBy',
+        sortable: true,
+        property: 'createdBy.value'
+    },
+    {
+        id: 'lastModified',
+        label: 'jcontent:label.contentManager.listColumns.lastModified',
+        sortable: true,
+        property: 'lastModified.value'
     }
 ];

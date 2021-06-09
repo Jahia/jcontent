@@ -1,14 +1,6 @@
-.cellActions {
-    position: absolute;
+@import './reactTable/components/cells/Cells.scss';
 
-    display: none;
-    justify-content: flex-end;
-    width: 120px;
-
-    background-color: var(--color-gray);
-}
-
-.tableCell {
+.tableRow {
     &:hover .cellActions {
         display: flex;
     }
@@ -22,4 +14,8 @@
 
     outline: none;
     overflow: auto;
+}
+
+.empty {
+    justify-content: center;
 }

@@ -103,7 +103,7 @@ export const jContentRedux = registry => {
     }, '');
     let tableType = handleActions({
         tableType: (state, action) => action.payload
-    }, 'moon');
+    }, null);
 
     const openPathsReducer = handleActions({
         [cmOpenPaths]: (state, action) => _.union(state, action.payload),

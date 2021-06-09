@@ -1,0 +1,27 @@
+.cellActions {
+    position: absolute;
+
+    display: none;
+    justify-content: flex-end;
+    width: 200px;
+
+    background-color: rgb(238, 238, 238);
+}
+
+.icon {
+    margin-right: 3px;
+
+    vertical-align: bottom;
+}
+
+.cell {
+    text-overflow: ellipsis;
+}
+
+.lastModifiedCell {
+    width: 200px;
+}
+
+.badge {
+    background-color: var(--color-accent);
+}

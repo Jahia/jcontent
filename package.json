@@ -2,7 +2,7 @@
   "name": "@jahia/jcontent",
   "version": "2.2.0",
   "scripts": {
-    "build": "yarn webpack",
+    "build": "yarn lint && yarn test && yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
@@ -33,6 +33,12 @@
     },
     "apps": {
       "jahia": "configs/jcontent.jsp"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn test"
     }
   },
   "dependencies": {

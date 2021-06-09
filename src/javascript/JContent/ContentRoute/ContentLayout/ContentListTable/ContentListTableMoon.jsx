@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Badge, Tooltip, withStyles} from '@material-ui/core';
@@ -17,56 +18,21 @@ import {
 import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
-import classNames from 'classnames';
 import {cmSetPreviewSelection} from '../../../preview.redux';
 import {cmSetSort} from '../sort.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
 import JContentConstants from '../../../JContent.constants';
-import ContentListEmptyDropZone from './ContentListEmptyDropZone';
-import ContentNotFound from './ContentNotFound';
-import EmptyTable from './EmptyTable';
-import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../icons';
-import {useKeyboardNavigation} from '../useKeyboardNavigation';
-import {Table, TablePagination, TableBody, TableRow, TableBodyCell} from '@jahia/moonstone';
+import ContentListEmptyDropZone from './ContentListEmptyDropZoneMoon';
+import ContentNotFound from './ContentNotFoundMoon';
+import EmptyTable from './EmptyTableMoon';
+import {Table, TablePagination, TableBody, TableRow} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeaderMoon';
 import css from './ContentListTableMoon.scss';
-import {allColumnData} from './reactTable/columns';
-
-const reducedColumnData = [
-    {
-        id: 'name',
-        label: 'jcontent:label.contentManager.listColumns.name',
-        sortable: true,
-        property: 'displayName'
-    },
-    {
-        id: 'wip',
-        label: '',
-        sortable: false,
-        property: ''
-    },
-    {
-        id: 'lock',
-        label: '',
-        sortable: false,
-        property: ''
-    },
-    {
-        id: 'createdBy',
-        label: 'jcontent:label.contentManager.listColumns.createdBy',
-        sortable: true,
-        property: 'createdBy.value'
-    },
-    {
-        id: 'lastModified',
-        label: 'jcontent:label.contentManager.listColumns.lastModified',
-        sortable: true,
-        property: 'lastModified.value'
-    }
-];
+import {allColumnData, reducedColumnData} from './reactTable/columns';
+import ContentListTableWrapper from './ContentListTableWrapper';
 
 const adaptedRows = rows => (rows.map(r => ({
     ...r,
@@ -75,49 +41,6 @@ const adaptedRows = rows => (rows.map(r => ({
     createdBy: r.createdBy.value,
     lastModified: r.lastModified.value
 })));
-
-const getCellClasses = (node, classes, column, isSelected, isPreviewOpened) => {
-    let selected = isSelected && isPreviewOpened;
-    return {
-        root: classNames(
-            classes.cell,
-            classes[column + 'Cell'],
-            {
-                [classes.selectedCell]: selected,
-                [classes[column + 'CellPreviewOpened']]: isPreviewOpened,
-                [classes[column + 'CellSelected']]: selected,
-                [classes.isDeleted]: isMarkedForDeletion(node)
-            }
-        )
-    };
-};
-
-const addIconSuffix = icon => {
-    return (icon.includes('.png') ? icon : icon + '.png');
-};
-
-const getMediaIcon = (node, classes) => {
-    switch (node.primaryNodeType.name) {
-        case 'jnt:folder':
-            return <Folder className={classes.icon}/>;
-        case 'jnt:file':
-            if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:image'))) {
-                return <ImageIcon className={classes.icon}/>;
-            }
-
-            if (node.name.match(/.zip$/g) || node.name.match(/.tar$/g) || node.name.match(/.rar$/g)) {
-                return <ZipIcon className={classes.icon}/>;
-            }
-
-            if (node.mixinTypes.length !== 0 && !_.isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:document'))) {
-                return <DocumentIcon className={classes.icon}/>;
-            }
-
-            return <FileIcon className={classes.icon}/>;
-        default:
-            return <img src={addIconSuffix(node.primaryNodeType.icon)}/>;
-    }
-};
 
 export const ContentListTable = ({
     setPath,
@@ -143,7 +66,6 @@ export const ContentListTable = ({
     lang,
     switchSelection,
     addSelection,
-    cellReplacement,
     loading}) => {
     const {t} = useTranslation();
     const {
@@ -153,16 +75,6 @@ export const ContentListTable = ({
         rows: tableRows,
         prepareRow
     } = useTable({columns: allColumnData, data: adaptedRows(rows)}, useRowSelection);
-
-    const {
-        mainPanelRef,
-        handleKeyboardNavigation,
-        setFocusOnMainContainer,
-        setSelectedItemIndex
-    } = useKeyboardNavigation({
-        listLength: rows.length,
-        onSelectionChange: index => onPreviewSelect(rows[index].path)
-    });
 
     useEffect(() => {
         if (selection.length > 0) {
@@ -196,40 +108,70 @@ export const ContentListTable = ({
     let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
+    if (contentNotFound) {
+        return (
+            <ContentListTableWrapper>
+                <ContentNotFound columnSpan={columnData.length} t={t}/>
+            </ContentListTableWrapper>
+        );
+    }
+
+    if (_.isEmpty(rows) && !loading) {
+        if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
+            return <EmptyTable columnSpan={columnData.length} t={t}/>;
+        }
+
+        return <ContentListEmptyDropZone mode={mode} path={path}/>;
+    }
+
     return (
         <>
-            <div ref={mainPanelRef}
-                 className={css.tableWrapper}
-                 tabIndex="1"
-                 onKeyDown={handleKeyboardNavigation}
-                 onClick={setFocusOnMainContainer}
-            >
-                <Table {...getTableProps()}>
-                    <ContentListHeader
-                        headerGroups={headerGroups}
-                    />
-                    <TableBody {...getTableBodyProps()}>
+            <ContentListTableWrapper rows={rows} onPreviewSelect={onPreviewSelect}>
+                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()}>
+                    <ContentListHeader headerGroups={headerGroups}/>
+                    <UploadTransformComponent uploadTargetComponent={TableBody}
+                                              uploadPath={path}
+                                              mode={mode}
+                                              {...getTableBodyProps()}
+                    >
                         {tableRows.map(row => {
                             prepareRow(row);
                             const rowProps = row.getRowProps();
+                            const node = row.original;
+                            contextualMenus.current[node.path] = contextualMenus.current[node.path] || React.createRef();
+
+                            const openContextualMenu = event => {
+                                contextualMenus.current[node.path].current(event);
+                            };
+
                             return (
-                                // This rerenders all the rows :(
-                                // <TableRow key={'row' + row.id} {...row.getRowProps()} onMouseEnter={() => table.setRowState(row.id, {over: true})} onMouseLeave={() => table.setRowState(row.id, {over: false})}>
-                                <TableRow key={'row' + row.id} {...rowProps} className={css.tableCell}>
-                                    {row.cells.map((cell, index) => {
-                                        return (
-                                            // tslint:disable-next-line
-                                            <TableBodyCell key={row.id + index}{...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableBodyCell>
-                                        );
-                                    })}
+                                <TableRow key={'row' + row.id}
+                                          {...rowProps}
+                                          className={css.tableRow}
+                                          onContextMenu={event => {
+                                                            event.stopPropagation();
+                                                            openContextualMenu(event);
+                                                        }}
+                                          onDoubleClick={allowDoubleClickNavigation(
+                                              node.primaryNodeType.name,
+                                              node.subNodes ? node.subNodes.pageInfo.totalCount : null,
+                                              () => {
+                                                  doubleClickNavigation(node);
+                                              })}
+                                >
+                                    <ContextualMenu
+                                        setOpenRef={contextualMenus.current[node.path]}
+                                        actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
+                                        path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
+                                        paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
+                                    />
+                                    {row.cells.map(cell => cell.render('Cell'))}
                                 </TableRow>
                             );
                         })}
-                    </TableBody>
+                    </UploadTransformComponent>
                 </Table>
-            </div>
+            </ContentListTableWrapper>
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
                              rowsPerPage={pagination.pageSize}

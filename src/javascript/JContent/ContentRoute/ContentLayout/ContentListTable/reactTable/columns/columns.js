@@ -64,35 +64,4 @@ export const allColumnData = [
     }
 ];
 
-export const reducedColumnData = [
-    {
-        id: 'name',
-        label: 'jcontent:label.contentManager.listColumns.name',
-        sortable: true,
-        property: 'displayName'
-    },
-    {
-        id: 'wip',
-        label: '',
-        sortable: false,
-        property: ''
-    },
-    {
-        id: 'lock',
-        label: '',
-        sortable: false,
-        property: ''
-    },
-    {
-        id: 'createdBy',
-        label: 'jcontent:label.contentManager.listColumns.createdBy',
-        sortable: true,
-        property: 'createdBy.value'
-    },
-    {
-        id: 'lastModified',
-        label: 'jcontent:label.contentManager.listColumns.lastModified',
-        sortable: true,
-        property: 'lastModified.value'
-    }
-];
+export const reducedColumnData = allColumnData.filter(c => c.id !== 'type');

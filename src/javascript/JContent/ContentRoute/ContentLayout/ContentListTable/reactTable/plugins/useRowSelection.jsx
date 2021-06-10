@@ -1,5 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {cmSwitchSelection, cmAddSelection, cmRemoveSelection} from '../../../contentSelection.redux';
+import {useGetLatest} from 'react-table';
 
 export const useRowSelection = hooks => {
     hooks.getToggleRowSelectedProps = defaultGetToggleRowSelectedProps;
@@ -34,7 +35,7 @@ const defaultGetToggleAllRowsSelectedProps = instance => ({
 
 function useInstance(instance) {
     const {getHooks, rows} = instance;
-
+    const getInstance = useGetLatest(instance);
     const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
     const dispatch = useDispatch();
 
@@ -53,7 +54,7 @@ function useInstance(instance) {
         }
     };
 
-    const getToggleAllRowsSelectedProps = handlerFcn => (getHooks().getToggleAllRowsSelectedProps(instance, handlerFcn));
+    const getToggleAllRowsSelectedProps = handlerFcn => (getHooks().getToggleAllRowsSelectedProps(getInstance(), handlerFcn));
     Object.assign(instance, {
         toggleRowSelected,
         toggleAllRowsSelected,

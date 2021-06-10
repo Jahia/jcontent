@@ -1,14 +1,16 @@
-import {Cell, CellLastModified, CellPublicationStatus, CellSelection, CellVisibleActions, CellName} from '../components/cells';
+import {Cell, CellLastModified, CellPublicationStatus, CellSelection, CellVisibleActions, CellName, CellStatus, CellType} from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 
 export const allColumnData = [
     {
         id: 'publicationStatus',
+        sortable: false,
         Header: '',
         Cell: CellPublicationStatus
     },
     {
         id: 'selection',
+        sortable: false,
         Header: HeaderSelection,
         Cell: CellSelection
     },
@@ -21,25 +23,20 @@ export const allColumnData = [
         Cell: CellName,
         Header: Header
     },
-    // {
-    //     id: 'wip',
-    //     label: '',
-    //     sortable: false,
-    //     property: ''
-    // },
-    // {
-    //     id: 'lock',
-    //     label: '',
-    //     sortable: false,
-    //     property: ''
-    // },
+    {
+        id: 'status',
+        label: 'jcontent:label.contentManager.listColumns.status',
+        sortable: false,
+        Header: Header,
+        Cell: CellStatus
+    },
     {
         id: 'type',
         accessor: 'type',
         label: 'jcontent:label.contentManager.listColumns.type',
         sortable: true,
         property: 'primaryNodeType.displayName',
-        Cell: Cell,
+        Cell: CellType,
         Header: Header
     },
     {

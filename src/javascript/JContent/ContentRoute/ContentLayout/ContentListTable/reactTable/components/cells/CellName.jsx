@@ -5,7 +5,6 @@ import css from './Cells.scss';
 import {Folder} from 'mdi-material-ui';
 import {isEmpty} from 'lodash';
 import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../../../../icons';
-import {Badge} from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 const addIconSuffix = icon => {
@@ -37,21 +36,9 @@ const getMediaIcon = node => {
 
 export const CellName = ({value, cell, column, row}) => {
     const node = row.original;
-    const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
     return (
         <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
-            {
-                showSubNodes ?
-                    <Badge
-                        badgeContent={node.subNodes.pageInfo.totalCount}
-                        invisible={node.subNodes.pageInfo.totalCount === 0}
-                        classes={{badge: css.badge}}
-                        data-cm-role="sub-contents-count"
-                    >
-                        <Typography>{getMediaIcon(node)}{value}</Typography>
-                    </Badge> :
-                    <Typography>{getMediaIcon(node)}{value}</Typography>
-            }
+            <Typography>{getMediaIcon(node)}{value}</Typography>
         </TableBodyCell>
     );
 };

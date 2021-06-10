@@ -29,6 +29,7 @@ import EmptyTable from './EmptyTableMoon';
 import {Table, TablePagination, TableBody, TableRow} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
+import {useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeaderMoon';
 import css from './ContentListTableMoon.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
@@ -74,7 +75,7 @@ export const ContentListTable = ({
         headerGroups,
         rows: tableRows,
         prepareRow
-    } = useTable({columns: allColumnData, data: adaptedRows(rows)}, useRowSelection);
+    } = useTable({columns: allColumnData, data: adaptedRows(rows)}, useRowSelection, useSort);
 
     useEffect(() => {
         if (selection.length > 0) {

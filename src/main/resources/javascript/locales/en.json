@@ -163,7 +163,8 @@
         "createdBy": "Created By",
         "name": "Name",
         "lastModified": "Last modified on",
-        "type": "Type"
+        "type": "Content",
+        "status": "Status"
       },
       "export": {
         "actionLabel": "Export",

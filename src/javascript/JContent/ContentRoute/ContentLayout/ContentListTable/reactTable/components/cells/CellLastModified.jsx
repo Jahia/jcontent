@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 export const CellLastModified = ({row, value, cell, column}) => {
     const uilang = useSelector(state => state.uilang);
     return (
-        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.lastModifiedCell, css.cell)}>
+        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.lastModifiedCell, css.cell, css.unAlign)}>
             <Typography>
                 <time>{dayjs(value).locale(getDefaultLocale(uilang)).format('ll')}</time>
             </Typography>

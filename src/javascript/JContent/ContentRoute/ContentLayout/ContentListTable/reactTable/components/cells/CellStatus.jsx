@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TableBodyCell} from '@jahia/moonstone';
+import {TableBodyCell, Chip} from '@jahia/moonstone';
 import clsx from 'clsx';
 import css from './Cells.scss';
 import {isWorkInProgress} from '../../../../../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {Lock, Build} from '@material-ui/icons';
-import {Tooltip, Chip} from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
 
 export const CellStatus = ({cell, column, row}) => {
     const {t} = useTranslation();

@@ -6,7 +6,7 @@ import PublicationStatus from '../../../../PublicationStatus';
 import PropTypes from 'prop-types';
 
 export const CellPublicationStatus = ({row, cell, column}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell, css.unAlign)}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
         <PublicationStatus node={row.original}/>
     </TableBodyCell>
 );

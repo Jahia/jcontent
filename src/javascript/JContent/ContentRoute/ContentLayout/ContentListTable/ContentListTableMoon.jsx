@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {Badge, Tooltip, withStyles} from '@material-ui/core';
-import {Lock} from '@material-ui/icons';
-import {Folder, Wrench} from 'mdi-material-ui';
 import {ContextualMenu} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
@@ -27,7 +24,7 @@ import ContentListEmptyDropZone from './ContentListEmptyDropZoneMoon';
 import ContentNotFound from './ContentNotFoundMoon';
 import EmptyTable from './EmptyTableMoon';
 import {Table, TablePagination, TableBody, TableRow} from '@jahia/moonstone';
-import {useTable} from 'react-table';
+import {useTable, useFlexLayout} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
 import {useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeaderMoon';
@@ -75,7 +72,15 @@ export const ContentListTable = ({
         headerGroups,
         rows: tableRows,
         prepareRow
-    } = useTable({columns: allColumnData, data: adaptedRows(rows)}, useRowSelection, useSort);
+    } = useTable(
+        {
+            columns: allColumnData,
+            data: adaptedRows(rows)
+        },
+        useRowSelection,
+        useSort,
+        useFlexLayout
+    );
 
     useEffect(() => {
         if (selection.length > 0) {
@@ -128,7 +133,7 @@ export const ContentListTable = ({
     return (
         <>
             <ContentListTableWrapper rows={rows} onPreviewSelect={onPreviewSelect}>
-                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()}>
+                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()} style={{width: '100%'}}>
                     <ContentListHeader headerGroups={headerGroups}/>
                     <UploadTransformComponent uploadTargetComponent={TableBody}
                                               uploadPath={path}

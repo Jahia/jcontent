@@ -6,11 +6,13 @@ export const allColumnData = [
         id: 'publicationStatus',
         sortable: false,
         Header: '',
+        width: 50,
         Cell: CellPublicationStatus
     },
     {
         id: 'selection',
         sortable: false,
+        width: 50,
         Header: HeaderSelection,
         Cell: CellSelection
     },
@@ -20,6 +22,7 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName',
+        width: 300,
         Cell: CellName,
         Header: Header
     },
@@ -27,6 +30,7 @@ export const allColumnData = [
         id: 'status',
         label: 'jcontent:label.contentManager.listColumns.status',
         sortable: false,
+        width: 100,
         Header: Header,
         Cell: CellStatus
     },
@@ -36,6 +40,7 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.type',
         sortable: true,
         property: 'primaryNodeType.displayName',
+        width: 150,
         Cell: CellType,
         Header: Header
     },
@@ -45,6 +50,7 @@ export const allColumnData = [
         Header: Header,
         label: 'jcontent:label.contentManager.listColumns.createdBy',
         sortable: true,
+        width: 100,
         property: 'createdBy.value',
         Cell: Cell
     },
@@ -54,12 +60,14 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value',
+        width: 200,
         Cell: CellLastModified,
         Header: Header
     },
     {
         id: 'visibleActions',
         Header: '',
+        width: 40,
         Cell: CellVisibleActions
     }
 ];

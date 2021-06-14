@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import css from '../../../ContentListTableMoon.scss';
 import {TableBodyCell, Typography, Chip, Subdirectory} from '@jahia/moonstone';
 
 export const CellType = ({value, cell, column, row}) => {
@@ -8,8 +9,10 @@ export const CellType = ({value, cell, column, row}) => {
 
     return (
         <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
-            <Typography>{value}</Typography>
-            {showSubNodes && <Chip color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}
+            <div className={css.cellType}>
+                <Typography>{value}</Typography>
+                {showSubNodes && <Chip color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}
+            </div>
         </TableBodyCell>
     );
 };

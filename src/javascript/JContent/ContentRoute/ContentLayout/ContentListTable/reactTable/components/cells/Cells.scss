@@ -1,14 +1,19 @@
 .cellActions {
-    position: absolute;
-
     display: none;
     justify-content: flex-end;
+    align-items: center;
     width: inherit;
     height: 48px;
 
-    background-color: inherit;
+    background-color: transparent;
+}
 
-    transition: background-color 0.2s ease-in-out;
+.cellType {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
 }
 
 .cellLastModifiedText {

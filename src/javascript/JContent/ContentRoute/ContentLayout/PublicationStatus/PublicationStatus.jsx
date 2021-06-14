@@ -10,8 +10,6 @@ import classNames from 'classnames';
 const styles = theme => ({
     root: {
         display: 'flex',
-        minHeight: 48,
-        maxHeight: 48,
         height: '100%',
         position: 'absolute',
         zIndex: 1,

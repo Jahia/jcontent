@@ -1,5 +1,5 @@
 import React from 'react';
-import {TableBodyCell, Typography} from '@jahia/moonstone';
+import {TableBodyCell} from '@jahia/moonstone';
 import clsx from 'clsx';
 import css from './Cells.scss';
 import {Folder} from 'mdi-material-ui';
@@ -38,7 +38,7 @@ export const CellName = ({value, cell, column, row}) => {
     const node = row.original;
     return (
         <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
-            <Typography>{getMediaIcon(node)}{value}</Typography>
+            {getMediaIcon(node)}{value}
         </TableBodyCell>
     );
 };

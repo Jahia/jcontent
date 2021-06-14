@@ -1,11 +1,9 @@
 import React from 'react';
 import {Checkbox, TableBodyCell} from '@jahia/moonstone';
-import clsx from 'clsx';
-import css from './Cells.scss';
 import PropTypes from 'prop-types';
 
 export const CellSelection = ({row, cell, column}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
         <Checkbox isUncontrolled {...row.getToggleRowSelectedProps()}/>
     </TableBodyCell>
 );

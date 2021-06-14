@@ -1,7 +1,6 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
-import clsx from 'clsx';
 import css from '../../../ContentListTableMoon.scss';
 import dayjs from 'dayjs';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
@@ -13,8 +12,8 @@ import PropTypes from 'prop-types';
 export const CellLastModified = ({row, value, cell, column}) => {
     const uilang = useSelector(state => state.uilang);
     return (
-        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
-            <Typography>
+        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
+            <Typography className={css.cellLastModifiedText}>
                 <time>{dayjs(value).locale(getDefaultLocale(uilang)).format('ll')}</time>
             </Typography>
             <div className={css.cellActions}

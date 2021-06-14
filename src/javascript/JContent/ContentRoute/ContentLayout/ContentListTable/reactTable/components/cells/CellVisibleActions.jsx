@@ -1,14 +1,12 @@
 import React from 'react';
 import {TableBodyCell} from '@jahia/moonstone';
-import clsx from 'clsx';
-import css from './Cells.scss';
 import {DisplayAction} from '@jahia/ui-extender';
 import {includes} from 'lodash';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import PropTypes from 'prop-types';
 
 export const CellVisibleActions = ({row, cell, column}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
         <DisplayAction
             actionKey="contentMenu"
             path={row.original.path}

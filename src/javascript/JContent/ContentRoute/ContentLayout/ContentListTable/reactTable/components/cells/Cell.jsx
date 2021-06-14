@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
-import clsx from 'clsx';
-import css from './Cells.scss';
 
 export const Cell = ({value, cell, column, row}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} className={clsx(css.cell)}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
         <Typography>{value}</Typography>
     </TableBodyCell>
 );

@@ -17,7 +17,6 @@ const defaultGetSortProps = (props, {instance, column}) => {
         props,
         {
             onClick: () => {
-                console.log('sorting...');
                 instance.sortColumn(column);
             },
             style: {

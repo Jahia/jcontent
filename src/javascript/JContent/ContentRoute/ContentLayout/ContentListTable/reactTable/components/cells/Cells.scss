@@ -1,0 +1,31 @@
+.cellActions {
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+    width: inherit;
+    height: 48px;
+
+    background-color: transparent;
+}
+
+.cellType {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cellLastModifiedText {
+    display: inherit;
+}
+
+.icon {
+    margin-right: 3px;
+
+    vertical-align: bottom;
+}
+
+.badge {
+    background-color: var(--color-accent);
+}

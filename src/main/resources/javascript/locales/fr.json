@@ -162,7 +162,8 @@
         "createdBy": "Créé par",
         "name": "Nom",
         "lastModified": "Modifié le",
-        "type": "Type"
+        "type": "Contenu",
+        "status": "Statut"
       },
       "export": {
         "actionLabel": "Exporter",

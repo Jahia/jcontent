@@ -36,7 +36,7 @@ const getMediaIcon = node => {
 export const CellName = ({value, cell, column, row}) => {
     const node = row.original;
     return (
-        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
+        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} data-cm-role="table-content-list-cell-name">
             {getMediaIcon(node)}{value}
         </TableBodyCell>
     );

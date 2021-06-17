@@ -11,7 +11,7 @@ export const CellType = ({value, cell, column, row}) => {
         <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
             <div className={css.cellType}>
                 <Typography>{value}</Typography>
-                {showSubNodes && <Chip color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}
+                {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}
             </div>
         </TableBodyCell>
     );

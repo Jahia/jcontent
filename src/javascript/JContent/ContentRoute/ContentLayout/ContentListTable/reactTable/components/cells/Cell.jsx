@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 
 export const Cell = ({value, cell, column, row}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} data-cm-role={'table-content-list-cell-' + column.id}>
         <Typography>{value}</Typography>
     </TableBodyCell>
 );

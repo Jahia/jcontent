@@ -6,7 +6,7 @@ import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import PropTypes from 'prop-types';
 
 export const CellVisibleActions = ({row, cell, column}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} data-cm-role="table-content-list-cell-actions">
         <DisplayAction
             actionKey="contentMenu"
             path={row.original.path}

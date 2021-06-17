@@ -17,7 +17,7 @@ const styles = () => ({
 });
 
 export const CellPublicationStatus = withStyles(styles)(({row, cell, column, classes}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
+    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} data-cm-role="table-content-list-cell-publication">
         <PublicationStatus node={row.original} classes={{root: classes.root}}/>
     </TableBodyCell>
 ));

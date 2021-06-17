@@ -115,11 +115,7 @@ export const ContentListTable = ({
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
     if (contentNotFound) {
-        return (
-            <ContentListTableWrapper>
-                <ContentNotFound columnSpan={columnData.length} t={t}/>
-            </ContentListTableWrapper>
-        );
+        return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
     if (_.isEmpty(rows) && !loading) {
@@ -153,6 +149,7 @@ export const ContentListTable = ({
                             return (
                                 <TableRow key={'row' + row.id}
                                           {...rowProps}
+                                          data-cm-role="table-content-list-row"
                                           className={css.tableRow}
                                           onContextMenu={event => {
                                                             event.stopPropagation();

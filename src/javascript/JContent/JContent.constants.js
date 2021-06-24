@@ -25,6 +25,7 @@ const JContentConstants = {
         IMPORT: 'import'
     },
     localStorageKeys: {
+        viewMode: 'jcontent_view_mode',
         filesSelectorMode: 'jcontent_files_selector_mode'
     },
     accordionPermissions: {
@@ -33,6 +34,10 @@ const JContentConstants = {
         mediaAccordionAccess: 'mediaAccordionAccess',
         additionalAccordionAccess: 'additionalAccordionAccess',
         formAccordionAccess: 'formAccordionAccess'
+    },
+    viewMode: {
+        flat: 'flatList',
+        structured: 'structuredView'
     }
 };
 

@@ -21,6 +21,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from 'react-apollo';
 import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
 import {useNodeChecks} from '@jahia/data-helper';
+import {structuredViewRedux} from './JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
 
 export default function () {
     const CmmNavItem = () => {
@@ -92,6 +93,7 @@ export default function () {
     fileuploadRedux(registry);
     previewRedux(registry);
     copypasteRedux(registry);
+    structuredViewRedux(registry);
     filesGridRedux(registry);
     paginationRedux(registry);
     sortRedux(registry);

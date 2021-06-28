@@ -34,7 +34,7 @@ export const allColumnData = [
         sortable: false,
         width: 100,
         maxWidth: 100,
-        Header: Header,
+        Header: '',
         Cell: CellStatus
     },
     {

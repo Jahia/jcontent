@@ -20,11 +20,11 @@ const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
     });
 
     if (permissions.loading) {
-        return 'Loading...';
+        return null;
     }
 
     accordionItems = accordionItems.filter(accordionItem =>
-        Object.prototype.hasOwnProperty.call(permissions.node.site, accordionItem.requiredSitePermission) && permissions.node.site[accordionItem.requiredSitePermission]
+        Object.prototype.hasOwnProperty.call(permissions.node?.site, accordionItem.requiredSitePermission) && permissions.node?.site[accordionItem.requiredSitePermission]
     );
 
     return <ContentNavigation accordionItems={accordionItems} mode={mode} siteKey={siteKey} handleNavigation={handleNavigation}/>;

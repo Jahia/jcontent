@@ -13,6 +13,7 @@ import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {connect} from 'react-redux';
+import ContentTypeSelector from './ContentListTable/ContentTypeSelector';
 
 const styles = theme => ({
     root: {
@@ -132,10 +133,13 @@ export class ContentLayout extends React.Component {
                                                rows={rows}
                                                contentNotFound={contentNotFound}
                                                loading={loading}/> :
-                                    <ContentListTableMoon totalCount={totalCount}
-                                                          rows={rows}
-                                                          contentNotFound={contentNotFound}
-                                                          loading={loading}/>}
+                                    <>
+                                        <ContentTypeSelector/>
+                                        <ContentListTableMoon totalCount={totalCount}
+                                                              rows={rows}
+                                                              contentNotFound={contentNotFound}
+                                                              loading={loading}/>
+                                    </>}
                             </ErrorBoundary>
                         </Paper>
                     </div>

@@ -15,6 +15,7 @@ import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {connect} from 'react-redux';
+import ContentTypeSelector from './ContentListTable/ContentTypeSelector';
 
 const styles = theme => ({
     root: {
@@ -135,6 +136,7 @@ export class ContentLayout extends React.Component {
                                                contentNotFound={contentNotFound}
                                                loading={loading}/> :
                                     <>
+                                        <ContentTypeSelector/>
                                         {tableType !== 'moon' &&
                                             <ContentListTable totalCount={totalCount}
                                                               rows={rows}

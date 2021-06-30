@@ -44,20 +44,20 @@ export default function () {
         });
 
         if (permissions.loading) {
-            return 'Loading...';
+            return null;
         }
 
         let defaultMode = '';
 
-        if (permissions.node.site.pagesAccordionAccess) {
+        if (permissions.node?.site.pagesAccordionAccess) {
             defaultMode = JContentConstants.mode.PAGES;
-        } else if (permissions.node.site.contentFolderAccordionAccess) {
+        } else if (permissions.node?.site.contentFolderAccordionAccess) {
             defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
-        } else if (permissions.node.site.mediaAccordionAccess) {
+        } else if (permissions.node?.site.mediaAccordionAccess) {
             defaultMode = JContentConstants.mode.MEDIA;
-        } else if (permissions.node.site.formAccordionAccess) {
+        } else if (permissions.node?.site.formAccordionAccess) {
             defaultMode = JContentConstants.mode.FORMS;
-        } else if (permissions.node.site.additionalAccordionAccess) {
+        } else if (permissions.node?.site.additionalAccordionAccess) {
             defaultMode = JContentConstants.mode.APPS;
         }
 

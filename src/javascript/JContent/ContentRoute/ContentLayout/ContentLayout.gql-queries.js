@@ -89,6 +89,9 @@ const nodeFields = gql`
         site {
             ...NodeCacheRequiredFields
         }
+        parent {
+            path
+        }
         ...NodeCacheRequiredFields
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
@@ -97,11 +100,11 @@ const nodeFields = gql`
 class ContentQueryHandler {
     getQuery() {
         return gql`
-            query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+            query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
                 jcr {
                     nodeByPath(path: $path) {
                         ...NodeFields
-                        descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                        descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: $recursionTypesFilter, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                             pageInfo {
                                 totalCount
                             }
@@ -127,11 +130,15 @@ class ContentQueryHandler {
         const paramsByBrowseType = {
             pages: {
                 typeFilter: [JContentConstants.contentType, 'jnt:page'],
-                recursionTypesFilter: ['jnt:page', 'jnt:contentFolder']
+                recursionTypesFilter: {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']}
             },
             contents: {
                 typeFilter: ['jnt:content', 'jnt:contentFolder'],
-                recursionTypesFilter: ['nt:base']
+                recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
+            },
+            structured: {
+                typeFilter: ['jnt:page', 'jnt:content'],
+                recursionTypesFilter: null
             }
         };
 

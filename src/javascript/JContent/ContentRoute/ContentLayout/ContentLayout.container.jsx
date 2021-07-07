@@ -23,6 +23,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
+import {structureData} from '../ContentLayout/ContentLayout.utils';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -69,8 +70,9 @@ export const ContentLayoutContainer = ({
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
 
-    const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
-
+    // const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
+    const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, {...params, type: 'structured'}, rootPath, {currentPage: 0, pageSize: 1000}, sort);
+    delete layoutQueryParams.fieldGrouping;
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
         variables: layoutQueryParams,
         fetchPolicy: fetchPolicy
@@ -233,7 +235,8 @@ export const ContentLayoutContainer = ({
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        rows = currentResult.nodes;
+        rows = structureData(path, currentResult.nodes);
+        console.log('Rows', rows, currentResult.nodes);
     }
 
     return (

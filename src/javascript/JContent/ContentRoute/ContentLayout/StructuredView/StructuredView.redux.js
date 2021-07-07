@@ -1,7 +1,7 @@
 import JContentConstants from '../../../JContent.constants';
 import {createActions, handleActions} from 'redux-actions';
 
-export const {setViewMode} = createActions('VIEWMODE_SET_MODE');
+export const {setViewMode} = createActions('SET_VIEW_MODE');
 const localStorage = window.localStorage;
 const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
 const DEFAULT_VIEW_MODE = JContentConstants.viewMode.flat;

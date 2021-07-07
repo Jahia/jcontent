@@ -23,6 +23,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
+import {structureData} from '../ContentLayout/ContentLayout.utils';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -58,7 +59,8 @@ export const ContentLayoutContainer = ({
     setPath,
     filesMode,
     previewState,
-    previewSelection
+    previewSelection,
+    viewMode
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
@@ -69,7 +71,11 @@ export const ContentLayoutContainer = ({
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
 
-    const layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
+    let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
+
+    if (viewMode.viewMode === JContentConstants.viewMode.structured) {
+        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams);
+    }
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
         variables: layoutQueryParams,
@@ -233,7 +239,11 @@ export const ContentLayoutContainer = ({
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        rows = currentResult.nodes;
+        if (viewMode.viewMode === JContentConstants.viewMode.structured) {
+            rows = structureData(path, currentResult.nodes);
+        } else {
+            rows = currentResult.nodes;
+        }
     }
 
     return (
@@ -268,7 +278,8 @@ const mapStateToProps = state => ({
     pagination: state.jcontent.pagination,
     sort: state.jcontent.sort,
     openedPaths: state.jcontent.openPaths,
-    selection: state.jcontent.selection
+    selection: state.jcontent.selection,
+    viewMode: state.jcontent.viewMode
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -299,7 +310,8 @@ ContentLayoutContainer.propTypes = {
     filesMode: PropTypes.string.isRequired,
     selection: PropTypes.array.isRequired,
     removeSelection: PropTypes.func.isRequired,
-    switchSelection: PropTypes.func.isRequired
+    switchSelection: PropTypes.func.isRequired,
+    viewMode: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);

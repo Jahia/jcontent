@@ -4,6 +4,7 @@ import {compose} from '~/utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper, withStyles} from '@material-ui/core';
 import ContentListTable from './ContentListTable';
+import ContentStructuredTableMoon from './ContentListTable/ContentStructuredTableMoon';
 import ContentListTableMoon from './ContentListTable/ContentListTableMoon';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
@@ -92,7 +93,7 @@ export class ContentLayout extends React.Component {
     render() {
         const {
             mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
-            totalCount, loading, tableType
+            totalCount, loading, tableType, contentFolder
         } = this.props;
 
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -139,11 +140,16 @@ export class ContentLayout extends React.Component {
                                                               rows={rows}
                                                               contentNotFound={contentNotFound}
                                                               loading={loading}/>}
-                                        {tableType === 'moon' &&
+                                        {tableType === 'moon' && contentFolder.viewMode !== JContentConstants.viewMode.structured &&
                                             <ContentListTableMoon totalCount={totalCount}
                                                                   rows={rows}
                                                                   contentNotFound={contentNotFound}
                                                                   loading={loading}/>}
+                                        {tableType === 'moon' && contentFolder.viewMode === JContentConstants.viewMode.structured &&
+                                            <ContentStructuredTableMoon totalCount={totalCount}
+                                                                        rows={rows}
+                                                                        contentNotFound={contentNotFound}
+                                                                        loading={loading}/>}
                                     </>}
                             </ErrorBoundary>
                         </Paper>
@@ -165,13 +171,14 @@ ContentLayout.propTypes = {
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
     loading: PropTypes.bool.isRequired,
-    tableType: PropTypes.string
+    tableType: PropTypes.string,
+    contentFolder: PropTypes.object.isRequired
 };
 
 export default compose(
     withTranslation(),
     withStyles(styles),
-    connect(state => ({tableType: state.jcontent.tableType}), dispatch => ({setTableType: type => {
+    connect(state => ({tableType: state.jcontent.tableType, contentFolder: state.jcontent.contentFolder}), dispatch => ({setTableType: type => {
         dispatch(type);
     }}))
 )(ContentLayout);

@@ -89,6 +89,9 @@ const nodeFields = gql`
         site {
             ...NodeCacheRequiredFields
         }
+        parent {
+            path
+        }
         ...NodeCacheRequiredFields
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
@@ -97,11 +100,11 @@ const nodeFields = gql`
 class ContentQueryHandler {
     getQuery() {
         return gql`
-            query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+            query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
                 jcr {
                     nodeByPath(path: $path) {
                         ...NodeFields
-                        descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: {multi: NONE, types: $recursionTypesFilter}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                        descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: $recursionTypesFilter, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                             pageInfo {
                                 totalCount
                             }
@@ -127,11 +130,11 @@ class ContentQueryHandler {
         const paramsByBrowseType = {
             pages: {
                 typeFilter: [JContentConstants.contentType, 'jnt:page'],
-                recursionTypesFilter: ['jnt:page', 'jnt:contentFolder']
+                recursionTypesFilter: {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']}
             },
             contents: {
                 typeFilter: ['jnt:content', 'jnt:contentFolder'],
-                recursionTypesFilter: ['nt:base']
+                recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
             }
         };
 
@@ -153,6 +156,17 @@ class ContentQueryHandler {
                 groups: paramsByBrowseType[type].recursionTypesFilter,
                 groupingType: 'START'
             }
+        };
+    }
+
+    updateQueryParamsForStructuredView(params) {
+        return {
+            ...params,
+            recursionTypesFilter: null,
+            fieldGrouping: null,
+            typeFilter: ['jnt:page', 'jnt:content'],
+            offset: 0,
+            limit: 10000
         };
     }
 
@@ -222,6 +236,10 @@ class FilesQueryHandler {
         };
     }
 
+    updateQueryParamsForStructuredView(params) {
+        return params;
+    }
+
     getResultsPath(data) {
         return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.children;
     }
@@ -279,6 +297,10 @@ class SearchQueryHandler {
         };
     }
 
+    updateQueryParamsForStructuredView(params) {
+        return params;
+    }
+
     getResultsPath(data) {
         return data && data.jcr && data.jcr.nodesByCriteria;
     }
@@ -322,6 +344,10 @@ class Sql2SearchQueryHandler {
                 ignoreCase: true
             }
         };
+    }
+
+    updateQueryParamsForStructuredView(params) {
+        return params;
     }
 
     getResultsPath(data) {

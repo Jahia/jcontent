@@ -333,6 +333,10 @@
         "published": "Live",
         "warning": "Warning",
         "workInProgress": "Work in progress"
+      },
+      "view": {
+        "flatList": "Flat list",
+        "structuredView": "Structured view"
       }
     }
   }

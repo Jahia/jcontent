@@ -1323,10 +1323,10 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
-"@jahia/moonstone@^1.4.0":
-  version "1.4.0"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-1.4.0.tgz#129db2328c5f60b64884fb622e8e6e79da0ca8dc"
-  integrity sha512-2VGe1DYpiZDtU7IHG8Q1aJic2Z4xN29S7v1QvFTEdZIhMdw7UcccbbYgl+2Yt/lPqI6/vYKgP34uqEo89wQccQ==
+"@jahia/moonstone@^1.5.0":
+  version "1.5.0"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-1.5.0.tgz#3f6e8e7df225bd7f1674cba5217806dccd303137"
+  integrity sha512-CUbsrA3E7OxppzebTtlDEfL/aI9vtQZ9eZCScew6L9uHurP76lqoSA1s3mkeVcz+OIYrcWiy3ueCkarCrGHc2w==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@react-aria/checkbox" "^3.2.1"

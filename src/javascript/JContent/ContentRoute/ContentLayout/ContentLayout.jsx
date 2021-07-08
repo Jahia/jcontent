@@ -16,6 +16,7 @@ import contentManagerStyleConstants from '../../JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {connect} from 'react-redux';
 import ContentTypeSelector from './ContentListTable/ContentTypeSelector';
+import {flattenTree} from './ContentLayout.utils';
 
 const styles = theme => ({
     root: {
@@ -116,7 +117,7 @@ export class ContentLayout extends React.Component {
                     >
                         {previewOpen && (
                             <ErrorBoundary key={previewSelection}>
-                                <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
+                                <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
                             </ErrorBoundary>
                         )}
                     </Drawer>

@@ -12,7 +12,7 @@ import {
     isMarkedForDeletion,
     isWorkInProgress
 } from '../../../JContent.utils';
-import {connect, useSelector} from 'react-redux';
+import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '../../../preview.redux';
@@ -31,14 +31,7 @@ import ContentListHeader from './ContentListHeader/ContentListHeaderMoon';
 import css from './ContentListTableMoon.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentListTableWrapper from './ContentListTableWrapper';
-
-const adaptedRows = rows => (rows.map(r => ({
-    ...r,
-    name: r.displayName,
-    type: r.primaryNodeType.displayName,
-    createdBy: r.createdBy.value,
-    lastModified: r.lastModified.value
-})));
+import {flattenTree} from '../ContentLayout.utils';
 
 export const ContentListTable = ({
     setPath,
@@ -66,15 +59,14 @@ export const ContentListTable = ({
     addSelection,
     loading}) => {
     const {t} = useTranslation();
-    const data = React.useMemo(() => adaptedRows(rows), [rows]);
+    const data = React.useMemo(() => rows, [rows]);
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows: tableRows,
         prepareRow,
-        toggleAllRowsExpanded,
-        isAllRowsExpanded
+        toggleAllRowsExpanded
     } = useTable(
         {
             columns: allColumnData,
@@ -85,11 +77,10 @@ export const ContentListTable = ({
         useExpanded,
         useFlexLayout
     );
-    const {viewMode} = useSelector(state => state.jcontent.contentFolder.viewMode);
 
     useEffect(() => {
         if (selection.length > 0) {
-            const paths = rows.map(node => node.path);
+            const paths = flattenTree(rows, p => p.path);
             const toRemove = selection.filter(path => paths.indexOf(path) === -1);
             if (toRemove.length > 0) {
                 removeSelection(toRemove);
@@ -98,8 +89,9 @@ export const ContentListTable = ({
     }, [rows, selection, removeSelection]);
 
     useEffect(() => {
-        toggleAllRowsExpanded();
-    }, [viewMode]);
+        console.log('open all');
+        toggleAllRowsExpanded(true);
+    }, [data]);
 
     const contextualMenus = useRef({});
 
@@ -149,6 +141,7 @@ export const ContentListTable = ({
                             prepareRow(row);
                             const rowProps = row.getRowProps();
                             const node = row.original;
+                            const isSelected = node.path === previewSelection && isPreviewOpened;
                             contextualMenus.current[node.path] = contextualMenus.current[node.path] || React.createRef();
 
                             const openContextualMenu = event => {
@@ -160,6 +153,12 @@ export const ContentListTable = ({
                                           {...rowProps}
                                           data-cm-role="table-content-list-row"
                                           className={css.tableRow}
+                                          isHighlighted={isSelected}
+                                          onClick={() => {
+                                              if (!node.notSelectableForPreview) {
+                                                  onPreviewSelect(node.path);
+                                              }
+                                          }}
                                           onContextMenu={event => {
                                                             event.stopPropagation();
                                                             openContextualMenu(event);

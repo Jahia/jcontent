@@ -65,7 +65,7 @@ export const flattenTree = function (rows, selector = p => p) {
     }
 };
 
-const adaptedRow = r => ({
+export const adaptedRow = r => ({
     ...r,
     name: r.displayName,
     type: r.primaryNodeType.displayName,

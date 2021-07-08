@@ -3,7 +3,7 @@ import {Button, ViewList, ViewTree} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '../../../JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {setContentFolderViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
+import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
 
 const localStorage = window.localStorage;
 
@@ -21,11 +21,11 @@ export const ContentFolderViewModeSelector = () => {
     const {t} = useTranslation();
 
     let {viewMode} = useSelector(state => ({
-        viewMode: state.jcontent.contentFolder.viewMode
+        viewMode: state.jcontent.tableView.viewMode
     }));
 
     const dispatch = useDispatch();
-    const onChange = vm => dispatch(setContentFolderViewMode(vm));
+    const onChange = vm => dispatch(setTableViewMode(vm));
 
     const handleChange = selectedViewMode => {
         onChange(selectedViewMode);

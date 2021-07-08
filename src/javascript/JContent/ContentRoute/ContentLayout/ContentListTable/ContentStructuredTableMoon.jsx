@@ -23,7 +23,7 @@ import JContentConstants from '../../../JContent.constants';
 import ContentListEmptyDropZone from './ContentListEmptyDropZoneMoon';
 import ContentNotFound from './ContentNotFoundMoon';
 import EmptyTable from './EmptyTableMoon';
-import {Table, TableBody, TableRow} from '@jahia/moonstone';
+import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
 import {useTable, useFlexLayout, useExpanded} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
 import {useSort} from './reactTable/plugins';
@@ -32,6 +32,7 @@ import css from './ContentListTableMoon.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentListTableWrapper from './ContentListTableWrapper';
 import {flattenTree} from '../ContentLayout.utils';
+import ContentTypeSelector from './ContentTypeSelector';
 
 export const ContentListTable = ({
     setPath,
@@ -57,7 +58,9 @@ export const ContentListTable = ({
     lang,
     switchSelection,
     addSelection,
+    tableView,
     loading}) => {
+    const isStructuredView = JContentConstants.viewMode.structured === tableView.viewMode;
     const {t} = useTranslation();
     const data = React.useMemo(() => rows, [rows]);
     const {
@@ -89,8 +92,10 @@ export const ContentListTable = ({
     }, [rows, selection, removeSelection]);
 
     useEffect(() => {
-        console.log('open all');
-        toggleAllRowsExpanded(true);
+        if (isStructuredView) {
+            console.log('open all');
+            toggleAllRowsExpanded(true);
+        }
     }, [data]);
 
     const contextualMenus = useRef({});
@@ -129,6 +134,7 @@ export const ContentListTable = ({
 
     return (
         <>
+            {isStructuredView && <ContentTypeSelector/>}
             <ContentListTableWrapper rows={rows} onPreviewSelect={onPreviewSelect}>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()} style={{width: '100%'}}>
                     <ContentListHeader headerGroups={headerGroups}/>
@@ -183,6 +189,17 @@ export const ContentListTable = ({
                     </UploadTransformComponent>
                 </Table>
             </ContentListTableWrapper>
+            {!isStructuredView &&
+            <TablePagination totalNumberOfRows={totalCount}
+                             currentPage={pagination.currentPage + 1}
+                             rowsPerPage={pagination.pageSize}
+                             label={{
+                                 rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                                 of: t('jcontent:label.pagination.of')
+                             }}
+                             onPageChange={setCurrentPage}
+                             onRowsPerPageChange={setPageSize}
+            />}
         </>
     );
 };
@@ -202,7 +219,8 @@ const mapStateToProps = state => ({
     pagination: state.jcontent.pagination,
     sort: state.jcontent.sort,
     previewState: state.jcontent.previewState,
-    selection: state.jcontent.selection
+    selection: state.jcontent.selection,
+    tableView: state.jcontent.tableView
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -250,6 +268,7 @@ ContentListTable.propTypes = {
     setSort: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     sort: PropTypes.object.isRequired,
+    tableView: PropTypes.object.isRequired,
     switchSelection: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
     uilang: PropTypes.string.isRequired

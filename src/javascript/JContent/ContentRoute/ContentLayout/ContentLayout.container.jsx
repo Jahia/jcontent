@@ -23,7 +23,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
-import {structureData} from '../ContentLayout/ContentLayout.utils';
+import {structureData, adaptedRow} from '../ContentLayout/ContentLayout.utils';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -60,7 +60,7 @@ export const ContentLayoutContainer = ({
     filesMode,
     previewState,
     previewSelection,
-    contentFolder
+    tableView
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
@@ -73,7 +73,7 @@ export const ContentLayoutContainer = ({
 
     let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
-    if (contentFolder.viewMode === JContentConstants.viewMode.structured) {
+    if (tableView.viewMode === JContentConstants.viewMode.structured) {
         layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams);
     }
 
@@ -239,10 +239,10 @@ export const ContentLayoutContainer = ({
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        if (contentFolder.viewMode === JContentConstants.viewMode.structured) {
+        if (tableView.viewMode === JContentConstants.viewMode.structured) {
             rows = structureData(path, currentResult.nodes);
         } else {
-            rows = currentResult.nodes;
+            rows = currentResult.nodes.map(r => adaptedRow(r));
         }
     }
 
@@ -279,7 +279,7 @@ const mapStateToProps = state => ({
     sort: state.jcontent.sort,
     openedPaths: state.jcontent.openPaths,
     selection: state.jcontent.selection,
-    contentFolder: state.jcontent.contentFolder
+    tableView: state.jcontent.tableView
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -311,7 +311,7 @@ ContentLayoutContainer.propTypes = {
     selection: PropTypes.array.isRequired,
     removeSelection: PropTypes.func.isRequired,
     switchSelection: PropTypes.func.isRequired,
-    contentFolder: PropTypes.object.isRequired
+    tableView: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);

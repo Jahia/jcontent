@@ -64,7 +64,7 @@ export const BrowseControlBar = ({showActions}) => {
             <div className="flexFluid"/>
             {showActions && mode === JContentConstants.mode.MEDIA &&
             <FileModeSelector/>}
-            {showActions && mode === JContentConstants.mode.CONTENT_FOLDERS &&
+            {showActions &&
             <ContentFolderViewModeSelector/>}
         </React.Fragment>
     );

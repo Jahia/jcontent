@@ -4,7 +4,6 @@ import {compose} from '~/utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper, withStyles} from '@material-ui/core';
 import ContentStructuredTableMoon from './ContentListTable/ContentStructuredTableMoon';
-import ContentListTableMoon from './ContentListTable/ContentListTableMoon';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import {withTranslation} from 'react-i18next';
@@ -13,8 +12,6 @@ import FilesGrid from './FilesGrid';
 import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
-import {connect} from 'react-redux';
-import ContentTypeSelector from './ContentListTable/ContentTypeSelector';
 import {flattenTree} from './ContentLayout.utils';
 
 const styles = theme => ({
@@ -94,7 +91,7 @@ export class ContentLayout extends React.Component {
     render() {
         const {
             mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
-            totalCount, loading, contentFolder
+            totalCount, loading
         } = this.props;
 
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -135,19 +132,10 @@ export class ContentLayout extends React.Component {
                                                rows={rows}
                                                contentNotFound={contentNotFound}
                                                loading={loading}/> :
-                                    <>
-                                        <ContentTypeSelector/>
-                                        {contentFolder.viewMode !== JContentConstants.viewMode.structured &&
-                                            <ContentListTableMoon totalCount={totalCount}
-                                                                  rows={rows}
-                                                                  contentNotFound={contentNotFound}
-                                                                  loading={loading}/>}
-                                        {contentFolder.viewMode === JContentConstants.viewMode.structured &&
-                                            <ContentStructuredTableMoon totalCount={totalCount}
-                                                                        rows={rows}
-                                                                        contentNotFound={contentNotFound}
-                                                                        loading={loading}/>}
-                                    </>}
+                                    <ContentStructuredTableMoon totalCount={totalCount}
+                                                                rows={rows}
+                                                                contentNotFound={contentNotFound}
+                                                                loading={loading}/>}
                             </ErrorBoundary>
                         </Paper>
                     </div>
@@ -167,14 +155,10 @@ ContentLayout.propTypes = {
     rows: PropTypes.array.isRequired,
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired,
-    contentFolder: PropTypes.object.isRequired
+    loading: PropTypes.bool.isRequired
 };
 
 export default compose(
     withTranslation(),
-    withStyles(styles),
-    connect(state => ({contentFolder: state.jcontent.contentFolder}), dispatch => ({setTableType: type => {
-        dispatch(type);
-    }}))
+    withStyles(styles)
 )(ContentLayout);

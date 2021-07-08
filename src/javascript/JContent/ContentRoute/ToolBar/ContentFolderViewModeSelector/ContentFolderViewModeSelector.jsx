@@ -1,9 +1,9 @@
 import React from 'react';
-import {Button, Diagram, ViewList} from '@jahia/moonstone';
+import {Button, ViewList, ViewTree} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '../../../JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {setViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
+import {setContentFolderViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
 
 const localStorage = window.localStorage;
 
@@ -14,18 +14,18 @@ const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
 const buttons = [FLATLIST, STRUCTUREDVIEW];
 const icons = {
     [FLATLIST]: <ViewList/>,
-    [STRUCTUREDVIEW]: <Diagram/>
+    [STRUCTUREDVIEW]: <ViewTree/>
 };
 
-export const ViewModeSelector = () => {
+export const ContentFolderViewModeSelector = () => {
     const {t} = useTranslation();
 
     let {viewMode} = useSelector(state => ({
-        viewMode: state.jcontent.viewMode.viewMode
+        viewMode: state.jcontent.contentFolder.viewMode
     }));
 
     const dispatch = useDispatch();
-    const onChange = vm => dispatch(setViewMode(vm));
+    const onChange = vm => dispatch(setContentFolderViewMode(vm));
 
     const handleChange = selectedViewMode => {
         onChange(selectedViewMode);
@@ -48,4 +48,4 @@ export const ViewModeSelector = () => {
     );
 };
 
-export default ViewModeSelector;
+export default ContentFolderViewModeSelector;

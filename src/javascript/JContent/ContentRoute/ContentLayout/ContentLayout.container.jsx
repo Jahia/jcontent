@@ -60,7 +60,7 @@ export const ContentLayoutContainer = ({
     filesMode,
     previewState,
     previewSelection,
-    viewMode
+    contentFolder
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
@@ -73,7 +73,7 @@ export const ContentLayoutContainer = ({
 
     let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
-    if (viewMode.viewMode === JContentConstants.viewMode.structured) {
+    if (contentFolder.viewMode === JContentConstants.viewMode.structured) {
         layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams);
     }
 
@@ -239,7 +239,7 @@ export const ContentLayoutContainer = ({
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        if (viewMode.viewMode === JContentConstants.viewMode.structured) {
+        if (contentFolder.viewMode === JContentConstants.viewMode.structured) {
             rows = structureData(path, currentResult.nodes);
         } else {
             rows = currentResult.nodes;
@@ -279,7 +279,7 @@ const mapStateToProps = state => ({
     sort: state.jcontent.sort,
     openedPaths: state.jcontent.openPaths,
     selection: state.jcontent.selection,
-    viewMode: state.jcontent.viewMode
+    contentFolder: state.jcontent.contentFolder
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -311,7 +311,7 @@ ContentLayoutContainer.propTypes = {
     selection: PropTypes.array.isRequired,
     removeSelection: PropTypes.func.isRequired,
     switchSelection: PropTypes.func.isRequired,
-    viewMode: PropTypes.object.isRequired
+    contentFolder: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);

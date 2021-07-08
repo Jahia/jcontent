@@ -12,7 +12,7 @@ import {
     isMarkedForDeletion,
     isWorkInProgress
 } from '../../../JContent.utils';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '../../../preview.redux';
@@ -85,6 +85,7 @@ export const ContentListTable = ({
         useExpanded,
         useFlexLayout
     );
+    const {viewMode} = useSelector(state => state.jcontent.contentFolder.viewMode);
 
     useEffect(() => {
         if (selection.length > 0) {
@@ -97,10 +98,8 @@ export const ContentListTable = ({
     }, [rows, selection, removeSelection]);
 
     useEffect(() => {
-        if (!isAllRowsExpanded) {
-            toggleAllRowsExpanded();
-        }
-    });
+        toggleAllRowsExpanded();
+    }, [viewMode]);
 
     const contextualMenus = useRef({});
 

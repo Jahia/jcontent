@@ -7,8 +7,8 @@ import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredVie
 
 const localStorage = window.localStorage;
 
-const FLATLIST = JContentConstants.viewMode.flat;
-const STRUCTUREDVIEW = JContentConstants.viewMode.structured;
+const FLATLIST = JContentConstants.tableView.viewMode.FLAT;
+const STRUCTUREDVIEW = JContentConstants.tableView.viewMode.STRUCTURED;
 const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
 
 const buttons = [FLATLIST, STRUCTUREDVIEW];
@@ -17,7 +17,7 @@ const icons = {
     [STRUCTUREDVIEW]: <ViewTree/>
 };
 
-export const ContentFolderViewModeSelector = () => {
+export const ViewModeSelector = () => {
     const {t} = useTranslation();
 
     let {viewMode} = useSelector(state => ({
@@ -48,4 +48,4 @@ export const ContentFolderViewModeSelector = () => {
     );
 };
 
-export default ContentFolderViewModeSelector;
+export default ViewModeSelector;

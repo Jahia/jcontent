@@ -6,7 +6,7 @@ import JContentConstants from '../../../JContent.constants';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import ContentFolderViewModeSelector from '../ContentFolderViewModeSelector/ContentFolderViewModeSelector';
+import ViewModeSelector from '../ViewModeSelector';
 
 const excludedActions = [
     'subContents',
@@ -64,8 +64,8 @@ export const BrowseControlBar = ({showActions}) => {
             <div className="flexFluid"/>
             {showActions && mode === JContentConstants.mode.MEDIA &&
             <FileModeSelector/>}
-            {showActions &&
-            <ContentFolderViewModeSelector/>}
+            {showActions && mode !== JContentConstants.mode.MEDIA &&
+            <ViewModeSelector/>}
         </React.Fragment>
     );
 };

@@ -59,8 +59,9 @@ export const ContentListTable = ({
     switchSelection,
     addSelection,
     tableView,
+    dataCounts,
     loading}) => {
-    const isStructuredView = JContentConstants.viewMode.structured === tableView.viewMode;
+    const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
     const {t} = useTranslation();
     const data = React.useMemo(() => rows, [rows]);
     const {
@@ -134,7 +135,7 @@ export const ContentListTable = ({
 
     return (
         <>
-            {isStructuredView && <ContentTypeSelector/>}
+            {isStructuredView && mode === JContentConstants.mode.PAGES && <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/>}
             <ContentListTableWrapper rows={rows} onPreviewSelect={onPreviewSelect}>
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()} style={{width: '100%'}}>
                     <ContentListHeader headerGroups={headerGroups}/>
@@ -271,7 +272,8 @@ ContentListTable.propTypes = {
     tableView: PropTypes.object.isRequired,
     switchSelection: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
-    uilang: PropTypes.string.isRequired
+    uilang: PropTypes.string.isRequired,
+    dataCounts: PropTypes.object
 };
 
 export default compose(

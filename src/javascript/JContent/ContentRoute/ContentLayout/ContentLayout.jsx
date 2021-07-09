@@ -25,7 +25,7 @@ const styles = theme => ({
         minHeight: 0,
         width: '100%'
     },
-    content: {
+    CONTENT: {
         flex: '1 2 0%',
         order: 2,
         display: 'flex',
@@ -91,7 +91,7 @@ export class ContentLayout extends React.Component {
     render() {
         const {
             mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
-            totalCount, loading
+            totalCount, loading, dataCounts
         } = this.props;
 
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -119,7 +119,7 @@ export class ContentLayout extends React.Component {
                     </Drawer>
                     <ContextualMenu setOpenRef={this.contextualMenu} actionKey="contentMenu" path={path}/>
                     <div
-                        className={classNames(classes.content)}
+                        className={classNames(classes.CONTENT)}
                         style={{
                             marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                         }}
@@ -135,7 +135,8 @@ export class ContentLayout extends React.Component {
                                     <ContentStructuredTableMoon totalCount={totalCount}
                                                                 rows={rows}
                                                                 contentNotFound={contentNotFound}
-                                                                loading={loading}/>}
+                                                                loading={loading}
+                                                                dataCounts={dataCounts}/>}
                             </ErrorBoundary>
                         </Paper>
                     </div>
@@ -155,7 +156,8 @@ ContentLayout.propTypes = {
     rows: PropTypes.array.isRequired,
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    dataCounts: PropTypes.object
 };
 
 export default compose(

@@ -25,6 +25,7 @@ const JContentConstants = {
         IMPORT: 'import'
     },
     localStorageKeys: {
+        viewType: 'jcontent_view_type',
         viewMode: 'jcontent_view_mode',
         filesSelectorMode: 'jcontent_files_selector_mode'
     },
@@ -35,9 +36,16 @@ const JContentConstants = {
         additionalAccordionAccess: 'additionalAccordionAccess',
         formAccordionAccess: 'formAccordionAccess'
     },
-    viewMode: {
-        flat: 'flatList',
-        structured: 'structuredView'
+    tableView: {
+        viewMode: {
+            FLAT: 'flatList',
+            STRUCTURED: 'structuredView'
+        },
+        viewType: {
+            CONTENT: 'content',
+            PAGES: 'pages',
+            ALL: 'all'
+        }
     }
 };
 

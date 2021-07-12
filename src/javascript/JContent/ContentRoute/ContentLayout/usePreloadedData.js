@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-export default (isStructuredView, client, options, viewType, path) => {
+export default (shouldFetch, client, options, tableView, path) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -15,11 +15,11 @@ export default (isStructuredView, client, options, viewType, path) => {
             }
         }
 
-        if (isStructuredView) {
+        if (shouldFetch) {
             console.log('Run effect');
             fetch();
         }
-    }, [viewType, path]);
+    }, [tableView.viewType, tableView.viewMode, path]);
 
     return data;
 };

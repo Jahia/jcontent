@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {ContextualMenu} from '@jahia/ui-extender';
 import * as _ from 'lodash';
@@ -33,6 +33,7 @@ import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentListTableWrapper from './ContentListTableWrapper';
 import {flattenTree} from '../ContentLayout.utils';
 import ContentTypeSelector from './ContentTypeSelector';
+import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
 export const ContentListTable = ({
     setPath,
@@ -63,7 +64,20 @@ export const ContentListTable = ({
     loading}) => {
     const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
     const {t} = useTranslation();
-    const data = React.useMemo(() => rows, [rows]);
+    const paths = useMemo(() => flattenTree(rows, p => p.path), [rows]);
+    const {
+        mainPanelRef,
+        handleKeyboardNavigation,
+        setFocusOnMainContainer,
+        setSelectedItemIndex
+    } = useKeyboardNavigation({
+        listLength: paths.length,
+        onSelectionChange: index => {
+            if (isPreviewOpened) {
+                onPreviewSelect(paths[index]);
+            }
+        }
+    });
     const {
         getTableProps,
         getTableBodyProps,
@@ -74,7 +88,7 @@ export const ContentListTable = ({
     } = useTable(
         {
             columns: allColumnData,
-            data: data
+            data: rows
         },
         useRowSelection,
         useSort,
@@ -84,7 +98,6 @@ export const ContentListTable = ({
 
     useEffect(() => {
         if (selection.length > 0) {
-            const paths = flattenTree(rows, p => p.path);
             const toRemove = selection.filter(path => paths.indexOf(path) === -1);
             if (toRemove.length > 0) {
                 removeSelection(toRemove);
@@ -94,10 +107,9 @@ export const ContentListTable = ({
 
     useEffect(() => {
         if (isStructuredView) {
-            console.log('open all');
             toggleAllRowsExpanded(true);
         }
-    }, [data]);
+    }, [rows]);
 
     const contextualMenus = useRef({});
 
@@ -135,8 +147,11 @@ export const ContentListTable = ({
 
     return (
         <>
-            {isStructuredView && mode === JContentConstants.mode.PAGES && <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/>}
-            <ContentListTableWrapper rows={rows} onPreviewSelect={onPreviewSelect}>
+            {isStructuredView && mode === JContentConstants.mode.PAGES && dataCounts && <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/>}
+            <ContentListTableWrapper ref={mainPanelRef}
+                                     onKeyDown={handleKeyboardNavigation}
+                                     onClick={setFocusOnMainContainer}
+            >
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()} style={{width: '100%'}}>
                     <ContentListHeader headerGroups={headerGroups}/>
                     <UploadTransformComponent uploadTargetComponent={TableBody}
@@ -144,7 +159,7 @@ export const ContentListTable = ({
                                               mode={mode}
                                               {...getTableBodyProps()}
                     >
-                        {tableRows.map(row => {
+                        {tableRows.map((row, index) => {
                             prepareRow(row);
                             const rowProps = row.getRowProps();
                             const node = row.original;
@@ -162,7 +177,8 @@ export const ContentListTable = ({
                                           className={css.tableRow}
                                           isHighlighted={isSelected}
                                           onClick={() => {
-                                              if (!node.notSelectableForPreview) {
+                                              if (isPreviewOpened && !node.notSelectableForPreview) {
+                                                  setSelectedItemIndex(index);
                                                   onPreviewSelect(node.path);
                                               }
                                           }}

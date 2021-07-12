@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient, useQuery} from 'react-apollo';
 import {
@@ -65,6 +65,7 @@ export const ContentLayoutContainer = ({
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
+    const [isMenuLabel, setMenuLabel] = useState(false);
     const fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
     const queryHandler = contentQueryHandlerByMode(mode);
@@ -73,8 +74,12 @@ export const ContentLayoutContainer = ({
     const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
     let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
-    // Update params when in structured view to use different type and recursion filters
-    if (isStructuredView) {
+    console.log('params', layoutQueryParams);
+
+    // Update params when in menulabel or structured view to use different type and recursion filters
+    if (isMenuLabel) {
+        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, JContentConstants.mode.PAGES);
+    } else if (isStructuredView) {
         layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, mode === JContentConstants.mode.PAGES ? tableView.viewType : JContentConstants.tableView.viewType.ALL);
     }
 
@@ -181,15 +186,16 @@ export const ContentLayoutContainer = ({
         }
     };
 
+    // Preload data either for pages or contents depending on current view type
     const preloadedData = usePreladedData(
-        isStructuredView,
+        isStructuredView && !isMenuLabel,
         client,
         {
             query: layoutQuery,
             variables: queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType),
             fetchPolicy: fetchPolicy
         },
-        tableView.viewType,
+        tableView,
         path);
 
     console.log('P', preloadedData);
@@ -198,6 +204,14 @@ export const ContentLayoutContainer = ({
         if (data && data.jcr && data.jcr.nodeByPath) {
             // When new results have been loaded, use them for rendering.
             let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+
+            // Indicate that we are browsing menu label
+            if (nodeTypeName === 'jnt:navMenuText') {
+                setMenuLabel(true);
+            } else if (isMenuLabel) {
+                setMenuLabel(false);
+            }
+
             let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
             if (!isSub && params.sub && params.sub === true) {
                 setPath(path, {sub: false});
@@ -270,7 +284,7 @@ export const ContentLayoutContainer = ({
                            rows={rows}
                            loading={loading}
                            totalCount={totalCount}
-                           dataCounts={{
+                           dataCounts={isMenuLabel ? null : {
                                pages: preloadForType === JContentConstants.tableView.viewType.PAGES ? preloadedData.length : totalCount,
                                contents: preloadForType === JContentConstants.tableView.viewType.CONTENT ? preloadedData.length : totalCount
                            }}

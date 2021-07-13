@@ -18,7 +18,6 @@ export const useKeyboardNavigation = ({listLength, onSelectionChange}) => {
     };
 
     const setFocusOnMainContainer = () => {
-        console.log(mainPanelRef);
         mainPanelRef.current.focus();
     };
 

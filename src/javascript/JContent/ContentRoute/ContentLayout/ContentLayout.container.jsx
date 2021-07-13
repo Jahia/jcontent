@@ -74,8 +74,6 @@ export const ContentLayoutContainer = ({
     const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
     let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
-    console.log('params', layoutQueryParams);
-
     // Update params when in menulabel or structured view to use different type and recursion filters
     if (isMenuLabel) {
         layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, JContentConstants.mode.PAGES);
@@ -198,8 +196,6 @@ export const ContentLayoutContainer = ({
         tableView,
         path);
 
-    console.log('P', preloadedData);
-
     useEffect(() => {
         if (data && data.jcr && data.jcr.nodeByPath) {
             // When new results have been loaded, use them for rendering.
@@ -223,7 +219,7 @@ export const ContentLayoutContainer = ({
         setRefetcher(refetchTypes.CONTENT_DATA, {
             query: layoutQuery,
             queryParams: layoutQueryParams,
-            refetch: refetch // TODO make sure still works
+            refetch: refetch
         });
 
         registerContentModificationEventHandler(onGwtContentModification);

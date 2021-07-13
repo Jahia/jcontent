@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import css from '../../../ContentListTableMoon.scss';
+import css from '../../../ContentTable.scss';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 
 export const CellType = ({value, cell, column, row}) => {

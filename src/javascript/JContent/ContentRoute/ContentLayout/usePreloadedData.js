@@ -16,7 +16,6 @@ export default (shouldFetch, client, options, tableView, path) => {
         }
 
         if (shouldFetch) {
-            console.log('Run effect');
             fetch();
         }
     }, [tableView.viewType, tableView.viewMode, path]);

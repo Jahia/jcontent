@@ -33,3 +33,7 @@
 .statusCellItem {
     margin-right: var(--spacing-small);
 }
+
+.deleted {
+    text-decoration: line-through;
+}

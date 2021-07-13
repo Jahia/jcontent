@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper, withStyles} from '@material-ui/core';
-import ContentStructuredTableMoon from './ContentListTable/ContentStructuredTableMoon';
+import ContentTable from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import {withTranslation} from 'react-i18next';
@@ -132,11 +132,11 @@ export class ContentLayout extends React.Component {
                                                rows={rows}
                                                contentNotFound={contentNotFound}
                                                loading={loading}/> :
-                                    <ContentStructuredTableMoon totalCount={totalCount}
-                                                                rows={rows}
-                                                                contentNotFound={contentNotFound}
-                                                                loading={loading}
-                                                                dataCounts={dataCounts}/>}
+                                    <ContentTable totalCount={totalCount}
+                                                  rows={rows}
+                                                  contentNotFound={contentNotFound}
+                                                  loading={loading}
+                                                  dataCounts={dataCounts}/>}
                             </ErrorBoundary>
                         </Paper>
                     </div>

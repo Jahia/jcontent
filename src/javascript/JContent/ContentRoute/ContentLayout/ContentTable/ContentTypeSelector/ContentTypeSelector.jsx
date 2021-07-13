@@ -7,6 +7,9 @@ import {setTableViewType} from '../../StructuredView/StructuredView.redux';
 import classes from './ContentTypeSelector.scss';
 import {useTranslation} from 'react-i18next';
 
+const localStorage = window.localStorage;
+const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
+
 const ContentTypeSelector = ({contentCount, pagesCount}) => {
     const {t} = useTranslation();
     const viewType = useSelector(state => state.jcontent.tableView.viewType);
@@ -20,6 +23,7 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
                      size="big"
                      onClick={() => {
                          dispatch(setTableViewType(JContentConstants.tableView.viewType.CONTENT));
+                         localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.CONTENT);
                      }}/>
             <TabItem isSelected={JContentConstants.tableView.viewType.PAGES === viewType}
                      isDisabled={pagesCount === 0}
@@ -27,6 +31,7 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
                      size="big"
                      onClick={() => {
                          dispatch(setTableViewType(JContentConstants.tableView.viewType.PAGES));
+                         localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.PAGES);
                      }}/>
         </Tab>
     );

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {ContextualMenu} from '@jahia/ui-extender';
 import * as _ from 'lodash';
@@ -7,38 +6,29 @@ import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../JContent.redux';
 import {
     allowDoubleClickNavigation,
-    extractPaths,
-    getDefaultLocale,
-    isMarkedForDeletion,
-    isWorkInProgress
+    extractPaths
 } from '../../../JContent.utils';
 import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '../../../preview.redux';
-import {cmSetSort} from '../sort.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
-import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
+import {cmRemoveSelection} from '../contentSelection.redux';
 import JContentConstants from '../../../JContent.constants';
-import ContentListEmptyDropZone from './ContentListEmptyDropZoneMoon';
-import ContentNotFound from './ContentNotFoundMoon';
-import EmptyTable from './EmptyTableMoon';
-import {Table, TablePagination, TableBody, TableRow} from '@jahia/moonstone';
-import {useTable, useFlexLayout} from 'react-table';
+import ContentListEmptyDropZone from './ContentEmptyDropZone';
+import ContentNotFound from './ContentNotFound';
+import EmptyTable from './EmptyTable';
+import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
+import {useTable, useFlexLayout, useExpanded} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
 import {useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeaderMoon';
-import css from './ContentListTableMoon.scss';
+import css from './ContentTable.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
-import ContentListTableWrapper from './ContentListTableWrapper';
-
-const adaptedRows = rows => (rows.map(r => ({
-    ...r,
-    name: r.displayName,
-    type: r.primaryNodeType.displayName,
-    createdBy: r.createdBy.value,
-    lastModified: r.lastModified.value
-})));
+import ContentTableWrapper from './ContentTableWrapper';
+import {flattenTree} from '../ContentLayout.utils';
+import ContentTypeSelector from './ContentTypeSelector';
+import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
 export const ContentListTable = ({
     setPath,
@@ -50,47 +40,64 @@ export const ContentListTable = ({
     removeSelection,
     contentNotFound,
     pagination,
-    sort,
     setCurrentPage,
     setPageSize,
     onPreviewSelect,
     previewSelection,
     totalCount,
-    classes,
-    uilang,
-    setSort,
     path,
     previewState,
-    lang,
-    switchSelection,
-    addSelection,
+    tableView,
+    dataCounts,
     loading}) => {
+    const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
     const {t} = useTranslation();
+    const paths = useMemo(() => flattenTree(rows, p => p.path), [rows]);
+    const {
+        mainPanelRef,
+        handleKeyboardNavigation,
+        setFocusOnMainContainer,
+        setSelectedItemIndex
+    } = useKeyboardNavigation({
+        listLength: paths.length,
+        onSelectionChange: index => {
+            if (isPreviewOpened) {
+                onPreviewSelect(paths[index]);
+            }
+        }
+    });
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows: tableRows,
-        prepareRow
+        prepareRow,
+        toggleAllRowsExpanded
     } = useTable(
         {
             columns: allColumnData,
-            data: adaptedRows(rows)
+            data: rows
         },
         useRowSelection,
         useSort,
+        useExpanded,
         useFlexLayout
     );
 
     useEffect(() => {
         if (selection.length > 0) {
-            const paths = rows.map(node => node.path);
             const toRemove = selection.filter(path => paths.indexOf(path) === -1);
             if (toRemove.length > 0) {
                 removeSelection(toRemove);
             }
         }
     }, [rows, selection, removeSelection]);
+
+    useEffect(() => {
+        if (isStructuredView) {
+            toggleAllRowsExpanded(true);
+        }
+    }, [rows]);
 
     const contextualMenus = useRef({});
 
@@ -128,7 +135,11 @@ export const ContentListTable = ({
 
     return (
         <>
-            <ContentListTableWrapper rows={rows} onPreviewSelect={onPreviewSelect}>
+            {isStructuredView && mode === JContentConstants.mode.PAGES && dataCounts && <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/>}
+            <ContentTableWrapper reference={mainPanelRef}
+                                 onKeyDown={handleKeyboardNavigation}
+                                 onClick={setFocusOnMainContainer}
+            >
                 <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()} style={{width: '100%'}}>
                     <ContentListHeader headerGroups={headerGroups}/>
                     <UploadTransformComponent uploadTargetComponent={TableBody}
@@ -136,10 +147,11 @@ export const ContentListTable = ({
                                               mode={mode}
                                               {...getTableBodyProps()}
                     >
-                        {tableRows.map(row => {
+                        {tableRows.map((row, index) => {
                             prepareRow(row);
                             const rowProps = row.getRowProps();
                             const node = row.original;
+                            const isSelected = node.path === previewSelection && isPreviewOpened;
                             contextualMenus.current[node.path] = contextualMenus.current[node.path] || React.createRef();
 
                             const openContextualMenu = event => {
@@ -151,6 +163,13 @@ export const ContentListTable = ({
                                           {...rowProps}
                                           data-cm-role="table-content-list-row"
                                           className={css.tableRow}
+                                          isHighlighted={isSelected}
+                                          onClick={() => {
+                                              if (isPreviewOpened && !node.notSelectableForPreview) {
+                                                  setSelectedItemIndex(index);
+                                                  onPreviewSelect(node.path);
+                                              }
+                                          }}
                                           onContextMenu={event => {
                                                             event.stopPropagation();
                                                             openContextualMenu(event);
@@ -174,17 +193,18 @@ export const ContentListTable = ({
                         })}
                     </UploadTransformComponent>
                 </Table>
-            </ContentListTableWrapper>
+            </ContentTableWrapper>
+            {!isStructuredView &&
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
                              rowsPerPage={pagination.pageSize}
                              label={{
-                              rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                              of: t('jcontent:label.pagination.of')
-                          }}
+                                 rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                                 of: t('jcontent:label.pagination.of')
+                             }}
                              onPageChange={setCurrentPage}
                              onRowsPerPageChange={setPageSize}
-            />
+            />}
         </>
     );
 };
@@ -192,10 +212,8 @@ export const ContentListTable = ({
 const mapStateToProps = state => ({
     mode: state.jcontent.mode,
     previewSelection: state.jcontent.previewSelection,
-    uilang: state.uilang,
     siteKey: state.site,
     path: state.jcontent.path,
-    lang: state.language,
     params: state.jcontent.params,
     searchTerms: state.jcontent.params.searchTerms,
     searchContentType: state.jcontent.params.searchContentType,
@@ -204,7 +222,8 @@ const mapStateToProps = state => ({
     pagination: state.jcontent.pagination,
     sort: state.jcontent.sort,
     previewState: state.jcontent.previewState,
-    selection: state.jcontent.selection
+    selection: state.jcontent.selection,
+    tableView: state.jcontent.tableView
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -216,7 +235,6 @@ const mapDispatchToProps = dispatch => ({
     setMode: mode => dispatch(cmGoto({mode})),
     setCurrentPage: page => dispatch(cmSetPage(page - 1)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
-    setSort: state => dispatch(cmSetSort(state)),
     clearSearch: params => {
         params = _.clone(params);
         _.unset(params, 'searchContentType');
@@ -225,16 +243,11 @@ const mapDispatchToProps = dispatch => ({
         _.unset(params, 'sql2SearchWhere');
         dispatch(cmGoto({mode: JContentConstants.mode.CONTENT_FOLDERS, params: params}));
     },
-    switchSelection: path => dispatch(cmSwitchSelection(path)),
-    addSelection: path => dispatch(cmAddSelection(path)),
     removeSelection: path => dispatch(cmRemoveSelection(path))
 });
 
 ContentListTable.propTypes = {
-    addSelection: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     contentNotFound: PropTypes.bool,
-    lang: PropTypes.string.isRequired,
     loading: PropTypes.bool,
     mode: PropTypes.string.isRequired,
     onPreviewSelect: PropTypes.func.isRequired,
@@ -249,12 +262,11 @@ ContentListTable.propTypes = {
     setPageSize: PropTypes.func.isRequired,
     setPath: PropTypes.func.isRequired,
     setMode: PropTypes.func.isRequired,
-    setSort: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
-    sort: PropTypes.object.isRequired,
+    tableView: PropTypes.object.isRequired,
     switchSelection: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
-    uilang: PropTypes.string.isRequired
+    dataCounts: PropTypes.object
 };
 
 export default compose(

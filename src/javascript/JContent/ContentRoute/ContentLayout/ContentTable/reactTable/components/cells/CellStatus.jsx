@@ -5,6 +5,7 @@ import {isWorkInProgress} from '../../../../../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {Tooltip} from '@material-ui/core';
+import classes from './Cells.scss';
 
 export const CellStatus = ({cell, column, row}) => {
     const {t} = useTranslation();
@@ -15,9 +16,9 @@ export const CellStatus = ({cell, column, row}) => {
     return (
         <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
             {isWorkInProgress(node, lang) &&
-            <Tooltip title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}><Chip icon={<Build fontSize="small"/>}/></Tooltip>}
+            <Tooltip title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}><Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>}/></Tooltip>}
             {node.lockOwner !== null &&
-            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip icon={<Lock fontSize="small"/>} color="danger"/></Tooltip>}
+            <Tooltip title={t('jcontent:label.contentManager.locked')}><Chip className={classes.statusCellItem} icon={<Lock fontSize="small"/>} color="danger"/></Tooltip>}
             {showSubNodes && <Chip data-cm-role="sub-contents-count" color="accent" label={`${node.subNodes.pageInfo.totalCount} item(s)`} icon={<Subdirectory/>}/>}
         </TableBodyCell>
     );

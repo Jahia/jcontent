@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper, withStyles} from '@material-ui/core';
-import ContentListTable from './ContentListTable';
-import ContentStructuredTableMoon from './ContentListTable/ContentStructuredTableMoon';
-import ContentListTableMoon from './ContentListTable/ContentListTableMoon';
+import ContentTable from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import {withTranslation} from 'react-i18next';
@@ -14,7 +12,7 @@ import FilesGrid from './FilesGrid';
 import JContentConstants from '../../JContent.constants';
 import contentManagerStyleConstants from '../../JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
-import {connect} from 'react-redux';
+import {flattenTree} from './ContentLayout.utils';
 
 const styles = theme => ({
     root: {
@@ -93,7 +91,7 @@ export class ContentLayout extends React.Component {
     render() {
         const {
             mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
-            totalCount, loading, tableType, contentFolder
+            totalCount, loading, dataCounts
         } = this.props;
 
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -115,7 +113,7 @@ export class ContentLayout extends React.Component {
                     >
                         {previewOpen && (
                             <ErrorBoundary key={previewSelection}>
-                                <PreviewDrawer previewSelection={rows.find(node => node.path === previewSelection)}/>
+                                <PreviewDrawer previewSelection={flattenTree(rows).find(n => n.path === previewSelection)}/>
                             </ErrorBoundary>
                         )}
                     </Drawer>
@@ -134,23 +132,11 @@ export class ContentLayout extends React.Component {
                                                rows={rows}
                                                contentNotFound={contentNotFound}
                                                loading={loading}/> :
-                                    <>
-                                        {tableType !== 'moon' &&
-                                            <ContentListTable totalCount={totalCount}
-                                                              rows={rows}
-                                                              contentNotFound={contentNotFound}
-                                                              loading={loading}/>}
-                                        {tableType === 'moon' && contentFolder.viewMode !== JContentConstants.viewMode.structured &&
-                                            <ContentListTableMoon totalCount={totalCount}
-                                                                  rows={rows}
-                                                                  contentNotFound={contentNotFound}
-                                                                  loading={loading}/>}
-                                        {tableType === 'moon' && contentFolder.viewMode === JContentConstants.viewMode.structured &&
-                                            <ContentStructuredTableMoon totalCount={totalCount}
-                                                                        rows={rows}
-                                                                        contentNotFound={contentNotFound}
-                                                                        loading={loading}/>}
-                                    </>}
+                                    <ContentTable totalCount={totalCount}
+                                                  rows={rows}
+                                                  contentNotFound={contentNotFound}
+                                                  loading={loading}
+                                                  dataCounts={dataCounts}/>}
                             </ErrorBoundary>
                         </Paper>
                     </div>
@@ -171,14 +157,10 @@ ContentLayout.propTypes = {
     contentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
     loading: PropTypes.bool.isRequired,
-    tableType: PropTypes.string,
-    contentFolder: PropTypes.object.isRequired
+    dataCounts: PropTypes.object
 };
 
 export default compose(
     withTranslation(),
-    withStyles(styles),
-    connect(state => ({tableType: state.jcontent.tableType, contentFolder: state.jcontent.contentFolder}), dispatch => ({setTableType: type => {
-        dispatch(type);
-    }}))
+    withStyles(styles)
 )(ContentLayout);

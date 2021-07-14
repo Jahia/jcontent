@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient, useQuery} from 'react-apollo';
 import {
@@ -23,7 +23,8 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
-import {structureData} from '../ContentLayout/ContentLayout.utils';
+import {structureData, adaptedRow} from '../ContentLayout/ContentLayout.utils';
+import usePreloadedData from './usePreloadedData';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -60,21 +61,24 @@ export const ContentLayoutContainer = ({
     filesMode,
     previewState,
     previewSelection,
-    contentFolder
+    tableView
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
-
-    let fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
-
+    const [isMenuLabel, setMenuLabel] = useState(false);
+    const fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
+    const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
     const queryHandler = contentQueryHandlerByMode(mode);
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
-
+    const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
     let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
 
-    if (contentFolder.viewMode === JContentConstants.viewMode.structured) {
-        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams);
+    // Update params when in menulabel or structured view to use different type and recursion filters
+    if (isMenuLabel) {
+        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, JContentConstants.mode.PAGES);
+    } else if (isStructuredView) {
+        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, mode === JContentConstants.mode.PAGES ? tableView.viewType : JContentConstants.tableView.viewType.ALL);
     }
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
@@ -93,7 +97,7 @@ export const ContentLayoutContainer = ({
             let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
             client.cache.flushNodeEntryByPath(parentPath);
             if (path !== parentPath) {
-                // Make sure the created content is visible in the main panel.
+                // Make sure the created CONTENT is visible in the main panel.
                 setPath(parentPath);
             }
         } else if (operation === 'delete') {
@@ -180,10 +184,30 @@ export const ContentLayoutContainer = ({
         }
     };
 
+    // Preload data either for pages or contents depending on current view type
+    const preloadedData = usePreloadedData(
+        isStructuredView && !isMenuLabel,
+        client,
+        {
+            query: layoutQuery,
+            variables: queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType),
+            fetchPolicy: fetchPolicy
+        },
+        tableView,
+        path);
+
     useEffect(() => {
         if (data && data.jcr && data.jcr.nodeByPath) {
             // When new results have been loaded, use them for rendering.
             let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
+
+            // Indicate that we are browsing menu label
+            if (nodeTypeName === 'jnt:navMenuText') {
+                setMenuLabel(true);
+            } else if (isMenuLabel) {
+                setMenuLabel(false);
+            }
+
             let isSub = nodeTypeName !== 'jnt:page' && nodeTypeName !== 'jnt:contentFolder' && nodeTypeName !== 'jnt:virtualsite';
             if (!isSub && params.sub && params.sub === true) {
                 setPath(path, {sub: false});
@@ -222,8 +246,6 @@ export const ContentLayoutContainer = ({
                            rows={[]}
                            loading={loading}
                            totalCount={0}
-                           layoutQuery={layoutQuery}
-                           layoutQueryParams={layoutQueryParams}
             />
         );
     }
@@ -239,10 +261,10 @@ export const ContentLayoutContainer = ({
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        if (contentFolder.viewMode === JContentConstants.viewMode.structured) {
+        if (isStructuredView) {
             rows = structureData(path, currentResult.nodes);
         } else {
-            rows = currentResult.nodes;
+            rows = currentResult.nodes.map(r => adaptedRow(r));
         }
     }
 
@@ -258,8 +280,10 @@ export const ContentLayoutContainer = ({
                            rows={rows}
                            loading={loading}
                            totalCount={totalCount}
-                           layoutQuery={layoutQuery}
-                           layoutQueryParams={layoutQueryParams}
+                           dataCounts={isMenuLabel ? null : {
+                               pages: preloadForType === JContentConstants.tableView.viewType.PAGES ? preloadedData.length : totalCount,
+                               contents: preloadForType === JContentConstants.tableView.viewType.CONTENT ? preloadedData.length : totalCount
+                           }}
             />
         </React.Fragment>
     );
@@ -279,7 +303,7 @@ const mapStateToProps = state => ({
     sort: state.jcontent.sort,
     openedPaths: state.jcontent.openPaths,
     selection: state.jcontent.selection,
-    contentFolder: state.jcontent.contentFolder
+    tableView: state.jcontent.tableView
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -311,7 +335,7 @@ ContentLayoutContainer.propTypes = {
     selection: PropTypes.array.isRequired,
     removeSelection: PropTypes.func.isRequired,
     switchSelection: PropTypes.func.isRequired,
-    contentFolder: PropTypes.object.isRequired
+    tableView: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);

@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core';
 import EmptyDropZone from '../EmptyDropZone';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {Table, TableBody, TableRow, TableBodyCell} from '@jahia/moonstone';
-import ContentListTableWrapper from './ContentListTableWrapper';
+import ContentTableWrapper from './ContentTableWrapper';
 
 const styles = theme => ({
     dragZoneContentList: {
@@ -21,8 +21,8 @@ const styles = theme => ({
     }
 });
 
-export const ContentListEmptyDropZone = ({classes, path, mode}) => (
-    <ContentListTableWrapper>
+export const ContentEmptyDropZone = ({classes, path, mode}) => (
+    <ContentTableWrapper>
         <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
             <TableBody>
                 <UploadTransformComponent
@@ -37,13 +37,13 @@ export const ContentListEmptyDropZone = ({classes, path, mode}) => (
                 </UploadTransformComponent>
             </TableBody>
         </Table>
-    </ContentListTableWrapper>
+    </ContentTableWrapper>
 );
 
-ContentListEmptyDropZone.propTypes = {
+ContentEmptyDropZone.propTypes = {
     classes: PropTypes.object.isRequired,
     mode: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(ContentListEmptyDropZone);
+export default withStyles(styles)(ContentEmptyDropZone);

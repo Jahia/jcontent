@@ -30,7 +30,7 @@ export const getFileType = function (filename) {
 };
 
 export const structureData = function (parentPath, dataForParentPath = []) {
-    const structuredData = dataForParentPath.filter(d => d.parent.path === parentPath);
+    const structuredData = dataForParentPath.filter(d => d.parent.path === parentPath).map(d => adaptedRow(d));
     setSubrows(structuredData, dataForParentPath);
     return structuredData;
 
@@ -52,7 +52,20 @@ export const structureData = function (parentPath, dataForParentPath = []) {
     }
 };
 
-const adaptedRow = r => ({
+export const flattenTree = function (rows) {
+    const items = [];
+    collectItems(rows);
+    return items;
+
+    function collectItems(arrayData) {
+        for (let i = 0; i < arrayData.length; i++) {
+            items.push(arrayData[i]);
+            collectItems(arrayData[i].subRows || []);
+        }
+    }
+};
+
+export const adaptedRow = r => ({
     ...r,
     name: r.displayName,
     type: r.primaryNodeType.displayName,

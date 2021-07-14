@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
-import css from '../../../ContentListTableMoon.scss';
+import css from '../../../ContentTable.scss';
 import dayjs from 'dayjs';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {getDefaultLocale} from '../../../../../../JContent.utils';

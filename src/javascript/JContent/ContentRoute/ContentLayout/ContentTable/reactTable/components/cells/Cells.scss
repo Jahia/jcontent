@@ -29,3 +29,11 @@
 .badge {
     background-color: var(--color-accent);
 }
+
+.statusCellItem {
+    margin-right: var(--spacing-small);
+}
+
+.deleted {
+    text-decoration: line-through;
+}

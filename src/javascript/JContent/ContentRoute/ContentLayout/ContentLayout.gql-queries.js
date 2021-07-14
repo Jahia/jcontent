@@ -159,14 +159,34 @@ class ContentQueryHandler {
         };
     }
 
-    updateQueryParamsForStructuredView(params) {
-        return {
+    updateQueryParamsForStructuredView(params, viewType) {
+        const p = {
             ...params,
-            recursionTypesFilter: null,
             fieldGrouping: null,
-            typeFilter: ['jnt:page', 'jnt:content'],
             offset: 0,
             limit: 10000
+        };
+
+        if (JContentConstants.tableView.viewType.CONTENT === viewType) {
+            return {
+                ...p,
+                recursionTypesFilter: {types: ['jnt:content']},
+                typeFilter: ['jnt:content']
+            };
+        }
+
+        if (JContentConstants.tableView.viewType.PAGES === viewType) {
+            return {
+                ...p,
+                recursionTypesFilter: {types: ['jnt:page']},
+                typeFilter: ['jnt:page']
+            };
+        }
+
+        return {
+            ...p,
+            recursionTypesFilter: null,
+            typeFilter: ['jnt:page', 'jnt:content']
         };
     }
 

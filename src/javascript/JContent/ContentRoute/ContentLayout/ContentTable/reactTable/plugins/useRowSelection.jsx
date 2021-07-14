@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {cmSwitchSelection, cmAddSelection, cmRemoveSelection} from '../../../contentSelection.redux';
 import {useGetLatest} from 'react-table';
+import {flattenTree} from '../../../ContentLayout.utils';
 
 export const useRowSelection = hooks => {
     hooks.getToggleRowSelectedProps = defaultGetToggleRowSelectedProps;
@@ -39,7 +40,8 @@ function useInstance(instance) {
     const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
     const dispatch = useDispatch();
 
-    const allSelected = selection.length > 0 && selection.length === instance.rows.length;
+    const paths = flattenTree(rows).map(n => n.original.path);
+    const allSelected = selection.length > 0 && selection.length === paths.length;
     const anySelected = selection.length > 0;
 
     const toggleRowSelected = row => {
@@ -48,9 +50,9 @@ function useInstance(instance) {
 
     const toggleAllRowsSelected = () => {
         if (allSelected) {
-            dispatch(cmRemoveSelection(rows.map(r => r.original.path)));
+            dispatch(cmRemoveSelection(paths));
         } else {
-            dispatch(cmAddSelection(rows.map(r => r.original.path)));
+            dispatch(cmAddSelection(paths));
         }
     };
 

@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Table, TableBody, TableBodyCell, TableRow, Typography} from '@jahia/moonstone';
-import ContentListTableConstants from './ContentListTable.constants';
-import css from './ContentListTableMoon.scss';
-import ContentListTableWrapper from './ContentListTableWrapper';
+import ContentTableConstants from './ContentTable.constants';
+import css from './ContentTable.scss';
+import ContentTableWrapper from './ContentTableWrapper';
 
 const ContentNotFound = ({columnSpan, t}) => (
-    <ContentListTableWrapper>
+    <ContentTableWrapper>
         <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
             <TableBody>
                 <TableRow>
-                    <TableBodyCell colSpan={columnSpan + ContentListTableConstants.appTableCells} className={css.empty}>
+                    <TableBodyCell colSpan={columnSpan + ContentTableConstants.appTableCells} className={css.empty}>
                         <Typography weight="bold">
                             {t('jcontent:label.contentManager.contentNotFound')}
                         </Typography>
@@ -18,7 +18,7 @@ const ContentNotFound = ({columnSpan, t}) => (
                 </TableRow>
             </TableBody>
         </Table>
-    </ContentListTableWrapper>
+    </ContentTableWrapper>
 );
 
 ContentNotFound.propTypes = {

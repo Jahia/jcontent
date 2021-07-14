@@ -337,6 +337,10 @@
       "view": {
         "flatList": "Flat list",
         "structuredView": "Structured view"
+      },
+      "contentTypeSelector": {
+        "contents": "Contents ({{count}})",
+        "pages": "Sub-pages ({{count}})"
       }
     }
   }

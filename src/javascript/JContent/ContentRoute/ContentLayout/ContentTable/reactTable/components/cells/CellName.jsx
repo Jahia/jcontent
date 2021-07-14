@@ -5,6 +5,8 @@ import {Folder} from 'mdi-material-ui';
 import {isEmpty} from 'lodash';
 import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../../../../icons';
 import PropTypes from 'prop-types';
+import {isMarkedForDeletion} from '../../../../../../JContent.utils';
+import classes from './Cells.scss';
 
 const addIconSuffix = icon => {
     return (icon.includes('.png') ? icon : icon + '.png');
@@ -35,8 +37,9 @@ const getMediaIcon = node => {
 
 export const CellName = ({value, cell, column, row}) => {
     const node = row.original;
+    const deleted = isMarkedForDeletion(node);
     return (
-        <TableBodyCell key={row.id + column.id} isExpandableColumn {...cell.getCellProps()} row={row} cell={cell} iconStart={row.original[cell.column.id]?.icon} data-cm-role="table-content-list-cell-name">
+        <TableBodyCell key={row.id + column.id} isExpandableColumn className={deleted ? classes.deleted : ''} {...cell.getCellProps()} row={row} cell={cell} iconStart={row.original[cell.column.id]?.icon} data-cm-role="table-content-list-cell-name">
             {getMediaIcon(node)}{value}
         </TableBodyCell>
     );

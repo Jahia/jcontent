@@ -30,7 +30,7 @@ import {flattenTree} from '../ContentLayout.utils';
 import ContentTypeSelector from './ContentTypeSelector';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
-export const ContentListTable = ({
+export const ContentTable = ({
     setPath,
     mode,
     siteKey,
@@ -246,7 +246,7 @@ const mapDispatchToProps = dispatch => ({
     removeSelection: path => dispatch(cmRemoveSelection(path))
 });
 
-ContentListTable.propTypes = {
+ContentTable.propTypes = {
     contentNotFound: PropTypes.bool,
     loading: PropTypes.bool,
     mode: PropTypes.string.isRequired,
@@ -271,4 +271,4 @@ ContentListTable.propTypes = {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps)
-)(ContentListTable);
+)(ContentTable);

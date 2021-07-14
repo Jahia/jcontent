@@ -40,7 +40,7 @@ function useInstance(instance) {
     const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
     const dispatch = useDispatch();
 
-    const paths = flattenTree(rows, p => p.original.path);
+    const paths = flattenTree(rows).map(n => n.original.path);
     const allSelected = selection.length > 0 && selection.length === paths.length;
     const anySelected = selection.length > 0;
 

@@ -22,7 +22,7 @@ import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
 import {useTable, useFlexLayout, useExpanded} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
 import {useSort} from './reactTable/plugins';
-import ContentListHeader from './ContentListHeader/ContentListHeaderMoon';
+import ContentListHeader from './ContentListHeader/ContentListHeader';
 import css from './ContentTable.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentTableWrapper from './ContentTableWrapper';
@@ -52,7 +52,7 @@ export const ContentTable = ({
     loading}) => {
     const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
     const {t} = useTranslation();
-    const paths = useMemo(() => flattenTree(rows, p => p.path), [rows]);
+    const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
     const {
         mainPanelRef,
         handleKeyboardNavigation,

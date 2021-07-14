@@ -25,7 +25,7 @@ const styles = theme => ({
         minHeight: 0,
         width: '100%'
     },
-    CONTENT: {
+    content: {
         flex: '1 2 0%',
         order: 2,
         display: 'flex',
@@ -119,7 +119,7 @@ export class ContentLayout extends React.Component {
                     </Drawer>
                     <ContextualMenu setOpenRef={this.contextualMenu} actionKey="contentMenu" path={path}/>
                     <div
-                        className={classNames(classes.CONTENT)}
+                        className={classNames(classes.content)}
                         style={{
                             marginRight: previewOpen ? 0 : -contentManagerStyleConstants.previewDrawerWidth
                         }}

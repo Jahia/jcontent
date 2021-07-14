@@ -24,7 +24,7 @@ import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
 import {structureData, adaptedRow} from '../ContentLayout/ContentLayout.utils';
-import usePreladedData from './usePreloadedData';
+import usePreloadedData from './usePreloadedData';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -185,7 +185,7 @@ export const ContentLayoutContainer = ({
     };
 
     // Preload data either for pages or contents depending on current view type
-    const preloadedData = usePreladedData(
+    const preloadedData = usePreloadedData(
         isStructuredView && !isMenuLabel,
         client,
         {

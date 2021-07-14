@@ -1,71 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
+import {TableHeadCell, TableRow, TableHead, SortIndicator} from '@jahia/moonstone';
 
-export const ContentListHeader = ({order, orderBy, columnData, t, classes, setSort, allSelected, anySelected, selectAll, unselectAll}) => {
-    let direction = order === 'DESC' ? 'ASC' : 'DESC';
-    let noneSelected = !anySelected;
+export const ContentListHeader = ({headerGroups}) => {
     return (
         <TableHead>
-            <TableRow>
-                <TableCell padding="none"/>
-                <TableCell padding="checkbox">
-                    <Checkbox indeterminate={anySelected && !allSelected}
-                              checked={anySelected}
-                              onClick={allSelected ? unselectAll : selectAll}/>
-                </TableCell>
-                {columnData.map(column => {
-                    if (column.sortable) {
-                        return (
-                            <TableCell
-                                key={column.id}
-                                className={classes[column.id + 'Cell']}
-                                sortDirection={orderBy === column.property ? order.toLowerCase() : false}
-                            >
-                                <TableSortLabel
-                                    active={orderBy === column.property}
-                                    direction={direction.toLowerCase()}
-                                    className={anySelected ? classes.disabledSort : ''}
-                                    onClick={() => noneSelected && setSort({
-                                        order: direction,
-                                        orderBy: column.property
-                                    })}
-                                >
-                                    <Typography noWrap variant="zeta">{t(column.label)}</Typography>
-                                </TableSortLabel>
-                            </TableCell>
-                        );
-                    }
-
-                    return (
-                        <TableCell
-                            key={column.id}
-                            className={classes[column.id + 'Cell']}
-                            sortDirection={orderBy === column.property ? order.toLowerCase() : false}
-                        >
-                            <Typography noWrap variant="zeta">{t(column.label)}</Typography>
-                        </TableCell>
-                    );
-                }, this)}
-            </TableRow>
+            {headerGroups.map(headerGroup => (
+                <TableRow key={'headerGroup' + headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => (
+                        <TableHeadCell key={column.id} {...column.getHeaderProps(column.getSortProps())}>
+                            {column.render('Header')}
+                            {column.sortable && <SortIndicator isSorted={column.sorted} direction={column.sortDirection}/>}
+                        </TableHeadCell>
+                    ))}
+                </TableRow>
+            ))}
         </TableHead>
     );
 };
 
 ContentListHeader.propTypes = {
-    allSelected: PropTypes.bool.isRequired,
-    anySelected: PropTypes.bool.isRequired,
-    classes: PropTypes.object.isRequired,
-    columnData: PropTypes.array.isRequired,
-    order: PropTypes.string.isRequired,
-    orderBy: PropTypes.string.isRequired,
-    selectAll: PropTypes.func.isRequired,
-    setSort: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
-    unselectAll: PropTypes.func.isRequired
+    headerGroups: PropTypes.object.isRequired
 };
 
 export default compose(

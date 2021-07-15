@@ -333,6 +333,10 @@
         "published": "Live",
         "warning": "Attention",
         "workInProgress": "Travail en cours"
+      },
+      "contentTypeSelector": {
+        "contents": "Contenus ({{count}})",
+        "pages": "Sous-pages ({{count}})"
       }
     }
   }

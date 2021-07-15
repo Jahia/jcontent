@@ -331,7 +331,7 @@
         "notPublished": "Nicht veröffentlicht",
         "published": "Live",
         "warning": "Achtung",
-        "workInProgress": "In Arbeit",
+        "workInProgress": "In Arbeit"
       },
       "contentTypeSelector": {
         "contents": "Content ({{count}})",

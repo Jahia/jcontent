@@ -16,7 +16,9 @@ export default (shouldFetch, client, options, tableView, path) => {
         }
 
         if (shouldFetch) {
-            fetch();
+            setTimeout(() => {
+                fetch();
+            }, 30);
         }
     }, [tableView.viewType, tableView.viewMode, path]);
 

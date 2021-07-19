@@ -125,17 +125,24 @@ export const ContentTable = ({
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
+    const typeSelector = isStructuredView && mode === JContentConstants.mode.PAGES && dataCounts ? <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/> : null;
+
     if (_.isEmpty(rows) && !loading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
             return <EmptyTable columnSpan={columnData.length} t={t}/>;
         }
 
-        return <ContentListEmptyDropZone mode={mode} path={path}/>;
+        return (
+            <>
+                {typeSelector}
+                <ContentListEmptyDropZone mode={mode} path={path}/>;
+            </>
+        );
     }
 
     return (
         <>
-            {isStructuredView && mode === JContentConstants.mode.PAGES && dataCounts && <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/>}
+            {typeSelector}
             <ContentTableWrapper reference={mainPanelRef}
                                  onKeyDown={handleKeyboardNavigation}
                                  onClick={setFocusOnMainContainer}

@@ -9,7 +9,7 @@ class PublicationStatusUnpublished {
         return (
             <React.Fragment>
                 { t('jcontent:label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
+                <time>{dayjs(_.get(node, 'lastModified', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
     }
@@ -49,7 +49,7 @@ class PublicationStatusModified {
         return (
             <React.Fragment>
                 { t('jcontent:label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastModified.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
+                <time>{dayjs(_.get(node, 'lastModified', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
             </React.Fragment>
         );
     }

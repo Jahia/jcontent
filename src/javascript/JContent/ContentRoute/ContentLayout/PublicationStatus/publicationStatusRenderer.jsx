@@ -2,15 +2,21 @@ import React from 'react';
 import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
 import {isMarkedForDeletion, getDefaultLocale} from '../../../JContent.utils';
-import * as _ from 'lodash';
+
+function getFormattedDate(date, locale) {
+    return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');
+}
 
 class PublicationStatusUnpublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
+        const userName = node?.lastModifiedBy?.value || '';
+        const lastModified = node?.lastModified || '';
+
         return (
-            <React.Fragment>
-                { t('jcontent:label.contentManager.publicationStatus.unPublished', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastModified', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
-            </React.Fragment>
+            <>
+                { t('jcontent:label.contentManager.publicationStatus.unPublished', {userName, timestamp: ''}) }
+                <time>{getFormattedDate(lastModified, locale)}</time>
+            </>
         );
     }
 
@@ -31,11 +37,14 @@ class PublicationStatusNotPublished {
 
 class PublicationStatusPublished {
     geti18nDetailsMessage(node, t, locale = 'en') {
+        const userName = node?.lastModifiedBy?.value || '';
+        const lastPublished = node?.lastPublished?.value || '';
+
         return (
-            <React.Fragment>
-                { t('jcontent:label.contentManager.publicationStatus.published', {userName: _.get(node, 'lastPublishedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastPublished.value', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
-            </React.Fragment>
+            <>
+                { t('jcontent:label.contentManager.publicationStatus.published', {userName, timestamp: ''}) }
+                <time>{getFormattedDate(lastPublished, locale)}</time>
+            </>
         );
     }
 
@@ -46,11 +55,14 @@ class PublicationStatusPublished {
 
 class PublicationStatusModified {
     geti18nDetailsMessage(node, t, locale = 'en') {
+        const userName = node?.lastModifiedBy?.value || '';
+        const lastModified = node?.lastModified || '';
+
         return (
-            <React.Fragment>
-                { t('jcontent:label.contentManager.publicationStatus.modified', {userName: _.get(node, 'lastModifiedBy.value', ''), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'lastModified', '')).locale(getDefaultLocale(locale)).format('LLL')}</time>
-            </React.Fragment>
+            <>
+                { t('jcontent:label.contentManager.publicationStatus.modified', {userName, timestamp: ''}) }
+                <time>{getFormattedDate(lastModified, locale)}</time>
+            </>
         );
     }
 
@@ -61,14 +73,17 @@ class PublicationStatusModified {
 
 class PublicationStatusMarkedForDeletion {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        let parentDeletionUser = _.get(_.head(node.ancestors), 'deletionUser.value', '');
-        let parentDeletionDate = _.get(_.head(node.ancestors), 'deletionDate.value', '');
+        let parentDeletionUser = node.ancestors[0]?.deletionUser?.value || '';
+        let parentDeletionDate = node.ancestors[0]?.deletionDate?.value || '';
+
+        let userName = node?.deletedBy?.value || parentDeletionUser;
+        let deletedTs = node?.deleted?.value || parentDeletionDate;
 
         return (
-            <React.Fragment>
-                { t('jcontent:label.contentManager.publicationStatus.markedForDeletion', {userName: _.get(node, 'deletedBy.value', parentDeletionUser), timestamp: ''}) }
-                <time>{dayjs(_.get(node, 'deleted.value', parentDeletionDate)).locale(getDefaultLocale(locale)).format('LLL')}</time>
-            </React.Fragment>
+            <>
+                { t('jcontent:label.contentManager.publicationStatus.markedForDeletion', {userName, timestamp: ''}) }
+                <time>{getFormattedDate(deletedTs, locale)}</time>
+            </>
         );
     }
 

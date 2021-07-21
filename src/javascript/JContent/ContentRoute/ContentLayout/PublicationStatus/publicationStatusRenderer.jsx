@@ -8,14 +8,10 @@ function getFormattedDate(date, locale) {
 }
 
 class PublicationStatusUnpublished {
-    geti18nDetailsMessage(node, t, locale = 'en') {
-        const userName = node?.lastModifiedBy?.value || '';
-        const lastModified = node?.lastModified || '';
-
+    geti18nDetailsMessage(node, t) {
         return (
             <>
-                { t('jcontent:label.contentManager.publicationStatus.unPublished', {userName, timestamp: ''}) }
-                <time>{getFormattedDate(lastModified, locale)}</time>
+                { t('jcontent:label.contentManager.publicationStatus.unPublished') }
             </>
         );
     }

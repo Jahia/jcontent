@@ -18,7 +18,7 @@
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
       "publicationStatus": {
         "notPublished": "This content has never been published",
-        "unPublished": "Unpublished by {{userName}} on {{timestamp}}",
+        "unPublished": "This item has been unpublished",
         "modified": "Modified by {{userName}} on {{timestamp}}",
         "published": "Published by {{userName}} on {{timestamp}}",
         "mandatoryLanguageUnpublishable": {

@@ -167,27 +167,21 @@ class ContentQueryHandler {
             limit: 10000
         };
 
-        if (JContentConstants.tableView.viewType.CONTENT === viewType) {
-            return {
+        const {CONTENT, PAGES} = JContentConstants.tableView.viewType;
+        switch (viewType) {
+            case CONTENT: return {
                 ...p,
-                recursionTypesFilter: {types: ['jnt:content']},
+                recursionTypesFilter: {multi: 'NONE', types: ['jnt:contentFolder']},
                 typeFilter: ['jnt:content']
             };
-        }
-
-        if (JContentConstants.tableView.viewType.PAGES === viewType) {
-            return {
+            case PAGES: return {
                 ...p,
                 recursionTypesFilter: {types: ['jnt:page']},
                 typeFilter: ['jnt:page']
             };
-        }
 
-        return {
-            ...p,
-            recursionTypesFilter: null,
-            typeFilter: ['jnt:page', 'jnt:content']
-        };
+            default: return p;
+        }
     }
 
     getResultsPath(data) {

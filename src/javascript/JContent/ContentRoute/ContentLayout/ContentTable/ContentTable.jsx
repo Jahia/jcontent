@@ -135,7 +135,7 @@ export const ContentTable = ({
         return (
             <>
                 {typeSelector}
-                <ContentListEmptyDropZone mode={mode} path={path}/>;
+                <ContentListEmptyDropZone mode={mode} path={path}/>
             </>
         );
     }
@@ -184,9 +184,8 @@ export const ContentTable = ({
                                           onDoubleClick={allowDoubleClickNavigation(
                                               node.primaryNodeType.name,
                                               node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                              () => {
-                                                  doubleClickNavigation(node);
-                                              })}
+                                              () => doubleClickNavigation(node)
+                                          )}
                                 >
                                     <ContextualMenu
                                         setOpenRef={contextualMenus.current[node.path]}

@@ -75,8 +75,7 @@ export const ContentLayoutContainer = ({
 
     // Update params for structured view to use different type and recursion filters
     if (isStructuredView) {
-        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams,
-            mode === JContentConstants.mode.PAGES ? tableView.viewType : JContentConstants.tableView.viewType.ALL);
+        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, tableView.viewType);
     }
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {

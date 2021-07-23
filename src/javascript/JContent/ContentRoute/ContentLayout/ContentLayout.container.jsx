@@ -200,7 +200,7 @@ export const ContentLayoutContainer = ({
             let subTypes = ['jnt:page', 'jnt:contentFolder', 'jnt:virtualsite'];
             let isSub = !subTypes.includes(nodeTypeName);
             // Sub is not the same as params.sub; refresh and sync up path param state
-            if (isSub !== Boolean(params.sub)) {
+            if (isSub !== (params.sub === true)) { // Params.sub needs to be boolean type; else falsy
                 setPath(path, {sub: isSub});
             }
         }

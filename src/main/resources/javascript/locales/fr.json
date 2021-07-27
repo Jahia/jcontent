@@ -335,8 +335,8 @@
         "workInProgress": "Travail en cours"
       },
       "contentTypeSelector": {
-        "contents": "Contenus ({{count}})",
-        "pages": "Sous-pages ({{count}})"
+        "contents": "Contenus {{count}}",
+        "pages": "Sous-pages {{count}}"
       }
     }
   }

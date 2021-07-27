@@ -75,7 +75,7 @@ export const ContentLayoutContainer = ({
 
     // Update params for structured view to use different type and recursion filters
     if (isStructuredView) {
-        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, tableView.viewType);
+        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, tableView.viewType, mode);
     }
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
@@ -187,7 +187,7 @@ export const ContentLayoutContainer = ({
         client,
         {
             query: layoutQuery,
-            variables: queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType),
+            variables: queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode),
             fetchPolicy: fetchPolicy
         },
         tableView,

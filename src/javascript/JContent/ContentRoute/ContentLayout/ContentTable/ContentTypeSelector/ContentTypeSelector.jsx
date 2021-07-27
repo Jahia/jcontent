@@ -19,7 +19,7 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
         <Tab className={classes.tabs}>
             <TabItem isSelected={JContentConstants.tableView.viewType.CONTENT === viewType}
                      isDisabled={contentCount === 0}
-                     label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount})}
+                     label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount > 0 ? `(${contentCount})` : ' '})}
                      size="big"
                      onClick={() => {
                          dispatch(setTableViewType(JContentConstants.tableView.viewType.CONTENT));
@@ -27,7 +27,7 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
                      }}/>
             <TabItem isSelected={JContentConstants.tableView.viewType.PAGES === viewType}
                      isDisabled={pagesCount === 0}
-                     label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount})}
+                     label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount > 0 ? `(${pagesCount})` : ' '})}
                      size="big"
                      onClick={() => {
                          dispatch(setTableViewType(JContentConstants.tableView.viewType.PAGES));

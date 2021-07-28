@@ -16,6 +16,7 @@ export default (shouldFetch, client, options, tableView, path) => {
         }
 
         if (shouldFetch) {
+            setData([]);
             setTimeout(() => {
                 fetch();
             }, 30);

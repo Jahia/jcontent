@@ -339,8 +339,8 @@
         "structuredView": "Structured view"
       },
       "contentTypeSelector": {
-        "contents": "Contents ({{count}})",
-        "pages": "Sub-pages ({{count}})"
+        "contents": "Contents {{count}}",
+        "pages": "Sub-pages {{count}}"
       }
     }
   }

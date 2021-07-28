@@ -159,7 +159,7 @@ class ContentQueryHandler {
         };
     }
 
-    updateQueryParamsForStructuredView(params, viewType) {
+    updateQueryParamsForStructuredView(params, viewType, mode) {
         const p = {
             ...params,
             fieldGrouping: null,
@@ -171,7 +171,7 @@ class ContentQueryHandler {
         switch (viewType) {
             case CONTENT: return {
                 ...p,
-                recursionTypesFilter: {multi: 'NONE', types: ['jnt:contentFolder']},
+                recursionTypesFilter: JContentConstants.mode.CONTENT_FOLDERS === mode ? {multi: 'NONE', types: ['jnt:contentFolder']} : {types: ['jnt:content']},
                 typeFilter: ['jnt:content']
             };
             case PAGES: return {

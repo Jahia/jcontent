@@ -334,8 +334,8 @@
         "workInProgress": "In Arbeit"
       },
       "contentTypeSelector": {
-        "contents": "Content ({{count}})",
-        "pages": "Unter-Seiten ({{count}})"
+        "contents": "Content {{count}}",
+        "pages": "Unter-Seiten {{count}}"
       }
     }
   }

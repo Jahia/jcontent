@@ -67,8 +67,8 @@ export const flattenTree = function (rows) {
 
 export const adaptedRow = r => ({
     ...r,
-    name: r.displayName,
-    type: r.primaryNodeType.displayName,
-    createdBy: r.createdBy.value,
-    lastModified: r.lastModified.value
+    name: r?.displayName,
+    type: r?.primaryNodeType?.displayName,
+    createdBy: r?.createdBy?.value,
+    lastModified: r?.lastModified?.value
 });

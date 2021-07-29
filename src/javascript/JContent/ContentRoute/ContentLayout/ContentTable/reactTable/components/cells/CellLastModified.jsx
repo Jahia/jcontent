@@ -19,8 +19,8 @@ export const CellLastModified = ({row, value, cell, column}) => {
                        data-cm-role={'table-content-list-cell-' + column.id}
         >
             <div className={css.cellLastModified}>
-                <Typography className={css.cellLastModifiedText}>
-                    <time>{dayjs(value).locale(getDefaultLocale(uilang)).format('ll')}</time>
+                <Typography className={css.cellLastModifiedText} component="time">
+                    {dayjs(value).locale(getDefaultLocale(uilang)).format('ll')}
                 </Typography>
                 <div className={css.cellActions}
                      data-cm-role="table-content-list-cell-actions"

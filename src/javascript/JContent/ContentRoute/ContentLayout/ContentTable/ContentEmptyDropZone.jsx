@@ -15,6 +15,7 @@ const styles = theme => ({
         padding: theme.spacing.unit * 4
     },
     dragZone: {
+        justifyContent: 'center',
         display: 'flex',
         padding: 0,
         width: '100%'

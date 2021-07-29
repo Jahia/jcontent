@@ -5,6 +5,7 @@ import {isWorkInProgress} from '../../../../../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {Tooltip} from '@material-ui/core';
+import {columnWidths} from '../../columns';
 import classes from './Cells.scss';
 
 export const CellStatus = ({cell, column, row}) => {
@@ -14,7 +15,10 @@ export const CellStatus = ({cell, column, row}) => {
     const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;
 
     return (
-        <TableBodyCell key={row.id + column.id} {...cell.getCellProps()}>
+        <TableBodyCell key={row.id + column.id}
+                       {...cell.getCellProps()}
+                       width={columnWidths[column.id]}
+        >
             {isWorkInProgress(node, lang) &&
             <Tooltip title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}><Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>}/></Tooltip>}
             {node.lockOwner !== null &&

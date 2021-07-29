@@ -3,6 +3,8 @@ import {TableBodyCell} from '@jahia/moonstone';
 import PublicationStatus from '../../../../PublicationStatus';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
+import scssStyles from './Cells.scss';
+import {columnWidths} from '../../columns';
 
 const styles = () => ({
     root: {
@@ -17,7 +19,12 @@ const styles = () => ({
 });
 
 export const CellPublicationStatus = withStyles(styles)(({row, cell, column, classes}) => (
-    <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} data-cm-role="table-content-list-cell-publication">
+    <TableBodyCell key={row.id + column.id}
+                   className={scssStyles.publicationStatusCell}
+                   {...cell.getCellProps()}
+                   width={columnWidths[column.id]}
+                   data-cm-role="table-content-list-cell-publication"
+    >
         <PublicationStatus node={row.original} classes={{root: classes.root}}/>
     </TableBodyCell>
 ));

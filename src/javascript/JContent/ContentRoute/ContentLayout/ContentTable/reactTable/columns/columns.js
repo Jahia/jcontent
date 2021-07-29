@@ -1,20 +1,27 @@
 import {Cell, CellLastModified, CellPublicationStatus, CellSelection, CellVisibleActions, CellName, CellStatus, CellType} from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 
+export const columnWidths = {
+    publicationStatus: '15px',
+    selection: '50px',
+    name: '300px',
+    status: '115px',
+    type: '180px',
+    createdBy: '150px',
+    lastModified: '220px',
+    visibleActions: '60px'
+};
+
 export const allColumnData = [
     {
         id: 'publicationStatus',
         sortable: false,
-        width: 50,
-        maxWidth: 50,
         Header: '',
         Cell: CellPublicationStatus
     },
     {
         id: 'selection',
         sortable: false,
-        width: 50,
-        maxWidth: 50,
         Header: HeaderSelection,
         Cell: CellSelection
     },
@@ -24,7 +31,6 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName',
-        width: 300,
         Cell: CellName,
         Header: Header
     },
@@ -32,8 +38,6 @@ export const allColumnData = [
         id: 'status',
         label: 'jcontent:label.contentManager.listColumns.status',
         sortable: false,
-        width: 100,
-        maxWidth: 100,
         Header: '',
         Cell: CellStatus
     },
@@ -43,8 +47,6 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.type',
         sortable: true,
         property: 'primaryNodeType.displayName',
-        width: 150,
-        maxWidth: 150,
         Cell: CellType,
         Header: Header
     },
@@ -53,8 +55,6 @@ export const allColumnData = [
         accessor: 'createdBy',
         label: 'jcontent:label.contentManager.listColumns.createdBy',
         sortable: true,
-        width: 100,
-        maxWidth: 100,
         property: 'createdBy.value',
         Header: Header,
         Cell: Cell
@@ -65,15 +65,12 @@ export const allColumnData = [
         label: 'jcontent:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value',
-        width: 200,
         Cell: CellLastModified,
         Header: Header
     },
     {
         id: 'visibleActions',
         Header: '',
-        width: 40,
-        maxWidth: 40,
         Cell: CellVisibleActions
     }
 ];

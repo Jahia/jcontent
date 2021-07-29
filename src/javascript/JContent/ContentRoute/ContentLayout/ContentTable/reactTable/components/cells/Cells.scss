@@ -1,29 +1,39 @@
 .cellActions {
-    display: none;
+    display: flex;
     justify-content: flex-end;
     align-items: center;
     width: inherit;
     height: 48px;
 
     background-color: transparent;
+
+    visibility: hidden;
 }
 
-.cellType {
-    display: flex;
-    flex-direction: row;
+.cellName {
+    flex-grow: 1;
+}
 
+.cellLastModified {
+    display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.cellLastModifiedText {
-    display: inherit;
+.visibleActions {
+    div {
+        width: inherit;
+    }
 }
 
 .icon {
-    margin-right: 3px;
+    padding: 0 var(--spacing-nano);
 
-    vertical-align: bottom;
+    vertical-align: top;
+}
+
+.publicationStatusCell div {
+    padding-left: 0;
 }
 
 .badge {

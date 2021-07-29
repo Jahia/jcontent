@@ -2,11 +2,7 @@
 
 .tableRow {
     &:hover .cellActions {
-        display: flex;
-    }
-
-    &:hover .cellLastModifiedText {
-        display: none;
+        visibility: inherit;
     }
 }
 
@@ -18,6 +14,12 @@
 
     outline: none;
     overflow: auto;
+}
+
+.tableHeader {
+    .header-name {
+        flex-grow: 1;
+    }
 }
 
 .empty {

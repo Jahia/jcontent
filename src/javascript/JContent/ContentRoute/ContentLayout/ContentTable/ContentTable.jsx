@@ -19,7 +19,7 @@ import ContentListEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
 import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
-import {useTable, useFlexLayout, useExpanded} from 'react-table';
+import {useTable, useExpanded} from 'react-table';
 import {useRowSelection} from './reactTable/plugins';
 import {useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeader';
@@ -80,8 +80,7 @@ export const ContentTable = ({
         },
         useRowSelection,
         useSort,
-        useExpanded,
-        useFlexLayout
+        useExpanded
     );
 
     useEffect(() => {
@@ -147,7 +146,11 @@ export const ContentTable = ({
                                  onKeyDown={handleKeyboardNavigation}
                                  onClick={setFocusOnMainContainer}
             >
-                <Table aria-labelledby="tableTitle" data-cm-role="table-content-list" {...getTableProps()} style={{width: '100%'}}>
+                <Table aria-labelledby="tableTitle"
+                       data-cm-role="table-content-list"
+                       {...getTableProps()}
+                       style={{width: '100%', minWidth: '1100px'}}
+                >
                     <ContentListHeader headerGroups={headerGroups}/>
                     <UploadTransformComponent uploadTargetComponent={TableBody}
                                               uploadPath={path}

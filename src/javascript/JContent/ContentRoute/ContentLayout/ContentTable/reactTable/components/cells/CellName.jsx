@@ -1,12 +1,13 @@
 import React from 'react';
 import {TableBodyCell} from '@jahia/moonstone';
-import css from './Cells.scss';
 import {Folder} from 'mdi-material-ui';
 import {isEmpty} from 'lodash';
 import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../../../../icons';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../../../../../../JContent.utils';
+import {columnWidths} from '../../columns';
 import classes from './Cells.scss';
+import clsx from 'clsx';
 
 const addIconSuffix = icon => {
     return (icon.includes('.png') ? icon : icon + '.png');
@@ -15,23 +16,23 @@ const addIconSuffix = icon => {
 const getMediaIcon = node => {
     switch (node.primaryNodeType.name) {
         case 'jnt:folder':
-            return <Folder className={css.icon}/>;
+            return <Folder className={classes.icon}/>;
         case 'jnt:file':
             if (node.mixinTypes.length !== 0 && !isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:image'))) {
-                return <ImageIcon className={css.icon}/>;
+                return <ImageIcon className={classes.icon}/>;
             }
 
             if (node.name.match(/.zip$/g) || node.name.match(/.tar$/g) || node.name.match(/.rar$/g)) {
-                return <ZipIcon className={css.icon}/>;
+                return <ZipIcon className={classes.icon}/>;
             }
 
             if (node.mixinTypes.length !== 0 && !isEmpty(node.mixinTypes.filter(mixin => mixin.name === 'jmix:document'))) {
-                return <DocumentIcon className={css.icon}/>;
+                return <DocumentIcon className={classes.icon}/>;
             }
 
-            return <FileIcon className={css.icon}/>;
+            return <FileIcon className={classes.icon}/>;
         default:
-            return <img src={addIconSuffix(node.primaryNodeType.icon)}/>;
+            return <img className={classes.icon} src={addIconSuffix(node.primaryNodeType.icon)}/>;
     }
 };
 
@@ -39,7 +40,19 @@ export const CellName = ({value, cell, column, row}) => {
     const node = row.original;
     const deleted = isMarkedForDeletion(node);
     return (
-        <TableBodyCell key={row.id + column.id} isExpandableColumn className={deleted ? classes.deleted : ''} {...cell.getCellProps()} row={row} cell={cell} iconStart={row.original[cell.column.id]?.icon} data-cm-role="table-content-list-cell-name">
+        <TableBodyCell key={row.id + column.id}
+                       isExpandableColumn
+                       className={clsx(
+                           classes.cellName,
+                           {[classes.deleted]: deleted}
+                       )}
+                       width={columnWidths[column.id]}
+                       {...cell.getCellProps()}
+                       row={row}
+                       cell={cell}
+                       iconStart={row.original[cell.column.id]?.icon}
+                       data-cm-role="table-content-list-cell-name"
+        >
             {getMediaIcon(node)}{value}
         </TableBodyCell>
     );

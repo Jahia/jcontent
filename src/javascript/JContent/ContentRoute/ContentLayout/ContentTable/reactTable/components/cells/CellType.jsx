@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {columnWidths} from '../../columns';
-import css from '../../../ContentTable.scss';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 
 export const CellType = ({value, cell, column, row}) => {
     return (
         <TableBodyCell key={row.id + column.id} {...cell.getCellProps()} width={columnWidths[column.id]}>
-            <div className={css.cellType}>
-                <Typography>{value}</Typography>
-            </div>
+            <Typography isNowrap>{value}</Typography>
         </TableBodyCell>
     );
 };

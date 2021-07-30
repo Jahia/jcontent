@@ -100,7 +100,7 @@ export class ImageEditor extends React.Component {
                         }
                         title={name}
                         titleProps={{color: 'alpha'}}
-                        contextModifiers={<React.Fragment></React.Fragment>}
+                        contextModifiers={<React.Fragment/>}
                         actions={
                             <React.Fragment>
                                 <Typography variant="omega">

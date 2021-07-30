@@ -5,6 +5,20 @@ orbs:
   jq: circleci/jq@2.2.0
   jahia-modules-orb: jahia/jahia-modules-orb@0.4.0
 
+references:
+  workdir: &workdir
+    working_directory: ~/source
+
+  persist-workspace: &persist-workspace
+    persist_to_workspace:
+      root: ~/source
+      paths:
+        - .
+
+  attach-workspace: &attach-workspace
+    attach_workspace:
+      at: .
+
 # Parameters are available across the entire config file and can be used with this syntax: << pipeline.parameters.THE_PARAMETER >>
 # Avoid using project-specific variables in the jobs or steps.
 # Instead, declare those as pipeline parameters (At the top of the config file).
@@ -74,6 +88,16 @@ parameters:
     type: boolean
     default: false
 
+jobs:
+  initialize:
+    <<: *workdir
+    docker: # run the steps with Docker
+      - image: circleci/openjdk:8-jdk-stretch
+    steps:
+      - checkout
+      - jahia-modules-orb/generate-cachekey-seed
+      - *persist-workspace
+
 workflows:
   # On code change is executed each time new code is pushed to a branch
   # Current project configuration in circleci only builds on PR + main, so effectively this is only being executed
@@ -83,22 +107,22 @@ workflows:
         - << pipeline.parameters.IS_RELEASE >>
         - << pipeline.parameters.UPDATE_SIGNATURE >>
     jobs:
-      - jahia-modules-orb/initialize
+      - initialize
       - jahia-modules-orb/update-signature:
           pre-steps:
             - jahia-modules-orb/update-signature-prestep
           ssh_key_fingerprints:  << pipeline.parameters.SSH_KEY_FINGERPRINT >>
           context: QA_ENVIRONMENT
           requires:
-            - jahia-modules-orb/initialize
+            - initialize
       - jahia-modules-orb/static-analysis:
           requires:
-            - jahia-modules-orb/initialize
+            - initialize
           auditci_level: << pipeline.parameters.AUDITCI_LEVEL >>
       - jahia-modules-orb/build:
           context: QA_ENVIRONMENT
           requires:
-            - jahia-modules-orb/initialize
+            - initialize
             - jahia-modules-orb/update-signature
       - jahia-modules-orb/sonar-analysis:
           context: QA_ENVIRONMENT

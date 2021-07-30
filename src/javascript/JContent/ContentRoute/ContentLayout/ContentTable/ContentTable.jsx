@@ -142,21 +142,20 @@ export const ContentTable = ({
     return (
         <>
             {typeSelector}
-            <ContentTableWrapper reference={mainPanelRef}
-                                 onKeyDown={handleKeyboardNavigation}
-                                 onClick={setFocusOnMainContainer}
+            <UploadTransformComponent uploadTargetComponent={ContentTableWrapper}
+                                      uploadPath={path}
+                                      mode={mode}
+                                      reference={mainPanelRef}
+                                      onKeyDown={handleKeyboardNavigation}
+                                      onClick={setFocusOnMainContainer}
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"
-                       {...getTableProps()}
                        style={{width: '100%', minWidth: '1100px'}}
+                       {...getTableProps()}
                 >
                     <ContentListHeader headerGroups={headerGroups}/>
-                    <UploadTransformComponent uploadTargetComponent={TableBody}
-                                              uploadPath={path}
-                                              mode={mode}
-                                              {...getTableBodyProps()}
-                    >
+                    <TableBody {...getTableBodyProps()}>
                         {tableRows.map((row, index) => {
                             prepareRow(row);
                             const rowProps = row.getRowProps();
@@ -200,9 +199,9 @@ export const ContentTable = ({
                                 </TableRow>
                             );
                         })}
-                    </UploadTransformComponent>
+                    </TableBody>
                 </Table>
-            </ContentTableWrapper>
+            </UploadTransformComponent>
             {!isStructuredView &&
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}

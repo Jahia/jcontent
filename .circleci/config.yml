@@ -88,16 +88,6 @@ parameters:
     type: boolean
     default: false
 
-jobs:
-  initialize:
-    <<: *workdir
-    docker: # run the steps with Docker
-      - image: circleci/openjdk:8-jdk-stretch
-    steps:
-      - checkout
-      - jahia-modules-orb/generate-cachekey-seed
-      - *persist-workspace
-
 workflows:
   # On code change is executed each time new code is pushed to a branch
   # Current project configuration in circleci only builds on PR + main, so effectively this is only being executed
@@ -107,18 +97,21 @@ workflows:
         - << pipeline.parameters.IS_RELEASE >>
         - << pipeline.parameters.UPDATE_SIGNATURE >>
     jobs:
-      - initialize
+      - jahia-modules-orb/initialize
       - jahia-modules-orb/update-signature:
           pre-steps:
             - jahia-modules-orb/update-signature-prestep
           ssh_key_fingerprints:  << pipeline.parameters.SSH_KEY_FINGERPRINT >>
           context: QA_ENVIRONMENT
           requires:
-            - initialize
+            - jahia-modules-orb/initialize
+      - jahia-modules-orb/static-analysis:
+          requires:
+            - jahia-modules-orb/initialize            
       - jahia-modules-orb/build:
           context: QA_ENVIRONMENT
           requires:
-            - initialize
+            - jahia-modules-orb/initialize
             - jahia-modules-orb/update-signature
       - jahia-modules-orb/sonar-analysis:
           context: QA_ENVIRONMENT

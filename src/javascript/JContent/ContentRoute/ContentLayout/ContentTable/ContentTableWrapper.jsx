@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './ContentTable.scss';
 
-const ContentTableWrapper = ({children, reference, onClick = () => {}, onKeyDown = () => {}}) => {
+const ContentTableWrapper = ({children, reference, onClick = () => {}, onKeyDown = () => {}, ...rest}) => {
     return (
         <div ref={reference}
              className={css.tableWrapper}
              tabIndex="1"
              onClick={onClick}
              onKeyDown={onKeyDown}
+             {...rest}
         >
             {children}
         </div>

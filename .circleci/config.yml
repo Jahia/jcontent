@@ -88,20 +88,6 @@ parameters:
     type: boolean
     default: false
 
-# jobs:
-#   initialize:
-#     <<: *workdir
-#     docker: # run the steps with Docker
-#       - image: cimg/openjdk:8.0.275-node
-#     steps:
-#       - checkout
-#       - run:
-#           name: Run yarn
-#           command: |
-#             yarn
-#       - jahia-modules-orb/generate-cachekey-seed
-#       - *persist-workspace
-
 workflows:
   # On code change is executed each time new code is pushed to a branch
   # Current project configuration in circleci only builds on PR + main, so effectively this is only being executed

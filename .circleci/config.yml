@@ -95,7 +95,10 @@ jobs:
       - image: cimg/openjdk:8.0.275-node
     steps:
       - checkout
-      - yarn
+      - run:
+        name: Run yarn
+        command: |
+          yarn
       - jahia-modules-orb/generate-cachekey-seed
       - *persist-workspace
 

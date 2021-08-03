@@ -96,9 +96,9 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Run yarn
-        command: |
-          yarn
+          name: Run yarn
+          command: |
+            yarn
       - jahia-modules-orb/generate-cachekey-seed
       - *persist-workspace
 

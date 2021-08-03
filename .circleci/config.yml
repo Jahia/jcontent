@@ -92,7 +92,7 @@ jobs:
   initialize:
     <<: *workdir
     docker: # run the steps with Docker
-      - image: circleci/openjdk:8-jdk-stretch
+      - image: cimg/openjdk:8.0.275-node
     steps:
       - checkout
       - jahia-modules-orb/generate-cachekey-seed

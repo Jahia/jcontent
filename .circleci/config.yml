@@ -119,6 +119,9 @@ workflows:
           context: QA_ENVIRONMENT
           requires:
             - jahia-modules-orb/initialize
+      - jahia-modules-orb/static-analysis:
+          requires:
+            - jahia-modules-orb/initialize            
       - jahia-modules-orb/build:
           context: QA_ENVIRONMENT
           requires:

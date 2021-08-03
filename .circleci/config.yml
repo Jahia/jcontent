@@ -88,19 +88,19 @@ parameters:
     type: boolean
     default: false
 
-jobs:
-  initialize:
-    <<: *workdir
-    docker: # run the steps with Docker
-      - image: cimg/openjdk:8.0.275-node
-    steps:
-      - checkout
-      - run:
-          name: Run yarn
-          command: |
-            yarn
-      - jahia-modules-orb/generate-cachekey-seed
-      - *persist-workspace
+# jobs:
+#   initialize:
+#     <<: *workdir
+#     docker: # run the steps with Docker
+#       - image: cimg/openjdk:8.0.275-node
+#     steps:
+#       - checkout
+#       - run:
+#           name: Run yarn
+#           command: |
+#             yarn
+#       - jahia-modules-orb/generate-cachekey-seed
+#       - *persist-workspace
 
 workflows:
   # On code change is executed each time new code is pushed to a branch
@@ -118,11 +118,11 @@ workflows:
           ssh_key_fingerprints:  << pipeline.parameters.SSH_KEY_FINGERPRINT >>
           context: QA_ENVIRONMENT
           requires:
-            - initialize
+            - jahia-modules-orb/initialize
       - jahia-modules-orb/build:
           context: QA_ENVIRONMENT
           requires:
-            - initialize
+            - jahia-modules-orb/initialize
             - jahia-modules-orb/update-signature
       - jahia-modules-orb/sonar-analysis:
           context: QA_ENVIRONMENT

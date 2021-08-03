@@ -111,7 +111,7 @@ workflows:
         - << pipeline.parameters.IS_RELEASE >>
         - << pipeline.parameters.UPDATE_SIGNATURE >>
     jobs:
-      - initialize
+      - jahia-modules-orb/initialize
       - jahia-modules-orb/update-signature:
           pre-steps:
             - jahia-modules-orb/update-signature-prestep

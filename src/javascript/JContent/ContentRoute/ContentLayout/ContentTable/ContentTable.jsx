@@ -210,6 +210,7 @@ export const ContentTable = ({
                                  rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
                                  of: t('jcontent:label.pagination.of')
                              }}
+                             rowsPerPageOptions={[10, 25, 50, 100]}
                              onPageChange={setCurrentPage}
                              onRowsPerPageChange={setPageSize}
             />}

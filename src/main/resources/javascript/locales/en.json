@@ -163,7 +163,7 @@
         "createdBy": "Created By",
         "name": "Name",
         "lastModified": "Last modified on",
-        "type": "Content",
+        "type": "Type",
         "status": "Status"
       },
       "export": {

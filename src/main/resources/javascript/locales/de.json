@@ -161,7 +161,7 @@
         "createdBy": "Erstellt von",
         "name": "Name",
         "lastModified": "Geändert am",
-        "type": "Inhalt",
+        "type": "Typ",
         "status": "Status"
       },
       "export": {

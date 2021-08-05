@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-export default (shouldFetch, client, options, tableView, path) => {
+export default (client, options, tableView, path) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -15,12 +15,10 @@ export default (shouldFetch, client, options, tableView, path) => {
             }
         }
 
-        if (shouldFetch) {
-            setData([]);
-            setTimeout(() => {
-                fetch();
-            }, 30);
-        }
+        setData([]);
+        setTimeout(() => {
+            fetch();
+        }, 30);
     }, [tableView.viewType, tableView.viewMode, path]);
 
     return data;

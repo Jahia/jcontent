@@ -71,7 +71,7 @@ export const ContentLayoutContainer = ({
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
     const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
-    let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort);
+    let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort, tableView.viewType);
 
     // Update params for structured view to use different type and recursion filters
     if (isStructuredView) {
@@ -183,11 +183,10 @@ export const ContentLayoutContainer = ({
 
     // Preload data either for pages or contents depending on current view type
     const preloadedData = usePreloadedData(
-        isStructuredView,
         client,
         {
             query: layoutQuery,
-            variables: queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode),
+            variables: isStructuredView ? queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) : queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort, preloadForType),
             fetchPolicy: fetchPolicy
         },
         tableView,

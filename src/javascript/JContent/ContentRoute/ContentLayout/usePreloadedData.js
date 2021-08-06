@@ -22,7 +22,7 @@ export default (client, options, tableView, path, pagination) => {
                 }
             } catch (e) {
                 console.log('Failed to preload data', e);
-                setData([]);
+                setData(EMPTY_STATE);
             }
         }
 

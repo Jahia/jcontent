@@ -186,7 +186,9 @@ export const ContentLayoutContainer = ({
         client,
         {
             query: layoutQuery,
-            variables: isStructuredView ? queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) : queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort, preloadForType),
+            variables: isStructuredView ?
+                queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
+                queryHandler.getQueryParams(path, uilang, lang, params, rootPath, {...pagination, currentPage: 0}, sort, preloadForType),
             fetchPolicy: fetchPolicy
         },
         tableView,

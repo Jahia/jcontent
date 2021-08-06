@@ -190,7 +190,8 @@ export const ContentLayoutContainer = ({
             fetchPolicy: fetchPolicy
         },
         tableView,
-        path);
+        path,
+        pagination);
 
     useEffect(() => {
         if (data && data.jcr && data.jcr.nodeByPath) {
@@ -269,8 +270,8 @@ export const ContentLayoutContainer = ({
                            loading={loading}
                            totalCount={totalCount}
                            dataCounts={{
-                               pages: preloadForType === JContentConstants.tableView.viewType.PAGES ? preloadedData.length : totalCount,
-                               contents: preloadForType === JContentConstants.tableView.viewType.CONTENT ? preloadedData.length : totalCount
+                               pages: preloadForType === JContentConstants.tableView.viewType.PAGES ? preloadedData.totalCount : totalCount,
+                               contents: preloadForType === JContentConstants.tableView.viewType.CONTENT ? preloadedData.totalCount : totalCount
                            }}
             />
         </React.Fragment>

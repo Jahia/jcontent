@@ -124,7 +124,7 @@ export const ContentTable = ({
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
-    const typeSelector = isStructuredView && mode === JContentConstants.mode.PAGES && dataCounts ? <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/> : null;
+    const typeSelector = mode === JContentConstants.mode.PAGES && dataCounts ? <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/> : null;
 
     if (_.isEmpty(rows) && !loading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {

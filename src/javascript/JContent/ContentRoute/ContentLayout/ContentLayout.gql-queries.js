@@ -121,7 +121,7 @@ class ContentQueryHandler {
         `;
     }
 
-    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort, viewType) {
         let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
         if (urlParams.sub) {
             type = 'contents';
@@ -129,7 +129,7 @@ class ContentQueryHandler {
 
         const paramsByBrowseType = {
             pages: {
-                typeFilter: [JContentConstants.contentType, 'jnt:page'],
+                typeFilter: JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType],
                 recursionTypesFilter: {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']}
             },
             contents: {

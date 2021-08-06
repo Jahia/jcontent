@@ -162,7 +162,7 @@
         "createdBy": "Créé par",
         "name": "Nom",
         "lastModified": "Modifié le",
-        "type": "Contenu",
+        "type": "Type",
         "status": "Statut"
       },
       "export": {

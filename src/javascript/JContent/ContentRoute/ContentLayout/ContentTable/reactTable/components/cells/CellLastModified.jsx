@@ -11,7 +11,7 @@ import {includes} from 'lodash';
 import PropTypes from 'prop-types';
 
 export const CellLastModified = ({row, value, cell, column}) => {
-    const uilang = useSelector(state => state.uilang);
+    const {uilang, selection} = useSelector(state => ({uilang: state.uilang, selection: state.jcontent.selection}));
     return (
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}
@@ -22,19 +22,20 @@ export const CellLastModified = ({row, value, cell, column}) => {
                 <Typography className={css.cellLastModifiedText} component="time">
                     {dayjs(value).locale(getDefaultLocale(uilang)).format('ll')}
                 </Typography>
-                <div className={css.cellActions}
-                     data-cm-role="table-content-list-cell-actions"
-                >
-                    <DisplayActions
-                        target="contentActions"
-                        filter={value => {
-                            return includes(['edit', 'preview', 'subContents', 'locate'], value.key);
-                        }}
-                        path={row.original.path}
-                        render={ButtonRendererNoLabel}
-                        buttonProps={{variant: 'ghost', size: 'big'}}
-                    />
-                </div>
+                {selection.length === 0 &&
+                    <div className={css.cellActions}
+                         data-cm-role="table-content-list-cell-actions"
+                    >
+                        <DisplayActions
+                            target="contentActions"
+                            filter={value => {
+                                return includes(['edit', 'preview', 'subContents', 'locate'], value.key);
+                            }}
+                            path={row.original.path}
+                            render={ButtonRendererNoLabel}
+                            buttonProps={{variant: 'ghost', size: 'big'}}
+                        />
+                    </div>}
             </div>
 
         </TableBodyCell>

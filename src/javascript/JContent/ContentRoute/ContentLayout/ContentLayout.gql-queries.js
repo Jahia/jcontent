@@ -133,7 +133,7 @@ class ContentQueryHandler {
                 recursionTypesFilter: {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']}
             },
             contents: {
-                typeFilter: ['jnt:content', 'jnt:contentFolder'],
+                typeFilter: JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : ['jnt:content', 'jnt:contentFolder'],
                 recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
             }
         };

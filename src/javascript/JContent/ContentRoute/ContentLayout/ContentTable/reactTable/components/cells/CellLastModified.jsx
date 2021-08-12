@@ -11,7 +11,8 @@ import {includes} from 'lodash';
 import PropTypes from 'prop-types';
 
 export const CellLastModified = ({row, value, cell, column}) => {
-    const uilang = useSelector(state => state.uilang);
+    const {uilang, selection} = useSelector(state => ({uilang: state.uilang, selection: state.jcontent.selection}));
+    const actionFilter = selection.length === 0 ? ['edit', 'preview', 'subContents', 'locate'] : ['subContents', 'locate'];
     return (
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}
@@ -28,7 +29,7 @@ export const CellLastModified = ({row, value, cell, column}) => {
                     <DisplayActions
                         target="contentActions"
                         filter={value => {
-                            return includes(['edit', 'preview', 'subContents', 'locate'], value.key);
+                            return includes(actionFilter, value.key);
                         }}
                         path={row.original.path}
                         render={ButtonRendererNoLabel}

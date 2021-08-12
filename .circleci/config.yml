@@ -106,8 +106,9 @@ workflows:
           requires:
             - jahia-modules-orb/initialize
       - jahia-modules-orb/static-analysis:
+          auditci_level: high
           requires:
-            - jahia-modules-orb/initialize            
+            - jahia-modules-orb/initialize
       - jahia-modules-orb/build:
           context: QA_ENVIRONMENT
           requires:

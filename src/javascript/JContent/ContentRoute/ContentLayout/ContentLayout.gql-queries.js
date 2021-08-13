@@ -133,7 +133,7 @@ class ContentQueryHandler {
                 recursionTypesFilter: {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']}
             },
             contents: {
-                typeFilter: JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : ['jnt:content', 'jnt:contentFolder'],
+                typeFilter: ['jnt:content', 'jnt:contentFolder'],
                 recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
             }
         };
@@ -168,20 +168,20 @@ class ContentQueryHandler {
         };
 
         const {CONTENT, PAGES} = JContentConstants.tableView.viewType;
-        switch (viewType) {
-            case CONTENT: return {
-                ...p,
-                recursionTypesFilter: JContentConstants.mode.CONTENT_FOLDERS === mode ? {multi: 'NONE', types: ['jnt:contentFolder']} : {types: ['jnt:content']},
-                typeFilter: ['jnt:content']
-            };
-            case PAGES: return {
-                ...p,
-                recursionTypesFilter: {types: ['jnt:page']},
-                typeFilter: ['jnt:page']
-            };
+        const {CONTENT_FOLDERS} = JContentConstants.mode;
 
-            default: return p;
+        if (mode === CONTENT_FOLDERS) {
+            p.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
+            p.typeFilter = ['jnt:content'];
+        } else if (viewType === CONTENT) {
+            p.recursionTypesFilter = {types: ['jnt:content']};
+            p.typeFilter = ['jnt:content'];
+        } else if (viewType === PAGES) {
+            p.recursionTypesFilter = {types: ['jnt:page']};
+            p.typeFilter = ['jnt:page'];
         }
+
+        return p;
     }
 
     getResultsPath(data) {

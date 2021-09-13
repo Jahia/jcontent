@@ -298,7 +298,7 @@ class SearchQueryHandler {
         return {
             searchPath: urlParams.searchPath,
             nodeType: (urlParams.searchContentType || 'jmix:searchable'),
-            searchTerms: `*${urlParams.searchTerms}*`,
+            searchTerms: urlParams.searchTerms,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,

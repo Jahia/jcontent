@@ -23,7 +23,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '../../preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
-import {structureData, adaptedRow} from '../ContentLayout/ContentLayout.utils';
+import {structureData, adaptedRow, isInSearchMode} from '../ContentLayout/ContentLayout.utils';
 import usePreloadedData from './usePreloadedData';
 
 const contentQueryHandlerByMode = mode => {
@@ -65,7 +65,7 @@ export const ContentLayoutContainer = ({
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
-    const fetchPolicy = sort.orderBy === 'displayName' ? 'network-only' : 'cache-first';
+    const fetchPolicy = 'network-only';
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
     const queryHandler = contentQueryHandlerByMode(mode);
     const layoutQuery = queryHandler.getQuery();
@@ -252,7 +252,7 @@ export const ContentLayoutContainer = ({
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        if (isStructuredView) {
+        if (isStructuredView && !isInSearchMode(mode)) {
             rows = structureData(path, currentResult.nodes);
         } else {
             rows = currentResult.nodes.map(r => adaptedRow(r));

@@ -26,7 +26,7 @@ import ContentListHeader from './ContentListHeader/ContentListHeader';
 import css from './ContentTable.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentTableWrapper from './ContentTableWrapper';
-import {flattenTree} from '../ContentLayout.utils';
+import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import ContentTypeSelector from './ContentTypeSelector';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
@@ -202,7 +202,7 @@ export const ContentTable = ({
                     </TableBody>
                 </Table>
             </UploadTransformComponent>
-            {!isStructuredView &&
+            {(!isStructuredView || isInSearchMode(mode) || JContentConstants.mode.MEDIA === mode) &&
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
                              rowsPerPage={pagination.pageSize}

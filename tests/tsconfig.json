@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "types": [
+      "cypress",
+      "@jahia/cypress",
+      "node"
+    ]
+  },
+  "include": [
+    "node_modules/cypress",
+    "cypress/*/*.ts"
+  ]
+}

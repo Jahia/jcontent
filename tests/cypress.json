@@ -1,0 +1,11 @@
+{
+    "videoUploadOnPasses": false,
+    "reporter": "cypress-multi-reporters",
+    "reporterOptions": {
+        "configFile": "reporter-config.json"
+    },
+    "screenshotsFolder": "./results/screenshots",
+    "videosFolder": "./results/videos",
+    "viewportWidth": 1366,
+    "viewportHeight": 768
+}

@@ -42,6 +42,7 @@ export const CellName = ({value, cell, column, row}) => {
     return (
         <TableBodyCell key={row.id + column.id}
                        isExpandableColumn
+                       isScrollable
                        className={clsx(
                            classes.cellName,
                            {[classes.deleted]: deleted}

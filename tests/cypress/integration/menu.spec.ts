@@ -1,6 +1,6 @@
 import {JContent} from "../page-object";
 
-describe("Search tests", () => {
+describe("Menu tests", () => {
     beforeEach(function () {
         cy.executeGroovy("jcontent/createSite.groovy", {SITEKEY: "jcontentSite"});
         cy.apollo({mutationFile: "jcontent/createContent.graphql"});

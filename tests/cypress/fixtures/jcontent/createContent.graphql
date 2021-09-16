@@ -22,12 +22,36 @@ mutation {
                         {
                             name: "test-content4"
                             primaryNodeType: "jnt:event"
-                            properties: [{ name: "body", language: "en", value: "test event 1" }]
+                            properties: [
+                                { name: "body", language: "en", value: "test event 1" }
+                            ]
                         }
                         {
                             name: "test-content5"
                             primaryNodeType: "jnt:event"
-                            properties: [{ name: "body", language: "en", value: "test event 2" }]
+                            properties: [
+                                { name: "body", language: "en", value: "test event 2" }
+                            ]
+                        }
+                        {
+                            name: "lookForMeSystemName"
+                            primaryNodeType: "jnt:bigText"
+                            properties: [
+                                {
+                                    name: "text"
+                                    language: "en"
+                                    value: "Very Rich text to find with system name"
+                                }
+                            ]
+                        }
+                        {
+                            name: "lookForMeTag"
+                            primaryNodeType: "jnt:bigText"
+                            mixins: ["jmix:tagged"]
+                            properties: [
+                                { name: "text", language: "en", value: "Very Rich text to find with tag" }
+                                { name: "j:tagList", language: "en", values: ["tagToLookFor"] }
+                            ]
                         }
                     ]
                 ) {

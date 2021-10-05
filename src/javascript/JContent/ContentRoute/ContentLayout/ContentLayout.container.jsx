@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient, useQuery} from 'react-apollo';
 import {
@@ -67,16 +67,23 @@ export const ContentLayoutContainer = ({
     const client = useApolloClient();
     const fetchPolicy = 'network-only';
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
-    const queryHandler = contentQueryHandlerByMode(mode);
+    const queryHandler = useMemo(() => contentQueryHandlerByMode(mode), [mode]);
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
     const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
-    let layoutQueryParams = queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination, sort, viewType: tableView.viewType});
 
-    // Update params for structured view to use different type and recursion filters
-    if (isStructuredView) {
-        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, tableView.viewType, mode);
-    }
+    const layoutQueryParams = useMemo(
+        () => {
+            let r = queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination, sort, viewType: tableView.viewType});
+            // Update params for structured view to use different type and recursion filters
+            if (isStructuredView) {
+                r = queryHandler.updateQueryParamsForStructuredView(r, tableView.viewType, mode);
+            }
+
+            return r;
+        },
+        [path, uilang, lang, params, rootPath, pagination, sort, tableView.viewType, mode, isStructuredView, queryHandler]
+    );
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
         variables: layoutQueryParams,
@@ -196,16 +203,18 @@ export const ContentLayoutContainer = ({
         }
     };
 
+    const options = useMemo(() => ({
+        query: layoutQuery,
+        variables: isStructuredView ?
+            queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
+            queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
+        fetchPolicy: fetchPolicy
+    }), [isStructuredView, lang, layoutQuery, layoutQueryParams, mode, pagination, params, path, preloadForType, queryHandler, rootPath, sort, uilang]);
+
     // Preload data either for pages or contents depending on current view type
     const preloadedData = usePreloadedData({
         client,
-        options: {
-            query: layoutQuery,
-            variables: isStructuredView ?
-                queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
-                queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
-            fetchPolicy: fetchPolicy
-        },
+        options,
         tableView,
         path,
         pagination

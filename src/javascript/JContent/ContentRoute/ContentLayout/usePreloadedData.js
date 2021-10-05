@@ -29,7 +29,7 @@ export default ({client, options, tableView, path, pagination}) => {
         setTimeout(() => {
             fetch();
         }, TIMEOUT);
-    }, [tableView.viewType, tableView.viewMode, path, pagination.currentPage, pagination.pageSize, client]);
+    }, [tableView.viewType, tableView.viewMode, path, pagination.currentPage, pagination.pageSize, client, options]);
 
     return data;
 };

@@ -44,7 +44,7 @@ const deserializeQueryString = search => {
     return {};
 };
 
-export const buildUrl = (site, language, mode, path, params) => {
+export const buildUrl = ({site, language, mode, path, params}) => {
     let registryItem = registry.get('accordionItem', mode);
     if (registryItem && registryItem.getUrlPathPart) {
         path = registryItem.getUrlPathPart(site, path, registryItem);
@@ -64,11 +64,13 @@ export const cmGoto = data => (
     (dispatch, getStore) => {
         const {site, language, jcontent: {mode, path, params}} = getStore();
 
-        dispatch(push(buildUrl(data.site || site,
-            data.language || language,
-            data.mode || mode,
-            data.path || path,
-            data.params || params)));
+        dispatch(push(buildUrl({
+            site: data.site || site,
+            language: data.language || language,
+            mode: data.mode || mode,
+            path: data.path || path,
+            params: data.params || params
+        })));
     }
 );
 
@@ -128,7 +130,7 @@ export const jContentRedux = registry => {
     registry.add('redux-action', 'jcontentGoto', {action: cmGoto});
     registry.add('redux-action', 'jcontentReplaceOpenedPath', {action: replaceOpenedPath});
     registry.add('jcontent', 'utils', {
-        extractParamsFromUrl: extractParamsFromUrl,
-        buildUrl: buildUrl
+        extractParamsFromUrl,
+        buildUrl
     });
 };

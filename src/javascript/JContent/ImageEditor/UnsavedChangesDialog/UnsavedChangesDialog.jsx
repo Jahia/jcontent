@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 
 export class UnsavedChangesDialog extends React.Component {
     render() {
-        let {t, open, onBack, onClose} = this.props;
+        let {t, isOpen, onBack, onClose} = this.props;
         return (
-            <Dialog fullWidth open={open} aria-labelledby="form-dialog-title" onClose={onClose}>
+            <Dialog fullWidth open={isOpen} aria-labelledby="form-dialog-title" onClose={onClose}>
                 <DialogTitle>
                     {t('jcontent:label.contentManager.editImage.discardChangesTitle')}
                 </DialogTitle>
@@ -33,7 +33,7 @@ export class UnsavedChangesDialog extends React.Component {
 
 UnsavedChangesDialog.propTypes = {
     t: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     onBack: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired
 };

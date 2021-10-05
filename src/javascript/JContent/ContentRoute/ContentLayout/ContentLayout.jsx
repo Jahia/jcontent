@@ -90,8 +90,8 @@ export class ContentLayout extends React.Component {
 
     render() {
         const {
-            mode, path, previewState, classes, filesMode, previewSelection, rows, contentNotFound,
-            totalCount, loading, dataCounts
+            mode, path, previewState, classes, filesMode, previewSelection, rows, isContentNotFound,
+            totalCount, isLoading, dataCounts
         } = this.props;
 
         let previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
@@ -130,12 +130,12 @@ export class ContentLayout extends React.Component {
                                 {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?
                                     <FilesGrid totalCount={totalCount}
                                                rows={rows}
-                                               contentNotFound={contentNotFound}
-                                               loading={loading}/> :
+                                               isContentNotFound={isContentNotFound}
+                                               isLoading={isLoading}/> :
                                     <ContentTable totalCount={totalCount}
                                                   rows={rows}
-                                                  contentNotFound={contentNotFound}
-                                                  loading={loading}
+                                                  isContentNotFound={isContentNotFound}
+                                                  isLoading={isLoading}
                                                   dataCounts={dataCounts}/>}
                             </ErrorBoundary>
                         </Paper>
@@ -154,9 +154,9 @@ ContentLayout.propTypes = {
     previewState: PropTypes.number.isRequired,
     previewSelection: PropTypes.string,
     rows: PropTypes.array.isRequired,
-    contentNotFound: PropTypes.bool,
+    isContentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     dataCounts: PropTypes.object
 };
 

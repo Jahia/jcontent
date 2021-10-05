@@ -124,12 +124,12 @@ export class UploadTransformComponent extends React.Component {
 
                 let acceptedFiles = fileList.filter(file => fileMatchSize(file, uploadMaxSize, uploadMinSize));
 
-                onFilesSelected(
+                onFilesSelected({
                     acceptedFiles,
-                    this.props.uploadDispatchBatch,
-                    {path: uploadPath},
-                    mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
-                );
+                    dispatchBatch: this.props.uploadDispatchBatch,
+                    uploadInfo: {path: uploadPath},
+                    type: mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
+                });
             });
         }
     }

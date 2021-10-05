@@ -18,8 +18,8 @@ let styles = theme => ({
     }
 });
 
-export const Feedback = ({open, messageKey, classes, onClose, t}) => (
-    <Snackbar open={open}
+export const Feedback = ({isOpen, messageKey, classes, onClose, t}) => (
+    <Snackbar open={isOpen}
               className={classes.feedback}
               autoHideDuration={2000}
               anchorOrigin={{
@@ -41,7 +41,7 @@ export const Feedback = ({open, messageKey, classes, onClose, t}) => (
 Feedback.propTypes = {
     classes: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     messageKey: PropTypes.string,
     onClose: PropTypes.func
 };

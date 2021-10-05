@@ -38,7 +38,7 @@ export const ContentTable = ({
     rows,
     selection,
     removeSelection,
-    contentNotFound,
+    isContentNotFound,
     pagination,
     setCurrentPage,
     setPageSize,
@@ -49,7 +49,7 @@ export const ContentTable = ({
     previewState,
     tableView,
     dataCounts,
-    loading}) => {
+    isLoading}) => {
     const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
     const {t} = useTranslation();
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
@@ -90,22 +90,22 @@ export const ContentTable = ({
                 removeSelection(toRemove);
             }
         }
-    }, [rows, selection, removeSelection]);
+    }, [rows, selection, removeSelection, paths]);
 
     useEffect(() => {
         if (isStructuredView) {
             toggleAllRowsExpanded(true);
         }
-    }, [rows]);
+    }, [rows, isStructuredView, toggleAllRowsExpanded]);
 
     const contextualMenus = useRef({});
 
     const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
-            if (node.path.indexOf('/files') !== -1) {
+            if (node.path.indexOf('/files') > -1) {
                 newMode = JContentConstants.mode.MEDIA;
-            } else if (node.path.indexOf('/contents') !== -1) {
+            } else if (node.path.indexOf('/contents') > -1) {
                 newMode = JContentConstants.mode.CONTENT_FOLDERS;
             } else {
                 newMode = JContentConstants.mode.PAGES;
@@ -120,13 +120,13 @@ export const ContentTable = ({
     let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
-    if (contentNotFound) {
+    if (isContentNotFound) {
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
     const typeSelector = mode === JContentConstants.mode.PAGES && dataCounts ? <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/> : null;
 
-    if (_.isEmpty(rows) && !loading) {
+    if (_.isEmpty(rows) && !isLoading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
             return <EmptyTable columnSpan={columnData.length} t={t}/>;
         }
@@ -256,8 +256,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 ContentTable.propTypes = {
-    contentNotFound: PropTypes.bool,
-    loading: PropTypes.bool,
+    isContentNotFound: PropTypes.bool,
+    isLoading: PropTypes.bool,
     mode: PropTypes.string.isRequired,
     onPreviewSelect: PropTypes.func.isRequired,
     pagination: PropTypes.object.isRequired,

@@ -97,8 +97,7 @@ export class ImageEditorContainer extends React.Component {
     }
 
     resize({width, height, keepRatio}) {
-        this.setState(({resizeParams, originalHeight, originalWidth}) => {
-            let snackBarMessage = null;
+        function getMessage(snackBarMessage, resizeParams, originalHeight, originalWidth) {
             if (keepRatio === false) {
                 snackBarMessage = 'jcontent:label.contentManager.editImage.ratioUnlocked';
             } else if (keepRatio === true) {
@@ -114,6 +113,13 @@ export class ImageEditorContainer extends React.Component {
             } else if (keepRatio) {
                 height = Math.round(resizeParams.width * originalHeight / originalWidth);
             }
+
+            return snackBarMessage;
+        }
+
+        this.setState(({resizeParams, originalHeight, originalWidth}) => {
+            let snackBarMessage = null;
+            snackBarMessage = getMessage(snackBarMessage, resizeParams, originalHeight, originalWidth);
 
             width = width || resizeParams.width;
             height = height || resizeParams.height;
@@ -156,25 +162,11 @@ export class ImageEditorContainer extends React.Component {
                 width = height * aspect;
             }
 
-            width = width || cropParams.width;
-            height = height || cropParams.height;
-            top = top || cropParams.top;
-            left = left || cropParams.left;
-            if (width > originalWidth) {
-                width = originalWidth;
-            }
-
-            if (height > originalHeight) {
-                height = originalHeight;
-            }
-
-            if (width && left + width > originalWidth) {
-                left = originalWidth - width;
-            }
-
-            if (height && top + height > originalHeight) {
-                top = originalHeight - height;
-            }
+            const box = this.getBox({width, cropParams, height, top, left, originalWidth, originalHeight});
+            width = box.width;
+            height = box.height;
+            top = box.top;
+            left = box.left;
 
             return {
                 cropParams: {
@@ -197,6 +189,30 @@ export class ImageEditorContainer extends React.Component {
                 snackBarMessage: snackBarMessage
             };
         });
+    }
+
+    getBox({width, cropParams, height, top, left, originalWidth, originalHeight}) {
+        width = width || cropParams.width;
+        height = height || cropParams.height;
+        top = top || cropParams.top;
+        left = left || cropParams.left;
+        if (width > originalWidth) {
+            width = originalWidth;
+        }
+
+        if (height > originalHeight) {
+            height = originalHeight;
+        }
+
+        if (width && left + width > originalWidth) {
+            left = originalWidth - width;
+        }
+
+        if (height && top + height > originalHeight) {
+            top = originalHeight - height;
+        }
+
+        return {width, height, top, left};
     }
 
     undoChanges() {
@@ -298,12 +314,12 @@ export class ImageEditorContainer extends React.Component {
                             onBackNavigation={this.onBackNavigation}
                         />
                         <ConfirmSaveDialog
-                            open={confirmSaveOpen}
+                            isOpen={confirmSaveOpen}
                             handleSave={() => mutation({variables: {path}})}
                             handleClose={this.handleClose}
                         />
                         <SaveAsDialog
-                            open={saveAsOpen}
+                            isOpen={saveAsOpen}
                             name={newName}
                             isNameValid={isNameValid}
                             handleSave={() => {
@@ -319,7 +335,7 @@ export class ImageEditorContainer extends React.Component {
                             onChangeName={this.handleChangeName}
                         />
                         <UnsavedChangesDialog
-                            open={confirmCloseOpen}
+                            isOpen={confirmCloseOpen}
                             onBack={() => {
                                 this.undoChanges();
                                 this.handleClose();
@@ -328,7 +344,7 @@ export class ImageEditorContainer extends React.Component {
                             onClose={this.handleClose}
                         />
 
-                        <Feedback open={Boolean(snackBarMessage)}
+                        <Feedback isOpen={Boolean(snackBarMessage)}
                                   messageKey={snackBarMessage}
                                   anchorOrigin={{
                                       vertical: 'bottom',

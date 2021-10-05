@@ -61,9 +61,9 @@ const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
     }, [data, updateChildNodes]);
 
     return (
-        <CreateFolderDialog open={open}
+        <CreateFolderDialog isOpen={open}
                             name={name}
-                            loading={loading}
+                            isLoading={loading}
                             isNameValid={isNameValid}
                             isNameAvailable={isNameAvailable}
                             handleCancel={handleCancel}

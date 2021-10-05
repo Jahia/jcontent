@@ -13,6 +13,7 @@ import {
     Folder
 } from 'mdi-material-ui';
 
+// eslint-disable-next-line complexity
 export const FileIcon = ({filename, ...props}) => {
     switch (filename.split('.').pop().toLowerCase()) {
         case 'png':

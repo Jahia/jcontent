@@ -130,9 +130,9 @@ export class Upload extends React.Component {
 
         if (!status) {
             us = uploadsStatuses.NOT_STARTED;
-        } else if (status.uploading !== 0) {
+        } else if (status.uploading > 0) {
             us = uploadsStatuses.UPLOADING;
-        } else if (status.error !== 0) {
+        } else if (status.error > 0) {
             us = uploadsStatuses.HAS_ERROR;
         } else {
             us = uploadsStatuses.UPLOADED;

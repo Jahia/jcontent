@@ -112,7 +112,7 @@ export class ImageEditor extends React.Component {
                 }
             >
                 <TwoColumnsContent classes={{root: classes.root, left: classes.left, right: classes.right}}
-                                   rightCol={<ImageEditorPreview cropExpanded={expanded === PANELS.CROP}
+                                   rightCol={<ImageEditorPreview isCropExpanded={expanded === PANELS.CROP}
                                                                  path={this.props.path}
                                                                  ts={this.props.ts}
                                                                  cropParams={this.props.cropParams}
@@ -136,7 +136,7 @@ export class ImageEditor extends React.Component {
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <RotatePanel onRotate={onRotate}/>
                                 </ExpansionPanelDetails>
-                                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                                <ImageEditorActions isDirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
                         <Tooltip title={(rotationParams.dirty || cropParams.dirty) ? t('jcontent:label.contentManager.editImage.tooltip') : ''}>
@@ -155,7 +155,7 @@ export class ImageEditor extends React.Component {
                                                  onResize={onResize}
                                     />
                                 </ExpansionPanelDetails>
-                                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                                <ImageEditorActions isDirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
                         <Tooltip title={(resizeParams.dirty || rotationParams.dirty) ? t('jcontent:label.contentManager.editImage.tooltip') : ''}>
@@ -172,7 +172,7 @@ export class ImageEditor extends React.Component {
                                                onCrop={onCrop}
                                     />
                                 </ExpansionPanelDetails>
-                                <ImageEditorActions dirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
+                                <ImageEditorActions isDirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
                             </ExpansionPanel>
                         </Tooltip>
                     </>

@@ -18,7 +18,7 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
         if (mode !== JContentConstants.mode.SQL2SEARCH && mode !== JContentConstants.mode.SEARCH) {
             dispatch(cmPreSearchModeMemo(mode));
         }
-    }, [mode]);
+    }, [mode, dispatch]);
 
     const [isAdvancedSearch, setIsAdvancedSearch] = useState(mode === JContentConstants.mode.SQL2SEARCH);
     const [searchPath, setSearchPath] = useState(params.searchPath ? params.searchPath : path);

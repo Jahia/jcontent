@@ -17,16 +17,15 @@ const SearchInput = function () {
         searchContentType: state.jcontent.params.searchContentType
     }));
     const [t, setT] = useState(searchTerms);
+
     // This updates component state when user changes search via dialog
     useEffect(() => {
-        if (searchTerms !== t) {
-            setT(searchTerms);
-        }
-    }, [searchTerms]);
+        setT(searchTerms);
+    }, [searchTerms, setT]);
 
     const performSearchDebounced = (time, value) => e => {
         clearTimeout(timeOut);
-        const searchForValue = value !== undefined ? value : e.target.value;
+        const searchForValue = value === undefined ? e.target.value : value;
         setT(searchForValue);
         timeOut = setTimeout(() => {
             clearTimeout(timeOut);

@@ -29,7 +29,7 @@ export const SearchControlBar = () => {
     if (advancedSearchMode) {
         typeInfo = from;
     } else {
-        typeInfo = searchContentType !== '' ? searchContentType : t('jcontent:label.contentManager.search.anyContent');
+        typeInfo = searchContentType === '' ? t('jcontent:label.contentManager.search.anyContent') : searchContentType;
     }
 
     return (

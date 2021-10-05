@@ -121,7 +121,7 @@ class ContentQueryHandler {
         `;
     }
 
-    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort, viewType) {
+    getQueryParams({path, uilang, lang, urlParams, rootPath, pagination, sort, viewType}) {
         let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
         if (urlParams.sub) {
             type = 'contents';
@@ -229,7 +229,7 @@ class FilesQueryHandler {
         `;
     }
 
-    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams({path, uilang, lang, pagination, sort}) {
         return {
             path: path,
             language: lang,
@@ -294,7 +294,7 @@ class SearchQueryHandler {
         `;
     }
 
-    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
         return {
             searchPath: urlParams.searchPath,
             nodeType: (urlParams.searchContentType || 'jmix:searchable'),
@@ -339,7 +339,7 @@ class Sql2SearchQueryHandler {
         `;
     }
 
-    getQueryParams(path, uilang, lang, urlParams, rootPath, pagination, sort) {
+    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${urlParams.searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {

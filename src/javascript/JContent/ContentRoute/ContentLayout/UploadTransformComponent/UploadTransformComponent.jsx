@@ -12,7 +12,7 @@ import {fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
 import {withApollo} from 'react-apollo';
 import {compose} from '~/utils';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];

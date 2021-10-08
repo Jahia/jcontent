@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Tooltip, withStyles} from '@material-ui/core';
-import {RotateLeft, RotateRight} from '@material-ui/icons';
-import {IconButton, Typography} from '@jahia/design-system-kit';
+import {Typography, ArrowLeft, ArrowRight, Button} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 
@@ -15,19 +14,23 @@ let styles = theme => ({
 export const RotatePanel = ({classes, t, onRotate}) => {
     return (
         <>
-            <Typography variant="zeta">
+            <Typography weight="bold">
                 {t('jcontent:label.contentManager.editImage.rotateInfo')}
             </Typography>
             <div className={classes.icons}>
                 <Tooltip title={t('jcontent:label.contentManager.editImage.rotateLeft')}>
-                    <IconButton data-cm-role="rotate-left"
-                                icon={<RotateLeft color="primary" fontSize="large"/>}
-                                onClick={() => onRotate(-1)}/>
+                    <Button data-cm-role="rotate-left"
+                            size="big"
+                            variant="ghost"
+                            icon={<ArrowLeft/>}
+                            onClick={() => onRotate(-1)}/>
                 </Tooltip>
                 <Tooltip title={t('jcontent:label.contentManager.editImage.rotateRight')}>
-                    <IconButton data-cm-role="rotate-right"
-                                icon={<RotateRight color="primary" fontSize="large"/>}
-                                onClick={() => onRotate(1)}/>
+                    <Button data-cm-role="rotate-right"
+                            size="big"
+                            variant="ghost"
+                            icon={<ArrowRight/>}
+                            onClick={() => onRotate(1)}/>
                 </Tooltip>
             </div>
         </>

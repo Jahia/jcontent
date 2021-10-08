@@ -4,10 +4,10 @@ import {withTranslation} from 'react-i18next';
 import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/design-system-kit';
 import dayjs from 'dayjs';
-import JContentConstants from '../../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {isMarkedForDeletion, getDefaultLocale} from '../../../../JContent.utils';
+import {isMarkedForDeletion, getDefaultLocale} from '~/JContent/JContent.utils';
 import {compose} from '~/utils';
 
 const styles = theme => ({

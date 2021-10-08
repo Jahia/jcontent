@@ -13,7 +13,8 @@ import {Dialog,
     FormHelperText,
     withStyles
 } from '@material-ui/core';
-import {FormControlLabel, Typography, Button} from '@jahia/design-system-kit';
+import {Button, Typography} from '@jahia/moonstone';
+import {FormControlLabel} from '@jahia/design-system-kit';
 
 const styles = theme => ({
     margins: {
@@ -94,7 +95,7 @@ export class Export extends React.Component {
                             classes={{root: classes.checkboxLabel}}
                             value="xml"
                             label={
-                                <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.checkboxTypo}>
+                                <Typography className={classes.checkboxTypo}>
                                     {t('jcontent:label.contentManager.export.asXml')}
                                 </Typography>
                             }
@@ -107,19 +108,16 @@ export class Export extends React.Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="secondary" onClick={onClose}>
-                        {t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
-                    </Button>
+                    <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} onClick={onClose}/>
                     <Button
-                        variant="primary"
+                        color="accent"
                         data-cm-role="export-button"
+                        label={t('jcontent:label.contentManager.export.actionLabel')}
                         onClick={() => {
                             this.triggerExport(path);
                             onClose();
                         }}
-                    >
-                        {t('jcontent:label.contentManager.export.actionLabel')}
-                    </Button>
+                    />
                 </DialogActions>
             </Dialog>
         );

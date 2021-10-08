@@ -4,18 +4,18 @@ import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
+import {Typography} from '@jahia/moonstone';
 import {Pagination} from '@jahia/react-material';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
-import {cmSetPreviewSelection} from '../../../preview.redux';
-import {cmGoto, cmOpenPaths} from '../../../JContent.redux';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
+import {cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import classNames from 'classnames';
-import {extractPaths} from '../../../JContent.utils';
+import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const styles = theme => ({
     grid: {
@@ -94,7 +94,7 @@ export const FilesGrid = ({
         return (
             <React.Fragment>
                 <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                    <Typography variant="epsilon" className={classes.empty}>
+                    <Typography className={classes.empty}>
                         {t('jcontent:label.contentManager.contentNotFound')}
                     </Typography>
                 </Grid>

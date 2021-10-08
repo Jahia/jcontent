@@ -8,7 +8,7 @@ import {
     DialogTitle,
     withStyles
 } from '@material-ui/core';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
 
@@ -31,12 +31,8 @@ export const ConfirmSaveDialog = ({isOpen, handleClose, handleSave, classes, t})
             </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button variant="secondary" data-cm-role="image-save-no" onClick={handleClose}>
-                {t('jcontent:label.contentManager.editImage.confirmSaveDialog.no')}
-            </Button>
-            <Button variant="primary" data-cm-role="image-save-yes" onClick={() => handleSave()}>
-                {t('jcontent:label.contentManager.editImage.confirmSaveDialog.yes')}
-            </Button>
+            <Button variant="default" color="default" size="big" data-cm-role="image-save-no" label={t('jcontent:label.contentManager.editImage.confirmSaveDialog.no')} onClick={handleClose}/>
+            <Button variant="default" color="accent" size="big" data-cm-role="image-save-yes" label={t('jcontent:label.contentManager.editImage.confirmSaveDialog.yes')} onClick={handleSave}/>
         </DialogActions>
     </Dialog>
 );

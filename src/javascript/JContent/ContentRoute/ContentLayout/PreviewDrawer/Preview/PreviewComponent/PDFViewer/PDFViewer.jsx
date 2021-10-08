@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {Tooltip, withStyles} from '@material-ui/core';
-import {IconButton, Typography} from '@jahia/design-system-kit';
+import {Button, Typography} from '@jahia/moonstone';
 import {
     ChevronLeft,
     ChevronRight,
@@ -13,6 +13,7 @@ import {
 } from 'mdi-material-ui';
 import {compose} from '~/utils';
 import classNames from 'classnames';
+import clsx from 'clsx';
 
 const styles = theme => ({
     pdfContainer: {
@@ -32,22 +33,9 @@ const styles = theme => ({
     fullScreen: {},
     controlsContainer: {
         height: (theme.spacing.unit * 6) + 'px',
+        padding: 'var(--spacing-small)',
         width: '100%',
-        background: theme.palette.background.paper,
-        display: 'flex'
-    },
-    controlLeft: {
-        flex: 1,
-        margin: 'auto'
-    },
-    controlCenter: {
-        margin: 'auto',
-        alignSelf: 'center'
-    },
-    controlRight: {
-        flex: 1,
-        margin: 'auto',
-        textAlign: 'end'
+        background: theme.palette.background.paper
     },
     scale: {
         top: '38px !important'
@@ -146,53 +134,55 @@ export class PDFViewer extends React.Component {
                     </div>
                 </Tooltip>
 
-                <div className={classes.controlsContainer}>
-                    <div className={classes.controlLeft}/>
-                    <Typography className={classes.controlCenter} variant="caption" component="div">
-                        <IconButton disabled={page === 1}
-                                    variant="ghost"
-                                    icon={<StepBackward/>}
-                                    onClick={event => {
-                                        this.handleNavigation(event, 'first');
-                                    }}
+                <div className={clsx('flexRow_between', classes.controlsContainer)}>
+                    <div className={clsx('flexRow', 'alignCenter')}/>
+                    <div className={clsx('flexRow', 'alignCenter')}>
+                        <Button disabled={page === 1}
+                                variant="ghost"
+                                icon={<StepBackward/>}
+                                onClick={event => {
+                                    this.handleNavigation(event, 'first');
+                                }}
                         />
-                        <IconButton disabled={page === 1}
-                                    variant="ghost"
-                                    icon={<ChevronLeft/>}
-                                    onClick={event => {
-                                        this.handleNavigation(event, 'previous');
-                                    }}
+                        <Button disabled={page === 1}
+                                variant="ghost"
+                                icon={<ChevronLeft/>}
+                                onClick={event => {
+                                    this.handleNavigation(event, 'previous');
+                                }}
                         />
-                        {page}/{pages}
-                        <IconButton disabled={page === pages}
-                                    variant="ghost"
-                                    icon={<ChevronRight/>}
-                                    onClick={event => {
-                                        this.handleNavigation(event, 'next');
-                                    }}
+                        <Typography variant="caption">
+                            {page}/{pages}
+                        </Typography>
+                        <Button disabled={page === pages}
+                                variant="ghost"
+                                icon={<ChevronRight/>}
+                                onClick={event => {
+                                    this.handleNavigation(event, 'next');
+                                }}
                         />
-                        <IconButton disabled={page === pages}
-                                    variant="ghost"
-                                    icon={<StepForward/>}
-                                    onClick={event => {
-                                        this.handleNavigation(event, 'last');
-                                    }}
+                        <Button disabled={page === pages}
+                                variant="ghost"
+                                icon={<StepForward/>}
+                                onClick={event => {
+                                    this.handleNavigation(event, 'last');
+                                }}
                         />
-                    </Typography>
-                    <div className={classes.controlRight}>
-                        <IconButton disabled={scaleSize === 0}
-                                    variant="ghost"
-                                    icon={<MagnifyMinusOutline/>}
-                                    onClick={event => {
-                                        this.handleZoom(event, 'out');
-                                    }}
+                    </div>
+                    <div className={clsx('flexRow', 'alignCenter')}>
+                        <Button disabled={scaleSize === 0}
+                                variant="ghost"
+                                icon={<MagnifyMinusOutline/>}
+                                onClick={event => {
+                                    this.handleZoom(event, 'out');
+                                }}
                         />
-                        <IconButton disabled={scaleSize === scaleSizes.length - 1}
-                                    variant="ghost"
-                                    icon={<MagnifyPlusOutline/>}
-                                    onClick={event => {
-                                        this.handleZoom(event, 'in');
-                                    }}
+                        <Button disabled={scaleSize === scaleSizes.length - 1}
+                                variant="ghost"
+                                icon={<MagnifyPlusOutline/>}
+                                onClick={event => {
+                                    this.handleZoom(event, 'in');
+                                }}
                         />
                     </div>
                 </div>

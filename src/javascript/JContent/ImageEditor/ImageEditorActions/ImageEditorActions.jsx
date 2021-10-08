@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, ExpansionPanelActions} from '@jahia/design-system-kit';
+import {ExpansionPanelActions} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 import {withStyles} from '@material-ui/core';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
@@ -19,17 +20,11 @@ let styles = {
 };
 
 const ImageEditorActions = ({classes, t, undoChanges, saveChanges, isDirty}) => (
-    <ExpansionPanelActions className={classes.buttons}>
-        <Button data-cm-role="undo-changes" variant="ghost" disabled={!isDirty} onClick={undoChanges}>
-            {t('jcontent:label.contentManager.editImage.undo')}
-        </Button>
+    <ExpansionPanelActions>
+        <Button data-cm-role="undo-changes" variant="default" color="accent" label={t('jcontent:label.contentManager.editImage.undo')} disabled={!isDirty} onClick={undoChanges}/>
         <div className={classes.spacer}/>
-        <Button variant="secondary" data-cm-role="image-save-as-button" disabled={!isDirty} onClick={() => saveChanges(true)}>
-            {t('jcontent:label.contentManager.editImage.saveAs')}
-        </Button>
-        <Button variant="primary" data-cm-role="image-save-button" disabled={!isDirty} onClick={() => saveChanges(false)}>
-            {t('jcontent:label.contentManager.editImage.save')}
-        </Button>
+        <Button data-cm-role="image-save-as-button" variant="default" color="default" label={t('jcontent:label.contentManager.editImage.saveAs')} disabled={!isDirty} onClick={() => saveChanges(true)}/>
+        <Button data-cm-role="image-save-button" variant="default" color="accent" label={t('jcontent:label.contentManager.editImage.save')} disabled={!isDirty} onClick={() => saveChanges(false)}/>
     </ExpansionPanelActions>
 );
 

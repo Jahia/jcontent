@@ -3,7 +3,7 @@ import {CreateFolderQuery} from './CreateFolderDialog.gql-queries';
 import {CreateFolderMutation} from './CreateFolderDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import CreateFolderDialog from './CreateFolderDialog';
-import {triggerRefetchAll} from '../../../JContent.refetches';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useApolloClient, useQuery, useMutation} from '@apollo/react-hooks';
 
 const CreateFolderDialogContainer = ({path, contentType, onExit}) => {

@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 
 const RetryButton = ({t, classes, doUploadAndStatusUpdate}) => (
     <Button
         key="retry"
+        isReversed
+        size="big"
         className={classes.actionButton}
         component="a"
         variant="ghost"
-        color="inverted"
+        label={t('jcontent:label.contentManager.fileUpload.retry')}
         onClick={() => doUploadAndStatusUpdate()}
-    >
-        {t('jcontent:label.contentManager.fileUpload.retry')}
-    </Button>
+    />
 );
 
 RetryButton.propTypes = {

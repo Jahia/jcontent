@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
+import {Typography} from '@jahia/moonstone';
 import {InfoOutlined} from '@material-ui/icons';
 import {publicationStatusByName} from './publicationStatusRenderer';
 import {withTranslation} from 'react-i18next';
@@ -101,7 +101,7 @@ export class PublicationStatus extends Component {
                         >
                             <InfoOutlined className={classes.spacing} fontSize="small"/>
 
-                            <Typography color="inherit" variant="caption" classes={{root: classes.spacing}}>
+                            <Typography variant="caption" classes={{root: classes.spacing}}>
                                 {publicationStatus.geti18nDetailsMessage(node, t, i18n.language)}
                             </Typography>
                         </div>

@@ -9,9 +9,9 @@ import {
     TextField,
     withStyles
 } from '@material-ui/core';
-import {Button} from '@jahia/design-system-kit';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
+import {Button} from '@jahia/moonstone';
 
 let styles = {
     root: {
@@ -42,12 +42,8 @@ export const SaveAsDialog = ({isOpen, handleClose, handleSave, classes, t, name,
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="secondary" data-cm-role="image-save-as-cancel" onClick={handleClose}>
-                    {t('jcontent:label.contentManager.editImage.saveAsDialog.cancel')}
-                </Button>
-                <Button variant="primary" data-cm-role="image-save-as-confirm" disabled={!isNameValid} onClick={handleSave}>
-                    {t('jcontent:label.contentManager.editImage.saveAsDialog.save')}
-                </Button>
+                <Button label={t('jcontent:label.contentManager.editImage.saveAsDialog.cancel')} size="big" data-cm-role="image-save-as-cancel" onClick={handleClose}/>
+                <Button label={t('jcontent:label.contentManager.editImage.saveAsDialog.save')} size="big" color="accent" data-cm-role="image-save-as-confirm" disabled={!isNameValid} onClick={handleSave}/>
             </DialogActions>
         </Dialog>
     );

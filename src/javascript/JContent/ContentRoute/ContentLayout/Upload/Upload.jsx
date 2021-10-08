@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Snackbar, withStyles} from '@material-ui/core';
-import {IconButton} from '@jahia/design-system-kit';
-import {Close} from '@material-ui/icons';
+import {Button, Close} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux';
@@ -109,7 +108,7 @@ export class Upload extends React.Component {
                                 />
                             ))}
                         </div>
-                        <IconButton color="inverted" size="compact" data-cm-role="upload-close-button" icon={<Close/>} className={classes.closeButton} onClick={this.handleCloseSnackBar}/>
+                        <Button isReversed variant="ghost" size="small" data-cm-role="upload-close-button" icon={<Close/>} className={classes.closeButton} onClick={this.handleCloseSnackBar}/>
                     </React.Fragment>
                 </Snackbar>
                 <div style={this.generateOverlayStyle()}/>

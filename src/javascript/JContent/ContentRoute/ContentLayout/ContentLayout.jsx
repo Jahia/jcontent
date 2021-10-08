@@ -7,10 +7,10 @@ import ContentTable from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'classnames';
 import {withTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES} from '../../JContent.redux';
+import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import FilesGrid from './FilesGrid';
-import JContentConstants from '../../JContent.constants';
-import contentManagerStyleConstants from '../../JContent.style-constants';
+import JContentConstants from '~/JContent/JContent.constants';
+import contentManagerStyleConstants from '~/JContent/JContent.style-constants';
 import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {flattenTree} from './ContentLayout.utils';
 

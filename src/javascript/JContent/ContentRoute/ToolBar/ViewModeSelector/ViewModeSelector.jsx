@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ViewList, ViewTree} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
 

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
-import {IconButton, Typography} from '@jahia/design-system-kit';
+import {Button, Link, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
-import {Link} from 'mdi-material-ui';
 
 let styles = theme => ({
     form: {
@@ -55,7 +54,7 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
 
     return (
         <>
-            <Typography variant="zeta">
+            <Typography weight="bold">
                 {t('jcontent:label.contentManager.editImage.cropInfo')}
             </Typography>
             <div className={classes.form}>
@@ -82,9 +81,13 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
                     </FormControl>
                 </div>
                 <div className={classes.secondCol}>
-                    <IconButton icon={<Link color={cropParams.aspect === null ? 'inherit' : 'action'}/>}
-                                data-cm-role="keep-ratio-button"
-                                onClick={switchRatio}/>
+                    <Button icon={<Link/>}
+                            color={cropParams.aspect ? 'accent' : 'default'}
+                            size="big"
+                            variant="ghost"
+                            data-cm-role="keep-ratio-button"
+                            onClick={switchRatio}
+                    />
                 </div>
             </div>
         </>

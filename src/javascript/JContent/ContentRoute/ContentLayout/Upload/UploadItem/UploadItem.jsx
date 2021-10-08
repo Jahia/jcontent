@@ -9,7 +9,7 @@ import {
     TextField,
     withStyles
 } from '@material-ui/core';
-import {Button, Typography} from '@jahia/design-system-kit';
+import {Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withApollo} from 'react-apollo';
 import {uploadStatuses} from '../Upload.constants';
@@ -18,6 +18,7 @@ import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
 import EditButton from './EditButton';
 import {registry} from '@jahia/ui-extender';
+import {Button} from '@jahia/moonstone';
 
 const styles = theme => ({
     listItem: {
@@ -86,7 +87,7 @@ export class UploadItem extends React.Component {
         const {classes, t, file} = this.props;
         return (
             <div className={classes.listItem}>
-                <Typography variant="zeta" color="inherit" className={classes.fileNameText}>
+                <Typography className={classes.fileNameText}>
                     {this.getFileName()}
                 </Typography>
                 <SecondaryActionsList
@@ -118,12 +119,8 @@ export class UploadItem extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="secondary" onClick={() => this.setState({anchorEl: null})}>
-                            {t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
-                        </Button>
-                        <Button variant="primary" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}>
-                            {t('jcontent:label.contentManager.fileUpload.dialogRename')}
-                        </Button>
+                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} onClick={() => this.setState({anchorEl: null})}/>
+                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')} color="accent" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}/>
                     </DialogActions>
                 </Dialog>
             </div>

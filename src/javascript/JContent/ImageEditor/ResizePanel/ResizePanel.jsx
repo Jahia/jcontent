@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
-import {Link} from 'mdi-material-ui';
-import {IconButton, Typography} from '@jahia/design-system-kit';
+import {Typography, Link, Button} from '@jahia/moonstone';
 
 let styles = theme => ({
     panel: {
@@ -58,7 +57,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
 
     return (
         <>
-            <Typography variant="zeta">
+            <Typography weight="bold">
                 {t('jcontent:label.contentManager.editImage.resizeInfo')}
             </Typography>
             <div className={classes.form}>
@@ -85,9 +84,12 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
                     </FormControl>
                 </div>
                 <div className={classes.secondCol}>
-                    <IconButton icon={<Link color={resizeParams.keepRatio ? 'action' : 'inherit'}/>}
-                                data-cm-role="keep-ratio-button"
-                                onClick={switchRatio}/>
+                    <Button icon={<Link/>}
+                            color={resizeParams.keepRatio ? 'accent' : 'default'}
+                            size="big"
+                            variant="ghost"
+                            data-cm-role="keep-ratio-button"
+                            onClick={switchRatio}/>
                 </div>
             </div>
         </>

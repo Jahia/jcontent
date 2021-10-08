@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '../../../../../JContent.utils';
+import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {Tooltip, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
+import {Typography} from '@jahia/moonstone';
 
 const styles = () => ({
     isDeleted: {
@@ -21,7 +21,6 @@ export const FileName = ({maxLength, classes, node}) => {
         <Typography noWrap
                     component="p"
                     className={isMarkedForDeletion(node) ? classes.isDeleted : ''}
-                    variant="iota"
                     data-cm-role="grid-content-list-card-name"
         >
             {name}

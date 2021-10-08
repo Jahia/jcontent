@@ -1,14 +1,14 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
+import {Typography} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../../ContentLayout.utils';
 import FileIcon from '../FileIcon';
-import {CM_DRAWER_STATES} from '../../../../JContent.redux';
-import {allowDoubleClickNavigation, getDefaultLocale} from '../../../../JContent.utils';
+import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
+import {allowDoubleClickNavigation, getDefaultLocale} from '~/JContent/JContent.utils';
 import classNames from 'classnames';
 import FileName from './FileName';
 import Actions from './Actions';
@@ -189,7 +189,7 @@ export const FileCard = ({
                         <Typography variant="caption" component="p">
                             {t('jcontent:label.contentManager.filesGrid.contains')}
                         </Typography>
-                        <Typography variant="iota" component="p">
+                        <Typography component="p">
                             {node?.subNodes?.pageInfo?.totalCount}
                             &nbsp;
                             {node?.subNodes?.pageInfo?.totalCount === 1 ?

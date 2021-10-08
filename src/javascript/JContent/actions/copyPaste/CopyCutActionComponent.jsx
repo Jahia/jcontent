@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
-import {hasMixin} from '../../JContent.utils';
+import {hasMixin} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
 import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';

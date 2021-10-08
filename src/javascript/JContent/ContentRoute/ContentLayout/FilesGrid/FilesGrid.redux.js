@@ -1,4 +1,4 @@
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {createActions, handleActions} from 'redux-actions';
 
 export const {filesgridSetMode, filesgridSetGridMode} = createActions('FILESGRID_SET_MODE');

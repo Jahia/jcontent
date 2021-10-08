@@ -5,8 +5,6 @@ import {
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary,
-    IconButton,
-    Typography,
     TopBar
 } from '@jahia/design-system-kit';
 import ImageEditorPreview from './ImageEditorPreview';
@@ -16,7 +14,7 @@ import {withTranslation} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 import CropPanel from './CropPanel';
-import {ChevronLeft, ExpandMore} from '@material-ui/icons';
+import {Typography, Button, ChevronLeft, ChevronDown} from '@jahia/moonstone';
 import ImageEditorActions from './ImageEditorActions';
 import MainLayout from '../MainLayout';
 
@@ -89,21 +87,19 @@ export class ImageEditor extends React.Component {
                 header={
                     <TopBar
                         path={
-                            <React.Fragment>
-                                <Typography variant="omega">
-                                    <IconButton size="compact"
-                                                icon={<ChevronLeft/>}
-                                                onClick={() => onBackNavigation(dirty)}/>
-                                    {t('jcontent:label.contentManager.editImage.goBack')}
-                                </Typography>
-                            </React.Fragment>
+                            <Button size="small"
+                                    variant="ghost"
+                                    icon={<ChevronLeft/>}
+                                    label={t('jcontent:label.contentManager.editImage.goBack')}
+                                    onClick={() => onBackNavigation(dirty)}
+                            />
                         }
                         title={name}
                         titleProps={{color: 'alpha'}}
                         contextModifiers={<React.Fragment/>}
                         actions={
                             <React.Fragment>
-                                <Typography variant="omega">
+                                <Typography>
                                     {changesFeedback}
                                 </Typography>
                             </React.Fragment>
@@ -130,8 +126,8 @@ export class ImageEditor extends React.Component {
                                             data-cm-role="rotate-panel"
                                             onChange={(event, expanded) => expanded && !resizeParams.dirty && !cropParams.dirty && this.onChangePanel(PANELS.ROTATE)}
                             >
-                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.ROTATE && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.rotate')}</Typography>
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.ROTATE && <ChevronDown/>}>
+                                    <Typography weight="bold">{t('jcontent:label.contentManager.editImage.rotate')}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <RotatePanel onRotate={onRotate}/>
@@ -145,8 +141,8 @@ export class ImageEditor extends React.Component {
                                             data-cm-role="resize-panel"
                                             onChange={(event, expanded) => expanded && !rotationParams.dirty && !cropParams.dirty && this.onChangePanel(PANELS.RESIZE)}
                             >
-                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.RESIZE && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.resize')}</Typography>
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.RESIZE && <ChevronDown/>}>
+                                    <Typography weight="bold">{t('jcontent:label.contentManager.editImage.resize')}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <ResizePanel originalWidth={originalWidth}
@@ -164,8 +160,8 @@ export class ImageEditor extends React.Component {
                                             data-cm-role="crop-panel"
                                             onChange={(event, expanded) => expanded && !resizeParams.dirty && !rotationParams.dirty && this.onChangePanel(PANELS.CROP)}
                             >
-                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.crop')}</Typography>
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ChevronDown/>}>
+                                    <Typography weight="bold">{t('jcontent:label.contentManager.editImage.crop')}</Typography>
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.panel}>
                                     <CropPanel cropParams={cropParams}

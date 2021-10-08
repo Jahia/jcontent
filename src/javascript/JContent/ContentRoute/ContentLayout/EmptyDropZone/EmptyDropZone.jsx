@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
-import JContentConstants from '../../../JContent.constants';
-import {Publish} from '@jahia/moonstone';
+import JContentConstants from '~/JContent/JContent.constants';
+import {Publish, Typography} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
@@ -55,7 +54,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
     if (mode === JContentConstants.mode.MEDIA && permissions.node.site.uploadFilesAction) {
         return (
             <Component className={classes.dropZone}>
-                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
+                <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
                 <Publish/>
             </Component>
         );
@@ -64,7 +63,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
     if (mode === JContentConstants.mode.CONTENT_FOLDERS && permissions.node.site.importAction) {
         return (
             <Component className={classes.dropZone}>
-                <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
+                <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
                 <Publish/>
             </Component>
         );
@@ -72,7 +71,7 @@ const EmptyDropZone = ({component: Component, t, classes, mode}) => {
 
     return (
         <Component className={classes.emptyZone}>
-            <Typography variant="gamma" color="inherit">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
+            <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
         </Component>
     );
 };

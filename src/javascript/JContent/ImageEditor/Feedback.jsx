@@ -1,7 +1,6 @@
 import React from 'react';
 import {Snackbar, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
-import {Check} from '@material-ui/icons';
+import {Typography, Check} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
@@ -29,7 +28,7 @@ export const Feedback = ({isOpen, messageKey, classes, onClose, t}) => (
               message={
                   <div className={classes.feedbackContent}>
                       <Check className={classes.feedbackIcon}/>
-                      <Typography variant="zeta" color="invert">
+                      <Typography>
                           {messageKey && t(messageKey.key ? messageKey.key : messageKey, messageKey.params)}
                       </Typography>
                   </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
 import ImageEditorActions from './ImageEditorActions';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 
 describe('Image actions', () => {
     let props;

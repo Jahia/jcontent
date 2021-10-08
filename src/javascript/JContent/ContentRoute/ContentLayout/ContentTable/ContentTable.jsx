@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import {ContextualMenu} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../JContent.redux';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {
     allowDoubleClickNavigation,
     extractPaths
-} from '../../../JContent.utils';
+} from '~/JContent/JContent.utils';
 import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {cmSetPreviewSelection} from '../../../preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import {cmRemoveSelection} from '../contentSelection.redux';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import ContentListEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';

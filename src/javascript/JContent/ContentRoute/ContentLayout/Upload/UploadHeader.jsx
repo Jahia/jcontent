@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {CircularProgress, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
-import {CheckCircle, Info} from '@material-ui/icons';
+import {withStyles} from '@material-ui/core';
+import {Check, Information, Loader, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withTranslation, Trans} from 'react-i18next';
 
@@ -30,15 +29,15 @@ export function UploadHeader({classes, t, status}) {
     if (status.uploading !== 0) {
         return (
             <div className={classNames(classes.headerText)}>
-                <CircularProgress size={20} color="inherit" className={classes.statusIcon}/>
-                <Typography color="inherit" data-cm-role="upload-status-uploading">
+                <Loader isReversed size="small" className={classes.statusIcon}/>
+                <Typography data-cm-role="upload-status-uploading">
                     {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.importingMessage' : 'jcontent:label.contentManager.fileUpload.uploadingMessage', {
                         uploaded: status.uploaded,
                         total: status.total
                     })}
                 </Typography>
                 {(status.error !== 0) &&
-                    <Typography color="inherit">
+                    <Typography>
                         {t('jcontent:label.contentManager.fileUpload.uploadingActionMessage')}
                     </Typography>}
             </div>
@@ -48,8 +47,8 @@ export function UploadHeader({classes, t, status}) {
     if (status.error !== 0) {
         return (
             <div className={classNames(classes.headerText)}>
-                <Info className={classNames(classes.statusIcon)}/>
-                <Typography color="inherit" data-cm-role="upload-status-error">
+                <Information className={classNames(classes.statusIcon)}/>
+                <Typography data-cm-role="upload-status-error">
                     {status.type === 'import' ?
                         <Trans i18nKey="jcontent:label.contentManager.fileUpload.importErrorMessage"
                                components={[
@@ -68,8 +67,8 @@ export function UploadHeader({classes, t, status}) {
 
     return (
         <div className={classNames(classes.headerText)}>
-            <CheckCircle className={classNames(classes.statusIcon)}/>
-            <Typography color="inherit" data-cm-role="upload-status-success">
+            <Check className={classNames(classes.statusIcon)}/>
+            <Typography data-cm-role="upload-status-success">
                 {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.successfulImportMessage' : 'jcontent:label.contentManager.fileUpload.successfulUploadMessage', {
                     count: status.total,
                     number: status.total

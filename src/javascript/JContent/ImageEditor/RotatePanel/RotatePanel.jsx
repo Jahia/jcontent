@@ -14,7 +14,7 @@ let styles = theme => ({
 export const RotatePanel = ({classes, t, onRotate}) => {
     return (
         <>
-            <Typography weight="bold">
+            <Typography variant="subheading">
                 {t('jcontent:label.contentManager.editImage.rotateInfo')}
             </Typography>
             <div className={classes.icons}>

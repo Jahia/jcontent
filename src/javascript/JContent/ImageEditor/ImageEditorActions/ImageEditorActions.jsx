@@ -21,10 +21,10 @@ let styles = {
 
 const ImageEditorActions = ({classes, t, undoChanges, saveChanges, isDirty}) => (
     <ExpansionPanelActions>
-        <Button data-cm-role="undo-changes" variant="default" color="accent" label={t('jcontent:label.contentManager.editImage.undo')} disabled={!isDirty} onClick={undoChanges}/>
+        <Button data-cm-role="undo-changes" size="big" variant="ghost" color="default" label={t('jcontent:label.contentManager.editImage.undo')} disabled={!isDirty} onClick={undoChanges}/>
         <div className={classes.spacer}/>
-        <Button data-cm-role="image-save-as-button" variant="default" color="default" label={t('jcontent:label.contentManager.editImage.saveAs')} disabled={!isDirty} onClick={() => saveChanges(true)}/>
-        <Button data-cm-role="image-save-button" variant="default" color="accent" label={t('jcontent:label.contentManager.editImage.save')} disabled={!isDirty} onClick={() => saveChanges(false)}/>
+        <Button data-cm-role="image-save-as-button" size="big" variant="ghost" color="default" label={t('jcontent:label.contentManager.editImage.saveAs')} disabled={!isDirty} onClick={() => saveChanges(true)}/>
+        <Button data-cm-role="image-save-button" size="big" variant="default" color="accent" label={t('jcontent:label.contentManager.editImage.save')} disabled={!isDirty} onClick={() => saveChanges(false)}/>
     </ExpansionPanelActions>
 );
 

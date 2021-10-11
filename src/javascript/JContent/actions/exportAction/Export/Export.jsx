@@ -7,13 +7,10 @@ import {Dialog,
     DialogContent,
     DialogActions,
     DialogContentText,
-    Select,
-    MenuItem,
-    Checkbox,
     FormHelperText,
     withStyles
 } from '@material-ui/core';
-import {Button, Typography} from '@jahia/moonstone';
+import {Button, Dropdown, Checkbox, Typography} from '@jahia/moonstone';
 import {FormControlLabel} from '@jahia/design-system-kit';
 
 const styles = theme => ({
@@ -26,7 +23,10 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 2
     },
     checkboxLabel: {
-        marginLeft: 0
+        marginLeft: 0,
+        '& p': {
+            color: 'var(--color-dark)'
+        }
     },
     checkboxTypo: {
         padding: '10px'
@@ -44,8 +44,8 @@ export class Export extends React.Component {
         this.onXmlChange = this.onXmlChange.bind(this);
     }
 
-    onWorkspaceChange(event) {
-        let wsp = event.target.value;
+    onWorkspaceChange(event, item) {
+        let wsp = item.value;
         this.setState(Object.assign({workspace: wsp}, (wsp === 'live') ? {xml: false} : {}));
     }
 
@@ -74,19 +74,18 @@ export class Export extends React.Component {
                     <DialogContentText className={classes.margins}>
                         {t('jcontent:label.contentManager.export.selectWorkspace')}
                     </DialogContentText>
-                    <Select
-                        className={classes.margins}
+                    <Dropdown
+                        data={[
+                            {label: t('jcontent:label.contentManager.export.stagingOnlyOption'), value: 'default'},
+                            {label: t('jcontent:label.contentManager.export.stagingAndLiveOption'), value: 'live'}
+                        ]}
+                        label={this.state.workspace === 'live' ? t('jcontent:label.contentManager.export.stagingAndLiveOption') : t('jcontent:label.contentManager.export.stagingOnlyOption')}
                         value={this.state.workspace}
+                        variant="outlined"
+                        size="medium"
                         data-cm-role="select-workspace"
-                        onChange={e => this.onWorkspaceChange(e)}
-                    >
-                        <MenuItem value="default" data-cm-role="default-workspace">
-                            {t('jcontent:label.contentManager.export.stagingOnlyOption')}
-                        </MenuItem>
-                        <MenuItem value="live" data-cm-role="live-workspace">
-                            {t('jcontent:label.contentManager.export.stagingAndLiveOption')}
-                        </MenuItem>
-                    </Select>
+                        onChange={this.onWorkspaceChange}
+                    />
                     <FormHelperText>
                         {t('jcontent:label.contentManager.export.exportDetails')}
                     </FormHelperText>
@@ -108,8 +107,9 @@ export class Export extends React.Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} onClick={onClose}/>
+                    <Button size="big" label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} onClick={onClose}/>
                     <Button
+                        size="big"
                         color="accent"
                         data-cm-role="export-button"
                         label={t('jcontent:label.contentManager.export.actionLabel')}

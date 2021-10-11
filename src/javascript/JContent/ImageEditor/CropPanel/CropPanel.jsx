@@ -54,7 +54,7 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
 
     return (
         <>
-            <Typography weight="bold">
+            <Typography variant="subheading">
                 {t('jcontent:label.contentManager.editImage.cropInfo')}
             </Typography>
             <div className={classes.form}>

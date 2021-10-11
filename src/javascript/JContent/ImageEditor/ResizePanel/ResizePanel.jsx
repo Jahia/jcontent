@@ -57,7 +57,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
 
     return (
         <>
-            <Typography weight="bold">
+            <Typography variant="subheading">
                 {t('jcontent:label.contentManager.editImage.resizeInfo')}
             </Typography>
             <div className={classes.form}>

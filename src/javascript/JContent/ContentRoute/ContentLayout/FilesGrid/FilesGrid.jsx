@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
-import {Grid, Paper, withStyles} from '@material-ui/core';
+import {Grid, Paper} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
 import {Pagination} from '@jahia/react-material';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -16,49 +16,10 @@ import classNames from 'classnames';
 import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';
-
-const styles = theme => ({
-    grid: {
-        display: 'flex',
-        flex: '1 1 0%',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        margin: '0!important',
-        backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
-        outline: 'none'
-    },
-    gridEmpty: {
-        flex: '1 1 0%',
-        margin: '0!important',
-        backgroundColor: theme.palette.background.default
-    },
-    defaultGrid: {
-        flex: 1,
-        display: 'grid',
-        gap: '8px 8px',
-        boxShadow: 'none',
-        justifyContent: 'center',
-        background: theme.palette.background.default
-    },
-    // MsGrid are css properties for IE, please don't remove them
-    thumbGrid: {
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        msGridColumns: '( 1fr )[6]'
-    },
-    detailedGrid: {
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-        msGridColumns: '( 1fr )[2]'
-    },
-    empty: {
-        textAlign: 'center',
-        margin: theme.spacing.unit * 3
-    }
-});
+import styles from './FilesGrid.scss';
 
 export const FilesGrid = ({
     isContentNotFound,
-    classes,
     path,
     totalCount,
     pagination,
@@ -93,8 +54,8 @@ export const FilesGrid = ({
     if (isContentNotFound) {
         return (
             <React.Fragment>
-                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                    <Typography className={classes.empty}>
+                <Grid container className={styles.gridEmpty} data-cm-role="grid-content-list">
+                    <Typography className={styles.empty}>
                         {t('jcontent:label.contentManager.contentNotFound')}
                     </Typography>
                 </Grid>
@@ -113,7 +74,7 @@ export const FilesGrid = ({
     return (
         <React.Fragment>
             <div ref={mainPanelRef}
-                 className={classes.grid}
+                 className={styles.grid}
                  data-cm-role="grid-content-list"
                  tabIndex="1"
                  onKeyDown={handleKeyboardNavigation}
@@ -122,7 +83,7 @@ export const FilesGrid = ({
                 <UploadTransformComponent uploadTargetComponent={Paper}
                                           uploadPath={path}
                                           mode="media"
-                                          className={classNames(classes.defaultGrid, classes.detailedGrid)}
+                                          className={classNames(styles.defaultGrid, styles.detailedGrid)}
                 >
                     {rows.map((node, index) => (
                         <FileCard key={node.uuid}
@@ -185,7 +146,6 @@ let mapDispatchToProps = dispatch => ({
 });
 
 FilesGrid.propTypes = {
-    classes: PropTypes.object.isRequired,
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
@@ -204,6 +164,5 @@ FilesGrid.propTypes = {
 };
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withStyles(styles, {withTheme: true})
+    connect(mapStateToProps, mapDispatchToProps)
 )(FilesGrid);

@@ -4,7 +4,7 @@ import {CreateFolderMutation} from './CreateFolderDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import CreateFolderDialog from './CreateFolderDialog';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
-import {useApolloClient, useQuery, useMutation} from '@apollo/react-hooks';
+import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 
 const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
     const [open, updateIsDialogOpen] = useState(true);

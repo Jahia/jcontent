@@ -1,6 +1,6 @@
 import React from 'react';
 import {Snackbar, withStyles} from '@material-ui/core';
-import {Typography, Check} from '@jahia/moonstone';
+import {Check, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';

@@ -4,7 +4,13 @@ import {Snackbar, withStyles} from '@material-ui/core';
 import {Button, Close} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
-import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux';
+import {
+    fileuploadRemoveUpload,
+    fileuploadSetStatus,
+    fileuploadSetUploads,
+    fileuploadTakeFromQueue,
+    fileuploadUpdateUpload
+} from './Upload.redux';
 import UploadItem from './UploadItem';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';

@@ -2,36 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
-import {Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    DialogContentText,
-    FormHelperText,
-    withStyles
-} from '@material-ui/core';
-import {Button, Dropdown, Checkbox, Typography} from '@jahia/moonstone';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormHelperText} from '@material-ui/core';
+import {Button, Checkbox, Dropdown, Typography} from '@jahia/moonstone';
 import {FormControlLabel} from '@jahia/design-system-kit';
-
-const styles = theme => ({
-    margins: {
-        marginTop: theme.spacing.unit * 2,
-        width: '100%'
-    },
-    checkboxContainer: {
-        display: 'inline-flex',
-        marginTop: theme.spacing.unit * 2
-    },
-    checkboxLabel: {
-        marginLeft: 0,
-        '& p': {
-            color: 'var(--color-dark)'
-        }
-    },
-    checkboxTypo: {
-        padding: '10px'
-    }
-});
+import styles from './Export.scss';
 
 export class Export extends React.Component {
     constructor(props) {
@@ -63,7 +37,7 @@ export class Export extends React.Component {
     }
 
     render() {
-        let {t, classes, onClose, onExited, path, isOpen} = this.props;
+        let {t, onClose, onExited, path, isOpen} = this.props;
         let live = (this.state.workspace === 'live');
         return (
             <Dialog fullWidth open={isOpen} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
@@ -71,7 +45,7 @@ export class Export extends React.Component {
                     {t('jcontent:label.contentManager.export.dialogTitle')}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText className={classes.margins}>
+                    <DialogContentText className={styles.margins}>
                         {t('jcontent:label.contentManager.export.selectWorkspace')}
                     </DialogContentText>
                     <Dropdown
@@ -89,12 +63,12 @@ export class Export extends React.Component {
                     <FormHelperText>
                         {t('jcontent:label.contentManager.export.exportDetails')}
                     </FormHelperText>
-                    <div className={classes.checkboxContainer}>
+                    <div className={styles.checkboxContainer}>
                         <FormControlLabel
-                            classes={{root: classes.checkboxLabel}}
+                            classes={{root: styles.checkboxLabel}}
                             value="xml"
                             label={
-                                <Typography className={classes.checkboxTypo}>
+                                <Typography className={styles.checkboxTypo}>
                                     {t('jcontent:label.contentManager.export.asXml')}
                                 </Typography>
                             }
@@ -125,7 +99,6 @@ export class Export extends React.Component {
 }
 
 Export.propTypes = {
-    classes: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     onExited: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
@@ -134,6 +107,5 @@ Export.propTypes = {
 };
 
 export default compose(
-    withStyles(styles),
     withTranslation()
 )(Export);

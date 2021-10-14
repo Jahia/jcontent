@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import {withStyles} from '@material-ui/core';
 import {Check, Information, Loader, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
-import {withTranslation, Trans} from 'react-i18next';
+import {Trans, withTranslation} from 'react-i18next';
 
 let styles = theme => ({
     headerText: {

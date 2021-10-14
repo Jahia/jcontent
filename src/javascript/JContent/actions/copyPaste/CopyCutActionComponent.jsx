@@ -7,11 +7,7 @@ import {setLocalStorage} from './localStorageHandler';
 import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    PATH_CONTENTS_ITSELF,
-    PATH_FILES_ITSELF,
-    ACTION_PERMISSIONS
-} from '../actions.constants';
+import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 
 export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render, loading: Loading, ...others}) => {
     const {language, displayLanguage} = useSelector(state => ({

@@ -1,0 +1,10 @@
+.root.root {
+    position: absolute;
+    z-index: 1;
+
+    display: flex;
+    min-width: 6px;
+    min-height: 48px;
+    max-height: 48px;
+    margin-top: -24;
+}

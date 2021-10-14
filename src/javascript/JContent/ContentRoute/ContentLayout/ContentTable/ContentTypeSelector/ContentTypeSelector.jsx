@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Tab, TabItem} from '@jahia/moonstone';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {setTableViewType} from '../../StructuredView/StructuredView.redux';
 import classes from './ContentTypeSelector.scss';

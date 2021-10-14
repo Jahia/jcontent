@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import JContentConstants from '~/JContent/JContent.constants';
 import {lodash as _} from 'lodash';
 import {connect} from 'react-redux';
-import {isMarkedForDeletion, getDefaultLocale} from '~/JContent/JContent.utils';
+import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {compose} from '~/utils';
 
 const styles = theme => ({

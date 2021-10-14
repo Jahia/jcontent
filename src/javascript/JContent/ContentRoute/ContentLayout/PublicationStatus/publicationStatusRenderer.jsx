@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
-import {isMarkedForDeletion, getDefaultLocale} from '~/JContent/JContent.utils';
+import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
 
 function getFormattedDate(date, locale) {
     return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');

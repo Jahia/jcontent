@@ -1,6 +1,6 @@
 import React from 'react';
-import {Separator, ButtonGroup} from '@jahia/moonstone';
-import {ButtonRenderer, ButtonRendererShortLabel, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
+import {ButtonGroup, Separator} from '@jahia/moonstone';
+import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
 import {useSelector} from 'react-redux';

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
-import {Typography, Link, Button} from '@jahia/moonstone';
+import {Button, Link, Typography} from '@jahia/moonstone';
 
 let styles = theme => ({
     panel: {

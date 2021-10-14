@@ -9,7 +9,7 @@ import {
     TextField,
     withStyles
 } from '@material-ui/core';
-import {Typography} from '@jahia/moonstone';
+import {Button, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withApollo} from 'react-apollo';
 import {uploadStatuses} from '../Upload.constants';
@@ -18,7 +18,6 @@ import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
 import EditButton from './EditButton';
 import {registry} from '@jahia/ui-extender';
-import {Button} from '@jahia/moonstone';
 
 const styles = theme => ({
     listItem: {

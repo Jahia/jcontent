@@ -1,0 +1,84 @@
+.root.root {
+    position: relative;
+
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: row;
+    width: 100%;
+    min-height: 0;
+
+    background-color: var(--color-gray_light);
+    overflow: hidden;
+}
+
+.content.content {
+    display: flex;
+    flex: 1 2 0;
+    order: 2;
+    min-width: 0;
+
+    background-color: var(--color-gray_light);
+
+    transition: margin-left 0.25s, margin-right 0.25s;
+}
+
+.contentPaper.contentPaper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+}
+
+.treeDrawer.treeDrawer {
+    display: flex;
+    flex: 0 1 auto;
+    order: 1;
+
+    transition: transform 0.15s;
+}
+
+.treeDrawerPaper.treeDrawerPaper {
+    position: relative;
+    z-index: auto;
+
+    display: flex;
+    height: unset;
+    overflow: hidden;
+}
+
+.previewDrawer.previewDrawer {
+    display: flex;
+    flex: 0 1 600px;
+    order: 3;
+
+    transition: transform 0.15s;
+    overflow: hidden;
+}
+
+.previewDrawerHidden.previewDrawerHidden {
+    transform: translate(600px);
+}
+
+.previewDrawerPaper.previewDrawerPaper {
+    position: relative;
+    z-index: auto;
+
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    height: unset;
+
+    transition: 0.15s;
+    overflow: hidden;
+}
+
+.previewDrawerPaperFullScreen.previewDrawerPaperFullScreen {
+    top: 0;
+    right: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    transition: 0.15s;
+}

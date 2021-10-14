@@ -1,6 +1,6 @@
 import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
-import {Check, AddCircle, Information, Loader} from '@jahia/moonstone';
+import {AddCircle, Check, Information, Loader} from '@jahia/moonstone';
 import {Typography} from '@jahia/design-system-kit';
 
 const Status = ({classes, status, error, t, type}) => {

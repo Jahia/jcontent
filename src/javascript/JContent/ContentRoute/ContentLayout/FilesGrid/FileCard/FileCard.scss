@@ -1,0 +1,92 @@
+
+.detailedCard.detailedCard {
+    position: relative;
+
+    display: flex;
+    min-width: 200px;
+    min-height: 200px;
+    max-height: 200px;
+
+    background-color: var(--color-light);
+    cursor: pointer;
+
+    & .fileCardContentContainer {
+        width: calc(100% - 160px);
+    }
+}
+
+.card.card {
+    &:hover .actions {
+        display: block;
+    }
+}
+
+.detailedIcon.detailedIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+
+    & svg {
+        font-size: 160px;
+    }
+}
+
+.detailedCover.detailedCover {
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 200px;
+
+    background-color: var(--color-gray_light40);
+    background-size: contain;
+}
+
+.thumbCoverDetailed.thumbCoverDetailed {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.mediaCardContentContainer.mediaCardContentContainer {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.fileCardContentContainer.fileCardContentContainer {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.cardContent.cardContent {
+    padding-top: var(--spacing-medium);
+    padding-right: var(--spacing-nano);
+    padding-left: var(--spacing-nano);
+
+    & div {
+        margin-bottom: var(--spacing-small);
+    }
+}
+
+.selectedCard.selectedCard {
+    box-shadow: 1px 0 15px 4px var(--color-accent);
+}
+
+.publicationInfoDetailed.publicationInfoDetailed {
+    min-width: calc(400 - var(--spacing-medium) - 6);
+}
+
+.actions.actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    display: none;
+
+    & button {
+        margin: 0;
+        padding: 8px;
+    }
+}

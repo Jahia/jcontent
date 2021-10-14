@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {TableBodyCell, Chip, Subdirectory, Lock, Build} from '@jahia/moonstone';
+import {Build, Chip, Lock, Subdirectory, TableBodyCell} from '@jahia/moonstone';
 import {isWorkInProgress} from '~/JContent/JContent.utils';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';

@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardContent, CardMedia, withStyles} from '@material-ui/core';
+import {Card, CardContent, CardMedia} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
@@ -15,84 +15,9 @@ import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';
 import dayjs from 'dayjs';
 import FileSize from './FileSize';
-
-const styles = theme => ({
-    detailedCard: {
-        display: 'flex',
-        cursor: 'pointer',
-        position: 'relative',
-        margin: '0 16px 16px 0',
-        minWidth: 200,
-        minHeight: 200,
-        maxHeight: 200,
-        backgroundColor: theme.palette.background.paper,
-        '& $fileCardContentContainer': {
-            width: 'calc(100% - 160px)'
-        }
-    },
-    card: {
-        '&:hover $actions': {
-            display: 'block'
-        }
-    },
-    detailedIcon: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minWidth: 200,
-        '& svg': {
-            fontSize: 160
-        }
-    },
-    detailedCover: {
-        minWidth: 200,
-        maxWidth: 200,
-        minHeight: 200,
-        backgroundSize: 'contain',
-        backgroundColor: '#DADADA'
-    },
-    thumbCoverDetailed: {
-        maxHeight: 200,
-        maxWidth: 200
-    },
-    mediaCardContentContainer: {
-        minWidth: 0,
-        position: 'relative',
-        width: '100%'
-    },
-    fileCardContentContainer: {
-        minWidth: 0,
-        position: 'relative',
-        width: '100%'
-    },
-    cardContent: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit,
-        paddingTop: theme.spacing.unit * 3,
-        '& div': {
-            marginBottom: theme.spacing.unit * 2
-        }
-    },
-    selectedCard: {
-        boxShadow: '1px 0px 15px 4px ' + theme.palette.primary.main
-    },
-    publicationInfoDetailed: {
-        minWidth: 400 - (theme.spacing.unit * 4) - 6
-    },
-    actions: {
-        position: 'absolute',
-        top: 8,
-        right: 8,
-        '& button': {
-            padding: '8px',
-            margin: '0px'
-        },
-        display: 'none'
-    }
-});
+import styles from './FileCard.scss';
 
 export const FileCard = ({
-    classes,
     node,
     uilang,
     setPath,
@@ -123,9 +48,9 @@ export const FileCard = ({
         <Card
                 style={{msGridColumn: columnNumber, msGridRow: rowNumber}}
                 className={classNames(
-                    classes.card,
-                    classes.detailedCard,
-                    isPreviewSelected && classes.selectedCard
+                    styles.card,
+                    styles.detailedCard,
+                    isPreviewSelected && styles.selectedCard
                 )}
                 data-cm-role="grid-content-list-card"
                 onContextMenu={event => {
@@ -141,24 +66,24 @@ export const FileCard = ({
         >
             <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={node.path}/>
 
-            <PublicationStatus node={node} classes={{publicationInfo: classes.publicationInfoDetailed}}/>
+            <PublicationStatus node={node} styles={{publicationInfo: styles.publicationInfoDetailed}}/>
 
             {isImage ?
                 <CardMedia
-                        className={classNames(classes.detailedCover)}
+                        className={classNames(styles.detailedCover)}
                         image={`${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2`}
                         title={node.name}
                     /> :
-                <div className={classes.detailedIcon}>
+                <div className={styles.detailedIcon}>
                     {node.primaryNodeType.name === 'jnt:folder' ?
                         <Folder color="action"/> : <FileIcon filename={node.path} color="disabled"/>}
                 </div>}
 
-            <div className={isImage ? classes.mediaCardContentContainer : classes.fileCardContentContainer}>
+            <div className={isImage ? styles.mediaCardContentContainer : styles.fileCardContentContainer}>
 
-                <Actions node={node} className={classes.actions}/>
+                <Actions node={node} className={styles.actions}/>
 
-                <CardContent classes={{root: classes.cardContent}}>
+                <CardContent classes={{root: styles.cardContent}}>
                     <div>
                         <Typography variant="caption" component="p">
                             {t('jcontent:label.contentManager.filesGrid.name')}
@@ -169,7 +94,7 @@ export const FileCard = ({
                         <Typography variant="caption" component="p">
                             {t('jcontent:label.contentManager.filesGrid.createdBy')}
                         </Typography>
-                        <Typography variant="iota" component="p">
+                        <Typography isNowrap component="p">
                             {t('jcontent:label.contentManager.filesGrid.author', {author: node.createdBy ? node.createdBy.value : ''})}
                             &nbsp;
                             <time>{dayjs(node.created.value).locale(getDefaultLocale(uilang)).format('LLL')}</time>
@@ -203,7 +128,6 @@ export const FileCard = ({
 };
 
 FileCard.propTypes = {
-    classes: PropTypes.object.isRequired,
     mode: PropTypes.string.isRequired,
     node: PropTypes.object.isRequired,
     onPreviewSelect: PropTypes.func.isRequired,
@@ -215,4 +139,4 @@ FileCard.propTypes = {
     uilang: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(FileCard);
+export default FileCard;

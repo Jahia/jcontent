@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withTranslation} from 'react-i18next';
-import {Card, CardContent, Tooltip, withStyles} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
+import {Card, CardContent, Tooltip} from '@material-ui/core';
 import Preview from './Preview';
 import {Button, ButtonGroup, Close, Typography} from '@jahia/moonstone';
 import {Fullscreen, FullscreenExit} from '@material-ui/icons';
@@ -12,33 +12,16 @@ import PublicationStatus from './PublicationStatus';
 import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/preview.redux';
 import PreviewSize from './PreviewSize';
 import clsx from 'clsx';
+import styles from './PreviewDrawer.scss';
 
-const styles = theme => ({
-    leftButtons: {
-        flex: 'auto',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        '& button': {
-            margin: theme.spacing.unit
-        }
-    },
-    leftGutter: {
-        marginLeft: theme.spacing.unit * 2
-    },
-    heading: {
-        height: 'var(--spacing-big)',
-        '& > *': {
-            margin: 'var(--spacing-small)'
-        }
-    }
-});
-
-const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePreview, openFullScreen, closeFullScreen, previewSelection, selection, classes}) => {
+const PreviewDrawer = ({previewMode, previewState, setPreviewMode, closePreview, openFullScreen, closeFullScreen, previewSelection, selection}) => {
     const notPublished = previewSelection && (previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE');
     const deleted = previewSelection && previewSelection.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION';
     const disabledToggle = !previewSelection;
     const disabledEdit = !previewSelection || deleted;
     const disabledLive = !previewSelection || notPublished;
+
+    const {t} = useTranslation();
 
     let effectiveMode = previewMode;
     if (disabledLive && previewMode !== 'edit') {
@@ -49,7 +32,7 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
 
     return (
         <React.Fragment>
-            <div className={clsx(classes.heading, 'flexRow', 'alignCenter')}>
+            <div className={clsx(styles.heading, 'flexRow', 'alignCenter')}>
                 <Button data-cm-role="preview-drawer-close"
                         variant="ghost"
                         icon={<Close/>}
@@ -85,7 +68,7 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, t, closePrevi
             <Preview previewSelection={previewSelection} selection={selection} previewMode={effectiveMode} previewState={previewState}/>
             {previewSelection &&
             <Card>
-                <CardContent data-cm-role="preview-name" className={classes.leftGutter}>
+                <CardContent data-cm-role="preview-name" className={styles.leftGutter}>
                     <Typography isNowrap variant="subheading">
                         {previewSelection.displayName ? previewSelection.displayName : previewSelection.name}
                     </Typography>
@@ -123,7 +106,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 PreviewDrawer.propTypes = {
-    classes: PropTypes.object.isRequired,
     closeFullScreen: PropTypes.func.isRequired,
     closePreview: PropTypes.func.isRequired,
     openFullScreen: PropTypes.func.isRequired,
@@ -131,12 +113,9 @@ PreviewDrawer.propTypes = {
     selection: PropTypes.array.isRequired,
     previewSelection: PropTypes.object,
     previewState: PropTypes.number.isRequired,
-    setPreviewMode: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired
+    setPreviewMode: PropTypes.func.isRequired
 };
 
 export default compose(
-    withTranslation(),
-    withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
 )(PreviewDrawer);

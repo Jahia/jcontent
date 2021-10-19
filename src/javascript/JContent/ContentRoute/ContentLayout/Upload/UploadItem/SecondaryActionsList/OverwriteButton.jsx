@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from '@jahia/moonstone';
+import styles from '../UploadItem.scss';
 
-const OverwriteButton = ({t, classes, doUploadAndStatusUpdate}) => (
+const OverwriteButton = ({t, doUploadAndStatusUpdate}) => (
     <Button
         key="overwrite"
         isReversed
         size="big"
-        className={classes.actionButton}
+        className={styles.actionButton}
         component="a"
         variant="ghost"
         label={t('jcontent:label.contentManager.fileUpload.replace')}
@@ -19,7 +20,6 @@ const OverwriteButton = ({t, classes, doUploadAndStatusUpdate}) => (
 
 OverwriteButton.propTypes = {
     t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     doUploadAndStatusUpdate: PropTypes.func.isRequired
 };
 

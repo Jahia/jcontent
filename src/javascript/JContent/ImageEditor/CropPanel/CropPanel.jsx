@@ -1,37 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
+import {FormControl, Input, InputLabel} from '@material-ui/core';
 import {Button, Link, Typography} from '@jahia/moonstone';
-import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
+import styles from './CropPanel.scss';
+import {useTranslation} from 'react-i18next';
 
-let styles = theme => ({
-    form: {
-        display: 'flex',
-        flexDirection: 'row',
-        paddingTop: theme.spacing.unit * 3
-    },
-    firstCol: {
-        flex: '1 1 0%',
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    secondCol: {
-        flex: '1 1 0%',
-        alignSelf: 'center',
-        justifySelf: 'start',
-        padding: '16px'
-    },
-    formControl: {
-        width: '100%',
-        padding: '16px 0'
-    },
-    inputLabel: {
-        color: theme.palette.font.alpha
-    }
-});
-
-export const CropPanel = ({classes, t, onCrop, cropParams}) => {
+export const CropPanel = ({onCrop, cropParams}) => {
+    const {t} = useTranslation();
     const setWidth = event => {
         let width = event.target.value;
 
@@ -57,10 +32,13 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
             <Typography variant="subheading">
                 {t('jcontent:label.contentManager.editImage.cropInfo')}
             </Typography>
-            <div className={classes.form}>
-                <div className={classes.firstCol}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.width')}</InputLabel>
+            <div className={styles.form}>
+                <div className={styles.firstCol}>
+                    <FormControl className={styles.formControl}>
+                        <InputLabel shrink
+                                    className={styles.inputLabel}
+                        >{t('jcontent:label.contentManager.editImage.width')}
+                        </InputLabel>
                         <Input
                             id="width-field"
                             value={cropParams.width ? Math.round(cropParams.width) : ''}
@@ -69,8 +47,11 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
                             onChange={setWidth}
                         />
                     </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
+                    <FormControl className={styles.formControl}>
+                        <InputLabel shrink
+                                    className={styles.inputLabel}
+                        >{t('jcontent:label.contentManager.editImage.height')}
+                        </InputLabel>
                         <Input
                             id="height-field"
                             value={cropParams.height ? Math.round(cropParams.height) : ''}
@@ -80,7 +61,7 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
                         />
                     </FormControl>
                 </div>
-                <div className={classes.secondCol}>
+                <div className={styles.secondCol}>
                     <Button icon={<Link/>}
                             color={cropParams.aspect ? 'accent' : 'default'}
                             size="big"
@@ -95,13 +76,8 @@ export const CropPanel = ({classes, t, onCrop, cropParams}) => {
 };
 
 CropPanel.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     cropParams: PropTypes.object,
     onCrop: PropTypes.func.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles)
-)(CropPanel);
+export default CropPanel;

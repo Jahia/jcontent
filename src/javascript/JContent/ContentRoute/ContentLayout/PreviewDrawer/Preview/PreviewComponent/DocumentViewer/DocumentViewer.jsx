@@ -68,9 +68,9 @@ export class DocumentViewer extends React.Component {
     }
 
     render() {
-        let {classes, fullScreen} = this.props;
+        let {classes, isFullScreen} = this.props;
         return (
-            <div className={classNames(classes.container, fullScreen && classes.fullScreen)}>
+            <div className={classNames(classes.container, isFullScreen && classes.fullScreen)}>
                 {this.renderViewer()}
             </div>
         );
@@ -81,12 +81,11 @@ DocumentViewer.propTypes = {
     classes: PropTypes.object.isRequired,
     file: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    // eslint-disable-next-line react/boolean-prop-naming
-    fullScreen: PropTypes.bool
+    isFullScreen: PropTypes.bool
 };
 
 DocumentViewer.defaultProps = {
-    fullScreen: false
+    isFullScreen: false
 };
 
 export default withStyles(styles)(DocumentViewer);

@@ -1,23 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Tooltip, withStyles} from '@material-ui/core';
+import {Tooltip} from '@material-ui/core';
 import {ArrowLeft, ArrowRight, Button, Typography} from '@jahia/moonstone';
-import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import styles from './RotatePanel.scss';
 
-let styles = theme => ({
-    icons: {
-        paddingTop: theme.spacing.unit * 2
-    }
-});
-
-export const RotatePanel = ({classes, t, onRotate}) => {
+export const RotatePanel = ({onRotate}) => {
+    const {t} = useTranslation();
     return (
         <>
             <Typography variant="subheading">
                 {t('jcontent:label.contentManager.editImage.rotateInfo')}
             </Typography>
-            <div className={classes.icons}>
+            <div className={styles.icons}>
                 <Tooltip title={t('jcontent:label.contentManager.editImage.rotateLeft')}>
                     <Button data-cm-role="rotate-left"
                             size="big"
@@ -38,12 +33,7 @@ export const RotatePanel = ({classes, t, onRotate}) => {
 };
 
 RotatePanel.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     onRotate: PropTypes.func.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles)
-)(RotatePanel);
+export default RotatePanel;

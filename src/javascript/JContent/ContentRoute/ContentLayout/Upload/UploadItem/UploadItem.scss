@@ -1,0 +1,37 @@
+
+.listItem.listItem {
+    display: flex;
+    align-items: center;
+    height: 32px;
+
+    color: var(--color-light);
+}
+
+.grow.grow {
+    flex-grow: 1;
+}
+
+.fileNameText.fileNameText {
+    width: 220px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.statusIcon.statusIcon {
+    margin-right: var(--spacing-nano);
+}
+
+.tagIcon.tagIcon {
+    margin-right: var(--spacing-nano);
+    margin-left: var(--spacing-nano);
+}
+
+.actionButton.actionButton {
+    margin: var(--spacing-small) 0;
+}
+
+.progressText.progressText {
+    white-space: nowrap;
+}

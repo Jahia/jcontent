@@ -1,0 +1,12 @@
+.buttons.buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    & > button {
+        margin-right: 1em;
+    }
+}
+
+.spacer.spacer {
+    flex: 1;
+}

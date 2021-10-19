@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
-import {Pagination} from '@jahia/react-material';
+import {Pagination} from '../Pagination';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';

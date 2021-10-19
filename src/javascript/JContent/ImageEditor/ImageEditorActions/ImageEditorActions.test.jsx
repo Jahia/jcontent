@@ -17,7 +17,6 @@ describe('Image actions', () => {
             };
 
             wrapper = shallow(<ImageEditorActions {...props}/>);
-            wrapper = wrapper.dive().dive();
         } catch (e) {
             console.log(e);
         }

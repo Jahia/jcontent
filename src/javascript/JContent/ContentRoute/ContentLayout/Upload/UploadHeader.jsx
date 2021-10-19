@@ -1,35 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {withStyles} from '@material-ui/core';
 import {Check, Information, Loader, Typography} from '@jahia/moonstone';
-import {compose} from '~/utils';
-import {Trans, withTranslation} from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
+import styles from './UploadHeader.scss';
 
-let styles = theme => ({
-    headerText: {
-        color: theme.palette.text.contrastText,
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '16px'
-    },
-    statusIcon: {
-        marginRight: theme.spacing.unit
-    },
-    link: {
-        color: 'inherit'
-    }
-});
-
-export function UploadHeader({classes, t, status}) {
+export function UploadHeader({status}) {
+    const {t} = useTranslation();
     if (!status) {
         return null;
     }
 
     if (status.uploading !== 0) {
         return (
-            <div className={classNames(classes.headerText)}>
-                <Loader isReversed size="small" className={classes.statusIcon}/>
+            <div className={classNames(styles.headerText)}>
+                <Loader isReversed size="small" className={styles.statusIcon}/>
                 <Typography data-cm-role="upload-status-uploading">
                     {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.importingMessage' : 'jcontent:label.contentManager.fileUpload.uploadingMessage', {
                         uploaded: status.uploaded,
@@ -37,17 +22,17 @@ export function UploadHeader({classes, t, status}) {
                     })}
                 </Typography>
                 {(status.error !== 0) &&
-                    <Typography>
-                        {t('jcontent:label.contentManager.fileUpload.uploadingActionMessage')}
-                    </Typography>}
+                <Typography>
+                    {t('jcontent:label.contentManager.fileUpload.uploadingActionMessage')}
+                </Typography>}
             </div>
         );
     }
 
     if (status.error !== 0) {
         return (
-            <div className={classNames(classes.headerText)}>
-                <Information className={classNames(classes.statusIcon)}/>
+            <div className={classNames(styles.headerText)}>
+                <Information className={classNames(styles.statusIcon)}/>
                 <Typography data-cm-role="upload-status-error">
                     {status.type === 'import' ?
                         <Trans i18nKey="jcontent:label.contentManager.fileUpload.importErrorMessage"
@@ -56,7 +41,7 @@ export function UploadHeader({classes, t, status}) {
                                       href={window.contextJsParameters.config.links.importAcademy}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className={classes.link}
+                                      className={styles.link}
                                    >.
                                    </a>
                                ]}/> : t('jcontent:label.contentManager.fileUpload.errorMessage')}
@@ -66,8 +51,8 @@ export function UploadHeader({classes, t, status}) {
     }
 
     return (
-        <div className={classNames(classes.headerText)}>
-            <Check className={classNames(classes.statusIcon)}/>
+        <div className={classNames(styles.headerText)}>
+            <Check className={classNames(styles.statusIcon)}/>
             <Typography data-cm-role="upload-status-success">
                 {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.successfulImportMessage' : 'jcontent:label.contentManager.fileUpload.successfulUploadMessage', {
                     count: status.total,
@@ -79,12 +64,7 @@ export function UploadHeader({classes, t, status}) {
 }
 
 UploadHeader.propTypes = {
-    classes: PropTypes.object.isRequired,
-    status: PropTypes.object,
-    t: PropTypes.func.isRequired
+    status: PropTypes.object
 };
 
-export default compose(
-    withStyles(styles, {withTheme: true}),
-    withTranslation()
-)(UploadHeader);
+export default UploadHeader;

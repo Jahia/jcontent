@@ -1,14 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    TextField,
-    withStyles
-} from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {Button, Typography} from '@jahia/moonstone';
 import {compose} from '~/utils';
 import {withApollo} from 'react-apollo';
@@ -18,37 +10,7 @@ import SecondaryActionsList from './SecondaryActionsList';
 import Status from './Status';
 import EditButton from './EditButton';
 import {registry} from '@jahia/ui-extender';
-
-const styles = theme => ({
-    listItem: {
-        color: theme.palette.text.contrastText,
-        display: 'flex',
-        alignItems: 'center',
-        height: 32
-    },
-    grow: {
-        flexGrow: 1
-    },
-    fileNameText: {
-        width: 220,
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap'
-    },
-    statusIcon: {
-        marginRight: theme.spacing.unit
-    },
-    tagIcon: {
-        marginRight: theme.spacing.unit,
-        marginLeft: theme.spacing.unit
-    },
-    actionButton: {
-        margin: '8 0'
-    },
-    progressText: {
-        whiteSpace: 'nowrap'
-    }
-});
+import styles from './UploadItem.scss';
 
 const UPLOAD_DELAY = 500;
 
@@ -83,10 +45,10 @@ export class UploadItem extends React.Component {
     }
 
     render() {
-        const {classes, t, file} = this.props;
+        const {t, file} = this.props;
         return (
-            <div className={classes.listItem}>
-                <Typography className={classes.fileNameText}>
+            <div className={styles.listItem}>
+                <Typography className={styles.fileNameText}>
                     {this.getFileName()}
                 </Typography>
                 <SecondaryActionsList
@@ -96,7 +58,7 @@ export class UploadItem extends React.Component {
                     })}
                     doUploadAndStatusUpdate={this.doUploadAndStatusUpdate}
                 />
-                <div className={classes.grow}/>
+                <div className={styles.grow}/>
                 <Status {...this.props}/>
                 {this.state.component}
                 <EditButton {...this.props} uuid={this.state.uuid}/>
@@ -118,8 +80,8 @@ export class UploadItem extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} onClick={() => this.setState({anchorEl: null})}/>
-                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')} color="accent" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}/>
+                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} size="big" onClick={() => this.setState({anchorEl: null})}/>
+                        <Button label={t('jcontent:label.contentManager.fileUpload.dialogRename')} size="big" color="accent" data-cm-role="upload-rename-button" onClick={() => this.setState({anchorEl: null}, () => this.changeStatusToUploading())}/>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -226,7 +188,6 @@ UploadItem.propTypes = {
 };
 
 export default compose(
-    withStyles(styles),
     withTranslation(),
     withApollo
 )(UploadItem);

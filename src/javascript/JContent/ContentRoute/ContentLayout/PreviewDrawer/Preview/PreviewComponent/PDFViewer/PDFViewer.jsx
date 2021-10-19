@@ -115,7 +115,7 @@ export class PDFViewer extends React.Component {
 
     render() {
         let {page, pages, scaleSize, showScale} = this.state;
-        let {classes, file, fullScreen} = this.props;
+        let {classes, file, isFullScreen} = this.props;
 
         return (
             <React.Fragment>
@@ -124,7 +124,7 @@ export class PDFViewer extends React.Component {
                          open={showScale}
                          classes={{popper: classes.scale}}
                 >
-                    <div className={classNames(classes.pdfContainer, fullScreen && classes.fullScreen)}>
+                    <div className={classNames(classes.pdfContainer, isFullScreen && classes.fullScreen)}>
                         <Pdf key={file}
                              file={file}
                              scale={scaleSizes[scaleSize]}
@@ -194,8 +194,7 @@ export class PDFViewer extends React.Component {
 PDFViewer.propTypes = {
     classes: PropTypes.object.isRequired,
     file: PropTypes.string.isRequired,
-    // eslint-disable-next-line react/boolean-prop-naming
-    fullScreen: PropTypes.bool.isRequired
+    isFullScreen: PropTypes.bool.isRequired
 };
 
 export default compose(

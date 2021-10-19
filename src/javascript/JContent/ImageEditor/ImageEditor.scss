@@ -1,0 +1,27 @@
+
+.root.root {
+    min-height: 0;
+}
+
+.left.left {
+    overflow: auto;
+}
+
+.title.title {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel.panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.right.right {
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    padding-right: var(--spacing-small);
+
+    background: var(--color-gray_light40);
+}

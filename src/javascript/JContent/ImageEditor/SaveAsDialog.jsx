@@ -1,29 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    TextField,
-    withStyles
-} from '@material-ui/core';
-import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
+import styles from './SaveAsDialog.scss';
 
-let styles = {
-    root: {
-        minWidth: '600px'
-    }
-};
-
-export const SaveAsDialog = ({isOpen, handleClose, handleSave, classes, t, name, onChangeName, isNameValid}) => {
+export const SaveAsDialog = ({isOpen, handleClose, handleSave, name, onChangeName, isNameValid}) => {
+    const {t} = useTranslation();
     return (
         <Dialog open={isOpen}
                 aria-labelledby="form-dialog-title"
-                classes={{paper: classes.root}}
+                classes={{paper: styles.root}}
                 onClose={handleClose}
         >
             <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.editImage.saveAsDialog.title')}</DialogTitle>
@@ -50,8 +37,6 @@ export const SaveAsDialog = ({isOpen, handleClose, handleSave, classes, t, name,
 };
 
 SaveAsDialog.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     handleSave: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
@@ -60,7 +45,4 @@ SaveAsDialog.propTypes = {
     isNameValid: PropTypes.bool.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles)
-)(SaveAsDialog);
+export default SaveAsDialog;

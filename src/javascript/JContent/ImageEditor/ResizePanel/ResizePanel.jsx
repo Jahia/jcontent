@@ -1,40 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormControl, Input, InputLabel, withStyles} from '@material-ui/core';
-import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
+import {FormControl, Input, InputLabel} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
 import {Button, Link, Typography} from '@jahia/moonstone';
+import styles from './ResizePanel.scss';
 
-let styles = theme => ({
-    panel: {
-        flexDirection: 'column'
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'row',
-        paddingTop: theme.spacing.unit * 3
-    },
-    firstCol: {
-        flex: '1 1 0%',
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    secondCol: {
-        flex: '1 1 0%',
-        alignSelf: 'center',
-        justifySelf: 'start',
-        padding: '16px'
-    },
-    formControl: {
-        width: '100%',
-        padding: '16px 0'
-    },
-    inputLabel: {
-        color: theme.palette.font.alpha
-    }
-});
+export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResize}) => {
+    const {t} = useTranslation();
 
-export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizeParams, onResize}) => {
     const setWidth = event => {
         let value = event.target.value;
 
@@ -60,10 +33,10 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
             <Typography variant="subheading">
                 {t('jcontent:label.contentManager.editImage.resizeInfo')}
             </Typography>
-            <div className={classes.form}>
-                <div className={classes.firstCol}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.width')}</InputLabel>
+            <div className={styles.form}>
+                <div className={styles.firstCol}>
+                    <FormControl className={styles.formControl}>
+                        <InputLabel shrink className={styles.inputLabel}>{t('jcontent:label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
                             value={resizeParams.width ? resizeParams.width : originalWidth}
@@ -72,8 +45,8 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
                             onChange={setWidth}
                         />
                     </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel shrink className={classes.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
+                    <FormControl className={styles.formControl}>
+                        <InputLabel shrink className={styles.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
                             value={resizeParams.height ? resizeParams.height : originalHeight}
@@ -83,7 +56,7 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
                         />
                     </FormControl>
                 </div>
-                <div className={classes.secondCol}>
+                <div className={styles.secondCol}>
                     <Button icon={<Link/>}
                             color={resizeParams.keepRatio ? 'accent' : 'default'}
                             size="big"
@@ -97,15 +70,10 @@ export const ResizePanel = ({t, classes, originalWidth, originalHeight, resizePa
 };
 
 ResizePanel.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     originalWidth: PropTypes.number.isRequired,
     originalHeight: PropTypes.number.isRequired,
     resizeParams: PropTypes.object.isRequired,
     onResize: PropTypes.func.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles)
-)(ResizePanel);
+export default ResizePanel;

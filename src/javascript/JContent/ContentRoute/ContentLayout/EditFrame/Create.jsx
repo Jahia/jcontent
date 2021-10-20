@@ -12,7 +12,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
 
-    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'accent', className: styles.button}});
+    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default', className: styles.button}});
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {

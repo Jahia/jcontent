@@ -6,10 +6,11 @@ import classnames from 'clsx';
 import styles from './Box.scss';
 import publicationStatusStyles from './PublicationStatus.scss';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {useDragSource} from './useDragSource';
 import {useDropTarget} from './useDropTarget';
 import PublicationStatus from '../PublicationStatus/PublicationStatus';
+import '@jahia/moonstone/dist/globals.css';
 
 export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, onMouseOut, onSaved, rootElementRef}) => {
     const rect = element.getBoundingClientRect();
@@ -62,7 +63,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
         };
     }, [dropClassName, element, onDragEnter, onDragLeave, onDragOver, onDrop, parent]);
 
-    const buttonRenderer = getButtonRenderer({color, variant: 'outlined', className: styles.button});
+    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color, variant: 'outlined', className: styles.button}});
 
     const rootDiv = useRef();
     const div = useRef();
@@ -116,7 +117,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                                         onClick={onGoesUp}
                                 />
                             )}
-                            <DisplayAction actionKey="quickEdit" context={{path, onSaved}} render={buttonRenderer}/>
+                            <DisplayAction actionKey="quickEdit" context={{path, onSaved}} render={ButtonRenderer}/>
                             <Typography isUpperCase
                                         isNowrap
                                         className="flexFluid"

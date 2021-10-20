@@ -14,13 +14,13 @@ import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
 import {EditFrame} from './ContentLayout/EditFrame/EditFrame';
 
 const ContentRoute = () => {
-    const {mode, pagesMode} = useSelector(state => ({
+    const {mode, viewMode} = useSelector(state => ({
         mode: state.jcontent.mode,
-        pagesMode: state.jcontent.pagesMode
+        viewMode: state.jcontent.tableView.viewMode
     }));
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
-    const inEditMode = JContentConstants.mode.PAGES === mode && (JContentConstants.pagesMode.VIEW === pagesMode || JContentConstants.pagesMode.VIEW_DEVICE === pagesMode);
+    const inEditMode = JContentConstants.mode.PAGES === mode && (JContentConstants.pagesMode.VIEW === viewMode || JContentConstants.pagesMode.VIEW_DEVICE === viewMode);
     return (
         <MainLayout
             header={
@@ -35,7 +35,7 @@ const ContentRoute = () => {
         >
             <LoaderSuspense>
                 <ErrorBoundary>
-                    { mode.length > 0 && inEditMode ? <EditFrame deviceView={JContentConstants.pagesMode.VIEW_DEVICE === pagesMode}/> : <ContentLayout/> }
+                    { mode.length > 0 && inEditMode ? <EditFrame isDeviceView={JContentConstants.pagesMode.VIEW_DEVICE === viewMode}/> : <ContentLayout/> }
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

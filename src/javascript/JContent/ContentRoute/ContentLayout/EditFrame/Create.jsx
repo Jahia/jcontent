@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
 import {DisplayAction} from '@jahia/ui-extender';
-import {getButtonRenderer} from '../../../../utils/getButtonRenderer';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import classnames from 'clsx';
 import {useDropTarget} from './useDropTarget';
 
@@ -12,7 +12,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
 
-    const buttonRenderer = getButtonRenderer({color: 'default', className: styles.button});
+    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'accent', className: styles.button}});
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -50,8 +50,8 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
              onDragLeave={onDragLeave}
              onDrop={onDrop}
         >
-            <DisplayAction actionKey="createContent" context={{path}} render={buttonRenderer}/>
-            <DisplayAction actionKey="paste" context={{path}} render={buttonRenderer}/>
+            <DisplayAction actionKey="createContent" context={{path}} render={ButtonRenderer}/>
+            <DisplayAction actionKey="paste" context={{path}} render={ButtonRenderer}/>
         </div>
     );
 };

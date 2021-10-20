@@ -7,7 +7,6 @@ import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import ViewModeSelector from '../ViewModeSelector';
-import PagesModeSelector from '../PagesModeSelector/PagesModeSelector';
 
 const excludedActions = [
     'subContents',
@@ -67,8 +66,6 @@ export const BrowseControlBar = ({isShowingActions}) => {
             <FileModeSelector/>}
             {isShowingActions && mode !== JContentConstants.mode.MEDIA &&
             <ViewModeSelector/>}
-            {isShowActions && mode === JContentConstants.mode.PAGES &&
-            <PagesModeSelector/>}
         </React.Fragment>
     );
 };

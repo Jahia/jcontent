@@ -16,7 +16,7 @@ import {Infos} from './Infos';
 import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
 
-export const EditFrame = ({deviceView}) => {
+export const EditFrame = ({isDeviceView}) => {
     const {path, site, language} = useSelector(state => ({
         language: state.language,
         site: state.site,
@@ -64,10 +64,10 @@ export const EditFrame = ({deviceView}) => {
     };
 
     function refresh() {
-        if (iframeSwap.current.contentWindow.location.href !== iframe.current.contentWindow.location.href) {
-            iframeSwap.current.contentWindow.location.href = iframe.current.contentWindow.location.href;
-        } else {
+        if (iframeSwap.current.contentWindow.location.href === iframe.current.contentWindow.location.href) {
             iframeSwap.current.contentWindow.location.reload();
+        } else {
+            iframeSwap.current.contentWindow.location.href = iframe.current.contentWindow.location.href;
         }
     }
 
@@ -107,7 +107,7 @@ export const EditFrame = ({deviceView}) => {
         };
     });
 
-    const deviceParam = (deviceView && device) ? ('&channel=' + device) : '';
+    const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
 
     useEffect(() => {
         if (currentDocument) {
@@ -125,6 +125,9 @@ export const EditFrame = ({deviceView}) => {
                 iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
                 previousDevice.current = deviceParam;
             }
+        } else {
+            iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+            previousDevice.current = deviceParam;
         }
     }, [currentDocument, path, previousDevice, deviceParam, language]);
 
@@ -134,7 +137,7 @@ export const EditFrame = ({deviceView}) => {
 
     return (
         <>
-            <DeviceContainer enabled={deviceView} device={device} setDevice={setDevice}>
+            <DeviceContainer enabled={isDeviceView} device={device} setDevice={setDevice}>
                 <iframe ref={iframe}
                         width="100%"
                         height="100%"
@@ -171,5 +174,5 @@ export const EditFrame = ({deviceView}) => {
 };
 
 EditFrame.propTypes = {
-    deviceView: PropTypes.bool
+    isDeviceView: PropTypes.bool
 };

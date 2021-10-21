@@ -39,8 +39,6 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         height: 25
     };
 
-    console.log(ButtonRenderer);
-
     return (
         <div className={classnames(styles.root, dropClassName)}
              style={currentOffset}

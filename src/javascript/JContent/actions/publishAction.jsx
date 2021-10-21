@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
 
-function checkAction(res, node, publishType, isAllLanguages) {
+function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;
     let isVisible = res.checksResult && node.operationsSupport.publication;
 
@@ -25,7 +25,7 @@ function checkAction(res, node, publishType, isAllLanguages) {
             (publishType === 'publishAll' || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
     }
 
-    if (isAllLanguages) {
+    if (isPublishingAllLanguages) {
         isVisible = isVisible && node.site.languages.length > 1;
     }
 
@@ -36,13 +36,13 @@ function checkAction(res, node, publishType, isAllLanguages) {
     return {enabled, isVisible};
 }
 
-function checkActionOnNodes(res, publishType, isAllLanguages) {
+function checkActionOnNodes(res, publishType, isPublishingAllLanguages) {
     const defaults = {
         enabled: true,
         isVisible: true
     };
 
-    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, isAllLanguages)), defaults) : defaults;
+    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, isPublishingAllLanguages)), defaults) : defaults;
 }
 
 const mergeChecks = (v1, v2) => {
@@ -80,7 +80,7 @@ const constraintsByType = {
 };
 
 export const PublishActionComponent = props => {
-    const {id, path, paths, language, publishType, isAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
+    const {id, path, paths, language, publishType, isPublishingAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation();
 
@@ -106,7 +106,7 @@ export const PublishActionComponent = props => {
         return (Loading && <Loading {...props}/>) || false;
     }
 
-    let actionChecks = res.node ? checkAction(res, res.node, publishType, isAllLanguages) : checkActionOnNodes(res, publishType, isAllLanguages);
+    let actionChecks = res.node ? checkAction(res, res.node, publishType, isPublishingAllLanguages) : checkActionOnNodes(res, publishType, isPublishingAllLanguages);
     const actionEnabled = enabled === undefined ? actionChecks.enabled : (enabled && actionChecks.enabled);
     const actionVisible = isVisible === undefined ? actionChecks.isVisible : (isVisible && actionChecks.isVisible);
 
@@ -123,9 +123,9 @@ export const PublishActionComponent = props => {
             enabled={actionEnabled}
             onClick={() => {
                 if (path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', isAllLanguages, publishType === 'unpublish');
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', isPublishingAllLanguages, publishType === 'unpublish');
                 } else if (paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), publishType === 'publishAll', isAllLanguages, publishType === 'unpublish');
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), publishType === 'publishAll', isPublishingAllLanguages, publishType === 'unpublish');
                 }
             }}
         />
@@ -147,7 +147,7 @@ PublishActionComponent.propTypes = {
 
     publishType: PropTypes.oneOf(['publish', 'publishAll', 'unpublish']),
 
-    isAllLanguages: PropTypes.bool,
+    isPublishingAllLanguages: PropTypes.bool,
 
     render: PropTypes.func.isRequired,
 

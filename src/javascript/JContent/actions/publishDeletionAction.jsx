@@ -14,7 +14,7 @@ const checkAction = node => node.operationsSupport.publication &&
         (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
             (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));
 
-export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
+export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
     const res = useNodeChecks({path, paths, language}, {
@@ -38,9 +38,9 @@ export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isAll
             buttonProps={{...buttonProps, color: 'danger'}}
             onClick={() => {
                 if (path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], isAllSubTree, isAllLanguages);
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], isAllSubTree, isPublishingAllLanguages);
                 } else if (paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), isAllSubTree, isAllLanguages);
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), isAllSubTree, isPublishingAllLanguages);
                 }
             }}
         />
@@ -56,7 +56,7 @@ PublishDeletionActionComponent.propTypes = {
 
     isAllSubTree: PropTypes.bool,
 
-    isAllLanguages: PropTypes.bool,
+    isPublishingAllLanguages: PropTypes.bool,
 
     render: PropTypes.func.isRequired,
 

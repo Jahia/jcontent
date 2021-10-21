@@ -109,7 +109,7 @@ export const jContentActions = registry => {
         buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
         targets: ['publishMenu:1'],
         publishType: 'publish',
-        isAllLanguages: false,
+        isPublishingAllLanguages: false,
         component: PublishActionComponent
     });
     registry.add('action', 'publishInAllLanguages', {
@@ -117,7 +117,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishInAllLanguages',
         targets: ['publishMenu:2'],
         publishType: 'publish',
-        isAllLanguages: true,
+        isPublishingAllLanguages: true,
         component: PublishActionComponent
     });
     registry.add('action', 'publishAll', {
@@ -126,7 +126,7 @@ export const jContentActions = registry => {
         buttonLabelShort: 'jcontent:label.contentManager.contentPreview.publishShort',
         targets: ['publishMenu:3'],
         publishType: 'publishAll',
-        isAllLanguages: false,
+        isPublishingAllLanguages: false,
         component: PublishActionComponent
     });
     registry.add('action', 'publishAllInAllLanguages', {
@@ -134,7 +134,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.publishAllInAllLanguages',
         targets: ['publishMenu:4'],
         publishType: 'publishAll',
-        isAllLanguages: true,
+        isPublishingAllLanguages: true,
         component: PublishActionComponent
     });
     registry.add('action', 'publishDeletion', {
@@ -148,7 +148,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublish',
         targets: ['publishMenu:5'],
         publishType: 'unpublish',
-        isAllLanguages: false,
+        isPublishingAllLanguages: false,
         component: PublishActionComponent
     });
     registry.add('action', 'unpublishInAllLanguages', {
@@ -156,7 +156,7 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.unpublishInAllLanguages',
         targets: ['publishMenu:6'],
         publishType: 'unpublish',
-        isAllLanguages: true,
+        isPublishingAllLanguages: true,
         component: PublishActionComponent
     });
     registry.add('action', 'contentMenu', menuActionWithRenderer, {

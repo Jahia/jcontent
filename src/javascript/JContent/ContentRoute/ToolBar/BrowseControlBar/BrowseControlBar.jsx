@@ -24,7 +24,7 @@ const excludedActions = [
     'fileUpload'
 ];
 
-export const BrowseControlBar = ({isShowActions}) => {
+export const BrowseControlBar = ({isShowingActions}) => {
     const {path, mode, siteKey} = useSelector(state => ({
         path: state.jcontent.path,
         mode: state.jcontent.mode,
@@ -39,7 +39,7 @@ export const BrowseControlBar = ({isShowActions}) => {
 
     return (
         <React.Fragment>
-            {isShowActions && !isRootNode && (
+            {isShowingActions && !isRootNode && (
                 <>
                     <div className="flexRow">
                         <DisplayActions target="headerPrimaryActions"
@@ -62,16 +62,16 @@ export const BrowseControlBar = ({isShowActions}) => {
                 </>
             )}
             <div className="flexFluid"/>
-            {isShowActions && mode === JContentConstants.mode.MEDIA &&
+            {isShowingActions && mode === JContentConstants.mode.MEDIA &&
             <FileModeSelector/>}
-            {isShowActions && mode !== JContentConstants.mode.MEDIA &&
+            {isShowingActions && mode !== JContentConstants.mode.MEDIA &&
             <ViewModeSelector/>}
         </React.Fragment>
     );
 };
 
 BrowseControlBar.propTypes = {
-    isShowActions: PropTypes.bool.isRequired
+    isShowingActions: PropTypes.bool.isRequired
 };
 
 export default BrowseControlBar;

@@ -38,8 +38,8 @@ export const ToolBar = () => {
     return (
         <div className={`flexRow ${styles.root}`}>
             {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?
-                <SearchControlBar isShowActions={selection.length === 0}/> :
-                <BrowseControlBar isShowActions={selection.length === 0}/>}
+                <SearchControlBar/> :
+                <BrowseControlBar isShowingActions={selection.length === 0}/>}
             {paths.length > 0 &&
             <React.Fragment>
                 <div className="flexRow">

@@ -18,16 +18,16 @@ let styles = {
     }
 };
 
-const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
+const ImageEditorActions = ({classes, t, undoChanges, saveChanges, isDirty}) => (
     <ExpansionPanelActions className={classes.buttons}>
-        <Button data-cm-role="undo-changes" variant="ghost" disabled={!dirty} onClick={undoChanges}>
+        <Button data-cm-role="undo-changes" variant="ghost" disabled={!isDirty} onClick={undoChanges}>
             {t('jcontent:label.contentManager.editImage.undo')}
         </Button>
         <div className={classes.spacer}/>
-        <Button variant="secondary" data-cm-role="image-save-as-button" disabled={!dirty} onClick={() => saveChanges(true)}>
+        <Button variant="secondary" data-cm-role="image-save-as-button" disabled={!isDirty} onClick={() => saveChanges(true)}>
             {t('jcontent:label.contentManager.editImage.saveAs')}
         </Button>
-        <Button variant="primary" data-cm-role="image-save-button" disabled={!dirty} onClick={() => saveChanges(false)}>
+        <Button variant="primary" data-cm-role="image-save-button" disabled={!isDirty} onClick={() => saveChanges(false)}>
             {t('jcontent:label.contentManager.editImage.save')}
         </Button>
     </ExpansionPanelActions>
@@ -36,7 +36,7 @@ const ImageEditorActions = ({classes, t, undoChanges, saveChanges, dirty}) => (
 ImageEditorActions.propTypes = {
     t: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
-    dirty: PropTypes.bool.isRequired,
+    isDirty: PropTypes.bool.isRequired,
     saveChanges: PropTypes.func.isRequired,
     undoChanges: PropTypes.func.isRequired
 };

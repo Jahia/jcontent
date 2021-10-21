@@ -53,7 +53,7 @@ const styles = theme => ({
     }
 });
 
-const iframeLoadContent = (assets, displayValue, element, domLoadedCallback, iFrameStyle) => {
+const iframeLoadContent = ({assets, displayValue, element, domLoadedCallback, iFrameStyle}) => {
     if (element) {
         let frameDoc = element.document;
         if (element.contentWindow) {
@@ -87,6 +87,10 @@ const iframeLoadContent = (assets, displayValue, element, domLoadedCallback, iFr
     }
 };
 
+function getFile(workspace, data) {
+    return window.contextJsParameters.contextPath + '/files/' + (workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
+}
+
 const PreviewComponentCmp = ({classes, data, workspace, fullScreen, domLoadedCallback, iFrameStyle, iframeProps}) => {
     const {t} = useTranslation();
 
@@ -97,7 +101,7 @@ const PreviewComponentCmp = ({classes, data, workspace, fullScreen, domLoadedCal
 
     // If node type is "jnt:file" use specific viewer
     if (data && data.nodeByPath && data.nodeByPath.lastModified && data.nodeByPath.isFile) {
-        let file = window.contextJsParameters.contextPath + '/files/' + (workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
+        let file = getFile(workspace, data);
         if (isPDF(data.nodeByPath.path)) {
             return (
                 <div className={classes.previewContainer} data-sel-role="preview-type-pdf">
@@ -134,7 +138,7 @@ const PreviewComponentCmp = ({classes, data, workspace, fullScreen, domLoadedCal
         >
             <Paper elevation={1} classes={{root: classes.contentPaper}}>
                 <iframe key={data && data.nodeByPath ? data.nodeByPath.path : 'NoPreviewAvailable'}
-                        ref={element => iframeLoadContent(assets, displayValue, element, domLoadedCallback, iFrameStyle)}
+                        ref={element => iframeLoadContent({assets, displayValue, element, domLoadedCallback, iFrameStyle})}
                         data-sel-role={workspace + '-preview-frame'}
                         className={classes.contentIframe}
                         {...iframeProps}

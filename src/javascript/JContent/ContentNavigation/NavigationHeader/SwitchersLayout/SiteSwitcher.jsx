@@ -49,7 +49,6 @@ class SiteSwitcher extends React.Component {
     getSites(data) {
         let siteNodes = [];
         if (data && data.jcr.result !== null) {
-            // eslint-disable-next-line no-unused-vars
             for (let i in data.jcr.result.siteNodes) {
                 if (data.jcr.result.siteNodes[i].hasPermission) {
                     siteNodes.push(data.jcr.result.siteNodes[i]);
@@ -63,7 +62,6 @@ class SiteSwitcher extends React.Component {
     getTargetSiteLanguageForSwitch(siteNode, currentLang) {
         let newLang = null;
         let siteLanguages = siteNode.site.languages;
-        // eslint-disable-next-line no-unused-vars
         for (let i in siteLanguages) {
             if (Object.prototype.hasOwnProperty.call(siteLanguages, i)) {
                 let lang = siteLanguages[i];

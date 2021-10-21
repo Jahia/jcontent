@@ -19,9 +19,9 @@ let styles = {
     }
 };
 
-export const SaveAsDialog = ({open, handleClose, handleSave, classes, t, name, onChangeName, isNameValid}) => {
+export const SaveAsDialog = ({isOpen, handleClose, handleSave, classes, t, name, onChangeName, isNameValid}) => {
     return (
-        <Dialog open={open}
+        <Dialog open={isOpen}
                 aria-labelledby="form-dialog-title"
                 classes={{paper: classes.root}}
                 onClose={handleClose}
@@ -58,7 +58,7 @@ SaveAsDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     handleSave: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     onChangeName: PropTypes.func.isRequired,
     isNameValid: PropTypes.bool.isRequired

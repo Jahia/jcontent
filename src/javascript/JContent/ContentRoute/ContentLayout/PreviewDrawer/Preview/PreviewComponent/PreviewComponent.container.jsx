@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useContentPreview} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import PreviewComponent from './PreviewComponent';
@@ -18,13 +18,6 @@ export const PreviewComponentContainer = ({previewMode, previewSelection, previe
         language,
         workspace: previewMode
     });
-
-    // Trigger manual refetch only on language change
-    useEffect(() => {
-        if (!loading && !error) {
-            refetch();
-        }
-    }, [language]);
 
     if (!loading && Object.keys(data || {}).length === 0) {
         refetch();

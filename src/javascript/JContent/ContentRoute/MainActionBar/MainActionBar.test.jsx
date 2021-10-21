@@ -28,7 +28,7 @@ describe('MainActionBar', () => {
         const wrapper = shallow(<MainActionBar/>);
 
         wrapper.find('DisplayAction').forEach(node => {
-            expect(node.props().disabled).toBeFalsy();
+            expect(node.props().isDisabled).toBeFalsy();
         });
         expect(wrapper.findWhere(node => node.props().actionKey === 'publish').exists()).toBeTruthy();
         expect(wrapper.findWhere(node => node.props().actionKey === 'publishAll').exists()).toBeFalsy();
@@ -49,7 +49,7 @@ describe('MainActionBar', () => {
         const wrapper = shallow(<MainActionBar/>);
 
         wrapper.find('DisplayAction').forEach(node => {
-            expect(node.props().disabled).toBeTruthy();
+            expect(node.props().isDisabled).toBeTruthy();
         });
         expect(wrapper.findWhere(node => node.props().actionKey === 'publish').exists()).toBeTruthy();
         expect(wrapper.findWhere(node => node.props().actionKey === 'publishAll').exists()).toBeFalsy();

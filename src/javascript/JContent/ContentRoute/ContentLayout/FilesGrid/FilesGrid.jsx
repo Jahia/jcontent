@@ -57,7 +57,7 @@ const styles = theme => ({
 });
 
 export const FilesGrid = ({
-    contentNotFound,
+    isContentNotFound,
     classes,
     path,
     totalCount,
@@ -66,7 +66,7 @@ export const FilesGrid = ({
     onPreviewSelect,
     setCurrentPage,
     rows,
-    loading,
+    isLoading,
     mode,
     uilang,
     siteKey,
@@ -86,11 +86,11 @@ export const FilesGrid = ({
         onSelectionChange: index => onPreviewSelect(rows[index].path)
     });
 
-    if ((!rows || rows.length === 0) && loading) {
+    if ((!rows || rows.length === 0) && isLoading) {
         return null;
     }
 
-    if (contentNotFound) {
+    if (isContentNotFound) {
         return (
             <React.Fragment>
                 <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
@@ -102,7 +102,7 @@ export const FilesGrid = ({
         );
     }
 
-    if ((!rows || rows.length === 0) && !loading) {
+    if ((!rows || rows.length === 0) && !isLoading) {
         return (
             <React.Fragment>
                 <FilesGridEmptyDropZone mode={JContentConstants.mode.MEDIA} path={path}/>
@@ -186,8 +186,8 @@ let mapDispatchToProps = dispatch => ({
 
 FilesGrid.propTypes = {
     classes: PropTypes.object.isRequired,
-    contentNotFound: PropTypes.bool,
-    loading: PropTypes.bool.isRequired,
+    isContentNotFound: PropTypes.bool,
+    isLoading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
     path: PropTypes.string.isRequired,
     rows: PropTypes.array.isRequired,

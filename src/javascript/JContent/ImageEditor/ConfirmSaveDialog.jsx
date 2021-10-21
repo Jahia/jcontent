@@ -18,8 +18,8 @@ let styles = {
     }
 };
 
-export const ConfirmSaveDialog = ({open, handleClose, handleSave, classes, t}) => (
-    <Dialog open={open}
+export const ConfirmSaveDialog = ({isOpen, handleClose, handleSave, classes, t}) => (
+    <Dialog open={isOpen}
             aria-labelledby="form-dialog-title"
             classes={{paper: classes.root}}
             onClose={handleClose}
@@ -46,7 +46,7 @@ ConfirmSaveDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     handleSave: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    isOpen: PropTypes.bool.isRequired
 };
 
 export default compose(

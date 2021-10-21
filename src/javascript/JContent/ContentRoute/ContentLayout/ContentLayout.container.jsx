@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient, useQuery} from 'react-apollo';
 import {
@@ -67,133 +67,158 @@ export const ContentLayoutContainer = ({
     const client = useApolloClient();
     const fetchPolicy = 'network-only';
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
-    const queryHandler = contentQueryHandlerByMode(mode);
+    const queryHandler = useMemo(() => contentQueryHandlerByMode(mode), [mode]);
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
     const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
-    let layoutQueryParams = queryHandler.getQueryParams(path, uilang, lang, params, rootPath, pagination, sort, tableView.viewType);
 
-    // Update params for structured view to use different type and recursion filters
-    if (isStructuredView) {
-        layoutQueryParams = queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, tableView.viewType, mode);
-    }
+    const layoutQueryParams = useMemo(
+        () => {
+            let r = queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination, sort, viewType: tableView.viewType});
+            // Update params for structured view to use different type and recursion filters
+            if (isStructuredView) {
+                r = queryHandler.updateQueryParamsForStructuredView(r, tableView.viewType, mode);
+            }
+
+            return r;
+        },
+        [path, uilang, lang, params, rootPath, pagination, sort, tableView.viewType, mode, isStructuredView, queryHandler]
+    );
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
         variables: layoutQueryParams,
         fetchPolicy: fetchPolicy
     });
 
-    const onGwtContentModification = async (nodeUuid, nodePath, nodeName, operation) => {
-        let refetchObservableQueries = true;
+    function onGwtCreate(nodePath) {
+        let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
+        client.cache.flushNodeEntryByPath(parentPath);
+        if (path !== parentPath) {
+            // Make sure the created CONTENT is visible in the main panel.
+            setPath(parentPath);
+        }
 
+        return client.reFetchObservableQueries();
+    }
+
+    function onGwtDelete(nodePath) {
+        // Clear cache entries for subnodes
+        Object.keys(client.cache.idByPath)
+            .filter(p => isDescendantOrSelf(p, nodePath))
+            .forEach(p => client.cache.flushNodeEntryByPath(p));
+
+        // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
+        if (isDescendantOrSelf(path, nodePath)) {
+            setPath(nodePath.substring(0, nodePath.lastIndexOf('/')));
+        }
+
+        // Close any expanded nodes that have been just removed.
+        let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
+        if (!_.isEmpty(pathsToClose)) {
+            closePaths(pathsToClose);
+        }
+
+        // De-select any removed nodes.
+        if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
+            setPreviewSelection(null);
+        }
+
+        return client.reFetchObservableQueries();
+    }
+
+    function onGwtRename(nodePath, nodeName) {
+        let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
+        let newPath = parentPath + '/' + nodeName;
+
+        // Clear cache entries for subnodes
+        Object.keys(client.cache.idByPath)
+            .filter(p => isDescendantOrSelf(p, nodePath))
+            .forEach(p => client.cache.flushNodeEntryByPath(p));
+
+        // Switch to the new renamed node
+        if (isDescendantOrSelf(path, nodePath)) {
+            setPath(getNewNodePath(path, nodePath, newPath));
+        }
+
+        let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
+        if (!_.isEmpty(pathsToReopen)) {
+            closePaths(pathsToReopen);
+            pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, nodePath, newPath));
+            openPaths(pathsToReopen);
+        }
+
+        // De-select any removed nodes.
+        if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
+            setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
+        }
+
+        return client.reFetchObservableQueries();
+    }
+
+    async function onGwtUpdate(nodePath, nodeUuid) {
+        // If we're modifying the contribute settings we need to flush also node descendants
+        // so we fetch the node in cache and we search for contribute mixin
+        let node;
+        try {
+            node = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+        } catch (e) {
+            console.log(e);
+        }
+
+        client.cache.flushNodeEntryById(nodeUuid);
+        await client.reFetchObservableQueries();
+        let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
+        if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
+            !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
+            Object.keys(client.cache.idByPath)
+                .filter(p => isDescendantOrSelf(p, nodePath))
+                .forEach(p => client.cache.flushNodeEntryByPath(p));
+        }
+
+        if (selection.length > 0) {
+            // Modification when using multiple selection actions
+            let selectedNodes = _.clone(selection);
+            setTimeout(function () {
+                if (_.includes(selectedNodes, nodePath)) {
+                    removeSelection(nodePath);
+                    switchSelection(nodePath);
+                }
+            });
+        }
+    }
+
+    const onGwtContentModification = async (nodeUuid, nodePath, nodeName, operation) => {
         if (operation === 'update' && !nodePath.endsWith('/' + nodeName)) {
             operation = 'rename';
         }
 
         if (operation === 'create') {
-            let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-            client.cache.flushNodeEntryByPath(parentPath);
-            if (path !== parentPath) {
-                // Make sure the created CONTENT is visible in the main panel.
-                setPath(parentPath);
-            }
+            await onGwtCreate(nodePath);
         } else if (operation === 'delete') {
-            // Clear cache entries for subnodes
-            Object.keys(client.cache.idByPath)
-                .filter(p => isDescendantOrSelf(p, nodePath))
-                .forEach(p => client.cache.flushNodeEntryByPath(p));
-
-            // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
-            if (isDescendantOrSelf(path, nodePath)) {
-                setPath(nodePath.substring(0, nodePath.lastIndexOf('/')));
-            }
-
-            // Close any expanded nodes that have been just removed.
-            let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
-            if (!_.isEmpty(pathsToClose)) {
-                closePaths(pathsToClose);
-            }
-
-            // De-select any removed nodes.
-            if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-                setPreviewSelection(null);
-            }
+            await onGwtDelete(nodePath);
         } else if (operation === 'rename') {
-            let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
-            let newPath = parentPath + '/' + nodeName;
-
-            // Clear cache entries for subnodes
-            Object.keys(client.cache.idByPath)
-                .filter(p => isDescendantOrSelf(p, nodePath))
-                .forEach(p => client.cache.flushNodeEntryByPath(p));
-
-            // Switch to the new renamed node
-            if (isDescendantOrSelf(path, nodePath)) {
-                setPath(getNewNodePath(path, nodePath, newPath));
-            }
-
-            let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
-            if (!_.isEmpty(pathsToReopen)) {
-                closePaths(pathsToReopen);
-                pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, nodePath, newPath));
-                openPaths(pathsToReopen);
-            }
-
-            // De-select any removed nodes.
-            if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-                setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
-            }
+            await onGwtRename(nodePath, nodeName);
         } else if (operation === 'update') {
-            // If we're modifying the contribute settings we need to flush also node descendants
-            // so we fetch the node in cache and we search for contribute mixin
-            let node;
-            try {
-                node = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
-            } catch (e) {
-                console.log(e);
-            }
-
-            client.cache.flushNodeEntryById(nodeUuid);
-            await client.reFetchObservableQueries();
-            refetchObservableQueries = false;
-            let nodeAfterCacheFlush = client.readQuery({query: mixinTypes, variables: {path: nodePath}});
-            if (node && nodeAfterCacheFlush && (!_.isEmpty(nodeAfterCacheFlush.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')) ||
-                !_.isEmpty(node.jcr.nodeByPath.mixinTypes.filter(mixin => mixin.name === 'jmix:contributeMode')))) {
-                Object.keys(client.cache.idByPath)
-                    .filter(p => isDescendantOrSelf(p, nodePath))
-                    .forEach(p => client.cache.flushNodeEntryByPath(p));
-            }
-
-            if (selection.length > 0) {
-                // Modification when using multiple selection actions
-                let selectedNodes = _.clone(selection);
-                setTimeout(function () {
-                    if (_.includes(selectedNodes, nodePath)) {
-                        removeSelection(nodePath);
-                        switchSelection(nodePath);
-                    }
-                });
-            }
-        }
-
-        if (refetchObservableQueries) {
-            client.reFetchObservableQueries();
+            await onGwtUpdate(nodePath, nodeUuid);
         }
     };
 
+    const options = useMemo(() => ({
+        query: layoutQuery,
+        variables: isStructuredView ?
+            queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
+            queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
+        fetchPolicy: fetchPolicy
+    }), [isStructuredView, lang, layoutQuery, layoutQueryParams, mode, pagination, params, path, preloadForType, queryHandler, rootPath, sort, uilang]);
+
     // Preload data either for pages or contents depending on current view type
-    const preloadedData = usePreloadedData(
+    const preloadedData = usePreloadedData({
         client,
-        {
-            query: layoutQuery,
-            variables: isStructuredView ?
-                queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
-                queryHandler.getQueryParams(path, uilang, lang, params, rootPath, {...pagination, currentPage: 0}, sort, preloadForType),
-            fetchPolicy: fetchPolicy
-        },
+        options,
         tableView,
         path,
-        pagination);
+        pagination
+    });
 
     useEffect(() => {
         if (data && data.jcr && data.jcr.nodeByPath) {
@@ -228,14 +253,14 @@ export const ContentLayoutContainer = ({
         }
 
         return (
-            <ContentLayout contentNotFound
+            <ContentLayout isContentNotFound
                            mode={mode}
                            path={path}
                            filesMode={filesMode}
                            previewState={previewState}
                            previewSelection={previewSelection}
                            rows={[]}
-                           loading={loading}
+                           isLoading={loading}
                            totalCount={0}
             />
         );

@@ -62,10 +62,10 @@ export class Export extends React.Component {
     }
 
     render() {
-        let {t, classes, onClose, onExited, path} = this.props;
+        let {t, classes, onClose, onExited, path, isOpen} = this.props;
         let live = (this.state.workspace === 'live');
         return (
-            <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
+            <Dialog fullWidth open={isOpen} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
                     {t('jcontent:label.contentManager.export.dialogTitle')}
                 </DialogTitle>
@@ -130,7 +130,7 @@ Export.propTypes = {
     classes: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     onExited: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired
 };

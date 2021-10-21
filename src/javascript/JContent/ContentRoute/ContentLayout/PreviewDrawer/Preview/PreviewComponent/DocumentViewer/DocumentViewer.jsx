@@ -42,7 +42,6 @@ const styles = theme => ({
     }
 });
 
-// eslint-disable-next-line
 const FileViewer = React.lazy(() => import('react-file-viewer'));
 
 export class DocumentViewer extends React.Component {

@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 const EMPTY_STATE = {totalCount: 0};
 const TIMEOUT = 30;
 
-export default (client, options, tableView, path, pagination) => {
+export default ({client, options, tableView, path, pagination}) => {
     const [data, setData] = useState(EMPTY_STATE);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default (client, options, tableView, path, pagination) => {
         setTimeout(() => {
             fetch();
         }, TIMEOUT);
-    }, [tableView.viewType, tableView.viewMode, path, pagination.currentPage, pagination.pageSize]);
+    }, [tableView.viewType, tableView.viewMode, path, pagination.currentPage, pagination.pageSize, client, options]);
 
     return data;
 };

@@ -10,8 +10,6 @@ import {connect} from 'react-redux';
 import {isMarkedForDeletion, getDefaultLocale} from '../../../../JContent.utils';
 import {compose} from '~/utils';
 
-// TODO Here as well as in ContentListTable unpublished status is not clear
-
 const styles = theme => ({
     publicationInfoModified: {
         borderLeft: '5px solid ' + theme.palette.publicationStatus.modified.main,

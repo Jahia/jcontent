@@ -23,7 +23,7 @@ function getCropValue(cropParams, originalWidth, originalHeight) {
     };
 }
 
-export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams, theme}) => {
+export const ImageEditorPreview = ({path, cropParams, onCrop, isCropExpanded, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams, theme}) => {
     let filepath = window.contextJsParameters.contextPath + '/files/default' + path.replace(/[^/]/g, encodeURIComponent) + '?ts=' + ts;
     let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - (theme.spacing.unit * 4) : 0;
     let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - (theme.spacing.unit * 4) : 0;
@@ -36,7 +36,7 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, 
     let translate = (rotationParams.rotations % 2) * (width - height) / reduceFactor / 2;
     return (
         <div ref={containerRef} style={{width: rotatedWidth / reduceFactor, height: rotatedHeight / reduceFactor}}>
-            {cropExpanded ?
+            {isCropExpanded ?
                 <ReactCrop keepSelection
                            useNaturalImageDimensions
                            className={classes.cropPreview}
@@ -77,7 +77,7 @@ ImageEditorPreview.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     ts: PropTypes.number.isRequired,
-    cropExpanded: PropTypes.bool.isRequired,
+    isCropExpanded: PropTypes.bool.isRequired,
     onCrop: PropTypes.func.isRequired,
     cropParams: PropTypes.object,
     rotationParams: PropTypes.object.isRequired,

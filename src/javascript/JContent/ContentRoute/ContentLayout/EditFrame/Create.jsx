@@ -12,7 +12,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
 
-    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default', className: styles.button}});
+    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default'}});
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -39,6 +39,8 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         height: 25
     };
 
+    console.log(ButtonRenderer);
+
     return (
         <div className={classnames(styles.root, dropClassName)}
              style={currentOffset}
@@ -50,8 +52,8 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
              onDragLeave={onDragLeave}
              onDrop={onDrop}
         >
-            <DisplayAction actionKey="createContent" context={{path}} render={ButtonRenderer}/>
-            <DisplayAction actionKey="paste" context={{path}} render={ButtonRenderer}/>
+            <DisplayAction actionKey="createContent" path={path} loading={() => false} render={ButtonRenderer}/>
+            <DisplayAction actionKey="paste" path={path} loading={() => false} render={ButtonRenderer}/>
         </div>
     );
 };

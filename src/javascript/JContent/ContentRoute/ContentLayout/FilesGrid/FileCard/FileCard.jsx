@@ -9,7 +9,7 @@ import {isBrowserImage} from '../../ContentLayout.utils';
 import FileIcon from '../FileIcon';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation, getDefaultLocale} from '~/JContent/JContent.utils';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import FileName from './FileName';
 import Actions from './Actions';
 import {Folder} from 'mdi-material-ui';

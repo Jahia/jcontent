@@ -12,7 +12,7 @@ import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';

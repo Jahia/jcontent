@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getFileType, isBrowserImage, isPDF} from '../../../ContentLayout.utils';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
 import DocumentViewer from './DocumentViewer';
 import PDFViewer from './PDFViewer';

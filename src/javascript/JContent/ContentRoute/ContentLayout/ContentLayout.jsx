@@ -5,7 +5,7 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import {Drawer, Paper} from '@material-ui/core';
 import ContentTable from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import {withTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import FilesGrid from './FilesGrid';

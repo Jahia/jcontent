@@ -1,40 +1,49 @@
 .publicationInfoModified {
-  border-left: 5px solid var(--color-publicationStatus-modified);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid var(--color-publicationStatus-modified);
 }
 
 .publicationInfoNotPublished {
-  border-left: 5px solid var(--color-publicationStatus-notPublished);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid var(--color-publicationStatus-notPublished);
 }
 
 .publicationInfoPublished {
-  border-left: 5px solid var(--color-publicationStatus-published);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid var(--color-publicationStatus-published);
 }
 
 .publicationInfoMarkedForDeletion {
-  border-left: 5px solid  var(--color-publicationStatus-markedForDeletion);
-  color: var(--color-publicationStatus-markedForDeletion);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    color: var(--color-publicationStatus-markedForDeletion);
+
+    border-left: 5px solid  var(--color-publicationStatus-markedForDeletion);
 }
 
 .publicationInfoUnpublished {
-  border-left: 5px solid  var(--color-publicationStatus-unpublished);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid  var(--color-publicationStatus-unpublished);
 }
 
 .publicationInfoMandatoryLanguageUnpublishable {
-  border-left: 5px solid var(--color-publicationStatus-mandatoryLanguageUnpublishable);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid var(--color-publicationStatus-mandatoryLanguageUnpublishable);
 }
 
 .publicationInfoMandatoryLanguageValid {
-  border-left: 5px solid var(--color-publicationStatus-mandatoryLanguageValid);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid var(--color-publicationStatus-mandatoryLanguageValid);
 }
 
 .publicationInfoConflict {
-  border-left: 5px solid var(--color-publicationStatus-conflict);
-  padding: var(--spacing-nano);
+    padding: var(--spacing-nano);
+
+    border-left: 5px solid var(--color-publicationStatus-conflict);
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import {Check, Information, Loader, Typography} from '@jahia/moonstone';
 import {Trans, useTranslation} from 'react-i18next';
 import styles from './UploadHeader.scss';

@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';

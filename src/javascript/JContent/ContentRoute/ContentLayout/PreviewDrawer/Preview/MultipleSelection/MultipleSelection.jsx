@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
 import {ContentCopy} from 'mdi-material-ui';
 import {useDispatch} from 'react-redux';

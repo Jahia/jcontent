@@ -10,7 +10,7 @@ import {
     StepBackward,
     StepForward
 } from 'mdi-material-ui';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import clsx from 'clsx';
 import styles from './PDFViewer.scss';
 

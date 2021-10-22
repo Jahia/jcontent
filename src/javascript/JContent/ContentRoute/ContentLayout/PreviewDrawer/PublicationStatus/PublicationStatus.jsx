@@ -104,7 +104,7 @@ export const PublicationStatus = ({previewSelection}) => {
 };
 
 PublicationStatus.propTypes = {
-    previewSelection: PropTypes.object.isRequired,
+    previewSelection: PropTypes.object.isRequired
 };
 
 export default PublicationStatus;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FileIcon} from '@jahia/icons';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import styles from './DocumentViewer.scss';
 
 const FileViewer = React.lazy(() => import('react-file-viewer'));

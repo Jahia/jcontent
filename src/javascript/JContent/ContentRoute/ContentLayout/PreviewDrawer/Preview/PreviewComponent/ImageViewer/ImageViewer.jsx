@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {CardMedia} from '@material-ui/core';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import styles from './ImageViewer.scss';
 
 export const ImageViewer = ({file, isFullScreen, className}) => {

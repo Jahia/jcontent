@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core';
 import {Typography} from '@jahia/moonstone';
 import {InfoOutlined} from '@material-ui/icons';
 import {publicationStatusByName} from './publicationStatusRenderer';
-import {useTranslation, withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import classNames from 'clsx';
 import styles from './PublicationStatus.scss';
 
@@ -40,4 +39,4 @@ PublicationStatus.propTypes = {
     className: PropTypes.string
 };
 
-export default withTranslation()(withStyles(styles)(PublicationStatus));
+export default PublicationStatus;

@@ -1,0 +1,40 @@
+.publicationInfoModified {
+  border-left: 5px solid var(--color-publicationStatus-modified);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoNotPublished {
+  border-left: 5px solid var(--color-publicationStatus-notPublished);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoPublished {
+  border-left: 5px solid var(--color-publicationStatus-published);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoMarkedForDeletion {
+  border-left: 5px solid  var(--color-publicationStatus-markedForDeletion);
+  color: var(--color-publicationStatus-markedForDeletion);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoUnpublished {
+  border-left: 5px solid  var(--color-publicationStatus-unpublished);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoMandatoryLanguageUnpublishable {
+  border-left: 5px solid var(--color-publicationStatus-mandatoryLanguageUnpublishable);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoMandatoryLanguageValid {
+  border-left: 5px solid var(--color-publicationStatus-mandatoryLanguageValid);
+  padding: var(--spacing-nano);
+}
+
+.publicationInfoConflict {
+  border-left: 5px solid var(--color-publicationStatus-conflict);
+  padding: var(--spacing-nano);
+}

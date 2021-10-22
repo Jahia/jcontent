@@ -13,7 +13,7 @@ export const CellPublicationStatus = (({row, cell, column}) => (
                    width={columnWidths[column.id]}
                    data-cm-role="table-content-list-cell-publication"
     >
-        <PublicationStatus node={row.original} classes={{root: styles.root}}/>
+        <PublicationStatus node={row.original} className={styles.root}/>
     </TableBodyCell>
 ));
 

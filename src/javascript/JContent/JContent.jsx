@@ -5,6 +5,7 @@ import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
 import {Route, Switch} from 'react-router';
 import {useSelector} from 'react-redux';
+import './colors.scss';
 
 export const JContent = () => {
     const routes = registry.find({type: 'route', target: 'jcontent'});

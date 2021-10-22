@@ -1,52 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withTranslation} from 'react-i18next';
-import {withStyles} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
 import {Typography} from '@jahia/design-system-kit';
 import dayjs from 'dayjs';
 import JContentConstants from '~/JContent/JContent.constants';
 import {lodash as _} from 'lodash';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {compose} from '~/utils';
 
-const styles = theme => ({
-    publicationInfoModified: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.modified.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoNotPublished: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.notPublished.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoPublished: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.published.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoMarkedForDeletion: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.markedForDeletion.main,
-        color: theme.palette.publicationStatus.markedForDeletion.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoUnpublished: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.unpublished.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoMandatoryLanguageUnpublishable: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.mandatoryLanguageUnpublishable.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoMandatoryLanguageValid: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.mandatoryLanguageValid.main,
-        padding: theme.spacing.unit
-    },
-    publicationInfoConflict: {
-        borderLeft: '5px solid ' + theme.palette.publicationStatus.conflict.main,
-        padding: theme.spacing.unit
-    }
-});
+import styles from './PublicationStatus.scss';
 
-export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
+export const PublicationStatus = ({previewSelection}) => {
+    const {t} = useTranslation();
+    const uilang = useSelector(state => state.uilang);
+
     if (_.isEmpty(previewSelection) || !previewSelection.operationsSupport.publication) {
         return null;
     }
@@ -56,7 +23,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
     if (JContentConstants.availablePublicationStatuses.MARKED_FOR_DELETION === previewSelection.aggregatedPublicationInfo.publicationStatus || isMarkedForDeletion(previewSelection)) {
         return (
             <Typography component="span"
-                        className={classes.publicationInfoMarkedForDeletion}
+                        className={styles.publicationInfoMarkedForDeletion}
             >
                 {t('jcontent:label.contentManager.contentPreview.markedForDeletionBy', {userName: _.get(previewSelection, 'deletedBy.value', '')})}
             &nbsp;
@@ -69,7 +36,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.MODIFIED:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoModified}
+                            className={styles.publicationInfoModified}
                 >
                     {t('jcontent:label.contentManager.contentPreview.modifiedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
@@ -79,7 +46,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.PUBLISHED:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoPublished}
+                            className={styles.publicationInfoPublished}
                 >
                     {t('jcontent:label.contentManager.contentPreview.publishedBy', {userName: _.get(previewSelection, 'lastPublishedBy.value', '')})}
                 &nbsp;
@@ -89,7 +56,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.NOT_PUBLISHED:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoNotPublished}
+                            className={styles.publicationInfoNotPublished}
                 >
                     {t('jcontent:label.contentManager.contentPreview.notPublished')}
                 </Typography>
@@ -97,7 +64,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.UNPUBLISHED:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoUnpublished}
+                            className={styles.publicationInfoUnpublished}
                 >
                     {t('jcontent:label.contentManager.contentPreview.unPublishedBy', {userName: _.get(previewSelection, 'lastModifiedBy.value', '')})}
                 &nbsp;
@@ -107,7 +74,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_UNPUBLISHABLE:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoMandatoryLanguageUnpublishable}
+                            className={styles.publicationInfoMandatoryLanguageUnpublishable}
                             title={t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.description')}
                 >
                     {t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageUnpublishable.label')}
@@ -116,7 +83,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.MANDATORY_LANGUAGE_VALID:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoMandatoryLanguageValid}
+                            className={styles.publicationInfoMandatoryLanguageValid}
                             title={t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageValid.description')}
                 >
                     {t('jcontent:label.contentManager.publicationStatus.mandatoryLanguageValid.label')}
@@ -125,7 +92,7 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
         case JContentConstants.availablePublicationStatuses.CONFLICT:
             return (
                 <Typography component="p"
-                            className={classes.publicationInfoConflict}
+                            className={styles.publicationInfoConflict}
                             title={t('jcontent:label.contentManager.publicationStatus.conflict.description')}
                 >
                     {t('jcontent:label.contentManager.publicationStatus.conflict.label')}
@@ -136,19 +103,8 @@ export const PublicationStatus = ({previewSelection, t, classes, uilang}) => {
     }
 };
 
-const mapStateToProps = state => ({
-    uilang: state.uilang
-});
-
 PublicationStatus.propTypes = {
-    classes: PropTypes.object.isRequired,
     previewSelection: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired,
-    uilang: PropTypes.string.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles),
-    connect(mapStateToProps)
-)(PublicationStatus);
+export default PublicationStatus;

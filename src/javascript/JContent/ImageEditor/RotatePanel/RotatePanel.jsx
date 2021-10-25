@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Tooltip} from '@material-ui/core';
-import {ArrowLeft, ArrowRight, Button, Typography} from '@jahia/moonstone';
+import {Button, RotateLeft, RotateRight, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './RotatePanel.scss';
 
@@ -17,14 +17,14 @@ export const RotatePanel = ({onRotate}) => {
                     <Button data-cm-role="rotate-left"
                             size="big"
                             variant="ghost"
-                            icon={<ArrowLeft/>}
+                            icon={<RotateLeft/>}
                             onClick={() => onRotate(-1)}/>
                 </Tooltip>
                 <Tooltip title={t('jcontent:label.contentManager.editImage.rotateRight')}>
                     <Button data-cm-role="rotate-right"
                             size="big"
                             variant="ghost"
-                            icon={<ArrowRight/>}
+                            icon={<RotateRight/>}
                             onClick={() => onRotate(1)}/>
                 </Tooltip>
             </div>

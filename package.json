@@ -17,7 +17,8 @@
     "lint:scss": "stylelint \"./src/**/*.scss\"",
     "lint:scss:fix": "yarn lint:scss --fix",
     "lint": "yarn lint:js && yarn lint:scss",
-    "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix"
+    "lint:fix": "yarn lint:js:fix && yarn lint:scss:fix",
+    "build-icons": "rimraf src/javascript/icons/*.jsx && svgr --template ./node_modules/@jahia/moonstone/dist/tokens/icons/svgrTemplate.js --config-file ./node_modules/@jahia/moonstone/dist/tokens/icons/svgr.config.json ./src/javascript/icons --out-dir ./src/javascript/icons && eslint --fix ./src/javascript/icons"
   },
   "description": "jContent for Jahia",
   "main": "index.js",
@@ -114,6 +115,8 @@
     "@jahia/eslint-config": "^1.1.0",
     "@jahia/stylelint-config": "^0.0.3",
     "@jahia/test-framework": "^1.2.0",
+    "@svgr/cli": "^5.5.0",
+    "@svgr/core": "^5.5.0",
     "@types/jest": "^24.0.11",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",

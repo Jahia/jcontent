@@ -4,8 +4,7 @@ import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper} from '@material-ui/core';
-import {Typography} from '@jahia/moonstone';
-import {Pagination} from '../Pagination';
+import {TablePagination, Typography} from '@jahia/moonstone';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
@@ -110,16 +109,16 @@ export const FilesGrid = ({
                     <div/>
                 </UploadTransformComponent>
             </div>
-            <Pagination
-                totalCount={totalCount}
-                pageSize={pagination.pageSize}
-                currentPage={pagination.currentPage}
-                labels={{
-                    labelRowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                    of: t('jcontent:label.pagination.of')
-                }}
-                onChangePage={setCurrentPage}
-                onChangeRowsPerPage={setPageSize}
+            <TablePagination totalNumberOfRows={totalCount}
+                             currentPage={pagination.currentPage + 1}
+                             rowsPerPage={pagination.pageSize}
+                             label={{
+                                 rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                                 of: t('jcontent:label.pagination.of')
+                             }}
+                             rowsPerPageOptions={[10, 25, 50, 100]}
+                             onPageChange={setCurrentPage}
+                             onRowsPerPageChange={setPageSize}
             />
         </React.Fragment>
     );
@@ -136,7 +135,7 @@ let mapStateToProps = state => ({
 });
 
 let mapDispatchToProps = dispatch => ({
-    setCurrentPage: page => dispatch(cmSetPage(page)),
+    setCurrentPage: page => dispatch(cmSetPage(page - 1)),
     onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
     setPath: (siteKey, path, mode) => {

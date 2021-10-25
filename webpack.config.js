@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const shared = require("./webpack.shared")
+const moonstone = require("@jahia/moonstone/dist/rulesconfig-wp");
 
 module.exports = (env, argv) => {
     let config = {
@@ -26,6 +27,7 @@ module.exports = (env, argv) => {
         },
         module: {
             rules: [
+                ...moonstone,
                 {
                     test: /\.m?js$/,
                     type: 'javascript/auto'
@@ -62,28 +64,16 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.css$/,
+                    include: [path.join(__dirname,'node_modules/react-image-crop')],
                     sideEffects: true,
-                    use: [{
-                        loader: 'style-loader',
-                        options: {
-                            attributes: {
-                                styleloader: true
-                            }
-                        }
-                    }, 'css-loader']
+                    use: ['style-loader', 'css-loader']
                 },
                 {
                     test: /\.scss$/i,
+                    include: [path.join(__dirname, 'src')],
                     sideEffects: true,
                     use: [
-                        {
-                            loader: 'style-loader',
-                            options: {
-                                attributes: {
-                                    styleloader: true
-                                }
-                            }
-                        },
+                        'style-loader',
                         // Translates CSS into CommonJS
                         {
                             loader: 'css-loader',

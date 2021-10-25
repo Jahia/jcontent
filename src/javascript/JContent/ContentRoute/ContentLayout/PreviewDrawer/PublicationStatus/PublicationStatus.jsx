@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {Typography} from '@jahia/design-system-kit';
+import {Typography} from '@jahia/moonstone';
 import dayjs from 'dayjs';
 import JContentConstants from '~/JContent/JContent.constants';
 import {lodash as _} from 'lodash';

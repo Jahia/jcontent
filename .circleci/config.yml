@@ -26,7 +26,7 @@ references:
 parameters:
   AUDITCI_LEVEL:
     type: string
-    default: "high"
+    default: "critical"
   TESTS_PATH:
     type: string
     default: "tests/"
@@ -106,7 +106,7 @@ workflows:
           requires:
             - jahia-modules-orb/initialize
       - jahia-modules-orb/static-analysis:
-          auditci_level: high
+          auditci_level: << pipeline.parameters.AUDITCI_LEVEL >>
           requires:
             - jahia-modules-orb/initialize
       - jahia-modules-orb/build:

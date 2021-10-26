@@ -9,14 +9,13 @@ WORKDIR /home/jahians
 
 COPY --chown=jahians:jahians package.json yarn.lock /home/jahians/
 
-RUN mkdir -p /home/jahians/run-artifacts
-RUN mkdir -p /home/jahians/results
-RUN mkdir -p /home/jahians/cypress/plugins
+RUN mkdir -p /home/jahians/run-artifacts /home/jahians/results /home/jahians/cypress/plugins
 
-RUN yarn install
+#CI=true reduces the verbosity of the installation logs
+RUN CI=true yarn install
 
 COPY --chown=jahians:jahians . /home/jahians
 
-RUN /home/jahians/node_modules/.bin/cypress install
+RUN CI=true /home/jahians/node_modules/.bin/cypress install
 
 CMD ["/bin/bash", "-c", "/home/jahians/env.run.sh"]

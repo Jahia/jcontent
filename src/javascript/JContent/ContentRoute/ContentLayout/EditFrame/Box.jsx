@@ -107,7 +107,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                          }}
                     >
                         <div className={classnames(styles.header, styles['color_' + color])}>
-                            {node && <PublicationStatus node={nodeWithProps} classes={publicationStatusStyles}/>}
+                            {node && <PublicationStatus node={nodeWithProps} className={publicationStatusStyles.root}/>}
                             {onGoesUp && (
                                 <Button className={styles.button}
                                         variant="outlined"

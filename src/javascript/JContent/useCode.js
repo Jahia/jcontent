@@ -1,37 +1,33 @@
 import {useEffect, useState} from 'react';
 
-const useInputEvent = () => {
-    const [key, setKey] = useState(null);
-    useEffect(() => {
-        const keyDownHandler = ({code}) => setKey(code);
-        const keyUpHandler = () => setKey(null);
-        addEventListener('keydown', keyDownHandler);
-        addEventListener('keyup', keyUpHandler);
-        return () => {
-            removeEventListener('keydown', keyDownHandler);
-            removeEventListener('keyup', keyUpHandler);
-        };
-    }, []);
-    return key;
-};
-
 export const useCode = secretCode => {
+    const [key, setKey] = useState(null);
     const [count, setCount] = useState(0);
     const [success, setSuccess] = useState(false);
-    const key = useInputEvent();
+
+    useEffect(() => {
+        const keyDownHandler = ({code}) => setKey(code);
+        addEventListener('keydown', keyDownHandler);
+        return () => {
+            removeEventListener('keydown', keyDownHandler);
+        };
+    }, []);
 
     useEffect(() => {
         if (key !== null) {
-            if (key !== secretCode[count]) {
-                setCount(0);
-            } else {
+            if (key === secretCode[count]) {
                 setCount(state => state + 1);
+
                 if (count + 1 === secretCode.length) {
                     setSuccess(true);
                 }
+            } else {
+                setCount(0);
             }
+
+            setKey(null);
         }
-    }, [key]);
+    }, [count, secretCode, key]);
 
     return success;
 };

@@ -15,6 +15,26 @@ export const prefixCssSelectors = function (rules, className) {
     rules = rules.replace(/}(\s*)@/g, '}@');
     rules = rules.replace(/}(\s*)}/g, '}}');
 
+    function handleRule(i) {
+        let before = rules.slice(0, i + 1);
+        let after = rules.slice(i + 1).trim();
+        if (after.startsWith('.noprefix')) {
+            after = after.substr(9);
+            rules = before + after;
+        } else if (!after.startsWith(className)) {
+            if (after.startsWith(':root')) {
+                after = after.substr(5);
+                i -= 5;
+            }
+
+            rules = before + className + className + ' ' + after;
+            i += classLen;
+            isAt = false;
+        }
+
+        return i;
+    }
+
     for (var i = 0; i < rules.length - 2; i++) {
         char = rules[i];
         nextChar = rules[i + 1];
@@ -32,28 +52,11 @@ export const prefixCssSelectors = function (rules, className) {
         }
 
         if (!isIn && nextChar !== '@' && nextChar !== '}' && (char === '}' || char === ',' || ((char === '{' || char === ';') && isAt))) {
-            let before = rules.slice(0, i + 1);
-            let after = rules.slice(i + 1).trim();
-            if (after.startsWith('.noprefix')) {
-                after = after.substr(9);
-                rules = before + after;
-            } else if (!after.startsWith(className)) {
-                if (after.startsWith(':root')) {
-                    after = after.substr(5);
-                    i -= 5;
-                }
-
-                rules = before + className + className + ' ' + after;
-                i += classLen;
-                isAt = false;
-            }
+            i = handleRule(i);
         }
     }
 
-    // Prefix the first select if it is not `@media` and if it is not yet prefixed
-    if (rules.indexOf(className) !== 0 && rules.indexOf('@') !== 0) {
-        rules = className + className + ' ' + rules;
-    }
+    handleRule(-1);
 
     return rules;
 };

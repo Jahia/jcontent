@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Typography} from '@jahia/moonstone';
-import {InfoOutlined} from '@material-ui/icons';
+import {Typography, Information} from '@jahia/moonstone';
 import {publicationStatusByName} from './publicationStatusRenderer';
 import {useTranslation} from 'react-i18next';
 import classNames from 'clsx';
@@ -20,7 +19,7 @@ export const PublicationStatus = ({node, className, style}) => {
                          data-cm-role="publication-info"
                          data-cm-value={node.aggregatedPublicationInfo.publicationStatus}
                     >
-                        <InfoOutlined className={styles.spacing} fontSize="small"/>
+                        <Information className={styles.spacing} size="default"/>
 
                         <Typography variant="caption" className={styles.spacing}>
                             {publicationStatus.geti18nDetailsMessage(node, t, i18n.language)}

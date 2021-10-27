@@ -1,4 +1,4 @@
-.root.root {
+.root {
     position: absolute;
     z-index: 1;
 
@@ -7,18 +7,7 @@
     height: 100%;
 }
 
-.border.border {
-    width: 6px;
-
-    cursor: pointer;
-
-    &:hover ~ .publicationInfoWrapper {
-        width: 100%;
-        max-width: 100%;
-    }
-}
-
-.publicationInfoWrapper.publicationInfoWrapper {
+.publicationInfoWrapper {
     display: flex;
     overflow: hidden;
 
@@ -34,13 +23,24 @@
     }
 }
 
-.publicationInfo.publicationInfo {
+.border {
+    width: 6px;
+
+    cursor: pointer;
+
+    &:hover ~ .publicationInfoWrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.publicationInfo {
     display: flex;
     align-items: center;
     margin: 0 var(--spacing-small);
 }
 
-.spacing.spacing {
+.spacing {
     max-height: 16px;
     margin-right: var(--spacing-nano);
     overflow: hidden;

@@ -1,7 +1,6 @@
 import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
-import {AddCircle, Check, Information, Loader} from '@jahia/moonstone';
-import {Typography} from '@jahia/moonstone';
+import {AddCircle, Check, Information, Loader, Typography} from '@jahia/moonstone';
 import styles from './UploadItem.scss';
 
 const Status = ({status, error, t, type}) => {

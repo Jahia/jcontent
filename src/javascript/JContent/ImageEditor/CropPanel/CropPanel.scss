@@ -1,17 +1,17 @@
 
-.form.form {
+.form {
     display: flex;
     flex-direction: row;
     padding-top: var(--spacing-small);
 }
 
-.firstCol.firstCol {
+.firstCol {
     display: flex;
     flex: 1 1 0;
     flex-direction: column;
 }
 
-.secondCol.secondCol {
+.secondCol {
     flex: 1 1 0;
     justify-self: start;
     align-self: center;

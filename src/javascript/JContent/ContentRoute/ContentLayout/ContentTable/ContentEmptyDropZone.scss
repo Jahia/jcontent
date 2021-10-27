@@ -1,5 +1,5 @@
 
-.dragZoneContentList.dragZoneContentList {
+.dragZoneContentList {
     position: absolute;
 
     display: flex;
@@ -8,7 +8,7 @@
     padding: var(--spacing-medium);
 }
 
-.dragZone.dragZone {
+.dragZone {
     display: flex;
     justify-content: center;
     width: 100%;

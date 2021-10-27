@@ -1,3 +1,9 @@
+.fileCardContentContainer {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
 
 .detailedCard.detailedCard {
     position: relative;
@@ -15,13 +21,26 @@
     }
 }
 
+.actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    display: none;
+
+    & button {
+        margin: 0;
+        padding: 8px;
+    }
+}
+
 .card.card {
     &:hover .actions {
         display: block;
     }
 }
 
-.detailedIcon.detailedIcon {
+.detailedIcon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,14 +65,7 @@
     max-height: 200px;
 }
 
-.mediaCardContentContainer.mediaCardContentContainer {
-    position: relative;
-
-    width: 100%;
-    min-width: 0;
-}
-
-.fileCardContentContainer.fileCardContentContainer {
+.mediaCardContentContainer {
     position: relative;
 
     width: 100%;
@@ -74,19 +86,6 @@
     box-shadow: 1px 0 15px 4px var(--color-accent);
 }
 
-.publicationInfoDetailed.publicationInfoDetailed {
+.publicationInfoDetailed {
     min-width: calc(400 - var(--spacing-medium) - 6);
-}
-
-.actions.actions {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-
-    display: none;
-
-    & button {
-        margin: 0;
-        padding: 8px;
-    }
 }

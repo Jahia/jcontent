@@ -1,4 +1,4 @@
-.closeButton.closeButton {
+.closeButton {
     position: absolute;
     top: 0;
     right: 0;
@@ -15,7 +15,7 @@
     background-color: var(--color-dark);
 }
 
-.snackBarScroll.snackBarScroll {
+.snackBarScroll {
     max-height: 150px;
     overflow: auto;
 }

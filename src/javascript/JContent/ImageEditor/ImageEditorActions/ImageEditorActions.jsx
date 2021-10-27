@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {ExpansionPanelActions} from '@jahia/design-system-kit';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import styles from './ImageEditorActions.scss';
 
 const ImageEditorActions = ({undoChanges, saveChanges, isDirty}) => {
     const {t} = useTranslation();
@@ -16,7 +15,7 @@ const ImageEditorActions = ({undoChanges, saveChanges, isDirty}) => {
                     label={t('jcontent:label.contentManager.editImage.undo')}
                     disabled={!isDirty}
                     onClick={undoChanges}/>
-            <div className={styles.spacer}/>
+            <div className="flexFluid"/>
             <Button data-cm-role="image-save-as-button"
                     size="big"
                     variant="ghost"

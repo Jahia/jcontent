@@ -591,6 +591,14 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+cypress-multi-reporters@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/cypress-multi-reporters/-/cypress-multi-reporters-1.5.0.tgz#fff2758c082b49e8b91fed39f9650c70bc06de0d"
+  integrity sha512-6rJ1rk1RpjZwTeydCDc8r3iOmWj2ZEYo++oDTJHNEu7eetb3W1cYDNo5CdxF/r0bo7TLQsOEpBHOCYBZfPVt/g==
+  dependencies:
+    debug "^4.1.1"
+    lodash "^4.17.15"
+
 cypress-terminal-report@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/cypress-terminal-report/-/cypress-terminal-report-3.3.2.tgz#5e34f9fb8decc016bc167b53c28561128d8a7ee2"
@@ -1403,7 +1411,7 @@ lodash.truncate@^4.4.2:
   resolved "https://registry.yarnpkg.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
 
-lodash@^4.17.21:
+lodash@^4.17.15, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

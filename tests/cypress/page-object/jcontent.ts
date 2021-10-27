@@ -8,7 +8,7 @@ import {
     SecondaryNav,
     Table,
 } from "@jahia/cypress";
-import {BasicSearch} from "./basicsearch";
+import {BasicSearch} from "./basicSearch";
 import {CreateContent} from "./createContent";
 
 export class JContent extends BasePage {

@@ -1,7 +1,7 @@
 import {cmSetPage, cmSetPageSize} from './pagination.redux';
 import {cmSetSort} from './sort.redux';
 import {createAction, handleActions} from 'redux-actions';
-import {cmSetPreviewSelection} from '../../preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 
 const getAction = (path, type) => (dispatch, getState) => {
     dispatch({

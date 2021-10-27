@@ -1,4 +1,4 @@
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {createActions, handleActions} from 'redux-actions';
 
 export const {setTableViewMode, setTableViewType} = createActions('SET_TABLE_VIEW_MODE', 'SET_TABLE_VIEW_TYPE');

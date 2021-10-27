@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Separator} from '@jahia/moonstone';
 import FileModeSelector from '../FileModeSelector';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';

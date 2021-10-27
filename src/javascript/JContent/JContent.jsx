@@ -1,10 +1,11 @@
 import React from 'react';
 import {registry} from '@jahia/ui-extender';
-import {LoaderSuspense, ErrorBoundary} from '@jahia/jahia-ui-root';
+import {ErrorBoundary, LoaderSuspense} from '@jahia/jahia-ui-root';
 import {LayoutModule} from '@jahia/moonstone';
 import ContentNavigation from './ContentNavigation';
 import {Route, Switch} from 'react-router';
 import {useSelector} from 'react-redux';
+import './colors.scss';
 
 export const JContent = () => {
     const routes = registry.find({type: 'route', target: 'jcontent'});

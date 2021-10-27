@@ -1,37 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    TextField,
-    withStyles
-} from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
-import {compose} from '~/utils';
-import {withTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import styles from './CreateFolderDialog.scss';
 
-let styles = theme => ({
-    root: {
-        minWidth: '600px'
-    },
-    error: {
-        color: theme.palette.error.main
-    }
-});
-
-const CreateFolderDialog = ({classes, t, isOpen, isLoading, name, isNameValid, isNameAvailable, handleCancel, handleCreate, onChangeName}) => {
+const CreateFolderDialog = ({isOpen, isLoading, name, isNameValid, isNameAvailable, handleCancel, handleCreate, onChangeName}) => {
+    const {t} = useTranslation();
     return (
         <Dialog open={isOpen}
                 aria-labelledby="form-dialog-title"
-                classes={{paper: classes.root}}
+                classes={{paper: styles.root}}
                 onClose={handleCancel}
         >
             <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.createFolderAction.title')}</DialogTitle>
             <DialogContent>
-                <DialogContentText className={!isNameValid || !isNameAvailable ? classes.error : null}>
+                <DialogContentText className={!isNameValid || !isNameAvailable ? styles.error : null}>
                     {t('jcontent:label.contentManager.createFolderAction.text')}
                 </DialogContentText>
                 <TextField
@@ -67,8 +51,6 @@ const CreateFolderDialog = ({classes, t, isOpen, isLoading, name, isNameValid, i
 };
 
 CreateFolderDialog.propTypes = {
-    t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     handleCancel: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,
     isOpen: PropTypes.bool.isRequired,
@@ -79,7 +61,4 @@ CreateFolderDialog.propTypes = {
     onChangeName: PropTypes.func.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles)
-)(CreateFolderDialog);
+export default CreateFolderDialog;

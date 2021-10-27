@@ -7,7 +7,7 @@ import {withNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
 import {Dropdown} from '@jahia/moonstone';
 import styles from './LanguageSwitcher.scss';
-import {cmGoto} from '../../../JContent.redux';
+import {cmGoto} from '~/JContent/JContent.redux';
 
 export const LanguageSwitcher = ({
     notificationContext,

@@ -1,57 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core';
 import {FileIcon} from '@jahia/icons';
-import classNames from 'classnames';
-
-const styles = theme => ({
-    container: {
-        paddingTop: (theme.spacing.unit * 3) + 'px',
-        paddingBottom: (theme.spacing.unit * 3) + 'px',
-        margin: '0 auto',
-        '&&&& div': {
-            height: 'auto'
-        },
-        '& video': {
-            maxHeight: '100%',
-            maxWidth: '550px'
-        },
-        '& div.document-container': {
-            maxWidth: '550px'
-        },
-        '&$fullScreen': {
-            maxWidth: '100%',
-            '& video': {
-                maxWidth: '100%'
-            },
-            '& div.document-container': {
-                maxWidth: '100%'
-            },
-            '& $icon': {
-                width: '90%',
-                margin: 'auto'
-            }
-        }
-    },
-    fullScreen: {},
-    icon: {
-        fontSize: '160px',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: theme.palette.common.white
-    }
-});
+import classNames from 'clsx';
+import styles from './DocumentViewer.scss';
 
 const FileViewer = React.lazy(() => import('react-file-viewer'));
 
-export class DocumentViewer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.renderViewer = this.renderViewer.bind(this);
-    }
-
-    renderViewer() {
-        let {file, type, classes} = this.props;
+export const DocumentViewer = ({isFullScreen, file, type}) => {
+    const renderViewer = () => {
         switch (type) {
             case 'docx':
             case 'doc':
@@ -62,31 +18,26 @@ export class DocumentViewer extends React.Component {
                 return <FileViewer fileType={type} filePath={file}/>;
             default:
                 return (
-                    <FileIcon filename={file} color="disabled" classes={{root: classes.icon}}/>
+                    <FileIcon filename={file} color="disabled" classes={{root: styles.icon}}/>
                 );
         }
-    }
+    };
 
-    render() {
-        let {classes, fullScreen} = this.props;
-        return (
-            <div className={classNames(classes.container, fullScreen && classes.fullScreen)}>
-                {this.renderViewer()}
-            </div>
-        );
-    }
-}
+    return (
+        <div className={classNames(styles.container, isFullScreen && styles.fullScreen)}>
+            {renderViewer()}
+        </div>
+    );
+};
 
 DocumentViewer.propTypes = {
-    classes: PropTypes.object.isRequired,
     file: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    // eslint-disable-next-line react/boolean-prop-naming
-    fullScreen: PropTypes.bool
+    isFullScreen: PropTypes.bool
 };
 
 DocumentViewer.defaultProps = {
-    fullScreen: false
+    isFullScreen: false
 };
 
-export default withStyles(styles)(DocumentViewer);
+export default DocumentViewer;

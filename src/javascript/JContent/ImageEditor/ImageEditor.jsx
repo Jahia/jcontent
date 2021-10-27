@@ -1,44 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-    TwoColumnsContent,
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary,
-    IconButton,
-    Typography,
-    TopBar
+    TwoColumnsContent
 } from '@jahia/design-system-kit';
 import ImageEditorPreview from './ImageEditorPreview';
-import {Tooltip, withStyles} from '@material-ui/core';
-import {compose} from '~/utils';
+import {Tooltip} from '@material-ui/core';
 import {withTranslation} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 import CropPanel from './CropPanel';
-import {ChevronLeft, ExpandMore} from '@material-ui/icons';
+import {Button, ChevronDown, Chip, Edit, Header, Typography} from '@jahia/moonstone';
 import ImageEditorActions from './ImageEditorActions';
 import MainLayout from '../MainLayout';
-
-let styles = theme => ({
-    root: {
-        minHeight: 0
-    },
-    left: {
-        overflow: 'auto'
-    },
-    panel: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    right: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        maxWidth: '600px',
-        background: theme.palette.ui.omega,
-        paddingRight: theme.spacing.unit * 2
-    }
-});
+import styles from './ImageEditor.scss';
 
 const PANELS = {
     ROTATE: 0,
@@ -64,7 +41,6 @@ export class ImageEditor extends React.Component {
     render() {
         const {
             t,
-            classes,
             path,
             originalWidth,
             originalHeight,
@@ -87,31 +63,12 @@ export class ImageEditor extends React.Component {
         return (
             <MainLayout
                 header={
-                    <TopBar
-                        path={
-                            <React.Fragment>
-                                <Typography variant="omega">
-                                    <IconButton size="compact"
-                                                icon={<ChevronLeft/>}
-                                                onClick={() => onBackNavigation(dirty)}/>
-                                    {t('jcontent:label.contentManager.editImage.goBack')}
-                                </Typography>
-                            </React.Fragment>
-                        }
-                        title={name}
-                        titleProps={{color: 'alpha'}}
-                        contextModifiers={<React.Fragment/>}
-                        actions={
-                            <React.Fragment>
-                                <Typography variant="omega">
-                                    {changesFeedback}
-                                </Typography>
-                            </React.Fragment>
-                        }
+                    <Header title={name}
+                            backButton={<Button onClick={() => onBackNavigation(dirty)}/>}
                     />
                 }
             >
-                <TwoColumnsContent classes={{root: classes.root, left: classes.left, right: classes.right}}
+                <TwoColumnsContent classes={{root: styles.root, left: styles.left, right: styles.right}}
                                    rightCol={<ImageEditorPreview isCropExpanded={expanded === PANELS.CROP}
                                                                  path={this.props.path}
                                                                  ts={this.props.ts}
@@ -130,10 +87,10 @@ export class ImageEditor extends React.Component {
                                             data-cm-role="rotate-panel"
                                             onChange={(event, expanded) => expanded && !resizeParams.dirty && !cropParams.dirty && this.onChangePanel(PANELS.ROTATE)}
                             >
-                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.ROTATE && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.rotate')}</Typography>
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.ROTATE && <ChevronDown/>} classes={{content: styles.title}}>
+                                    <Typography variant="heading">{t('jcontent:label.contentManager.editImage.rotate')}</Typography> {changesFeedback && <Chip icon={<Edit/>} label={changesFeedback} color="warning"/> }
                                 </ExpansionPanelSummary>
-                                <ExpansionPanelDetails className={classes.panel}>
+                                <ExpansionPanelDetails className={styles.panel}>
                                     <RotatePanel onRotate={onRotate}/>
                                 </ExpansionPanelDetails>
                                 <ImageEditorActions isDirty={dirty} undoChanges={undoChanges} saveChanges={saveChanges}/>
@@ -145,10 +102,10 @@ export class ImageEditor extends React.Component {
                                             data-cm-role="resize-panel"
                                             onChange={(event, expanded) => expanded && !rotationParams.dirty && !cropParams.dirty && this.onChangePanel(PANELS.RESIZE)}
                             >
-                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.RESIZE && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.resize')}</Typography>
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.RESIZE && <ChevronDown/>} classes={{content: styles.title}}>
+                                    <Typography variant="heading">{t('jcontent:label.contentManager.editImage.resize')}</Typography> {changesFeedback && <Chip icon={<Edit/>} label={changesFeedback} color="warning"/> }
                                 </ExpansionPanelSummary>
-                                <ExpansionPanelDetails className={classes.panel}>
+                                <ExpansionPanelDetails className={styles.panel}>
                                     <ResizePanel originalWidth={originalWidth}
                                                  originalHeight={originalHeight}
                                                  resizeParams={resizeParams}
@@ -164,10 +121,10 @@ export class ImageEditor extends React.Component {
                                             data-cm-role="crop-panel"
                                             onChange={(event, expanded) => expanded && !resizeParams.dirty && !rotationParams.dirty && this.onChangePanel(PANELS.CROP)}
                             >
-                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ExpandMore/>}>
-                                    <Typography variant="zeta" color="alpha">{t('jcontent:label.contentManager.editImage.crop')}</Typography>
+                                <ExpansionPanelSummary expandIcon={expanded !== PANELS.CROP && <ChevronDown/>} classes={{content: styles.title}}>
+                                    <Typography variant="heading">{t('jcontent:label.contentManager.editImage.crop')}</Typography> {changesFeedback && <Chip icon={<Edit/>} label={changesFeedback} color="warning"/> }
                                 </ExpansionPanelSummary>
-                                <ExpansionPanelDetails className={classes.panel}>
+                                <ExpansionPanelDetails className={styles.panel}>
                                     <CropPanel cropParams={cropParams}
                                                onCrop={onCrop}
                                     />
@@ -184,7 +141,6 @@ export class ImageEditor extends React.Component {
 
 ImageEditor.propTypes = {
     t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     path: PropTypes.string,
     ts: PropTypes.number.isRequired,
     originalWidth: PropTypes.number,
@@ -201,7 +157,4 @@ ImageEditor.propTypes = {
     undoChanges: PropTypes.func.isRequired
 };
 
-export default compose(
-    withTranslation(),
-    withStyles(styles)
-)(ImageEditor);
+export default withTranslation()(ImageEditor);

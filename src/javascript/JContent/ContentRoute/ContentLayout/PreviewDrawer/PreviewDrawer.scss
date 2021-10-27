@@ -1,0 +1,11 @@
+.leftGutter.leftGutter {
+    margin-left: var(--spacing-small);
+}
+
+.heading.heading {
+    height: var(--spacing-huge);
+
+    & > * {
+        margin: var(--spacing-small);
+    }
+}

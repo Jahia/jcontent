@@ -1,5 +1,5 @@
 import imageExtensions from 'image-extensions';
-import JContentConstants from '../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const imageExtensionSet = new Set(imageExtensions);
 

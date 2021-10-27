@@ -3,62 +3,22 @@ import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
-import {Grid, Paper, withStyles} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
-import {Pagination} from '@jahia/react-material';
+import {Grid, Paper} from '@material-ui/core';
+import {TablePagination, Typography} from '@jahia/moonstone';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {connect} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
-import {cmSetPreviewSelection} from '../../../preview.redux';
-import {cmGoto, cmOpenPaths} from '../../../JContent.redux';
-import classNames from 'classnames';
-import {extractPaths} from '../../../JContent.utils';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
+import {cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import classNames from 'clsx';
+import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
-import JContentConstants from '../../../JContent.constants';
-
-const styles = theme => ({
-    grid: {
-        display: 'flex',
-        flex: '1 1 0%',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        margin: '0!important',
-        backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
-        outline: 'none'
-    },
-    gridEmpty: {
-        flex: '1 1 0%',
-        margin: '0!important',
-        backgroundColor: theme.palette.background.default
-    },
-    defaultGrid: {
-        flex: 1,
-        display: 'grid',
-        gap: '8px 8px',
-        boxShadow: 'none',
-        justifyContent: 'center',
-        background: theme.palette.background.default
-    },
-    // MsGrid are css properties for IE, please don't remove them
-    thumbGrid: {
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        msGridColumns: '( 1fr )[6]'
-    },
-    detailedGrid: {
-        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-        msGridColumns: '( 1fr )[2]'
-    },
-    empty: {
-        textAlign: 'center',
-        margin: theme.spacing.unit * 3
-    }
-});
+import JContentConstants from '~/JContent/JContent.constants';
+import styles from './FilesGrid.scss';
 
 export const FilesGrid = ({
     isContentNotFound,
-    classes,
     path,
     totalCount,
     pagination,
@@ -93,8 +53,8 @@ export const FilesGrid = ({
     if (isContentNotFound) {
         return (
             <React.Fragment>
-                <Grid container className={classes.gridEmpty} data-cm-role="grid-content-list">
-                    <Typography variant="epsilon" className={classes.empty}>
+                <Grid container className={styles.gridEmpty} data-cm-role="grid-content-list">
+                    <Typography className={styles.empty}>
                         {t('jcontent:label.contentManager.contentNotFound')}
                     </Typography>
                 </Grid>
@@ -113,7 +73,7 @@ export const FilesGrid = ({
     return (
         <React.Fragment>
             <div ref={mainPanelRef}
-                 className={classes.grid}
+                 className={styles.grid}
                  data-cm-role="grid-content-list"
                  tabIndex="1"
                  onKeyDown={handleKeyboardNavigation}
@@ -122,7 +82,7 @@ export const FilesGrid = ({
                 <UploadTransformComponent uploadTargetComponent={Paper}
                                           uploadPath={path}
                                           mode="media"
-                                          className={classNames(classes.defaultGrid, classes.detailedGrid)}
+                                          className={classNames(styles.defaultGrid, styles.detailedGrid)}
                 >
                     {rows.map((node, index) => (
                         <FileCard key={node.uuid}
@@ -149,16 +109,16 @@ export const FilesGrid = ({
                     <div/>
                 </UploadTransformComponent>
             </div>
-            <Pagination
-                totalCount={totalCount}
-                pageSize={pagination.pageSize}
-                currentPage={pagination.currentPage}
-                labels={{
-                    labelRowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
-                    of: t('jcontent:label.pagination.of')
-                }}
-                onChangePage={setCurrentPage}
-                onChangeRowsPerPage={setPageSize}
+            <TablePagination totalNumberOfRows={totalCount}
+                             currentPage={pagination.currentPage + 1}
+                             rowsPerPage={pagination.pageSize}
+                             label={{
+                                 rowsPerPage: t('jcontent:label.pagination.rowsPerPage'),
+                                 of: t('jcontent:label.pagination.of')
+                             }}
+                             rowsPerPageOptions={[10, 25, 50, 100]}
+                             onPageChange={setCurrentPage}
+                             onRowsPerPageChange={setPageSize}
             />
         </React.Fragment>
     );
@@ -175,7 +135,7 @@ let mapStateToProps = state => ({
 });
 
 let mapDispatchToProps = dispatch => ({
-    setCurrentPage: page => dispatch(cmSetPage(page)),
+    setCurrentPage: page => dispatch(cmSetPage(page - 1)),
     onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
     setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
     setPath: (siteKey, path, mode) => {
@@ -185,7 +145,6 @@ let mapDispatchToProps = dispatch => ({
 });
 
 FilesGrid.propTypes = {
-    classes: PropTypes.object.isRequired,
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
@@ -204,6 +163,5 @@ FilesGrid.propTypes = {
 };
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    withStyles(styles, {withTheme: true})
+    connect(mapStateToProps, mapDispatchToProps)
 )(FilesGrid);

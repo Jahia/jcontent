@@ -1,38 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core';
 import EmptyDropZone from '../EmptyDropZone';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {Table, TableBody, TableRow, TableBodyCell} from '@jahia/moonstone';
+import {Table, TableBody, TableBodyCell, TableRow} from '@jahia/moonstone';
 import ContentTableWrapper from './ContentTableWrapper';
+import styles from './ContentEmptyDropZone.scss';
 
-const styles = theme => ({
-    dragZoneContentList: {
-        position: 'absolute',
-        height: '57vh',
-        width: '100%',
-        display: 'flex',
-        padding: theme.spacing.unit * 4
-    },
-    dragZone: {
-        justifyContent: 'center',
-        display: 'flex',
-        padding: 0,
-        width: '100%'
-    }
-});
-
-export const ContentEmptyDropZone = ({classes, path, mode}) => (
+export const ContentEmptyDropZone = ({path, mode}) => (
     <ContentTableWrapper>
         <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
             <TableBody>
                 <UploadTransformComponent
                     uploadTargetComponent={TableRow}
                     uploadPath={path}
-                    className={classes.dragZoneContentList}
+                    className={styles.dragZoneContentList}
                     mode={mode}
                 >
-                    <TableBodyCell className={classes.dragZone}>
+                    <TableBodyCell className={styles.dragZone}>
                         <EmptyDropZone component="div" mode={mode}/>
                     </TableBodyCell>
                 </UploadTransformComponent>
@@ -42,9 +26,8 @@ export const ContentEmptyDropZone = ({classes, path, mode}) => (
 );
 
 ContentEmptyDropZone.propTypes = {
-    classes: PropTypes.object.isRequired,
     mode: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(ContentEmptyDropZone);
+export default ContentEmptyDropZone;

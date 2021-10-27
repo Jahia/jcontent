@@ -1,9 +1,9 @@
 import React from 'react';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
-import {Button} from '@jahia/design-system-kit';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
 import PropTypes from 'prop-types';
+import {Button} from '@jahia/moonstone';
 
 export class UnsavedChangesDialog extends React.Component {
     render() {
@@ -17,15 +17,11 @@ export class UnsavedChangesDialog extends React.Component {
                     <DialogContentText>
                         {t('jcontent:label.contentManager.editImage.exitConfirmation')}
                     </DialogContentText>
-                    <DialogActions>
-                        <Button variant="secondary" onClick={onClose}>
-                            {t('jcontent:label.contentManager.editImage.continueEditing')}
-                        </Button>
-                        <Button variant="primary" onClick={onBack}>
-                            {t('jcontent:label.contentManager.editImage.discardChangesButton')}
-                        </Button>
-                    </DialogActions>
                 </DialogContent>
+                <DialogActions>
+                    <Button label={t('jcontent:label.contentManager.editImage.continueEditing')} size="big" onClick={onClose}/>
+                    <Button label={t('jcontent:label.contentManager.editImage.discardChangesButton')} size="big" color="accent" onClick={onBack}/>
+                </DialogActions>
             </Dialog>
         );
     }

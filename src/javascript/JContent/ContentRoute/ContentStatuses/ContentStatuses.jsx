@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 
-import JContentConstants from '../../JContent.constants';
-import {isMarkedForDeletion, isWorkInProgress} from '../../JContent.utils';
+import JContentConstants from '~/JContent/JContent.constants';
+import {isMarkedForDeletion, isWorkInProgress} from '~/JContent/JContent.utils';
 import {getTooltip} from './ContentStatuses.utils';
 import styles from './ContentStatuses.scss';
 import Status from './Status';

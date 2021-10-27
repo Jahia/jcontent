@@ -9,22 +9,22 @@ import {
     Sql2SearchQueryHandler
 } from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
-import {ProgressOverlay} from '@jahia/react-material';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
 } from '../../eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
 import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
-import JContentConstants from '../../JContent.constants';
-import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import JContentConstants from '~/JContent/JContent.constants';
+import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
-import {cmSetPreviewSelection} from '../../preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import ContentLayout from './ContentLayout';
-import {refetchTypes, setRefetcher, unsetRefetcher} from '../../JContent.refetches';
-import {structureData, adaptedRow, isInSearchMode} from '../ContentLayout/ContentLayout.utils';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
+import {adaptedRow, isInSearchMode, structureData} from '../ContentLayout/ContentLayout.utils';
 import usePreloadedData from './usePreloadedData';
+import {Loader} from '@jahia/moonstone';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -286,8 +286,11 @@ export const ContentLayoutContainer = ({
 
     return (
         <React.Fragment>
-            {loading &&
-            <ProgressOverlay/>}
+            {loading && (
+                <div className="flexFluid flexCol_center alignCenter" style={{flex: '9999', backgroundColor: 'var(--color-light)'}}>
+                    <Loader size="big"/>
+                </div>
+            )}
             <ContentLayout mode={mode}
                            path={path}
                            filesMode={filesMode}

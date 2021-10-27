@@ -1,0 +1,107 @@
+.root {
+    position: absolute;
+    z-index: 1;
+
+    display: flex;
+    min-width: 6px;
+    height: 100%;
+}
+
+.publicationInfoWrapper {
+    display: flex;
+    overflow: hidden;
+
+    width: 0;
+    min-width: 0;
+    max-width: 0;
+
+    transition: width 0.2s, max-width 0.2s, min-width 0.2s;
+
+    &:hover {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.border {
+    width: 6px;
+
+    cursor: pointer;
+
+    &:hover ~ .publicationInfoWrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.publicationInfo {
+    display: flex;
+    align-items: center;
+    margin: 0 var(--spacing-small);
+}
+
+.spacing {
+    max-height: 16px;
+    margin-right: var(--spacing-nano);
+    overflow: hidden;
+}
+
+.published {
+    color: var(--color-light);
+
+    background-color: var(--color-publicationStatus-published);
+}
+
+.modified {
+    color: var(--color-light);
+
+    background-color: var(--color-publicationStatus-modified);
+}
+
+.notPublished {
+    color: var(--color-light);
+
+    background-color: var(--color-publicationStatus-notPublished);
+}
+
+.unPublished {
+    color: var(--color-dark);
+
+    background-color: var(--color-publicationStatus-unpublished);
+}
+
+.markedForDeletion {
+    color: var(--color-light);
+
+    background-color: var(--color-publicationStatus-markedForDeletion);
+}
+
+.mandatoryLanguageUnpublishable {
+    color: var(--color-dark);
+
+    background-color: var(--color-publicationStatus-mandatoryLanguageUnpublishable);
+}
+
+.mandatoryLanguageValid {
+    color: var(--color-dark);
+
+    background-color: var(--color-publicationStatus-mandatoryLanguageValid);
+}
+
+.conflict {
+    color: var(--color-dark);
+
+    background-color: var(--color-publicationStatus-conflict);
+}
+
+.unknown {
+    color: var(--color-dark);
+
+    background-color: var(--color-publicationStatus-conflict);
+}
+
+.noStatus {
+    color: var(--color-dark);
+
+    background-color: var(--color-light);
+}

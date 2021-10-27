@@ -1,0 +1,21 @@
+.closeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.snackBar.snackBar {
+    bottom: var(--spacing-large);
+    z-index: 10013;
+
+    display: block;
+    width: 800px;
+    padding: var(--spacing-large);
+
+    background-color: var(--color-dark);
+}
+
+.snackBarScroll {
+    max-height: 150px;
+    overflow: auto;
+}

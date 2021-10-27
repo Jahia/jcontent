@@ -5,7 +5,7 @@ import {columnWidths} from '../../columns';
 import css from '../../../ContentTable.scss';
 import dayjs from 'dayjs';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
-import {getDefaultLocale} from '../../../../../../JContent.utils';
+import {getDefaultLocale} from '~/JContent/JContent.utils';
 import {DisplayActions} from '@jahia/ui-extender';
 import {includes} from 'lodash';
 import PropTypes from 'prop-types';

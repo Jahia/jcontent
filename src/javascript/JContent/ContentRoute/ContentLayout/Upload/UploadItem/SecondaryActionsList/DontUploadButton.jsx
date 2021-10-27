@@ -1,27 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
+import styles from '../UploadItem.scss';
 
-const DontUploadButton = ({removeFile, index, removeUploadFromQueue, t, classes, updateUploadsStatus, type}) => (
+const DontUploadButton = ({removeFile, index, removeUploadFromQueue, t, updateUploadsStatus, type}) => (
     <Button
         key="dontupload"
-        className={classes.actionButton}
+        isReversed
+        size="big"
+        className={styles.actionButton}
         component="a"
         variant="ghost"
-        color="inverted"
+        label={type === 'import' ? t('jcontent:label.contentManager.fileUpload.dontImport') : t('jcontent:label.contentManager.fileUpload.dontUpload')}
         onClick={() => {
             removeFile(index);
             removeUploadFromQueue(index);
             updateUploadsStatus();
         }}
-    >
-        {type === 'import' ? t('jcontent:label.contentManager.fileUpload.dontImport') : t('jcontent:label.contentManager.fileUpload.dontUpload')}
-    </Button>
+    />
 );
 
 DontUploadButton.propTypes = {
     t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     updateUploadsStatus: PropTypes.func.isRequired,
     removeFile: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,

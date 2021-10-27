@@ -1,0 +1,24 @@
+.noPreviewContainer {
+    display: flex;
+    flex: 1 1 0;
+
+    background-color: var(--color-gray_light40);
+}
+
+.center.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+
+    color: var(--color-gray);
+    text-align: center;
+}
+
+.centerIcon.centerIcon {
+    margin: var(--spacing-small) auto;
+}
+
+.contentContainer.contentContainer {
+    padding: var(--spacing-small);
+}

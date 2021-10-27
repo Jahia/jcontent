@@ -1,16 +1,17 @@
 import React, {useContext} from 'react';
-import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {triggerRefetchAll} from '../../JContent.refetches';
+import {withNotifications} from '@jahia/react-material';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import zipUnzipQueries from './zipUnzip.gql-queries';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
-import {getNewCounter, removeFileExtension} from '../../JContent.utils';
+import {getNewCounter, removeFileExtension} from '~/JContent/JContent.utils';
 import {cmClearSelection} from '../../ContentRoute/ContentLayout/contentSelection.redux';
 import {useDispatch} from 'react-redux';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
-import {PATH_FILES_ITSELF, ACTION_PERMISSIONS} from '../actions.constants';
+import {ACTION_PERMISSIONS, PATH_FILES_ITSELF} from '../actions.constants';
+import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 
 export const ZipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
@@ -62,7 +63,7 @@ export const ZipActionComponent = withNotifications()(({path, paths, render: Ren
                         newName = removeFileExtension(name).concat('.zip');
                     }
 
-                    componentRenderer.render('progressOverlay', ProgressOverlay);
+                    componentRenderer.render('progressOverlay', TransparentLoaderOverlay);
                     // Zip mutation after calculating the new name of zip file
                     client.mutate({
                         variables: {parentPathOrId: parentPath, name: newName, paths: paths},

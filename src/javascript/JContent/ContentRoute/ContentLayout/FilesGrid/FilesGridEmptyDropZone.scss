@@ -1,0 +1,22 @@
+
+.root.root {
+    display: flex;
+    flex: 1 1 0;
+}
+
+.gridEmpty.gridEmpty {
+    flex: 1 1 0;
+    margin: 0 !important;
+
+    background-color: var(--color-gray_light40);
+}
+
+.dragZoneRoot.dragZoneRoot {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: var(--spacing-medium);
+}

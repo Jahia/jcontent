@@ -1,0 +1,15 @@
+.headerText {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    color: var(--color-light);
+}
+
+.statusIcon {
+    margin-right: var(--spacing-nano);
+}
+
+.link {
+    color: inherit;
+}

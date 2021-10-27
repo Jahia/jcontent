@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {cmSwitchSelection, cmAddSelection, cmRemoveSelection} from '../../../contentSelection.redux';
+import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../../../contentSelection.redux';
 import {useGetLatest} from 'react-table';
 import {flattenTree} from '../../../ContentLayout.utils';
 

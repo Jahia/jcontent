@@ -4,7 +4,7 @@ import {Folder} from 'mdi-material-ui';
 import {isEmpty} from 'lodash';
 import {DocumentIcon, FileIcon, ImageIcon, ZipIcon} from '../../../../icons';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '../../../../../../JContent.utils';
+import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 import {columnWidths} from '../../columns';
 import classes from './Cells.scss';
 import clsx from 'clsx';

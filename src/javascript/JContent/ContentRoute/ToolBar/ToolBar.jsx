@@ -11,7 +11,7 @@ import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonsto
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
-import {cmSetPreviewState} from '../../preview.redux';
+import {cmSetPreviewState} from '~/JContent/preview.redux';
 
 export const ToolBar = () => {
     const {t} = useTranslation();

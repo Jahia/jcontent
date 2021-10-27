@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
-import {TableHeadCell, TableRow, TableHead, SortIndicator} from '@jahia/moonstone';
+import {SortIndicator, TableHead, TableHeadCell, TableRow} from '@jahia/moonstone';
 import {columnWidths} from '../reactTable/columns';
 import clsx from 'clsx';
 import classes from '../ContentTable.scss';

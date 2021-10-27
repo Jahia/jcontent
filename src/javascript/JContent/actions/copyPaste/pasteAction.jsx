@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 import pasteMutations from './copyPaste.gql-mutations';
-import {triggerRefetchAll} from '../../JContent.refetches';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {copypasteClear} from './copyPaste.redux';
 import {withNotifications} from '@jahia/react-material';
-import {getNewNodePath, isDescendantOrSelf} from '../../JContent.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '../../JContent.redux';
-import {cmSetPreviewSelection} from '../../preview.redux';
+import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
 import {useDispatch, useSelector} from 'react-redux';

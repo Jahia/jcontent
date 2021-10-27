@@ -3,25 +3,21 @@ import PropTypes from 'prop-types';
 import {ContextualMenu} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '../../../JContent.redux';
-import {
-    allowDoubleClickNavigation,
-    extractPaths
-} from '../../../JContent.utils';
+import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {allowDoubleClickNavigation, extractPaths} from '~/JContent/JContent.utils';
 import {connect} from 'react-redux';
 import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {cmSetPreviewSelection} from '../../../preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import {cmRemoveSelection} from '../contentSelection.redux';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import ContentListEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
 import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
-import {useTable, useExpanded} from 'react-table';
-import {useRowSelection} from './reactTable/plugins';
-import {useSort} from './reactTable/plugins';
+import {useExpanded, useTable} from 'react-table';
+import {useRowSelection, useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeader';
 import css from './ContentTable.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';

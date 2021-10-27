@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 import * as _ from 'lodash';
-import JContentConstants from '../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const childNodesCount = gql`
     fragment ChildNodesCount on JCRNode {

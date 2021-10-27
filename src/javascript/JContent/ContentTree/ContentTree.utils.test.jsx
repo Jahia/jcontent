@@ -1,4 +1,4 @@
-import {getParentPath, findInTree, convertPathsToTree} from './ContentTree.utils';
+import {convertPathsToTree, findInTree, getParentPath} from './ContentTree.utils';
 
 describe('getParentPath', () => {
     it('should return parent path', () => {

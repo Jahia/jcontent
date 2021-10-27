@@ -1,0 +1,29 @@
+
+.form {
+    display: flex;
+    flex-direction: row;
+
+    padding-top: var(--spacing-small);
+}
+
+.firstCol {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+}
+
+.secondCol {
+    flex: 1 1 0;
+    justify-self: start;
+    align-self: center;
+    padding: 16px;
+}
+
+.formControl.formControl {
+    width: 100%;
+    padding: 16px 0;
+}
+
+.inputLabel.inputLabel {
+    color: var(--color-dark);
+}

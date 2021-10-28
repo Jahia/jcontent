@@ -69,8 +69,8 @@ class PublicationStatusModified {
 
 class PublicationStatusMarkedForDeletion {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        let parentDeletionUser = node.ancestors[0]?.deletionUser?.value || '';
-        let parentDeletionDate = node.ancestors[0]?.deletionDate?.value || '';
+        let parentDeletionUser = (node.ancestors && node.ancestors[0]?.deletionUser?.value) || '';
+        let parentDeletionDate = (node.ancestors && node.ancestors[0]?.deletionDate?.value) || '';
 
         let userName = node?.deletedBy?.value || parentDeletionUser;
         let deletedTs = node?.deleted?.value || parentDeletionDate;

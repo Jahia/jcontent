@@ -3,7 +3,7 @@ import {Button} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const getButtonRenderer = ({labelStyle} = {}) => {
+export const getButtonRenderer = ({labelStyle, defaultButtonProps} = {}) => {
     const ButtonRenderer = props => {
         const {buttonLabelNamespace, buttonLabelShort, buttonLabel, isVisible, buttonLabelParams, buttonIcon, actionKey, enabled, isDisabled, onClick, buttonProps} = props;
         const {t} = useTranslation(buttonLabelNamespace);
@@ -24,6 +24,7 @@ const getButtonRenderer = ({labelStyle} = {}) => {
                         e.stopPropagation();
                         onClick(props, e);
                     }}
+                    {...defaultButtonProps}
                     {...buttonProps}
             />
         );

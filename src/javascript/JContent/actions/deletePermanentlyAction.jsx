@@ -25,7 +25,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
             getAggregatedPublicationInfo: true,
             getOperationSupport: true,
             requiredPermission: ['jcr:removeNode'],
-            hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page'],
+            hideOnNodeTypes: ['jnt:virtualsite'],
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );

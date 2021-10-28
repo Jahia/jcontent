@@ -22,7 +22,7 @@ export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPub
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
         requiredPermission: ['publish'],
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
+        hideOnNodeTypes: ['jnt:virtualsite']
     });
 
     if (res.loading) {

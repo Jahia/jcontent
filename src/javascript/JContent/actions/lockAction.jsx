@@ -12,7 +12,7 @@ export const LockActionComponent = ({path, render: Render, loading: Loading, ...
             getLockInfo: true,
             getOperationSupport: true,
             requiredPermission: 'jcr:lockManagement',
-            hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText']
+            hideOnNodeTypes: ['jnt:navMenuText']
         }
     );
 

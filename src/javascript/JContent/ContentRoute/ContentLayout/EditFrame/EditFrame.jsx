@@ -158,11 +158,7 @@ export const EditFrame = ({isDeviceView}) => {
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
                                onSaved={() => {
-                                   setTimeout(
-                                       () => {
-                                           refresh();
-                                       }
-                                       , 100);
+                                   refresh();
                                }}
                         />
                         <Infos currentDocument={currentDocument}/>

@@ -117,7 +117,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                                         onClick={onGoesUp}
                                 />
                             )}
-                            <DisplayAction actionKey="quickEdit" context={{path, onSaved}} render={ButtonRenderer}/>
+                            <DisplayAction actionKey="quickEdit" path={path} editCallback={onSaved} render={ButtonRenderer}/>
                             <Typography isUpperCase
                                         isNowrap
                                         className="flexFluid"

@@ -134,7 +134,7 @@ workflows:
           requires:
             - jahia-modules-orb/build
           context: QA_ENVIRONMENT
-          jahia_image: jahia/jahia-discovery-dev:8-SNAPSHOT
+          jahia_image: << pipeline.parameters.JAHIA_IMAGE >>
           tests_manifest: provisioning-manifest-build.yml
           module_id: << pipeline.parameters.MODULE_ID >>
           testrail_project: << pipeline.parameters.TESTRAIL_PROJECTNAME >>
@@ -260,7 +260,7 @@ workflows:
             - jahia-modules-orb/initialize
           matrix:
             parameters:
-              jahia_image: ["jahia/jahia-discovery-dev:8-SNAPSHOT"]
+              jahia_image: ["<< pipeline.parameters.JAHIA_IMAGE >>"]
               tests_manifest: ["provisioning-manifest-snapshot.yml"]
               module_id: ["<< pipeline.parameters.MODULE_ID >>"]
               testrail_project: ["<< pipeline.parameters.TESTRAIL_PROJECTNAME >>"]

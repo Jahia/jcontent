@@ -15,8 +15,6 @@
 
 // Import commands.js using ES2015 syntax:
 
-require('@cypress/code-coverage/support');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('cypress-terminal-report/src/installLogsCollector')()
 require('@jahia/cypress/dist/support/registerSupport').registerSupport()
 

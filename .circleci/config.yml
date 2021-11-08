@@ -95,7 +95,9 @@ workflows:
     unless:
       or:
         - << pipeline.parameters.IS_RELEASE >>
+        - << pipeline.parameters.IS_ROLLBACK >>
         - << pipeline.parameters.UPDATE_SIGNATURE >>
+        - << pipeline.parameters.IS_MANUAL_TESTRUN >>
     jobs:
       - jahia-modules-orb/initialize
       - jahia-modules-orb/update-signature:

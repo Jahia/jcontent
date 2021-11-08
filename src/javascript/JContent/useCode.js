@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 export const useCode = secretCode => {
     const [key, setKey] = useState(null);
     const [count, setCount] = useState(0);
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState(window.jcontentEnhanced);
 
     useEffect(() => {
         const keyDownHandler = ({code}) => setKey(code);
@@ -19,6 +19,7 @@ export const useCode = secretCode => {
                 setCount(state => state + 1);
 
                 if (count + 1 === secretCode.length) {
+                    window.jcontentEnhanced = true;
                     setSuccess(true);
                 }
             } else {

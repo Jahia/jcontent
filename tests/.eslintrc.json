@@ -1,11 +1,16 @@
 {
+    "parser": "@typescript-eslint/parser",
     "plugins": [
         "@typescript-eslint",
         "cypress"
     ],
     "extends": [
         "plugin:cypress/recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
     ],
+    "rules": {
+        "cypress/no-async-tests": "off"
+    },    
     "root": true
 }

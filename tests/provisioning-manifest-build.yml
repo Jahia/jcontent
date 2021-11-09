@@ -1,0 +1,2 @@
+- addMavenRepository: 'https://store.jahia.com/nexus/content/repositories/jahia-public-app-store@id=JahiaStore'
+- addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/'

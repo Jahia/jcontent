@@ -1,23 +1,22 @@
-import {BaseComponent, BasePage, Button, getComponent, getComponentByRole, getElement, MUIInput} from "@jahia/cypress";
-import {JContent} from "./jcontent";
+import { BaseComponent, BasePage, Button, getComponent, getComponentByRole, getElement, MUIInput } from '@jahia/cypress'
+import { JContent } from './jcontent'
 
 export class CreateContent extends BasePage {
-    jcontent: JContent;
+    jcontent: JContent
 
     constructor(jcontent: JContent) {
-        super();
-        this.jcontent = jcontent;
+        super()
+        this.jcontent = jcontent
     }
 
     open(): CreateContent {
-        getComponentByRole(Button, 'createContent').click();
-        return this;
+        getComponentByRole(Button, 'createContent').click()
+        return this
     }
 
     getContentTypeSelector(): ContentTypeSelector {
         return getComponent(ContentTypeSelector)
     }
-
 }
 
 export class ContentTypeSelector extends BaseComponent {
@@ -32,7 +31,7 @@ export class ContentTypeSelector extends BaseComponent {
 
     selectContentType(contentType: string): ContentTypeSelector {
         getElement('[data-sel-role="content-type-tree"] span', this).contains(contentType).click()
-        return this;
+        return this
     }
 
     cancel(): void {
@@ -43,4 +42,3 @@ export class ContentTypeSelector extends BaseComponent {
         getComponentByRole(Button, 'content-type-dialog-create', this).click()
     }
 }
-

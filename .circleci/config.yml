@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   docker: circleci/docker@0.5.20
   jq: circleci/jq@2.2.0
-  jahia-modules-orb: jahia/jahia-modules-orb@0.4.0
+  jahia-modules-orb: jahia/jahia-modules-orb@0.6.4
 
 references:
   workdir: &workdir
@@ -26,7 +26,7 @@ references:
 parameters:
   AUDITCI_LEVEL:
     type: string
-    default: "high"
+    default: "critical"
   TESTS_PATH:
     type: string
     default: "tests/"
@@ -50,7 +50,7 @@ parameters:
     default: "master" # main or master ? set the branch for the main release
   JAHIA_IMAGE:
     type: string
-    default: "jahia/jahia-ee-dev:8-SNAPSHOT"
+    default: "jahia/jahia-discovery-dev:8-SNAPSHOT"
   RELEASE_ID:
     type: string
     default: ""
@@ -95,7 +95,9 @@ workflows:
     unless:
       or:
         - << pipeline.parameters.IS_RELEASE >>
+        - << pipeline.parameters.IS_ROLLBACK >>
         - << pipeline.parameters.UPDATE_SIGNATURE >>
+        - << pipeline.parameters.IS_MANUAL_TESTRUN >>
     jobs:
       - jahia-modules-orb/initialize
       - jahia-modules-orb/update-signature:
@@ -106,7 +108,7 @@ workflows:
           requires:
             - jahia-modules-orb/initialize
       - jahia-modules-orb/static-analysis:
-          auditci_level: high
+          auditci_level: << pipeline.parameters.AUDITCI_LEVEL >>
           requires:
             - jahia-modules-orb/initialize
       - jahia-modules-orb/build:
@@ -129,17 +131,16 @@ workflows:
               only:
                 - << pipeline.parameters.PRIMARY_RELEASE_BRANCH >>
       # Verifies that the new code works with the latest released version of Jahia
-#      - jahia-modules-orb/integration-tests:
-#          name: "Int. Tests - Jahia Latest - Built modules"
-#          requires:
-#            - jahia-modules-orb/build
-#          context: QA_ENVIRONMENT
-#          jahia_image: jahia/jahia-ee-dev:8-SNAPSHOT
-#          tests_manifest: provisioning-manifest-build.yml
-#          module_id: << pipeline.parameters.MODULE_ID >>
-#          testrail_project: << pipeline.parameters.TESTRAIL_PROJECTNAME >>
-#          testrail_milestone: << pipeline.parameters.TESTRAIL_MILESTONE >>
-#          should_skip_zencrepes: << pipeline.parameters.SHOULD_SKIP_ZENCREPES >>
+      - jahia-modules-orb/integration-tests-machine:
+          requires:
+            - jahia-modules-orb/build
+          context: QA_ENVIRONMENT
+          jahia_image: << pipeline.parameters.JAHIA_IMAGE >>
+          tests_manifest: provisioning-manifest-build.yml
+          module_id: << pipeline.parameters.MODULE_ID >>
+          testrail_project: << pipeline.parameters.TESTRAIL_PROJECTNAME >>
+          testrail_milestone: << pipeline.parameters.TESTRAIL_MILESTONE >>
+          should_skip_zencrepes: << pipeline.parameters.SHOULD_SKIP_ZENCREPES >>
 
   # The on-release workflow was created to handle the full release lifecycle after creating a release using GitHub
   # https://github.com/Jahia/sandbox/releases
@@ -243,29 +244,29 @@ workflows:
   # The objective of nightly runs is to ensure the codebase still passes tests:
   # - With the latest releases version of Jahia
   # - With the current snapshot of Jahia
-#  nightly:
-#    triggers:
-#      - schedule:
-#          cron: "0 0 * * *"
-#          filters:
-#            branches:
-#              only:
-#                - << pipeline.parameters.PRIMARY_RELEASE_BRANCH >>
-#    jobs:
-#      - jahia-modules-orb/initialize
-#      - jahia-modules-orb/integration-tests:
-#          name: Nightly-<< matrix.jahia_image >>
-#          context: QA_ENVIRONMENT
-#          requires:
-#            - jahia-modules-orb/initialize
-#          matrix:
-#            parameters:
-#              jahia_image: ["jahia/jahia-ee-dev:8-SNAPSHOT"]
-#              tests_manifest: ["provisioning-manifest-snapshot.yml"]
-#              module_id: ["<< pipeline.parameters.MODULE_ID >>"]
-#              testrail_project: ["<< pipeline.parameters.TESTRAIL_PROJECTNAME >>"]
-#              testrail_milestone: ["<< matrix.jahia_image >>"]
-#              should_skip_artifacts: [true]
-#              should_skip_testrail: [false]
-#              should_skip_notifications: [false]
-#              should_skip_zencrepes: [false]
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - << pipeline.parameters.PRIMARY_RELEASE_BRANCH >>
+    jobs:
+      - jahia-modules-orb/initialize
+      - jahia-modules-orb/integration-tests:
+          name: Nightly-<< matrix.jahia_image >>
+          context: QA_ENVIRONMENT
+          requires:
+            - jahia-modules-orb/initialize
+          matrix:
+            parameters:
+              jahia_image: ["jahia/jahia-discovery:8", "jahia/jahia-discovery-dev:8-SNAPSHOT"]
+              tests_manifest: ["provisioning-manifest-snapshot.yml"]
+              module_id: ["<< pipeline.parameters.MODULE_ID >>"]
+              testrail_project: ["<< pipeline.parameters.TESTRAIL_PROJECTNAME >>"]
+              testrail_milestone: ["<< matrix.jahia_image >>"]
+              should_skip_artifacts: [true]
+              should_skip_testrail: [false]
+              should_skip_notifications: [false]
+              should_skip_zencrepes: [false]

@@ -13,6 +13,7 @@ yarn-error.log
 /.externalToolBuilders
 graphql.config.json
 graphql.schema.json
+.env
 
 coverage/
 

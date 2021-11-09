@@ -28,5 +28,7 @@
     "prettier": "^2.4.0",
     "typescript": "^4.4.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@jahia/jahia-reporter": "^1.0.3"
+  }
 }

@@ -131,8 +131,7 @@ workflows:
               only:
                 - << pipeline.parameters.PRIMARY_RELEASE_BRANCH >>
       # Verifies that the new code works with the latest released version of Jahia
-      - jahia-modules-orb/integration-tests:
-          name: "Int. Tests - Jahia Latest - Built modules"
+      - jahia-modules-orb/integration-tests-machine:
           requires:
             - jahia-modules-orb/build
           context: QA_ENVIRONMENT

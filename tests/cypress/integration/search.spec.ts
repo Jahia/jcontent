@@ -1,13 +1,13 @@
-import {JContent, BasicSearch} from "../page-object";
+import { JContent, BasicSearch } from "../page-object";
 
 describe("Search tests", () => {
-    let jcontent: JContent
-    let basicSearch: BasicSearch
+    let jcontent: JContent;
+    let basicSearch: BasicSearch;
 
     before(function () {
-        cy.executeGroovy("jcontent/createSite.groovy", {SITEKEY: "jcontentSite"});
+        cy.executeGroovy("jcontent/createSite.groovy", { SITEKEY: "jcontentSite" });
 
-        cy.apollo({mutationFile: "jcontent/createContent.graphql"});
+        cy.apollo({ mutationFile: "jcontent/createContent.graphql" });
         cy.login(); // edit in chief
 
         JContent.visit(
@@ -15,19 +15,19 @@ describe("Search tests", () => {
             "en",
             "content-folders/contents"
         );
-    })
+    });
 
     after(function () {
         cy.logout();
-        cy.executeGroovy("jcontent/deleteSite.groovy", {SITEKEY: "jcontentSite"});
-    })
+        cy.executeGroovy("jcontent/deleteSite.groovy", { SITEKEY: "jcontentSite" });
+    });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce('JSESSIONID')
+        Cypress.Cookies.preserveOnce('JSESSIONID');
         jcontent = new JContent();
-        jcontent.selectAccordion('content-folders')
-        basicSearch = jcontent.getBasicSearch().openSearch().reset()
-    })
+        jcontent.selectAccordion('content-folders');
+        basicSearch = jcontent.getBasicSearch().openSearch().reset();
+    });
 
     it("Test basic search in current folder", function () {
         // Try to search digitall in current path then on whole site
@@ -35,7 +35,7 @@ describe("Search tests", () => {
             .searchTerm("test")
             .executeSearch()
             .verifyTotalCount(0);
-    })
+    });
 
     it("Test basic search in all site", function () {
         basicSearch
@@ -44,7 +44,7 @@ describe("Search tests", () => {
             .executeSearch()
             .verifyResults(["test", "test", "test", "test", "test"])
             .verifyTotalCount(5);
-    })
+    });
 
     it("Test search with type", function () {
         basicSearch
@@ -55,7 +55,7 @@ describe("Search tests", () => {
             .verifyResults(["test", "test"])
             .verifyResultType("Event")
             .verifyTotalCount(2);
-    })
+    });
 
     it("Test search edit", function () {
         basicSearch
@@ -76,7 +76,7 @@ describe("Search tests", () => {
             .executeSearch()
             .verifyResults(["Very Rich text to find with system name"])
             .verifyResultType("Rich text")
-            .verifyTotalCount(1)
+            .verifyTotalCount(1);
     });
 
     it("Test search tags", function () {
@@ -86,7 +86,7 @@ describe("Search tests", () => {
             .executeSearch()
             .verifyResults(["Very Rich text to find with tag"])
             .verifyResultType("Rich text")
-            .verifyTotalCount(1)
+            .verifyTotalCount(1);
     });
 
 });

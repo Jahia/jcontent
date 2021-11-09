@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   docker: circleci/docker@0.5.20
   jq: circleci/jq@2.2.0
-  jahia-modules-orb: jahia/jahia-modules-orb@0.5.10
+  jahia-modules-orb: jahia/jahia-modules-orb@0.6.2
 
 references:
   workdir: &workdir

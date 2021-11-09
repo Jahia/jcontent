@@ -7,18 +7,12 @@ source ./set-env.sh
 # It assumes that you previously built the module you're going to be testing
 #   and that the modules artifacts are located one level up
 
-if [[ ! -f .env ]]; then
- cp .env.example .env
-fi
-
-source .env
-
 if [ ! -d ./artifacts ]; then
   mkdir -p ./artifacts
 fi
 
 if [[ -e ../target ]]; then
-  cp ../target/*-SNAPSHOT.jar ./artifacts/jcontent-SNAPSHOT.jar
+  cp ../target/*-SNAPSHOT.jar ./artifacts/
 fi
 
 docker build -t ${TESTS_IMAGE} .

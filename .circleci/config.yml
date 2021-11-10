@@ -1,23 +1,7 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@0.5.20
-  jq: circleci/jq@2.2.0
-  jahia-modules-orb: jahia/jahia-modules-orb@0.6.4
-
-references:
-  workdir: &workdir
-    working_directory: ~/source
-
-  persist-workspace: &persist-workspace
-    persist_to_workspace:
-      root: ~/source
-      paths:
-        - .
-
-  attach-workspace: &attach-workspace
-    attach_workspace:
-      at: .
+  jahia-modules-orb: jahia/jahia-modules-orb@0.6.5
 
 # Parameters are available across the entire config file and can be used with this syntax: << pipeline.parameters.THE_PARAMETER >>
 # Avoid using project-specific variables in the jobs or steps.
@@ -202,6 +186,7 @@ workflows:
             - jahia-modules-orb/update-signature-prestep
           ssh_key_fingerprints:  << pipeline.parameters.SSH_KEY_FINGERPRINT >>
           context: QA_ENVIRONMENT
+
   # The manual-run workflow was created to allow the triggering of an integration testing run using CircleCI pipeline API
   manual-run:
     when: << pipeline.parameters.IS_MANUAL_TESTRUN >>
@@ -220,6 +205,7 @@ workflows:
           should_skip_testrail: << pipeline.parameters.SHOULD_SKIP_TESTRAIL >>
           should_skip_notifications: << pipeline.parameters.SHOULD_SKIP_NOTIFICATIONS >>
           should_skip_zencrepes: << pipeline.parameters.SHOULD_SKIP_ZENCREPES >>
+
   # The on-rollback workflow was created to handle release rollback when a release has been deleted from Github
   # The rollback pipeline/job performs the following action:
   # - restore rollback artifact cache created from the release job

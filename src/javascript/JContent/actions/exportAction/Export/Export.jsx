@@ -50,8 +50,8 @@ export class Export extends React.Component {
                     </DialogContentText>
                     <Dropdown
                         data={[
-                            {label: t('jcontent:label.contentManager.export.stagingOnlyOption'), value: 'default'},
-                            {label: t('jcontent:label.contentManager.export.stagingAndLiveOption'), value: 'live'}
+                            {label: t('jcontent:label.contentManager.export.stagingOnlyOption'), value: 'default', attributes: {'data-cm-role': 'default-workspace'}},
+                            {label: t('jcontent:label.contentManager.export.stagingAndLiveOption'), value: 'live', attributes: {'data-cm-role': 'live-workspace'}}
                         ]}
                         label={this.state.workspace === 'live' ? t('jcontent:label.contentManager.export.stagingAndLiveOption') : t('jcontent:label.contentManager.export.stagingOnlyOption')}
                         value={this.state.workspace}

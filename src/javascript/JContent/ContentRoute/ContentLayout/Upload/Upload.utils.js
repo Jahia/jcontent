@@ -6,7 +6,7 @@ export const files = {
     acceptedFiles: []
 };
 
-export const onFilesSelected = (acceptedFiles, dispatchBatch, uploadInfo, type, additionalActions = []) => {
+export const onFilesSelected = ({acceptedFiles, dispatchBatch, uploadInfo, type, additionalActions = []}) => {
     if (acceptedFiles.length > 0) {
         files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
         const uploads = acceptedFiles.map(() => ({

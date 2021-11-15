@@ -1,0 +1,5 @@
+- addMavenRepository: 'https://devtools.jahia.com/nexus/content/groups/public/@snapshots@noreleases'
+- installBundle:
+    - 'mvn:org.jahia.modules/jcontent'
+  autoStart: true
+  uninstallPreviousVersion: true

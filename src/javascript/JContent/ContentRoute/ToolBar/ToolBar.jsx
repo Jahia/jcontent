@@ -11,7 +11,7 @@ import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonsto
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
-import {cmSetPreviewState} from '../../preview.redux';
+import {cmSetPreviewState} from '~/JContent/preview.redux';
 
 export const ToolBar = () => {
     const {t} = useTranslation();
@@ -38,8 +38,8 @@ export const ToolBar = () => {
     return (
         <div className={`flexRow ${styles.root}`}>
             {(mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH) ?
-                <SearchControlBar showActions={selection.length === 0}/> :
-                <BrowseControlBar showActions={selection.length === 0}/>}
+                <SearchControlBar/> :
+                <BrowseControlBar isShowingActions={selection.length === 0}/>}
             {paths.length > 0 &&
             <React.Fragment>
                 <div className="flexRow">

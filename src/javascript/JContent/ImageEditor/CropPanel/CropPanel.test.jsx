@@ -3,7 +3,7 @@ import {shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
 import {CropPanel} from './CropPanel';
 import defaultProps from '../../../testDefaultProps';
-import {IconButton} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
 
 describe('Crop panel', () => {
     let props;
@@ -46,7 +46,7 @@ describe('Crop panel', () => {
     });
 
     it('Should crop the image without keeping ratio', () => {
-        wrapper.find(IconButton).at(0).simulate('click');
+        wrapper.find(Button).at(0).simulate('click');
 
         wrapper.find(Input).at(0).simulate('change', {
             target: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import {Tooltip} from '@material-ui/core';
-import {isMarkedForDeletion, getDefaultLocale} from '../../../JContent.utils';
+import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
 
 function getFormattedDate(date, locale) {
     return dayjs(date).locale(getDefaultLocale(locale)).format('LLL');
@@ -69,8 +69,8 @@ class PublicationStatusModified {
 
 class PublicationStatusMarkedForDeletion {
     geti18nDetailsMessage(node, t, locale = 'en') {
-        let parentDeletionUser = node.ancestors[0]?.deletionUser?.value || '';
-        let parentDeletionDate = node.ancestors[0]?.deletionDate?.value || '';
+        let parentDeletionUser = (node.ancestors && node.ancestors[0]?.deletionUser?.value) || '';
+        let parentDeletionDate = (node.ancestors && node.ancestors[0]?.deletionDate?.value) || '';
 
         let userName = node?.deletedBy?.value || parentDeletionUser;
         let deletedTs = node?.deleted?.value || parentDeletionDate;

@@ -1,4 +1,5 @@
 import imageExtensions from 'image-extensions';
+import JContentConstants from '~/JContent/JContent.constants';
 
 const imageExtensionSet = new Set(imageExtensions);
 
@@ -72,3 +73,5 @@ export const adaptedRow = r => ({
     createdBy: r?.createdBy?.value,
     lastModified: r?.lastModified?.value
 });
+
+export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode || JContentConstants.mode.SEARCH === mode;

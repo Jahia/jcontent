@@ -4,7 +4,7 @@ import {Chip, Edit, Separator} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer} from '~/utils/getButtonRenderer';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {useTranslation} from 'react-i18next';
 import {useNodeInfo} from '@jahia/data-helper';
 
@@ -29,7 +29,7 @@ export const SearchControlBar = () => {
     if (advancedSearchMode) {
         typeInfo = from;
     } else {
-        typeInfo = searchContentType !== '' ? searchContentType : t('jcontent:label.contentManager.search.anyContent');
+        typeInfo = searchContentType === '' ? t('jcontent:label.contentManager.search.anyContent') : searchContentType;
     }
 
     return (

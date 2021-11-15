@@ -1,17 +1,16 @@
 import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
-import {CheckCircle, FiberManualRecord, Info} from '@material-ui/icons';
-import {CircularProgress} from '@material-ui/core';
-import {Typography} from '@jahia/design-system-kit';
+import {AddCircle, Check, Information, Loader, Typography} from '@jahia/moonstone';
+import styles from './UploadItem.scss';
 
-const Status = ({classes, status, error, t, type}) => {
+const Status = ({status, error, t, type}) => {
     let content;
 
     if (status === uploadStatuses.QUEUED) {
         content = (
             <React.Fragment>
-                <FiberManualRecord className={classes.statusIcon} color="inherit"/>
-                <Typography variant="zeta" className={classes.progressText} color="inherit">
+                <AddCircle className={styles.statusIcon} color="inherit"/>
+                <Typography className={styles.progressText} weight="bold">
                     {t('jcontent:label.contentManager.fileUpload.queued')}
                 </Typography>
             </React.Fragment>
@@ -19,8 +18,8 @@ const Status = ({classes, status, error, t, type}) => {
     } else if (status === uploadStatuses.UPLOADED) {
         content = (
             <React.Fragment>
-                <CheckCircle className={classes.statusIcon} color="inherit"/>
-                <Typography variant="zeta" className={classes.progressText} color="inherit">
+                <Check className={styles.statusIcon} color="inherit"/>
+                <Typography className={styles.progressText} weight="bold">
                     {type === 'import' ? t('jcontent:label.contentManager.fileUpload.imported') : t('jcontent:label.contentManager.fileUpload.uploaded')}
                 </Typography>
             </React.Fragment>
@@ -37,8 +36,8 @@ const Status = ({classes, status, error, t, type}) => {
 
         content = (
             <React.Fragment>
-                <Info className={classes.statusIcon} color="inherit"/>
-                <Typography variant="zeta" className={classes.progressText} color="inherit">
+                <Information className={styles.statusIcon} color="inherit"/>
+                <Typography className={styles.progressText} weight="bold">
                     {getErrorMessage(error)}
                 </Typography>
             </React.Fragment>
@@ -46,8 +45,8 @@ const Status = ({classes, status, error, t, type}) => {
     } else if (status === uploadStatuses.UPLOADING) {
         content = (
             <React.Fragment>
-                <CircularProgress size={20} className={classes.statusIcon} color="inherit"/>
-                <Typography variant="zeta" className={classes.progressText} color="inherit">
+                <Loader isReversed size="small" className={styles.statusIcon}/>
+                <Typography className={styles.progressText} weight="bold">
                     {type === 'import' ? t('jcontent:label.contentManager.fileUpload.importing') : t('jcontent:label.contentManager.fileUpload.uploading')}
                 </Typography>
             </React.Fragment>

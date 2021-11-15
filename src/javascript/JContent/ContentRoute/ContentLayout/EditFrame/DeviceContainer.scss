@@ -1,0 +1,33 @@
+/* stylelint-disable */
+.root {
+    position: relative;
+    display: flex;
+    flex: 1 0 0;
+}
+
+.controls {
+    display: flex;
+    position: absolute;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid;
+    padding: 4px;
+    align-items: center;
+    height: 36px;
+}
+
+.container {
+    transform-origin: top left;
+    display: flex;
+    flex: 1 0 0;
+    transition: transform 0.3s ease-in;
+}
+
+.device {
+    position: absolute;
+}
+
+.frame {
+    position: relative;
+    margin: 0;
+}

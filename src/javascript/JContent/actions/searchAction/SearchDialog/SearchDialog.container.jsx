@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {cmGoto, cmPreSearchModeMemo} from '~/JContent/JContent.redux';
@@ -18,7 +18,7 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
         if (mode !== JContentConstants.mode.SQL2SEARCH && mode !== JContentConstants.mode.SEARCH) {
             dispatch(cmPreSearchModeMemo(mode));
         }
-    }, [mode]);
+    }, [mode, dispatch]);
 
     const [isAdvancedSearch, setIsAdvancedSearch] = useState(mode === JContentConstants.mode.SQL2SEARCH);
     const [searchPath, setSearchPath] = useState(params.searchPath ? params.searchPath : path);

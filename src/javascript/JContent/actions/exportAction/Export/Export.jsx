@@ -2,35 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from '~/utils';
 import {withTranslation} from 'react-i18next';
-import {Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    DialogContentText,
-    Select,
-    MenuItem,
-    Checkbox,
-    FormHelperText,
-    withStyles
-} from '@material-ui/core';
-import {FormControlLabel, Typography, Button} from '@jahia/design-system-kit';
-
-const styles = theme => ({
-    margins: {
-        marginTop: theme.spacing.unit * 2,
-        width: '100%'
-    },
-    checkboxContainer: {
-        display: 'inline-flex',
-        marginTop: theme.spacing.unit * 2
-    },
-    checkboxLabel: {
-        marginLeft: 0
-    },
-    checkboxTypo: {
-        padding: '10px'
-    }
-});
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormHelperText} from '@material-ui/core';
+import {Button, Checkbox, Dropdown, Typography} from '@jahia/moonstone';
+import {FormControlLabel} from '@jahia/design-system-kit';
+import styles from './Export.scss';
 
 export class Export extends React.Component {
     constructor(props) {
@@ -43,8 +18,8 @@ export class Export extends React.Component {
         this.onXmlChange = this.onXmlChange.bind(this);
     }
 
-    onWorkspaceChange(event) {
-        let wsp = event.target.value;
+    onWorkspaceChange(event, item) {
+        let wsp = item.value;
         this.setState(Object.assign({workspace: wsp}, (wsp === 'live') ? {xml: false} : {}));
     }
 
@@ -62,39 +37,38 @@ export class Export extends React.Component {
     }
 
     render() {
-        let {t, classes, onClose, onExited, path} = this.props;
+        let {t, onClose, onExited, path, isOpen} = this.props;
         let live = (this.state.workspace === 'live');
         return (
-            <Dialog fullWidth open={this.props.open} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
+            <Dialog fullWidth open={isOpen} aria-labelledby="form-dialog-title" data-cm-role="export-options" onExited={onExited} onClose={onClose}>
                 <DialogTitle>
                     {t('jcontent:label.contentManager.export.dialogTitle')}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText className={classes.margins}>
+                    <DialogContentText className={styles.margins}>
                         {t('jcontent:label.contentManager.export.selectWorkspace')}
                     </DialogContentText>
-                    <Select
-                        className={classes.margins}
+                    <Dropdown
+                        data={[
+                            {label: t('jcontent:label.contentManager.export.stagingOnlyOption'), value: 'default', attributes: {'data-cm-role': 'default-workspace'}},
+                            {label: t('jcontent:label.contentManager.export.stagingAndLiveOption'), value: 'live', attributes: {'data-cm-role': 'live-workspace'}}
+                        ]}
+                        label={this.state.workspace === 'live' ? t('jcontent:label.contentManager.export.stagingAndLiveOption') : t('jcontent:label.contentManager.export.stagingOnlyOption')}
                         value={this.state.workspace}
+                        variant="outlined"
+                        size="medium"
                         data-cm-role="select-workspace"
-                        onChange={e => this.onWorkspaceChange(e)}
-                    >
-                        <MenuItem value="default" data-cm-role="default-workspace">
-                            {t('jcontent:label.contentManager.export.stagingOnlyOption')}
-                        </MenuItem>
-                        <MenuItem value="live" data-cm-role="live-workspace">
-                            {t('jcontent:label.contentManager.export.stagingAndLiveOption')}
-                        </MenuItem>
-                    </Select>
+                        onChange={this.onWorkspaceChange}
+                    />
                     <FormHelperText>
                         {t('jcontent:label.contentManager.export.exportDetails')}
                     </FormHelperText>
-                    <div className={classes.checkboxContainer}>
+                    <div className={styles.checkboxContainer}>
                         <FormControlLabel
-                            classes={{root: classes.checkboxLabel}}
+                            classes={{root: styles.checkboxLabel}}
                             value="xml"
                             label={
-                                <Typography variant="iota" color={live ? 'beta' : 'alpha'} className={classes.checkboxTypo}>
+                                <Typography className={styles.checkboxTypo}>
                                     {t('jcontent:label.contentManager.export.asXml')}
                                 </Typography>
                             }
@@ -107,19 +81,17 @@ export class Export extends React.Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="secondary" onClick={onClose}>
-                        {t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
-                    </Button>
+                    <Button size="big" label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')} onClick={onClose}/>
                     <Button
-                        variant="primary"
+                        size="big"
+                        color="accent"
                         data-cm-role="export-button"
+                        label={t('jcontent:label.contentManager.export.actionLabel')}
                         onClick={() => {
                             this.triggerExport(path);
                             onClose();
                         }}
-                    >
-                        {t('jcontent:label.contentManager.export.actionLabel')}
-                    </Button>
+                    />
                 </DialogActions>
             </Dialog>
         );
@@ -127,15 +99,13 @@ export class Export extends React.Component {
 }
 
 Export.propTypes = {
-    classes: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     onExited: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     t: PropTypes.func.isRequired
 };
 
 export default compose(
-    withStyles(styles),
     withTranslation()
 )(Export);

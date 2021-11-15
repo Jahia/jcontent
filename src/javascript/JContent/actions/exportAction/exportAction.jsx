@@ -18,10 +18,10 @@ export const ExportActionComponent = ({path, render: Render, loading: Loading, .
             isVisible={res.checksResult}
             onClick={() => {
                 componentRenderer.render('exportDialog', Export, {
-                        open: true,
+                        isOpen: true,
                         path: res.node.path,
                         onClose: () => {
-                            componentRenderer.setProperties('exportDialog', {open: false});
+                            componentRenderer.setProperties('exportDialog', {isOpen: false});
                         },
                         onExited: () => {
                             componentRenderer.destroy('exportDialog');

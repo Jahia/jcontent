@@ -4,8 +4,8 @@ import {ArrowLeft, Button, Typography} from '@jahia/moonstone';
 import styles from './ContentSearchTitle.scss';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
-import {cmGoto} from '../../JContent.redux';
-import JContentConstants from '../../JContent.constants';
+import {cmGoto} from '~/JContent/JContent.redux';
+import JContentConstants from '~/JContent/JContent.constants';
 import SearchInput from '../SearchInput';
 
 const ContentSearchTitle = () => {

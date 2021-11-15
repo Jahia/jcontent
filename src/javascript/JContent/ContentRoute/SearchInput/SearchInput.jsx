@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import {Close as CloseIcon, Search as SearchIcon} from '@jahia/moonstone';
+import {Button, Close, Search} from '@jahia/moonstone';
 import {useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/JContent.redux';
-import JContentConstants from '../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import styles from './SearchInput.scss';
 
 let timeOut;
@@ -17,16 +16,15 @@ const SearchInput = function () {
         searchContentType: state.jcontent.params.searchContentType
     }));
     const [t, setT] = useState(searchTerms);
+
     // This updates component state when user changes search via dialog
     useEffect(() => {
-        if (searchTerms !== t) {
-            setT(searchTerms);
-        }
-    }, [searchTerms]);
+        setT(searchTerms);
+    }, [searchTerms, setT]);
 
     const performSearchDebounced = (time, value) => e => {
         clearTimeout(timeOut);
-        const searchForValue = value !== undefined ? value : e.target.value;
+        const searchForValue = value === undefined ? e.target.value : value;
         setT(searchForValue);
         timeOut = setTimeout(() => {
             clearTimeout(timeOut);
@@ -44,18 +42,14 @@ const SearchInput = function () {
 
     return (
         <div className={styles.searchInput}>
-            <IconButton disabled className={styles.iconButton}>
-                <SearchIcon/>
-            </IconButton>
+            <Button disabled variant="ghost" className={styles.iconButton} icon={<Search/>}/>
             <InputBase
                 className={styles.input}
                 value={t}
                 inputProps={{'aria-label': 'search'}}
                 onChange={performSearchDebounced(500)}
             />
-            <IconButton className={styles.iconButton} onClick={performSearchDebounced(0, '')}>
-                <CloseIcon/>
-            </IconButton>
+            <Button variant="ghost" className={styles.iconButton} icon={<Close/>} onClick={performSearchDebounced(0, '')}/>
         </div>
     );
 };

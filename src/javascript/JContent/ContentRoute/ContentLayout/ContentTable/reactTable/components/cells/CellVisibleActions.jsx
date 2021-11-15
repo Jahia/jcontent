@@ -6,23 +6,28 @@ import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import PropTypes from 'prop-types';
 import {columnWidths} from '../../columns';
 import classes from './Cells.scss';
+import {useSelector} from 'react-redux';
 
-export const CellVisibleActions = ({row, cell, column}) => (
-    <TableBodyCell key={row.id + column.id}
-                   className={classes.visibleActions}
-                   {...cell.getCellProps()}
-                   width={columnWidths[column.id]}
-                   data-cm-role="table-content-list-cell-actions"
-    >
-        <DisplayAction
-            actionKey="contentMenu"
-            path={row.original.path}
-            menuFilter={value => !includes(['edit', 'preview', 'subContents', 'locate'], value.key)}
-            render={ButtonRendererNoLabel}
-            buttonProps={{variant: 'ghost', size: 'big'}}
-        />
-    </TableBodyCell>
-);
+export const CellVisibleActions = ({row, cell, column}) => {
+    const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
+    return (
+        <TableBodyCell key={row.id + column.id}
+                       className={classes.visibleActions}
+                       {...cell.getCellProps()}
+                       width={columnWidths[column.id]}
+                       data-cm-role="table-content-list-cell-actions"
+        >
+            {selection.length === 0 &&
+                <DisplayAction
+                    actionKey="contentMenu"
+                    path={row.original.path}
+                    menuFilter={value => !includes(['edit', 'preview', 'subContents', 'locate'], value.key)}
+                    render={ButtonRendererNoLabel}
+                    buttonProps={{variant: 'ghost', size: 'big'}}
+                />}
+        </TableBodyCell>
+    );
+};
 
 CellVisibleActions.propTypes = {
     value: PropTypes.string,

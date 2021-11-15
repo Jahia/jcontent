@@ -1,4 +1,13 @@
-import {Cell, CellLastModified, CellPublicationStatus, CellSelection, CellVisibleActions, CellName, CellStatus, CellType} from '../components/cells';
+import {
+    Cell,
+    CellLastModified,
+    CellName,
+    CellPublicationStatus,
+    CellSelection,
+    CellStatus,
+    CellType,
+    CellVisibleActions
+} from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 
 export const columnWidths = {

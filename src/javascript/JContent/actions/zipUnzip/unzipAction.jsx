@@ -1,14 +1,15 @@
 import React, {useContext} from 'react';
-import {ProgressOverlay, withNotifications} from '@jahia/react-material';
-import {triggerRefetchAll} from '../../JContent.refetches';
+import {withNotifications} from '@jahia/react-material';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
-import {isMarkedForDeletion} from '../../JContent.utils';
+import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
-import {PATH_FILES_ITSELF, ACTION_PERMISSIONS} from '../actions.constants';
+import {ACTION_PERMISSIONS, PATH_FILES_ITSELF} from '../actions.constants';
+import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
 
 export const UnzipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
     const language = useSelector(state => state.language);
@@ -40,7 +41,7 @@ export const UnzipActionComponent = withNotifications()(({path, paths, render: R
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                componentRenderer.render('progressOverlay', ProgressOverlay);
+                componentRenderer.render('progressOverlay', TransparentLoaderOverlay);
                 client.mutate({
                     variables: {pathOrId: res.node.path, path: res.node.parent.path},
                     mutation: zipUnzipMutations.unzip

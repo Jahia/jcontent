@@ -1,23 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from '@jahia/design-system-kit';
+import {Button} from '@jahia/moonstone';
+import styles from '../UploadItem.scss';
 
-const RenameButton = ({t, classes, showRenameDialog}) => (
+const RenameButton = ({t, showRenameDialog}) => (
     <Button
         key="rename"
-        className={classes.actionButton}
+        isReversed
+        size="big"
+        className={styles.actionButton}
         component="a"
         variant="ghost"
-        color="inverted"
+        label={t('jcontent:label.contentManager.fileUpload.rename')}
         onClick={showRenameDialog}
-    >
-        {t('jcontent:label.contentManager.fileUpload.rename')}
-    </Button>
+    />
 );
 
 RenameButton.propTypes = {
     t: PropTypes.func.isRequired,
-    classes: PropTypes.object.isRequired,
     showRenameDialog: PropTypes.func.isRequired
 };
 

@@ -2,17 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
-import {
-    fileMatchSize,
-    getDataTransferItems,
-    isDragDataWithFiles,
-    onFilesSelected
-} from '../Upload/Upload.utils';
+import {fileMatchSize, getDataTransferItems, isDragDataWithFiles, onFilesSelected} from '../Upload/Upload.utils';
 import {fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
 import {withApollo} from 'react-apollo';
 import {compose} from '~/utils';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
@@ -124,12 +119,12 @@ export class UploadTransformComponent extends React.Component {
 
                 let acceptedFiles = fileList.filter(file => fileMatchSize(file, uploadMaxSize, uploadMinSize));
 
-                onFilesSelected(
+                onFilesSelected({
                     acceptedFiles,
-                    this.props.uploadDispatchBatch,
-                    {path: uploadPath},
-                    mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
-                );
+                    dispatchBatch: this.props.uploadDispatchBatch,
+                    uploadInfo: {path: uploadPath},
+                    type: mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
+                });
             });
         }
     }

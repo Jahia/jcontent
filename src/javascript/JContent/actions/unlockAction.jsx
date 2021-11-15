@@ -11,8 +11,7 @@ export const UnlockActionComponent = ({path, render: Render, loading: Loading, .
         {
             getLockInfo: true,
             getOperationSupport: true,
-            requiredPermission: 'jcr:lockManagement',
-            hideOnNodeTypes: ['jnt:page']
+            requiredPermission: 'jcr:lockManagement'
         }
     );
 

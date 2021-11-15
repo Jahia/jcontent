@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {setRefetcher, unsetRefetcher} from '../JContent.refetches';
 
-function checkAction(res, node, publishType, allLanguages) {
+function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;
     let isVisible = res.checksResult && node.operationsSupport.publication;
 
@@ -25,7 +25,7 @@ function checkAction(res, node, publishType, allLanguages) {
             (publishType === 'publishAll' || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
     }
 
-    if (allLanguages) {
+    if (isPublishingAllLanguages) {
         isVisible = isVisible && node.site.languages.length > 1;
     }
 
@@ -36,13 +36,13 @@ function checkAction(res, node, publishType, allLanguages) {
     return {enabled, isVisible};
 }
 
-function checkActionOnNodes(res, publishType, allLanguages) {
+function checkActionOnNodes(res, publishType, isPublishingAllLanguages) {
     const defaults = {
         enabled: true,
         isVisible: true
     };
 
-    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, allLanguages)), defaults) : defaults;
+    return res.nodes ? res.nodes.reduce((acc, node) => mergeChecks(acc, checkAction(res, node, publishType, isPublishingAllLanguages)), defaults) : defaults;
 }
 
 const mergeChecks = (v1, v2) => {
@@ -80,7 +80,7 @@ const constraintsByType = {
 };
 
 export const PublishActionComponent = props => {
-    const {id, path, paths, language, publishType, allLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
+    const {id, path, paths, language, publishType, isPublishingAllLanguages, enabled, isVisible, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
     const {t} = useTranslation();
 
@@ -106,9 +106,9 @@ export const PublishActionComponent = props => {
         return (Loading && <Loading {...props}/>) || false;
     }
 
-    let actionChecks = res.node ? checkAction(res, res.node, publishType, allLanguages) : checkActionOnNodes(res, publishType, allLanguages);
-    const actionEnabled = enabled !== undefined ? (enabled && actionChecks.enabled) : actionChecks.enabled;
-    const actionVisible = isVisible !== undefined ? (isVisible && actionChecks.isVisible) : actionChecks.isVisible;
+    let actionChecks = res.node ? checkAction(res, res.node, publishType, isPublishingAllLanguages) : checkActionOnNodes(res, publishType, isPublishingAllLanguages);
+    const actionEnabled = enabled === undefined ? actionChecks.enabled : (enabled && actionChecks.enabled);
+    const actionVisible = isVisible === undefined ? actionChecks.isVisible : (isVisible && actionChecks.isVisible);
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
@@ -123,9 +123,9 @@ export const PublishActionComponent = props => {
             enabled={actionEnabled}
             onClick={() => {
                 if (path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', allLanguages, publishType === 'unpublish');
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], publishType === 'publishAll', isPublishingAllLanguages, publishType === 'unpublish');
                 } else if (paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), publishType === 'publishAll', allLanguages, publishType === 'unpublish');
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), publishType === 'publishAll', isPublishingAllLanguages, publishType === 'unpublish');
                 }
             }}
         />
@@ -147,7 +147,7 @@ PublishActionComponent.propTypes = {
 
     publishType: PropTypes.oneOf(['publish', 'publishAll', 'unpublish']),
 
-    allLanguages: PropTypes.bool,
+    isPublishingAllLanguages: PropTypes.bool,
 
     render: PropTypes.func.isRequired,
 

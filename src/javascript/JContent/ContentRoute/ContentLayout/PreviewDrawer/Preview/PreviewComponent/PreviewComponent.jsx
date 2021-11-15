@@ -1,59 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getFileType, isBrowserImage, isPDF} from '../../../ContentLayout.utils';
-import classNames from 'classnames';
-import {Paper, withStyles} from '@material-ui/core';
+import classNames from 'clsx';
+import {Paper} from '@material-ui/core';
 import DocumentViewer from './DocumentViewer';
 import PDFViewer from './PDFViewer';
 import ImageViewer from './ImageViewer';
-import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
+import styles from './PreviewComponent.scss';
 
-const styles = theme => ({
-    previewContainer: {
-        flex: '1 1 0%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: 0,
-        backgroundColor: theme.palette.background.default
-    },
-    noPreviewContainer: {
-        flex: '1 1 0%',
-        backgroundColor: theme.palette.background.default,
-        display: 'flex'
-    },
-    center: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        textAlign: 'center',
-        color: theme.palette.text.disabled
-    },
-    centerIcon: {
-        margin: '8 auto'
-    },
-    mediaContainer: {
-        backgroundColor: theme.palette.background.dark
-    },
-    contentContainer: {
-        padding: (theme.spacing.unit * 3) + 'px'
-    },
-    contentPaper: {
-        width: '100%',
-        height: '100%',
-        display: 'flex'
-    },
-    contentIframe: {
-        border: 'none',
-        width: '100%',
-        height: '100%'
-    }
-});
-
-const iframeLoadContent = (assets, displayValue, element, domLoadedCallback, iFrameStyle) => {
+const iframeLoadContent = ({assets, displayValue, element, domLoadedCallback, iFrameStyle}) => {
     if (element) {
         let frameDoc = element.document;
         if (element.contentWindow) {
@@ -87,7 +43,11 @@ const iframeLoadContent = (assets, displayValue, element, domLoadedCallback, iFr
     }
 };
 
-const PreviewComponentCmp = ({classes, data, workspace, fullScreen, domLoadedCallback, iFrameStyle, iframeProps}) => {
+function getFile(workspace, data) {
+    return window.contextJsParameters.contextPath + '/files/' + (workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
+}
+
+const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iFrameStyle, iframeProps}) => {
     const {t} = useTranslation();
 
     let displayValue = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
@@ -97,21 +57,21 @@ const PreviewComponentCmp = ({classes, data, workspace, fullScreen, domLoadedCal
 
     // If node type is "jnt:file" use specific viewer
     if (data && data.nodeByPath && data.nodeByPath.lastModified && data.nodeByPath.isFile) {
-        let file = window.contextJsParameters.contextPath + '/files/' + (workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replace(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
+        let file = getFile(workspace, data);
         if (isPDF(data.nodeByPath.path)) {
             return (
-                <div className={classes.previewContainer} data-sel-role="preview-type-pdf">
-                    <PDFViewer file={file} fullScreen={fullScreen}/>
+                <div className={styles.previewContainer} data-sel-role="preview-type-pdf">
+                    <PDFViewer file={file} isFullScreen={fullScreen}/>
                 </div>
             );
         }
 
         if (isBrowserImage(data.nodeByPath.path)) {
             return (
-                <div className={classNames(classes.previewContainer, classes.mediaContainer)}
+                <div className={classNames(styles.previewContainer, styles.mediaContainer)}
                      data-sel-role="preview-type-image"
                 >
-                    <ImageViewer file={file} fullScreen={fullScreen}/>
+                    <ImageViewer file={file} isFullScreen={fullScreen}/>
                 </div>
             );
         }
@@ -119,24 +79,24 @@ const PreviewComponentCmp = ({classes, data, workspace, fullScreen, domLoadedCal
         const type = getFileType(data.nodeByPath.path);
         const isMedia = (type === 'avi' || type === 'mp4' || type === 'video');
         return (
-            <div className={classNames(classes.previewContainer, isMedia && classes.mediaContainer)}
+            <div className={classNames(styles.previewContainer, isMedia && styles.mediaContainer)}
                  data-sel-role="preview-type-document"
             >
-                <DocumentViewer file={file} type={type} fullScreen={fullScreen}/>
+                <DocumentViewer file={file} type={type} isFullScreen={fullScreen}/>
             </div>
         );
     }
 
     const assets = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.staticAssets : [];
     return (
-        <div className={classNames(classes.previewContainer, classes.contentContainer)}
+        <div className={classNames(styles.previewContainer, styles.contentContainer)}
              data-sel-role="preview-type-content"
         >
-            <Paper elevation={1} classes={{root: classes.contentPaper}}>
+            <Paper elevation={1} classes={{root: styles.contentPaper}}>
                 <iframe key={data && data.nodeByPath ? data.nodeByPath.path : 'NoPreviewAvailable'}
-                        ref={element => iframeLoadContent(assets, displayValue, element, domLoadedCallback, iFrameStyle)}
+                        ref={element => iframeLoadContent({assets, displayValue, element, domLoadedCallback, iFrameStyle})}
                         data-sel-role={workspace + '-preview-frame'}
-                        className={classes.contentIframe}
+                        className={styles.contentIframe}
                         {...iframeProps}
                 />
             </Paper>
@@ -152,7 +112,6 @@ PreviewComponentCmp.defaultProps = {
 };
 
 PreviewComponentCmp.propTypes = {
-    classes: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     workspace: PropTypes.string.isRequired,
     // eslint-disable-next-line react/boolean-prop-naming
@@ -162,8 +121,6 @@ PreviewComponentCmp.propTypes = {
     iframeProps: PropTypes.object
 };
 
-const PreviewComponent = compose(
-    withStyles(styles)
-)(PreviewComponentCmp);
+const PreviewComponent = PreviewComponentCmp;
 
 export default PreviewComponent;

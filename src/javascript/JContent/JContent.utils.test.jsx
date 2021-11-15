@@ -1,4 +1,4 @@
-import {removeFileExtension, getNewCounter} from './JContent.utils';
+import {getNewCounter, removeFileExtension} from './JContent.utils';
 
 describe('removeFileExtension', () => {
     it('should remove file extension', () => {

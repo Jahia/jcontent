@@ -62,7 +62,7 @@ export const FileUploadActionComponent = props => {
 
     useEffect(() => {
         componentRenderer.render('upload-' + id, Upload, {actionKey: id, uploadType});
-    }, [id, componentRenderer]);
+    }, [id, componentRenderer, uploadType]);
 
     if (res.loading) {
         return (Loading && <Loading {...props}/>) || false;
@@ -70,12 +70,12 @@ export const FileUploadActionComponent = props => {
 
     const handleClick = () => {
         currentUploadHandler = files => {
-            onFilesSelected(
-                [...files],
+            onFilesSelected({
+                acceptedFiles: [...files],
                 dispatchBatch,
-                {path},
-                uploadType
-            );
+                uploadInfo: {path},
+                type: uploadType
+            });
         };
 
         document.getElementById('file-upload-input-' + id).click();

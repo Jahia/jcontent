@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
-import {getDefaultLocale} from '../../JContent.utils';
-import JContentConstants from '../../JContent.constants';
+import {getDefaultLocale} from '~/JContent/JContent.utils';
+import JContentConstants from '~/JContent/JContent.constants';
 
 function formatDate(date, locale = 'en', format = 'LLL') {
     return dayjs(date).locale(locale).format(format);

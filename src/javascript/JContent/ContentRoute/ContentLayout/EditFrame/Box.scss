@@ -1,0 +1,88 @@
+.root {
+    position: absolute;
+    z-index: 9999;
+
+    border-bottom-right-radius: 8px;
+
+    border-bottom-left-radius: 8px;
+
+    pointer-events: none;
+
+    &.color_default {
+        border: 2px solid var(--color-gray);
+        border-top: 0;
+    }
+
+    &.color_accent {
+        z-index: 10000;
+
+        border: 2px solid var(--color-accent);
+        border-top: 0;
+    }
+
+    &.color_hidden {
+        display: none;
+    }
+
+    .dragging &.color_accent,
+    .dragging &.color_default {
+        border: 0;
+    }
+}
+
+.rel {
+    position: relative;
+    top: -34px;
+    left: 0;
+
+    display: block;
+    width: calc(100% + 4px);
+    margin-left: -2px;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    display: block;
+    width: 100%;
+    height: 34px;
+
+    pointer-events: all;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 34px;
+    padding: 16px;
+
+    color: white;
+
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+
+    &.color_default {
+        background: var(--color-gray);
+    }
+
+    &.color_accent {
+        background: var(--color-accent);
+    }
+
+    .dragging &.color_default,
+    .dragging &.color_accent {
+        display: none;
+    }
+}
+
+.button {
+    flex: 0 0 auto;
+    margin: 0 4px;
+}
+
+:global(.noprefix) .dropTarget {
+    border-top: 1px dashed gray;
+}

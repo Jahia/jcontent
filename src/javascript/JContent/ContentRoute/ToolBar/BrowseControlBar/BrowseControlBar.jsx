@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Separator} from '@jahia/moonstone';
 import FileModeSelector from '../FileModeSelector';
-import JContentConstants from '../../../JContent.constants';
+import JContentConstants from '~/JContent/JContent.constants';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -24,7 +24,7 @@ const excludedActions = [
     'fileUpload'
 ];
 
-export const BrowseControlBar = ({showActions}) => {
+export const BrowseControlBar = ({isShowingActions}) => {
     const {path, mode, siteKey} = useSelector(state => ({
         path: state.jcontent.path,
         mode: state.jcontent.mode,
@@ -39,7 +39,7 @@ export const BrowseControlBar = ({showActions}) => {
 
     return (
         <React.Fragment>
-            {showActions && !isRootNode && (
+            {isShowingActions && !isRootNode && (
                 <>
                     <div className="flexRow">
                         <DisplayActions target="headerPrimaryActions"
@@ -62,16 +62,16 @@ export const BrowseControlBar = ({showActions}) => {
                 </>
             )}
             <div className="flexFluid"/>
-            {showActions && mode === JContentConstants.mode.MEDIA &&
+            {isShowingActions && mode === JContentConstants.mode.MEDIA &&
             <FileModeSelector/>}
-            {showActions && mode !== JContentConstants.mode.MEDIA &&
+            {isShowingActions && mode !== JContentConstants.mode.MEDIA &&
             <ViewModeSelector/>}
         </React.Fragment>
     );
 };
 
 BrowseControlBar.propTypes = {
-    showActions: PropTypes.bool.isRequired
+    isShowingActions: PropTypes.bool.isRequired
 };
 
 export default BrowseControlBar;

@@ -1,16 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose} from '~/utils';
-import {withStyles} from '@material-ui/core';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-
-let styles = () => ({
-    cropPreview: {
-        background: 'transparent'
-    }
-});
-
+import styles from './ImageEditorPreview.scss';
 let containerRef = React.createRef();
 
 function getCropValue(cropParams, originalWidth, originalHeight) {
@@ -23,10 +15,10 @@ function getCropValue(cropParams, originalWidth, originalHeight) {
     };
 }
 
-export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, classes, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams, theme}) => {
+export const ImageEditorPreview = ({path, cropParams, onCrop, isCropExpanded, ts, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams}) => {
     let filepath = window.contextJsParameters.contextPath + '/files/default' + path.replace(/[^/]/g, encodeURIComponent) + '?ts=' + ts;
-    let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - (theme.spacing.unit * 4) : 0;
-    let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - (theme.spacing.unit * 4) : 0;
+    let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - 16 : 0;
+    let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - 16 : 0;
     let keepOrientation = rotationParams.rotations % 2 === 0;
     let height = resizeParams.height || originalHeight;
     let width = resizeParams.width || originalWidth;
@@ -36,10 +28,10 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, 
     let translate = (rotationParams.rotations % 2) * (width - height) / reduceFactor / 2;
     return (
         <div ref={containerRef} style={{width: rotatedWidth / reduceFactor, height: rotatedHeight / reduceFactor}}>
-            {cropExpanded ?
+            {isCropExpanded ?
                 <ReactCrop keepSelection
                            useNaturalImageDimensions
-                           className={classes.cropPreview}
+                           className={styles.cropPreview}
                            maxHeight={originalHeight}
                            maxWidth={originalWidth}
                            imageStyle={{
@@ -59,7 +51,7 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, 
                            }}
                            onImageLoaded={img => onImageLoaded(img)}
                 /> :
-                <img className={classes.img}
+                <img className={styles.img}
                      data-cm-role="preview-image"
                      style={{
                          width: width / reduceFactor,
@@ -74,10 +66,8 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, cropExpanded, ts, 
 
 ImageEditorPreview.propTypes = {
     path: PropTypes.string.isRequired,
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
     ts: PropTypes.number.isRequired,
-    cropExpanded: PropTypes.bool.isRequired,
+    isCropExpanded: PropTypes.bool.isRequired,
     onCrop: PropTypes.func.isRequired,
     cropParams: PropTypes.object,
     rotationParams: PropTypes.object.isRequired,
@@ -87,6 +77,4 @@ ImageEditorPreview.propTypes = {
     onImageLoaded: PropTypes.func.isRequired
 };
 
-export default compose(
-    withStyles(styles, {withTheme: true})
-)(ImageEditorPreview);
+export default ImageEditorPreview;

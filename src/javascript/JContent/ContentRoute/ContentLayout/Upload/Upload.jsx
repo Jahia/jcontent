@@ -1,37 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Snackbar, withStyles} from '@material-ui/core';
-import {IconButton} from '@jahia/design-system-kit';
-import {Close} from '@material-ui/icons';
+import {Snackbar} from '@material-ui/core';
+import {Button, Close} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
-import {fileuploadRemoveUpload, fileuploadSetStatus, fileuploadSetUploads, fileuploadTakeFromQueue, fileuploadUpdateUpload} from './Upload.redux';
+import {
+    fileuploadRemoveUpload,
+    fileuploadSetStatus,
+    fileuploadSetUploads,
+    fileuploadTakeFromQueue,
+    fileuploadUpdateUpload
+} from './Upload.redux';
 import UploadItem from './UploadItem';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
 import {files} from './Upload.utils';
 import UploadHeader from './UploadHeader';
 import {batchActions} from 'redux-batched-actions';
-
-const styles = theme => ({
-    closeButton: {
-        position: 'absolute',
-        top: 0,
-        right: 0
-    },
-    snackBar: {
-        zIndex: 10013,
-        backgroundColor: theme.palette.background.dark,
-        bottom: theme.spacing.unit * 4,
-        display: 'block',
-        width: 800,
-        padding: 24
-    },
-    snackBarScroll: {
-        maxHeight: '150px',
-        overflow: 'auto'
-    }
-});
+import styles from './Upload.scss';
 
 const SNACKBAR_CLOSE_TIMEOUT = 5000;
 
@@ -48,7 +34,7 @@ export class Upload extends React.Component {
             active: {
                 display: 'block',
                 position: 'absolute',
-                backgroundColor: props.theme.palette.secondary.main,
+                backgroundColor: 'var(--color-accent)',
                 opacity: '0.4',
                 pointerEvents: 'none'
             },
@@ -87,14 +73,14 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {classes, uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
+        let {uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
 
         return (
             <React.Fragment>
-                <Snackbar open={uploads.length > 0} classes={{root: classes.snackBar}}>
+                <Snackbar open={uploads.length > 0} classes={{root: styles.snackBar}}>
                     <React.Fragment>
                         <UploadHeader status={this.uploadStatus()}/>
-                        <div className={classes.snackBarScroll}>
+                        <div className={styles.snackBarScroll}>
                             {uploads.map((upload, index) => (
                                 <UploadItem
                                     key={upload.id}
@@ -109,7 +95,7 @@ export class Upload extends React.Component {
                                 />
                             ))}
                         </div>
-                        <IconButton color="inverted" size="compact" data-cm-role="upload-close-button" icon={<Close/>} className={classes.closeButton} onClick={this.handleCloseSnackBar}/>
+                        <Button isReversed variant="ghost" size="small" data-cm-role="upload-close-button" icon={<Close/>} className={styles.closeButton} onClick={this.handleCloseSnackBar}/>
                     </React.Fragment>
                 </Snackbar>
                 <div style={this.generateOverlayStyle()}/>
@@ -130,9 +116,9 @@ export class Upload extends React.Component {
 
         if (!status) {
             us = uploadsStatuses.NOT_STARTED;
-        } else if (status.uploading !== 0) {
+        } else if (status.uploading > 0) {
             us = uploadsStatuses.UPLOADING;
-        } else if (status.error !== 0) {
+        } else if (status.error > 0) {
             us = uploadsStatuses.HAS_ERROR;
         } else {
             us = uploadsStatuses.UPLOADED;
@@ -221,8 +207,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 Upload.propTypes = {
-    theme: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired,
     setStatus: PropTypes.func.isRequired,
     clearUploads: PropTypes.func.isRequired,
     status: PropTypes.string,
@@ -236,7 +220,6 @@ Upload.propTypes = {
 };
 
 export default compose(
-    withStyles(styles, {withTheme: true}),
     withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(Upload);

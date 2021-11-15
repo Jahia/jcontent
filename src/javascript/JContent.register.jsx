@@ -69,7 +69,7 @@ export default function () {
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {
-                                history.push(buildUrl(site, language, mode || defaultMode, path, params));
+                                history.push(buildUrl({site, language, mode: mode || defaultMode, path, params}));
                                 initClipboardWatcher(dispatch, client);
                             }}/>
         );

@@ -14,7 +14,7 @@ const checkAction = node => node.operationsSupport.publication &&
         (node.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' &&
             (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));
 
-export const PublishDeletionActionComponent = ({path, paths, allSubTree, allLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
+export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
 
     const res = useNodeChecks({path, paths, language}, {
@@ -22,7 +22,7 @@ export const PublishDeletionActionComponent = ({path, paths, allSubTree, allLang
         getAggregatedPublicationInfo: true,
         getOperationSupport: true,
         requiredPermission: ['publish'],
-        hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page']
+        hideOnNodeTypes: ['jnt:virtualsite']
     });
 
     if (res.loading) {
@@ -38,9 +38,9 @@ export const PublishDeletionActionComponent = ({path, paths, allSubTree, allLang
             buttonProps={{...buttonProps, color: 'danger'}}
             onClick={() => {
                 if (path) {
-                    window.authoringApi.openPublicationWorkflow([res.node.uuid], allSubTree, allLanguages);
+                    window.authoringApi.openPublicationWorkflow([res.node.uuid], isAllSubTree, isPublishingAllLanguages);
                 } else if (paths) {
-                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), allSubTree, allLanguages);
+                    window.authoringApi.openPublicationWorkflow(res.nodes.map(n => n.uuid), isAllSubTree, isPublishingAllLanguages);
                 }
             }}
         />
@@ -54,9 +54,9 @@ PublishDeletionActionComponent.propTypes = {
 
     buttonProps: PropTypes.object,
 
-    allSubTree: PropTypes.bool,
+    isAllSubTree: PropTypes.bool,
 
-    allLanguages: PropTypes.bool,
+    isPublishingAllLanguages: PropTypes.bool,
 
     render: PropTypes.func.isRequired,
 

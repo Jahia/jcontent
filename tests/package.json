@@ -1,0 +1,34 @@
+{
+  "name": "jcontent-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "instrument": "nyc instrument --compact=false cypress instrumented",
+    "e2e:ci": "cypress run",
+    "e2e:debug": "cypress open",
+    "lint": "eslint . -c .eslintrc.json --ext .ts",
+    "report:merge": "mochawesome-merge results/reports/cypress*.json > results/reports/report.json && rm results/reports/cypress*.json",
+    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@jahia/cypress": "^1.0.8",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "cypress": "^8.3.1",
+    "cypress-multi-reporters": "^1.5.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-cypress": "^2.11.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha-junit-reporter": "^2.0.2",
+    "mochawesome": "^7.0.1",
+    "mochawesome-merge": "^4.2.0",
+    "mochawesome-report-generator": "^6.0.1",
+    "prettier": "^2.4.0",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "@jahia/jahia-reporter": "^1.0.3"
+  }
+}

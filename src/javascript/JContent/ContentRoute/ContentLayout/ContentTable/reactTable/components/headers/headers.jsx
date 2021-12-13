@@ -6,7 +6,7 @@ import React from 'react';
 /* eslint-disable react/prop-types */
 
 export const HeaderSelection = ({getToggleAllRowsSelectedProps}) => (
-    <Checkbox isUncontrolled {...getToggleAllRowsSelectedProps()}/>
+    <Checkbox {...getToggleAllRowsSelectedProps()}/>
 );
 
 export const Header = ({column}) => {

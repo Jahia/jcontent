@@ -8,7 +8,7 @@ export const CellSelection = ({row, cell, column}) => (
                    {...cell.getCellProps()}
                    width={columnWidths[column.id]}
     >
-        <Checkbox isUncontrolled {...row.getToggleRowSelectedProps()}/>
+        <Checkbox {...row.getToggleRowSelectedProps()}/>
     </TableBodyCell>
 );
 

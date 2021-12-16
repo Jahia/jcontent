@@ -21,6 +21,5 @@ CellPublicationStatus.propTypes = {
     value: PropTypes.string,
     cell: PropTypes.object,
     column: PropTypes.object,
-    row: PropTypes.object,
-    classes: PropTypes.object.isRequired
+    row: PropTypes.object
 };

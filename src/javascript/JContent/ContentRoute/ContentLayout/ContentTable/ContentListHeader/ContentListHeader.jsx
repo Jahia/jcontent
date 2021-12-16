@@ -32,7 +32,7 @@ export const ContentListHeader = ({headerGroups}) => {
 };
 
 ContentListHeader.propTypes = {
-    headerGroups: PropTypes.object.isRequired
+    headerGroups: PropTypes.array.isRequired
 };
 
 export default compose(

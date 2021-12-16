@@ -23,9 +23,9 @@ export class Export extends React.Component {
         this.setState(Object.assign({workspace: wsp}, (wsp === 'live') ? {xml: false} : {}));
     }
 
-    onXmlChange(value) {
+    onXmlChange(event) {
         this.setState({
-            xml: value
+            xml: event.target.checked
         });
     }
 
@@ -72,11 +72,10 @@ export class Export extends React.Component {
                                     {t('jcontent:label.contentManager.export.asXml')}
                                 </Typography>
                             }
-                            control={<Checkbox isSelected={this.state.xml}
-                                               isDisabled={live}
-                                               onChange={e => this.onXmlChange(e)}
-                            />}
+                            checked={this.state.xml}
+                            control={<Checkbox isDisabled={live}/>}
                             data-cm-role="export-as-xml"
+                            onChange={e => this.onXmlChange(e)}
                         />
                     </div>
                 </DialogContent>

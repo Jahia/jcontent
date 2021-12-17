@@ -297,7 +297,7 @@ export const ContentLayoutContainer = ({
                            previewState={previewState}
                            previewSelection={previewSelection}
                            rows={rows}
-                           loading={loading}
+                           isLoading={loading}
                            totalCount={totalCount}
                            dataCounts={{
                                pages: preloadForType === JContentConstants.tableView.viewType.PAGES ? preloadedData.totalCount : totalCount,

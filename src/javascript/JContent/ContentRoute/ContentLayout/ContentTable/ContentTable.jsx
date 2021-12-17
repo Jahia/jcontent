@@ -191,7 +191,7 @@ export const ContentTable = ({
                                         path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
                                         paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
                                     />
-                                    {row.cells.map(cell => cell.render('Cell'))}
+                                    {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
                                 </TableRow>
                             );
                         })}
@@ -269,7 +269,6 @@ ContentTable.propTypes = {
     setMode: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     tableView: PropTypes.object.isRequired,
-    switchSelection: PropTypes.func.isRequired,
     totalCount: PropTypes.number.isRequired,
     dataCounts: PropTypes.object
 };

@@ -6,13 +6,12 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import PublicationStatus from '../../PublicationStatus';
 import {isBrowserImage} from '../../ContentLayout.utils';
-import FileIcon from '../FileIcon';
+import {NodeIcon} from '~/utils';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation, getDefaultLocale} from '~/JContent/JContent.utils';
 import classNames from 'clsx';
 import FileName from './FileName';
 import Actions from './Actions';
-import {Folder} from 'mdi-material-ui';
 import dayjs from 'dayjs';
 import FileSize from './FileSize';
 import styles from './FileCard.scss';
@@ -75,8 +74,7 @@ export const FileCard = ({
                         title={node.name}
                     /> :
                 <div className={styles.detailedIcon}>
-                    {node.primaryNodeType.name === 'jnt:folder' ?
-                        <Folder color="action"/> : <FileIcon filename={node.path} color="disabled"/>}
+                    <NodeIcon node={node}/>
                 </div>}
 
             <div className={isImage ? styles.mediaCardContentContainer : styles.fileCardContentContainer}>

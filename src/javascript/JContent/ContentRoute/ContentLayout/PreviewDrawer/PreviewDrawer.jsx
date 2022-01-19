@@ -56,11 +56,13 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, closePreview,
                 {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
                     <Tooltip title={t('jcontent:label.contentManager.contentPreview.collapse')}>
                         <Button variant="ghost"
+                                // TODO: Replace this icon
                                 icon={<FullscreenExit/>}
                                 onClick={closeFullScreen}/>
                     </Tooltip> :
                     <Tooltip title={t('jcontent:label.contentManager.contentPreview.expand')}>
                         <Button variant="ghost"
+                                // TODO: Replace this icon
                                 icon={<Fullscreen/>}
                                 onClick={openFullScreen}/>
                     </Tooltip>}

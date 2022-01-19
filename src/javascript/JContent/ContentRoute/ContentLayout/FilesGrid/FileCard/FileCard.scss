@@ -46,8 +46,13 @@
     align-items: center;
     min-width: 200px;
 
+    background-color: var(--color-gray_light40);
+
     & svg {
-        font-size: 160px;
+        width: 100px;
+        height: 100px;
+
+        color: var(--color-gray40);
     }
 }
 

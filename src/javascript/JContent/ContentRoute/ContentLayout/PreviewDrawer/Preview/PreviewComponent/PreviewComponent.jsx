@@ -77,7 +77,8 @@ const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iF
         }
 
         const type = getFileType(data.nodeByPath.path);
-        const isMedia = (type === 'avi' || type === 'mp4' || type === 'video');
+        // Media compatible with react-file-viewer
+        const isMedia = (type === 'mp4' || type === 'webm');
         return (
             <div className={classNames(styles.previewContainer, isMedia && styles.mediaContainer)}
                  data-sel-role="preview-type-document"

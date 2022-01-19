@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Card, CardContent, Tooltip} from '@material-ui/core';
 import Preview from './Preview';
-import {Button, ButtonGroup, Close, Typography} from '@jahia/moonstone';
-import {Fullscreen, FullscreenExit} from '@material-ui/icons';
+import {Button, ButtonGroup, Close, Maximize, Minimize, Typography} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {compose} from '~/utils';
@@ -56,14 +55,12 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, closePreview,
                 {previewState === CM_DRAWER_STATES.FULL_SCREEN ?
                     <Tooltip title={t('jcontent:label.contentManager.contentPreview.collapse')}>
                         <Button variant="ghost"
-                                // TODO: Replace this icon
-                                icon={<FullscreenExit/>}
+                                icon={<Minimize/>}
                                 onClick={closeFullScreen}/>
                     </Tooltip> :
                     <Tooltip title={t('jcontent:label.contentManager.contentPreview.expand')}>
                         <Button variant="ghost"
-                                // TODO: Replace this icon
-                                icon={<Fullscreen/>}
+                                icon={<Maximize/>}
                                 onClick={openFullScreen}/>
                     </Tooltip>}
             </div>

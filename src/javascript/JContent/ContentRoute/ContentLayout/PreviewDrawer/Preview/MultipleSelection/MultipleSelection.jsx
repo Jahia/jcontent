@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
-import {ContentCopy} from 'mdi-material-ui';
 import {useDispatch} from 'react-redux';
 import {cmClearSelection} from '../../../contentSelection.redux';
 import {useTranslation} from 'react-i18next';
-import {Button, Typography} from '@jahia/moonstone';
+import {Button, Typography, Copy} from '@jahia/moonstone';
 
 import styles from '../Preview.scss';
 const MultipleSelection = ({selection}) => {
@@ -19,7 +18,7 @@ const MultipleSelection = ({selection}) => {
                 <Typography variant="heading" weight="light">
                     {t('jcontent:label.contentManager.selection.itemsSelected', {count: selection.length})}
                 </Typography>
-                <ContentCopy className={styles.centerIcon} color="inherit"/>
+                <Copy className={styles.centerIcon} size="big"/>
                 <Button className={styles.centerIcon} label={t('jcontent:label.contentManager.selection.clearMultipleSelection')} onClick={() => dispatch(cmClearSelection())}/>
             </Paper>
         </div>

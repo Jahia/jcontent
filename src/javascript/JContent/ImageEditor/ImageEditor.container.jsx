@@ -121,8 +121,8 @@ export class ImageEditorContainer extends React.Component {
             let snackBarMessage = null;
             snackBarMessage = getMessage(snackBarMessage, resizeParams, originalHeight, originalWidth);
 
-            width = width || resizeParams.width;
-            height = height || resizeParams.height;
+            width = width || resizeParams.width || originalWidth;
+            height = height || resizeParams.height || originalHeight;
 
             return ({
                 resizeParams: {

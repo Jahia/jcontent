@@ -22,7 +22,7 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
-import {adaptedRow, isInSearchMode, structureData} from '../ContentLayout/ContentLayout.utils';
+import {isInSearchMode, structureData} from '../ContentLayout/ContentLayout.utils';
 import usePreloadedData from './usePreloadedData';
 import {Loader} from '@jahia/moonstone';
 
@@ -280,7 +280,7 @@ export const ContentLayoutContainer = ({
         if (isStructuredView && !isInSearchMode(mode)) {
             rows = structureData(path, currentResult.nodes);
         } else {
-            rows = currentResult.nodes.map(r => adaptedRow(r));
+            rows = currentResult.nodes;
         }
     }
 

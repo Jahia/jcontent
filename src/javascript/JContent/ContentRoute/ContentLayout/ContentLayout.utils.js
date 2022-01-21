@@ -31,7 +31,7 @@ export const getFileType = function (filename) {
 };
 
 export const structureData = function (parentPath, dataForParentPath = []) {
-    const structuredData = dataForParentPath.filter(d => d.parent.path === parentPath).map(d => adaptedRow(d));
+    const structuredData = dataForParentPath.filter(d => d.parent.path === parentPath);
     setSubrows(structuredData, dataForParentPath);
     return structuredData;
 
@@ -42,7 +42,7 @@ export const structureData = function (parentPath, dataForParentPath = []) {
             const rest = [];
             for (let j = 0; j < unstructuredData.length; j++) {
                 if (data[i].path === unstructuredData[j].parent.path) {
-                    data[i].subRows.push(adaptedRow(unstructuredData[j]));
+                    data[i].subRows.push(unstructuredData[j]);
                 } else {
                     rest.push(unstructuredData[j]);
                 }
@@ -65,13 +65,5 @@ export const flattenTree = function (rows) {
         }
     }
 };
-
-export const adaptedRow = r => ({
-    ...r,
-    name: r?.displayName,
-    type: r?.primaryNodeType?.displayName,
-    createdBy: r?.createdBy?.value,
-    lastModified: r?.lastModified?.value
-});
 
 export const isInSearchMode = mode => JContentConstants.mode.SQL2SEARCH === mode || JContentConstants.mode.SEARCH === mode;

@@ -36,7 +36,7 @@ export const allColumnData = [
     },
     {
         id: 'name',
-        accessor: 'name',
+        accessor: 'displayName',
         label: 'jcontent:label.contentManager.listColumns.name',
         sortable: true,
         property: 'displayName',
@@ -52,7 +52,7 @@ export const allColumnData = [
     },
     {
         id: 'type',
-        accessor: 'type',
+        accessor: 'primaryNodeType.displayName',
         label: 'jcontent:label.contentManager.listColumns.type',
         sortable: true,
         property: 'primaryNodeType.displayName',
@@ -61,7 +61,7 @@ export const allColumnData = [
     },
     {
         id: 'createdBy',
-        accessor: 'createdBy',
+        accessor: 'createdBy.value',
         label: 'jcontent:label.contentManager.listColumns.createdBy',
         sortable: true,
         property: 'createdBy.value',
@@ -70,7 +70,7 @@ export const allColumnData = [
     },
     {
         id: 'lastModified',
-        accessor: 'lastModified',
+        accessor: 'lastModified.value',
         label: 'jcontent:label.contentManager.listColumns.lastModified',
         sortable: true,
         property: 'lastModified.value',

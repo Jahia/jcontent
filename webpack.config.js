@@ -47,16 +47,6 @@ module.exports = (env, argv) => {
                             ],
                             plugins: [
                                 'lodash',
-                                ['transform-imports', {
-                                    '@material-ui/icons': {
-                                        transform: '@material-ui/icons/${member}',
-                                        preventFullImport: true
-                                    },
-                                    'mdi-material-ui': {
-                                        transform: 'mdi-material-ui/${member}',
-                                        preventFullImport: true
-                                    }
-                                }],
                                 '@babel/plugin-syntax-dynamic-import'
                             ]
                         }

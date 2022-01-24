@@ -52,7 +52,7 @@ class PublicationStatusPublished {
 class PublicationStatusModified {
     geti18nDetailsMessage(node, t, locale = 'en') {
         const userName = node?.lastModifiedBy?.value || '';
-        const lastModified = node?.lastModified || '';
+        const lastModified = node?.lastModified?.value || '';
 
         return (
             <>

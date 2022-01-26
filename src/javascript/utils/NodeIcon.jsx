@@ -14,8 +14,7 @@ import {
     FileVideo,
     FileWord,
     Folder,
-    Page,
-    Bug
+    Page
 } from '@jahia/moonstone';
 
 const addIconSuffix = icon => {
@@ -24,11 +23,8 @@ const addIconSuffix = icon => {
 
 // eslint-disable-next-line complexity
 export const NodeIcon = ({node, ...props}) => {
-    console.log('call NodeIcon');
-    console.log(node);
-
     if (typeof node === 'undefined' || typeof node.primaryNodeType === 'undefined') {
-        return <Bug {...props}/>;
+        return <File {...props}/>;
     }
 
     if (node.primaryNodeType.name === 'jnt:folder') {

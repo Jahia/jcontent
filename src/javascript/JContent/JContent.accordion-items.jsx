@@ -1,5 +1,5 @@
 import React from 'react';
-import {AccordionItem, Collections, File, FolderSpecial, Grain} from '@jahia/moonstone';
+import {AccordionItem, Collections, Page, FolderSpecial, Grain} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
@@ -51,7 +51,7 @@ export const jContentAccordionItems = registry => {
 
     registry.add('accordionItem', 'pages', renderDefaultContentTrees, {
         targets: ['jcontent:50'],
-        icon: <File/>,
+        icon: <Page/>,
         label: 'label.contentManager.navigation.pages',
         defaultPath: siteKey => '/sites/' + siteKey,
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,

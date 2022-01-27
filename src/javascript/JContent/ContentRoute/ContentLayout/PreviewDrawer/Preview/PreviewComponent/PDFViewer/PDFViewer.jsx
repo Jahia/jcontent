@@ -1,15 +1,7 @@
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Tooltip} from '@material-ui/core';
-import {Button, Typography} from '@jahia/moonstone';
-import {
-    ChevronLeft,
-    ChevronRight,
-    MagnifyMinusOutline,
-    MagnifyPlusOutline,
-    StepBackward,
-    StepForward
-} from 'mdi-material-ui';
+import {Button, ChevronRight, ChevronLeft, ChevronFirstPage, ChevronLastPage, Typography, ZoomIn, ZoomOut} from '@jahia/moonstone';
 import classNames from 'clsx';
 import clsx from 'clsx';
 import styles from './PDFViewer.scss';
@@ -90,14 +82,14 @@ export const PDFViewer = ({file, isFullScreen}) => {
             <div className={clsx('flexRow_between', styles.controlsContainer)}>
                 <div className={clsx('flexRow', 'alignCenter')}/>
                 <div className={clsx('flexRow', 'alignCenter')}>
-                    <Button disabled={page === 1}
+                    <Button isDisabled={page === 1}
                             variant="ghost"
-                            icon={<StepBackward/>}
+                            icon={<ChevronFirstPage/>}
                             onClick={event => {
                                 handleNavigation(event, 'first');
                             }}
                     />
-                    <Button disabled={page === 1}
+                    <Button isDisabled={page === 1}
                             variant="ghost"
                             icon={<ChevronLeft/>}
                             onClick={event => {
@@ -107,32 +99,32 @@ export const PDFViewer = ({file, isFullScreen}) => {
                     <Typography variant="caption">
                         {page}/{pages}
                     </Typography>
-                    <Button disabled={page === pages}
+                    <Button isDisabled={page === pages}
                             variant="ghost"
                             icon={<ChevronRight/>}
                             onClick={event => {
                                 handleNavigation(event, 'next');
                             }}
                     />
-                    <Button disabled={page === pages}
+                    <Button isDisabled={page === pages}
                             variant="ghost"
-                            icon={<StepForward/>}
+                            icon={<ChevronLastPage/>}
                             onClick={event => {
                                 handleNavigation(event, 'last');
                             }}
                     />
                 </div>
                 <div className={clsx('flexRow', 'alignCenter')}>
-                    <Button disabled={scaleSize === 0}
+                    <Button isDisabled={scaleSize === 0}
                             variant="ghost"
-                            icon={<MagnifyMinusOutline/>}
+                            icon={<ZoomOut/>}
                             onClick={event => {
                                 handleZoom(event, 'out');
                             }}
                     />
-                    <Button disabled={scaleSize === scaleSizes.length - 1}
+                    <Button isDisabled={scaleSize === scaleSizes.length - 1}
                             variant="ghost"
-                            icon={<MagnifyPlusOutline/>}
+                            icon={<ZoomIn/>}
                             onClick={event => {
                                 handleZoom(event, 'in');
                             }}

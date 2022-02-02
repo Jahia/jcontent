@@ -32,9 +32,9 @@ const updateFileContent = gql`mutation updateFileContent($path: String!, $mimeTy
     }
 }`;
 
-const importContent = gql`mutation importContent($path: String!, $fileHandle: String!) {
+const importContent = gql`mutation importContent($path: String!, $fileHandle: String!, $rootBehaviour: Int!) {
     jcr {
-        importContent(parentPathOrId: $path, file: $fileHandle)
+        importContent(parentPathOrId: $path, file: $fileHandle, rootBehaviour: $rootBehaviour)
     }
 }`;
 

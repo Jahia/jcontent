@@ -885,7 +885,9 @@ type JCRMutation {
         "Name of the request part that contains desired import file body"
         file: String!,
         "The path or id of the parent node"
-        parentPathOrId: String!
+        parentPathOrId: String!,
+        "Specify the behaviour in case of existing content, possible values are in the DocumentViewImportHandler class"
+        rootBehaviour: Int!
     ): Boolean
     "Marks the existing node and all its children for deletion"
     markNodeForDeletion(

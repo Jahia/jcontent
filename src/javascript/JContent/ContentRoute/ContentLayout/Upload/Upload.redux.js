@@ -85,7 +85,8 @@ export const fileuploadRedux = registry => {
                 mutation: importContent,
                 variables: {
                     path: path,
-                    fileHandle: file
+                    fileHandle: file,
+                    rootBehaviour: 1
                 }
             });
         }

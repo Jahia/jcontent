@@ -13,7 +13,7 @@ const CreateFolderDialogContainer = ({path, contentType, onExit}) => {
     const [isNameAvailable, updateIsNameAvailable] = useState(true);
     const [childNodes, updateChildNodes] = useState([]);
 
-    const invalidRegex = /[\\/:*?"<>|]/g;
+    const invalidRegex = /[\\/:*?"<>|%]/g;
     const gqlParams = {
         mutation: {
             parentPath: path,

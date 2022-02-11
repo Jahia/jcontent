@@ -1,12 +1,30 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import {useEffect, useState} from 'react';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './CreateFolderDialog.scss';
 
+const useErrMsg = (isNameAvailable, isNameValid) => {
+    const {t} = useTranslation();
+    let [errMsg, setErrMsg] = useState('');
+    useEffect(() => {
+        if (!isNameAvailable) {
+            setErrMsg(t('jcontent:label.contentManager.createFolderAction.text'));
+        } else if (!isNameValid) {
+            setErrMsg(t('jcontent:label.contentManager.createFolderAction.invalidChars'));
+        } else {
+            setErrMsg('');
+        }
+    }, [t, isNameValid, isNameAvailable]);
+    return errMsg;
+};
+
 const CreateFolderDialog = ({isOpen, isLoading, name, isNameValid, isNameAvailable, handleCancel, handleCreate, onChangeName}) => {
     const {t} = useTranslation();
+    const errMsg = useErrMsg(isNameAvailable, isNameValid);
+
     return (
         <Dialog open={isOpen}
                 aria-labelledby="form-dialog-title"
@@ -26,7 +44,7 @@ const CreateFolderDialog = ({isOpen, isLoading, name, isNameValid, isNameAvailab
                     id="folder-name"
                     aria-describedby="folder-name-error-text"
                     margin="dense"
-                    helperText={isNameAvailable ? '' : t('jcontent:label.contentManager.createFolderAction.exists')}
+                    helperText={errMsg}
                     onChange={onChangeName}
                 />
             </DialogContent>

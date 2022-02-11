@@ -322,7 +322,8 @@
         "text": "Entrez un nom de dossier",
         "ok": "OK",
         "cancel": "Annuler",
-        "exists": "Un dossier de ce nom existe déjà"
+        "exists": "Un dossier de ce nom existe déjà",
+        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
       },
       "contentStatus": {
         "locked": "Verrouillé",

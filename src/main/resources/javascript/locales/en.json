@@ -322,7 +322,8 @@
         "text": "Enter a folder name",
         "ok": "OK",
         "cancel": "Cancel",
-        "exists": "A folder with this name already exists"
+        "exists": "A folder with this name already exists",
+        "invalidChars": "Invalid characters:  \/:*?\"<>|%"
       },
       "contentStatus": {
         "locked": "Locked",

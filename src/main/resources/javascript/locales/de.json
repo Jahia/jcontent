@@ -321,7 +321,8 @@
         "text": "Geben Sie einen Ordner-Namen ein",
         "ok": "OK",
         "cancel": "Abbrechen",
-        "exists": "Ein Ordner mit diesem Namen existiert bereits"
+        "exists": "Ein Ordner mit diesem Namen existiert bereits",
+        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
       },
       "contentStatus": {
         "locked": "Gesperrt",

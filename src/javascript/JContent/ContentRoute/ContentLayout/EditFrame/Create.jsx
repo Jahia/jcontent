@@ -17,11 +17,13 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
         parent = element.parentElement;
-        while (parent.getAttribute('jahiatype') !== 'module') {
+        while (parent && parent.getAttribute('jahiatype') !== 'module') {
             parent = parent.parentElement;
         }
 
-        element.dataset.jahiaParent = parent.id;
+        if (parent) {
+            element.dataset.jahiaParent = parent.id;
+        }
     }
 
     const {onDragEnter, onDragLeave, onDragOver, onDrop, dropClassName} = useDropTarget({parent, element, onSaved, enabledClassName: styles.dropTarget});
@@ -29,6 +31,10 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     useEffect(() => {
         element.style.height = '28px';
     });
+
+    if (!parent) {
+        return false;
+    }
 
     const path = parent.getAttribute('path');
 

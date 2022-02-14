@@ -110,6 +110,7 @@ export const EditFrame = ({isDeviceView}) => {
     const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
 
     useEffect(() => {
+        const href = currentDocument ? `/modules/next-proxy/ssg${path}` : `/modules/next-proxy/api/preview?path=/ssg${path}`;
         if (currentDocument) {
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
             if (path === framePath && previousDevice.current === deviceParam) {
@@ -122,11 +123,11 @@ export const EditFrame = ({isDeviceView}) => {
                     head.appendChild(clone);
                 });
             } else {
-                iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+                iframe.current.contentWindow.location.href = href;
                 previousDevice.current = deviceParam;
             }
         } else {
-            iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+            iframe.current.contentWindow.location.href = href;
             previousDevice.current = deviceParam;
         }
     }, [currentDocument, path, previousDevice, deviceParam, language]);

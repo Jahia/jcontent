@@ -25,12 +25,14 @@ function checkAction(res, node, publishType, isPublishingAllLanguages) {
             (publishType === 'publishAll' || node.aggregatedPublicationInfo.publicationStatus !== 'PUBLISHED');
     }
 
-    if (isPublishingAllLanguages) {
-        isVisible = isVisible && node.site.languages.length > 1;
-    }
-
     if (enabled && !node.publish && !node['publication-start']) {
         enabled = false;
+    }
+
+    if (isPublishingAllLanguages) {
+        // Always enable all languages operations.
+        enabled = true;
+        isVisible = isVisible && node.site.languages.length > 1;
     }
 
     return {enabled, isVisible};

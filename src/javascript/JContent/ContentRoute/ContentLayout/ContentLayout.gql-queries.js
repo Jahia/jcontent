@@ -90,6 +90,7 @@ const nodeFields = gql`
             ...NodeCacheRequiredFields
         }
         parent {
+            ...NodeCacheRequiredFields
             path
         }
         ...NodeCacheRequiredFields

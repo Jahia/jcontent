@@ -263,7 +263,7 @@ class FilesQueryHandler {
 class SearchQueryHandler {
     getQuery() {
         return gql`
-            query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
+            query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $nodeNameSearchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
                 jcr {
                     nodesByCriteria(
                         criteria: {
@@ -274,7 +274,7 @@ class SearchQueryHandler {
                                 any: [
                                     {contains: $searchTerms}
                                     {contains: $searchTerms, property: "j:tagList"}
-                                    {contains: $searchTerms, property: "j:nodename"}
+                                    {like: $nodeNameSearchTerms, property: "j:nodename"}
                                 ]
                             }
                         },
@@ -300,6 +300,7 @@ class SearchQueryHandler {
             searchPath: urlParams.searchPath,
             nodeType: (urlParams.searchContentType || 'jmix:searchable'),
             searchTerms: urlParams.searchTerms,
+            nodeNameSearchTerms: `%${urlParams.searchTerms}%`,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,

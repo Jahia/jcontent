@@ -5,14 +5,43 @@ import {useNodeInfo} from '@jahia/data-helper';
 import classnames from 'clsx';
 import styles from './Box.scss';
 import publicationStatusStyles from './PublicationStatus.scss';
-import {DisplayAction} from '@jahia/ui-extender';
+import {DisplayAction, registry} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {useDragSource} from './useDragSource';
 import {useDropTarget} from './useDropTarget';
 import PublicationStatus from '../PublicationStatus/PublicationStatus';
 import '@jahia/moonstone/dist/globals.css';
 
-export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, onMouseOut, onSaved, rootElementRef}) => {
+const DefaultBar = ({node, path, onSaved, ButtonRenderer}) => (
+    <>
+        <DisplayAction actionKey="quickEdit" path={path} editCallback={onSaved} render={ButtonRenderer}/>
+        <Typography isUpperCase
+                    isNowrap
+                    className="flexFluid"
+                    variant="caption"
+        >{node ? node.displayName : ''}
+        </Typography>
+    </>
+);
+
+DefaultBar.propTypes = {
+    node: PropTypes.object,
+    path: PropTypes.string,
+    ButtonRenderer: PropTypes.func,
+    onSaved: PropTypes.func
+};
+
+export const Box = ({
+    element,
+    language,
+    color,
+    onSelect,
+    onGoesUp,
+    onMouseOver,
+    onMouseOut,
+    onSaved,
+    rootElementRef
+}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -21,7 +50,8 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
         getDisplayName: true,
         getAggregatedPublicationInfo: true,
         getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy'],
-        getOperationSupport: true
+        getOperationSupport: true,
+        getPrimaryNodeType: true
     });
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
@@ -63,17 +93,22 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
         };
     }, [dropClassName, element, onDragEnter, onDragLeave, onDragOver, onDrop, parent]);
 
-    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color, variant: 'outlined', className: styles.button}});
+    const ButtonRenderer = getButtonRenderer({
+        defaultButtonProps: {
+            color,
+            variant: 'outlined',
+            className: styles.button
+        }
+    });
 
     const rootDiv = useRef();
     const div = useRef();
 
-    const currentOffset = {
-        top: rect.top + scrollTop,
-        left: rect.left + scrollLeft - 4,
-        width: rect.width + 8,
-        height: rect.height + 4
-    };
+    const left = Math.max(0, (rect.left + scrollLeft - 4));
+    const width = Math.min(document.documentElement.clientWidth - left, rect.width + 8);
+    const top = rect.top + scrollTop;
+    const height = rect.height + 4;
+    const currentOffset = {top, left, width, height};
 
     const nodeWithProps = {};
     if (node) {
@@ -82,6 +117,9 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
             nodeWithProps[p.name.substr(p.name.indexOf(':') + 1)] = p;
         });
     }
+
+    const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
+    const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     return (
         <>
@@ -117,13 +155,7 @@ export const Box = ({element, language, color, onSelect, onGoesUp, onMouseOver, 
                                         onClick={onGoesUp}
                                 />
                             )}
-                            <DisplayAction actionKey="quickEdit" path={path} editCallback={onSaved} render={ButtonRenderer}/>
-                            <Typography isUpperCase
-                                        isNowrap
-                                        className="flexFluid"
-                                        variant="caption"
-                            >{node ? node.displayName : ''}
-                            </Typography>
+                            <Bar node={node} path={path} element={element} ButtonRenderer={ButtonRenderer} onSaved={onSaved}/>
                         </div>
                     </div>
                 </div>

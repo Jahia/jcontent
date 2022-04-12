@@ -51,7 +51,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && getModuleElement(event.currentTarget)?.getAttribute('path') !== getModuleElement(event.relatedTarget)?.getAttribute('path')) {
+        if (!event.relatedTarget || (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
             setCurrentElement(null);
         }
     }, [setCurrentElement]);
@@ -62,7 +62,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     useEffect(() => {
         const placeholders = [];
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(elem => {
-            if (elem.getAttribute('path') === '*') {
+            if (elem.getAttribute('path') === '*' || elem.getAttribute('type') === 'placeholder') {
                 placeholders.push(elem);
             }
         });

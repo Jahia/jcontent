@@ -30,7 +30,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         element.style.height = '28px';
     });
 
-    const path = parent.getAttribute('path');
+    const parentPath = parent.getAttribute('path');
 
     const currentOffset = {
         top: rect.top + scrollTop,
@@ -38,6 +38,10 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         width: rect.width,
         height: 25
     };
+
+    const nodePath = element.getAttribute('path') !== '*' ? element.getAttribute('path') : null;
+    console.log('place holder for path', nodePath);
+    const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
 
     return (
         <div className={classnames(styles.root, dropClassName)}
@@ -50,8 +54,8 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
              onDragLeave={onDragLeave}
              onDrop={onDrop}
         >
-            <DisplayAction actionKey="createContent" path={path} loading={() => false} render={ButtonRenderer}/>
-            <DisplayAction actionKey="paste" path={path} loading={() => false} render={ButtonRenderer}/>
+            <DisplayAction actionKey="createContent" path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>
+            <DisplayAction actionKey="paste" path={parentPath} loading={() => false} render={ButtonRenderer}/>
         </div>
     );
 };

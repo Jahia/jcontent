@@ -40,7 +40,6 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     };
 
     const nodePath = element.getAttribute('path') !== '*' ? element.getAttribute('path') : null;
-    console.log('place holder for path', nodePath);
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
 
     return (

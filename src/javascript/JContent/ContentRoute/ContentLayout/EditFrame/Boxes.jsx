@@ -51,10 +51,10 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (!event.relatedTarget || (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
+        if (event.relatedTarget && (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
             setCurrentElement(null);
         }
-    }, [setCurrentElement]);
+    }, [setCurrentElement, currentDocument]);
 
     const rootElement = useRef();
     const contextualMenu = useRef();

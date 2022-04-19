@@ -125,7 +125,7 @@ export const EditFrame = ({isDeviceView}) => {
                 iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
                 previousDevice.current = deviceParam;
             }
-        } else {
+        } else if (path && !path.endsWith('/')) {
             iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
             previousDevice.current = deviceParam;
         }

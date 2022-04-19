@@ -41,20 +41,24 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     const dispatch = useDispatch();
 
     const [currentElement, setCurrentElement] = useState();
+    const disableHover = useRef(false);
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
-        setCurrentElement(getModuleElement(currentDocument, event.currentTarget));
+        if (!disableHover.current) {
+            setCurrentElement(getModuleElement(currentDocument, event.currentTarget));
+        }
     }, [setCurrentElement, currentDocument]);
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
+        if (event.relatedTarget && event.currentTarget === currentElement && (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
+            disableHover.current = false;
             setCurrentElement(null);
         }
-    }, [setCurrentElement, currentDocument]);
+    }, [setCurrentElement, currentDocument, currentElement]);
 
     const rootElement = useRef();
     const contextualMenu = useRef();
@@ -126,13 +130,18 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                          onSelect={() => {
                              dispatch(cmSwitchSelection(e.getAttribute('path')));
                          }}
-                         onGoesUp={selected && getParentModule(e) && (event => {
+                         onGoesUp={getParentModule(e) && (event => {
                              event.stopPropagation();
                              let parent = getParentModule(e);
 
                              if (parent) {
-                                 dispatch(cmRemoveSelection(e.getAttribute('path')));
-                                 dispatch(cmAddSelection(parent.getAttribute('path')));
+                                 if (selected) {
+                                     dispatch(cmRemoveSelection(e.getAttribute('path')));
+                                     dispatch(cmAddSelection(parent.getAttribute('path')));
+                                 } else {
+                                     disableHover.current = true;
+                                     setCurrentElement(parent);
+                                 }
                              }
                          })}
                     />

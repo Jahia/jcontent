@@ -2,11 +2,13 @@ import {useMutation} from '@apollo/react-hooks';
 import styles from './EditFrame.scss';
 
 import gql from 'graphql-tag';
+import {PredefinedFragments} from '@jahia/data-helper';
 
 const moveNode = gql`mutation moveNode($pathOrId: String!, $destParentPathOrId: String!, $name:String, $next: String, $move: Boolean!, $reorder: Boolean!) {
     jcr {
         pasteNode(mode: MOVE, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, namingConflictResolution: RENAME) @include(if: $move) {
             node {
+                ...NodeCacheRequiredFields
                 path
             }
         }
@@ -14,7 +16,9 @@ const moveNode = gql`mutation moveNode($pathOrId: String!, $destParentPathOrId: 
             reorderChildren(names: [$name, $next])
         }
     }
-}`;
+}
+${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
 
 export const useDropTarget = ({parent, element, onSaved, enabledClassName}) => {
     const dropClassName = styles.enablePointerEvents;

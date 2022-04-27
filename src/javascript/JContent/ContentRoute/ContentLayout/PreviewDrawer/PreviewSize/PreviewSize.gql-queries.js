@@ -1,8 +1,10 @@
 import gql from 'graphql-tag';
+import {PredefinedFragments} from '@jahia/data-helper';
 
 const previewSizeQuery = gql`query getImageMetadata($workspace: Workspace!, $path: String!) {
     jcr(workspace: $workspace) {
         nodeByPath(path: $path) {
+            ...NodeCacheRequiredFields
             id: uuid
             path
             workspace
@@ -14,6 +16,7 @@ const previewSizeQuery = gql`query getImageMetadata($workspace: Workspace!, $pat
             }
             children(typesFilter: {types: ["jnt:resource"]}, names:["jcr:content"]) {
                 nodes {
+                    ...NodeCacheRequiredFields
                     data: property(name: "jcr:data") {
                         size
                     }
@@ -21,6 +24,8 @@ const previewSizeQuery = gql`query getImageMetadata($workspace: Workspace!, $pat
             }
         }
     }
-}`;
+}
+${PredefinedFragments.nodeCacheRequiredFields.gql}
+`;
 
 export {previewSizeQuery};

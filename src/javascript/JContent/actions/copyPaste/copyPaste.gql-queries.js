@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import {PredefinedFragments} from '@jahia/data-helper';
 
 const copyPasteQueries = {
     getClipboardInfo: gql`query getClipboardInfo($uuids: [String!]!) {
@@ -37,11 +38,15 @@ const copyPasteQueries = {
                                 name
                             }
                         }
+                        ...NodeCacheRequiredFields
                     }
                 }
+                ...NodeCacheRequiredFields
             }
         }
-    }`
+    }
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+    `
 };
 
 export default copyPasteQueries;

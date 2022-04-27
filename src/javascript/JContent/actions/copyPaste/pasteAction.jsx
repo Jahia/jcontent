@@ -43,6 +43,7 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
         query PasteCheckQuery($nodeTypes: [String]!, $contributeTypes:[String]!, $childNodeTypes:[String]!) {
             jcr {
                 nodeTypesByNames(names: $nodeTypes) {
+                    name
                     contributeTypes: isNodeType(type:{multi:ANY, types: $contributeTypes})
                     childNodeTypes: isNodeType(type:{multi:ANY, types: $childNodeTypes})
                 }

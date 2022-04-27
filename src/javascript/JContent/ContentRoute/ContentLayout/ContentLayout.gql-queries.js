@@ -212,6 +212,7 @@ class FilesQueryHandler {
                                 }
                                 children(typesFilter: {types: ["jnt:resource"]}) {
                                     nodes {
+                                        ...NodeCacheRequiredFields
                                         data: property(name: "jcr:data") {
                                             size
                                         }
@@ -227,6 +228,7 @@ class FilesQueryHandler {
             }
             ${nodeFields}
             ${childNodesCount}
+            ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
     }
 

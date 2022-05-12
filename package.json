@@ -37,7 +37,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "./node/node ./node/yarn/dist/bin/yarn.js lint",
+      "pre-commit": "./node/node ./node/yarn/dist/bin/yarn.js lint --max-warnings 1",
       "pre-push": " ./node/node ./node/yarn/dist/bin/yarn.js test"
     }
   },
@@ -97,7 +97,8 @@
     "underscore": "1.12.1",
     "xlsx": "^0.17.0",
     "mammoth": "^1.4.13",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "minimist": "^1.2.6"
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.3",

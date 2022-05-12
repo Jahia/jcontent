@@ -12,10 +12,10 @@ const useErrMsg = (isNameAvailable, isNameValid) => {
     useEffect(() => {
         if (!isNameAvailable) {
             setErrMsg(t('jcontent:label.contentManager.createFolderAction.exists'));
-        } else if (!isNameValid) {
-            setErrMsg(t('jcontent:label.contentManager.createFolderAction.invalidChars'));
-        } else {
+        } else if (isNameValid) {
             setErrMsg('');
+        } else {
+            setErrMsg(t('jcontent:label.contentManager.createFolderAction.invalidChars'));
         }
     }, [t, isNameValid, isNameAvailable]);
     return errMsg;

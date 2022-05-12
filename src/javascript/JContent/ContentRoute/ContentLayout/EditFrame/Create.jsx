@@ -39,7 +39,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         height: 25
     };
 
-    const nodePath = element.getAttribute('path') !== '*' ? element.getAttribute('path') : null;
+    const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
 
     return (

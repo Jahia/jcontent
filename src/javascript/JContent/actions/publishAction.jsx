@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {ellipsizeText, getLanguageLabel, isMarkedForDeletion, uppercaseFirst} from '../JContent.utils';
+import {ellipsizeText, isMarkedForDeletion} from '../JContent.utils';
 import * as _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -59,13 +59,13 @@ function getButtonLabelParams(paths, language, res, t) {
     if (!res.nodes) {
         return {
             displayName: t('jcontent:label.contentManager.selection.items', {count: 0}),
-            language: language
+            language
         };
     }
 
     return {
         displayName: t('jcontent:label.contentManager.selection.items', {count: paths.length}),
-        language: res.nodes[0]?.site ? _.escape(uppercaseFirst(getLanguageLabel(res.nodes[0].site.languages, language).displayName)) : null
+        language: res.nodes[0]?.site ? _.escape(language) : null
     };
 }
 
@@ -114,12 +114,15 @@ export const PublishActionComponent = props => {
 
     const buttonLabelParams = res.node ? {
         displayName: _.escape(ellipsizeText(res.node.displayName, 40)),
-        language: res.node.site ? _.escape(uppercaseFirst(getLanguageLabel(res.node.site.languages, languageToUse).displayName)) : null
+        language: res.node.site ? _.escape(languageToUse) : null
     } : getButtonLabelParams(paths, languageToUse, res, t);
 
+    const siteLanguages = res?.node?.site?.languages || [];
     return (
         <Render
             {...props}
+            // Do not display language in publish button if there is only one language available for site
+            buttonLabelShort={(siteLanguages.length > 1) ? '' : props.buttonLabelShort}
             buttonLabelParams={buttonLabelParams}
             isVisible={actionVisible}
             enabled={actionEnabled}
@@ -136,22 +139,14 @@ export const PublishActionComponent = props => {
 
 PublishActionComponent.propTypes = {
     id: PropTypes.string,
-
     path: PropTypes.string,
-
     paths: PropTypes.arrayOf(PropTypes.string),
-
     language: PropTypes.string,
-
     enabled: PropTypes.bool,
-
     isVisible: PropTypes.bool,
-
     publishType: PropTypes.oneOf(['publish', 'publishAll', 'unpublish']),
-
     isPublishingAllLanguages: PropTypes.bool,
-
     render: PropTypes.func.isRequired,
-
-    loading: PropTypes.func
+    loading: PropTypes.func,
+    buttonLabelShort: PropTypes.string
 };

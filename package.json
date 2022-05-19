@@ -2,7 +2,7 @@
   "name": "@jahia/jcontent",
   "version": "2.7.0",
   "scripts": {
-    "build": "yarn lint && yarn test && yarn webpack",
+    "build": "yarn webpack",
     "webpack": "node --max_old_space_size=2048 ./node_modules/webpack/bin/webpack.js",
     "build:analyze": "yarn build --analyze",
     "build:production": "yarn build --mode=production",
@@ -64,6 +64,8 @@
     "i18next": "^19.0.3",
     "image-extensions": "^1.1.0",
     "lodash": "^4.17.21",
+    "mammoth": "^1.4.13",
+    "node-fetch": "^2.6.1",
     "prop-types": "^15.7.2",
     "query-string": "5",
     "react": "^16.8.4",
@@ -88,7 +90,8 @@
     "rison": "^0.1.1",
     "rxjs": "^6.3.3",
     "uuid": "^3.3.2",
-    "whatwg-fetch": "^3.0.0"
+    "whatwg-fetch": "^3.0.0",
+    "xlsx": "^0.17.0"
   },
   "resolutions": {
     "graphql": "15.4.0",
@@ -122,7 +125,7 @@
     "clean-webpack-plugin": "^1.0.0",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^3.4.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.9.0",
     "eslint-loader": "^3.0.3",
     "eslint-plugin-jest": "^23.3.0",
     "eslint-plugin-react": "^7.17.0",
@@ -130,9 +133,9 @@
     "file-loader": "^2.0.0",
     "husky": "^3.0.5",
     "jest": "^24.9.0",
-    "node-sass": "^6.0.1",
     "rimraf": "^2.6.2",
-    "sass-loader": "^12.1.0",
+    "sass": "^1.51.0",
+    "sass-loader": "^13.0.0",
     "style-loader": "^1.2.1",
     "stylelint": "^13.2.0",
     "webpack": "^5.10.0",

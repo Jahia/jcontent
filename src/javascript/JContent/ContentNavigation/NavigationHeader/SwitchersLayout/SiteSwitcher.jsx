@@ -128,7 +128,7 @@ class SiteSwitcher extends React.Component {
                                 return true;
                             }}
                         />
-);
+                    );
                 }
             }
             </Query>

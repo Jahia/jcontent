@@ -1,8 +1,7 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 
-const copyPasteQueries = {
-    getClipboardInfo: gql`query getClipboardInfo($uuids: [String!]!) {
+const copyPasteQueries = gql`query getClipboardInfo($uuids: [String!]!) {
         jcr {
             nodesById(uuids: $uuids) {
                 name
@@ -46,7 +45,6 @@ const copyPasteQueries = {
         }
     }
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
-    `
-};
+    `;
 
 export default copyPasteQueries;

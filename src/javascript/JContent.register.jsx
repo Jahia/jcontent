@@ -17,9 +17,7 @@ import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import JContentConstants from './JContent/JContent.constants';
-import {useDispatch, useSelector} from 'react-redux';
-import {useApolloClient} from 'react-apollo';
-import {initClipboardWatcher} from './JContent/actions/copyPaste/localStorageHandler';
+import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {structuredViewRedux} from './JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
 
@@ -27,8 +25,6 @@ export default function () {
     const CmmNavItem = () => {
         const history = useHistory();
         const {t} = useTranslation('jcontent');
-        const client = useApolloClient();
-        const dispatch = useDispatch();
         const {site, language, path, mode, params} = useSelector(state => ({
             language: state.language,
             site: state.site,
@@ -70,7 +66,6 @@ export default function () {
                             icon={<Collections/>}
                             onClick={() => {
                                 history.push(buildUrl({site, language, mode: mode || defaultMode, path, params}));
-                                initClipboardWatcher(dispatch, client);
                             }}/>
         );
     };

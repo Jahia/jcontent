@@ -61,7 +61,7 @@ export const ToolBar = () => {
                 </div>
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <ButtonGroup size="default" variant="outlined" color="accent">
-                    {publishAction && <DisplayAction actionKey={publishAction} {...context} render={ButtonRendererShortLabel}/>}
+                    {publishAction && <DisplayAction actionKey={publishAction} {...context} isMediumLabel render={ButtonRendererShortLabel}/>}
                     <DisplayAction menuUseElementAnchor actionKey="publishMenu" {...context} render={ButtonRendererNoLabel}/>
                 </ButtonGroup>
                 <DisplayAction actionKey="publishDeletion" {...context} render={ButtonRendererShortLabel}/>

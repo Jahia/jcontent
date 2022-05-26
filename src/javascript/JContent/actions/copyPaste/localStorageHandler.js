@@ -24,24 +24,30 @@ const getGWTNode = n => {
 };
 
 let currentValue = '';
+let registeredInitClipboardWatcher;
 
 const initClipboardWatcher = (dispatch, client) => {
-    setInterval(() => {
+    if (registeredInitClipboardWatcher !== undefined) {
+        clearInterval(registeredInitClipboardWatcher);
+        currentValue = '';
+    }
+
+    registeredInitClipboardWatcher = setInterval(() => {
         let previousValue = currentValue;
         currentValue = localStorage.getItem('jahia-clipboard');
 
-        if (previousValue !== currentValue) {
+        if (currentValue !== previousValue) {
             let cb = JSON.parse(currentValue);
             if (!cb) {
                 return;
             }
 
             client.query({
-                query: copyPasteQueries.getClipboardInfo,
-                variables: {uuids: cb.nodes.map(n => n.uuid)}
+                query: copyPasteQueries,
+                variables: {uuids: cb.nodes.map(n => n.uuid)},
+                fetchPolicy: 'network-only'
             }).then(({data}) => {
                 const nodesWithData = data.jcr.nodesById;
-
                 if (cb.type === copyPasteConstants.CUT) {
                     dispatch(copypasteCut(nodesWithData));
                 } else {
@@ -54,8 +60,9 @@ const initClipboardWatcher = (dispatch, client) => {
 
 const setLocalStorage = (type, nodes, client) => {
     client.query({
-        query: copyPasteQueries.getClipboardInfo,
-        variables: {uuids: nodes.map(n => n.uuid)}
+        query: copyPasteQueries,
+        variables: {uuids: nodes.map(n => n.uuid)},
+        fetchPolicy: 'network-only'
     }).then(({data}) => {
         const nodesWithData = data.jcr.nodesById;
         let clipboard = {

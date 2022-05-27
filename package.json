@@ -100,7 +100,8 @@
     "underscore": "1.12.1",
     "xlsx": "^0.17.0",
     "mammoth": "^1.4.13",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "json-schema": "^0.4.0"
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.3",

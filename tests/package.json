@@ -30,5 +30,8 @@
   },
   "dependencies": {
     "@jahia/jahia-reporter": "^1.0.3"
+  },
+  "resolutions": {
+    "json-schema": "^0.4.0"
   }
 }

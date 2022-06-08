@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
 import JContentConstants from '~/JContent/JContent.constants';
-import {Button, ViewGrid, ViewList} from '@jahia/moonstone';
+import {ViewGrid, ViewList, Dropdown} from '@jahia/moonstone';
 
 const localStorage = window.localStorage;
 
@@ -15,6 +15,18 @@ const buttons = [GRID, LIST];
 const icons = {
     [GRID]: <ViewGrid/>,
     [LIST]: <ViewList/>
+};
+
+const tableViewDropdownData = (t, mode) => {
+    return buttons.map(v => ({
+        label: t(`jcontent:label.contentManager.filesGrid.${v}`),
+        value: v,
+        iconStart: icons[v],
+        attributes: {
+            'aria-selected': mode === v,
+            'data-sel-role': `sel-view-mode-${v}`
+        }
+    }));
 };
 
 export const FileModeSelector = () => {
@@ -33,18 +45,12 @@ export const FileModeSelector = () => {
     };
 
     return (
-        buttons.map(v => (
-            <Button key={v}
-                    data-sel-role={'set-view-mode-' + v}
-                    aria-selected={mode === v}
-                    color={mode === v ? 'accent' : 'default'}
-                    title={t('jcontent:label.contentManager.filesGrid.' + v)}
-                    size="default"
-                    variant="ghost"
-                    icon={icons[v]}
-                    onClick={() => handleChange(v)}
-            />
-        ))
+        <Dropdown data={tableViewDropdownData(t, mode)}
+                  data-sel-role="sel-view-mode-dropdown"
+                  label={t(`jcontent:label.contentManager.filesGrid.${mode}`)}
+                  value={mode}
+                  onChange={(e, item) => handleChange(item.value)}
+        />
     );
 };
 

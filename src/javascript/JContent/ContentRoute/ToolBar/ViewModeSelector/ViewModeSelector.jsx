@@ -35,12 +35,13 @@ const pagesButtons = [VIEW, VIEW_DEVICE];
 
 const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
 
-const tableViewDropdownData = t => {
+const tableViewDropdownData = (t, viewMode) => {
     return tableViewModes.map(v => ({
         label: t(`jcontent:label.contentManager.view.${v}`),
         value: v,
         iconStart: icons[v],
         attributes: {
+            'aria-selected': viewMode === v,
             'data-sel-role': `sel-view-mode-${v}`
         }
     }));
@@ -67,7 +68,7 @@ export const ViewModeSelector = () => {
 
     return (
         <>
-            <Dropdown data={tableViewDropdownData(t)}
+            <Dropdown data={tableViewDropdownData(t, viewMode)}
                       data-sel-role="sel-view-mode-dropdown"
                       label={t(`jcontent:label.contentManager.view.${viewMode}`)}
                       value={viewMode}

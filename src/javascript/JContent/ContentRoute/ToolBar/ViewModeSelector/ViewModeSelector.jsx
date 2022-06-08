@@ -5,6 +5,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
 import {useCode} from '~/JContent/useCode';
+import classes from './ViewModeSelector.scss';
 
 const localStorage = window.localStorage;
 
@@ -68,7 +69,8 @@ export const ViewModeSelector = () => {
 
     return (
         <>
-            <Dropdown data={tableViewDropdownData(t, viewMode)}
+            <Dropdown className={classes.dropdown}
+                      data={tableViewDropdownData(t, viewMode)}
                       data-sel-role="sel-view-mode-dropdown"
                       label={t(`jcontent:label.contentManager.view.${viewMode}`)}
                       value={viewMode}

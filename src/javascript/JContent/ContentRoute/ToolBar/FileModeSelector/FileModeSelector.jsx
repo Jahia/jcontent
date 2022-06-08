@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {ViewGrid, ViewList, Dropdown} from '@jahia/moonstone';
+import classes from './FileModeSelector.scss';
 
 const localStorage = window.localStorage;
 
@@ -45,7 +46,8 @@ export const FileModeSelector = () => {
     };
 
     return (
-        <Dropdown data={tableViewDropdownData(t, mode)}
+        <Dropdown className={classes.dropdown}
+                  data={tableViewDropdownData(t, mode)}
                   data-sel-role="sel-view-mode-dropdown"
                   label={t(`jcontent:label.contentManager.filesGrid.${mode}`)}
                   value={mode}

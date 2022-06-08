@@ -6,7 +6,7 @@ import BrowseControlBar from './BrowseControlBar';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
-import styles from './Toolbar.scss';
+import styles from './ToolBar.scss';
 import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonstone';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {useNodeInfo} from '@jahia/data-helper';

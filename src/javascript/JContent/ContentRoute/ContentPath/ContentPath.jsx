@@ -19,7 +19,7 @@ const renderItems = (items, onItemClick) => {
 };
 
 const ContentPath = ({items, onItemClick}) => {
-    return (
+    return (items.length > 0) && (
         <Breadcrumb>
             {renderItems(items, onItemClick)}
         </Breadcrumb>

@@ -1,10 +1,11 @@
 import React from 'react';
-import {Button, toIconComponentFunction, ViewList, ViewTree, WebPage} from '@jahia/moonstone';
+import {Button, toIconComponentFunction, ViewList, ViewTree, WebPage, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
 import {useCode} from '~/JContent/useCode';
+import classes from './ViewModeSelector.scss';
 
 const localStorage = window.localStorage;
 
@@ -14,9 +15,6 @@ const VIEW = JContentConstants.pagesMode.VIEW;
 const VIEW_DEVICE = JContentConstants.pagesMode.VIEW_DEVICE;
 
 const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
-
-const buttons = [FLATLIST, STRUCTUREDVIEW];
-const pagesButtons = [VIEW, VIEW_DEVICE];
 
 const Phone = toIconComponentFunction(
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 27.442 27.442">
@@ -33,7 +31,22 @@ const icons = {
     [VIEW_DEVICE]: <Phone/>
 };
 
+const tableViewModes = [FLATLIST, STRUCTUREDVIEW];
+const pagesButtons = [VIEW, VIEW_DEVICE];
+
 const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+
+const tableViewDropdownData = (t, viewMode) => {
+    return tableViewModes.map(v => ({
+        label: t(`jcontent:label.contentManager.view.${v}`),
+        value: v,
+        iconStart: icons[v],
+        attributes: {
+            'aria-selected': viewMode === v,
+            'data-sel-role': `sel-view-mode-${v}`
+        }
+    }));
+};
 
 export const ViewModeSelector = () => {
     const {t} = useTranslation();
@@ -52,21 +65,32 @@ export const ViewModeSelector = () => {
         localStorage.setItem(VIEW_MODE, selectedViewMode);
     };
 
-    const allButtons = (mode === JContentConstants.mode.PAGES && valid) ? [...buttons, ...pagesButtons] : buttons;
+    const allButtons = (mode === JContentConstants.mode.PAGES && valid) ? pagesButtons : [];
 
     return (
-        allButtons.map(v => (
-            <Button key={v}
-                    data-sel-role={'sel-view-mode-' + v}
-                    aria-selected={viewMode === v}
-                    color={viewMode === v ? 'accent' : 'default'}
-                    size="default"
-                    variant="ghost"
-                    title={t('jcontent:label.contentManager.view.' + v)}
-                    icon={icons[v]}
-                    onClick={() => handleChange(v)}
+        <>
+            <Dropdown className={classes.dropdown}
+                      data={tableViewDropdownData(t, viewMode)}
+                      data-sel-role="sel-view-mode-dropdown"
+                      label={t(`jcontent:label.contentManager.view.${viewMode}`)}
+                      value={viewMode}
+                      onChange={(e, item) => handleChange(item.value)}
             />
-        ))
+            {
+                allButtons.map(v => (
+                    <Button key={v}
+                            data-sel-role={'sel-view-mode-' + v}
+                            aria-selected={viewMode === v}
+                            color={viewMode === v ? 'accent' : 'default'}
+                            size="default"
+                            variant="ghost"
+                            title={t('jcontent:label.contentManager.view.' + v)}
+                            icon={icons[v]}
+                            onClick={() => handleChange(v)}
+                    />
+                ))
+            }
+        </>
     );
 };
 

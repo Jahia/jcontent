@@ -1,6 +1,9 @@
+import React from 'react';
 import * as _ from 'lodash';
 import ellipsize from 'ellipsize';
 import JContentConstants from './JContent.constants';
+import {getIcon} from '@jahia/icons';
+import {Layers} from '@jahia/moonstone';
 
 function getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
     if (_.startsWith(oldPath, oldAncestorPath + '/') || oldPath === oldAncestorPath) {
@@ -127,6 +130,11 @@ function uppercaseFirst(string) {
     return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
+function getNodeTypeIcon(typeName) {
+    const Icon = getIcon(typeName) || Layers;
+    return <Icon/>;
+}
+
 export {
     getNewNodePath,
     hasMixin,
@@ -142,5 +150,6 @@ export {
     removeFileExtension,
     allowDoubleClickNavigation,
     getLanguageLabel,
-    uppercaseFirst
+    uppercaseFirst,
+    getNodeTypeIcon
 };

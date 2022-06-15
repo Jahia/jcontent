@@ -10,7 +10,6 @@ import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {useDragSource} from './useDragSource';
 import {useDropTarget} from './useDropTarget';
 import PublicationStatus from '../PublicationStatus/PublicationStatus';
-import '@jahia/moonstone/dist/globals.css';
 
 const DefaultBar = ({node, path, onSaved, ButtonRenderer}) => (
     <>

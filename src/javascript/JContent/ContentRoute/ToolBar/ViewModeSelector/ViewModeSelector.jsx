@@ -74,6 +74,7 @@ export const ViewModeSelector = () => {
                       data-sel-role="sel-view-mode-dropdown"
                       label={t(`jcontent:label.contentManager.view.${viewMode}`)}
                       value={viewMode}
+                      icon={icons[viewMode]}
                       onChange={(e, item) => handleChange(item.value)}
             />
             {

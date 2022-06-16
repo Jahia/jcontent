@@ -106,7 +106,7 @@
         "publish": "Publish",
         "name": "Name:",
         "fileInfo": "Size:",
-        "list": "List view",
+        "list": "List",
         "grid": "Thumbnails",
         "contains": "Contains:",
         "element": "item",
@@ -338,8 +338,8 @@
         "workInProgress": "Work in progress"
       },
       "view": {
-        "flatList": "Flat list",
-        "structuredView": "Structured view"
+        "flatList": "List",
+        "structuredView": "Structured"
       },
       "contentTypeSelector": {
         "contents": "Contents {{count}}",

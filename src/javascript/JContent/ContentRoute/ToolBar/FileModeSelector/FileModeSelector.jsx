@@ -51,6 +51,7 @@ export const FileModeSelector = () => {
                   data-sel-role="sel-view-mode-dropdown"
                   label={t(`jcontent:label.contentManager.filesGrid.${mode}`)}
                   value={mode}
+                  icon={icons[mode]}
                   onChange={(e, item) => handleChange(item.value)}
         />
     );

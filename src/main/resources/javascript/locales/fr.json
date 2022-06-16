@@ -337,6 +337,10 @@
         "warning": "Attention",
         "workInProgress": "Travail en cours"
       },
+      "view": {
+        "flatList": "Liste",
+        "structuredView": "Organisé"
+      },
       "contentTypeSelector": {
         "contents": "Contenus {{count}}",
         "pages": "Sous-pages {{count}}"

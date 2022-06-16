@@ -336,6 +336,10 @@
         "warning": "Achtung",
         "workInProgress": "In Arbeit"
       },
+      "view": {
+        "flatList": "Listenansicht",
+        "structuredView": "Strukturiert"
+      },
       "contentTypeSelector": {
         "contents": "Content {{count}}",
         "pages": "Unter-Seiten {{count}}"

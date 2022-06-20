@@ -1217,10 +1217,10 @@
     uuid "^8.3.1"
     xml-js "^1.6.11"
 
-"@jahia/moonstone@^2.2.1":
-  version "2.3.1"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.3.1.tgz#745b1924d047ed967a069db8c79746dfeec5bf8b"
-  integrity sha512-2TfuBY0xfezd40LBG7miASiT8DdxGUEGN/3I24wR+b9xWVcsj5xUKs2hfiCyGhYoVe1L6C9J8PYlTK2Tyl1BaA==
+"@jahia/moonstone@^2.4.0":
+  version "2.4.0"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.4.0.tgz#955d0a5f0cfaca82019eeec2a3c39cff43a55311"
+  integrity sha512-pJ4idDK43+EVhDwe/KodlKEtrl5FtpNSzP4tQFOdo5pOBqg5yEAGlEQ/aQZidkF2K0zPuiFqX480cP5PHGVGfA==
   dependencies:
     "@babel/runtime" "^7.12.5"
     clsx "^1.1.1"
@@ -6249,7 +6249,7 @@ json-schema-traverse@^1.0.0:
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
   integrity sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
 
-json-schema@0.4.0, json-schema@^0.4.0:
+json-schema@0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.4.0.tgz#f7de4cf6efab838ebaeb3236474cbba5a1930ab5"
   integrity sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==

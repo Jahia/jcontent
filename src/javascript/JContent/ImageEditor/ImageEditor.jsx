@@ -12,7 +12,7 @@ import {withTranslation} from 'react-i18next';
 import RotatePanel from './RotatePanel';
 import ResizePanel from './ResizePanel';
 import CropPanel from './CropPanel';
-import {Button, ChevronDown, Chip, Edit, Header, Typography} from '@jahia/moonstone';
+import {Button, ChevronDown, Chip, Edit, Header, Typography, ArrowLeft} from '@jahia/moonstone';
 import ImageEditorActions from './ImageEditorActions';
 import MainLayout from '../MainLayout';
 import styles from './ImageEditor.scss';
@@ -64,7 +64,7 @@ export class ImageEditor extends React.Component {
             <MainLayout
                 header={
                     <Header title={name}
-                            backButton={<Button onClick={() => onBackNavigation(dirty)}/>}
+                            backButton={<Button variant="outlined" icon={<ArrowLeft/>} onClick={() => onBackNavigation(dirty)}/>}
                     />
                 }
             >

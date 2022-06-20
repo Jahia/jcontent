@@ -61,12 +61,13 @@ const ContentHeader = () => {
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={<ContentStatuses/>}
             toolbarLeft={<BrowseControlBar isShowingActions={selection.length === 0}/>}
-            toolbarRight={paths.length > 0 ? <SelectionActionsBar paths={paths} clear={clear}/> : (
+            toolbarRight={
                 <>
                     {mode === JContentConstants.mode.MEDIA && <FileModeSelector/>}
                     {mode !== JContentConstants.mode.MEDIA && <ViewModeSelector/>}
+                    {paths.length > 0 && <SelectionActionsBar paths={paths} clear={clear}/>}
                 </>
-            )}
+            }
         />
     );
 };

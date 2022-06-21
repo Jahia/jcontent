@@ -16,7 +16,7 @@ import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {cmSetPreviewState} from '~/JContent/preview.redux';
 import {SelectionActionsBar} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/SelectionActionsBar';
-import SearchInput from "../SearchInput";
+import SearchInput from '../SearchInput';
 
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');

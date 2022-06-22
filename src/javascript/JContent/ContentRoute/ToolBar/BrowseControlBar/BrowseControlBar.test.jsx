@@ -32,12 +32,14 @@ describe('BrowseControlBar', () => {
         const bar = shallow(<BrowseControlBar isShowingActions/>);
         expect(bar.find('DisplayActions').length).toEqual(1);
         expect(bar.find('DisplayAction').length).toEqual(1);
+        expect(bar.find('FileModeSelector').length).toEqual(0);
     });
 
     it('should not display actions', () => {
         const bar = shallow(<BrowseControlBar isShowingActions={false}/>);
         expect(bar.find('DisplayActions').length).toEqual(0);
         expect(bar.find('DisplayAction').length).toEqual(0);
+        expect(bar.find('FileModeSelector').length).toEqual(0);
     });
 
     it('should show file selectors', () => {
@@ -49,5 +51,6 @@ describe('BrowseControlBar', () => {
         const bar = shallow(<BrowseControlBar isShowingActions/>);
         expect(bar.find('DisplayActions').length).toEqual(1);
         expect(bar.find('DisplayAction').length).toEqual(1);
+        expect(bar.find('FileModeSelector').length).toEqual(1);
     });
 });

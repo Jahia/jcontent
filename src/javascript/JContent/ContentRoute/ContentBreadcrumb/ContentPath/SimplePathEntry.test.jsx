@@ -3,7 +3,7 @@ import {shallow} from '@jahia/test-framework';
 import {BreadcrumbItem} from '@jahia/moonstone';
 
 import SimplePathEntry from './SimplePathEntry';
-import {getNodeTypeIcon} from '~/JContent/JContent.utils';
+import {getNodeTypeIcon} from '../ContentBreadcrumb.utils';
 
 describe('SimplePathEntry', () => {
     it('should render one BreadcrumbItem', () => {

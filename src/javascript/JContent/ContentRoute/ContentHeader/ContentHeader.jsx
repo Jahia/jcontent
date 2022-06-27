@@ -50,7 +50,7 @@ const ContentHeader = () => {
     return inSearchMode ? (
         <Header
             backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
-            mainActions={<SearchInput/>}
+            mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
             title={title}
             toolbarLeft={<SearchControlBar/>}
             toolbarRight={paths.length > 0 && <SelectionActionsBar paths={paths} clear={clear}/>}

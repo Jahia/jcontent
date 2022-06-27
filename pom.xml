@@ -49,7 +49,7 @@
         <yarn.arguments>build:production</yarn.arguments>
         <jahia-module-signature>MCwCFE0pgyNuTlrOhuqW+cDZgWD0td+2AhRXJ5BJchKbY0CZB3zyIPPTUPccAA==</jahia-module-signature>
         <jahia-depends>jahia-ui-root</jahia-depends>
-        <jahia-plugin-version>5.11</jahia-plugin-version>
+        <jahia-plugin-version>6.4</jahia-plugin-version>
     </properties>
 
     <repositories>

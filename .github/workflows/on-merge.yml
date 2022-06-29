@@ -38,7 +38,6 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: jcontent
-          nexus_internal_url: https://devtools.jahia.com/nexus/content/groups/internal/
 
   integration-tests-standalone:
     name: Integration Tests (Standalone)
@@ -61,7 +60,7 @@ jobs:
           tests_manifest: provisioning-manifest-build.yml
           jahia_image: jahia/jahia-discovery-dev:8-SNAPSHOT
           should_use_build_artifacts: true
-          github_artifact_name: jcontent-standalone-artifacts-${{ github.run_number }}
+          github_artifact_name: jcontent-standalone-${{ github.run_number }}
           bastion_ssh_private_key: ${{ secrets.BASTION_SSH_PRIVATE_KEY_JAHIACI }}
           jahia_license: ${{ secrets.JAHIA_LICENSE_8X_FULL }}
           docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -78,6 +77,14 @@ jobs:
           incident_google_client_email: ${{ secrets.INCIDENT_GOOGLE_CLIENT_EMAIL }}
           incident_google_api_key_base64: ${{ secrets.INCIDENT_GOOGLE_PRIVATE_KEY_BASE64 }}
           zencrepes_secret: ${{ secrets.ZENCREPES_WEBHOOK_SECRET }}
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Tests Report (Standalone)
+          path: tests/artifacts/results/xml_reports/*.xml
+          reporter: java-junit
+          fail-on-error: 'false'
 
   publish:
     name: Publish module
@@ -95,4 +102,3 @@ jobs:
         with:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
-          nexus_internal_url: https://devtools.jahia.com/nexus/content/groups/internal/

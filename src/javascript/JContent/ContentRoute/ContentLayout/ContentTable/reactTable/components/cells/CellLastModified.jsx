@@ -20,7 +20,7 @@ export const CellLastModified = ({row, value, cell, column}) => {
         >
             <div className={css.cellLastModified}>
                 <Typography className={css.cellLastModifiedText} component="time">
-                    {dayjs(value).locale(getDefaultLocale(uilang)).format('ll')}
+                    {dayjs(value).locale(getDefaultLocale(uilang)).format('lll')}
                 </Typography>
                 {selection.length === 0 &&
                     <div className={css.cellActions}

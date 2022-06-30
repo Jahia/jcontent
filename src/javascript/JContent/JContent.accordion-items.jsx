@@ -52,7 +52,7 @@ export const jContentAccordionItems = registry => {
     registry.add('accordionItem', 'pages', renderDefaultContentTrees, {
         targets: ['jcontent:50'],
         icon: <Page/>,
-        label: 'label.contentManager.navigation.pages',
+        label: 'jcontent:label.contentManager.navigation.pages',
         defaultPath: siteKey => '/sites/' + siteKey,
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         config: {
@@ -69,7 +69,7 @@ export const jContentAccordionItems = registry => {
     registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
-        label: 'label.contentManager.navigation.contentFolders',
+        label: 'jcontent:label.contentManager.navigation.contentFolders',
         defaultPath: siteKey => '/sites/' + siteKey + '/contents',
         requiredSitePermission: JContentConstants.accordionPermissions.contentFolderAccordionAccess,
         config: {
@@ -85,7 +85,7 @@ export const jContentAccordionItems = registry => {
     registry.add('accordionItem', 'media', renderDefaultContentTrees, {
         targets: ['jcontent:70'],
         icon: <Collections/>,
-        label: 'label.contentManager.navigation.media',
+        label: 'jcontent:label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
         requiredSitePermission: JContentConstants.accordionPermissions.mediaAccordionAccess,
         config: {
@@ -101,7 +101,7 @@ export const jContentAccordionItems = registry => {
     registry.add('accordionItem', 'apps', renderDefaultApps, {
         targets: ['jcontent:80'],
         icon: <Grain/>,
-        label: 'label.contentManager.navigation.apps.title',
+        label: 'jcontent:label.contentManager.navigation.apps.title',
         appsTarget: 'jcontent',
         isEnabled: siteKey => siteKey !== 'systemsite',
         requiredSitePermission: JContentConstants.accordionPermissions.additionalAccordionAccess

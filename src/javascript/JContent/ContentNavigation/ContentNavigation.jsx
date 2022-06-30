@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Accordion, SecondaryNav} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import NavigationHeader from './NavigationHeader';
 
-const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation}) => {
-    const {t} = useTranslation('jcontent');
+const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation, header}) => {
+    const {t} = useTranslation();
     return (
-        <SecondaryNav header={<NavigationHeader/>}>
+        <SecondaryNav header={header}>
             <Accordion isReversed
                        openedItem={mode}
                        onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).defaultPath(siteKey))}
@@ -29,7 +28,8 @@ ContentNavigation.propTypes = {
     mode: PropTypes.string,
     siteKey: PropTypes.string.isRequired,
     accordionItems: PropTypes.array.isRequired,
-    handleNavigation: PropTypes.func.isRequired
+    handleNavigation: PropTypes.func.isRequired,
+    header: PropTypes.element.isRequired
 };
 
 export default ContentNavigation;

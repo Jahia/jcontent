@@ -98,6 +98,7 @@ module.exports = (env, argv) => {
                 library: { type: "assign", name: "appShell.remotes.jcontent" },
                 filename: "remoteEntry.js",
                 exposes: {
+                    '.': './src/javascript/shared',
                     './init': './src/javascript/init',
                     './JContent/actions': './src/javascript/JContent/actions/index'
                 },

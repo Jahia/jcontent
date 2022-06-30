@@ -1,47 +1,68 @@
-import React from 'react';
-import {connect, useSelector} from 'react-redux';
-import {cmGoto} from '../JContent.redux';
+import React, {useMemo} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useNodeChecks} from '@jahia/data-helper';
 import JContentConstants from '../JContent.constants';
+import {createStructuredSelector} from 'reselect';
+import {cmGoto} from '~/JContent/JContent.redux';
+import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 
-const ContentNavigationContainer = ({mode, siteKey, handleNavigation}) => {
-    let accordionItems = registry.find({type: 'accordionItem', target: 'jcontent'});
-
-    const currentState = useSelector(state => ({site: state.site, language: state.language}));
+const ContentNavigationContainer = ({handleNavigation, selectorObject, accordionItemTarget, accordionItemType, header, sitePermissions}) => {
+    const selector = useMemo(() => createStructuredSelector(selectorObject), [selectorObject]);
+    const dispatch = useDispatch();
+    const {siteKey, language, mode} = useSelector(state => selector(state));
     const permissions = useNodeChecks({
-        path: `/sites/${currentState.site}`,
-        language: currentState.language
+        path: `/sites/${siteKey}`,
+        language: language
     }, {
-        requiredSitePermission: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
+        requiredSitePermission: sitePermissions
     });
 
     if (permissions.loading) {
         return null;
     }
 
-    accordionItems = accordionItems.filter(accordionItem =>
+    let accordionItems = registry.find({type: accordionItemType, target: accordionItemTarget});
+    accordionItems = sitePermissions.length === 0 ? accordionItems : accordionItems.filter(accordionItem =>
         permissions.node && Object.prototype.hasOwnProperty.call(permissions.node.site, accordionItem.requiredSitePermission) && permissions.node.site[accordionItem.requiredSitePermission]
     );
 
-    return <ContentNavigation accordionItems={accordionItems} mode={mode} siteKey={siteKey} handleNavigation={handleNavigation}/>;
+    return (
+        <ContentNavigation header={header}
+                           accordionItems={accordionItems}
+                           mode={mode}
+                           siteKey={siteKey}
+                           handleNavigation={(mode, path) => dispatch(handleNavigation(mode, path))}
+        />
+    );
 };
-
-const mapDispatchToProps = dispatch => ({
-    handleNavigation: (mode, path) => dispatch(cmGoto({mode, path}))
-});
-
-let mapStateToProps = state => ({
-    mode: state.jcontent.mode,
-    siteKey: state.site
-});
 
 ContentNavigationContainer.propTypes = {
-    handleNavigation: PropTypes.func.isRequired,
-    mode: PropTypes.string.isRequired,
-    siteKey: PropTypes.string.isRequired
+    selectorObject: PropTypes.shape({
+        mode: PropTypes.func.isRequired,
+        siteKey: PropTypes.func.isRequired,
+        language: PropTypes.func.isRequired
+    }),
+    accordionItemTarget: PropTypes.string,
+    accordionItemType: PropTypes.string,
+    handleNavigation: PropTypes.func,
+    header: PropTypes.element,
+    sitePermissions: PropTypes.arrayOf(PropTypes.string)
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContentNavigationContainer);
+ContentNavigationContainer.defaultProps = {
+    header: <NavigationHeader/>,
+    selectorObject: {
+        mode: state => state.jcontent.mode,
+        siteKey: state => state.site,
+        language: state => state.language
+    },
+    handleNavigation: (mode, path) => cmGoto({mode, path}),
+    accordionItemTarget: 'jcontent',
+    accordionItemType: 'accordionItem',
+    sitePermissions: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
+};
+
+export default ContentNavigationContainer;

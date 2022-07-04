@@ -1,18 +1,16 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import {compose} from '~/utils';
 import {Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/data-helper';
 import gql from 'graphql-tag';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import {withNotifications} from '@jahia/react-material';
+import {useNotifications} from '@jahia/react-material';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '~/JContent/JContent.redux';
 import {Dropdown} from '@jahia/moonstone';
 import {cmSetPreviewMode, cmSetPreviewSelection, cmSetPreviewState} from '~/JContent/preview.redux';
 import styles from './SiteSwitcher.scss';
-import {createStructuredSelector} from 'reselect';
 import {batchActions} from 'redux-batched-actions';
 
 const QUERY = gql`
@@ -69,11 +67,11 @@ const getTargetSiteLanguageForSwitch = (siteNode, currentLang) => {
     return newLang ? newLang : siteNode.site.defaultLanguage;
 };
 
-const SiteSwitcher = ({selectorObject, onSelectAction, notificationContext}) => {
-    const {t} = useTranslation();
-    const selector = useMemo(() => createStructuredSelector(selectorObject), [selectorObject]);
+const SiteSwitcher = ({selector, onSelectAction}) => {
+    const {t} = useTranslation('jcontent');
+    const {notify} = useNotifications();
     const dispatch = useDispatch();
-    const {siteKey, currentLang} = useSelector(state => selector(state));
+    const {siteKey, currentLang} = useSelector(selector);
 
     const onSelectSite = (siteNode, currentLang) => {
         let newLang = getTargetSiteLanguageForSwitch(siteNode, currentLang);
@@ -87,7 +85,7 @@ const SiteSwitcher = ({selectorObject, onSelectAction, notificationContext}) => 
                     if (error) {
                         console.log('Error when fetching data: ' + error);
                         let message = t('jcontent:label.contentManager.error.queryingContent', {details: (error.message ? error.message : '')});
-                        notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                        notify(message, ['closeButton', 'noAutomaticClose']);
                         return null;
                     }
 
@@ -131,11 +129,7 @@ const SiteSwitcher = ({selectorObject, onSelectAction, notificationContext}) => 
 SiteSwitcher.propTypes = {
     // This must return redux action object compatible with dispatch fcn
     onSelectAction: PropTypes.func,
-    selectorObject: PropTypes.shape({
-        siteKey: PropTypes.string.isRequired,
-        currentLang: PropTypes.string.isRequired
-    }),
-    notificationContext: PropTypes.object.isRequired
+    selector: PropTypes.func
 };
 
 SiteSwitcher.defaultProps = {
@@ -145,10 +139,10 @@ SiteSwitcher.defaultProps = {
         cmSetPreviewState(CM_DRAWER_STATES.HIDE),
         cmSetPreviewSelection(null)
     ])),
-    selectorObject: {
-        siteKey: state => state.site,
-        currentLang: state => state.language
-    }
+    selector: state => ({
+        siteKey: state.site,
+        currentLang: state.language
+    })
 };
 
-export default compose(withNotifications())(SiteSwitcher);
+export default SiteSwitcher;

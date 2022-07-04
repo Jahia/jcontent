@@ -4,7 +4,7 @@ import {Accordion, SecondaryNav} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 
 const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation, header}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <SecondaryNav header={header}>
             <Accordion isReversed

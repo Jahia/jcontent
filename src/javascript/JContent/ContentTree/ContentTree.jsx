@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useMemo} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
@@ -8,13 +8,11 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
-import {createStructuredSelector} from 'reselect';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 
-export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selectorObject, refetcherType}) => {
-    const selector = useMemo(() => createStructuredSelector(selectorObject), [selectorObject]);
+export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType}) => {
     const dispatch = useDispatch();
-    const {lang, siteKey, path, openPaths} = useSelector(state => selector(state));
+    const {lang, siteKey, path, openPaths} = useSelector(selector);
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
@@ -85,12 +83,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
 ContentTree.propTypes = {
     item: PropTypes.object.isRequired,
-    selectorObject: PropTypes.shape({
-        lang: PropTypes.func.isRequired,
-        siteKey: PropTypes.func.isRequired,
-        path: PropTypes.func.isRequired,
-        openPaths: PropTypes.func.isRequired
-    }),
+    selector: PropTypes.func,
     refetcherType: PropTypes.string,
     // These functions must return redux action object
     openPathAction: PropTypes.func,
@@ -99,12 +92,12 @@ ContentTree.propTypes = {
 };
 
 ContentTree.defaultProps = {
-    selectorObject: {
-        siteKey: state => state.site,
-        lang: state => state.language,
-        path: state => state.jcontent.path,
-        openPaths: state => state.jcontent.openPaths
-    },
+    selector: state => ({
+        siteKey: state.site,
+        lang: state.language,
+        path: state.jcontent.path,
+        openPaths: state.jcontent.openPaths
+    }),
     refetcherType: refetchTypes.CONTENT_TREE,
     setPathAction: (path, params) => cmGoto({path, params}),
     openPathAction: path => cmOpenPaths([path]),

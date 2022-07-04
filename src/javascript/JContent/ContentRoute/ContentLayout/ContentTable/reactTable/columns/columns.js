@@ -17,7 +17,7 @@ export const columnWidths = {
     status: '115px',
     type: '180px',
     createdBy: '150px',
-    lastModified: '220px',
+    lastModified: '290px',
     visibleActions: '60px'
 };
 

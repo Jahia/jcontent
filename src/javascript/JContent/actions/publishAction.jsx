@@ -56,7 +56,7 @@ const mergeChecks = (v1, v2) => {
 };
 
 function getButtonLabelParams(paths, language, res, t) {
-    if (!res.nodes) {
+    if (!res.nodes || res.nodes.length === 0) {
         return {
             displayName: t('jcontent:label.contentManager.selection.items', {count: 0}),
             language
@@ -122,7 +122,7 @@ export const PublishActionComponent = props => {
     if (isMediumLabel) {
         buttonLabel += 'Medium';
         buttonLabelParams.language = _.escape(languageToUse).toUpperCase();
-        const siteLanguages = res?.nodes ? res.nodes[0].site?.languages : res?.node?.site?.languages;
+        const siteLanguages = res?.nodes && res?.nodes.length > 0 ? res.nodes[0].site?.languages : res?.node?.site?.languages;
         if ((siteLanguages || []).length > 1) {
             // Display language in publish button by disabling short label
             buttonLabelShort = '';

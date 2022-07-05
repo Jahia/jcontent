@@ -1,8 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '../JContent.redux';
-import {compose} from '~/utils';
+import {useSelector, useDispatch} from 'react-redux';
 import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
@@ -10,11 +8,14 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 
-export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, closePath, item}) => {
+export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType}) => {
+    const dispatch = useDispatch();
+    const {lang, siteKey, path, openPaths} = useSelector(selector);
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
 
-    if (openPaths.findIndex(p => p === rootPath) === -1) {
+    if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
         openPaths.push(rootPath);
     }
 
@@ -46,16 +47,16 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
 
     useEffect(() => {
         if (switchPath) {
-            setPath(switchPath);
+            dispatch(setPathAction(switchPath));
         }
-    }, [setPath, switchPath]);
+    }, [setPathAction, switchPath]);
 
     useEffect(() => {
-        setRefetcher(refetchTypes.CONTENT_TREE, {
+        setRefetcher(refetcherType, {
             refetch: refetch
         });
         return () => {
-            unsetRefetcher(refetchTypes.CONTENT_TREE);
+            unsetRefetcher(refetcherType);
         };
     });
 
@@ -72,37 +73,35 @@ export const ContentTree = ({lang, siteKey, path, openPaths, setPath, openPath, 
                           event.stopPropagation();
                           contextualMenu.current(event, {path: object.id});
                       }}
-                      onClickItem={object => setPath(object.id, {sub: false})}
-                      onOpenItem={object => openPath(object.id)}
-                      onCloseItem={object => closePath(object.id)}
+                      onClickItem={object => dispatch(setPathAction(object.id, {sub: false}))}
+                      onOpenItem={object => dispatch(openPathAction(object.id))}
+                      onCloseItem={object => dispatch(closePathAction(object.id))}
             />
         </React.Fragment>
     );
 };
 
-const mapStateToProps = state => ({
-    siteKey: state.site,
-    lang: state.language,
-    path: state.jcontent.path,
-    openPaths: state.jcontent.openPaths,
-    previewSelection: state.jcontent.previewSelection
-});
-
-const mapDispatchToProps = dispatch => ({
-    setPath: (path, params) => dispatch(cmGoto({path, params})),
-    openPath: path => dispatch(cmOpenPaths([path])),
-    closePath: path => dispatch(cmClosePaths([path]))
-});
-
 ContentTree.propTypes = {
-    lang: PropTypes.string.isRequired,
-    siteKey: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-    openPaths: PropTypes.arrayOf(PropTypes.string).isRequired,
     item: PropTypes.object.isRequired,
-    openPath: PropTypes.func.isRequired,
-    closePath: PropTypes.func.isRequired,
-    setPath: PropTypes.func.isRequired
+    selector: PropTypes.func,
+    refetcherType: PropTypes.string,
+    // These functions must return redux action object
+    openPathAction: PropTypes.func,
+    closePathAction: PropTypes.func,
+    setPathAction: PropTypes.func
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps))(ContentTree);
+ContentTree.defaultProps = {
+    selector: state => ({
+        siteKey: state.site,
+        lang: state.language,
+        path: state.jcontent.path,
+        openPaths: state.jcontent.openPaths
+    }),
+    refetcherType: refetchTypes.CONTENT_TREE,
+    setPathAction: (path, params) => cmGoto({path, params}),
+    openPathAction: path => cmOpenPaths([path]),
+    closePathAction: path => cmClosePaths([path])
+};
+
+export default ContentTree;

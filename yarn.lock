@@ -1229,7 +1229,7 @@
     react-is "^17.0.2"
     to-px "^1.1.0"
 
-"@jahia/react-material@^3.0.1":
+"@jahia/react-material@^3.0.5":
   version "3.0.5"
   resolved "https://npm.jahia.com/@jahia%2freact-material/-/react-material-3.0.5.tgz#6a888a6d699524a0af069a0644db755e07bbf181"
   integrity sha512-E5+Ba9wknBZC+mGtlJmkclYeGzyiYpev8aIFFV77dKZR/2QOQUHqLMnR6bK5WbdtkgHVqv2IQyhn5HgvPgZ4BQ==

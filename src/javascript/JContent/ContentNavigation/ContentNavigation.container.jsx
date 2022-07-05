@@ -7,11 +7,24 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {cmGoto} from '~/JContent/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 
-const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header}) => {
+const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header, accordionItemProps}) => {
     const dispatch = useDispatch();
     const {siteKey, language, mode} = useSelector(selector);
 
     let accordionItems = registry.find({type: accordionItemType, target: accordionItemTarget});
+
+    if (accordionItemProps) {
+        accordionItems = accordionItems.map(item => {
+            const overrideProps = accordionItemProps[item.key];
+
+            if (overrideProps) {
+                return {...item, ...overrideProps};
+            }
+
+            return item;
+        });
+    }
+
     const sitePermissions = accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined);
 
     const permissions = useNodeChecks({
@@ -41,6 +54,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
 
 ContentNavigationContainer.propTypes = {
     selector: PropTypes.func,
+    accordionItemProps: PropTypes.object,
     accordionItemTarget: PropTypes.string,
     accordionItemType: PropTypes.string,
     handleNavigationAction: PropTypes.func,

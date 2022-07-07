@@ -9,7 +9,7 @@ import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
-import {getArray} from '~/JContent/JContent.utils';
+import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType}) => {
     const dispatch = useDispatch();
@@ -25,10 +25,10 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
-        openableTypes: getArray(item.config.openableTypes),
-        selectableTypes: getArray(item.config.selectableTypes),
+        openableTypes: arrayValue(item.config.openableTypes),
+        selectableTypes: arrayValue(item.config.selectableTypes),
         queryVariables: {language: lang},
-        hideRoot: item.config.hideRoot
+        hideRoot: booleanValue(item.config.hideRoot)
     };
 
     // For pages portion want to skip the sortBy
@@ -82,8 +82,24 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     );
 };
 
+export const accordionPropType = PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    icon: PropTypes.node.isRequired,
+    label: PropTypes.string.isRequired,
+    defaultPath: PropTypes.func,
+    requiredSitePermission: PropTypes.string.isRequired,
+    config: PropTypes.shape({
+        hideRoot: PropTypes.bool,
+        rootPath: PropTypes.node.isRequired,
+        selectableTypes: PropTypes.arrayOf(PropTypes.string),
+        type: PropTypes.string.isRequired,
+        openableTypes: PropTypes.arrayOf(PropTypes.string),
+        rootLabel: PropTypes.string
+    }).isRequired
+});
+
 ContentTree.propTypes = {
-    item: PropTypes.object.isRequired,
+    item: accordionPropType,
     selector: PropTypes.func,
     refetcherType: PropTypes.string,
     // These functions must return redux action object

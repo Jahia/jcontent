@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
@@ -9,6 +9,7 @@ import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {getArray} from '~/JContent/JContent.utils';
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType}) => {
     const dispatch = useDispatch();
@@ -24,8 +25,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
-        openableTypes: item.config.openableTypes,
-        selectableTypes: item.config.selectableTypes,
+        openableTypes: getArray(item.config.openableTypes),
+        selectableTypes: getArray(item.config.selectableTypes),
         queryVariables: {language: lang},
         hideRoot: item.config.hideRoot
     };
@@ -49,7 +50,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         if (switchPath) {
             dispatch(setPathAction(switchPath));
         }
-    }, [setPathAction, switchPath]);
+    }, [dispatch, setPathAction, switchPath]);
 
     useEffect(() => {
         setRefetcher(refetcherType, {

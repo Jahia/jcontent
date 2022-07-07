@@ -6,6 +6,7 @@ import {registry} from '@jahia/ui-extender';
 import {useNodeChecks} from '@jahia/data-helper';
 import {cmGoto} from '~/JContent/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
+import {mergeDeep} from '~/JContent/JContent.utils';
 
 const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header, accordionItemProps}) => {
     const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
             const overrideProps = accordionItemProps[item.key];
 
             if (overrideProps) {
-                return {...item, ...overrideProps};
+                return mergeDeep({}, item, overrideProps);
             }
 
             return item;

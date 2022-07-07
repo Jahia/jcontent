@@ -5,16 +5,16 @@ import JContentConstants from './JContent.constants';
 import {getIcon} from '@jahia/icons';
 import {Layers} from '@jahia/moonstone';
 
-function getNewNodePath(oldPath, oldAncestorPath, newAncestorPath) {
+export const getNewNodePath = (oldPath, oldAncestorPath, newAncestorPath) => {
     if (_.startsWith(oldPath, oldAncestorPath + '/') || oldPath === oldAncestorPath) {
         let relativePath = oldPath.substring(oldAncestorPath.length, oldPath.length);
         return (newAncestorPath + relativePath);
     }
 
     return oldPath;
-}
+};
 
-function hasMixin(node, mixin) {
+export const hasMixin = (node, mixin) => {
     if (node.mixinTypes) {
         return _.find(node.mixinTypes, t => t.name === mixin) !== undefined;
     }
@@ -25,26 +25,26 @@ function hasMixin(node, mixin) {
     }
 
     return false;
-}
+};
 
-function hasProperty(node, propertyName) {
+export const hasProperty = (node, propertyName) => {
     let propertyValue = _.find(node.properties, property => property.name === propertyName);
     return propertyValue !== undefined;
-}
+};
 
-function isDescendant(path, ancestorPath) {
+export const isDescendant = (path, ancestorPath) => {
     return path.startsWith(ancestorPath + '/');
-}
+};
 
-function isDescendantOrSelf(path, ancestorOrSelfPath) {
+export const isDescendantOrSelf = (path, ancestorOrSelfPath) => {
     return (path === ancestorOrSelfPath || isDescendant(path, ancestorOrSelfPath));
-}
+};
 
-function isMarkedForDeletion(node) {
+export const isMarkedForDeletion = node => {
     return hasMixin(node, 'jmix:markedForDeletion');
-}
+};
 
-function isWorkInProgress(node, lang) {
+export const isWorkInProgress = (node, lang) => {
     if (node.wipStatus) {
         switch (node.wipStatus.value) {
             case 'ALL_CONTENT':
@@ -57,9 +57,9 @@ function isWorkInProgress(node, lang) {
     }
 
     return false;
-}
+};
 
-function extractPaths(siteKey, path, mode) {
+export const extractPaths = (siteKey, path, mode) => {
     let pathBase = '/sites/' + siteKey + (mode === JContentConstants.mode.MEDIA ? '/files' : '');
     let pathParts = path.replace(pathBase, '').split('/');
     let paths = [];
@@ -74,21 +74,21 @@ function extractPaths(siteKey, path, mode) {
     }
 
     return paths;
-}
+};
 
-function ellipsizeText(text, maxLength) {
+export const ellipsizeText = (text, maxLength) => {
     return ellipsize(text, maxLength || 100, {chars: [' ', '&']});
-}
+};
 
-function removeFileExtension(filename) {
+export const removeFileExtension = filename => {
     if (filename.lastIndexOf('.') > 0) {
         return filename.substr(0, filename.lastIndexOf('.'));
     }
 
     return filename;
-}
+};
 
-function getNewCounter(nodes) {
+export const getNewCounter = nodes => {
     let max = 0;
     nodes.forEach(node => {
         let name = removeFileExtension(node.name);
@@ -101,21 +101,21 @@ function getNewCounter(nodes) {
         }
     });
     return max + 1;
-}
+};
 
-function allowDoubleClickNavigation(nodeType, subNodes, fcn) {
+export const allowDoubleClickNavigation = (nodeType, subNodes, fcn) => {
     if (['jnt:page', 'jnt:folder', 'jnt:contentFolder'].indexOf(nodeType) !== -1 || (subNodes && subNodes > 0)) {
         return fcn;
     }
 
     return function () {};
-}
+};
 
-function getDefaultLocale(lang) {
+export const getDefaultLocale = lang => {
     return ['en', 'fr', 'de'].indexOf(lang) > -1 ? lang : 'en';
-}
+};
 
-function getLanguageLabel(languages, currentLang) {
+export const getLanguageLabel = (languages, currentLang) => {
     return _.find(languages, function (language) {
         if (language.language === currentLang) {
             return language;
@@ -124,32 +124,45 @@ function getLanguageLabel(languages, currentLang) {
         language: currentLang,
         displayName: Intl.DisplayNames ? new Intl.DisplayNames([contextJsParameters.language], {type: 'language'}).of(currentLang.split('_')[0]) : currentLang.split('_')[0]
     };
-}
+};
 
-function uppercaseFirst(string) {
+export const uppercaseFirst = string => {
     return string.charAt(0).toUpperCase() + string.substr(1);
-}
+};
 
-function getNodeTypeIcon(typeName) {
+export const getNodeTypeIcon = typeName => {
     const Icon = getIcon(typeName) || Layers;
     return <Icon/>;
-}
+};
 
-export {
-    getNewNodePath,
-    hasMixin,
-    isDescendant,
-    isDescendantOrSelf,
-    isMarkedForDeletion,
-    isWorkInProgress,
-    extractPaths,
-    ellipsizeText,
-    hasProperty,
-    getDefaultLocale,
-    getNewCounter,
-    removeFileExtension,
-    allowDoubleClickNavigation,
-    getLanguageLabel,
-    uppercaseFirst,
-    getNodeTypeIcon
+export const isObject = item => {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+};
+
+export const mergeDeep = (target, ...sources) => {
+    if (!sources.length) {
+        return target;
+    }
+
+    const source = sources.shift();
+
+    if (isObject(target) && isObject(source)) {
+        for (const key in source) {
+            if (isObject(source[key])) {
+                if (!target[key]) {
+                    Object.assign(target, {[key]: {}});
+                }
+
+                mergeDeep(target[key], source[key]);
+            } else {
+                Object.assign(target, {[key]: source[key]});
+            }
+        }
+    }
+
+    return mergeDeep(target, ...sources);
+};
+
+export const getArray = value => {
+    return (typeof value === 'string') ? value.split(',') : value;
 };

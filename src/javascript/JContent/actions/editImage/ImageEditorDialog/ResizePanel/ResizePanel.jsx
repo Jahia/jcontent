@@ -45,6 +45,16 @@ export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResi
                             onChange={setWidth}
                         />
                     </FormControl>
+                </div>
+                <div className={styles.secondCol}>
+                    <Button icon={<Link/>}
+                            color={resizeParams.keepRatio ? 'accent' : 'default'}
+                            size="big"
+                            variant="ghost"
+                            data-cm-role="keep-ratio-button"
+                            onClick={switchRatio}/>
+                </div>
+                <div className={styles.firstCol}>
                     <FormControl className={styles.formControl}>
                         <InputLabel shrink className={styles.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
                         <Input
@@ -55,14 +65,6 @@ export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResi
                             onChange={setHeight}
                         />
                     </FormControl>
-                </div>
-                <div className={styles.secondCol}>
-                    <Button icon={<Link/>}
-                            color={resizeParams.keepRatio ? 'accent' : 'default'}
-                            size="big"
-                            variant="ghost"
-                            data-cm-role="keep-ratio-button"
-                            onClick={switchRatio}/>
                 </div>
             </div>
         </>

@@ -1,3 +1,7 @@
 .icons {
-    padding-top: var(--spacing-small);
+    padding: var(--spacing-large);
+
+    & button {
+        margin-right: var(--spacing-medium);
+    }
 }

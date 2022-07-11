@@ -41,20 +41,21 @@ export const ImageEditorDialog = ({
     let changesFeedback = dirty ? t('jcontent:label.contentManager.editImage.unsavedChanges') : '';
 
     return (
-        <Dialog fullScreen
+        <Dialog fullWidth
+                maxWidth="lg"
                 open={isOpen}
                 aria-labelledby="form-dialog-title"
                 classes={{paper: styles.root}}
                 onClose={onClose}
         >
-            <DialogTitle disableTypography id="form-dialog-title" classes={{root: 'flexRow'}}>
+            <DialogTitle disableTypography id="form-dialog-title" classes={{root: 'flexRow alignCenter'}}>
                 <Typography variant="title">{name}</Typography>
                 <div>
-                    {changesFeedback && <Chip icon={<Edit/>} label={changesFeedback} color="warning"/> }
+                    {changesFeedback && <Chip className={styles.chip} icon={<Edit/>} label={changesFeedback} color="warning"/> }
                 </div>
             </DialogTitle>
-            <DialogContent classes={{root: 'flexRow'}}>
-                <TwoColumnsContent classes={{root: styles.root, left: styles.left, right: styles.right}}
+            <DialogContent classes={{root: 'flexRow ' + styles.dialogContent}}>
+                <TwoColumnsContent classes={{left: styles.left, right: styles.right}}
                                    rightCol={<ImageEditorPreview isCropExpanded={currentPanel === PANELS.CROP}
                                                                  path={path}
                                                                  ts={ts}
@@ -108,10 +109,10 @@ export const ImageEditorDialog = ({
                     </>
                 </TwoColumnsContent>
             </DialogContent>
-            <DialogActions>
+            <DialogActions classes={{root: styles.actions}}>
                 <Button
                         data-sel-role="cancel-button"
-                        variant="outlined"
+                        variant="ghost"
                         size="big"
                         label={t('jcontent:label.contentManager.editImage.close')}
                         onClick={onClose}

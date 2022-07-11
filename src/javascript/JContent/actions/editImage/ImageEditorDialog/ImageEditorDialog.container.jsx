@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Mutation, useApolloClient} from 'react-apollo';
-import {useDispatch, useSelector} from 'react-redux';
 import ImageEditorDialog from './ImageEditorDialog';
 import {getImageMutation} from './ImageEditorDialog.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
-import {cmGoto} from '../../../JContent.redux';
 import {refetchTypes, triggerRefetch} from '../../../JContent.refetches';
 import Feedback from './Feedback';
 
@@ -63,16 +61,12 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
     });
     const [saveAsOpen, setSaveAsOpen] = useState(false);
     const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
-    const [name, setName] = useState(false);
+    const [currentPath, setCurrentPath] = useState(path);
+    const [name, setName] = useState(null);
     const [ts, setTs] = useState(new Date().getTime());
     const [snackBarMessage, setSnackBarMessage] = useState(null);
     const [isNameValid, setIsNameValid] = useState(true);
 
-    const {site, language} = useSelector(state => ({
-        site: state.site,
-        language: state.language
-    }));
-    const dispatch = useDispatch();
     const client = useApolloClient();
 
     const onClose = () => {
@@ -240,14 +234,6 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
         }));
     };
 
-    const handleClose = () => {
-        setIsOpen(false);
-        setConfirmSaveOpen(false);
-        setSaveAsOpen(false);
-        setConfirmCloseOpen(false);
-        onExit();
-    };
-
     const handleChangeName = ({target: {value}}) => {
         if (value) {
             const isNameValid = value.match(/[\\/:*?"<>|]/g) === null;
@@ -261,19 +247,21 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
         undoChanges();
         if (newPath === path) {
             setTs(new Date().getTime());
-            setSnackBarMessage('jcontent:label.contentManager.editImage.savedMessage');
-        } else {
-            dispatch(cmGoto({site, language, mode: 'image-edit', path}));
         }
 
-        handleClose();
+        setSnackBarMessage('jcontent:label.contentManager.editImage.savedMessage');
+
+        setConfirmSaveOpen(false);
+        setSaveAsOpen(false);
+        setCurrentPath(newPath);
+
         triggerRefetch(refetchTypes.CONTENT_DATA);
         client.cache.flushNodeEntryByPath(path);
     };
 
     let newName = name;
     if (!newName) {
-        newName = path.substring(path.lastIndexOf('/') + 1);
+        newName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
         newName = newName.substring(0, newName.lastIndexOf('.') + 1) + 'copy' + newName.substring(newName.lastIndexOf('.'));
     }
 
@@ -287,7 +275,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                     <ImageEditorDialog
                         isOpen={isOpen}
                         ts={ts}
-                        path={path}
+                        path={currentPath}
                         originalWidth={imageSize.originalWidth}
                         originalHeight={imageSize.originalHeight}
                         rotationParams={operations.rotationParams}
@@ -306,30 +294,31 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                     />
                     <ConfirmSaveDialog
                         isOpen={confirmSaveOpen}
-                        handleSave={() => mutation({variables: {path}})}
-                        handleClose={handleClose}
+                        handleSave={() => mutation({variables: {path: currentPath}})}
+                        handleClose={() => setConfirmSaveOpen(false)}
                     />
                     <SaveAsDialog
                         isOpen={saveAsOpen}
                         name={newName}
                         isNameValid={isNameValid}
                         handleSave={() => {
-                            mutation({variables: {path, name: newName.trim()}});
+                            mutation({variables: {path: currentPath, name: newName.trim()}});
                             setSnackBarMessage({
                                 key: 'jcontent:label.contentManager.editImage.editingMessage',
                                 params: {imageName: newName}
                             });
                         }}
-                        handleClose={handleClose}
+                        handleClose={() => setSaveAsOpen(false)}
                         onChangeName={handleChangeName}
                     />
                     <UnsavedChangesDialog
                         isOpen={confirmCloseOpen}
                         onBack={() => {
-                            undoChanges();
-                            handleClose();
+                            setConfirmCloseOpen(false);
+                            setIsOpen(false);
+                            onExit();
                         }}
-                        onClose={handleClose}
+                        onClose={() => setConfirmCloseOpen(false)}
                     />
 
                     <Feedback isOpen={Boolean(snackBarMessage)}

@@ -17,8 +17,10 @@ function getCropValue(cropParams, originalWidth, originalHeight) {
 
 export const ImageEditorPreview = ({path, cropParams, onCrop, isCropExpanded, ts, originalHeight, originalWidth, onImageLoaded, rotationParams, resizeParams}) => {
     let filepath = window.contextJsParameters.contextPath + '/files/default' + path.replace(/[^/]/g, encodeURIComponent) + '?ts=' + ts;
-    let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - 16 : 0;
-    let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - 16 : 0;
+    let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - 33 : 0;
+    let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - 33 : 0;
+    console.log('w', containerWidth);
+    console.log('h', containerHeight);
     let keepOrientation = rotationParams.rotations % 2 === 0;
     let height = resizeParams.height || originalHeight;
     let width = resizeParams.width || originalWidth;

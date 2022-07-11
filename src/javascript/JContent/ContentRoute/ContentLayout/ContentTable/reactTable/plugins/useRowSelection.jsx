@@ -3,10 +3,10 @@ import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../../../con
 import {useGetLatest} from 'react-table';
 import {flattenTree} from '../../../ContentLayout.utils';
 
-export const useRowSelection = hooks => {
+export const useRowSelection = selector => hooks => {
     hooks.getToggleRowSelectedProps = defaultGetToggleRowSelectedProps;
     hooks.getToggleAllRowsSelectedProps = defaultGetToggleAllRowsSelectedProps;
-    hooks.useInstance.push(useInstance);
+    hooks.useInstance.push(getUseInstance(selector));
     hooks.prepareRow.push(prepareRow);
 };
 
@@ -34,10 +34,10 @@ const defaultGetToggleAllRowsSelectedProps = instance => ({
     checked: instance.anySelected
 });
 
-function useInstance(instance) {
+const getUseInstance = selector => instance => {
     const {getHooks, rows} = instance;
     const getInstance = useGetLatest(instance);
-    const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
+    const {selection} = useSelector(selector);
     const dispatch = useDispatch();
 
     const paths = flattenTree(rows).map(n => n.original.path);
@@ -65,5 +65,4 @@ function useInstance(instance) {
         allSelected,
         anySelected
     });
-}
-
+};

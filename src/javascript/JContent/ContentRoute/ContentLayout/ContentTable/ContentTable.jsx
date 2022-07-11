@@ -34,6 +34,7 @@ export const ContentTable = ({
     isLoading,
     isAllowUpload,
     selector,
+    reactTableSelectors,
     reduxActions,
     columnData,
     doubleClickNavigation,
@@ -67,8 +68,8 @@ export const ContentTable = ({
             columns: columnData.allColumnData,
             data: rows
         },
-        useRowSelection,
-        useSort,
+        useRowSelection(reactTableSelectors.rowSelector),
+        useSort(reactTableSelectors.sortSelector),
         useExpanded
     );
 
@@ -222,6 +223,9 @@ const selector = state => ({
     tableView: state.jcontent.tableView
 });
 
+const rowSelector = state => ({selection: state.jcontent.selection});
+const sortSelector = state => state.jcontent.sort;
+
 ContentTable.propTypes = {
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool,
@@ -243,7 +247,11 @@ ContentTable.propTypes = {
     columnData: PropTypes.shape({
         allColumnData: PropTypes.array.isRequired,
         reducedColumnData: PropTypes.array.isRequired
-    })
+    }),
+    reactTableSelectors: {
+        rowSelector: PropTypes.func.isRequired,
+        sortSelector: PropTypes.func.isRequired
+    }
 };
 
 ContentTable.defaultProps = {
@@ -262,6 +270,10 @@ ContentTable.defaultProps = {
     columnData: {
         allColumnData: allColumnData,
         reducedColumnData: reducedColumnData
+    },
+    reactTableSelectors: {
+        rowSelector: rowSelector,
+        sortSelector: sortSelector
     }
 };
 

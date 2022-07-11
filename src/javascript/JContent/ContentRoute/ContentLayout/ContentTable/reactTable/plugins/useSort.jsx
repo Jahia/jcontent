@@ -5,9 +5,9 @@ import {useGetLatest} from 'react-table';
 const DESC = 'DESC';
 const ASC = 'ASC';
 
-export const useSort = hooks => {
+export const useSort = selector => hooks => {
     hooks.getSortProps = defaultGetSortProps;
-    hooks.useInstance.push(useInstance);
+    hooks.useInstance.push(getUseInstance(selector));
 };
 
 useSort.pluginName = 'useSort';
@@ -26,10 +26,10 @@ const defaultGetSortProps = (props, {instance, column}) => {
     ];
 };
 
-function useInstance(instance) {
+const getUseInstance = selector => instance => {
     const getInstance = useGetLatest(instance);
     const {getHooks, flatHeaders} = instance;
-    const {order, orderBy} = useSelector(state => state.jcontent.sort);
+    const {order, orderBy} = useSelector(selector);
     const dispatch = useDispatch();
 
     const toggleOrder = order => {
@@ -65,5 +65,5 @@ function useInstance(instance) {
     Object.assign(instance, {
         sortColumn
     });
-}
+};
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
 import {CropPanel} from './CropPanel';
-import defaultProps from '../../../testDefaultProps';
+import defaultProps from '../../../../../testDefaultProps';
 import {Button} from '@jahia/moonstone';
 
 describe('Crop panel', () => {

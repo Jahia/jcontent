@@ -36,7 +36,6 @@ import {PreviewActionComponent} from './actions/previewAction';
 import {PasteActionComponent} from './actions/copyPaste/pasteAction';
 import {CopyCutActionComponent} from './actions/copyPaste/CopyCutActionComponent';
 import {LockActionComponent} from './actions/lockAction';
-import {RouterActionComponent} from './actions/routerAction';
 import {UnlockActionComponent} from './actions/unlockAction';
 import {ClearAllLocksActionComponent} from './actions/clearAllLocksAction';
 import {LocateActionComponent} from './actions/locateAction';
@@ -51,6 +50,7 @@ import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
+import {EditImageActionComponent} from '~/JContent/actions/editImage';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -271,11 +271,7 @@ export const jContentActions = registry => {
         buttonIcon: <Edit/>,
         buttonLabel: 'jcontent:label.contentManager.editImage.action',
         targets: ['contentActions:2.5'],
-        requiredPermission: ['jcr:write'],
-        requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction],
-        showOnNodeTypes: ['jmix:image'],
-        mode: 'image-edit',
-        component: RouterActionComponent
+        component: EditImageActionComponent
     });
     registry.add('action', 'downloadFile', {
         buttonIcon: <CloudDownload/>,

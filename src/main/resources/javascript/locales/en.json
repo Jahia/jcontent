@@ -315,7 +315,8 @@
           "text": "A file with this name already exists. Are you sure you want to continue?",
           "no": "No",
           "yes": "Yes"
-        }
+        },
+        "close": "Close"
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)",

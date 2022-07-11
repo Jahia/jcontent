@@ -1,11 +1,11 @@
 import React from 'react';
 import {mount} from '@jahia/test-framework';
-import {ImageEditorContainer} from './ImageEditor.container';
+import {ImageEditorDialogContainer} from './ImageEditorDialog.container';
 import {MockedProvider} from '@apollo/react-testing';
-import {ImageQuery} from './ImageEditor.gql-queries';
-import {getImageMutation} from './ImageEditor.gql-mutations';
+import {ImageQuery} from './ImageEditorDialog.gql-queries';
+import {getImageMutation} from './ImageEditorDialog.gql-mutations';
 import {MuiThemeProvider} from '@material-ui/core';
-import ImageEditor from './ImageEditor';
+import ImageEditor from './ImageEditorDialog';
 import {dsGenericTheme as theme} from '@jahia/design-system-kit';
 
 let result = {
@@ -85,7 +85,7 @@ describe('Image Edition', () => {
         wrapper = mount(
             <MuiThemeProvider theme={theme}>
                 <MockedProvider mocks={mocks}>
-                    <ImageEditorContainer {...props}/>
+                    <ImageEditorDialogContainer {...props}/>
                 </MockedProvider>
             </MuiThemeProvider>
         );

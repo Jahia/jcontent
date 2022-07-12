@@ -49,14 +49,14 @@ const tableViewDropdownData = (t, viewMode) => {
     }));
 };
 
-export const ViewModeSelector = ({selector}) => {
+export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation();
     const valid = useCode(code);
 
     let {mode, viewMode} = useSelector(selector);
 
     const dispatch = useDispatch();
-    const onChange = vm => dispatch(setTableViewMode(vm));
+    const onChange = vm => dispatch(setTableViewModeAction(vm));
 
     const handleChange = selectedViewMode => {
         onChange(selectedViewMode);
@@ -99,11 +99,13 @@ const selector = state => ({
 });
 
 ViewModeSelector.propTypes = {
-    selector: PropTypes.func
+    selector: PropTypes.func,
+    setTableViewModeAction: PropTypes.func
 };
 
 ViewModeSelector.defaultProps = {
-    selector: selector
+    selector: selector,
+    setTableViewModeAction: mode => setTableViewMode(mode)
 };
 
 export default ViewModeSelector;

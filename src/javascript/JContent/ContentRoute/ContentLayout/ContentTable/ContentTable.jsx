@@ -9,7 +9,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
-import {cmRemoveSelection} from '../contentSelection.redux';
+import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
+import {cmSetSort} from '../sort.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import ContentListEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
@@ -35,6 +36,7 @@ export const ContentTable = ({
     isAllowUpload,
     selector,
     reactTableSelectors,
+    reactTableActions,
     reduxActions,
     columnData,
     doubleClickNavigation,
@@ -68,8 +70,8 @@ export const ContentTable = ({
             columns: columnData.allColumnData,
             data: rows
         },
-        useRowSelection(reactTableSelectors.rowSelector),
-        useSort(reactTableSelectors.sortSelector),
+        useRowSelection(reactTableSelectors.rowSelector, reactTableActions.rowSelection),
+        useSort(reactTableSelectors.sortSelector, reactTableActions.sort),
         useExpanded
     );
 
@@ -251,6 +253,16 @@ ContentTable.propTypes = {
     reactTableSelectors: {
         rowSelector: PropTypes.func.isRequired,
         sortSelector: PropTypes.func.isRequired
+    },
+    reactTableActions: {
+        rowSelection: {
+            switchSelectionAction: PropTypes.func.isRequired,
+            removeSelectionAction: PropTypes.func.isRequired,
+            addSelectionAction: PropTypes.func.isRequired
+        },
+        sort: {
+            setSortAction: PropTypes.func.isRequired
+        }
     }
 };
 
@@ -274,6 +286,16 @@ ContentTable.defaultProps = {
     reactTableSelectors: {
         rowSelector: rowSelector,
         sortSelector: sortSelector
+    },
+    reactTableActions: {
+        rowSelection: {
+            switchSelectionAction: p => cmSwitchSelection(p),
+            removeSelectionAction: p => cmRemoveSelection(p),
+            addSelectionAction: p => cmAddSelection(p)
+        },
+        sort: {
+            setSortAction: s => cmSetSort(s)
+        }
     }
 };
 

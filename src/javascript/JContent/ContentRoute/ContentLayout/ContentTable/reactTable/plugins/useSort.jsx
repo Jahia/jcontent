@@ -1,13 +1,12 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {cmSetSort} from '../../../sort.redux';
 import {useGetLatest} from 'react-table';
 
 const DESC = 'DESC';
 const ASC = 'ASC';
 
-export const useSort = selector => hooks => {
+export const useSort = (selector, actions) => hooks => {
     hooks.getSortProps = defaultGetSortProps;
-    hooks.useInstance.push(getUseInstance(selector));
+    hooks.useInstance.push(getUseInstance(selector, actions));
 };
 
 useSort.pluginName = 'useSort';
@@ -26,7 +25,7 @@ const defaultGetSortProps = (props, {instance, column}) => {
     ];
 };
 
-const getUseInstance = selector => instance => {
+const getUseInstance = (selector, actions) => instance => {
     const getInstance = useGetLatest(instance);
     const {getHooks, flatHeaders} = instance;
     const {order, orderBy} = useSelector(selector);
@@ -37,7 +36,7 @@ const getUseInstance = selector => instance => {
     };
 
     const sortColumn = column => {
-        dispatch(cmSetSort({
+        dispatch(actions.setSortAction({
             order: orderBy === column.property ? toggleOrder(order) : order,
             orderBy: column.property
         }));

@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {Button} from '@jahia/moonstone';
 import {RotatePanel} from './RotatePanel';
-import defaultProps from '../../../testDefaultProps';
+import defaultProps from '../../../../../testDefaultProps';
 
 describe('Rotate panel', () => {
     let props;

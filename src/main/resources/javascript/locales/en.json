@@ -283,8 +283,8 @@
         "crop": "Crop",
         "rotate": "Rotate",
         "rotateInfo": "Rotate the image then save it, or save the rotated image as a new file",
-        "rotateLeft": "Rotate left",
-        "rotateRight": "Rotate right",
+        "rotateLeft": "Left",
+        "rotateRight": "Right",
         "width": "Width",
         "height": "Height",
         "undo": "Undo changes",
@@ -315,7 +315,8 @@
           "text": "A file with this name already exists. Are you sure you want to continue?",
           "no": "No",
           "yes": "Yes"
-        }
+        },
+        "close": "Close"
       },
       "subContent": "({{count}} sub-content)",
       "subContent_plural": "({{count}} sub-contents)",

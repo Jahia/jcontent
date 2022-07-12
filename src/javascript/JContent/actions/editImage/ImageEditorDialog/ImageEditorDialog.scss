@@ -1,6 +1,10 @@
 
 .root.root {
-    min-height: 0;
+    min-height: 70vh;
+}
+
+.dialogContent.dialogContent {
+    overflow: hidden;
 }
 
 .left.left {
@@ -21,7 +25,19 @@
     justify-content: center;
     align-items: center;
     max-width: 600px;
-    padding-right: var(--spacing-small);
+    padding: 0 var(--spacing-medium);
 
     background: var(--color-gray_light40);
+}
+
+.content.content {
+    margin-top: var(--spacing-large);
+}
+
+.chip {
+    margin-left: var(--spacing-medium);
+}
+
+.actions.actions {
+    border-top: 1px solid  var(--color-gray40);
 }

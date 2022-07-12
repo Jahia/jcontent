@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
 import {ResizePanel} from './ResizePanel';
-import defaultProps from '../../../testDefaultProps';
+import defaultProps from '../../../../../testDefaultProps';
 
 describe('Resize panel', () => {
     let props;

@@ -40,14 +40,14 @@ describe('Image actions', () => {
 
     it('should save changes', () => {
         wrapper.setProps({isDirty: true});
-        wrapper.find(Button).at(1).simulate('click');
+        wrapper.find(Button).at(2).simulate('click');
         expect(props.saveChanges.mock.calls.length).toBe(1);
         expect(props.saveChanges.mock.calls[0][0]).toBe(true);
     });
 
     it('should save as changes', () => {
         wrapper.setProps({isDirty: true});
-        wrapper.find(Button).at(2).simulate('click');
+        wrapper.find(Button).at(1).simulate('click');
         expect(props.saveChanges.mock.calls.length).toBe(1);
         expect(props.saveChanges.mock.calls[0][0]).toBe(false);
     });

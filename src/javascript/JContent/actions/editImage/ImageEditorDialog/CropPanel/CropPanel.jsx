@@ -47,6 +47,17 @@ export const CropPanel = ({onCrop, cropParams}) => {
                             onChange={setWidth}
                         />
                     </FormControl>
+                </div>
+                <div className={styles.secondCol}>
+                    <Button icon={<Link/>}
+                            color={cropParams.aspect ? 'accent' : 'default'}
+                            size="big"
+                            variant="ghost"
+                            data-cm-role="keep-ratio-button"
+                            onClick={switchRatio}
+                    />
+                </div>
+                <div className={styles.firstCol}>
                     <FormControl className={styles.formControl}>
                         <InputLabel shrink
                                     className={styles.inputLabel}
@@ -60,15 +71,6 @@ export const CropPanel = ({onCrop, cropParams}) => {
                             onChange={setHeight}
                         />
                     </FormControl>
-                </div>
-                <div className={styles.secondCol}>
-                    <Button icon={<Link/>}
-                            color={cropParams.aspect ? 'accent' : 'default'}
-                            size="big"
-                            variant="ghost"
-                            data-cm-role="keep-ratio-button"
-                            onClick={switchRatio}
-                    />
                 </div>
             </div>
         </>

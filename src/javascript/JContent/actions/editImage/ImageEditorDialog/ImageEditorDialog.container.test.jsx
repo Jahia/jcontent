@@ -76,10 +76,7 @@ describe('Image Edition', () => {
 
         props = {
             path: '/toto.jpg',
-            site: 'mySite',
-            language: 'en',
-            editImage: jest.fn(),
-            refreshData: jest.fn()
+            onExit: jest.fn()
         };
 
         wrapper = mount(
@@ -93,49 +90,5 @@ describe('Image Edition', () => {
 
     it('render', async () => {
         expect(wrapper.find(ImageEditor).length).toBe(1);
-    });
-
-    it('rotates 1', () => {
-        wrapper = wrapper.find('ImageEditorContainer');
-        wrapper.instance().rotate(1);
-        expect(wrapper.state().rotationParams.rotations).toBe(1);
-        expect(wrapper.state().transforms.length).toBe(1);
-        expect(wrapper.state().transforms[0].op).toBe('rotateImage');
-        expect(wrapper.state().transforms[0].args.angle).toBe(90);
-    });
-
-    it('rotates full turn', () => {
-        wrapper = wrapper.find('ImageEditorContainer');
-        wrapper.instance().rotate(1);
-        wrapper.instance().rotate(1);
-        wrapper.instance().rotate(1);
-        wrapper.instance().rotate(1);
-        expect(wrapper.state().rotationParams.rotations).toBe(0);
-        expect(wrapper.state().transforms.length).toBe(0);
-    });
-
-    it('resizes', () => {
-        wrapper = wrapper.find('ImageEditorContainer');
-        wrapper.instance().onImageLoaded({naturalHeight: 200, naturalWidth: 300});
-        wrapper.instance().resize({width: 150});
-        expect(wrapper.state().resizeParams.width).toBe(150);
-        expect(wrapper.state().resizeParams.height).toBe(100);
-        expect(wrapper.state().transforms[0].op).toBe('resizeImage');
-        expect(wrapper.state().transforms[0].args.width).toBe(150);
-        expect(wrapper.state().transforms[0].args.height).toBe(100);
-
-        wrapper.instance().resize({keepRatio: false});
-        expect(wrapper.state().resizeParams.width).toBe(150);
-        expect(wrapper.state().resizeParams.height).toBe(100);
-        expect(wrapper.state().transforms[0].op).toBe('resizeImage');
-        expect(wrapper.state().transforms[0].args.width).toBe(150);
-        expect(wrapper.state().transforms[0].args.height).toBe(100);
-
-        wrapper.instance().resize({height: 150});
-        expect(wrapper.state().resizeParams.width).toBe(150);
-        expect(wrapper.state().resizeParams.height).toBe(150);
-        expect(wrapper.state().transforms[0].op).toBe('resizeImage');
-        expect(wrapper.state().transforms[0].args.width).toBe(150);
-        expect(wrapper.state().transforms[0].args.height).toBe(150);
     });
 });

@@ -19,8 +19,6 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, isCropExpanded, ts
     let filepath = window.contextJsParameters.contextPath + '/files/default' + path.replace(/[^/]/g, encodeURIComponent) + '?ts=' + ts;
     let containerHeight = containerRef.current ? containerRef.current.parentElement.offsetHeight - 33 : 0;
     let containerWidth = containerRef.current ? containerRef.current.parentElement.offsetWidth - 33 : 0;
-    console.log('w', containerWidth);
-    console.log('h', containerHeight);
     let keepOrientation = rotationParams.rotations % 2 === 0;
     let height = resizeParams.height || originalHeight;
     let width = resizeParams.width || originalWidth;

@@ -70,18 +70,21 @@ export const ImageEditorDialog = ({
                     <>
                         <Tab>
                             <TabItem size="big"
+                                     data-cm-role="rotate-panel"
                                      isSelected={currentPanel === PANELS.ROTATE}
                                      isDisabled={resizeParams.dirty || cropParams.dirty}
                                      label={t('jcontent:label.contentManager.editImage.rotate')}
                                      onClick={() => !resizeParams.dirty && !cropParams.dirty && setCurrentPanel(PANELS.ROTATE)}
                             />
                             <TabItem size="big"
+                                     data-cm-role="resize-panel"
                                      isSelected={currentPanel === PANELS.RESIZE}
                                      isDisabled={rotationParams.dirty || cropParams.dirty}
                                      label={t('jcontent:label.contentManager.editImage.resize')}
                                      onClick={() => !rotationParams.dirty && !cropParams.dirty && setCurrentPanel(PANELS.RESIZE)}
                             />
                             <TabItem size="big"
+                                     data-cm-role="crop-panel"
                                      isSelected={currentPanel === PANELS.CROP}
                                      isDisabled={resizeParams.dirty || rotationParams.dirty}
                                      label={t('jcontent:label.contentManager.editImage.crop')}

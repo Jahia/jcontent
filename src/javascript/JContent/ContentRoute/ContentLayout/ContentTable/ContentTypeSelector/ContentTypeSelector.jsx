@@ -12,16 +12,16 @@ import {cmSetPage} from '../../pagination.redux';
 const localStorage = window.localStorage;
 const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
-const ContentTypeSelector = ({contentCount, pagesCount}) => {
+const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions}) => {
     const {t} = useTranslation();
-    const tableView = useSelector(state => state.jcontent.tableView);
+    const tableView = useSelector(selector);
     const dispatch = useDispatch();
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
     const actionsBatch = [];
 
     // Reset pagination when changing view type in non structured mode to disassociate pagination between two tabs
     if (!isStructuredView) {
-        actionsBatch.push(cmSetPage(0));
+        actionsBatch.push(reduxActions.setPageAction(0));
     }
 
     return (
@@ -31,7 +31,7 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
                      label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount > 0 ? `(${contentCount})` : ' '})}
                      size="big"
                      onClick={() => {
-                         actionsBatch.push(setTableViewType(JContentConstants.tableView.viewType.CONTENT));
+                         actionsBatch.push(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.CONTENT));
                          dispatch(batchActions(actionsBatch));
                          localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.CONTENT);
                      }}/>
@@ -40,7 +40,7 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
                      label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount > 0 ? `(${pagesCount})` : ' '})}
                      size="big"
                      onClick={() => {
-                         actionsBatch.push(setTableViewType(JContentConstants.tableView.viewType.PAGES));
+                         actionsBatch.push(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.PAGES));
                          dispatch(batchActions(actionsBatch));
                          localStorage.setItem(VIEW_TYPE, JContentConstants.tableView.viewType.PAGES);
                      }}/>
@@ -50,7 +50,20 @@ const ContentTypeSelector = ({contentCount, pagesCount}) => {
 
 ContentTypeSelector.propTypes = {
     contentCount: PropTypes.number,
-    pagesCount: PropTypes.number
+    pagesCount: PropTypes.number,
+    selector: PropTypes.func,
+    reduxActions: {
+        setPageAction: PropTypes.func.isRequired,
+        setTableViewTypeAction: PropTypes.func.isRequired
+    }
+};
+
+ContentTypeSelector.defaultProps = {
+    selector: state => state.jcontent.tableView,
+    reduxActions: {
+        setPageAction: page => cmSetPage(page),
+        setTableViewTypeAction: view => setTableViewType(view)
+    }
 };
 
 export default ContentTypeSelector;

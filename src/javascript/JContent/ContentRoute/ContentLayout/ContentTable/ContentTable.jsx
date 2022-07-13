@@ -40,7 +40,8 @@ export const ContentTable = ({
     reduxActions,
     columnData,
     doubleClickNavigation,
-    ctxMenuActionKey}) => {
+    ctxMenuActionKey,
+    ContentTypeSelector}) => {
     const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(selector);
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -263,7 +264,8 @@ ContentTable.propTypes = {
         sort: {
             setSortAction: PropTypes.func.isRequired
         }
-    }
+    },
+    ContentTypeSelector: PropTypes.element
 };
 
 ContentTable.defaultProps = {
@@ -296,7 +298,8 @@ ContentTable.defaultProps = {
         sort: {
             setSortAction: s => cmSetSort(s)
         }
-    }
+    },
+    ContentTypeSelector: ContentTypeSelector
 };
 
 export default ContentTable;

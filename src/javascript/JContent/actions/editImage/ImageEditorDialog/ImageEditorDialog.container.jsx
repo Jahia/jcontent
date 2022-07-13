@@ -211,7 +211,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
     };
 
     const undoChanges = () => {
-        setOperations(previousState => ({
+        setOperations({
             transforms: [],
             rotationParams: {
                 dirty: false,
@@ -229,9 +229,9 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                 left: 0,
                 height: null,
                 width: null,
-                aspect: previousState.originalWidth / previousState.originalHeight
+                aspect: imageSize.originalWidth / imageSize.originalHeight
             }
-        }));
+        });
     };
 
     const handleChangeName = ({target: {value}}) => {

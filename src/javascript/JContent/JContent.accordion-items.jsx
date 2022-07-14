@@ -66,7 +66,7 @@ export const jContentAccordionItems = registry => {
         }
     });
 
-    registry.add('accordionItem', 'contents', renderDefaultContentTrees, {
+    registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'jcontent:label.contentManager.navigation.contentFolders',

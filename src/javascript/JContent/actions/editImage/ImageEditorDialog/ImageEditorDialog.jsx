@@ -55,7 +55,7 @@ export const ImageEditorDialog = ({
                 </div>
             </DialogTitle>
             <DialogContent classes={{root: 'flexRow ' + styles.dialogContent}}>
-                <TwoColumnsContent classes={{left: styles.left, right: styles.right}}
+                <TwoColumnsContent classes={{left: styles.left, right: styles.right, root: styles.twoCols}}
                                    rightCol={<ImageEditorPreview isCropExpanded={currentPanel === PANELS.CROP}
                                                                  path={path}
                                                                  ts={ts}

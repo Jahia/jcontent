@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import styles from './ImageEditorPreview.scss';
+
 let containerRef = React.createRef();
 
 function getCropValue(cropParams, originalWidth, originalHeight) {
@@ -27,7 +28,11 @@ export const ImageEditorPreview = ({path, cropParams, onCrop, isCropExpanded, ts
     let reduceFactor = Math.max(1, rotatedHeight / containerHeight, rotatedWidth / containerWidth);
     let translate = (rotationParams.rotations % 2) * (width - height) / reduceFactor / 2;
     return (
-        <div ref={containerRef} style={{width: rotatedWidth / reduceFactor, height: rotatedHeight / reduceFactor}}>
+        <div ref={containerRef}
+             style={{width: rotatedWidth / reduceFactor, height: rotatedHeight / reduceFactor}}
+             data-image-original-width={originalWidth}
+             data-image-original-height={originalHeight}
+        >
             {isCropExpanded ?
                 <ReactCrop keepSelection
                            useNaturalImageDimensions

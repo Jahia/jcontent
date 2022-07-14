@@ -14,7 +14,7 @@ import {
     unregisterContentModificationEventHandler
 } from '../../eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
@@ -26,55 +26,31 @@ import {isInSearchMode, structureData} from '../ContentLayout/ContentLayout.util
 import usePreloadedData from './usePreloadedData';
 import {Loader} from '@jahia/moonstone';
 
-const contentQueryHandlerByMode = mode => {
-    switch (mode) {
-        case JContentConstants.mode.MEDIA:
-            return new FilesQueryHandler();
-        case JContentConstants.mode.SEARCH:
-            return new SearchQueryHandler();
-        case JContentConstants.mode.SQL2SEARCH:
-            return new Sql2SearchQueryHandler();
-        default:
-            return new ContentQueryHandler();
-    }
-};
-
 let currentResult;
 
 export const ContentLayoutContainer = ({
-    mode,
-    path,
-    uilang,
-    lang,
-    siteKey,
-    params,
-    pagination,
-    sort,
-    openedPaths,
-    openPaths,
-    closePaths,
-    selection,
-    removeSelection,
-    switchSelection,
-    setPreviewSelection,
-    setPath,
-    filesMode,
-    previewState,
-    previewSelection,
-    tableView
+    selector,
+    hasGWTHandlers,
+    refetcherKey,
+    contentQueryHandlerByMode,
+    reduxActions,
+    ContentLayout
 }) => {
     const {t} = useTranslation();
     const client = useApolloClient();
+    const {mode, path, uilang, lang, siteKey, params, pagination, sort, openedPaths, selection,
+        tableView, previewState, filesMode, previewSelection} = useSelector(selector, shallowEqual);
+    const dispatch = useDispatch();
     const fetchPolicy = 'network-only';
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
-    const queryHandler = useMemo(() => contentQueryHandlerByMode(mode), [mode]);
+    const queryHandler = useMemo(() => contentQueryHandlerByMode(mode), [mode, contentQueryHandlerByMode]);
     const layoutQuery = queryHandler.getQuery();
     const rootPath = `/sites/${siteKey}`;
     const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
 
     const layoutQueryParams = useMemo(
         () => {
-            let r = queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination, sort, viewType: tableView.viewType});
+            let r = queryHandler.getQueryParams({path, uilang, lang, params, rootPath, pagination, sort, viewType: tableView.viewType});
             // Update params for structured view to use different type and recursion filters
             if (isStructuredView) {
                 r = queryHandler.updateQueryParamsForStructuredView(r, tableView.viewType, mode);
@@ -95,7 +71,7 @@ export const ContentLayoutContainer = ({
         client.cache.flushNodeEntryByPath(parentPath);
         if (path !== parentPath) {
             // Make sure the created CONTENT is visible in the main panel.
-            setPath(parentPath);
+            dispatch(reduxActions.setPathAction(parentPath));
         }
 
         return client.reFetchObservableQueries();
@@ -109,18 +85,18 @@ export const ContentLayoutContainer = ({
 
         // Switch to the closest available ancestor node in case of currently selected node or any of its ancestor nodes deletion.
         if (isDescendantOrSelf(path, nodePath)) {
-            setPath(nodePath.substring(0, nodePath.lastIndexOf('/')));
+            dispatch(reduxActions.setPathAction(nodePath.substring(0, nodePath.lastIndexOf('/'))));
         }
 
         // Close any expanded nodes that have been just removed.
         let pathsToClose = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
         if (!_.isEmpty(pathsToClose)) {
-            closePaths(pathsToClose);
+            dispatch(reduxActions.closePathsAction(pathsToClose));
         }
 
         // De-select any removed nodes.
         if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-            setPreviewSelection(null);
+            dispatch(reduxActions.setPreviewSelectionAction(null));
         }
 
         return client.reFetchObservableQueries();
@@ -137,19 +113,19 @@ export const ContentLayoutContainer = ({
 
         // Switch to the new renamed node
         if (isDescendantOrSelf(path, nodePath)) {
-            setPath(getNewNodePath(path, nodePath, newPath));
+            dispatch(reduxActions.setPathAction(getNewNodePath(path, nodePath, newPath)));
         }
 
         let pathsToReopen = _.filter(openedPaths, openedPath => isDescendantOrSelf(openedPath, nodePath));
         if (!_.isEmpty(pathsToReopen)) {
-            closePaths(pathsToReopen);
+            dispatch(reduxActions.closePathsAction(pathsToReopen));
             pathsToReopen = _.map(pathsToReopen, pathToReopen => getNewNodePath(pathToReopen, nodePath, newPath));
-            openPaths(pathsToReopen);
+            dispatch(reduxActions.openPathsAction(pathsToReopen));
         }
 
         // De-select any removed nodes.
         if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
-            setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
+            dispatch(reduxActions.setPreviewSelectionAction(getNewNodePath(previewSelection, nodePath, newPath)));
         }
 
         return client.reFetchObservableQueries();
@@ -180,8 +156,8 @@ export const ContentLayoutContainer = ({
             let selectedNodes = _.clone(selection);
             setTimeout(function () {
                 if (_.includes(selectedNodes, nodePath)) {
-                    removeSelection(nodePath);
-                    switchSelection(nodePath);
+                    dispatch(reduxActions.removeSelectionAction(nodePath));
+                    dispatch(reduxActions.switchSelectionAction(nodePath));
                 }
             });
         }
@@ -207,7 +183,7 @@ export const ContentLayoutContainer = ({
         query: layoutQuery,
         variables: isStructuredView ?
             queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
-            queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
+            queryHandler.getQueryParams({path, uilang, lang, params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
         fetchPolicy: fetchPolicy
     }), [isStructuredView, lang, layoutQuery, layoutQueryParams, mode, pagination, params, path, preloadForType, queryHandler, rootPath, sort, uilang]);
 
@@ -227,22 +203,26 @@ export const ContentLayoutContainer = ({
             let subTypes = ['jnt:page', 'jnt:contentFolder', 'jnt:virtualsite'];
             let isSub = !subTypes.includes(nodeTypeName);
             // Sub is not the same as params.sub; refresh and sync up path param state
-            if (isSub !== (params.sub === true)) { // Params.sub needs to be boolean type; else falsy
-                setPath(path, {sub: isSub});
+            if (isSub !== (params.sub === true) && !params.typeFilter) { // Params.sub needs to be boolean type; else falsy
+                dispatch(reduxActions.setPathAction(path, {sub: isSub}));
             }
         }
 
-        setRefetcher(refetchTypes.CONTENT_DATA, {
+        setRefetcher(refetcherKey, {
             query: layoutQuery,
             queryParams: layoutQueryParams,
             refetch: refetch
         });
 
-        registerContentModificationEventHandler(onGwtContentModification);
+        if (hasGWTHandlers) {
+            registerContentModificationEventHandler(onGwtContentModification);
+        }
 
         return () => {
-            unsetRefetcher(refetchTypes.CONTENT_DATA);
-            unregisterContentModificationEventHandler(onGwtContentModification);
+            unsetRefetcher(refetcherKey);
+            if (hasGWTHandlers) {
+                unregisterContentModificationEventHandler(onGwtContentModification);
+            }
         };
     });
 
@@ -308,7 +288,7 @@ export const ContentLayoutContainer = ({
     );
 };
 
-const mapStateToProps = state => ({
+const selector = state => ({
     mode: state.jcontent.mode,
     siteKey: state.site,
     path: state.jcontent.path,
@@ -325,36 +305,50 @@ const mapStateToProps = state => ({
     tableView: state.jcontent.tableView
 });
 
-const mapDispatchToProps = dispatch => ({
-    setPath: (path, params) => dispatch(cmGoto({path, params})),
-    setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
-    openPaths: paths => dispatch(cmOpenPaths(paths)),
-    closePaths: paths => dispatch(cmClosePaths(paths)),
-    removeSelection: path => dispatch(cmRemoveSelection(path)),
-    switchSelection: path => dispatch(cmSwitchSelection(path))
-});
-
-ContentLayoutContainer.propTypes = {
-    closePaths: PropTypes.func.isRequired,
-    lang: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired,
-    openPaths: PropTypes.func.isRequired,
-    openedPaths: PropTypes.array.isRequired,
-    pagination: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
-    path: PropTypes.string.isRequired,
-    previewSelection: PropTypes.string,
-    setPath: PropTypes.func.isRequired,
-    setPreviewSelection: PropTypes.func.isRequired,
-    siteKey: PropTypes.string.isRequired,
-    sort: PropTypes.object.isRequired,
-    uilang: PropTypes.string.isRequired,
-    previewState: PropTypes.number.isRequired,
-    filesMode: PropTypes.string.isRequired,
-    selection: PropTypes.array.isRequired,
-    removeSelection: PropTypes.func.isRequired,
-    switchSelection: PropTypes.func.isRequired,
-    tableView: PropTypes.object.isRequired
+const contentQueryHandlerByMode = mode => {
+    console.log(mode);
+    switch (mode) {
+        case JContentConstants.mode.MEDIA:
+            return new FilesQueryHandler();
+        case JContentConstants.mode.SEARCH:
+            return new SearchQueryHandler();
+        case JContentConstants.mode.SQL2SEARCH:
+            return new Sql2SearchQueryHandler();
+        default:
+            return new ContentQueryHandler();
+    }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);
+ContentLayoutContainer.propTypes = {
+    hasGWTHandlers: PropTypes.bool,
+    selector: PropTypes.func,
+    refetcherKey: PropTypes.string,
+    contentQueryHandlerByMode: PropTypes.func,
+    reduxActions: {
+        setPathAction: PropTypes.func.isRequired,
+        setPreviewSelectionAction: PropTypes.func.isRequired,
+        openPathsAction: PropTypes.func.isRequired,
+        closePathsAction: PropTypes.func.isRequired,
+        removeSelectionAction: PropTypes.func.isRequired,
+        switchSelectionAction: PropTypes.func.isRequired
+    },
+    ContentLayout: PropTypes.element
+};
+
+ContentLayoutContainer.defaultProps = {
+    hasGWTHandlers: true,
+    selector: selector,
+    refetcherKey: refetchTypes.CONTENT_DATA,
+    contentQueryHandlerByMode: contentQueryHandlerByMode,
+    reduxActions: {
+        setPathAction: (path, params) => cmGoto({path, params}),
+        setPreviewSelectionAction: previewSelection => cmSetPreviewSelection(previewSelection),
+        openPathsAction: paths => cmOpenPaths(paths),
+        closePathsAction: paths => cmClosePaths(paths),
+        removeSelectionAction: path => cmRemoveSelection(path),
+        switchSelectionAction: path => cmSwitchSelection(path)
+    },
+    ContentLayout: ContentLayout
+};
+
+export default ContentLayoutContainer;

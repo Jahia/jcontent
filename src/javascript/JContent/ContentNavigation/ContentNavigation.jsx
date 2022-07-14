@@ -6,7 +6,9 @@ import {useTranslation} from 'react-i18next';
 const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation, header}) => {
     const {t} = useTranslation('jcontent');
     return (
-        <SecondaryNav header={header}>
+        <SecondaryNav defaultSize={{height: '100%', width: '245px'}}
+                      header={header}
+        >
             <Accordion isReversed
                        openedItem={mode}
                        onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).defaultPath(siteKey))}

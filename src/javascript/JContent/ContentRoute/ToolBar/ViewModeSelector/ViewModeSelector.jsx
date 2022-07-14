@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Button, toIconComponentFunction, ViewList, ViewTree, WebPage, Dropdown} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -48,17 +49,14 @@ const tableViewDropdownData = (t, viewMode) => {
     }));
 };
 
-export const ViewModeSelector = () => {
+export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation();
     const valid = useCode(code);
 
-    let {mode, viewMode} = useSelector(state => ({
-        mode: state.jcontent.mode,
-        viewMode: state.jcontent.tableView.viewMode
-    }));
+    let {mode, viewMode} = useSelector(selector);
 
     const dispatch = useDispatch();
-    const onChange = vm => dispatch(setTableViewMode(vm));
+    const onChange = vm => dispatch(setTableViewModeAction(vm));
 
     const handleChange = selectedViewMode => {
         onChange(selectedViewMode);
@@ -93,6 +91,21 @@ export const ViewModeSelector = () => {
             }
         </>
     );
+};
+
+const selector = state => ({
+    mode: state.jcontent.mode,
+    viewMode: state.jcontent.tableView.viewMode
+});
+
+ViewModeSelector.propTypes = {
+    selector: PropTypes.func,
+    setTableViewModeAction: PropTypes.func
+};
+
+ViewModeSelector.defaultProps = {
+    selector: selector,
+    setTableViewModeAction: mode => setTableViewMode(mode)
 };
 
 export default ViewModeSelector;

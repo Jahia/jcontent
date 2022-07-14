@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
@@ -30,15 +31,13 @@ const tableViewDropdownData = (t, mode) => {
     }));
 };
 
-export const FileModeSelector = () => {
+export const FileModeSelector = ({selector, setModeAction}) => {
     const {t} = useTranslation();
 
-    const {mode} = useSelector(state => ({
-        mode: state.jcontent.filesGrid.mode
-    }));
+    const {mode} = useSelector(selector);
 
     const dispatch = useDispatch();
-    const onChange = mode => dispatch(filesgridSetMode(mode));
+    const onChange = mode => dispatch(setModeAction(mode));
 
     const handleChange = selectedMode => {
         onChange(selectedMode);
@@ -55,6 +54,20 @@ export const FileModeSelector = () => {
                   onChange={(e, item) => handleChange(item.value)}
         />
     );
+};
+
+const selector = state => ({
+    mode: state.jcontent.filesGrid.mode
+});
+
+FileModeSelector.propTypes = {
+    selector: PropTypes.func,
+    setModeAction: PropTypes.func
+};
+
+FileModeSelector.defaultProps = {
+    selector: selector,
+    setModeAction: mode => filesgridSetMode(mode)
 };
 
 export default FileModeSelector;

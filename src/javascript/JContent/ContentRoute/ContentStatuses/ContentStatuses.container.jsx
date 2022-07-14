@@ -4,8 +4,9 @@ import {useQuery} from '@apollo/react-hooks';
 
 import ContentStatuses from './ContentStatuses';
 import {GetContentStatuses} from './ContentStatuses.gql-queries';
+import PropTypes from 'prop-types';
 
-const ContentStatusesContainer = () => {
+const ContentStatusesContainer = ({nodePath}) => {
     const {path, isDisabled, language, uilang} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
@@ -15,7 +16,7 @@ const ContentStatusesContainer = () => {
 
     const {data, error} = useQuery(GetContentStatuses, {
         variables: {
-            path: path,
+            path: nodePath || path,
             language: language
         }
     });
@@ -28,6 +29,10 @@ const ContentStatusesContainer = () => {
     return (
         <ContentStatuses node={node} isDisabled={isDisabled} language={language} uilang={uilang}/>
     );
+};
+
+ContentStatusesContainer.propTypes = {
+    nodePath: PropTypes.string
 };
 
 export default ContentStatusesContainer;

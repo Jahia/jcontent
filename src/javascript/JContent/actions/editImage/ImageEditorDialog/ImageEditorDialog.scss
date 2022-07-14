@@ -34,8 +34,12 @@
     margin-top: var(--spacing-large);
 }
 
+.contentStatuses {
+    padding: 0 var(--spacing-medium);
+}
+
 .chip {
-    margin-left: var(--spacing-medium);
+    margin-left: var(--spacing-nano);
 }
 
 .actions.actions {

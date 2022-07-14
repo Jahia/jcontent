@@ -4,9 +4,11 @@ import {ImageEditorDialogContainer} from './ImageEditorDialog.container';
 import {MockedProvider} from '@apollo/react-testing';
 import {ImageQuery} from './ImageEditorDialog.gql-queries';
 import {getImageMutation} from './ImageEditorDialog.gql-mutations';
+import {GetContentStatuses} from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses.gql-queries';
 import {MuiThemeProvider} from '@material-ui/core';
 import ImageEditor from './ImageEditorDialog';
 import {dsGenericTheme as theme} from '@jahia/design-system-kit';
+import {useSelector} from 'react-redux';
 
 let result = {
     data: {
@@ -35,6 +37,10 @@ let result = {
     }
 };
 
+jest.mock('react-redux', () => ({
+    useSelector: jest.fn()
+}));
+
 let request = {
     query: ImageQuery,
     variables: {
@@ -61,6 +67,16 @@ const mocks = [
                 path: '/toto.jpg'
             }
         }
+    },
+    {
+        request: {
+            query: GetContentStatuses,
+            variables: {
+                path: '/toto.jpg',
+                language: 'en'
+            }
+        },
+        result: result
     }
 ];
 
@@ -78,6 +94,13 @@ describe('Image Edition', () => {
             path: '/toto.jpg',
             onExit: jest.fn()
         };
+
+        useSelector.mockImplementation(() => ({
+            path: '',
+            language: 'en',
+            isDisabled: false,
+            uilang: 'en'
+        }));
 
         wrapper = mount(
             <MuiThemeProvider theme={theme}>

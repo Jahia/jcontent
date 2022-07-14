@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation, extractPaths} from '~/JContent/JContent.utils';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
@@ -39,10 +39,9 @@ export const ContentTable = ({
     reactTableActions,
     reduxActions,
     columnData,
-    doubleClickNavigation,
     ctxMenuActionKey,
     ContentTypeSelector}) => {
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(selector);
+    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
@@ -118,16 +117,36 @@ export const ContentTable = ({
     }
 
     const Transform = isAllowUpload ? UploadTransformComponent : ContentTableWrapper;
+    const props = isAllowUpload ? {
+        uploadTargetComponent: ContentTableWrapper,
+        uploadPath: path,
+        mode: mode
+    } : {};
+
+    const doubleClickNavigation = (node, siteKey, mode) => {
+        let newMode = mode;
+        if (mode === JContentConstants.mode.SEARCH) {
+            if (node.path.indexOf('/files') > -1) {
+                newMode = JContentConstants.mode.MEDIA;
+            } else if (node.path.indexOf('/contents') > -1) {
+                newMode = JContentConstants.mode.CONTENT_FOLDERS;
+            } else {
+                newMode = JContentConstants.mode.PAGES;
+            }
+
+            dispatch(reduxActions.setModeAction(mode));
+        }
+
+        dispatch(reduxActions.setPathAction(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'}));
+    };
 
     return (
         <>
             {typeSelector}
-            <Transform uploadTargetComponent={ContentTableWrapper}
-                       uploadPath={path}
-                       mode={mode}
-                       reference={mainPanelRef}
+            <Transform reference={mainPanelRef}
                        onKeyDown={handleKeyboardNavigation}
                        onClick={setFocusOnMainContainer}
+                       {...props}
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"
@@ -166,7 +185,7 @@ export const ContentTable = ({
                                           onDoubleClick={allowDoubleClickNavigation(
                                               node.primaryNodeType.name,
                                               node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                              () => doubleClickNavigation(node, siteKey, mode, mode => dispatch(reduxActions.setModeAction(mode)), path => dispatch(reduxActions.setPathAction(path)))
+                                              () => doubleClickNavigation(node, siteKey, mode)
                                           )}
                                 >
                                     <ContextualMenu
@@ -198,23 +217,6 @@ export const ContentTable = ({
     );
 };
 
-const doubleClickNavigation = (node, siteKey, mode, setMode, setPath) => {
-    let newMode = mode;
-    if (mode === JContentConstants.mode.SEARCH) {
-        if (node.path.indexOf('/files') > -1) {
-            newMode = JContentConstants.mode.MEDIA;
-        } else if (node.path.indexOf('/contents') > -1) {
-            newMode = JContentConstants.mode.CONTENT_FOLDERS;
-        } else {
-            newMode = JContentConstants.mode.PAGES;
-        }
-
-        setMode(newMode);
-    }
-
-    setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
-};
-
 const selector = state => ({
     mode: state.jcontent.mode,
     previewSelection: state.jcontent.previewSelection,
@@ -236,7 +238,6 @@ ContentTable.propTypes = {
     rows: PropTypes.array.isRequired,
     totalCount: PropTypes.number.isRequired,
     dataCounts: PropTypes.object,
-    doubleClickNavigation: PropTypes.func,
     ctxMenuActionKey: PropTypes.func,
     selector: PropTypes.func,
     reduxActions: PropTypes.shape({
@@ -269,7 +270,6 @@ ContentTable.propTypes = {
 };
 
 ContentTable.defaultProps = {
-    doubleClickNavigation: doubleClickNavigation,
     ctxMenuActionKey: (node, selection) => selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu',
     selector: selector,
     isAllowUpload: true,

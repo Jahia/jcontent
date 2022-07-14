@@ -14,7 +14,7 @@ import {
     unregisterContentModificationEventHandler
 } from '../../eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
@@ -39,7 +39,7 @@ export const ContentLayoutContainer = ({
     const {t} = useTranslation();
     const client = useApolloClient();
     const {mode, path, uilang, lang, siteKey, params, pagination, sort, openedPaths, selection,
-        tableView, previewState, filesMode, previewSelection} = useSelector(selector);
+        tableView, previewState, filesMode, previewSelection} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const fetchPolicy = 'network-only';
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
@@ -50,7 +50,7 @@ export const ContentLayoutContainer = ({
 
     const layoutQueryParams = useMemo(
         () => {
-            let r = queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination, sort, viewType: tableView.viewType});
+            let r = queryHandler.getQueryParams({path, uilang, lang, params, rootPath, pagination, sort, viewType: tableView.viewType});
             // Update params for structured view to use different type and recursion filters
             if (isStructuredView) {
                 r = queryHandler.updateQueryParamsForStructuredView(r, tableView.viewType, mode);
@@ -183,7 +183,7 @@ export const ContentLayoutContainer = ({
         query: layoutQuery,
         variables: isStructuredView ?
             queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
-            queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
+            queryHandler.getQueryParams({path, uilang, lang, params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
         fetchPolicy: fetchPolicy
     }), [isStructuredView, lang, layoutQuery, layoutQueryParams, mode, pagination, params, path, preloadForType, queryHandler, rootPath, sort, uilang]);
 
@@ -203,7 +203,7 @@ export const ContentLayoutContainer = ({
             let subTypes = ['jnt:page', 'jnt:contentFolder', 'jnt:virtualsite'];
             let isSub = !subTypes.includes(nodeTypeName);
             // Sub is not the same as params.sub; refresh and sync up path param state
-            if (isSub !== (params.sub === true)) { // Params.sub needs to be boolean type; else falsy
+            if (isSub !== (params.sub === true) && !params.typeFilter) { // Params.sub needs to be boolean type; else falsy
                 dispatch(reduxActions.setPathAction(path, {sub: isSub}));
             }
         }
@@ -306,6 +306,7 @@ const selector = state => ({
 });
 
 const contentQueryHandlerByMode = mode => {
+    console.log(mode);
     switch (mode) {
         case JContentConstants.mode.MEDIA:
             return new FilesQueryHandler();

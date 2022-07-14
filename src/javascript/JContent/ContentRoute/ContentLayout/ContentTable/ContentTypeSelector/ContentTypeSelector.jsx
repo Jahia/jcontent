@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Tab, TabItem} from '@jahia/moonstone';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {setTableViewType} from '../../StructuredView/StructuredView.redux';
 import classes from './ContentTypeSelector.scss';
@@ -14,7 +14,7 @@ const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
 const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions}) => {
     const {t} = useTranslation();
-    const tableView = useSelector(selector);
+    const tableView = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
     const actionsBatch = [];

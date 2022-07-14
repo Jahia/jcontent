@@ -122,9 +122,9 @@ class ContentQueryHandler {
         `;
     }
 
-    getQueryParams({path, uilang, lang, urlParams, rootPath, pagination, sort, viewType}) {
-        let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
-        if (urlParams.sub) {
+    getQueryParams({path, uilang, lang, params, rootPath, pagination, sort, viewType}) {
+        let type = params.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
+        if (params.sub) {
             type = 'contents';
         }
 
@@ -138,6 +138,15 @@ class ContentQueryHandler {
                 recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
             }
         };
+
+        // Allow override of filters
+        if (params.typeFilter) {
+            paramsByBrowseType[type].typeFilter = params.typeFilter;
+        }
+
+        if (params.recursionTypesFilter) {
+            paramsByBrowseType[type].recursionTypesFilter = params.recursionTypesFilter;
+        }
 
         return {
             path: path,
@@ -168,16 +177,13 @@ class ContentQueryHandler {
             limit: 10000
         };
 
-        const {CONTENT, PAGES} = JContentConstants.tableView.viewType;
-        const {CONTENT_FOLDERS} = JContentConstants.mode;
-
-        if (mode === CONTENT_FOLDERS) {
+        if (mode === JContentConstants.mode.CONTENT_FOLDERS) {
             p.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
             p.typeFilter = ['jnt:content'];
-        } else if (viewType === CONTENT) {
+        } else if (viewType === JContentConstants.tableView.viewType.CONTENT) {
             p.recursionTypesFilter = {types: ['jnt:content']};
             p.typeFilter = ['jnt:content'];
-        } else if (viewType === PAGES) {
+        } else if (viewType === JContentConstants.tableView.viewType.PAGES) {
             p.recursionTypesFilter = {types: ['jnt:page']};
             p.typeFilter = ['jnt:page'];
         }
@@ -232,14 +238,14 @@ class FilesQueryHandler {
         `;
     }
 
-    getQueryParams({path, uilang, lang, pagination, sort}) {
+    getQueryParams({path, uilang, lang, pagination, params, sort}) {
         return {
             path: path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: ['jnt:file', 'jnt:folder'],
+            typeFilter: params && params.typeFilter ? params.typeFilter : ['jnt:file', 'jnt:folder'],
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,

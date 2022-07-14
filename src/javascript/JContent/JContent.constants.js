@@ -12,7 +12,7 @@ const JContentConstants = {
         CONFLICT: 'CONFLICT'
     },
     mode: {
-        CONTENT_FOLDERS: 'content-folders',
+        CONTENT_FOLDERS: 'contents',
         PAGES: 'pages',
         MEDIA: 'media',
         FORMS: 'forms',

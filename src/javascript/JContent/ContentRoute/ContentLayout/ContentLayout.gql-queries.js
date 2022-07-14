@@ -303,12 +303,12 @@ class SearchQueryHandler {
         `;
     }
 
-    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
+    getQueryParams({uilang, lang, params, pagination, sort}) {
         return {
-            searchPath: urlParams.searchPath,
-            nodeType: (urlParams.searchContentType || 'jmix:searchable'),
-            searchTerms: urlParams.searchTerms,
-            nodeNameSearchTerms: `%${urlParams.searchTerms}%`,
+            searchPath: params.searchPath,
+            nodeType: (params.searchContentType || 'jmix:searchable'),
+            searchTerms: params.searchTerms,
+            nodeNameSearchTerms: `%${params.searchTerms}%`,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
@@ -349,9 +349,9 @@ class Sql2SearchQueryHandler {
         `;
     }
 
-    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
-        let {sql2SearchFrom, sql2SearchWhere} = urlParams;
-        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${urlParams.searchPath}')`;
+    getQueryParams({uilang, lang, params, pagination, sort}) {
+        let {sql2SearchFrom, sql2SearchWhere} = params;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${params.searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
             query += ` AND (${sql2SearchWhere})`;
         }

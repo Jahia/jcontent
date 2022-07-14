@@ -10,6 +10,7 @@ import CropPanel from './CropPanel';
 import {Button, Chip, Edit, Tab, TabItem, Typography} from '@jahia/moonstone';
 import ImageEditorActions from './ImageEditorActions';
 import styles from './ImageEditorDialog.scss';
+import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses';
 
 const PANELS = {
     ROTATE: 0,
@@ -49,8 +50,9 @@ export const ImageEditorDialog = ({
                 onClose={onClose}
         >
             <DialogTitle disableTypography id="form-dialog-title" classes={{root: 'flexRow alignCenter'}}>
-                <Typography variant="title" className={styles.title}>{name}</Typography>
-                <div>
+                <Typography variant="heading">Edit {name}</Typography>
+                <div className={styles.contentStatuses}>
+                    {<ContentStatuses nodePath={path}/>}
                     {changesFeedback && <Chip className={styles.chip} icon={<Edit/>} label={changesFeedback} color="warning"/> }
                 </div>
             </DialogTitle>

@@ -49,7 +49,7 @@ export const ImageEditorDialog = ({
                 onClose={onClose}
         >
             <DialogTitle disableTypography id="form-dialog-title" classes={{root: 'flexRow alignCenter'}}>
-                <Typography variant="title">{name}</Typography>
+                <Typography variant="title" className={styles.title}>{name}</Typography>
                 <div>
                     {changesFeedback && <Chip className={styles.chip} icon={<Edit/>} label={changesFeedback} color="warning"/> }
                 </div>

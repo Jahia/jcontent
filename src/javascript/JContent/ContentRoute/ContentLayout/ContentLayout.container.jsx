@@ -204,7 +204,8 @@ export const ContentLayoutContainer = ({
             let isSub = !subTypes.includes(nodeTypeName);
             // Sub is not the same as params.sub; refresh and sync up path param state
             if (isSub !== (params.sub === true) && !params.typeFilter) { // Params.sub needs to be boolean type; else falsy
-                dispatch(reduxActions.setPathAction(path, {sub: isSub}));
+                // Todo figure out why this is necessary and why it leads to infinite loop
+                // Dispatch(reduxActions.setPathAction(path, {sub: isSub}));
             }
         }
 

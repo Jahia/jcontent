@@ -33,7 +33,10 @@
     },
     "apps": {
       "jahia": "configs/jcontent.jsp"
-    }
+    },
+    "urlPatterns" : [
+      "/(?<appName>\\S*?)/jcontent/(?<siteKey>\\S*?)/(?<language>\\S*?)/(?<contentPath>\\S*)"
+    ]
   },
   "husky": {
     "hooks": {

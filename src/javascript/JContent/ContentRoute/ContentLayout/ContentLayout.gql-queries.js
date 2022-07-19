@@ -141,15 +141,15 @@ class ContentQueryHandler {
 
         // Allow override of filters
         if (params.typeFilter) {
-            paramsByBrowseType[type].typeFilter = params.typeFilter;
+            paramsByBrowseType[type].typeFilter = params.typeFilter[viewType];
         }
 
         if (params.recursionTypesFilter) {
-            paramsByBrowseType[type].recursionTypesFilter = params.recursionTypesFilter;
+            paramsByBrowseType[type].recursionTypesFilter = params.recursionTypesFilter[viewType];
         }
 
         return {
-            path: path,
+            path: params.rootPath ? params.rootPath : path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
@@ -240,12 +240,12 @@ class FilesQueryHandler {
 
     getQueryParams({path, uilang, lang, pagination, params, sort}) {
         return {
-            path: path,
+            path: params.rootPath ? params.rootPath : path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: params && params.typeFilter ? params.typeFilter : ['jnt:file', 'jnt:folder'],
+            typeFilter: params && params.typeFilter && params.typeFilter.media ? params.typeFilter.media : ['jnt:file', 'jnt:folder'],
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,

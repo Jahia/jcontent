@@ -165,12 +165,13 @@ export const ContentTable = ({
                                 contextualMenus.current[node.path].current(event);
                             };
 
+                            const selectionProps = row.getToggleRowSelectedProps();
                             return (
                                 <TableRow key={'row' + row.id}
                                           {...rowProps}
                                           data-cm-role="table-content-list-row"
                                           className={css.tableRow}
-                                          isHighlighted={isSelected}
+                                          isHighlighted={selectionProps.checked || isSelected}
                                           onClick={() => {
                                               if (isPreviewOpened && !node.notSelectableForPreview) {
                                                   setSelectedItemIndex(index);

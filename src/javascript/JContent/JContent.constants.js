@@ -42,7 +42,7 @@ const JContentConstants = {
             STRUCTURED: 'structuredView'
         },
         viewType: {
-            CONTENT: 'content',
+            CONTENT: 'contents',
             PAGES: 'pages',
             ALL: 'all'
         }

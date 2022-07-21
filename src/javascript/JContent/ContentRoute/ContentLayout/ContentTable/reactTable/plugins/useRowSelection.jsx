@@ -1,12 +1,11 @@
 import {useDispatch, useSelector} from 'react-redux';
-import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../../../contentSelection.redux';
 import {useGetLatest} from 'react-table';
 import {flattenTree} from '../../../ContentLayout.utils';
 
-export const useRowSelection = hooks => {
+export const useRowSelection = (selector, actions) => hooks => {
     hooks.getToggleRowSelectedProps = defaultGetToggleRowSelectedProps;
     hooks.getToggleAllRowsSelectedProps = defaultGetToggleAllRowsSelectedProps;
-    hooks.useInstance.push(useInstance);
+    hooks.useInstance.push(getUseInstance(selector, actions));
     hooks.prepareRow.push(prepareRow);
 };
 
@@ -34,10 +33,10 @@ const defaultGetToggleAllRowsSelectedProps = instance => ({
     checked: instance.anySelected
 });
 
-function useInstance(instance) {
+const getUseInstance = (selector, actions) => instance => {
     const {getHooks, rows} = instance;
     const getInstance = useGetLatest(instance);
-    const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
+    const {selection} = useSelector(selector);
     const dispatch = useDispatch();
 
     const paths = flattenTree(rows).map(n => n.original.path);
@@ -45,14 +44,14 @@ function useInstance(instance) {
     const allSelected = anySelected && selection.length === paths.length;
 
     const toggleRowSelected = row => {
-        dispatch(cmSwitchSelection(row.original.path));
+        dispatch(actions.switchSelectionAction(row.original.path));
     };
 
     const toggleAllRowsSelected = () => {
         if (allSelected) {
-            dispatch(cmRemoveSelection(paths));
+            dispatch(actions.removeSelectionAction(paths));
         } else {
-            dispatch(cmAddSelection(paths));
+            dispatch(actions.addSelectionAction(paths));
         }
     };
 
@@ -65,5 +64,4 @@ function useInstance(instance) {
         allSelected,
         anySelected
     });
-}
-
+};

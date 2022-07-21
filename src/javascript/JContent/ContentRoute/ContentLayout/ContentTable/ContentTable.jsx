@@ -9,7 +9,8 @@ import {useSelector, useDispatch, shallowEqual} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
-import {cmRemoveSelection} from '../contentSelection.redux';
+import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
+import {cmSetSort} from '../sort.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import ContentListEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
@@ -34,8 +35,10 @@ export const ContentTable = ({
     isLoading,
     isAllowUpload,
     selector,
-    reactTableData,
+    reactTableSelectors,
+    reactTableActions,
     reduxActions,
+    columnData,
     ctxMenuActionKey,
     ContentTypeSelector}) => {
     const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(selector, shallowEqual);
@@ -64,24 +67,22 @@ export const ContentTable = ({
         toggleAllRowsExpanded
     } = useTable(
         {
-            columns: reactTableData.columnData.allColumnData,
+            columns: columnData.allColumnData,
             data: rows
         },
-        reactTableData.hooks.useRowSelection,
-        reactTableData.hooks.useSort,
+        useRowSelection(reactTableSelectors.rowSelector, reactTableActions.rowSelection),
+        useSort(reactTableSelectors.sortSelector, reactTableActions.sort),
         useExpanded
     );
 
-    const selectionPaths = selection[0] && selection[0].path ? selection.map(o => o.path) : selection;
-
     useEffect(() => {
-        if (selectionPaths.length > 0) {
-            const toRemove = selectionPaths.filter(path => paths.indexOf(path) === -1);
+        if (selection.length > 0) {
+            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
             if (toRemove.length > 0) {
                 dispatch(reduxActions.removeSelectionAction(toRemove));
             }
         }
-    }, [rows, selection, selectionPaths, dispatch, reduxActions, paths]);
+    }, [rows, selection, dispatch, reduxActions, paths]);
 
     const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
 
@@ -93,7 +94,7 @@ export const ContentTable = ({
 
     const contextualMenus = useRef({});
 
-    let colData = previewState === CM_DRAWER_STATES.SHOW ? reactTableData.columnData.reducedColumnData : reactTableData.columnData.allColumnData;
+    let colData = previewState === CM_DRAWER_STATES.SHOW ? columnData.reducedColumnData : columnData.allColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
     if (isContentNotFound) {
@@ -189,9 +190,9 @@ export const ContentTable = ({
                                 >
                                     <ContextualMenu
                                         setOpenRef={contextualMenus.current[node.path]}
-                                        actionKey={ctxMenuActionKey(node, selectionPaths)}
-                                        path={selectionPaths.length === 0 || selectionPaths.indexOf(node.path) === -1 ? node.path : null}
-                                        paths={selectionPaths.length === 0 || selectionPaths.indexOf(node.path) === -1 ? null : selectionPaths}
+                                        actionKey={ctxMenuActionKey(node, selection)}
+                                        path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
+                                        paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
                                     />
                                     {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
                                 </TableRow>
@@ -227,6 +228,9 @@ const selector = state => ({
     tableView: state.jcontent.tableView
 });
 
+const rowSelector = state => ({selection: state.jcontent.selection});
+const sortSelector = state => state.jcontent.sort;
+
 ContentTable.propTypes = {
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool,
@@ -244,15 +248,23 @@ ContentTable.propTypes = {
         setPageSizeAction: PropTypes.func.isRequired,
         removeSelectionAction: PropTypes.func.isRequired
     }),
-    reactTableData: {
-        columnData: PropTypes.shape({
-            allColumnData: PropTypes.array.isRequired,
-            reducedColumnData: PropTypes.array.isRequired
-        }),
-        hooks: PropTypes.shape({
-            useRowSelection: PropTypes.func.isRequired,
-            useSort: PropTypes.func.isRequired
-        })
+    columnData: PropTypes.shape({
+        allColumnData: PropTypes.array.isRequired,
+        reducedColumnData: PropTypes.array.isRequired
+    }),
+    reactTableSelectors: {
+        rowSelector: PropTypes.func.isRequired,
+        sortSelector: PropTypes.func.isRequired
+    },
+    reactTableActions: {
+        rowSelection: {
+            switchSelectionAction: PropTypes.func.isRequired,
+            removeSelectionAction: PropTypes.func.isRequired,
+            addSelectionAction: PropTypes.func.isRequired
+        },
+        sort: {
+            setSortAction: PropTypes.func.isRequired
+        }
     },
     ContentTypeSelector: PropTypes.element
 };
@@ -269,14 +281,22 @@ ContentTable.defaultProps = {
         setPageSizeAction: pageSize => cmSetPageSize(pageSize),
         removeSelectionAction: path => cmRemoveSelection(path)
     },
-    reactTableData: {
-        columnData: {
-            allColumnData: allColumnData,
-            reducedColumnData: reducedColumnData
+    columnData: {
+        allColumnData: allColumnData,
+        reducedColumnData: reducedColumnData
+    },
+    reactTableSelectors: {
+        rowSelector: rowSelector,
+        sortSelector: sortSelector
+    },
+    reactTableActions: {
+        rowSelection: {
+            switchSelectionAction: p => cmSwitchSelection(p),
+            removeSelectionAction: p => cmRemoveSelection(p),
+            addSelectionAction: p => cmAddSelection(p)
         },
-        hooks: {
-            useRowSelection: useRowSelection,
-            useSort: useSort
+        sort: {
+            setSortAction: s => cmSetSort(s)
         }
     },
     ContentTypeSelector: ContentTypeSelector

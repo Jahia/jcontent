@@ -41,8 +41,8 @@ function useInstance(instance) {
     const dispatch = useDispatch();
 
     const paths = flattenTree(rows).map(n => n.original.path);
+    const allSelected = selection.length > 0 && selection.length === paths.length;
     const anySelected = selection.length > 0;
-    const allSelected = anySelected && selection.length === paths.length;
 
     const toggleRowSelected = row => {
         dispatch(cmSwitchSelection(row.original.path));

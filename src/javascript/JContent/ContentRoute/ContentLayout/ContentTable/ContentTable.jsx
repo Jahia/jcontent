@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation, extractPaths} from '~/JContent/JContent.utils';
-import {useSelector, useDispatch, shallowEqual} from 'react-redux';
+import {connect} from 'react-redux';
+import {compose} from '~/utils';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
@@ -24,22 +25,28 @@ import ContentTableWrapper from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import ContentTypeSelector from './ContentTypeSelector';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
-import {batchActions} from 'redux-batched-actions';
 
 export const ContentTable = ({
+    setPath,
+    mode,
+    siteKey,
+    setMode,
     rows,
+    selection,
+    removeSelection,
     isContentNotFound,
+    pagination,
+    setCurrentPage,
+    setPageSize,
+    onPreviewSelect,
+    previewSelection,
     totalCount,
+    path,
+    previewState,
+    tableView,
     dataCounts,
-    isLoading,
-    isAllowUpload,
-    selector,
-    reactTableData,
-    reduxActions,
-    ctxMenuActionKey,
-    ContentTypeSelector}) => {
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(selector, shallowEqual);
-    const dispatch = useDispatch();
+    isLoading}) => {
+    const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
     const {t} = useTranslation();
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
     const {
@@ -51,7 +58,7 @@ export const ContentTable = ({
         listLength: paths.length,
         onSelectionChange: index => {
             if (isPreviewOpened) {
-                dispatch(reduxActions.onPreviewSelectAction(paths[index]));
+                onPreviewSelect(paths[index]);
             }
         }
     });
@@ -64,26 +71,22 @@ export const ContentTable = ({
         toggleAllRowsExpanded
     } = useTable(
         {
-            columns: reactTableData.columnData.allColumnData,
+            columns: allColumnData,
             data: rows
         },
-        reactTableData.hooks.useRowSelection,
-        reactTableData.hooks.useSort,
+        useRowSelection,
+        useSort,
         useExpanded
     );
 
-    const selectionPaths = selection[0] && selection[0].path ? selection.map(o => o.path) : selection;
-
     useEffect(() => {
-        if (selectionPaths.length > 0) {
-            const toRemove = selectionPaths.filter(path => paths.indexOf(path) === -1);
+        if (selection.length > 0) {
+            const toRemove = selection.filter(path => paths.indexOf(path) === -1);
             if (toRemove.length > 0) {
-                dispatch(reduxActions.removeSelectionAction(toRemove));
+                removeSelection(toRemove);
             }
         }
-    }, [rows, selection, selectionPaths, dispatch, reduxActions, paths]);
-
-    const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
+    }, [rows, selection, removeSelection, paths]);
 
     useEffect(() => {
         if (isStructuredView) {
@@ -93,36 +96,7 @@ export const ContentTable = ({
 
     const contextualMenus = useRef({});
 
-    let colData = previewState === CM_DRAWER_STATES.SHOW ? reactTableData.columnData.reducedColumnData : reactTableData.columnData.allColumnData;
-    let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
-
-    if (isContentNotFound) {
-        return <ContentNotFound columnSpan={colData.length} t={t}/>;
-    }
-
-    const typeSelector = mode === JContentConstants.mode.PAGES && dataCounts ? <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/> : null;
-
-    if (_.isEmpty(rows) && !isLoading) {
-        if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
-            return <EmptyTable columnSpan={colData.length} t={t}/>;
-        }
-
-        return (
-            <>
-                {typeSelector}
-                {isAllowUpload ? <ContentListEmptyDropZone mode={mode} path={path}/> : <EmptyTable columnSpan={colData.length} t={t}/>}
-            </>
-        );
-    }
-
-    const Transform = isAllowUpload ? UploadTransformComponent : ContentTableWrapper;
-    const props = isAllowUpload ? {
-        uploadTargetComponent: ContentTableWrapper,
-        uploadPath: path,
-        mode: mode
-    } : {};
-
-    const doubleClickNavigation = (node, siteKey, mode) => {
+    const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
             if (node.path.indexOf('/files') > -1) {
@@ -133,19 +107,43 @@ export const ContentTable = ({
                 newMode = JContentConstants.mode.PAGES;
             }
 
-            dispatch(reduxActions.setModeAction(mode));
+            setMode(newMode);
         }
 
-        dispatch(reduxActions.setPathAction(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'}));
+        setPath(siteKey, node.path, newMode, {sub: node.primaryNodeType.name !== 'jnt:page' && node.primaryNodeType.name !== 'jnt:contentFolder'});
     };
+
+    let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
+    let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
+
+    if (isContentNotFound) {
+        return <ContentNotFound columnSpan={columnData.length} t={t}/>;
+    }
+
+    const typeSelector = mode === JContentConstants.mode.PAGES && dataCounts ? <ContentTypeSelector contentCount={dataCounts.contents} pagesCount={dataCounts.pages}/> : null;
+
+    if (_.isEmpty(rows) && !isLoading) {
+        if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
+            return <EmptyTable columnSpan={columnData.length} t={t}/>;
+        }
+
+        return (
+            <>
+                {typeSelector}
+                <ContentListEmptyDropZone mode={mode} path={path}/>
+            </>
+        );
+    }
 
     return (
         <>
             {typeSelector}
-            <Transform reference={mainPanelRef}
-                       onKeyDown={handleKeyboardNavigation}
-                       onClick={setFocusOnMainContainer}
-                       {...props}
+            <UploadTransformComponent uploadTargetComponent={ContentTableWrapper}
+                                      uploadPath={path}
+                                      mode={mode}
+                                      reference={mainPanelRef}
+                                      onKeyDown={handleKeyboardNavigation}
+                                      onClick={setFocusOnMainContainer}
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"
@@ -174,7 +172,7 @@ export const ContentTable = ({
                                           onClick={() => {
                                               if (isPreviewOpened && !node.notSelectableForPreview) {
                                                   setSelectedItemIndex(index);
-                                                  dispatch(reduxActions.onPreviewSelectAction(paths[index]));
+                                                  onPreviewSelect(node.path);
                                               }
                                           }}
                                           onContextMenu={event => {
@@ -184,14 +182,14 @@ export const ContentTable = ({
                                           onDoubleClick={allowDoubleClickNavigation(
                                               node.primaryNodeType.name,
                                               node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                              () => doubleClickNavigation(node, siteKey, mode)
+                                              () => doubleClickNavigation(node)
                                           )}
                                 >
                                     <ContextualMenu
                                         setOpenRef={contextualMenus.current[node.path]}
-                                        actionKey={ctxMenuActionKey(node, selectionPaths)}
-                                        path={selectionPaths.length === 0 || selectionPaths.indexOf(node.path) === -1 ? node.path : null}
-                                        paths={selectionPaths.length === 0 || selectionPaths.indexOf(node.path) === -1 ? null : selectionPaths}
+                                        actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
+                                        path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
+                                        paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
                                     />
                                     {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
                                 </TableRow>
@@ -199,7 +197,7 @@ export const ContentTable = ({
                         })}
                     </TableBody>
                 </Table>
-            </Transform>
+            </UploadTransformComponent>
             {(!isStructuredView || isInSearchMode(mode) || JContentConstants.mode.MEDIA === mode) &&
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
@@ -209,77 +207,72 @@ export const ContentTable = ({
                                  of: t('jcontent:label.pagination.of')
                              }}
                              rowsPerPageOptions={[10, 25, 50, 100]}
-                             onPageChange={page => dispatch(reduxActions.setCurrentPageAction(page))}
-                             onRowsPerPageChange={size => dispatch(reduxActions.setPageSizeAction(size))}
+                             onPageChange={setCurrentPage}
+                             onRowsPerPageChange={setPageSize}
             />}
         </>
     );
 };
 
-const selector = state => ({
+const mapStateToProps = state => ({
     mode: state.jcontent.mode,
     previewSelection: state.jcontent.previewSelection,
     siteKey: state.site,
     path: state.jcontent.path,
+    params: state.jcontent.params,
+    searchTerms: state.jcontent.params.searchTerms,
+    searchContentType: state.jcontent.params.searchContentType,
+    sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
+    sql2SearchWhere: state.jcontent.params.sql2SearchWhere,
     pagination: state.jcontent.pagination,
+    sort: state.jcontent.sort,
     previewState: state.jcontent.previewState,
     selection: state.jcontent.selection,
     tableView: state.jcontent.tableView
 });
 
+const mapDispatchToProps = dispatch => ({
+    onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
+    setPath: (siteKey, path, mode, params) => {
+        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
+        dispatch(cmGoto({path, params}));
+    },
+    setMode: mode => dispatch(cmGoto({mode})),
+    setCurrentPage: page => dispatch(cmSetPage(page - 1)),
+    setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
+    clearSearch: params => {
+        params = _.clone(params);
+        _.unset(params, 'searchContentType');
+        _.unset(params, 'searchTerms');
+        _.unset(params, 'sql2SearchFrom');
+        _.unset(params, 'sql2SearchWhere');
+        dispatch(cmGoto({mode: JContentConstants.mode.CONTENT_FOLDERS, params: params}));
+    },
+    removeSelection: path => dispatch(cmRemoveSelection(path))
+});
+
 ContentTable.propTypes = {
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool,
-    isAllowUpload: PropTypes.bool,
+    mode: PropTypes.string.isRequired,
+    onPreviewSelect: PropTypes.func.isRequired,
+    pagination: PropTypes.object.isRequired,
+    path: PropTypes.string.isRequired,
+    previewSelection: PropTypes.string,
+    previewState: PropTypes.number.isRequired,
+    removeSelection: PropTypes.func.isRequired,
     rows: PropTypes.array.isRequired,
+    selection: PropTypes.array.isRequired,
+    setCurrentPage: PropTypes.func.isRequired,
+    setPageSize: PropTypes.func.isRequired,
+    setPath: PropTypes.func.isRequired,
+    setMode: PropTypes.func.isRequired,
+    siteKey: PropTypes.string.isRequired,
+    tableView: PropTypes.object.isRequired,
     totalCount: PropTypes.number.isRequired,
-    dataCounts: PropTypes.object,
-    ctxMenuActionKey: PropTypes.func,
-    selector: PropTypes.func,
-    reduxActions: PropTypes.shape({
-        onPreviewSelectAction: PropTypes.func.isRequired,
-        setPathAction: PropTypes.func.isRequired,
-        setModeAction: PropTypes.func.isRequired,
-        setCurrentPageAction: PropTypes.func.isRequired,
-        setPageSizeAction: PropTypes.func.isRequired,
-        removeSelectionAction: PropTypes.func.isRequired
-    }),
-    reactTableData: {
-        columnData: PropTypes.shape({
-            allColumnData: PropTypes.array.isRequired,
-            reducedColumnData: PropTypes.array.isRequired
-        }),
-        hooks: PropTypes.shape({
-            useRowSelection: PropTypes.func.isRequired,
-            useSort: PropTypes.func.isRequired
-        })
-    },
-    ContentTypeSelector: PropTypes.element
+    dataCounts: PropTypes.object
 };
 
-ContentTable.defaultProps = {
-    ctxMenuActionKey: (node, selection) => selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu',
-    selector: selector,
-    isAllowUpload: true,
-    reduxActions: {
-        onPreviewSelectAction: previewSelection => cmSetPreviewSelection(previewSelection),
-        setPathAction: (siteKey, path, mode, params) => (batchActions([cmOpenPaths(extractPaths(siteKey, path, mode)), cmGoto({path, params})])),
-        setModeAction: mode => cmGoto({mode}),
-        setCurrentPageAction: page => cmSetPage(page - 1),
-        setPageSizeAction: pageSize => cmSetPageSize(pageSize),
-        removeSelectionAction: path => cmRemoveSelection(path)
-    },
-    reactTableData: {
-        columnData: {
-            allColumnData: allColumnData,
-            reducedColumnData: reducedColumnData
-        },
-        hooks: {
-            useRowSelection: useRowSelection,
-            useSort: useSort
-        }
-    },
-    ContentTypeSelector: ContentTypeSelector
-};
-
-export default ContentTable;
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps)
+)(ContentTable);

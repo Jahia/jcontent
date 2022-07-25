@@ -122,9 +122,9 @@ class ContentQueryHandler {
         `;
     }
 
-    getQueryParams({path, uilang, lang, params, rootPath, pagination, sort, viewType}) {
-        let type = params.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
-        if (params.sub) {
+    getQueryParams({path, uilang, lang, urlParams, rootPath, pagination, sort, viewType}) {
+        let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
+        if (urlParams.sub) {
             type = 'contents';
         }
 
@@ -138,15 +138,6 @@ class ContentQueryHandler {
                 recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
             }
         };
-
-        // Allow override of filters
-        if (params.typeFilter) {
-            paramsByBrowseType[type].typeFilter = params.typeFilter;
-        }
-
-        if (params.recursionTypesFilter) {
-            paramsByBrowseType[type].recursionTypesFilter = params.recursionTypesFilter;
-        }
 
         return {
             path: path,
@@ -177,13 +168,16 @@ class ContentQueryHandler {
             limit: 10000
         };
 
-        if (mode === JContentConstants.mode.CONTENT_FOLDERS) {
+        const {CONTENT, PAGES} = JContentConstants.tableView.viewType;
+        const {CONTENT_FOLDERS} = JContentConstants.mode;
+
+        if (mode === CONTENT_FOLDERS) {
             p.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
             p.typeFilter = ['jnt:content'];
-        } else if (viewType === JContentConstants.tableView.viewType.CONTENT) {
+        } else if (viewType === CONTENT) {
             p.recursionTypesFilter = {types: ['jnt:content']};
             p.typeFilter = ['jnt:content'];
-        } else if (viewType === JContentConstants.tableView.viewType.PAGES) {
+        } else if (viewType === PAGES) {
             p.recursionTypesFilter = {types: ['jnt:page']};
             p.typeFilter = ['jnt:page'];
         }
@@ -238,14 +232,14 @@ class FilesQueryHandler {
         `;
     }
 
-    getQueryParams({path, uilang, lang, pagination, params, sort}) {
+    getQueryParams({path, uilang, lang, pagination, sort}) {
         return {
             path: path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: params && params.typeFilter ? params.typeFilter : ['jnt:file', 'jnt:folder'],
+            typeFilter: ['jnt:file', 'jnt:folder'],
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
@@ -303,12 +297,12 @@ class SearchQueryHandler {
         `;
     }
 
-    getQueryParams({uilang, lang, params, pagination, sort}) {
+    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
         return {
-            searchPath: params.searchPath,
-            nodeType: (params.searchContentType || 'jmix:searchable'),
-            searchTerms: params.searchTerms,
-            nodeNameSearchTerms: `%${params.searchTerms}%`,
+            searchPath: urlParams.searchPath,
+            nodeType: (urlParams.searchContentType || 'jmix:searchable'),
+            searchTerms: urlParams.searchTerms,
+            nodeNameSearchTerms: `%${urlParams.searchTerms}%`,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
@@ -349,9 +343,9 @@ class Sql2SearchQueryHandler {
         `;
     }
 
-    getQueryParams({uilang, lang, params, pagination, sort}) {
-        let {sql2SearchFrom, sql2SearchWhere} = params;
-        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${params.searchPath}')`;
+    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
+        let {sql2SearchFrom, sql2SearchWhere} = urlParams;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${urlParams.searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
             query += ` AND (${sql2SearchWhere})`;
         }

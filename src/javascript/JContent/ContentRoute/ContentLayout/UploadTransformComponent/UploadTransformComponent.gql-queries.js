@@ -12,7 +12,7 @@ export const CheckNodeFolder = gql`
         }
         
     }
-`
+`;
 
 export const UploadRequirementsQuery = gql`
     query UploadRequirementsQuery($path:String!, $permission:String!, $sitePermission:String!, $permittedNodeTypes:[String!]!) {

@@ -2,8 +2,10 @@ import {uploadStatuses} from '../Upload.constants';
 import React from 'react';
 import {AddCircle, Check, Information, Loader, Typography} from '@jahia/moonstone';
 import styles from './UploadItem.scss';
+import {useTranslation} from 'react-i18next';
 
-const Status = ({status, error, t, type}) => {
+const Status = ({status, error, type}) => {
+    const {t} = useTranslation();
     let content;
 
     if (status === uploadStatuses.QUEUED) {
@@ -29,6 +31,7 @@ const Status = ({status, error, t, type}) => {
             switch (error) {
                 case 'WRONG_INPUT': return t('jcontent:label.contentManager.fileUpload.wrongInput');
                 case 'FILE_EXISTS': return t('jcontent:label.contentManager.fileUpload.exists');
+                case 'FOLDER_EXISTS': return t('jcontent:label.contentManager.fileUpload.folderExists');
                 case 'INCORRECT_SIZE': return t('jcontent:label.contentManager.fileUpload.cannotStore', {maxUploadSize: contextJsParameters.maxUploadSize});
                 default: return type === 'import' ? t('jcontent:label.contentManager.fileUpload.failedImport') : t('jcontent:label.contentManager.fileUpload.failedUpload');
             }

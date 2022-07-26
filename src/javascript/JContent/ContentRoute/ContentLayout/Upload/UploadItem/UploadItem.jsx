@@ -12,7 +12,7 @@ import EditButton from './EditButton';
 import {registry} from '@jahia/ui-extender';
 import styles from './UploadItem.scss';
 
-const UPLOAD_DELAY = 500;
+const UPLOAD_DELAY = 200;
 
 export class UploadItem extends React.Component {
     constructor(props) {
@@ -45,7 +45,7 @@ export class UploadItem extends React.Component {
     }
 
     render() {
-        const {t, file} = this.props;
+        const {t, file, entry} = this.props;
         return (
             <div className={styles.listItem}>
                 <Typography className={styles.fileNameText}>
@@ -61,7 +61,7 @@ export class UploadItem extends React.Component {
                 <div className={styles.grow}/>
                 <Status {...this.props}/>
                 {this.state.component}
-                <EditButton {...this.props} uuid={this.state.uuid}/>
+                {file && <EditButton {...this.props} uuid={this.state.uuid}/>}
                 <Dialog open={this.state.anchorEl !== null}>
                     <DialogTitle>
                         {t('jcontent:label.contentManager.fileUpload.dialogRenameTitle')}
@@ -75,7 +75,7 @@ export class UploadItem extends React.Component {
                             label={t('jcontent:label.contentManager.fileUpload.newName')}
                             type="text"
                             name={t('jcontent:label.contentManager.fileUpload.dialogRenameExample')}
-                            defaultValue={file.name}
+                            defaultValue={file ? file.name : entry.name}
                             onChange={e => this.setState({userChosenName: e.target.value})}
                         />
                     </DialogContent>
@@ -157,7 +157,7 @@ export class UploadItem extends React.Component {
     }
 
     getFileName() {
-        return (this.state.userChosenName ? this.state.userChosenName : this.props.file.name);
+        return (this.state.userChosenName ? this.state.userChosenName : (this.props.file ? this.props.file.name : this.props.entry.name));
     }
 
     changeStatusToUploading() {
@@ -173,9 +173,9 @@ export class UploadItem extends React.Component {
 
 UploadItem.propTypes = {
     classes: PropTypes.object.isRequired,
-    removeFile: PropTypes.func.isRequired,
     updateUploadsStatus: PropTypes.func.isRequired,
-    file: PropTypes.object.isRequired,
+    file: PropTypes.object,
+    entry: PropTypes.object,
     t: PropTypes.func.isRequired,
     status: PropTypes.string.isRequired,
     type: PropTypes.string,

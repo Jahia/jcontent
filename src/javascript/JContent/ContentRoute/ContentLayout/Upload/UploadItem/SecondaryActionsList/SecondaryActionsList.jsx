@@ -28,6 +28,14 @@ const SecondaryActionsList = props => {
             );
         }
 
+        if (error === 'FOLDER_EXISTS') {
+            return (
+                <>
+                    <DontUploadButton {...props}/>
+                </>
+            );
+        }
+
         return (
             <>
                 <DontUploadButton {...props}/>

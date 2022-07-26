@@ -14,7 +14,6 @@ import {
 import UploadItem from './UploadItem';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
-import {files} from './Upload.utils';
 import UploadHeader from './UploadHeader';
 import {batchActions} from 'redux-batched-actions';
 import styles from './Upload.scss';
@@ -26,7 +25,6 @@ export class Upload extends React.Component {
         super(props);
         this.client = null;
         this.closeTimeout = null;
-        this.removeFile = this.removeFile.bind(this);
         this.updateUploadsStatus = this.updateUploadsStatus.bind(this);
         this.handleCloseSnackBar = this.handleCloseSnackBar.bind(this);
         this.clearCloseTimeout = this.clearCloseTimeout.bind(this);
@@ -85,8 +83,6 @@ export class Upload extends React.Component {
                                 <UploadItem
                                     key={upload.id}
                                     index={index}
-                                    file={files.acceptedFiles[index]}
-                                    removeFile={this.removeFile}
                                     updateUploadsStatus={this.updateUploadsStatus}
                                     updateUpload={updateUpload}
                                     uploadFile={uploadFile}
@@ -101,12 +97,6 @@ export class Upload extends React.Component {
                 <div style={this.generateOverlayStyle()}/>
             </React.Fragment>
         );
-    }
-
-    removeFile(index) {
-        files.acceptedFiles = files.acceptedFiles.filter((file, i) => {
-            return i !== index;
-        });
     }
 
     updateUploadsStatus() {
@@ -130,7 +120,7 @@ export class Upload extends React.Component {
     }
 
     closePanelAndClearUploads() {
-        files.acceptedFiles = [];
+        // Files.acceptedFiles = [];
         this.props.clearUploads();
     }
 

@@ -1,19 +1,20 @@
 import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Upload.redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
 import randomUUID from 'uuid/v4';
+import {
+    CheckNodeFolder
+} from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-queries';
+import {
+    CreateFolders
+} from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-mutations';
 
-const IGNORED_FILES = ['.DS_Store', '.localized']
-
-export const files = {
-    acceptedFiles: []
-};
+const IGNORED_FILES = ['.DS_Store', '.localized'];
 
 export const onFilesSelected = ({acceptedFiles, dispatchBatch, type, additionalActions = []}) => {
     if (acceptedFiles.length > 0) {
-        files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles.map(f => f.file));
-        const uploads = acceptedFiles.map(info => ({
+        const uploads = acceptedFiles.map(file => ({
             ...uploadSeed,
-            path: info.path,
+            ...file,
             id: randomUUID(),
             type
         }));
@@ -64,6 +65,36 @@ export const fileMatchSize = (file, maxSize, minSize) => {
     return file.size <= maxSize && file.size >= minSize;
 };
 
-export const fileIgnored = (file) => {
+export const fileIgnored = file => {
     return IGNORED_FILES.find(f => f === file.name);
+};
+
+export const createMissingFolders = async (client, directories) => {
+    const foldersChecks = await client.query({
+        query: CheckNodeFolder,
+        variables: {
+            paths: directories.map(dir => dir.path + '/' + dir.entry.name)
+        },
+        fetchPolicy: 'network-only',
+        errorPolicy: 'ignore'
+    });
+    const conflicts = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && !n.isNodeType));
+    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && n.isNodeType));
+    const created = directories
+        .filter(dir => !foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name))
+        .filter(dir => !conflicts.find(f => dir.path.startsWith(f.path + '/' + f.entry.name)));
+    await client.mutate({
+        mutation: CreateFolders,
+        variables: {
+            nodes: created.map(dir => ({
+                parentPathOrId: dir.path,
+                name: dir.entry.name,
+                primaryNodeType: 'jnt:folder'
+            }))
+        }
+    });
+
+    return {
+        created, exists, conflicts
+    };
 };

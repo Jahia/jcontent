@@ -2,15 +2,73 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
-import {fileMatchSize, getDataTransferItems, isDragDataWithFiles, onFilesSelected} from '../Upload/Upload.utils';
-import {fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
+import {
+    createMissingFolders,
+    fileIgnored,
+    fileMatchSize,
+    getDataTransferItems,
+    isDragDataWithFiles,
+    onFilesSelected
+} from '../Upload/Upload.utils';
+import {fileuploadAddUploads, fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
 import {withApollo} from 'react-apollo';
 import {compose} from '~/utils';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 import JContentConstants from '~/JContent/JContent.constants';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
+import randomUUID from 'uuid/v4';
+import {uploadStatuses} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.constants';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
+
+async function scan(fileList, uploadMaxSize, uploadMinSize, uploadPath) {
+    const files = [];
+    const directories = [];
+
+    async function scanFiles(entry) {
+        if (entry.isDirectory) {
+            directories.push({
+                path: uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)),
+                entry
+            });
+            let directoryReader = entry.createReader();
+            const entries = await new Promise((res, rej) => {
+                directoryReader.readEntries(res, rej);
+            });
+            await Promise.all(entries.map(entry => scanFiles(entry)));
+        } else {
+            const file = await new Promise((res, rej) => {
+                entry.file(res, rej);
+            });
+            if (fileMatchSize(file, uploadMaxSize, uploadMinSize) && !fileIgnored(file)) {
+                files.push({
+                    path: uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)),
+                    entry,
+                    file
+                });
+            }
+        }
+    }
+
+    const entries = fileList.map(f => ({
+        file: f,
+        webkitEntry: f.webkitGetAsEntry()
+    }));
+
+    await Promise.all(entries.map(entry => {
+        if (entry.webkitEntry) {
+            return scanFiles(entry.webkitEntry);
+        }
+
+        if (fileMatchSize(entry.file, uploadMaxSize, uploadMinSize)) {
+            files.push({path: uploadPath, file: entry.file});
+        }
+
+        return Promise.resolve();
+    }));
+
+    return {files, directories};
+}
 
 export class UploadTransformComponent extends React.Component {
     constructor(props) {
@@ -112,20 +170,40 @@ export class UploadTransformComponent extends React.Component {
 
         this.props.uploadSetOverlayTarget(null);
         if (isDragDataWithFiles(evt)) {
-            Promise.resolve(getDataTransferItems(evt)).then(fileList => {
-                if (evt.isPropagationStopped()) {
-                    return;
-                }
+            const fileList = getDataTransferItems(evt);
+            if (evt.isPropagationStopped()) {
+                return;
+            }
 
-                let acceptedFiles = fileList.filter(file => fileMatchSize(file, uploadMaxSize, uploadMinSize));
+            const asyncScanAndUpload = async () => {
+                const {directories, files} = await scan(fileList, uploadMaxSize, uploadMinSize, uploadPath);
+                let acceptedFiles = files;
+
+                if (mode === JContentConstants.mode.MEDIA) {
+                    const {conflicts} = await createMissingFolders(this.props.client, directories);
+
+                    if (conflicts.length > 0) {
+                        const uploads = conflicts.map(dir => ({
+                            status: uploadStatuses.HAS_ERROR,
+                            error: 'FOLDER_EXISTS',
+                            ...dir,
+                            id: randomUUID()
+                        }));
+                        conflicts.forEach(dir => {
+                            acceptedFiles = acceptedFiles.filter(f => !f.path.startsWith(uploadPath + dir.entry.fullPath));
+                        });
+                        this.props.uploadAddUploads(uploads);
+                    }
+                }
 
                 onFilesSelected({
                     acceptedFiles,
                     dispatchBatch: this.props.uploadDispatchBatch,
-                    uploadInfo: {path: uploadPath},
                     type: mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
                 });
-            });
+            };
+
+            asyncScanAndUpload().then(() => {});
         }
     }
 
@@ -179,6 +257,7 @@ export class UploadTransformComponent extends React.Component {
 
 const mapDispatchToProps = dispatch => {
     return {
+        uploadAddUploads: uploads => dispatch(fileuploadAddUploads(uploads)),
         uploadDispatchBatch: actions => dispatch(batchActions(actions)),
         uploadSetOverlayTarget: state => dispatch(fileuploadSetOverlayTarget(state))
     };
@@ -188,6 +267,7 @@ UploadTransformComponent.propTypes = {
     uploadTargetComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
     uploadPath: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
+    uploadAddUploads: PropTypes.func.isRequired,
     uploadDispatchBatch: PropTypes.func.isRequired,
     uploadSetOverlayTarget: PropTypes.func.isRequired,
     client: PropTypes.object.isRequired,

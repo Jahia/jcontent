@@ -2,8 +2,8 @@ import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {createActions, handleActions} from 'redux-actions';
 import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
 
-export const {fileuploadSetPath, fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue, fileuploadSetOverlayTarget} =
-    createActions('FILEUPLOAD_SET_PATH', 'FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE', 'FILEUPLOAD_SET_OVERLAY_TARGET');
+export const {fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue, fileuploadSetOverlayTarget} =
+    createActions('FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE', 'FILEUPLOAD_SET_OVERLAY_TARGET');
 
 export const uploadSeed = {
     id: '',
@@ -14,17 +14,12 @@ export const uploadSeed = {
 
 export const fileuploadRedux = registry => {
     const initialState = {
-        path: null, // Folder that will get files
         status: uploadsStatuses.NOT_STARTED,
         uploads: [],
         overlayTarget: null
     };
 
     const fileUpload = handleActions({
-        [fileuploadSetPath]: (state, action) => ({
-            ...state,
-            path: action.payload
-        }),
         [fileuploadSetStatus]: (state, action) => ({
             ...state,
             status: action.payload
@@ -41,7 +36,10 @@ export const fileuploadRedux = registry => {
             ...state,
             uploads: state.uploads.map(upload => {
                 if (upload.id === action.payload.id) {
-                    return action.payload;
+                    return {
+                        ...upload,
+                        ...action.payload
+                    };
                 }
 
                 return upload;

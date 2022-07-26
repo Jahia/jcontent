@@ -1,17 +1,20 @@
 import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Upload.redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
 import randomUUID from 'uuid/v4';
+import {
+    CheckNodeFolder
+} from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-queries';
+import {
+    CreateFolders
+} from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-mutations';
 
-export const files = {
-    acceptedFiles: []
-};
+const IGNORED_FILES = ['.DS_Store', '.localized'];
 
-export const onFilesSelected = ({acceptedFiles, dispatchBatch, uploadInfo, type, additionalActions = []}) => {
+export const onFilesSelected = ({acceptedFiles, dispatchBatch, type, additionalActions = []}) => {
     if (acceptedFiles.length > 0) {
-        files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
-        const uploads = acceptedFiles.map(() => ({
+        const uploads = acceptedFiles.map(file => ({
             ...uploadSeed,
-            ...uploadInfo,
+            ...file,
             id: randomUUID(),
             type
         }));
@@ -25,7 +28,7 @@ export const onFilesSelected = ({acceptedFiles, dispatchBatch, uploadInfo, type,
 
 export const isDragDataWithFiles = evt => {
     if (!evt.dataTransfer) {
-        return true;
+        return false;
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
@@ -43,12 +46,12 @@ export const getDataTransferItems = event => {
 
         // NOTE: Only the 'drop' event has access to DataTransfer.files,
         // otherwise it will always be empty
-        if (dt.files && dt.files.length) {
-            dataTransferItemsList = dt.files;
-        } else if (dt.items && dt.items.length) {
+        if (dt.items && dt.items.length) {
             // During the drag even the dataTransfer.files is null
             // but Chrome implements some drag store, which is accessible via dataTransfer.items
             dataTransferItemsList = dt.items;
+        } else if (dt.files && dt.files.length) {
+            dataTransferItemsList = dt.files;
         }
     } else if (event.target && event.target.files) {
         dataTransferItemsList = event.target.files;
@@ -60,4 +63,38 @@ export const getDataTransferItems = event => {
 
 export const fileMatchSize = (file, maxSize, minSize) => {
     return file.size <= maxSize && file.size >= minSize;
+};
+
+export const fileIgnored = file => {
+    return IGNORED_FILES.find(f => f === file.name);
+};
+
+export const createMissingFolders = async (client, directories) => {
+    const foldersChecks = await client.query({
+        query: CheckNodeFolder,
+        variables: {
+            paths: directories.map(dir => dir.path + '/' + dir.entry.name)
+        },
+        fetchPolicy: 'network-only',
+        errorPolicy: 'ignore'
+    });
+    const conflicts = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && !n.isNodeType));
+    const exists = directories.filter(dir => foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name && n.isNodeType));
+    const created = directories
+        .filter(dir => !foldersChecks.data.jcr.nodesByPath.find(n => n.path === dir.path + '/' + dir.entry.name))
+        .filter(dir => !conflicts.find(f => dir.path.startsWith(f.path + '/' + f.entry.name)));
+    await client.mutate({
+        mutation: CreateFolders,
+        variables: {
+            nodes: created.map(dir => ({
+                parentPathOrId: dir.path,
+                name: dir.entry.name,
+                primaryNodeType: 'jnt:folder'
+            }))
+        }
+    });
+
+    return {
+        created, exists, conflicts
+    };
 };

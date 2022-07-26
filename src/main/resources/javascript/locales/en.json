@@ -62,6 +62,7 @@
         "uploaded": "Uploaded",
         "wrongInput": "Invalid file format",
         "exists": "File already exists",
+        "folderExists": "A file exists with that name, cannot create a folder",
         "cannotStore": "Could not upload file: file exceeds {{maxUploadSize}}MB",
         "uploading": "Uploading...",
         "retry": "Retry",

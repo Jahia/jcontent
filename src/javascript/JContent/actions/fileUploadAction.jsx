@@ -71,9 +71,8 @@ export const FileUploadActionComponent = props => {
     const handleClick = () => {
         currentUploadHandler = files => {
             onFilesSelected({
-                acceptedFiles: [...files],
+                acceptedFiles: [...files].map(file => ({file, path})),
                 dispatchBatch,
-                uploadInfo: {path},
                 type: uploadType
             });
         };

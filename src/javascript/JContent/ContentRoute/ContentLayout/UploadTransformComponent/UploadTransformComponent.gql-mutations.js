@@ -1,16 +1,16 @@
 import gql from 'graphql-tag';
 
-export const CheckNodeFolder = gql`
-    query CheckNodeFolder($paths: [String!]!) {
+export const CreateFolders = gql`
+    mutation CreateFolders($nodes: [InputJCRNodeWithParent]!) {
         jcr {
-            nodesByPath(paths:$paths) {
-                uuid
-                workspace
-                path
-                isNodeType(type: {types: "jnt:folder"} )
+            addNodesBatch(nodes: $nodes) {
+                node {
+                    uuid
+                    path
+                    workspace
+                }
             }
         }
-        
     }
 `
 

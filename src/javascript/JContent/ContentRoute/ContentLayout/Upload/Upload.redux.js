@@ -1,6 +1,6 @@
 import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {createActions, handleActions} from 'redux-actions';
-import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
+import {ensureDir, importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
 
 export const {fileuploadSetPath, fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue, fileuploadSetOverlayTarget} =
     createActions('FILEUPLOAD_SET_PATH', 'FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE', 'FILEUPLOAD_SET_OVERLAY_TARGET');

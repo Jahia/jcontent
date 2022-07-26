@@ -2,16 +2,18 @@ import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Uploa
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
 import randomUUID from 'uuid/v4';
 
+const IGNORED_FILES = ['.DS_Store', '.localized']
+
 export const files = {
     acceptedFiles: []
 };
 
-export const onFilesSelected = ({acceptedFiles, dispatchBatch, uploadInfo, type, additionalActions = []}) => {
+export const onFilesSelected = ({acceptedFiles, dispatchBatch, type, additionalActions = []}) => {
     if (acceptedFiles.length > 0) {
-        files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles);
-        const uploads = acceptedFiles.map(() => ({
+        files.acceptedFiles = files.acceptedFiles.concat(acceptedFiles.map(f => f.file));
+        const uploads = acceptedFiles.map(info => ({
             ...uploadSeed,
-            ...uploadInfo,
+            path: info.path,
             id: randomUUID(),
             type
         }));
@@ -25,7 +27,7 @@ export const onFilesSelected = ({acceptedFiles, dispatchBatch, uploadInfo, type,
 
 export const isDragDataWithFiles = evt => {
     if (!evt.dataTransfer) {
-        return true;
+        return false;
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
@@ -43,12 +45,12 @@ export const getDataTransferItems = event => {
 
         // NOTE: Only the 'drop' event has access to DataTransfer.files,
         // otherwise it will always be empty
-        if (dt.files && dt.files.length) {
-            dataTransferItemsList = dt.files;
-        } else if (dt.items && dt.items.length) {
+        if (dt.items && dt.items.length) {
             // During the drag even the dataTransfer.files is null
             // but Chrome implements some drag store, which is accessible via dataTransfer.items
             dataTransferItemsList = dt.items;
+        } else if (dt.files && dt.files.length) {
+            dataTransferItemsList = dt.files;
         }
     } else if (event.target && event.target.files) {
         dataTransferItemsList = event.target.files;
@@ -60,4 +62,8 @@ export const getDataTransferItems = event => {
 
 export const fileMatchSize = (file, maxSize, minSize) => {
     return file.size <= maxSize && file.size >= minSize;
+};
+
+export const fileIgnored = (file) => {
+    return IGNORED_FILES.find(f => f === file.name);
 };

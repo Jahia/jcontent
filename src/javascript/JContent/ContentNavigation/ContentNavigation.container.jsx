@@ -8,7 +8,7 @@ import {cmGoto} from '~/JContent/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import {mergeDeep} from '~/JContent/JContent.utils';
 
-const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header, accordionItemProps}) => {
+const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
     const {siteKey, language, mode} = useSelector(selector);
 
@@ -48,6 +48,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
                            accordionItems={accordionItems}
                            mode={mode}
                            siteKey={siteKey}
+                           isReversed={isReversed}
                            handleNavigation={(mode, path) => dispatch(handleNavigationAction(mode, path))}
         />
     );
@@ -59,7 +60,8 @@ ContentNavigationContainer.propTypes = {
     accordionItemTarget: PropTypes.string,
     accordionItemType: PropTypes.string,
     handleNavigationAction: PropTypes.func,
-    header: PropTypes.element
+    header: PropTypes.element,
+    isReversed: PropTypes.bool
 };
 
 ContentNavigationContainer.defaultProps = {
@@ -71,7 +73,8 @@ ContentNavigationContainer.defaultProps = {
     }),
     handleNavigationAction: (mode, path) => cmGoto({mode, path}),
     accordionItemTarget: 'jcontent',
-    accordionItemType: 'accordionItem'
+    accordionItemType: 'accordionItem',
+    isReversed: true
 };
 
 export default ContentNavigationContainer;

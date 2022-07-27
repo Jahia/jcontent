@@ -34,7 +34,7 @@
     "apps": {
       "jahia": "configs/jcontent.jsp"
     },
-    "urlPatterns" : {
+    "urlPatterns": {
       "jahia": "/jcontent/(?<siteKey>\\S*?)/(?<language>\\S*?)/(?<contentPath>\\S*)"
     }
   },
@@ -51,7 +51,7 @@
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
     "@jahia/jahia-reporter": "^1.0.3",
-    "@jahia/moonstone": "^2.4.0",
+    "@jahia/moonstone": "^2.4.1",
     "@jahia/react-material": "^3.0.5",
     "@jahia/ui-extender": "^1.0.0",
     "@material-ui/core": "^3.6.2",

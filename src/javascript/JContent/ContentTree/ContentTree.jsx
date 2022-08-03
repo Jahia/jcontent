@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useMemo} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {useDispatch, useSelector, shallowEqual} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
@@ -13,7 +13,7 @@ import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed}) => {
     const dispatch = useDispatch();
-    const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
+    const {lang, siteKey, path, openPaths} = useSelector(selector);
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
@@ -37,17 +37,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson);
-    const actualSelectedPath = useRef('');
-    const data = useMemo(() => {
-        // Make sure that selected path is always in treeEntries so that selection is visible
-        treeEntries.forEach(entry => {
-            if (entry.selectable && entry.openable && path.startsWith(entry.path) && entry.path.length > actualSelectedPath.current.length) {
-                actualSelectedPath.current = entry.path;
-            }
-        });
-
-        return convertPathsToTree(treeEntries, path);
-    }, [treeEntries, path]);
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child
@@ -78,9 +67,9 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         <React.Fragment>
             <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu"/>
             <TreeView isReversed={isReversed}
-                      data={data}
+                      data={convertPathsToTree(treeEntries, path)}
                       openedItems={openPaths}
-                      selectedItems={[actualSelectedPath.current === '' ? path : actualSelectedPath.current]}
+                      selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
                           event.stopPropagation();
                           contextualMenu.current(event, {path: object.id});

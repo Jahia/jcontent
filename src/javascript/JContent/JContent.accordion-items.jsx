@@ -54,6 +54,10 @@ export const jContentAccordionItems = registry => {
         icon: <Page/>,
         label: 'jcontent:label.contentManager.navigation.pages',
         defaultPath: siteKey => '/sites/' + siteKey,
+        getPathForItem: node => {
+            const pages = node.ancestors.filter(n => n.primaryNodeType.name === 'jnt:page');
+            return pages[pages.length - 1].path;
+        },
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         config: {
             hideRoot: true,

@@ -10,4 +10,5 @@ export {default as ContentNotFound} from '../JContent/ContentRoute/ContentLayout
 export {default as EmptyTable} from '../JContent/ContentRoute/ContentLayout/ContentTable/EmptyTable';
 export {default as ContentListHeader} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';
 export {default as ContentTableWrapper} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentTableWrapper';
+export {NodeIcon} from '../utils/NodeIcon';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';

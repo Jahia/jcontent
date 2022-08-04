@@ -42,7 +42,7 @@ async function scan(fileList, uploadMaxSize, uploadMinSize, uploadPath) {
             });
             if (fileMatchSize(file, uploadMaxSize, uploadMinSize) && !fileIgnored(file)) {
                 files.push({
-                    path: uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)),
+                    path: entry.fullPath ? uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)) : uploadPath,
                     entry,
                     file
                 });

@@ -4,23 +4,44 @@ import {useTranslation} from 'react-i18next';
 import {Card, CardContent, Tooltip} from '@material-ui/core';
 import Preview from './Preview';
 import {Button, ButtonGroup, Close, Maximize, Minimize, Typography} from '@jahia/moonstone';
-import {connect} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
-import {compose} from '~/utils';
 import PublicationStatus from './PublicationStatus';
 import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/preview.redux';
 import PreviewSize from './PreviewSize';
 import clsx from 'clsx';
 import styles from './PreviewDrawer.scss';
 
-const PreviewDrawer = ({previewMode, previewState, setPreviewMode, closePreview, openFullScreen, closeFullScreen, previewSelection, selection}) => {
+const PreviewDrawer = ({previewSelection}) => {
+    const {previewMode, previewState, selection} = useSelector(state => ({
+        previewMode: state.jcontent.previewMode,
+        previewState: state.jcontent.previewState,
+        selection: state.jcontent.selection
+    }), shallowEqual);
+    const dispatch = useDispatch();
+    const setPreviewMode = mode => {
+        dispatch(cmSetPreviewMode(mode));
+    };
+
+    const closePreview = () => {
+        dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE));
+    };
+
+    const openFullScreen = () => {
+        dispatch(cmSetPreviewState(CM_DRAWER_STATES.FULL_SCREEN));
+    };
+
+    const closeFullScreen = () => {
+        dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
+    };
+
     const notPublished = previewSelection && (previewSelection.aggregatedPublicationInfo.publicationStatus === 'NOT_PUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'UNPUBLISHED' || previewSelection.aggregatedPublicationInfo.publicationStatus === 'MANDATORY_LANGUAGE_UNPUBLISHABLE');
     const deleted = previewSelection && previewSelection.aggregatedPublicationInfo.publicationStatus === 'MARKED_FOR_DELETION';
     const disabledToggle = !previewSelection;
     const disabledEdit = !previewSelection || deleted;
     const disabledLive = !previewSelection || notPublished;
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     let effectiveMode = previewMode;
     if (disabledLive && previewMode !== 'edit') {
@@ -81,40 +102,8 @@ const PreviewDrawer = ({previewMode, previewState, setPreviewMode, closePreview,
     );
 };
 
-const mapStateToProps = state => {
-    return {
-        previewMode: state.jcontent.previewMode,
-        previewState: state.jcontent.previewState,
-        selection: state.jcontent.selection
-    };
-};
-
-const mapDispatchToProps = dispatch => ({
-    setPreviewMode: mode => {
-        dispatch(cmSetPreviewMode(mode));
-    },
-    closePreview: () => {
-        dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE));
-    },
-    openFullScreen: () => {
-        dispatch(cmSetPreviewState(CM_DRAWER_STATES.FULL_SCREEN));
-    },
-    closeFullScreen: () => {
-        dispatch(cmSetPreviewState(CM_DRAWER_STATES.SHOW));
-    }
-});
-
 PreviewDrawer.propTypes = {
-    closeFullScreen: PropTypes.func.isRequired,
-    closePreview: PropTypes.func.isRequired,
-    openFullScreen: PropTypes.func.isRequired,
-    previewMode: PropTypes.string.isRequired,
-    selection: PropTypes.array.isRequired,
-    previewSelection: PropTypes.object,
-    previewState: PropTypes.number.isRequired,
-    setPreviewMode: PropTypes.func.isRequired
+    previewSelection: PropTypes.object
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps)
-)(PreviewDrawer);
+export default PreviewDrawer;

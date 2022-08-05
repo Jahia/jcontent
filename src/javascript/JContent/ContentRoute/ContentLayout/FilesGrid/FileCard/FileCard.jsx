@@ -27,7 +27,7 @@ export const FileCard = ({
     mode,
     index
 }) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     let contextualMenu = useRef();
 

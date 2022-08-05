@@ -6,9 +6,7 @@ import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../../../JContent.utils';
 
 export const Infos = ({currentDocument}) => {
-    const {language} = useSelector(state => ({
-        language: state.language
-    }));
+    const language = useSelector(state => state.language);
 
     const [paths, setPaths] = useState([]);
 

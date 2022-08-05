@@ -6,6 +6,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useDispatch, useSelector} from 'react-redux';
+import {setTableViewType} from '~/JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
+import {batchActions} from 'redux-batched-actions';
 
 export const LocateActionComponent = ({path, render: Render, ...others}) => {
     const client = useApolloClient();
@@ -20,10 +22,13 @@ export const LocateActionComponent = ({path, render: Render, ...others}) => {
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                expandTree(path, client).then(({mode, ancestorPaths}) => {
-                    dispatch(cmGoto({mode: mode, path: ancestorPaths[ancestorPaths.length - 1]}));
-                    dispatch(cmOpenPaths(ancestorPaths));
-                    dispatch(cmSetPreviewSelection(path));
+                expandTree(path, client).then(({mode, parentPath, viewType, ancestorPaths}) => {
+                    dispatch(batchActions([
+                        cmGoto({mode: mode, path: parentPath}),
+                        ...(viewType ? [setTableViewType(viewType)] : []),
+                        cmOpenPaths(ancestorPaths),
+                        cmSetPreviewSelection(path)
+                    ]));
                 });
             }}
         />

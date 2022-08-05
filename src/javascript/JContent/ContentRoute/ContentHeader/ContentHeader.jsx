@@ -3,7 +3,7 @@ import {ArrowLeft, Button, Chip, Header} from '@jahia/moonstone';
 import {MainActionBar} from '~/JContent/ContentRoute/MainActionBar';
 import JContentConstants from '~/JContent/JContent.constants';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import ContentPath from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
@@ -11,12 +11,11 @@ import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmGoto} from '~/JContent/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
 import BrowseControlBar from '~/JContent/ContentRoute/ToolBar/BrowseControlBar';
-import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
-import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
 import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
 import {cmSetPreviewState} from '~/JContent/preview.redux';
 import {SelectionActionsBar} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/SelectionActionsBar';
 import SearchInput from '../SearchInput';
+import {registry} from '@jahia/ui-extender';
 
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');
@@ -29,9 +28,11 @@ const ContentHeader = () => {
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
         previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection
-    }));
+    }), shallowEqual);
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
+
+    const viewSelector = registry.get('accordionItem', mode)?.viewSelector;
 
     const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {getPrimaryNodeType: true, getDisplayName: true});
     const nodeType = node?.primaryNodeType;
@@ -40,7 +41,8 @@ const ContentHeader = () => {
         ((!loading && node && node.displayName) || 'Loading ...');
 
     const clearSearchFunc = () => {
-        dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : JContentConstants.mode.PAGES, params: {}}));
+        const defaultMode = registry.find({type: 'accordionItem', target: 'jcontent'})[0].key;
+        dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
     };
 
     const paths = selection.length > 0 ? selection : (previewSelection ? [previewSelection] : []);
@@ -65,8 +67,7 @@ const ContentHeader = () => {
             toolbarLeft={<BrowseControlBar isShowingActions={selection.length === 0}/>}
             toolbarRight={
                 <>
-                    {mode === JContentConstants.mode.MEDIA && <FileModeSelector/>}
-                    {mode !== JContentConstants.mode.MEDIA && <ViewModeSelector/>}
+                    {viewSelector}
                     {paths.length > 0 && <SelectionActionsBar paths={paths} clear={clear}/>}
                 </>
             }

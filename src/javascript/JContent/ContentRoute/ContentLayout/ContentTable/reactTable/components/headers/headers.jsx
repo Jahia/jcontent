@@ -10,6 +10,6 @@ export const HeaderSelection = ({getToggleAllRowsSelectedProps}) => (
 );
 
 export const Header = ({column}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return <Typography weight="bold">{t(column.label)}</Typography>;
 };

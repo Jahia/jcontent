@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {compose} from '~/utils';
 import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper} from '@material-ui/core';
 import {TablePagination, Typography} from '@jahia/moonstone';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {connect} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
@@ -17,24 +16,25 @@ import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
 
-export const FilesGrid = ({
-    isContentNotFound,
-    path,
-    totalCount,
-    pagination,
-    setPageSize,
-    onPreviewSelect,
-    setCurrentPage,
-    rows,
-    isLoading,
-    mode,
-    uilang,
-    siteKey,
-    previewSelection,
-    previewState,
-    setPath
-}) => {
-    const {t} = useTranslation();
+export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
+    const {t} = useTranslation('jcontent');
+    const {path, pagination, mode, siteKey, uilang, previewSelection, previewState} = useSelector(state => ({
+        path: state.jcontent.path,
+        pagination: state.jcontent.pagination,
+        mode: state.jcontent.filesGrid.mode,
+        siteKey: state.site,
+        uilang: state.uilang,
+        previewSelection: state.jcontent.previewSelection,
+        previewState: state.jcontent.previewState
+    }), shallowEqual);
+    const dispatch = useDispatch();
+    const setCurrentPage = page => dispatch(cmSetPage(page - 1));
+    const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
+    const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
+    const setPath = (siteKey, path, mode) => {
+        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
+        dispatch(cmGoto({path: path}));
+    };
 
     const {
         mainPanelRef,
@@ -124,44 +124,11 @@ export const FilesGrid = ({
     );
 };
 
-let mapStateToProps = state => ({
-    path: state.jcontent.path,
-    pagination: state.jcontent.pagination,
-    mode: state.jcontent.filesGrid.mode,
-    siteKey: state.site,
-    uilang: state.uilang,
-    previewSelection: state.jcontent.previewSelection,
-    previewState: state.jcontent.previewState
-});
-
-let mapDispatchToProps = dispatch => ({
-    setCurrentPage: page => dispatch(cmSetPage(page - 1)),
-    onPreviewSelect: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
-    setPageSize: pageSize => dispatch(cmSetPageSize(pageSize)),
-    setPath: (siteKey, path, mode) => {
-        dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));
-        dispatch(cmGoto({path: path}));
-    }
-});
-
 FilesGrid.propTypes = {
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool.isRequired,
-    pagination: PropTypes.object.isRequired,
-    path: PropTypes.string.isRequired,
     rows: PropTypes.array.isRequired,
-    setCurrentPage: PropTypes.func.isRequired,
-    setPageSize: PropTypes.func.isRequired,
-    uilang: PropTypes.string.isRequired,
-    previewSelection: PropTypes.string,
-    previewState: PropTypes.number.isRequired,
-    siteKey: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired,
-    totalCount: PropTypes.number.isRequired,
-    onPreviewSelect: PropTypes.func.isRequired,
-    setPath: PropTypes.func.isRequired
+    totalCount: PropTypes.number.isRequired
 };
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps)
-)(FilesGrid);
+export default FilesGrid;

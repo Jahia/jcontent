@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {MenuItem} from '@jahia/moonstone';
 
 export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, actionKey, enabled, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const [hover, setHover] = useState(false);
 
     const onEnter = e => {

@@ -10,7 +10,7 @@ function checkAction(node) {
 }
 
 export const DeleteActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
-    const {language} = useSelector(state => ({language: state.language}));
+    const language = useSelector(state => state.language);
 
     const res = useNodeChecks(
         {path, paths, language},

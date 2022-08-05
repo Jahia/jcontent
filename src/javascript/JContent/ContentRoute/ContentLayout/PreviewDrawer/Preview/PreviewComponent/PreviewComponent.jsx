@@ -48,7 +48,7 @@ function getFile(workspace, data) {
 }
 
 const PreviewComponentCmp = ({data, workspace, fullScreen, domLoadedCallback, iFrameStyle, iframeProps}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     let displayValue = data && data.nodeByPath && data.nodeByPath.renderedContent ? data.nodeByPath.renderedContent.output : '';
     if (displayValue === '') {

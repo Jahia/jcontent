@@ -6,7 +6,7 @@ import styles from './CropPanel.scss';
 import {useTranslation} from 'react-i18next';
 
 export const CropPanel = ({onCrop, cropParams}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const setWidth = event => {
         let width = event.target.value;
 

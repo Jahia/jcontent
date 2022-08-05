@@ -5,7 +5,7 @@ import styles from './UploadItem.scss';
 import {useTranslation} from 'react-i18next';
 
 const Status = ({status, error, type}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     let content;
 
     if (status === uploadStatuses.QUEUED) {

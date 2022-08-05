@@ -16,8 +16,7 @@ import {filesGridRedux} from './JContent/ContentRoute/ContentLayout/FilesGrid/Fi
 import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.redux';
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
-import JContentConstants from './JContent/JContent.constants';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {structuredViewRedux} from './JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
 
@@ -25,43 +24,33 @@ export default function () {
     const CmmNavItem = () => {
         const history = useHistory();
         const {t} = useTranslation('jcontent');
-        const {site, language, path, mode, params} = useSelector(state => ({
+        const {site, language, path, mode, params, pathname} = useSelector(state => ({
             language: state.language,
             site: state.site,
             path: state.jcontent.path,
             mode: state.jcontent.mode,
-            params: state.jcontent.params
-        }));
+            params: state.jcontent.params,
+            pathname: state.router.location.pathname
+        }), shallowEqual);
 
+        let accordions = registry.find({type: 'accordionItem', target: 'jcontent'});
         const permissions = useNodeChecks({
             path: `/sites/${site}`,
             language: language
         }, {
-            requiredSitePermission: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
+            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))]
         });
 
         if (permissions.loading) {
             return null;
         }
 
-        let defaultMode = '';
-
-        if (permissions.node?.site.pagesAccordionAccess) {
-            defaultMode = JContentConstants.mode.PAGES;
-        } else if (permissions.node?.site.contentFolderAccordionAccess) {
-            defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
-        } else if (permissions.node?.site.mediaAccordionAccess) {
-            defaultMode = JContentConstants.mode.MEDIA;
-        } else if (permissions.node?.site.formAccordionAccess) {
-            defaultMode = JContentConstants.mode.FORMS;
-        } else if (permissions.node?.site.additionalAccordionAccess) {
-            defaultMode = JContentConstants.mode.APPS;
-        }
+        let defaultMode = accordions.find(acc => permissions.node?.site[acc.requiredSitePermission])?.key;
 
         return (
             <PrimaryNavItem key="/jcontent"
                             role="jcontent-menu-item"
-                            isSelected={history.location.pathname.startsWith('/jcontent') && history.location.pathname.split('/').length > 3}
+                            isSelected={pathname.startsWith('/jcontent') && pathname.split('/').length > 3}
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {

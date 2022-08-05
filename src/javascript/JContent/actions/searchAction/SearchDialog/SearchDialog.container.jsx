@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {cmGoto, cmPreSearchModeMemo} from '~/JContent/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -12,7 +12,7 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
         params: state.jcontent.params,
         mode: state.jcontent.mode,
         path: state.jcontent.path
-    }));
+    }), shallowEqual);
 
     useEffect(() => {
         if (mode !== JContentConstants.mode.SQL2SEARCH && mode !== JContentConstants.mode.SEARCH) {

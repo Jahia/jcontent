@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux';
 import {LoaderOverlay, LoaderSuspense} from '@jahia/jahia-ui-root';
 
 export const PreviewComponentContainer = ({previewMode, previewSelection, previewState, notificationContext}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const language = useSelector(state => state.language);
     const {data, loading, error, refetch} = useContentPreview({
         path: previewSelection && previewSelection.path,

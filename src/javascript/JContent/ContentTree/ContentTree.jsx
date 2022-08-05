@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
@@ -13,7 +13,7 @@ import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed}) => {
     const dispatch = useDispatch();
-    const {lang, siteKey, path, openPaths} = useSelector(selector);
+    const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {

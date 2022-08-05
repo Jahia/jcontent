@@ -44,13 +44,9 @@ const JContentConstants = {
         viewType: {
             CONTENT: 'content',
             PAGES: 'pages',
-            ALL: 'all'
+            VIEW: 'view',
+            VIEW_DEVICE: 'view_device'
         }
-    },
-    pagesMode: {
-        LIST: 'list',
-        VIEW: 'view',
-        VIEW_DEVICE: 'view_device'
     }
 };
 

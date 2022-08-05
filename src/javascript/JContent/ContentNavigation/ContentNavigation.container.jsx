@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
@@ -10,7 +10,7 @@ import {mergeDeep} from '~/JContent/JContent.utils';
 
 const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
-    const {siteKey, language, mode} = useSelector(selector);
+    const {siteKey, language, mode} = useSelector(selector, shallowEqual);
 
     let accordionItems = registry.find({type: accordionItemType, target: accordionItemTarget});
 

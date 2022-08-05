@@ -1,12 +1,12 @@
 import {cmGoto} from '../JContent.redux';
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 
 export const RouterActionComponent = ({path, mode, urlParams, render: Render, loading: Loading, ...others}) => {
     const dispatch = useDispatch();
-    const {language, site} = useSelector(state => ({language: state.language, site: state.site}));
+    const {language, site} = useSelector(state => ({language: state.language, site: state.site}), shallowEqual);
 
     const res = useNodeChecks({path}, others);
 

@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import styles from './ConfirmSaveDialog.scss';
 
 export const ConfirmSaveDialog = ({isOpen, handleClose, handleSave}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <Dialog open={isOpen}
                 aria-labelledby="form-dialog-title"

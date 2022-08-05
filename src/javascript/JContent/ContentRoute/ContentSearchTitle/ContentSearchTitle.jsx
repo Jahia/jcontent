@@ -3,7 +3,7 @@ import classnames from 'clsx';
 import {ArrowLeft, Button, Typography} from '@jahia/moonstone';
 import styles from './ContentSearchTitle.scss';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchInput from '../SearchInput';
@@ -14,7 +14,7 @@ const ContentSearchTitle = () => {
     const {mode, preSearchModeMemo} = useSelector(state => ({
         mode: state.jcontent.mode,
         preSearchModeMemo: state.jcontent.preSearchModeMemo
-    }));
+    }), shallowEqual);
     const title = t('label.contentManager.title.search');
 
     const clearSearchFunc = () => {

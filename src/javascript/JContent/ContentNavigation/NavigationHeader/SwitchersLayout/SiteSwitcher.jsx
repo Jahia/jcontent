@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {Query} from 'react-apollo';
 import {PredefinedFragments} from '@jahia/data-helper';
 import gql from 'graphql-tag';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {CM_DRAWER_STATES, CM_PREVIEW_MODES, cmGoto} from '~/JContent/JContent.redux';
@@ -71,7 +71,7 @@ const SiteSwitcher = ({selector, onSelectAction}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const dispatch = useDispatch();
-    const {siteKey, currentLang} = useSelector(selector);
+    const {siteKey, currentLang} = useSelector(selector, shallowEqual);
 
     const onSelectSite = (siteNode, currentLang) => {
         let newLang = getTargetSiteLanguageForSwitch(siteNode, currentLang);

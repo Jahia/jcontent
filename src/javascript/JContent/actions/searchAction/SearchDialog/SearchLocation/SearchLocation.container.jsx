@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNodeInfo, useSiteInfo} from '@jahia/data-helper';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchLocation from './SearchLocation';
 
@@ -9,7 +9,7 @@ const SearchLocationContainer = ({searchPath, setSearchPath}) => {
         path: state.jcontent.path,
         siteKey: state.site,
         language: state.language
-    }));
+    }), shallowEqual);
 
     const {node, loading: nodeLoading} = useNodeInfo({path: path, language: language}, {getDisplayName: true});
     const {siteInfo, loading} = useSiteInfo({siteKey, displayLanguage: language});

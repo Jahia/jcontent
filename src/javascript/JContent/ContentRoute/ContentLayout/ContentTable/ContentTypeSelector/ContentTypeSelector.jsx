@@ -8,13 +8,14 @@ import classes from './ContentTypeSelector.scss';
 import {useTranslation} from 'react-i18next';
 import {batchActions} from 'redux-batched-actions';
 import {cmSetPage} from '../../pagination.redux';
+import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 
 const localStorage = window.localStorage;
 const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
-const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions}) => {
-    const {t} = useTranslation();
-    const tableView = useSelector(selector, shallowEqual);
+const ContentTypeSelector = ({selector, reduxActions}) => {
+    const {t} = useTranslation('jcontent');
+    const {tableView} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
     const actionsBatch = [];
@@ -23,6 +24,24 @@ const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions})
     if (!isStructuredView) {
         actionsBatch.push(reduxActions.setPageAction(0));
     }
+
+    const pages = useLayoutQuery(state => ({
+        ...selector(state),
+        tableView: {
+            ...selector(state).tableView,
+            viewType: JContentConstants.tableView.viewType.PAGES
+        }
+    }), {fetchPolicy: 'cache-and-network'});
+    const pagesCount = pages.loading ? 0 : pages.queryHandler.getResultsPath(pages.data).pageInfo.totalCount;
+
+    const content = useLayoutQuery(state => ({
+        ...selector(state),
+        tableView: {
+            ...selector(state).tableView,
+            viewType: JContentConstants.tableView.viewType.CONTENT
+        }
+    }), {fetchPolicy: 'cache-and-network'});
+    const contentCount = content.loading ? 0 : content.queryHandler.getResultsPath(content.data).pageInfo.totalCount;
 
     return (
         <Tab className={classes.tabs}>
@@ -49,8 +68,6 @@ const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions})
 };
 
 ContentTypeSelector.propTypes = {
-    contentCount: PropTypes.number,
-    pagesCount: PropTypes.number,
     selector: PropTypes.func,
     reduxActions: {
         setPageAction: PropTypes.func.isRequired,
@@ -59,7 +76,17 @@ ContentTypeSelector.propTypes = {
 };
 
 ContentTypeSelector.defaultProps = {
-    selector: state => state.jcontent.tableView,
+    selector: state => ({
+        mode: state.jcontent.mode,
+        siteKey: state.site,
+        path: state.jcontent.path,
+        lang: state.language,
+        uilang: state.uilang,
+        params: state.jcontent.params,
+        pagination: state.jcontent.pagination,
+        sort: state.jcontent.sort,
+        tableView: state.jcontent.tableView
+    }),
     reduxActions: {
         setPageAction: page => cmSetPage(page),
         setTableViewTypeAction: view => setTableViewType(view)

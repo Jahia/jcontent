@@ -85,7 +85,7 @@ export const PublishActionComponent = props => {
     const {id, path, paths, language, publishType, isPublishingAllLanguages, enabled, isVisible,
         isMediumLabel, render: Render, loading: Loading} = props;
     const languageToUse = useSelector(state => language ? language : state.language);
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     const res = useNodeChecks({path, paths, language: languageToUse}, {
         getDisplayName: true,

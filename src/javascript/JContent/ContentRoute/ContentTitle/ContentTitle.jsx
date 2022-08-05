@@ -2,14 +2,14 @@ import React from 'react';
 import classnames from 'clsx';
 import {Typography} from '@jahia/moonstone';
 import styles from './ContentTitle.scss';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeInfo} from '@jahia/data-helper';
 
 const ContentTitle = () => {
     const {path, language} = useSelector(state => ({
         path: state.jcontent.path,
         language: state.language
-    }));
+    }), shallowEqual);
 
     const {loading, node} = useNodeInfo({path: path, language: language}, {getDisplayName: true});
 

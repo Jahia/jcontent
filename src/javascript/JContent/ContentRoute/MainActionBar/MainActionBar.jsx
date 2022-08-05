@@ -3,11 +3,11 @@ import {ButtonGroup, Separator} from '@jahia/moonstone';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import styles from './MainActionBar.scss';
 
 export const MainActionBar = () => {
-    const {path, language, selection} = useSelector(state => ({path: state.jcontent.path, language: state.language, selection: state.jcontent.selection}));
+    const {path, language, selection} = useSelector(state => ({path: state.jcontent.path, language: state.language, selection: state.jcontent.selection}), shallowEqual);
 
     const {node, loading} = useNodeInfo({path, language}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 

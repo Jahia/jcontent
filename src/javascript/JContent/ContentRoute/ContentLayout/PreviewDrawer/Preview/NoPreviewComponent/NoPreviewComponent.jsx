@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import styles from '../Preview.scss';
 
 const NoPreviewComponent = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <div className={classNames(styles.noPreviewContainer, styles.contentContainer)}>
             <Paper elevation={1} className={styles.contentContainer} classes={{root: styles.center}}>

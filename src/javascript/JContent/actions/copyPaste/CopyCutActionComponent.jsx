@@ -1,4 +1,4 @@
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
@@ -13,7 +13,7 @@ export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render
     const {language, displayLanguage} = useSelector(state => ({
         language: state.language,
         displayLanguage: state.uilang
-    }));
+    }), shallowEqual);
     const client = useApolloClient();
     const dispatch = useDispatch();
 

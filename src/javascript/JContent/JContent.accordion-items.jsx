@@ -1,10 +1,17 @@
 import React from 'react';
-import {AccordionItem, Collections, Page, FolderSpecial, Grain} from '@jahia/moonstone';
+import {AccordionItem, Collections, FolderSpecial, Grain, Page} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
+import {ContentQueryHandler, FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
+import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
+import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
+import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
+
+const filesRegex = /\/sites\/[^/]+\/files\/.*/;
+const contentsRegex = /\/sites\/[^/]+\/contents\/.*/;
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {
@@ -36,7 +43,11 @@ export const jContentAccordionItems = registry => {
         ),
         routeComponent: ContentRoute,
         getPath,
-        getUrlPathPart
+        getUrlPathPart,
+        getPathForItem: node => {
+            return node.ancestors[node.ancestors.length - 1].path;
+        },
+        queryHandler: ContentQueryHandler
     });
 
     const renderDefaultApps = registry.add('accordionItem', 'renderDefaultApps', {
@@ -58,6 +69,8 @@ export const jContentAccordionItems = registry => {
             const pages = node.ancestors.filter(n => n.primaryNodeType.name === 'jnt:page');
             return pages[pages.length - 1].path;
         },
+        canDisplayItem: node => !filesRegex.test(node.path) && !contentsRegex.test(node.path),
+        getViewTypeForItem: node => node.primaryNodeType.name === 'jnt:page' ? 'pages' : 'content',
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         config: {
             hideRoot: true,
@@ -67,7 +80,9 @@ export const jContentAccordionItems = registry => {
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
             rootLabel: 'jcontent:label.contentManager.browsePages',
             key: 'browse-tree-pages'
-        }
+        },
+        viewSelector: <ViewModeSelector/>,
+        tableHeader: <ContentTypeSelector/>
     });
 
     registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
@@ -75,6 +90,7 @@ export const jContentAccordionItems = registry => {
         icon: <FolderSpecial/>,
         label: 'jcontent:label.contentManager.navigation.contentFolders',
         defaultPath: siteKey => '/sites/' + siteKey + '/contents',
+        canDisplayItem: node => contentsRegex.test(node.path),
         requiredSitePermission: JContentConstants.accordionPermissions.contentFolderAccordionAccess,
         config: {
             rootPath: '/contents',
@@ -83,7 +99,8 @@ export const jContentAccordionItems = registry => {
             openableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
             rootLabel: 'jcontent:label.contentManager.browseFolders',
             key: 'browse-tree-content'
-        }
+        },
+        viewSelector: <ViewModeSelector/>
     });
 
     registry.add('accordionItem', 'media', renderDefaultContentTrees, {
@@ -91,6 +108,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'jcontent:label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
+        canDisplayItem: node => filesRegex.test(node.path),
         requiredSitePermission: JContentConstants.accordionPermissions.mediaAccordionAccess,
         config: {
             rootPath: '/files',
@@ -99,7 +117,9 @@ export const jContentAccordionItems = registry => {
             openableTypes: ['jnt:folder'],
             rootLabel: 'jcontent:label.contentManager.browseFiles',
             key: 'browse-tree-files'
-        }
+        },
+        queryHandler: FilesQueryHandler,
+        viewSelector: <FileModeSelector/>
     });
 
     registry.add('accordionItem', 'apps', renderDefaultApps, {

@@ -37,7 +37,7 @@ const defaultGetToggleAllRowsSelectedProps = instance => ({
 function useInstance(instance) {
     const {getHooks, rows} = instance;
     const getInstance = useGetLatest(instance);
-    const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
+    const selection = useSelector(state => state.jcontent.selection);
     const dispatch = useDispatch();
 
     const paths = flattenTree(rows).map(n => n.original.path);

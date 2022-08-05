@@ -15,7 +15,7 @@ const checkAction = node => node.operationsSupport.publication &&
             (node.aggregatedPublicationInfo.existsInLive === undefined ? false : node.aggregatedPublicationInfo.existsInLive)));
 
 export const PublishDeletionActionComponent = ({path, paths, isAllSubTree, isPublishingAllLanguages, buttonProps, render: Render, loading: Loading, ...others}) => {
-    const {language} = useSelector(state => ({language: state.language}));
+    const language = useSelector(state => state.language);
 
     const res = useNodeChecks({path, paths, language}, {
         getProperties: ['jcr:mixinTypes'],

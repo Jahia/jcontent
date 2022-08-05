@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchControlBar from './SearchControlBar';
 import BrowseControlBar from './BrowseControlBar';
@@ -14,14 +14,14 @@ import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {cmSetPreviewState} from '~/JContent/preview.redux';
 
 export const ToolBar = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
     const {mode, selection, previewSelection} = useSelector(state => ({
         mode: state.jcontent.mode,
         selection: state.jcontent.selection,
         previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection
-    }));
+    }), shallowEqual);
 
     const {nodes, loading} = useNodeInfo({paths: selection}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 

@@ -6,6 +6,7 @@ import {
     Sql2SearchQueryHandler
 } from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
 import {registry} from '@jahia/ui-extender';
+import {replaceFragmentsInDocument} from '@jahia/data-helper';
 
 const contentQueryHandlerByMode = mode => {
     switch (mode) {
@@ -18,7 +19,7 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
-export function useLayoutQuery(selector, options) {
+export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const defaultOptions = {
         fetchPolicy: 'network-only'
     };
@@ -41,8 +42,7 @@ export function useLayoutQuery(selector, options) {
     const {fetchPolicy} = {...defaultOptions, ...options};
 
     const queryHandler = contentQueryHandlerByMode(mode);
-    const layoutQuery = queryHandler.getQuery();
-
+    const layoutQuery = replaceFragmentsInDocument(queryHandler.getQuery(), fragments);
     const rootPath = `/sites/${siteKey}`;
 
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
@@ -61,7 +61,7 @@ export function useLayoutQuery(selector, options) {
     });
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
-        variables: layoutQueryParams,
+        variables: {...layoutQueryParams, ...queryVariables},
         fetchPolicy
     });
     return {queryHandler, layoutQuery, isStructuredView, layoutQueryParams, data, error, loading, refetch};

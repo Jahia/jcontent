@@ -105,12 +105,14 @@ const ContentQueryHandler = {
                 jcr {
                     nodeByPath(path: $path) {
                         ...NodeFields
+                        ...node
                         descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: $recursionTypesFilter, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                             pageInfo {
                                 totalCount
                             }
                             nodes {
                                 ...NodeFields
+                                ...node
                                 ...ChildNodesCount
                             }
                         }
@@ -191,12 +193,14 @@ const FilesQueryHandler = {
                 jcr {
                     nodeByPath(path: $path) {
                         ...NodeFields
+                        ...node
                         children(offset: $offset, limit: $limit, typesFilter: {types: $typeFilter, multi: ANY}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
                             pageInfo {
                                 totalCount
                             }
                             nodes {
                                 ...NodeFields
+                                ...node
                                 ...ChildNodesCount
                                 width: property(name: "j:width") {
                                     value
@@ -279,6 +283,7 @@ const SearchQueryHandler = {
                         }
                         nodes {
                             ...NodeFields
+                            ...node
                         }
                     }
                 }
@@ -321,6 +326,7 @@ const Sql2SearchQueryHandler = {
                         }
                         nodes {
                             ...NodeFields
+                            ...node
                         }
                     }
                 }

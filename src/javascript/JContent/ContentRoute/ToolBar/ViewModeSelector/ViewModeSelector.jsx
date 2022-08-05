@@ -50,7 +50,7 @@ const tableViewDropdownData = (t, viewMode, allButtons) => {
 };
 
 export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const valid = useCode(code);
 
     let {mode, viewMode} = useSelector(selector, shallowEqual);

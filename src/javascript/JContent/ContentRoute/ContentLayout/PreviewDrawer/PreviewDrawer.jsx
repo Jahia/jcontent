@@ -41,7 +41,7 @@ const PreviewDrawer = ({previewSelection}) => {
     const disabledEdit = !previewSelection || deleted;
     const disabledLive = !previewSelection || notPublished;
 
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     let effectiveMode = previewMode;
     if (disabledLive && previewMode !== 'edit') {

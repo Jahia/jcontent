@@ -11,7 +11,7 @@ import {getDefaultLocale, isMarkedForDeletion} from '~/JContent/JContent.utils';
 import styles from './PublicationStatus.scss';
 
 export const PublicationStatus = ({previewSelection}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const uilang = useSelector(state => state.uilang);
 
     if (_.isEmpty(previewSelection) || !previewSelection.operationsSupport.publication) {

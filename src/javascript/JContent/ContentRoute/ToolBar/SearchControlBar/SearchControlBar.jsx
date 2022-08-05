@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next';
 import {useNodeInfo} from '@jahia/data-helper';
 
 export const SearchControlBar = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const {path, mode, from, language, searchPath, searchContentType} = useSelector(state => ({
         path: state.jcontent.path,
         site: state.site,

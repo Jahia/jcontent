@@ -10,7 +10,7 @@ import {Button, Copy, Typography} from '@jahia/moonstone';
 import styles from '../Preview.scss';
 
 const MultipleSelection = ({selection}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
     return (

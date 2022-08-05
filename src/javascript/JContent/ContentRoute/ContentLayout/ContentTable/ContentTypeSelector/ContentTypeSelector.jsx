@@ -14,7 +14,7 @@ const localStorage = window.localStorage;
 const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
 const ContentTypeSelector = ({selector, reduxActions}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const {tableView} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;

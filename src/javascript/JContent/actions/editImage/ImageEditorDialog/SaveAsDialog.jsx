@@ -6,7 +6,7 @@ import {Button} from '@jahia/moonstone';
 import styles from './SaveAsDialog.scss';
 
 export const SaveAsDialog = ({isOpen, handleClose, handleSave, name, onChangeName, isNameValid}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <Dialog open={isOpen}
                 aria-labelledby="form-dialog-title"

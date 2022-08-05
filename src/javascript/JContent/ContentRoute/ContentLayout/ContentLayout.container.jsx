@@ -21,7 +21,7 @@ import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQue
 let currentResult;
 
 export const ContentLayoutContainer = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const client = useApolloClient();
 
     const {mode, path, previewSelection, previewState, params, filesMode, openedPaths, selection} = useSelector(state => ({

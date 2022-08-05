@@ -13,7 +13,7 @@ export const LanguageSwitcher = () => {
         lang: state.language
     }), shallowEqual);
     const {siteInfo, error, loading} = useSiteInfo({siteKey, displayLanguage: lang});
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     const dispatch = useDispatch();
     const notificationContext = useNotifications();

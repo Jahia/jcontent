@@ -9,7 +9,7 @@ import {columnWidths} from '../../columns';
 import classes from './Cells.scss';
 
 export const CellStatus = ({cell, column, row}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const node = row.original;
     const lang = useSelector(state => state.lang);
     const showSubNodes = node.primaryNodeType.name !== 'jnt:page' && node.subNodes && node.subNodes.pageInfo.totalCount > 0;

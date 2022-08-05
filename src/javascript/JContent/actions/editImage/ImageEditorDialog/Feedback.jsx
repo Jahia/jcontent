@@ -7,7 +7,7 @@ import styles from './Feedback.scss';
 import {useTranslation} from 'react-i18next';
 
 export const Feedback = ({isOpen, messageKey, onClose}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <Snackbar open={isOpen}
                   className={styles.feedback}

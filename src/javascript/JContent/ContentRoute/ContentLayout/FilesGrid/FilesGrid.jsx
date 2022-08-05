@@ -17,7 +17,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const {path, pagination, mode, siteKey, uilang, previewSelection, previewState} = useSelector(state => ({
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,

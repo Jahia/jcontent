@@ -7,7 +7,7 @@ import classNames from 'clsx';
 import styles from './PublicationStatus.scss';
 
 export const PublicationStatus = ({node, className, style}) => {
-    const {t, i18n} = useTranslation();
+    const {t, i18n} = useTranslation('jcontent');
     const publicationStatus = publicationStatusByName.getStatus(node);
     const publicationStatusClass = publicationStatus.getContentClass(styles);
     if (node.operationsSupport.publication) {

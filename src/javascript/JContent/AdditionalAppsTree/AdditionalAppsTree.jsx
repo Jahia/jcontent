@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 export const AdditionalAppsTree = ({item, target}) => {
     const {site, path} = useSelector(state => ({site: state.site, path: state.jcontent.path}), shallowEqual);
     const dispatch = useDispatch();
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     const selected = path.substr(1);
 

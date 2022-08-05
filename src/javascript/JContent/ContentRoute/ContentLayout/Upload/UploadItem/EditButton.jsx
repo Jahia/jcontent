@@ -7,7 +7,7 @@ import {isImageFile} from '../../ContentLayout.utils';
 import {useTranslation} from 'react-i18next';
 
 const EditButton = props => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const {status, file, uuid} = props;
 
     const language = useSelector(state => state.language);

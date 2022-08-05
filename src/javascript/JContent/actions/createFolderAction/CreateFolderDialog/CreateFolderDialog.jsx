@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import styles from './CreateFolderDialog.scss';
 
 const useErrMsg = (isNameAvailable, isNameValid) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     let [errMsg, setErrMsg] = useState('');
     useEffect(() => {
         if (!isNameAvailable) {
@@ -21,7 +21,7 @@ const useErrMsg = (isNameAvailable, isNameValid) => {
 };
 
 const CreateFolderDialog = ({isOpen, isLoading, name, isNameValid, isNameAvailable, handleCancel, handleCreate, onChangeName}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const errMsg = useErrMsg(isNameAvailable, isNameValid);
 
     return (

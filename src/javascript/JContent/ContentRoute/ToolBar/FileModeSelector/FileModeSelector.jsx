@@ -32,7 +32,7 @@ const tableViewDropdownData = (t, mode) => {
 };
 
 export const FileModeSelector = ({selector, setModeAction}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     const {mode} = useSelector(selector, shallowEqual);
 

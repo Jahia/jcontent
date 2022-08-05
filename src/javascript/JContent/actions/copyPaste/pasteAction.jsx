@@ -20,7 +20,7 @@ import {ACTION_PERMISSIONS} from '../actions.constants';
 export const PasteActionComponent = withNotifications()(({path, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const {copyPaste, treePath, openedPaths, previewSelection} = useSelector(state => ({
         copyPaste: state.jcontent.copyPaste,
         treePath: state.jcontent.path,

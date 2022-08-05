@@ -25,7 +25,7 @@ import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
     const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(state => ({

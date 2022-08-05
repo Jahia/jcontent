@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import styles from './RotatePanel.scss';
 
 export const RotatePanel = ({onRotate}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <>
             <Typography variant="subheading">

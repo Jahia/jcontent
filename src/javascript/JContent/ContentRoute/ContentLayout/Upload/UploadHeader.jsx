@@ -6,7 +6,7 @@ import {Trans, useTranslation} from 'react-i18next';
 import styles from './UploadHeader.scss';
 
 export function UploadHeader({status}) {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     if (!status) {
         return null;
     }

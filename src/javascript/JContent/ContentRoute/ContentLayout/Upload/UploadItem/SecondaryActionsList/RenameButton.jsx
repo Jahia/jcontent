@@ -5,7 +5,7 @@ import styles from '../UploadItem.scss';
 import {useTranslation} from 'react-i18next';
 
 const RenameButton = ({showRenameDialog}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <Button
             key="rename"

@@ -6,7 +6,7 @@ import {Button, Link, Typography} from '@jahia/moonstone';
 import styles from './ResizePanel.scss';
 
 export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResize}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     const setWidth = event => {
         let value = event.target.value;

@@ -10,7 +10,7 @@ import styles from './EmptyDropZone.scss';
 
 const EmptyDropZone = ({component: Component, mode}) => {
     const currentState = useSelector(state => ({site: state.site, language: state.language}), shallowEqual);
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
 
     const permissions = useNodeChecks({
         path: `/sites/${currentState.site}`,

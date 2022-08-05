@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import styles from './ImageEditorActions.scss';
 
 const ImageEditorActions = ({undoChanges, saveChanges, isDirty}) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     return (
         <ExpansionPanelActions className={styles.expansePanel}>
             <Button data-cm-role="undo-changes"

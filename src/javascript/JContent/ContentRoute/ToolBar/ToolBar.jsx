@@ -14,7 +14,7 @@ import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {cmSetPreviewState} from '~/JContent/preview.redux';
 
 export const ToolBar = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
     const {mode, selection, previewSelection} = useSelector(state => ({

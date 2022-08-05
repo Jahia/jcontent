@@ -24,12 +24,13 @@ export default function () {
     const CmmNavItem = () => {
         const history = useHistory();
         const {t} = useTranslation('jcontent');
-        const {site, language, path, mode, params} = useSelector(state => ({
+        const {site, language, path, mode, params, pathname} = useSelector(state => ({
             language: state.language,
             site: state.site,
             path: state.jcontent.path,
             mode: state.jcontent.mode,
-            params: state.jcontent.params
+            params: state.jcontent.params,
+            pathname: state.router.location.pathname
         }), shallowEqual);
 
         let accordions = registry.find({type: 'accordionItem', target: 'jcontent'});
@@ -49,7 +50,7 @@ export default function () {
         return (
             <PrimaryNavItem key="/jcontent"
                             role="jcontent-menu-item"
-                            isSelected={history.location.pathname.startsWith('/jcontent') && history.location.pathname.split('/').length > 3}
+                            isSelected={pathname.startsWith('/jcontent') && pathname.split('/').length > 3}
                             label={t('label.name')}
                             icon={<Collections/>}
                             onClick={() => {

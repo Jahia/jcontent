@@ -19,7 +19,7 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
-export function useLayoutQuery(selector, options, fragments) {
+export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const defaultOptions = {
         fetchPolicy: 'network-only'
     };
@@ -61,7 +61,7 @@ export function useLayoutQuery(selector, options, fragments) {
     });
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
-        variables: layoutQueryParams,
+        variables: {...layoutQueryParams, ...queryVariables},
         fetchPolicy
     });
     return {queryHandler, layoutQuery, isStructuredView, layoutQueryParams, data, error, loading, refetch};

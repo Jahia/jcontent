@@ -18,24 +18,27 @@ const contentQueryHandlerByMode = mode => {
     }
 };
 
-export function useLayoutQuery(options) {
+export function useLayoutQuery(selector, options) {
     const defaultOptions = {
         fetchPolicy: 'network-only'
     };
 
-    const reduxOptions = useSelector(state => ({
-        mode: state.jcontent.mode,
-        siteKey: state.site,
-        path: state.jcontent.path,
-        lang: state.language,
-        uilang: state.uilang,
-        params: state.jcontent.params,
-        pagination: state.jcontent.pagination,
-        sort: state.jcontent.sort,
-        tableView: state.jcontent.tableView
-    }), shallowEqual);
+    if (!selector) {
+        selector = state => ({
+            mode: state.jcontent.mode,
+            siteKey: state.site,
+            path: state.jcontent.path,
+            lang: state.language,
+            uilang: state.uilang,
+            params: state.jcontent.params,
+            pagination: state.jcontent.pagination,
+            sort: state.jcontent.sort,
+            tableView: state.jcontent.tableView
+        });
+    }
 
-    const {mode, siteKey, path, lang, uilang, params, pagination, sort, tableView, fetchPolicy} = {...defaultOptions, ...reduxOptions, ...options};
+    const {mode, siteKey, path, lang, uilang, params, pagination, sort, tableView} = useSelector(selector, shallowEqual);
+    const {fetchPolicy} = {...defaultOptions, ...options};
 
     const queryHandler = contentQueryHandlerByMode(mode);
     const layoutQuery = queryHandler.getQuery();

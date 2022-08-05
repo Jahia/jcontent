@@ -98,7 +98,7 @@ const nodeFields = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-class ContentQueryHandler {
+const ContentQueryHandler = {
     getQuery() {
         return gql`
             query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
@@ -120,9 +120,9 @@ class ContentQueryHandler {
             ${nodeFields}
             ${childNodesCount}
         `;
-    }
+    },
 
-    getQueryParams({path, uilang, lang, urlParams, rootPath, pagination, sort, viewType}) {
+    getQueryParams({path, uilang, lang, urlParams, rootPath, pagination, sort, viewType, viewMode, mode}) {
         let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
         if (urlParams.sub) {
             type = 'contents';
@@ -139,7 +139,7 @@ class ContentQueryHandler {
             }
         };
 
-        return {
+        const layoutQueryParams = {
             path: path,
             language: lang,
             displayLanguage: uilang,
@@ -158,39 +158,33 @@ class ContentQueryHandler {
                 groupingType: 'START'
             }
         };
-    }
 
-    updateQueryParamsForStructuredView(params, viewType, mode) {
-        const p = {
-            ...params,
-            fieldGrouping: null,
-            offset: 0,
-            limit: 10000
-        };
+        if (viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+            layoutQueryParams.fieldGrouping = null;
+            layoutQueryParams.offset = 0;
+            layoutQueryParams.limit = 10000;
 
-        const {CONTENT, PAGES} = JContentConstants.tableView.viewType;
-        const {CONTENT_FOLDERS} = JContentConstants.mode;
-
-        if (mode === CONTENT_FOLDERS) {
-            p.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
-            p.typeFilter = ['jnt:content'];
-        } else if (viewType === CONTENT) {
-            p.recursionTypesFilter = {types: ['jnt:content']};
-            p.typeFilter = ['jnt:content'];
-        } else if (viewType === PAGES) {
-            p.recursionTypesFilter = {types: ['jnt:page']};
-            p.typeFilter = ['jnt:page'];
+            if (mode === JContentConstants.mode.CONTENT_FOLDERS) {
+                layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
+                layoutQueryParams.typeFilter = ['jnt:content'];
+            } else if (viewType === JContentConstants.tableView.viewType.CONTENT) {
+                layoutQueryParams.recursionTypesFilter = {types: ['jnt:content']};
+                layoutQueryParams.typeFilter = ['jnt:content'];
+            } else if (viewType === JContentConstants.tableView.viewType.PAGES) {
+                layoutQueryParams.recursionTypesFilter = {types: ['jnt:page']};
+                layoutQueryParams.typeFilter = ['jnt:page'];
+            }
         }
 
-        return p;
-    }
+        return layoutQueryParams;
+    },
 
     getResultsPath(data) {
         return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.descendants;
     }
-}
+};
 
-class FilesQueryHandler {
+const FilesQueryHandler = {
     getQuery() {
         return gql`
             query getFiles($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
@@ -230,7 +224,7 @@ class FilesQueryHandler {
             ${childNodesCount}
             ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `;
-    }
+    },
 
     getQueryParams({path, uilang, lang, pagination, sort}) {
         return {
@@ -251,18 +245,14 @@ class FilesQueryHandler {
                 groupingType: 'START'
             }
         };
-    }
-
-    updateQueryParamsForStructuredView(params) {
-        return params;
-    }
+    },
 
     getResultsPath(data) {
         return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.children;
     }
-}
+};
 
-class SearchQueryHandler {
+const SearchQueryHandler = {
     getQuery() {
         return gql`
             query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $nodeNameSearchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
@@ -295,7 +285,7 @@ class SearchQueryHandler {
             }
             ${nodeFields}
         `;
-    }
+    },
 
     getQueryParams({uilang, lang, urlParams, pagination, sort}) {
         return {
@@ -313,18 +303,14 @@ class SearchQueryHandler {
                 ignoreCase: true
             }
         };
-    }
-
-    updateQueryParamsForStructuredView(params) {
-        return params;
-    }
+    },
 
     getResultsPath(data) {
         return data && data.jcr && data.jcr.nodesByCriteria;
     }
-}
+};
 
-class Sql2SearchQueryHandler {
+const Sql2SearchQueryHandler = {
     getQuery() {
         return gql`
             query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
@@ -341,7 +327,7 @@ class Sql2SearchQueryHandler {
             }
             ${nodeFields}
         `;
-    }
+    },
 
     getQueryParams({uilang, lang, urlParams, pagination, sort}) {
         let {sql2SearchFrom, sql2SearchWhere} = urlParams;
@@ -362,16 +348,12 @@ class Sql2SearchQueryHandler {
                 ignoreCase: true
             }
         };
-    }
-
-    updateQueryParamsForStructuredView(params) {
-        return params;
-    }
+    },
 
     getResultsPath(data) {
         return data && data.jcr && data.jcr.nodesByQuery;
     }
-}
+};
 
 export {
     ContentQueryHandler,

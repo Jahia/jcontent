@@ -8,11 +8,12 @@ import classes from './ContentTypeSelector.scss';
 import {useTranslation} from 'react-i18next';
 import {batchActions} from 'redux-batched-actions';
 import {cmSetPage} from '../../pagination.redux';
+import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 
 const localStorage = window.localStorage;
 const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
-const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions}) => {
+const ContentTypeSelector = ({selector, reduxActions}) => {
     const {t} = useTranslation();
     const tableView = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
@@ -23,6 +24,11 @@ const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions})
     if (!isStructuredView) {
         actionsBatch.push(reduxActions.setPageAction(0));
     }
+
+    const pages = useLayoutQuery({tableView: {...tableView, viewType: JContentConstants.tableView.viewType.PAGES}, fetchPolicy: 'cache-and-network'});
+    const pagesCount = pages.loading ? 0 : pages.queryHandler.getResultsPath(pages.data).pageInfo.totalCount;
+    const content = useLayoutQuery({tableView: {...tableView, viewType: JContentConstants.tableView.viewType.CONTENT}, fetchPolicy: 'cache-and-network'});
+    const contentCount = content.loading ? 0 : content.queryHandler.getResultsPath(content.data).pageInfo.totalCount;
 
     return (
         <Tab className={classes.tabs}>
@@ -49,8 +55,6 @@ const ContentTypeSelector = ({contentCount, pagesCount, selector, reduxActions})
 };
 
 ContentTypeSelector.propTypes = {
-    contentCount: PropTypes.number,
-    pagesCount: PropTypes.number,
     selector: PropTypes.func,
     reduxActions: {
         setPageAction: PropTypes.func.isRequired,

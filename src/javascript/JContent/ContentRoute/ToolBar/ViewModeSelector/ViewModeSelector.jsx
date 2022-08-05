@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, toIconComponentFunction, ViewList, ViewTree, WebPage, Dropdown} from '@jahia/moonstone';
+import {Dropdown, toIconComponentFunction, ViewList, ViewTree, WebPage} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,8 +12,8 @@ const localStorage = window.localStorage;
 
 const FLATLIST = JContentConstants.tableView.viewMode.FLAT;
 const STRUCTUREDVIEW = JContentConstants.tableView.viewMode.STRUCTURED;
-const VIEW = JContentConstants.pagesMode.VIEW;
-const VIEW_DEVICE = JContentConstants.pagesMode.VIEW_DEVICE;
+const VIEW = JContentConstants.tableView.viewMode.VIEW;
+const VIEW_DEVICE = JContentConstants.tableView.viewMode.VIEW_DEVICE;
 
 const VIEW_MODE = JContentConstants.localStorageKeys.viewMode;
 
@@ -32,13 +32,13 @@ const icons = {
     [VIEW_DEVICE]: <Phone/>
 };
 
-const tableViewModes = [FLATLIST, STRUCTUREDVIEW];
+const buttons = [FLATLIST, STRUCTUREDVIEW];
 const pagesButtons = [VIEW, VIEW_DEVICE];
 
 const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
 
-const tableViewDropdownData = (t, viewMode) => {
-    return tableViewModes.map(v => ({
+const tableViewDropdownData = (t, viewMode, allButtons) => {
+    return allButtons.map(v => ({
         label: t(`jcontent:label.contentManager.view.${v}`),
         value: v,
         iconStart: icons[v],
@@ -63,32 +63,18 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
         localStorage.setItem(VIEW_MODE, selectedViewMode);
     };
 
-    const allButtons = (mode === JContentConstants.mode.PAGES && valid) ? pagesButtons : [];
+    const allButtons = (mode === JContentConstants.mode.PAGES && valid) ? [...buttons, ...pagesButtons] : buttons;
 
     return (
         <>
             <Dropdown className={classes.dropdown}
-                      data={tableViewDropdownData(t, viewMode)}
+                      data={tableViewDropdownData(t, viewMode, allButtons)}
                       data-sel-role="sel-view-mode-dropdown"
                       label={t(`jcontent:label.contentManager.view.${viewMode}`)}
                       value={viewMode}
                       icon={icons[viewMode]}
                       onChange={(e, item) => handleChange(item.value)}
             />
-            {
-                allButtons.map(v => (
-                    <Button key={v}
-                            data-sel-role={'sel-view-mode-' + v}
-                            aria-selected={viewMode === v}
-                            color={viewMode === v ? 'accent' : 'default'}
-                            size="default"
-                            variant="ghost"
-                            title={t('jcontent:label.contentManager.view.' + v)}
-                            icon={icons[v]}
-                            onClick={() => handleChange(v)}
-                    />
-                ))
-            }
         </>
     );
 };

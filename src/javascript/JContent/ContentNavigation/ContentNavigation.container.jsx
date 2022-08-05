@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';

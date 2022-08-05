@@ -5,9 +5,10 @@ import {Paper} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
 import {cmClearSelection} from '../../../contentSelection.redux';
 import {useTranslation} from 'react-i18next';
-import {Button, Typography, Copy} from '@jahia/moonstone';
+import {Button, Copy, Typography} from '@jahia/moonstone';
 
 import styles from '../Preview.scss';
+
 const MultipleSelection = ({selection}) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();

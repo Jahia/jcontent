@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Typography, Information} from '@jahia/moonstone';
+import {Information, Typography} from '@jahia/moonstone';
 import {publicationStatusByName} from './publicationStatusRenderer';
 import {useTranslation} from 'react-i18next';
 import classNames from 'clsx';

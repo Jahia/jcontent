@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';

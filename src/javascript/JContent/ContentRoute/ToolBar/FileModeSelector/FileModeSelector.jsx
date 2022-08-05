@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
 import JContentConstants from '~/JContent/JContent.constants';
-import {ViewGrid, ViewList, Dropdown} from '@jahia/moonstone';
+import {Dropdown, ViewGrid, ViewList} from '@jahia/moonstone';
 import classes from './FileModeSelector.scss';
 
 const localStorage = window.localStorage;

@@ -4,6 +4,7 @@ import {ExpansionPanelActions} from '@jahia/design-system-kit';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import styles from './ImageEditorActions.scss';
+
 const ImageEditorActions = ({undoChanges, saveChanges, isDirty}) => {
     const {t} = useTranslation();
     return (

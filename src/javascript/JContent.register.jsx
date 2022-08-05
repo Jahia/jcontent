@@ -16,7 +16,6 @@ import {filesGridRedux} from './JContent/ContentRoute/ContentLayout/FilesGrid/Fi
 import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.redux';
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
-import JContentConstants from './JContent/JContent.constants';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {structuredViewRedux} from './JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
@@ -33,30 +32,19 @@ export default function () {
             params: state.jcontent.params
         }));
 
+        let accordions = registry.find({type: 'accordionItem', target: 'jcontent'});
         const permissions = useNodeChecks({
             path: `/sites/${site}`,
             language: language
         }, {
-            requiredSitePermission: [JContentConstants.accordionPermissions.pagesAccordionAccess, JContentConstants.accordionPermissions.contentFolderAccordionAccess, JContentConstants.accordionPermissions.mediaAccordionAccess, JContentConstants.accordionPermissions.additionalAccordionAccess, JContentConstants.accordionPermissions.formAccordionAccess]
+            requiredSitePermission: [...new Set(accordions.map(acc => acc.requiredSitePermission))]
         });
 
         if (permissions.loading) {
             return null;
         }
 
-        let defaultMode = '';
-
-        if (permissions.node?.site.pagesAccordionAccess) {
-            defaultMode = JContentConstants.mode.PAGES;
-        } else if (permissions.node?.site.contentFolderAccordionAccess) {
-            defaultMode = JContentConstants.mode.CONTENT_FOLDERS;
-        } else if (permissions.node?.site.mediaAccordionAccess) {
-            defaultMode = JContentConstants.mode.MEDIA;
-        } else if (permissions.node?.site.formAccordionAccess) {
-            defaultMode = JContentConstants.mode.FORMS;
-        } else if (permissions.node?.site.additionalAccordionAccess) {
-            defaultMode = JContentConstants.mode.APPS;
-        }
+        let defaultMode = accordions.find(acc => permissions.node?.site[acc.requiredSitePermission])?.key;
 
         return (
             <PrimaryNavItem key="/jcontent"

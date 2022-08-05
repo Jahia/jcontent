@@ -1,94 +1,49 @@
-import React, {useEffect, useMemo} from 'react';
-import PropTypes from 'prop-types';
-import {useApolloClient, useQuery} from 'react-apollo';
-import {
-    ContentQueryHandler,
-    FilesQueryHandler,
-    mixinTypes,
-    SearchQueryHandler,
-    Sql2SearchQueryHandler
-} from './ContentLayout.gql-queries';
+import React, {useEffect} from 'react';
+import {useApolloClient} from 'react-apollo';
+import {mixinTypes} from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
 } from '../../eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
-import {connect} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
-import JContentConstants from '~/JContent/JContent.constants';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {isInSearchMode, structureData} from '../ContentLayout/ContentLayout.utils';
-import usePreloadedData from './usePreloadedData';
 import {Loader} from '@jahia/moonstone';
-
-const contentQueryHandlerByMode = mode => {
-    switch (mode) {
-        case JContentConstants.mode.MEDIA:
-            return new FilesQueryHandler();
-        case JContentConstants.mode.SEARCH:
-            return new SearchQueryHandler();
-        case JContentConstants.mode.SQL2SEARCH:
-            return new Sql2SearchQueryHandler();
-        default:
-            return new ContentQueryHandler();
-    }
-};
+import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 
 let currentResult;
 
-export const ContentLayoutContainer = ({
-    mode,
-    path,
-    uilang,
-    lang,
-    siteKey,
-    params,
-    pagination,
-    sort,
-    openedPaths,
-    openPaths,
-    closePaths,
-    selection,
-    removeSelection,
-    switchSelection,
-    setPreviewSelection,
-    setPath,
-    filesMode,
-    previewState,
-    previewSelection,
-    tableView
-}) => {
+export const ContentLayoutContainer = () => {
     const {t} = useTranslation();
     const client = useApolloClient();
-    const fetchPolicy = 'network-only';
-    const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
-    const queryHandler = useMemo(() => contentQueryHandlerByMode(mode), [mode]);
-    const layoutQuery = queryHandler.getQuery();
-    const rootPath = `/sites/${siteKey}`;
-    const preloadForType = tableView.viewType === JContentConstants.tableView.viewType.PAGES ? JContentConstants.tableView.viewType.CONTENT : JContentConstants.tableView.viewType.PAGES;
 
-    const layoutQueryParams = useMemo(
-        () => {
-            let r = queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination, sort, viewType: tableView.viewType});
-            // Update params for structured view to use different type and recursion filters
-            if (isStructuredView) {
-                r = queryHandler.updateQueryParamsForStructuredView(r, tableView.viewType, mode);
-            }
+    const {mode, path, previewSelection, previewState, params, filesMode, openedPaths, selection} = useSelector(state => ({
+        mode: state.jcontent.mode,
+        path: state.jcontent.path,
+        previewSelection: state.jcontent.previewSelection,
+        previewState: state.jcontent.previewState,
+        params: state.jcontent.params,
+        filesMode: state.jcontent.filesGrid.mode,
+        openedPaths: state.jcontent.openPaths,
+        selection: state.jcontent.selection
+    }), shallowEqual);
 
-            return r;
-        },
-        [path, uilang, lang, params, rootPath, pagination, sort, tableView.viewType, mode, isStructuredView, queryHandler]
-    );
+    const dispatch = useDispatch();
+    const setPath = (path, params) => dispatch(cmGoto({path, params}));
+    const setPreviewSelection = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
+    const openPaths = paths => dispatch(cmOpenPaths(paths));
+    const closePaths = paths => dispatch(cmClosePaths(paths));
+    const removeSelection = path => dispatch(cmRemoveSelection(path));
+    const switchSelection = path => dispatch(cmSwitchSelection(path));
 
-    const {data, error, loading, refetch} = useQuery(layoutQuery, {
-        variables: layoutQueryParams,
-        fetchPolicy: fetchPolicy
-    });
+    const {queryHandler, layoutQuery, isStructuredView, layoutQueryParams, data, error, loading, refetch} = useLayoutQuery();
 
     function onGwtCreate(nodePath) {
         let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
@@ -203,23 +158,6 @@ export const ContentLayoutContainer = ({
         }
     };
 
-    const options = useMemo(() => ({
-        query: layoutQuery,
-        variables: isStructuredView ?
-            queryHandler.updateQueryParamsForStructuredView(layoutQueryParams, preloadForType, mode) :
-            queryHandler.getQueryParams({path, uilang, lang, urlParams: params, rootPath, pagination: {...pagination, currentPage: 0}, sort, viewType: preloadForType}),
-        fetchPolicy: fetchPolicy
-    }), [isStructuredView, lang, layoutQuery, layoutQueryParams, mode, pagination, params, path, preloadForType, queryHandler, rootPath, sort, uilang]);
-
-    // Preload data either for pages or contents depending on current view type
-    const preloadedData = usePreloadedData({
-        client,
-        options,
-        tableView,
-        path,
-        pagination
-    });
-
     useEffect(() => {
         if (data && data.jcr && data.jcr.nodeByPath) {
             // When new results have been loaded, use them for rendering.
@@ -299,62 +237,9 @@ export const ContentLayoutContainer = ({
                            rows={rows}
                            isLoading={loading}
                            totalCount={totalCount}
-                           dataCounts={{
-                               pages: preloadForType === JContentConstants.tableView.viewType.PAGES ? preloadedData.totalCount : totalCount,
-                               contents: preloadForType === JContentConstants.tableView.viewType.CONTENT ? preloadedData.totalCount : totalCount
-                           }}
             />
         </React.Fragment>
     );
 };
 
-const mapStateToProps = state => ({
-    mode: state.jcontent.mode,
-    siteKey: state.site,
-    path: state.jcontent.path,
-    lang: state.language,
-    previewSelection: state.jcontent.previewSelection,
-    previewState: state.jcontent.previewState,
-    uilang: state.uilang,
-    params: state.jcontent.params,
-    filesMode: state.jcontent.filesGrid.mode,
-    pagination: state.jcontent.pagination,
-    sort: state.jcontent.sort,
-    openedPaths: state.jcontent.openPaths,
-    selection: state.jcontent.selection,
-    tableView: state.jcontent.tableView
-});
-
-const mapDispatchToProps = dispatch => ({
-    setPath: (path, params) => dispatch(cmGoto({path, params})),
-    setPreviewSelection: previewSelection => dispatch(cmSetPreviewSelection(previewSelection)),
-    openPaths: paths => dispatch(cmOpenPaths(paths)),
-    closePaths: paths => dispatch(cmClosePaths(paths)),
-    removeSelection: path => dispatch(cmRemoveSelection(path)),
-    switchSelection: path => dispatch(cmSwitchSelection(path))
-});
-
-ContentLayoutContainer.propTypes = {
-    closePaths: PropTypes.func.isRequired,
-    lang: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired,
-    openPaths: PropTypes.func.isRequired,
-    openedPaths: PropTypes.array.isRequired,
-    pagination: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
-    path: PropTypes.string.isRequired,
-    previewSelection: PropTypes.string,
-    setPath: PropTypes.func.isRequired,
-    setPreviewSelection: PropTypes.func.isRequired,
-    siteKey: PropTypes.string.isRequired,
-    sort: PropTypes.object.isRequired,
-    uilang: PropTypes.string.isRequired,
-    previewState: PropTypes.number.isRequired,
-    filesMode: PropTypes.string.isRequired,
-    selection: PropTypes.array.isRequired,
-    removeSelection: PropTypes.func.isRequired,
-    switchSelection: PropTypes.func.isRequired,
-    tableView: PropTypes.object.isRequired
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContentLayoutContainer);
+export default ContentLayoutContainer;

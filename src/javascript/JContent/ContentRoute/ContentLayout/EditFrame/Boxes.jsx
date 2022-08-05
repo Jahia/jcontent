@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
 import {Create} from './Create';
@@ -36,7 +36,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
         language: state.language,
         path: state.jcontent.path,
         selection: state.jcontent.selection
-    }));
+    }), shallowEqual);
 
     const dispatch = useDispatch();
 

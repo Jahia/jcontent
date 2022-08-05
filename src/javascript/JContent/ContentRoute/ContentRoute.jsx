@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import ContentLayout from './ContentLayout';
 import MainLayout from '../MainLayout';
 import ContentHeader from './ContentHeader';
@@ -11,7 +11,7 @@ const ContentRoute = () => {
     const {mode, viewMode} = useSelector(state => ({
         mode: state.jcontent.mode,
         viewMode: state.jcontent.tableView.viewMode
-    }));
+    }), shallowEqual);
 
     const inEditMode = JContentConstants.mode.PAGES === mode && (JContentConstants.tableView.viewType.VIEW === viewMode || JContentConstants.tableView.viewType.VIEW_DEVICE === viewMode);
     return (

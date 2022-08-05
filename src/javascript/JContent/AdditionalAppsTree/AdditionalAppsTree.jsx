@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {TreeView} from '@jahia/moonstone';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '../JContent.redux';
 import {useAdminRouteTreeStructure} from '@jahia/jahia-ui-root';
 import {useNodeInfo} from '@jahia/data-helper';
@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 
 export const AdditionalAppsTree = ({item, target}) => {
-    const {site, path} = useSelector(state => ({site: state.site, path: state.jcontent.path}));
+    const {site, path} = useSelector(state => ({site: state.site, path: state.jcontent.path}), shallowEqual);
     const dispatch = useDispatch();
     const {t} = useTranslation();
 

@@ -16,7 +16,7 @@ import {filesGridRedux} from './JContent/ContentRoute/ContentLayout/FilesGrid/Fi
 import {paginationRedux} from './JContent/ContentRoute/ContentLayout/pagination.redux';
 import {sortRedux} from './JContent/ContentRoute/ContentLayout/sort.redux';
 import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/contentSelection.redux';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {structuredViewRedux} from './JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
 
@@ -30,7 +30,7 @@ export default function () {
             path: state.jcontent.path,
             mode: state.jcontent.mode,
             params: state.jcontent.params
-        }));
+        }), shallowEqual);
 
         let accordions = registry.find({type: 'accordionItem', target: 'jcontent'});
         const permissions = useNodeChecks({

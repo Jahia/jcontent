@@ -8,7 +8,7 @@ import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import React from 'react';
 import {useApolloClient, useLazyQuery} from '@apollo/react-hooks';
@@ -26,7 +26,7 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
         treePath: state.jcontent.path,
         openedPaths: state.jcontent.openPaths,
         previewSelection: state.jcontent.previewSelection
-    }));
+    }), shallowEqual);
 
     const res = useNodeChecks(
         {path},

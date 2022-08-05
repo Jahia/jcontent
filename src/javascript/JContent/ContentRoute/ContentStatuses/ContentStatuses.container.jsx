@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 
 import ContentStatuses from './ContentStatuses';
@@ -12,7 +12,7 @@ const ContentStatusesContainer = ({nodePath}) => {
         path: state.jcontent.path,
         isDisabled: state.jcontent.selection.length > 0,
         uilang: state.uilang
-    }));
+    }), shallowEqual);
 
     const {data, error} = useQuery(GetContentStatuses, {
         variables: {

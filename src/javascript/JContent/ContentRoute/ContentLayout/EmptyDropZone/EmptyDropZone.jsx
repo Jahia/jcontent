@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
 import {Publish, Typography} from '@jahia/moonstone';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import styles from './EmptyDropZone.scss';
 
 const EmptyDropZone = ({component: Component, mode}) => {
-    const currentState = useSelector(state => ({site: state.site, language: state.language}));
+    const currentState = useSelector(state => ({site: state.site, language: state.language}), shallowEqual);
     const {t} = useTranslation();
 
     const permissions = useNodeChecks({

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Dropdown, toIconComponentFunction, ViewList, ViewTree, WebPage} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
 import {useCode} from '~/JContent/useCode';
 import classes from './ViewModeSelector.scss';
@@ -53,7 +53,7 @@ export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation();
     const valid = useCode(code);
 
-    let {mode, viewMode} = useSelector(selector);
+    let {mode, viewMode} = useSelector(selector, shallowEqual);
 
     const dispatch = useDispatch();
     const onChange = vm => dispatch(setTableViewModeAction(vm));

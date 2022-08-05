@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import {Button, Close, Search} from '@jahia/moonstone';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './SearchInput.scss';
@@ -14,7 +14,7 @@ const SearchInput = function () {
         searchTerms: state.jcontent.params.searchTerms,
         searchPath: state.jcontent.params.searchPath,
         searchContentType: state.jcontent.params.searchContentType
-    }));
+    }), shallowEqual);
     const [t, setT] = useState(searchTerms);
 
     // This updates component state when user changes search via dialog

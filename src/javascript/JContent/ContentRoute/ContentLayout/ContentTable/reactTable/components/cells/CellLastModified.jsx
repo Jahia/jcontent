@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
 import {columnWidths} from '../../columns';
 import css from '../../../ContentTable.scss';
@@ -11,7 +11,7 @@ import {includes} from 'lodash';
 import PropTypes from 'prop-types';
 
 export const CellLastModified = ({row, value, cell, column}) => {
-    const {uilang, selection} = useSelector(state => ({uilang: state.uilang, selection: state.jcontent.selection}));
+    const {uilang, selection} = useSelector(state => ({uilang: state.uilang, selection: state.jcontent.selection}), shallowEqual);
     return (
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}

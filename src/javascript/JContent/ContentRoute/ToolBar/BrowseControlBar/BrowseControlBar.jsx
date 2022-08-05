@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {DisplayAction, DisplayActions, registry} from '@jahia/ui-extender';
 import {Separator} from '@jahia/moonstone';
 import {ButtonRenderer, ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 const excludedActions = [
@@ -25,7 +25,7 @@ export const BrowseControlBar = ({isShowingActions}) => {
     const {path, siteKey} = useSelector(state => ({
         path: state.jcontent.path,
         siteKey: state.site
-    }));
+    }), shallowEqual);
 
     const contentActions = useMemo(() => [
         ...registry.find({type: 'action', target: 'headerPrimaryActions'}).map(action => action.key),

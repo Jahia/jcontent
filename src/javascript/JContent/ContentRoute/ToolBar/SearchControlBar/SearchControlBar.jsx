@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SearchControlBar.scss';
 import {Chip, Edit, Separator} from '@jahia/moonstone';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRenderer} from '~/utils/getButtonRenderer';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -18,7 +18,7 @@ export const SearchControlBar = () => {
         searchContentType: state.jcontent.params.searchContentType,
         searchPath: state.jcontent.params.searchPath,
         language: state.language
-    }));
+    }), shallowEqual);
 
     const nodeInfo = useNodeInfo({path: searchPath, language: language}, {getDisplayName: true});
     const location = nodeInfo.node ? nodeInfo.node.displayName : '';

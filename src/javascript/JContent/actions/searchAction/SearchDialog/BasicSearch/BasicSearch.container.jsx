@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useSelector} from 'react-redux';
+import {shallowEqual, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 import SiteContentTypesQuery from './BasicSearch.gql-queries';
 import {extractAndFormatContentTypeData} from './BasicSearch.utils';
@@ -10,7 +10,7 @@ export const BasicSearchContainer = props => {
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
         language: state.language
-    }));
+    }), shallowEqual);
 
     const {data, error, loading} = useQuery(SiteContentTypesQuery, {
         variables: {

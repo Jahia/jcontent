@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {Card, CardContent, Tooltip} from '@material-ui/core';
 import Preview from './Preview';
 import {Button, ButtonGroup, Close, Maximize, Minimize, Typography} from '@jahia/moonstone';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import PublicationStatus from './PublicationStatus';
 import {cmSetPreviewMode, cmSetPreviewState} from '~/JContent/preview.redux';
@@ -17,7 +17,7 @@ const PreviewDrawer = ({previewSelection}) => {
         previewMode: state.jcontent.previewMode,
         previewState: state.jcontent.previewState,
         selection: state.jcontent.selection
-    }));
+    }), shallowEqual);
     const dispatch = useDispatch();
     const setPreviewMode = mode => {
         dispatch(cmSetPreviewMode(mode));

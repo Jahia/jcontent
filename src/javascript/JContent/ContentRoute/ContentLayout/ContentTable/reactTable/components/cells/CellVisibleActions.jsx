@@ -9,7 +9,7 @@ import classes from './Cells.scss';
 import {useSelector} from 'react-redux';
 
 export const CellVisibleActions = ({row, cell, column}) => {
-    const {selection} = useSelector(state => ({selection: state.jcontent.selection}));
+    const selection = useSelector(state => state.jcontent.selection);
     return (
         <TableBodyCell key={row.id + column.id}
                        className={classes.visibleActions}

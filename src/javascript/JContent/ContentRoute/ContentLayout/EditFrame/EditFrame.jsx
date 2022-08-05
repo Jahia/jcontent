@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '../../../JContent.redux';
 import styles from './EditFrame.scss';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../../../JContent.refetches';
@@ -22,7 +22,7 @@ export const EditFrame = ({isDeviceView}) => {
         site: state.site,
         path: state.jcontent.path,
         selection: state.jcontent.selection
-    }));
+    }), shallowEqual);
 
     const client = useApolloClient();
     const dispatch = useDispatch();

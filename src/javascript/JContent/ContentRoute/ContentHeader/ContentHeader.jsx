@@ -3,7 +3,7 @@ import {ArrowLeft, Button, Chip, Header} from '@jahia/moonstone';
 import {MainActionBar} from '~/JContent/ContentRoute/MainActionBar';
 import JContentConstants from '~/JContent/JContent.constants';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import ContentPath from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
@@ -28,7 +28,7 @@ const ContentHeader = () => {
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
         previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection
-    }));
+    }), shallowEqual);
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
 

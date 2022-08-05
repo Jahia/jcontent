@@ -15,7 +15,7 @@ const checkAction = node => node.operationsSupport.markForDeletion &&
     (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
 
 export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
-    const {language} = useSelector(state => ({language: state.language}));
+    const language = useSelector(state => state.language);
 
     const res = useNodeChecks(
         {path, paths, language},

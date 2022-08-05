@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 
 import {cmGoto} from '~/JContent/JContent.redux';
@@ -44,7 +44,7 @@ const ContentPathContainer = () => {
         mode: state.jcontent.mode,
         path: state.jcontent.path,
         language: state.language
-    }));
+    }), shallowEqual);
 
     const {data, error} = useQuery(GetContentPath, {
         variables: {path, language}

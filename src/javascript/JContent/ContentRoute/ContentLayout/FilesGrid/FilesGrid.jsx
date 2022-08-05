@@ -5,7 +5,7 @@ import FileCard from './FileCard';
 import {Grid, Paper} from '@material-ui/core';
 import {TablePagination, Typography} from '@jahia/moonstone';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
@@ -26,7 +26,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         uilang: state.uilang,
         previewSelection: state.jcontent.previewSelection,
         previewState: state.jcontent.previewState
-    }));
+    }), shallowEqual);
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
     const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));

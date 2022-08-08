@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
-import * as _ from 'lodash';
 import JContentConstants from '~/JContent/JContent.constants';
 
 const childNodesCount = gql`
@@ -124,31 +123,19 @@ const ContentQueryHandler = {
         `;
     },
 
-    getQueryParams({path, uilang, lang, urlParams, rootPath, pagination, sort, viewType, viewMode, mode}) {
-        let type = urlParams.type || (_.startsWith(path, rootPath + '/contents') ? 'contents' : 'pages');
-        if (urlParams.sub) {
-            type = 'contents';
-        }
+    getResultsPath(data) {
+        return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.descendants;
+    },
 
-        const paramsByBrowseType = {
-            pages: {
-                typeFilter: JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType],
-                recursionTypesFilter: {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']}
-            },
-            contents: {
-                typeFilter: ['jnt:content', 'jnt:contentFolder'],
-                recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
-            }
-        };
-
-        const layoutQueryParams = {
+    getLayoutQueryParams({path, lang, uilang, pagination, typeFilter, recursionTypesFilter, sort}) {
+        return {
             path: path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: paramsByBrowseType[type].typeFilter,
-            recursionTypesFilter: paramsByBrowseType[type].recursionTypesFilter,
+            typeFilter: typeFilter,
+            recursionTypesFilter: recursionTypesFilter,
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
@@ -156,20 +143,27 @@ const ContentQueryHandler = {
             },
             fieldGrouping: {
                 fieldName: 'primaryNodeType.name',
-                groups: paramsByBrowseType[type].recursionTypesFilter,
+                groups: recursionTypesFilter,
                 groupingType: 'START'
             }
         };
+    }
+};
+
+const ContentQueryHandlerPages = {
+    ...ContentQueryHandler,
+    getQueryParams({path, uilang, lang, pagination, sort, viewType, viewMode}) {
+        const typeFilter = JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType];
+        const recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
+
+        const layoutQueryParams = this.getLayoutQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
 
         if (viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             layoutQueryParams.fieldGrouping = null;
             layoutQueryParams.offset = 0;
             layoutQueryParams.limit = 10000;
 
-            if (mode === JContentConstants.mode.CONTENT_FOLDERS) {
-                layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
-                layoutQueryParams.typeFilter = ['jnt:content'];
-            } else if (viewType === JContentConstants.tableView.viewType.CONTENT) {
+            if (viewType === JContentConstants.tableView.viewType.CONTENT) {
                 layoutQueryParams.recursionTypesFilter = {types: ['jnt:content']};
                 layoutQueryParams.typeFilter = ['jnt:content'];
             } else if (viewType === JContentConstants.tableView.viewType.PAGES) {
@@ -179,10 +173,27 @@ const ContentQueryHandler = {
         }
 
         return layoutQueryParams;
-    },
+    }
+};
 
-    getResultsPath(data) {
-        return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.descendants;
+const ContentQueryHandlerContentFolders = {
+    ...ContentQueryHandler,
+    getQueryParams({path, uilang, lang, pagination, sort, viewMode}) {
+        const typeFilter = ['jnt:content', 'jnt:contentFolder'];
+        const recursionTypesFilter = {multi: 'NONE', types: ['nt:base']};
+
+        const layoutQueryParams = this.getLayoutQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
+
+        if (viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+            layoutQueryParams.fieldGrouping = null;
+            layoutQueryParams.offset = 0;
+            layoutQueryParams.limit = 10000;
+
+            layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
+            layoutQueryParams.typeFilter = ['jnt:content'];
+        }
+
+        return layoutQueryParams;
     }
 };
 
@@ -362,7 +373,8 @@ const Sql2SearchQueryHandler = {
 };
 
 export {
-    ContentQueryHandler,
+    ContentQueryHandlerPages,
+    ContentQueryHandlerContentFolders,
     SearchQueryHandler,
     Sql2SearchQueryHandler,
     FilesQueryHandler,

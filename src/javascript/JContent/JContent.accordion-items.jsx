@@ -5,7 +5,7 @@ import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
-import {ContentQueryHandler, FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
+import {ContentQueryHandlerPages, ContentQueryHandlerContentFolders, FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
 import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
@@ -47,7 +47,7 @@ export const jContentAccordionItems = registry => {
         getPathForItem: node => {
             return node.ancestors[node.ancestors.length - 1].path;
         },
-        queryHandler: ContentQueryHandler
+        queryHandler: ContentQueryHandlerPages
     });
 
     const renderDefaultApps = registry.add('accordionItem', 'renderDefaultApps', {
@@ -85,7 +85,7 @@ export const jContentAccordionItems = registry => {
         tableHeader: <ContentTypeSelector/>
     });
 
-    registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
+    registry.add('accordionItem', 'content-folders', {...renderDefaultContentTrees, queryHandler: ContentQueryHandlerContentFolders}, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'jcontent:label.contentManager.navigation.contentFolders',

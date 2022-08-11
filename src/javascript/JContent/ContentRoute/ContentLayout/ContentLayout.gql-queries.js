@@ -152,9 +152,14 @@ const ContentQueryHandler = {
 
 const ContentQueryHandlerPages = {
     ...ContentQueryHandler,
-    getQueryParams({path, uilang, lang, pagination, sort, viewType, viewMode}) {
-        const typeFilter = JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType];
-        const recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
+    getQueryParams({path, uilang, lang, pagination, sort, viewType, viewMode, urlParams}) {
+        let typeFilter = JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType];
+        let recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
+
+        if (urlParams.sub) {
+            typeFilter = ['jnt:content', 'jnt:contentFolder'];
+            recursionTypesFilter = {multi: 'NONE', types: ['nt:base']};
+        }
 
         const layoutQueryParams = this.getLayoutQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
 

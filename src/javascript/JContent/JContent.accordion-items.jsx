@@ -5,7 +5,12 @@ import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
-import {ContentQueryHandlerPages, ContentQueryHandlerContentFolders, FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
+import {
+    ContentQueryHandlerPages,
+    ContentQueryHandlerContentFolders,
+    FilesQueryHandler,
+    SearchQueryHandler, Sql2SearchQueryHandler
+} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
 import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
@@ -47,7 +52,7 @@ export const jContentAccordionItems = registry => {
         getPathForItem: node => {
             return node.ancestors[node.ancestors.length - 1].path;
         },
-        queryHandler: ContentQueryHandlerPages
+        queryHandler: ContentQueryHandlerContentFolders
     });
 
     const renderDefaultApps = registry.add('accordionItem', 'renderDefaultApps', {
@@ -58,6 +63,14 @@ export const jContentAccordionItems = registry => {
         ),
         routeRender: (v, item) => <AdditionalAppsRoute target={item.appsTarget} match={v.match}/>,
         defaultPath: () => '/'
+    });
+
+    registry.add('accordionItem', 'search', {
+        queryHandler: SearchQueryHandler
+    });
+
+    registry.add('accordionItem', 'sql2Search', {
+        queryHandler: Sql2SearchQueryHandler
     });
 
     registry.add('accordionItem', 'pages', renderDefaultContentTrees, {
@@ -81,11 +94,12 @@ export const jContentAccordionItems = registry => {
             rootLabel: 'jcontent:label.contentManager.browsePages',
             key: 'browse-tree-pages'
         },
+        queryHandler: ContentQueryHandlerPages,
         viewSelector: <ViewModeSelector/>,
         tableHeader: <ContentTypeSelector/>
     });
 
-    registry.add('accordionItem', 'content-folders', {...renderDefaultContentTrees, queryHandler: ContentQueryHandlerContentFolders}, {
+    registry.add('accordionItem', 'content-folders', renderDefaultContentTrees, {
         targets: ['jcontent:60'],
         icon: <FolderSpecial/>,
         label: 'jcontent:label.contentManager.navigation.contentFolders',

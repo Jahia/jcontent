@@ -97,7 +97,7 @@ const nodeFields = gql`
     ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-const ContentQueryHandler = {
+const BaseQueryHandler = {
     getQuery() {
         return gql`
             query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
@@ -127,7 +127,11 @@ const ContentQueryHandler = {
         return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.descendants;
     },
 
-    getLayoutQueryParams({path, lang, uilang, pagination, typeFilter, recursionTypesFilter, sort}) {
+    getFragments() {
+        return [];
+    },
+
+    getBaseQueryParams({path, lang, uilang, pagination, typeFilter, recursionTypesFilter, sort}) {
         return {
             path: path,
             language: lang,
@@ -151,17 +155,17 @@ const ContentQueryHandler = {
 };
 
 const ContentQueryHandlerPages = {
-    ...ContentQueryHandler,
-    getQueryParams({path, uilang, lang, pagination, sort, viewType, viewMode, urlParams}) {
+    ...BaseQueryHandler,
+    getQueryParams({path, uilang, lang, pagination, sort, viewType, viewMode, params}) {
         let typeFilter = JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType];
         let recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
 
-        if (urlParams.sub) {
+        if (params.sub) {
             typeFilter = ['jnt:content', 'jnt:contentFolder'];
             recursionTypesFilter = {multi: 'NONE', types: ['nt:base']};
         }
 
-        const layoutQueryParams = this.getLayoutQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
+        const layoutQueryParams = this.getBaseQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
 
         if (viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             layoutQueryParams.fieldGrouping = null;
@@ -182,12 +186,12 @@ const ContentQueryHandlerPages = {
 };
 
 const ContentQueryHandlerContentFolders = {
-    ...ContentQueryHandler,
+    ...BaseQueryHandler,
     getQueryParams({path, uilang, lang, pagination, sort, viewMode}) {
         const typeFilter = ['jnt:content', 'jnt:contentFolder'];
         const recursionTypesFilter = {multi: 'NONE', types: ['nt:base']};
 
-        const layoutQueryParams = this.getLayoutQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
+        const layoutQueryParams = this.getBaseQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
 
         if (viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             layoutQueryParams.fieldGrouping = null;
@@ -203,6 +207,7 @@ const ContentQueryHandlerContentFolders = {
 };
 
 const FilesQueryHandler = {
+    ...BaseQueryHandler,
     getQuery() {
         return gql`
             query getFiles($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
@@ -247,24 +252,10 @@ const FilesQueryHandler = {
     },
 
     getQueryParams({path, uilang, lang, pagination, sort}) {
-        return {
-            path: path,
-            language: lang,
-            displayLanguage: uilang,
-            offset: pagination.currentPage * pagination.pageSize,
-            limit: pagination.pageSize,
-            typeFilter: ['jnt:file', 'jnt:folder'],
-            fieldSorter: sort.orderBy === '' ? null : {
-                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
-                fieldName: sort.orderBy === '' ? null : sort.orderBy,
-                ignoreCase: true
-            },
-            fieldGrouping: {
-                fieldName: 'primaryNodeType.name',
-                groups: ['jnt:folder'],
-                groupingType: 'START'
-            }
-        };
+        const typeFilter = ['jnt:file', 'jnt:folder'];
+        const recursionTypesFilter = {multi: 'NONE', types: ['nt:base']};
+
+        return this.getBaseQueryParams({path, lang, uilang, pagination, sort, typeFilter, recursionTypesFilter});
     },
 
     getResultsPath(data) {
@@ -275,7 +266,7 @@ const FilesQueryHandler = {
 const SearchQueryHandler = {
     getQuery() {
         return gql`
-            query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $nodeNameSearchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
+            query searchContentQuery($searchPath:String!, $nodeType:String!, $searchTerms:String!, $nodeNameSearchTerms:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldFilter: InputFieldFiltersInput, $fieldSorter: InputFieldSorterInput) {
                 jcr {
                     nodesByCriteria(
                         criteria: {
@@ -290,6 +281,7 @@ const SearchQueryHandler = {
                                 ]
                             }
                         },
+                        fieldFilter: $fieldFilter
                         offset: $offset,
                         limit: $limit,
                         fieldSorter: $fieldSorter
@@ -308,12 +300,12 @@ const SearchQueryHandler = {
         `;
     },
 
-    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
+    getQueryParams({uilang, lang, params, pagination, sort}) {
         return {
-            searchPath: urlParams.searchPath,
-            nodeType: (urlParams.searchContentType || 'jmix:searchable'),
-            searchTerms: urlParams.searchTerms,
-            nodeNameSearchTerms: `%${urlParams.searchTerms}%`,
+            searchPath: params.searchPath,
+            nodeType: (params.searchContentType || 'jmix:searchable'),
+            searchTerms: params.searchTerms,
+            nodeNameSearchTerms: `%${params.searchTerms}%`,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
@@ -322,6 +314,10 @@ const SearchQueryHandler = {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
+            },
+            fieldFilter: {
+                filters: [],
+                multi: 'NONE'
             }
         };
     },
@@ -351,9 +347,9 @@ const Sql2SearchQueryHandler = {
         `;
     },
 
-    getQueryParams({uilang, lang, urlParams, pagination, sort}) {
-        let {sql2SearchFrom, sql2SearchWhere} = urlParams;
-        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${urlParams.searchPath}')`;
+    getQueryParams({uilang, lang, params, pagination, sort}) {
+        let {sql2SearchFrom, sql2SearchWhere} = params;
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${params.searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
             query += ` AND (${sql2SearchWhere})`;
         }

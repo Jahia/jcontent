@@ -3,14 +3,18 @@ import {Checkbox, TableBodyCell} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {columnWidths} from '../../columns';
 
-export const CellSelection = ({row, cell, column}) => (
-    <TableBodyCell key={row.id + column.id}
-                   {...cell.getCellProps()}
-                   width={columnWidths[column.id]}
-    >
-        <Checkbox {...row.getToggleRowSelectedProps()}/>
-    </TableBodyCell>
-);
+export const CellSelection = ({row, cell, column}) => {
+    // Not selectable only if 'isSelectable' is explicitly set to false
+    const selectable = row.original.isSelectable !== false;
+    return (
+        <TableBodyCell key={row.id + column.id}
+                       {...cell.getCellProps()}
+                       width={columnWidths[column.id]}
+        >
+            {selectable && <Checkbox {...row.getToggleRowSelectedProps()}/>}
+        </TableBodyCell>
+    );
+};
 
 CellSelection.propTypes = {
     value: PropTypes.string,

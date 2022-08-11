@@ -13,3 +13,4 @@ export {default as ContentTableWrapper} from '../JContent/ContentRoute/ContentLa
 export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQuery';
 export {NodeIcon} from '../utils/NodeIcon';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
+export {default as FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard/FileSize';

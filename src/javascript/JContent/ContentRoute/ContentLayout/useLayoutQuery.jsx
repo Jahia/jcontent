@@ -27,7 +27,7 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const {fetchPolicy} = {...defaultOptions, ...options};
 
     const queryHandler = registry.get('accordionItem', mode).queryHandler;
-    const layoutQuery = replaceFragmentsInDocument(queryHandler.getQuery(), [...queryHandler.getFragments(), ...(fragments || [])]);
+    const layoutQuery = replaceFragmentsInDocument(queryHandler.getQuery(), [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])]);
     const rootPath = `/sites/${siteKey}`;
 
     const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;

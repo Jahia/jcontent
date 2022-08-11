@@ -13,7 +13,7 @@ import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQue
 const localStorage = window.localStorage;
 const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 
-const ContentTypeSelector = ({selector, reduxActions, pagesQueryVariables, contentQueryVariables}) => {
+const ContentTypeSelector = ({selector, reduxActions}) => {
     const {t} = useTranslation('jcontent');
     const {tableView} = useSelector(selector, shallowEqual);
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const ContentTypeSelector = ({selector, reduxActions, pagesQueryVariables, conte
             ...selector(state).tableView,
             viewType: JContentConstants.tableView.viewType.PAGES
         }
-    }), {fetchPolicy: 'cache-and-network'}, [], pagesQueryVariables);
+    }), {fetchPolicy: 'cache-and-network'});
     const pagesCount = pages.loading ? 0 : pages.queryHandler.getResultsPath(pages.data).pageInfo.totalCount;
 
     const content = useLayoutQuery(state => ({
@@ -40,7 +40,7 @@ const ContentTypeSelector = ({selector, reduxActions, pagesQueryVariables, conte
             ...selector(state).tableView,
             viewType: JContentConstants.tableView.viewType.CONTENT
         }
-    }), {fetchPolicy: 'cache-and-network'}, [], contentQueryVariables);
+    }), {fetchPolicy: 'cache-and-network'});
     const contentCount = content.loading ? 0 : content.queryHandler.getResultsPath(content.data).pageInfo.totalCount;
 
     return (
@@ -72,9 +72,7 @@ ContentTypeSelector.propTypes = {
     reduxActions: {
         setPageAction: PropTypes.func.isRequired,
         setTableViewTypeAction: PropTypes.func.isRequired
-    },
-    pagesQueryVariables: PropTypes.object,
-    contentQueryVariables: PropTypes.object
+    }
 };
 
 ContentTypeSelector.defaultProps = {

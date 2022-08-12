@@ -28,7 +28,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView} = useSelector(state => ({
+    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView, searchTerms} = useSelector(state => ({
         mode: state.jcontent.mode,
         previewSelection: state.jcontent.previewSelection,
         siteKey: state.site,
@@ -36,7 +36,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
         pagination: state.jcontent.pagination,
         previewState: state.jcontent.previewState,
         selection: state.jcontent.selection,
-        tableView: state.jcontent.tableView
+        tableView: state.jcontent.tableView,
+        searchTerms: state.jcontent.params.searchTerms
     }), shallowEqual);
 
     const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
@@ -124,7 +125,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
 
     if (_.isEmpty(rows) && !isLoading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
-            return <EmptyTable columnSpan={columnData.length} t={t}/>;
+            return <EmptyTable text={searchTerms}/>;
         }
 
         return (

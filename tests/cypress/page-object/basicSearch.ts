@@ -50,8 +50,6 @@ export class BasicSearch extends BasePage {
 
     executeSearch(): BasicSearch {
         getComponentByRole(Button, 'search-submit').click()
-        // Wait for result
-        this.jcontent.getTable().getRows((el) => expect(el).to.be.visible)
         return this
     }
 

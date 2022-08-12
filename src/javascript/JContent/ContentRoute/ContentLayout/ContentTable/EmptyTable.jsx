@@ -1,26 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Table, TableBody, TableBodyCell, TableRow, Typography} from '@jahia/moonstone';
-import ContentTableConstants from './ContentTable.constants';
-import ContentTableWrapper from './ContentTableWrapper';
+import {Typography} from '@jahia/moonstone';
+import styles from './EmptyTable.scss';
+import {useTranslation} from 'react-i18next';
 
-const EmptyTable = ({columnSpan, t}) => (
-    <ContentTableWrapper>
-        <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
-            <TableBody>
-                <TableRow>
-                    <TableBodyCell colSpan={columnSpan + ContentTableConstants.appTableCells + 2}>
-                        <Typography weight="bold">{t('jcontent:label.contentManager.noResults')}</Typography>
-                    </TableBodyCell>
-                </TableRow>
-            </TableBody>
-        </Table>
-    </ContentTableWrapper>
-);
+const EmptyTable = ({text}) => {
+    const {t} = useTranslation('jcontent');
+    return (
+        <div className="flexFluid flexCol_center alignCenter">
+            <Typography component="div" variant="heading">{t('label.contentManager.noResults')}</Typography>
+            <Typography className={styles.text} component="div" variant="body">{t('label.contentManager.noResultsText', {text})}</Typography>
+        </div>
+    );
+};
 
 EmptyTable.propTypes = {
-    columnSpan: PropTypes.number.isRequired,
-    t: PropTypes.func.isRequired
+    text: PropTypes.string.isRequired
 };
 
 export default EmptyTable;

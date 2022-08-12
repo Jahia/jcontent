@@ -141,7 +141,8 @@
       "editAction": "Edit",
       "subContentsAction": "View sub-contents",
       "translateAction": "{{source}} -> {{dest}}",
-      "noResults": "No Results",
+      "noResults": "No matches found",
+      "noResultsText": "No results for your search \"{{text}}\"",
       "create": {
         "contentFolder": "New content folder",
         "folder": "New folder",

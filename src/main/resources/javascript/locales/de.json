@@ -139,6 +139,7 @@
       "subContentsAction": "Sub-Inhalte anzeigen",
       "translateAction": "{{source}} -> {{dest}}",
       "noResults": "Kein Ergebnis",
+      "noResultsText": "Kein Ergebnis für Ihre Suche {{text}}",
       "create": {
         "contentFolder": "Neues Content Verzeichnis",
         "folder": "Neues Verzeichnis",

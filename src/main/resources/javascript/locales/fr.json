@@ -141,6 +141,7 @@
       "subContentsAction": "Voir les sous-contenus",
       "translateAction": "{{source}} -> {{dest}}",
       "noResults": "Aucun résultat",
+      "noResultsText": "Aucun resultat pour votre recherche \"{{text}}\"",
       "create": {
         "contentFolder": "Nouveau répertoire de contenu",
         "folder": "Nouveau dossier",

@@ -10,9 +10,5 @@ export const FilesQueryHandler = {
 
     getFragments() {
         return [imageFields];
-    },
-
-    getResultsPath(data) {
-        return data && data.jcr && data.jcr.nodeByPath && data.jcr.nodeByPath.children;
     }
 };

@@ -13,27 +13,21 @@ export const BaseQueryHandler = {
         return [];
     },
 
-    getQueryParams({path, lang, uilang, pagination, typeFilter, recursionTypesFilter, sort}) {
+    getQueryParams({path, lang, uilang, pagination, typeFilter, recursionTypesFilter, sort, fieldGrouping}) {
         return {
             path: path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: typeFilter,
+            typeFilter: typeFilter || ['jnt:content'],
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
-            ...(recursionTypesFilter ? {
-                recursionTypesFilter: recursionTypesFilter,
-                fieldGrouping: {
-                    fieldName: 'primaryNodeType.name',
-                    groups: recursionTypesFilter,
-                    groupingType: 'START'
-                }
-            } : {})
+            recursionTypesFilter: recursionTypesFilter,
+            fieldGrouping: fieldGrouping
         };
     }
 };

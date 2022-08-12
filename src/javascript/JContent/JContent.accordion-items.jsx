@@ -8,10 +8,10 @@ import JContentConstants from './JContent.constants';
 import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
-import {ContentQueryHandlerPages} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentQueryHandlerPages';
+import {PagesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/PagesQueryHandler';
 import {
-    ContentQueryHandlerContentFolders
-} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentQueryHandlerContentFolders';
+    ContentFoldersQueryHandler
+} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentFoldersQueryHandler';
 import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/FilesQueryHandler';
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
@@ -53,7 +53,7 @@ export const jContentAccordionItems = registry => {
         getPathForItem: node => {
             return node.ancestors[node.ancestors.length - 1].path;
         },
-        queryHandler: ContentQueryHandlerContentFolders
+        queryHandler: ContentFoldersQueryHandler
     });
 
     const renderDefaultApps = registry.add('accordionItem', 'renderDefaultApps', {
@@ -95,7 +95,7 @@ export const jContentAccordionItems = registry => {
             rootLabel: 'jcontent:label.contentManager.browsePages',
             key: 'browse-tree-pages'
         },
-        queryHandler: ContentQueryHandlerPages,
+        queryHandler: PagesQueryHandler,
         viewSelector: <ViewModeSelector/>,
         tableHeader: <ContentTypeSelector/>
     });

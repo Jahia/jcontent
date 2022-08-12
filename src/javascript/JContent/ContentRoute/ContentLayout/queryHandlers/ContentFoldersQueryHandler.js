@@ -1,8 +1,12 @@
 import {BaseQueryHandler} from './BaseQueryHandler';
 import JContentConstants from '~/JContent/JContent.constants';
+import {BaseDescendantsQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
 
-export const ContentQueryHandlerContentFolders = {
+export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,
+    getQuery() {
+        return BaseDescendantsQuery;
+    },
     getQueryParams({path, uilang, lang, pagination, sort, viewMode}) {
         const typeFilter = ['jnt:content', 'jnt:contentFolder'];
 

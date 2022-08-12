@@ -2,7 +2,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {BaseQueryHandler} from './BaseQueryHandler';
 import {BaseDescendantsQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
 
-export const ContentQueryHandlerPages = {
+export const PagesQueryHandler = {
     ...BaseQueryHandler,
     getQuery() {
         return BaseDescendantsQuery;

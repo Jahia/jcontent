@@ -1,6 +1,9 @@
-import {SearchQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler.gql-queries';
+import {SearchQuery} from './SearchQueryHandler.gql-queries';
+import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler';
 
 export const SearchQueryHandler = {
+    ...BaseQueryHandler,
+
     getQuery() {
         return SearchQuery;
     },

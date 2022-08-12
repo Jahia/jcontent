@@ -14,3 +14,4 @@ export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQu
 export {NodeIcon} from '../utils/NodeIcon';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 export {default as FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard/FileSize';
+export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';

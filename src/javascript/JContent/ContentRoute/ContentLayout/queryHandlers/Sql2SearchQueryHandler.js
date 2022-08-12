@@ -1,6 +1,9 @@
-import {Sql2SearchQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler.gql-queries';
+import {Sql2SearchQuery} from './Sql2SearchQueryHandler.gql-queries';
+import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler';
 
 export const Sql2SearchQueryHandler = {
+    ...BaseQueryHandler,
+
     getQuery() {
         return Sql2SearchQuery;
     },

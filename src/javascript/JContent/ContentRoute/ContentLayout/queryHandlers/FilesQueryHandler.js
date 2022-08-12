@@ -1,5 +1,5 @@
 import {BaseQueryHandler} from './BaseQueryHandler';
-import {imageFields} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/FilesQueryHandler.gql-queries';
+import {imageFields} from './FilesQueryHandler.gql-queries';
 
 export const FilesQueryHandler = {
     ...BaseQueryHandler,

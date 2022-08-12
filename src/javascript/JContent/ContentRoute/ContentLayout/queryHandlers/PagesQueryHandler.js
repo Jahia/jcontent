@@ -1,12 +1,14 @@
 import JContentConstants from '~/JContent/JContent.constants';
 import {BaseQueryHandler} from './BaseQueryHandler';
-import {BaseDescendantsQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
+import {BaseDescendantsQuery} from './BaseQueryHandler.gql-queries';
 
 export const PagesQueryHandler = {
     ...BaseQueryHandler,
+
     getQuery() {
         return BaseDescendantsQuery;
     },
+
     getQueryParams({path, uilang, lang, pagination, sort, viewType, viewMode, params}) {
         let typeFilter = JContentConstants.tableView.viewType.PAGES === viewType ? ['jnt:page'] : [JContentConstants.contentType];
         let recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};

@@ -15,6 +15,7 @@ import {
     Lock,
     MoreVert,
     NoCloud,
+    OpenInBrowser,
     Paste,
     Publish,
     Reload,
@@ -51,6 +52,7 @@ import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
 import {EditImageActionComponent} from '~/JContent/actions/editImage';
+import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -303,5 +305,11 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.search.search',
         targets: [],
         component: SearchActionComponent
+    });
+    registry.add('action', 'openInJContent', {
+        buttonIcon: <OpenInBrowser/>,
+        buttonLabel: 'jcontent:label.contentManager.actions.openInJContent',
+        targets: [],
+        component: OpenInJContentActionComponent
     });
 };

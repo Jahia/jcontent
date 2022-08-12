@@ -263,6 +263,7 @@
       },
       "actions": {
         "pageComposer": "Open in Page Composer",
+        "openInJContent": "Open in jContent",
         "error": {
           "loading": "Error retrieving action data: {{details}}"
         },

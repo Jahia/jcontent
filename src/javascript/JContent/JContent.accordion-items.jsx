@@ -5,15 +5,16 @@ import ContentRoute from './ContentRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
-import {
-    ContentQueryHandlerPages,
-    ContentQueryHandlerContentFolders,
-    FilesQueryHandler,
-    SearchQueryHandler, Sql2SearchQueryHandler
-} from '~/JContent/ContentRoute/ContentLayout/ContentLayout.gql-queries';
 import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
+import {ContentQueryHandlerPages} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentQueryHandlerPages';
+import {
+    ContentQueryHandlerContentFolders
+} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentQueryHandlerContentFolders';
+import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/FilesQueryHandler';
+import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
+import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 
 const filesRegex = /\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /\/sites\/[^/]+\/contents\/.*/;

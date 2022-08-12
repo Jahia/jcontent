@@ -4,9 +4,11 @@ import {BaseDescendantsQuery} from './BaseQueryHandler.gql-queries';
 
 export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,
+
     getQuery() {
         return BaseDescendantsQuery;
     },
+
     getQueryParams({path, uilang, lang, pagination, sort, viewMode}) {
         const typeFilter = ['jnt:content', 'jnt:contentFolder'];
 

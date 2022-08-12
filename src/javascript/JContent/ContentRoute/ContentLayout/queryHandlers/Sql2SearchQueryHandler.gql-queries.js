@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {nodeFields} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
+import {QueryHandlersFragments} from './BaseQueryHandler.gql-queries';
 
 export const Sql2SearchQuery = gql`
     query sql2SearchContentQuery($query:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $fieldSorter: InputFieldSorterInput) {
@@ -15,5 +15,5 @@ export const Sql2SearchQuery = gql`
             }
         }
     }
-    ${nodeFields}
+    ${QueryHandlersFragments.nodeFields.gql}
 `;

@@ -1,4 +1,4 @@
-import {BaseChildrenQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
+import {BaseChildrenQuery} from './BaseQueryHandler.gql-queries';
 
 export const BaseQueryHandler = {
     getQuery() {

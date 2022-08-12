@@ -1,6 +1,6 @@
 import {BaseQueryHandler} from './BaseQueryHandler';
 import JContentConstants from '~/JContent/JContent.constants';
-import {BaseDescendantsQuery} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseQueryHandler.gql-queries';
+import {BaseDescendantsQuery} from './BaseQueryHandler.gql-queries';
 
 export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,

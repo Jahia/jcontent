@@ -26,7 +26,7 @@ export const BaseQueryHandler = {
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
-            recursionTypesFilter: recursionTypesFilter,
+            recursionTypesFilter: recursionTypesFilter || {multi: 'NONE', types: ['nt:base']},
             fieldGrouping: fieldGrouping
         };
     }

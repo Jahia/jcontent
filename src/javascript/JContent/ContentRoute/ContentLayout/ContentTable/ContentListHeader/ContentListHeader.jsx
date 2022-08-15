@@ -18,6 +18,7 @@ export const ContentListHeader = ({headerGroups}) => {
                     {headerGroup.headers.map(column => (
                         <TableHeadCell key={column.id}
                                        {...column.getHeaderProps(column.getSortProps())}
+                                       data-cm-role={'table-content-list-header-cell-' + column.id}
                                        className={clsx(classes[`header-${column.id}`])}
                                        width={columnWidths[column.id]}
                         >

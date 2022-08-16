@@ -16,8 +16,8 @@ import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHand
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 
-const filesRegex = /\/sites\/[^/]+\/files\/.*/;
-const contentsRegex = /\/sites\/[^/]+\/contents\/.*/;
+const filesRegex = /^\/sites\/[^/]+\/files((\/.*)|$)/;
+const contentsRegex = /^\/sites\/[^/]+\/contents((\/.*)|$)/;
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {

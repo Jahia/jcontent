@@ -18,6 +18,9 @@ import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/quer
 
 const filesRegex = /^\/sites\/[^/]+\/files((\/.*)|$)/;
 const contentsRegex = /^\/sites\/[^/]+\/contents((\/.*)|$)/;
+const contentFolderRegex = /^\/sites\/[^/]+\/contents.*/;
+const folderRegex = /^\/sites\/[^/]+\/files.*/;
+const everythingUnderSitesRegex = /^\/sites\/.*/;
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {
@@ -84,7 +87,12 @@ export const jContentAccordionItems = registry => {
                 .filter(n => n.primaryNodeType.name === 'jnt:page');
             return pages[pages.length - 1].path;
         },
-        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? !filesRegex.test(selectionNode.path) && !contentsRegex.test(selectionNode.path) : /^\/sites\/.*/.test(folderNode.path),
+        canDisplayItem: ({selectionNode, folderNode}) =>
+            selectionNode ? !filesRegex.test(selectionNode.path) &&
+                !contentsRegex.test(selectionNode.path) :
+                everythingUnderSitesRegex.test(folderNode.path) &&
+                !folderRegex.test(folderNode.path) &&
+                !contentFolderRegex.test(folderNode.path),
         getViewTypeForItem: node => node.primaryNodeType.name === 'jnt:page' ? 'pages' : 'content',
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         config: {
@@ -106,7 +114,7 @@ export const jContentAccordionItems = registry => {
         icon: <FolderSpecial/>,
         label: 'jcontent:label.contentManager.navigation.contentFolders',
         defaultPath: siteKey => '/sites/' + siteKey + '/contents',
-        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? contentsRegex.test(selectionNode.path) : /^\/sites\/[^/]+\/contents.*/.test(folderNode.path),
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? contentsRegex.test(selectionNode.path) : contentFolderRegex.test(folderNode.path),
         requiredSitePermission: JContentConstants.accordionPermissions.contentFolderAccordionAccess,
         config: {
             rootPath: '/contents',
@@ -124,7 +132,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'jcontent:label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
-        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? filesRegex.test(selectionNode.path) : /^\/sites\/[^/]+\/files.*/.test(folderNode.node),
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? filesRegex.test(selectionNode.path) : folderRegex.test(folderNode.node),
         requiredSitePermission: JContentConstants.accordionPermissions.mediaAccordionAccess,
         config: {
             rootPath: '/files',

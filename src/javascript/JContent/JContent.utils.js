@@ -168,3 +168,16 @@ export const arrayValue = value => {
 };
 
 export const booleanValue = v => typeof v === 'string' ? v === 'true' : Boolean(v);
+
+export const getCanDisplayItemParams = node => {
+    const folders = ['jnt:contentFolder', 'jnt:folder'];
+    const params = {};
+
+    if (folders.includes(node.primaryNodeType.name)) {
+        params.folderNode = node;
+    } else {
+        params.selectionNode = node;
+    }
+
+    return params;
+};

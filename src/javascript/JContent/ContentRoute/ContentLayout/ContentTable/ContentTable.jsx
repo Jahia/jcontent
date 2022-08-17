@@ -105,7 +105,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
     const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
-            newMode = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem(getCanDisplayItemParams(node)))?.key;
+            const params = getCanDisplayItemParams(node);
+            newMode = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params))?.key;
             if (newMode) {
                 setMode(newMode);
             }

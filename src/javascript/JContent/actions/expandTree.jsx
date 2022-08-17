@@ -29,7 +29,8 @@ const GetAncestorsQuery = gql`
 export const expandTree = (path, client) => {
     return client.query({query: GetAncestorsQuery, variables: {path}}).then(res => {
         let node = res.data.jcr.nodeByPath;
-        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem(getCanDisplayItemParams(node)));
+        const params = getCanDisplayItemParams(node);
+        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params));
         const mode = acc.key;
         const parentPath = acc.getPathForItem(node);
         const viewType = acc.getViewTypeForItem ? acc.getViewTypeForItem(node) : null;

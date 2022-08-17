@@ -132,7 +132,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'jcontent:label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
-        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? filesRegex.test(selectionNode.path) : folderRegex.test(folderNode.node),
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? filesRegex.test(selectionNode.path) : folderRegex.test(folderNode.path),
         requiredSitePermission: JContentConstants.accordionPermissions.mediaAccordionAccess,
         config: {
             rootPath: '/files',

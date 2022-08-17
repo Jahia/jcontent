@@ -1,5 +1,4 @@
 import {shallowEqual, useSelector} from 'react-redux';
-import JContentConstants from '~/JContent/JContent.constants';
 import {useQuery} from 'react-apollo';
 import {registry} from '@jahia/ui-extender';
 import {replaceFragmentsInDocument} from '@jahia/data-helper';
@@ -23,31 +22,23 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
         });
     }
 
-    const {mode, siteKey, path, lang, uilang, params, pagination, sort, tableView} = useSelector(selector, shallowEqual);
+    const selection = useSelector(selector, shallowEqual);
     const {fetchPolicy} = {...defaultOptions, ...options};
 
-    const queryHandler = registry.get('accordionItem', mode).queryHandler;
+    const queryHandler = registry.get('accordionItem', selection.mode).queryHandler;
     const layoutQuery = replaceFragmentsInDocument(queryHandler.getQuery(), [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])]);
-    const rootPath = `/sites/${siteKey}`;
 
-    const isStructuredView = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
-
-    let layoutQueryParams = queryHandler.getQueryParams({
-        path,
-        uilang,
-        lang,
-        params,
-        rootPath,
-        pagination,
-        sort,
-        viewType: tableView.viewType,
-        viewMode: tableView.viewMode,
-        mode
-    });
+    let layoutQueryParams = queryHandler.getQueryParams(selection);
 
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
         variables: {...layoutQueryParams, ...queryVariables},
         fetchPolicy
     });
-    return {queryHandler, layoutQuery, isStructuredView, layoutQueryParams, data, error, loading, refetch};
+
+    const isStructured = queryHandler.isStructured(selection);
+
+    const queryResult = data && queryHandler.getResults(data, selection);
+    const result = isStructured ? queryHandler.structureData(selection.path, queryResult) : queryResult;
+
+    return {layoutQuery, isStructured, layoutQueryParams, result, error, loading, refetch};
 }

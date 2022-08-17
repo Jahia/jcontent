@@ -13,7 +13,7 @@ import {ErrorBoundary} from '@jahia/jahia-ui-root';
 import {flattenTree} from './ContentLayout.utils';
 import styles from './ContentLayout.scss';
 
-export const ContentLayout = ({mode, path, previewState, filesMode, previewSelection, rows, isContentNotFound, totalCount, isLoading}) => {
+export const ContentLayout = ({mode, path, previewState, filesMode, previewSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const contextualMenu = useRef();
     const previewOpen = previewState >= CM_DRAWER_STATES.SHOW;
     return (
@@ -56,6 +56,7 @@ export const ContentLayout = ({mode, path, previewState, filesMode, previewSelec
                                 <ContentTable totalCount={totalCount}
                                               rows={rows}
                                               isContentNotFound={isContentNotFound}
+                                              isStructured={isStructured}
                                               isLoading={isLoading}/>}
                         </ErrorBoundary>
                     </Paper>
@@ -74,7 +75,8 @@ ContentLayout.propTypes = {
     rows: PropTypes.array.isRequired,
     isContentNotFound: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
-    isLoading: PropTypes.bool.isRequired
+    isLoading: PropTypes.bool.isRequired,
+    isStructured: PropTypes.bool
 };
 
 export default ContentLayout;

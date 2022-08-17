@@ -24,11 +24,11 @@ import ContentTableWrapper from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 
-export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) => {
+export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, tableView, searchTerms} = useSelector(state => ({
+    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms} = useSelector(state => ({
         mode: state.jcontent.mode,
         previewSelection: state.jcontent.previewSelection,
         siteKey: state.site,
@@ -39,8 +39,6 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
         tableView: state.jcontent.tableView,
         searchTerms: state.jcontent.params.searchTerms
     }), shallowEqual);
-
-    const isStructuredView = JContentConstants.tableView.viewMode.STRUCTURED === tableView.viewMode;
 
     const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
     const setPath = (siteKey, path, mode, params) => {
@@ -95,10 +93,10 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
     }, [rows, selection, dispatch, paths]);
 
     useEffect(() => {
-        if (isStructuredView) {
+        if (isStructured) {
             toggleAllRowsExpanded(true);
         }
-    }, [rows, isStructuredView, toggleAllRowsExpanded]);
+    }, [rows, isStructured, toggleAllRowsExpanded]);
 
     const contextualMenus = useRef({});
 
@@ -199,7 +197,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
                     </TableBody>
                 </Table>
             </UploadTransformComponent>
-            {(!isStructuredView || isInSearchMode(mode) || JContentConstants.mode.MEDIA === mode) &&
+            {(!isStructured || isInSearchMode(mode) || JContentConstants.mode.MEDIA === mode) &&
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
                              rowsPerPage={pagination.pageSize}
@@ -218,6 +216,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading}) =
 ContentTable.propTypes = {
     isContentNotFound: PropTypes.bool,
     isLoading: PropTypes.bool,
+    isStructured: PropTypes.bool,
     rows: PropTypes.array.isRequired,
     totalCount: PropTypes.number.isRequired
 };

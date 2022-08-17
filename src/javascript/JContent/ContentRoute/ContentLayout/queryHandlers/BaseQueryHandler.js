@@ -55,5 +55,7 @@ export const BaseQueryHandler = {
             },
             recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
         };
-    }
+    },
+
+    isStructured: () => false
 };

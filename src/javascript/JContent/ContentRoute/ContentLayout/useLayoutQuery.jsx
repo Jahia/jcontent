@@ -35,7 +35,10 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
         fetchPolicy
     });
 
-    const result = data && queryHandler.getResults(data, selection);
+    const isStructured = queryHandler.isStructured(selection);
 
-    return {layoutQuery, layoutQueryParams, result, error, loading, refetch};
+    const queryResult = data && queryHandler.getResults(data, selection);
+    const result = isStructured ? queryHandler.structureData(selection.path, queryResult) : queryResult;
+
+    return {layoutQuery, isStructured, layoutQueryParams, result, error, loading, refetch};
 }

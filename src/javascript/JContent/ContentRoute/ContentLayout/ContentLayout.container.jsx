@@ -42,7 +42,7 @@ export const ContentLayoutContainer = () => {
     const removeSelection = path => dispatch(cmRemoveSelection(path));
     const switchSelection = path => dispatch(cmSwitchSelection(path));
 
-    const {layoutQuery, layoutQueryParams, result, error, loading, refetch} = useLayoutQuery();
+    const {layoutQuery, layoutQueryParams, isStructured, result, error, loading, refetch} = useLayoutQuery();
 
     function onGwtCreate(nodePath) {
         let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
@@ -186,6 +186,7 @@ export const ContentLayoutContainer = () => {
                            previewState={previewState}
                            previewSelection={previewSelection}
                            rows={[]}
+                           isStructured={isStructured}
                            isLoading={loading}
                            totalCount={0}
             />
@@ -220,6 +221,7 @@ export const ContentLayoutContainer = () => {
                            previewSelection={previewSelection}
                            rows={rows}
                            isLoading={loading}
+                           isStructured={isStructured}
                            totalCount={totalCount}
             />
         </React.Fragment>

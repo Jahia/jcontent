@@ -34,12 +34,5 @@ export const PagesQueryHandler = {
         return layoutQueryParams;
     },
 
-    getResults: (data, {tableView, path}) => {
-        const result = BaseQueryHandler.getResults(data);
-        if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            return BaseQueryHandler.structureData(path, result);
-        }
-
-        return result;
-    }
+    isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED
 };

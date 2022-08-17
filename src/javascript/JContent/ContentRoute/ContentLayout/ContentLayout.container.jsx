@@ -14,7 +14,6 @@ import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
-import {isInSearchMode, structureData} from '../ContentLayout/ContentLayout.utils';
 import {Loader} from '@jahia/moonstone';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 
@@ -24,7 +23,7 @@ export const ContentLayoutContainer = () => {
     const {t} = useTranslation('jcontent');
     const client = useApolloClient();
 
-    const {mode, path, previewSelection, previewState, params, filesMode, openedPaths, selection} = useSelector(state => ({
+    const {mode, path, previewSelection, previewState, filesMode, openedPaths, selection} = useSelector(state => ({
         mode: state.jcontent.mode,
         path: state.jcontent.path,
         previewSelection: state.jcontent.previewSelection,
@@ -43,7 +42,7 @@ export const ContentLayoutContainer = () => {
     const removeSelection = path => dispatch(cmRemoveSelection(path));
     const switchSelection = path => dispatch(cmSwitchSelection(path));
 
-    const {queryHandler, layoutQuery, isStructuredView, layoutQueryParams, data, error, loading, refetch} = useLayoutQuery();
+    const {layoutQuery, layoutQueryParams, result, error, loading, refetch} = useLayoutQuery();
 
     function onGwtCreate(nodePath) {
         let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
@@ -159,17 +158,6 @@ export const ContentLayoutContainer = () => {
     };
 
     useEffect(() => {
-        if (data && data.jcr && data.jcr.nodeByPath) {
-            // When new results have been loaded, use them for rendering.
-            let nodeTypeName = data.jcr.nodeByPath.primaryNodeType.name;
-            let subTypes = ['jnt:page', 'jnt:contentFolder', 'jnt:virtualsite'];
-            let isSub = !subTypes.includes(nodeTypeName);
-            // Sub is not the same as params.sub; refresh and sync up path param state
-            if (isSub !== (params.sub === true)) { // Params.sub needs to be boolean type; else falsy
-                setPath(path, {sub: isSub});
-            }
-        }
-
         setRefetcher(refetchTypes.CONTENT_DATA, {
             query: layoutQuery,
             queryParams: layoutQueryParams,
@@ -184,7 +172,7 @@ export const ContentLayoutContainer = () => {
         };
     });
 
-    if (error || (!loading && !queryHandler.getResultsPath(data))) {
+    if (error || (!loading && !result)) {
         if (error) {
             const message = t('jcontent:label.contentManager.error.queryingContent', {details: error.message || ''});
             console.error(message);
@@ -207,7 +195,7 @@ export const ContentLayoutContainer = () => {
     if (loading) {
         // While loading new results, render current ones loaded during previous render invocation (if any).
     } else {
-        currentResult = queryHandler.getResultsPath(data);
+        currentResult = result;
     }
 
     let rows = [];
@@ -215,11 +203,7 @@ export const ContentLayoutContainer = () => {
 
     if (currentResult) {
         totalCount = currentResult.pageInfo.totalCount;
-        if (isStructuredView && !isInSearchMode(mode)) {
-            rows = structureData(path, currentResult.nodes);
-        } else {
-            rows = currentResult.nodes;
-        }
+        rows = currentResult.nodes;
     }
 
     return (

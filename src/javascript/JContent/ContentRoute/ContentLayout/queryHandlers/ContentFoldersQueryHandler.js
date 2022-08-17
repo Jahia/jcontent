@@ -5,23 +5,12 @@ import {BaseDescendantsQuery} from './BaseQueryHandler.gql-queries';
 export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,
 
-    getQuery() {
-        return BaseDescendantsQuery;
-    },
+    getQuery: () => BaseDescendantsQuery,
 
-    getQueryParams({path, uilang, lang, pagination, sort, viewMode}) {
-        const typeFilter = ['jnt:content', 'jnt:contentFolder'];
-
-        const layoutQueryParams = BaseQueryHandler.getQueryParams({
-            path,
-            lang,
-            uilang,
-            pagination,
-            sort,
-            typeFilter
-        });
-
-        if (viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+    getQueryParams: selection => {
+        const layoutQueryParams = BaseQueryHandler.getQueryParams(selection);
+        layoutQueryParams.typeFilter = ['jnt:content', 'jnt:contentFolder'];
+        if (selection.tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             layoutQueryParams.fieldGrouping = null;
             layoutQueryParams.offset = 0;
             layoutQueryParams.limit = 10000;
@@ -31,5 +20,14 @@ export const ContentFoldersQueryHandler = {
         }
 
         return layoutQueryParams;
+    },
+
+    getResults: (data, {tableView, path}) => {
+        const result = BaseQueryHandler.getResults(data);
+        if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+            return BaseQueryHandler.structureData(path, result);
+        }
+
+        return result;
     }
 };

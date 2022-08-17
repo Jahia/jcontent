@@ -4,11 +4,9 @@ import {BaseQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandl
 export const Sql2SearchQueryHandler = {
     ...BaseQueryHandler,
 
-    getQuery() {
-        return Sql2SearchQuery;
-    },
+    getQuery: () => Sql2SearchQuery,
 
-    getQueryParams({uilang, lang, params, pagination, sort}) {
+    getQueryParams: ({uilang, lang, params, pagination, sort}) => {
         let {sql2SearchFrom, sql2SearchWhere} = params;
         let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${params.searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
@@ -29,7 +27,5 @@ export const Sql2SearchQueryHandler = {
         };
     },
 
-    getResultsPath(data) {
-        return data && data.jcr && data.jcr.nodesByQuery;
-    }
+    getResults: data => data && data.jcr && data.jcr.nodesByQuery
 };

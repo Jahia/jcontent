@@ -32,7 +32,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
             viewType: JContentConstants.tableView.viewType.PAGES
         }
     }), {fetchPolicy: 'cache-and-network'});
-    const pagesCount = pages.loading ? 0 : pages.queryHandler.getResultsPath(pages.data).pageInfo.totalCount;
+    const pagesCount = pages.loading ? 0 : pages.result.pageInfo.totalCount;
 
     const content = useLayoutQuery(state => ({
         ...selector(state),
@@ -41,7 +41,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
             viewType: JContentConstants.tableView.viewType.CONTENT
         }
     }), {fetchPolicy: 'cache-and-network'});
-    const contentCount = content.loading ? 0 : content.queryHandler.getResultsPath(content.data).pageInfo.totalCount;
+    const contentCount = content.loading ? 0 : content.result.pageInfo.totalCount;
 
     return (
         <Tab className={classes.tabs}>

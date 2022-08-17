@@ -18,7 +18,6 @@ import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/quer
 
 const filesRegex = /^\/sites\/[^/]+\/files((\/.*)|$)/;
 const contentsRegex = /^\/sites\/[^/]+\/contents((\/.*)|$)/;
-const folderRegex = /^\/sites\/.*/;
 
 export const jContentAccordionItems = registry => {
     const getPath = (site, pathElements, registryItem) => {
@@ -42,18 +41,6 @@ export const jContentAccordionItems = registry => {
         return path;
     };
 
-    const compareNodesByPathDesc = (a, b) => {
-        if (a.path.length < b.path.length) {
-            return 1;
-        }
-
-        if (a.path.length > b.path.length) {
-            return -1;
-        }
-
-        return 0;
-    };
-
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: (v, item) => (
             <AccordionItem key={v.id} id={v.id} label={v.label} icon={v.icon}>
@@ -64,7 +51,7 @@ export const jContentAccordionItems = registry => {
         getPath,
         getUrlPathPart,
         getPathForItem: node => {
-            return node.ancestors.sort(compareNodesByPathDesc)[node.ancestors.length - 1].path;
+            return node.ancestors[node.ancestors.length - 1].path;
         },
         queryHandler: ContentFoldersQueryHandler
     });
@@ -94,11 +81,10 @@ export const jContentAccordionItems = registry => {
         defaultPath: siteKey => '/sites/' + siteKey,
         getPathForItem: node => {
             const pages = node.ancestors
-                .filter(n => n.primaryNodeType.name === 'jnt:page')
-                .sort(compareNodesByPathDesc);
+                .filter(n => n.primaryNodeType.name === 'jnt:page');
             return pages[pages.length - 1].path;
         },
-        canDisplayItem: (selectionNode, folderNode) => selectionNode ? !filesRegex.test(selectionNode.path) && !contentsRegex.test(selectionNode.path) : folderRegex.test(folderNode.path),
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? !filesRegex.test(selectionNode.path) && !contentsRegex.test(selectionNode.path) : /^\/sites\/.*/.test(folderNode.path),
         getViewTypeForItem: node => node.primaryNodeType.name === 'jnt:page' ? 'pages' : 'content',
         requiredSitePermission: JContentConstants.accordionPermissions.pagesAccordionAccess,
         config: {
@@ -120,7 +106,7 @@ export const jContentAccordionItems = registry => {
         icon: <FolderSpecial/>,
         label: 'jcontent:label.contentManager.navigation.contentFolders',
         defaultPath: siteKey => '/sites/' + siteKey + '/contents',
-        canDisplayItem: (selectionNode, folderNode) => selectionNode ? contentsRegex.test(selectionNode.path) : folderRegex.test(folderNode.path),
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? contentsRegex.test(selectionNode.path) : /^\/sites\/[^/]+\/contents.*/.test(folderNode.path),
         requiredSitePermission: JContentConstants.accordionPermissions.contentFolderAccordionAccess,
         config: {
             rootPath: '/contents',
@@ -138,7 +124,7 @@ export const jContentAccordionItems = registry => {
         icon: <Collections/>,
         label: 'jcontent:label.contentManager.navigation.media',
         defaultPath: siteKey => '/sites/' + siteKey + '/files',
-        canDisplayItem: (selectionNode, folderNode) => selectionNode ? filesRegex.test(selectionNode.path) : folderRegex.test(folderNode.node),
+        canDisplayItem: ({selectionNode, folderNode}) => selectionNode ? filesRegex.test(selectionNode.path) : /^\/sites\/[^/]+\/files.*/.test(folderNode.node),
         requiredSitePermission: JContentConstants.accordionPermissions.mediaAccordionAccess,
         config: {
             rootPath: '/files',

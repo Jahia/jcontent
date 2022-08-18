@@ -32,7 +32,7 @@ export const OpenInJContentActionComponent = ({path, render: Render, loading: Lo
                 isVisible={res.checksResult}
                 enabled={res.checksResult}
                 onClick={() => {
-                    const params = getCanDisplayItemParams(res.node);
+                    const params = {folderNode: res.node};
                     const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params));
                     const mode = acc.key;
                     window.open(`${window.contextJsParameters.contextPath}/jahia/jcontent/${matchArray[1]}/${language}/${mode}/${matchArray[2]}`, '_blank');

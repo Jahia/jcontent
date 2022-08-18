@@ -3,6 +3,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
+import {getCanDisplayItemParams} from '~/JContent/JContent.utils';
 
 export const OpenInJContentActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));
@@ -31,7 +32,8 @@ export const OpenInJContentActionComponent = ({path, render: Render, loading: Lo
                 isVisible={res.checksResult}
                 enabled={res.checksResult}
                 onClick={() => {
-                    const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem(res.node));
+                    const params = {folderNode: res.node};
+                    const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params));
                     const mode = acc.key;
                     window.open(`${window.contextJsParameters.contextPath}/jahia/jcontent/${matchArray[1]}/${language}/${mode}/${matchArray[2]}`, '_blank');
                 }}

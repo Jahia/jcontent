@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 import {registry} from '@jahia/ui-extender';
+import {getCanDisplayItemParams} from '~/JContent/JContent.utils';
 
 const GetAncestorsQuery = gql`
     query getAncestorsQuery($path:String!) {
@@ -28,7 +29,8 @@ const GetAncestorsQuery = gql`
 export const expandTree = (path, client) => {
     return client.query({query: GetAncestorsQuery, variables: {path}}).then(res => {
         let node = res.data.jcr.nodeByPath;
-        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem(node));
+        const params = {selectionNode: node};
+        const acc = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params));
         const mode = acc.key;
         const parentPath = acc.getPathForItem(node);
         const viewType = acc.getViewTypeForItem ? acc.getViewTypeForItem(node) : null;

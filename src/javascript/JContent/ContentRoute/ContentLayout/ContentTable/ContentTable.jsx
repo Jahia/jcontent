@@ -4,7 +4,7 @@ import {ContextualMenu, registry} from '@jahia/ui-extender';
 import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
-import {allowDoubleClickNavigation, extractPaths} from '~/JContent/JContent.utils';
+import {allowDoubleClickNavigation, extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
@@ -103,7 +103,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
-            const newMode = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem(node))?.key;
+            const params = getCanDisplayItemParams(node);
+            newMode = registry.find({type: 'accordionItem', target: 'jcontent'}).find(acc => acc.canDisplayItem && acc.canDisplayItem(params))?.key;
             if (newMode) {
                 setMode(newMode);
             }

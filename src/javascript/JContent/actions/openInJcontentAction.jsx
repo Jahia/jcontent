@@ -3,7 +3,6 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
-import {getCanDisplayItemParams} from '~/JContent/JContent.utils';
 
 export const OpenInJContentActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
     const {language} = useSelector(state => ({language: state.language}));

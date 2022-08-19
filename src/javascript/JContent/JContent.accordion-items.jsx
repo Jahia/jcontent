@@ -88,7 +88,7 @@ export const jContentAccordionItems = registry => {
             return pages[pages.length - 1].path;
         },
         canDisplayItem: ({selectionNode, folderNode}) =>
-            selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) && 
+            selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) &&
                 !filesRegex.test(selectionNode.path) &&
                 !contentsRegex.test(selectionNode.path) :
                 everythingUnderSitesRegex.test(folderNode.path) &&
@@ -100,10 +100,8 @@ export const jContentAccordionItems = registry => {
             hideRoot: true,
             rootPath: '',
             selectableTypes: ['jnt:page', 'jnt:virtualsite'],
-            type: 'pages',
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
-            rootLabel: 'jcontent:label.contentManager.browsePages',
-            key: 'browse-tree-pages'
+            rootLabel: 'jcontent:label.contentManager.browsePages'
         },
         queryHandler: PagesQueryHandler,
         viewSelector: <ViewModeSelector/>,
@@ -120,10 +118,8 @@ export const jContentAccordionItems = registry => {
         config: {
             rootPath: '/contents',
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
-            type: 'contents',
             openableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
-            rootLabel: 'jcontent:label.contentManager.browseFolders',
-            key: 'browse-tree-content'
+            rootLabel: 'jcontent:label.contentManager.browseFolders'
         },
         viewSelector: <ViewModeSelector/>
     });
@@ -138,10 +134,8 @@ export const jContentAccordionItems = registry => {
         config: {
             rootPath: '/files',
             selectableTypes: ['jnt:folder'],
-            type: 'files',
             openableTypes: ['jnt:folder'],
-            rootLabel: 'jcontent:label.contentManager.browseFiles',
-            key: 'browse-tree-files'
+            rootLabel: 'jcontent:label.contentManager.browseFiles'
         },
         queryHandler: FilesQueryHandler,
         viewSelector: <FileModeSelector/>

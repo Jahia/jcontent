@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import gql from 'graphql-tag';
 import {PredefinedFragments} from '@jahia/data-helper';
 import {registry} from '@jahia/ui-extender';
-import {getCanDisplayItemParams} from '~/JContent/JContent.utils';
 
 const GetAncestorsQuery = gql`
     query getAncestorsQuery($path:String!) {

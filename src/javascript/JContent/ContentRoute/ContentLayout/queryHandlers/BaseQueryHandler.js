@@ -49,7 +49,7 @@ export const BaseQueryHandler = {
             limit: pagination.pageSize,
             typeFilter: ['jnt:content'],
             fieldSorter: sort.orderBy === '' ? null : {
-                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'ASC' : 'DESC'),
+                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },

@@ -40,6 +40,22 @@ describe('Resize panel', () => {
         expect(props.onResize.mock.calls[1][0].height).toBe(100);
     });
 
+    it('Should not resize the image if size is too large', () => {
+        wrapper.find(Input).at(0).simulate('change', {
+            target: {
+                value: '201'
+            }
+        });
+        expect(props.onResize.mock.calls.length).toBe(0);
+
+        wrapper.find(Input).at(1).simulate('change', {
+            target: {
+                value: '201'
+            }
+        });
+        expect(props.onResize.mock.calls.length).toBe(0);
+    });
+
     it('Should not resize when typing garbage', () => {
         wrapper.find(Input).at(0).simulate('change', {
             target: {

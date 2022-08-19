@@ -13,7 +13,7 @@ describe('Resize panel', () => {
             originalWidth: 200,
             originalHeight: 100,
             resizeParams: {
-                width: 400,
+                width: 100,
                 height: 200
             },
             onResize: jest.fn()
@@ -33,11 +33,27 @@ describe('Resize panel', () => {
 
         wrapper.find(Input).at(1).simulate('change', {
             target: {
-                value: '300'
+                value: '100'
             }
         });
         expect(props.onResize.mock.calls.length).toBe(2);
-        expect(props.onResize.mock.calls[1][0].height).toBe(300);
+        expect(props.onResize.mock.calls[1][0].height).toBe(100);
+    });
+
+    it('Should not resize the image if size is too large', () => {
+        wrapper.find(Input).at(0).simulate('change', {
+            target: {
+                value: '201'
+            }
+        });
+        expect(props.onResize.mock.calls.length).toBe(0);
+
+        wrapper.find(Input).at(1).simulate('change', {
+            target: {
+                value: '201'
+            }
+        });
+        expect(props.onResize.mock.calls.length).toBe(0);
     });
 
     it('Should not resize when typing garbage', () => {

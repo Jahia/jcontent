@@ -259,6 +259,10 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
         client.cache.flushNodeEntryByPath(path);
     };
 
+    const onError = e => {
+        setSnackBarMessage(e.message);
+    };
+
     let newName = name;
     if (!newName) {
         newName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
@@ -269,6 +273,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
         <Mutation mutation={getImageMutation(operations.transforms)}
                   refetchQueries={() => ['ImageQuery']}
                   onCompleted={onCompleted}
+                  onError={onError}
         >
             {mutation => (
                 <>
@@ -323,6 +328,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
 
                     <Feedback isOpen={Boolean(snackBarMessage)}
                               messageKey={snackBarMessage}
+                              autoHideDuration={10000}
                               anchorOrigin={{
                                   vertical: 'bottom',
                                   horizontal: 'center'

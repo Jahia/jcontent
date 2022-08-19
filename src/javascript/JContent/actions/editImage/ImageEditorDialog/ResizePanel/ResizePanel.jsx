@@ -8,10 +8,14 @@ import styles from './ResizePanel.scss';
 export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResize}) => {
     const {t} = useTranslation('jcontent');
 
+    const valueWithinLimits = value => {
+        return originalWidth > originalHeight ? value <= originalWidth : value <= originalHeight;
+    };
+
     const setWidth = event => {
         let value = event.target.value;
 
-        if (/\d+/.test(value)) {
+        if (/\d+/.test(value) && valueWithinLimits(value)) {
             onResize({width: Math.round(value)});
         }
     };
@@ -19,7 +23,7 @@ export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResi
     const setHeight = event => {
         let value = event.target.value;
 
-        if (/\d+/.test(value)) {
+        if (/\d+/.test(value) && valueWithinLimits(value)) {
             onResize({height: Math.round(value)});
         }
     };

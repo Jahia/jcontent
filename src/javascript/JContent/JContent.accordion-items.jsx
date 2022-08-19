@@ -88,7 +88,7 @@ export const jContentAccordionItems = registry => {
             return pages[pages.length - 1].path;
         },
         canDisplayItem: ({selectionNode, folderNode}) =>
-            selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) && 
+            selectionNode ? everythingUnderSitesRegex.test(selectionNode.path) &&
                 !filesRegex.test(selectionNode.path) &&
                 !contentsRegex.test(selectionNode.path) :
                 everythingUnderSitesRegex.test(folderNode.path) &&

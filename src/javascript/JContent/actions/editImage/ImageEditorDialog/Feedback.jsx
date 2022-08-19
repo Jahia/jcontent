@@ -6,12 +6,12 @@ import PropTypes from 'prop-types';
 import styles from './Feedback.scss';
 import {useTranslation} from 'react-i18next';
 
-export const Feedback = ({isOpen, messageKey, onClose}) => {
+export const Feedback = ({isOpen, messageKey, onClose, autoHideDuration}) => {
     const {t} = useTranslation('jcontent');
     return (
         <Snackbar open={isOpen}
                   className={styles.feedback}
-                  autoHideDuration={2000}
+                  autoHideDuration={autoHideDuration}
                   anchorOrigin={{
                       vertical: 'bottom',
                       horizontal: 'center'
@@ -32,7 +32,12 @@ export const Feedback = ({isOpen, messageKey, onClose}) => {
 Feedback.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     messageKey: PropTypes.string,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    autoHideDuration: PropTypes.number
+};
+
+Feedback.defaultProps = {
+    autoHideDuration: 2000
 };
 
 export default Feedback;

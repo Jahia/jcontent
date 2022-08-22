@@ -1,7 +1,6 @@
 import React from 'react';
 import {shallowEqual, useSelector} from 'react-redux';
 import {TableBodyCell, Typography} from '@jahia/moonstone';
-import {columnWidths} from '../../columns';
 import css from '../../../ContentTable.scss';
 import dayjs from 'dayjs';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
@@ -15,7 +14,7 @@ export const CellLastModified = ({row, value, cell, column}) => {
     return (
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}
-                       width={columnWidths[column.id]}
+                       width={column.width}
                        data-cm-role={'table-content-list-cell-' + column.id}
         >
             <div className={css.cellLastModified}>

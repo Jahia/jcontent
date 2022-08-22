@@ -2,7 +2,6 @@ import React from 'react';
 import {TableBodyCell} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '~/JContent/JContent.utils';
-import {columnWidths} from '../../columns';
 import {NodeIcon} from '~/utils';
 import classes from './Cells.scss';
 import clsx from 'clsx';
@@ -18,7 +17,7 @@ export const CellName = ({value, cell, column, row}) => {
                            classes.cellName,
                            {[classes.deleted]: deleted}
                        )}
-                       width={columnWidths[column.id]}
+                       width={column.width}
                        {...cell.getCellProps()}
                        row={row}
                        iconStart={<NodeIcon node={node} className={classes.icon}/>}

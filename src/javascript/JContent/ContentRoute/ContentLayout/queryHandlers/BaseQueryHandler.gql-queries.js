@@ -70,6 +70,7 @@ export const QueryHandlersFragments = {
                     values
                 }
                 ancestors(fieldFilter: {filters: {fieldName: "deletionDate", evaluation: NOT_EMPTY}}) {
+                    ...NodeCacheRequiredFields
                     deletionDate:property(name: "j:deletionDate") {
                         value
                     }

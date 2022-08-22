@@ -1,7 +1,6 @@
 import React from 'react';
 import {Checkbox, TableBodyCell} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
-import {columnWidths} from '../../columns';
 
 export const CellSelection = ({row, cell, column}) => {
     // Not selectable only if 'isSelectable' is explicitly set to false
@@ -9,7 +8,7 @@ export const CellSelection = ({row, cell, column}) => {
     return (
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}
-                       width={columnWidths[column.id]}
+                       width={column.width}
                        data-cm-role={`table-content-list-cell-${column.id}`}
         >
             {selectable && <Checkbox {...row.getToggleRowSelectedProps()}/>}

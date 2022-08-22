@@ -17,6 +17,7 @@ export const CellStatus = ({cell, column, row}) => {
         <TableBodyCell key={row.id + column.id}
                        {...cell.getCellProps()}
                        width={column.width}
+                       data-cm-role={`table-content-list-cell-${column.id}`}
         >
             {isWorkInProgress(node, lang) &&
             <Tooltip title={node.wipLangs ? t('jcontent:label.contentManager.workInProgress', {wipLang: node.wipLangs.values}) : t('jcontent:label.contentManager.workInProgressAll')}><Chip className={classes.statusCellItem} icon={<Build fontSize="small"/>}/></Tooltip>}

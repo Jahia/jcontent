@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
 import {SortIndicator, TableHead, TableHeadCell, TableRow} from '@jahia/moonstone';
-import {columnWidths} from '../reactTable/columns';
 import clsx from 'clsx';
 import classes from '../ContentTable.scss';
 
@@ -20,7 +19,7 @@ export const ContentListHeader = ({headerGroups}) => {
                                        {...column.getHeaderProps(column.getSortProps())}
                                        data-cm-role={'table-content-list-header-cell-' + column.id}
                                        className={clsx(classes[`header-${column.id}`])}
-                                       width={columnWidths[column.id]}
+                                       width={column.width}
                         >
                             {column.render('Header')}
                             {column.sortable && <SortIndicator isSorted={column.sorted} direction={column.sortDirection}/>}

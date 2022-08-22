@@ -10,29 +10,20 @@ import {
 } from '../components/cells';
 import {Header, HeaderSelection} from '../components/headers';
 
-export const columnWidths = {
-    publicationStatus: '15px',
-    selection: '50px',
-    name: '300px',
-    status: '115px',
-    type: '180px',
-    createdBy: '150px',
-    lastModified: '290px',
-    visibleActions: '60px'
-};
-
 export const allColumnData = [
     {
         id: 'publicationStatus',
         sortable: false,
         Header: '',
-        Cell: CellPublicationStatus
+        Cell: CellPublicationStatus,
+        width: '15px'
     },
     {
         id: 'selection',
         sortable: false,
         Header: HeaderSelection,
-        Cell: CellSelection
+        Cell: CellSelection,
+        width: '50px'
     },
     {
         id: 'name',
@@ -41,14 +32,16 @@ export const allColumnData = [
         sortable: true,
         property: 'displayName',
         Cell: CellName,
-        Header: Header
+        Header: Header,
+        width: '300px'
     },
     {
         id: 'status',
         label: 'jcontent:label.contentManager.listColumns.status',
         sortable: false,
         Header: '',
-        Cell: CellStatus
+        Cell: CellStatus,
+        width: '115px'
     },
     {
         id: 'type',
@@ -57,7 +50,8 @@ export const allColumnData = [
         sortable: true,
         property: 'primaryNodeType.displayName',
         Cell: CellType,
-        Header: Header
+        Header: Header,
+        width: '180px'
     },
     {
         id: 'createdBy',
@@ -66,7 +60,9 @@ export const allColumnData = [
         sortable: true,
         property: 'createdBy.value',
         Header: Header,
-        Cell: Cell
+        Cell: Cell,
+        width: '150px'
+
     },
     {
         id: 'lastModified',
@@ -75,12 +71,14 @@ export const allColumnData = [
         sortable: true,
         property: 'lastModified.value',
         Cell: CellLastModified,
-        Header: Header
+        Header: Header,
+        width: '290px'
     },
     {
         id: 'visibleActions',
         Header: '',
-        Cell: CellVisibleActions
+        Cell: CellVisibleActions,
+        width: '60px'
     }
 ];
 

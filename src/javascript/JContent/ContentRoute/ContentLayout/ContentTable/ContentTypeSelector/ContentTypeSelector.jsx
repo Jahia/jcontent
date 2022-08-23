@@ -47,6 +47,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
         <Tab className={classes.tabs}>
             <TabItem isSelected={JContentConstants.tableView.viewType.CONTENT === tableView.viewType}
                      isDisabled={contentCount === 0}
+                     data-cm-view-type={JContentConstants.tableView.viewType.CONTENT}
                      label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount > 0 ? `(${contentCount})` : ' '})}
                      size="big"
                      onClick={() => {
@@ -56,6 +57,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
                      }}/>
             <TabItem isSelected={JContentConstants.tableView.viewType.PAGES === tableView.viewType}
                      isDisabled={pagesCount === 0}
+                     data-cm-view-type={JContentConstants.tableView.viewType.PAGES}
                      label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount > 0 ? `(${pagesCount})` : ' '})}
                      size="big"
                      onClick={() => {

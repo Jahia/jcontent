@@ -22,7 +22,7 @@ export const CellName = ({value, cell, column, row}) => {
                        row={row}
                        iconStart={<NodeIcon node={node} className={classes.icon}/>}
                        cell={cell}
-                       data-cm-role="table-content-list-cell-name"
+                       data-cm-role={`table-content-list-cell-${column.id}`}
         >
             {value}
         </TableBodyCell>

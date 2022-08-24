@@ -8,23 +8,23 @@ import styles from './ResizePanel.scss';
 export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResize}) => {
     const {t} = useTranslation('jcontent');
 
-    const valueWithinLimits = value => {
-        return originalWidth > originalHeight ? value <= originalWidth : value <= originalHeight;
-    };
-
     const setWidth = event => {
         let value = event.target.value;
 
-        if (/\d+/.test(value) && valueWithinLimits(value)) {
-            onResize({width: Math.round(value)});
+        if (event.target.checkValidity()) {
+            onResize({width: Math.floor(Math.min(value, originalWidth))});
+        } else {
+            onResize({width: resizeParams.width});
         }
     };
 
     const setHeight = event => {
         let value = event.target.value;
 
-        if (/\d+/.test(value) && valueWithinLimits(value)) {
-            onResize({height: Math.round(value)});
+        if (event.target.checkValidity()) {
+            onResize({height: Math.floor(Math.min(value, originalHeight))});
+        } else {
+            onResize({height: resizeParams.height});
         }
     };
 
@@ -43,7 +43,7 @@ export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResi
                         <InputLabel shrink className={styles.inputLabel}>{t('jcontent:label.contentManager.editImage.width')}</InputLabel>
                         <Input
                             id="width-field"
-                            value={resizeParams.width ? resizeParams.width : originalWidth}
+                            value={resizeParams.width}
                             type="number"
                             margin="none"
                             onChange={setWidth}
@@ -63,7 +63,7 @@ export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResi
                         <InputLabel shrink className={styles.inputLabel}>{t('jcontent:label.contentManager.editImage.height')}</InputLabel>
                         <Input
                             id="height-field"
-                            value={resizeParams.height ? resizeParams.height : originalHeight}
+                            value={resizeParams.height}
                             type="number"
                             margin="none"
                             onChange={setHeight}

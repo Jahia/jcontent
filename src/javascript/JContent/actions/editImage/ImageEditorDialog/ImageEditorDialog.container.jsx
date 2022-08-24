@@ -86,6 +86,12 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
         });
         setOperations(previousState => ({
             ...previousState,
+            resizeParams: {
+                dirty: false,
+                keepRatio: true,
+                width: image.naturalWidth,
+                height: image.naturalHeight
+            },
             cropParams: {
                 ...previousState.cropParams,
                 aspect: image.naturalWidth / image.naturalHeight
@@ -114,39 +120,35 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
     };
 
     const resize = ({width, height, keepRatio}) => {
-        function getMessage(snackBarMessage, resizeParams, originalHeight, originalWidth) {
-            if (keepRatio === false) {
-                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioUnlocked';
-            } else if (keepRatio === true) {
-                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioLocked';
-            } else {
-                keepRatio = resizeParams.keepRatio;
-            }
-
-            if (keepRatio && width) {
-                height = Math.round(keepRatio && originalHeight && originalWidth ? width * originalHeight / originalWidth : (resizeParams.height || originalHeight));
-            } else if (keepRatio && height) {
-                width = Math.round(keepRatio && originalHeight && originalWidth ? height * originalWidth / originalHeight : (resizeParams.width || originalWidth));
-            } else if (keepRatio) {
-                height = Math.round(resizeParams.width * originalHeight / originalWidth);
-            }
-
-            return snackBarMessage;
+        if (keepRatio === false) {
+            setSnackBarMessage('jcontent:label.contentManager.editImage.ratioUnlocked');
+        } else if (keepRatio === true) {
+            setSnackBarMessage('jcontent:label.contentManager.editImage.ratioLocked');
         }
 
         setOperations(previousState => {
-            let snackBarMessage = null;
-            snackBarMessage = getMessage(snackBarMessage, previousState.resizeParams, imageSize.originalHeight, imageSize.originalWidth);
+            if (typeof keepRatio === 'undefined') {
+                keepRatio = previousState.resizeParams.keepRatio;
+            }
 
-            width = width || previousState.resizeParams.width || imageSize.originalWidth;
-            height = height || previousState.resizeParams.height || imageSize.originalHeight;
+            const {originalHeight, originalWidth} = imageSize;
+            if (keepRatio && typeof width !== 'undefined') {
+                height = Math.round(keepRatio && originalHeight && originalWidth ? width * originalHeight / originalWidth : previousState.resizeParams.height);
+            } else if (keepRatio && typeof height !== 'undefined') {
+                width = Math.round(keepRatio && originalHeight && originalWidth ? height * originalWidth / originalHeight : previousState.resizeParams.width);
+            } else if (keepRatio) {
+                height = Math.round(previousState.resizeParams.width * originalHeight / originalWidth);
+            }
+
+            width = typeof width === 'undefined' ? previousState.resizeParams.width : width;
+            height = typeof height === 'undefined' ? previousState.resizeParams.height : height;
 
             return ({
                 ...previousState,
                 resizeParams: {
-                    dirty: (width && imageSize.originalWidth !== width) || (height && imageSize.originalHeight !== height),
-                    width,
-                    height,
+                    dirty: width && height && (imageSize.originalWidth !== width || imageSize.originalHeight !== height),
+                    width: width || '',
+                    height: height || '',
                     keepRatio: keepRatio
                 },
                 transforms: ([{
@@ -155,21 +157,23 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                         height: height,
                         width: width
                     }
-                }]),
-                snackBarMessage: snackBarMessage
+                }])
             });
         });
     };
 
     const crop = ({width, height, top, left, aspect}) => {
+        if (aspect === true) {
+            setSnackBarMessage('jcontent:label.contentManager.editImage.ratioLocked');
+        } else if (aspect === false) {
+            setSnackBarMessage('jcontent:label.contentManager.editImage.ratioUnlocked');
+        }
+
         setOperations(previousState => {
-            let snackBarMessage = null;
             if (aspect === true) {
                 aspect = (previousState.cropParams.width || imageSize.originalWidth) / (previousState.cropParams.height || imageSize.originalHeight);
-                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioLocked';
             } else if (aspect === false) {
                 aspect = null;
-                snackBarMessage = 'jcontent:label.contentManager.editImage.ratioUnlocked';
             } else {
                 aspect = previousState.cropParams.aspect;
             }
@@ -204,8 +208,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                         top: top && Math.round(top),
                         left: left && Math.round(left)
                     }
-                }]),
-                snackBarMessage: snackBarMessage
+                }])
             };
         });
     };

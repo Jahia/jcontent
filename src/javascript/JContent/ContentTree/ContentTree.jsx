@@ -11,7 +11,7 @@ import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 
-export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed}) => {
+export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
     const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
     const rootPath = '/sites/' + siteKey + item.config.rootPath;
@@ -65,7 +65,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
 
     return (
         <React.Fragment>
-            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu"/>
+            {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
                       data={convertPathsToTree(treeEntries, path)}
                       openedItems={openPaths}
@@ -106,7 +106,8 @@ ContentTree.propTypes = {
     openPathAction: PropTypes.func,
     closePathAction: PropTypes.func,
     setPathAction: PropTypes.func,
-    isReversed: PropTypes.bool
+    isReversed: PropTypes.bool,
+    contextualMenuAction: PropTypes.string
 };
 
 ContentTree.defaultProps = {

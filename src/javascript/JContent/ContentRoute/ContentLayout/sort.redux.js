@@ -4,7 +4,7 @@ export const cmSetSort = createAction('CM_SET_SORT');
 
 export const sortRedux = registry => {
     const sortReducer = handleAction(cmSetSort, (state, action) => (action.payload), {
-        order: 'ASC',
+        order: 'DESC',
         orderBy: 'lastModified.value'
     });
 

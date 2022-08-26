@@ -33,7 +33,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(treeEntries, selected) {
+function convertPathsToTree(treeEntries, selected, isReversed) {
     let tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -61,7 +61,8 @@ function convertPathsToTree(treeEntries, selected) {
                 isItalic: notPublished
             },
             className: classNames(styles.ContentTree_Item, {
-                [styles.notPublished]: notPublished && selected !== treeEntry.path
+                [styles.notPublished]: !isReversed && notPublished && selected !== treeEntry.path,
+                [styles.notPublishedReversed]: isReversed && notPublished && selected !== treeEntry.path
             }),
             children: [],
             treeItemProps: {

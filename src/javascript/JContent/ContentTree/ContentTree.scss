@@ -1,4 +1,8 @@
 .ContentTree_Item.notPublished {
+    color: var(--color-gray_dark60);
+}
+
+.ContentTree_Item.notPublishedReversed {
     color: var(--color-gray_light60);
 }
 

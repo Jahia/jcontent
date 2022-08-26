@@ -15,6 +15,7 @@ import {
 import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/FilesQueryHandler';
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
+import {SORT_CONTENT_TREE_BY_NAME_ASC} from '~/JContent/ContentTree/ContentTree.constants';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -119,7 +120,8 @@ export const jContentAccordionItems = registry => {
             rootPath: '/contents',
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
             openableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
-            rootLabel: 'jcontent:label.contentManager.browseFolders'
+            rootLabel: 'jcontent:label.contentManager.browseFolders',
+            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC
         },
         viewSelector: <ViewModeSelector/>
     });
@@ -135,7 +137,8 @@ export const jContentAccordionItems = registry => {
             rootPath: '/files',
             selectableTypes: ['jnt:folder'],
             openableTypes: ['jnt:folder'],
-            rootLabel: 'jcontent:label.contentManager.browseFiles'
+            rootLabel: 'jcontent:label.contentManager.browseFiles',
+            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC
         },
         queryHandler: FilesQueryHandler,
         viewSelector: <FileModeSelector/>

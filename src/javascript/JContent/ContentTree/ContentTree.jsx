@@ -7,7 +7,6 @@ import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
-import {SORT_CONTENT_TREE_BY_NAME_ASC} from './ContentTree.constants';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 
@@ -28,13 +27,9 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         openableTypes: arrayValue(item.config.openableTypes),
         selectableTypes: arrayValue(item.config.selectableTypes),
         queryVariables: {language: lang},
-        hideRoot: booleanValue(item.config.hideRoot)
+        hideRoot: booleanValue(item.config.hideRoot),
+        sortBy: item.config.sortBy
     };
-
-    // For pages portion want to skip the sortBy
-    if (item.key !== 'pages') {
-        useTreeEntriesOptionsJson.sortBy = SORT_CONTENT_TREE_BY_NAME_ASC;
-    }
 
     const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson);
 
@@ -94,7 +89,11 @@ export const accordionPropType = PropTypes.shape({
         selectableTypes: PropTypes.arrayOf(PropTypes.string),
         type: PropTypes.string.isRequired,
         openableTypes: PropTypes.arrayOf(PropTypes.string),
-        rootLabel: PropTypes.string
+        rootLabel: PropTypes.string,
+        sortBy: PropTypes.shape({
+            fieldName: PropTypes.string,
+            sortType: PropTypes.string
+        })
     }).isRequired
 });
 

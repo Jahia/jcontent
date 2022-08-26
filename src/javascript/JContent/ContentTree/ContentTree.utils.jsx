@@ -33,7 +33,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(treeEntries, selected, isReversed) {
+function convertPathsToTree(treeEntries, selected, isReversed, contentMenu) {
     let tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -55,7 +55,7 @@ function convertPathsToTree(treeEntries, selected, isReversed) {
             parent: parentPath,
             isClosable: treeEntry.depth > 0,
             iconStart: displayIcon(treeEntry.node),
-            iconEnd: <StatusIcon path={treeEntry.path} isLocked={locked} isNotPublished={notPublished}/>,
+            iconEnd: <StatusIcon path={treeEntry.path} contentMenu={contentMenu} isLocked={locked} isNotPublished={notPublished}/>,
             typographyOptions: {
                 hasLineThrough: markedForDeletion,
                 isItalic: notPublished

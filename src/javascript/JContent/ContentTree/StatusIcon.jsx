@@ -4,16 +4,19 @@ import PropTypes from 'prop-types';
 import styles from './ContentTree.scss';
 import {DisplayAction} from '@jahia/ui-extender';
 import {ButtonRendererNoLabel} from '../../utils/getButtonRenderer';
+import clsx from 'clsx';
 
-export const StatusIcon = ({isLocked, isNotPublished, path, ...props}) => {
+export const StatusIcon = ({isLocked, isNotPublished, path, contentMenu, ...props}) => {
     return (
         <>
-            <span className={styles.ContentTree_ItemStatusIcon}>
+            <span className={clsx(styles.ContentTree_ItemStatusIcon, {[styles.ContentTree_ItemStatusIconWithMenu]: contentMenu})}>
                 {(isLocked && <Lock {...props}/>) || (isNotPublished && <NoCloud {...props}/>)}
             </span>
-            <span className={styles.ContentTree_ItemMenuIcon}>
-                <DisplayAction isReversed actionKey="contentMenu" path={path} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'small'}} {...props}/>
-            </span>
+            {contentMenu && (
+                <span className={styles.ContentTree_ItemMenuIcon}>
+                    <DisplayAction isReversed actionKey={contentMenu} path={path} render={ButtonRendererNoLabel} buttonProps={{variant: 'ghost', size: 'small'}} {...props}/>
+                </span>
+            )}
         </>
     );
 };
@@ -23,5 +26,7 @@ StatusIcon.propTypes = {
 
     isLocked: PropTypes.bool.isRequired,
 
-    isNotPublished: PropTypes.bool.isRequired
+    isNotPublished: PropTypes.bool.isRequired,
+
+    contentMenu: PropTypes.string
 };

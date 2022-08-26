@@ -62,7 +62,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
-                      data={convertPathsToTree(treeEntries, path)}
+                      data={convertPathsToTree(treeEntries, path, isReversed)}
                       openedItems={openPaths}
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {

@@ -222,8 +222,8 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
             },
             resizeParams: {
                 dirty: false,
-                width: null,
-                height: null,
+                width: imageSize.originalWidth,
+                height: imageSize.originalHeight,
                 keepRatio: true
             },
             cropParams: {

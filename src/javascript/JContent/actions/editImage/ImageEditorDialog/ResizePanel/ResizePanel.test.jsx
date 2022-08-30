@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow} from '@jahia/test-framework';
+import {mount, shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
 import {ResizePanel} from './ResizePanel';
 import defaultProps from '../../../../../testDefaultProps';
@@ -16,7 +16,7 @@ describe('Resize panel', () => {
                 width: 100,
                 height: 200
             },
-            onResize: jest.fn()
+            onResize: jest.fn(param => param)
         };
 
         wrapper = shallow(<ResizePanel {...defaultProps} {...props}/>);
@@ -25,7 +25,8 @@ describe('Resize panel', () => {
     it('Should resize the image keeping ratio', () => {
         wrapper.find(Input).at(0).simulate('change', {
             target: {
-                value: '50'
+                value: '50',
+                checkValidity: () => true
             }
         });
         expect(props.onResize.mock.calls.length).toBe(1);
@@ -33,7 +34,8 @@ describe('Resize panel', () => {
 
         wrapper.find(Input).at(1).simulate('change', {
             target: {
-                value: '100'
+                value: '100',
+                checkValidity: () => true
             }
         });
         expect(props.onResize.mock.calls.length).toBe(2);
@@ -43,25 +45,31 @@ describe('Resize panel', () => {
     it('Should not resize the image if size is too large', () => {
         wrapper.find(Input).at(0).simulate('change', {
             target: {
-                value: '201'
+                value: '201',
+                checkValidity: () => true
             }
         });
-        expect(props.onResize.mock.calls.length).toBe(0);
+        expect(props.onResize.mock.results[0].value.width)
+            .toBe(props.originalWidth);
 
         wrapper.find(Input).at(1).simulate('change', {
             target: {
-                value: '201'
+                value: '201',
+                checkValidity: () => true
             }
         });
-        expect(props.onResize.mock.calls.length).toBe(0);
+        expect(props.onResize.mock.results[1].value.height)
+            .toBe(props.originalHeight);
     });
 
     it('Should not resize when typing garbage', () => {
-        wrapper.find(Input).at(0).simulate('change', {
-            target: {
-                value: 'gzgzgz'
-            }
-        });
+        mount(<ResizePanel {...defaultProps} {...props}/>)
+            .find(Input).at(0).simulate('change', {
+                target: {
+                    value: 'gzgzgz',
+                    checkValidity: () => true
+                }
+            });
         expect(props.onResize.mock.calls.length).toBe(0);
     });
 });

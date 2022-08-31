@@ -55,6 +55,8 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
             dirty: false,
             top: 0,
             left: 0,
+            width: null,
+            height: null,
             aspect: 1
         },
         transforms: []
@@ -94,6 +96,8 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
             },
             cropParams: {
                 ...previousState.cropParams,
+                width: image.naturalWidth,
+                height: image.naturalHeight,
                 aspect: image.naturalWidth / image.naturalHeight
             }
         }));
@@ -171,7 +175,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
 
         setOperations(previousState => {
             if (aspect === true) {
-                aspect = (previousState.cropParams.width || imageSize.originalWidth) / (previousState.cropParams.height || imageSize.originalHeight);
+                aspect = imageSize.originalWidth / imageSize.originalHeight;
             } else if (aspect === false) {
                 aspect = null;
             } else {
@@ -230,8 +234,8 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                 dirty: false,
                 top: 0,
                 left: 0,
-                height: null,
-                width: null,
+                width: imageSize.originalWidth,
+                height: imageSize.originalHeight,
                 aspect: imageSize.originalWidth / imageSize.originalHeight
             }
         });

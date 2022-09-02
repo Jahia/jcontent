@@ -1,7 +1,11 @@
 import {shallowEqual, useSelector} from 'react-redux';
 import {useQuery} from 'react-apollo';
 import {registry} from '@jahia/ui-extender';
-import {replaceFragmentsInDocument} from '@jahia/data-helper';
+import {replaceFragmentsInDocument, useTreeEntries} from '@jahia/data-helper';
+import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
+import {useRef} from 'react';
+
+const useHookSwitch = (b, useHook1, useHook2) => b ? useHook1 : useHook2;
 
 export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const defaultOptions = {
@@ -18,7 +22,8 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
             params: state.jcontent.params,
             pagination: state.jcontent.pagination,
             sort: state.jcontent.sort,
-            tableView: state.jcontent.tableView
+            tableView: state.jcontent.tableView,
+            openPaths: state.jcontent.openPaths
         });
     }
 
@@ -26,19 +31,43 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const {fetchPolicy} = {...defaultOptions, ...options};
 
     const queryHandler = registry.get('accordionItem', selection.mode).queryHandler;
-    const layoutQuery = replaceFragmentsInDocument(queryHandler.getQuery(), [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])]);
+    const allFragments = [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])];
 
-    let layoutQueryParams = queryHandler.getQueryParams(selection);
+    queryVariables = {...queryHandler.getQueryVariables(selection), ...queryVariables};
 
-    const {data, error, loading, refetch} = useQuery(layoutQuery, {
-        variables: {...layoutQueryParams, ...queryVariables},
-        fetchPolicy
-    });
+    const treeParams = queryHandler.getTreeParams && queryHandler.getTreeParams(selection);
+    const useTree = useRef(Boolean(treeParams));
+    if (useTree.current !== Boolean(treeParams)) {
+        throw new Error('Cannot switch hook mode, make sure your component is not being reused by adding a key');
+    }
 
     const isStructured = queryHandler.isStructured(selection);
 
-    const queryResult = data && queryHandler.getResults(data, selection);
-    const result = isStructured ? queryHandler.structureData(selection.path, queryResult) : queryResult;
+    const useTreeMode = () => {
+        const {treeEntries, error, loading, refetch} = useTreeEntries({
+            ...treeParams,
+            fragments: [...allFragments, QueryHandlersFragments.nodeFields, QueryHandlersFragments.childNodesCount],
+            queryVariables
+        });
 
-    return {layoutQuery, isStructured, layoutQueryParams, result, error, loading, refetch};
+        const result = queryHandler.structureTreeEntries(treeEntries);
+        return {isStructured, result, error, loading, refetch};
+    };
+
+    const useQueryMode = () => {
+        const layoutQuery = queryHandler.getQuery && replaceFragmentsInDocument(queryHandler.getQuery(), allFragments);
+
+        const {data, error, loading, refetch} = useQuery(layoutQuery, {
+            variables: queryVariables,
+            fetchPolicy
+        });
+
+        const queryResult = data && queryHandler.getResults(data, selection);
+        const result = isStructured ? queryHandler.structureData(selection.path, queryResult) : queryResult;
+        return {isStructured, result, error, loading, refetch};
+    };
+
+    const useContent = useHookSwitch(useTree.current, useTreeMode, useQueryMode);
+
+    return useContent();
 }

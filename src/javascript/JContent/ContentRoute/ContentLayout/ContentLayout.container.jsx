@@ -16,6 +16,8 @@ import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Loader} from '@jahia/moonstone';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
+import clsx from 'clsx';
+import styles from './ContentLayout.scss';
 
 let currentResult;
 
@@ -42,7 +44,7 @@ export const ContentLayoutContainer = () => {
     const removeSelection = path => dispatch(cmRemoveSelection(path));
     const switchSelection = path => dispatch(cmSwitchSelection(path));
 
-    const {layoutQuery, layoutQueryParams, isStructured, result, error, loading, refetch} = useLayoutQuery();
+    const {isStructured, result, error, loading, refetch} = useLayoutQuery();
 
     function onGwtCreate(nodePath) {
         let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
@@ -159,8 +161,6 @@ export const ContentLayoutContainer = () => {
 
     useEffect(() => {
         setRefetcher(refetchTypes.CONTENT_DATA, {
-            query: layoutQuery,
-            queryParams: layoutQueryParams,
             refetch: refetch
         });
 
@@ -208,9 +208,9 @@ export const ContentLayoutContainer = () => {
     }
 
     return (
-        <React.Fragment>
+        <div className="flexFluid flexCol_nowrap" style={{position: 'relative'}}>
             {loading && (
-                <div className="flexFluid flexCol_center alignCenter" style={{flex: '9999', backgroundColor: 'var(--color-light)'}}>
+                <div className={clsx('flexCol_center', 'alignCenter', styles.loader)}>
                     <Loader size="big"/>
                 </div>
             )}
@@ -224,7 +224,7 @@ export const ContentLayoutContainer = () => {
                            isStructured={isStructured}
                            totalCount={totalCount}
             />
-        </React.Fragment>
+        </div>
     );
 };
 

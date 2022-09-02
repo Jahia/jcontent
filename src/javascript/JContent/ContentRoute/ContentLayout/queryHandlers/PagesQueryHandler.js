@@ -7,31 +7,31 @@ export const PagesQueryHandler = {
 
     getQuery: () => BaseDescendantsQuery,
 
-    getQueryParams: selection => {
+    getQueryVariables: selection => {
         const {tableView, params} = selection;
 
-        const layoutQueryParams = BaseQueryHandler.getQueryParams(selection);
+        const queryVariables = BaseQueryHandler.getQueryVariables(selection);
 
         if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            layoutQueryParams.fieldGrouping = null;
-            layoutQueryParams.offset = 0;
-            layoutQueryParams.limit = 10000;
+            queryVariables.fieldGrouping = null;
+            queryVariables.offset = 0;
+            queryVariables.limit = 10000;
 
             if (tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {
-                layoutQueryParams.recursionTypesFilter = {types: ['jnt:content']};
-                layoutQueryParams.typeFilter = ['jnt:content'];
+                queryVariables.recursionTypesFilter = {types: ['jnt:content']};
+                queryVariables.typeFilter = ['jnt:content'];
             } else if (tableView.viewType === JContentConstants.tableView.viewType.PAGES) {
-                layoutQueryParams.recursionTypesFilter = {types: ['jnt:page']};
-                layoutQueryParams.typeFilter = ['jnt:page'];
+                queryVariables.recursionTypesFilter = {types: ['jnt:page']};
+                queryVariables.typeFilter = ['jnt:page'];
             }
         } else if (params.sub) {
-            layoutQueryParams.typeFilter = ['jnt:content', 'jnt:contentFolder'];
+            queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder'];
         } else {
-            layoutQueryParams.typeFilter = JContentConstants.tableView.viewType.PAGES === tableView.viewType ? ['jnt:page'] : [JContentConstants.contentType];
-            layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
+            queryVariables.typeFilter = JContentConstants.tableView.viewType.PAGES === tableView.viewType ? ['jnt:page'] : [JContentConstants.contentType];
+            queryVariables.recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
         }
 
-        return layoutQueryParams;
+        return queryVariables;
     },
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED

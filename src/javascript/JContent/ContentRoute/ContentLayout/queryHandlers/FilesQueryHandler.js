@@ -4,8 +4,8 @@ import {imageFields} from './FilesQueryHandler.gql-queries';
 export const FilesQueryHandler = {
     ...BaseQueryHandler,
 
-    getQueryParams: selection => ({
-        ...BaseQueryHandler.getQueryParams(selection),
+    getQueryVariables: selection => ({
+        ...BaseQueryHandler.getQueryVariables(selection),
         typeFilter: ['jnt:file', 'jnt:folder']
     }),
 

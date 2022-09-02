@@ -7,19 +7,19 @@ export const ContentFoldersQueryHandler = {
 
     getQuery: () => BaseDescendantsQuery,
 
-    getQueryParams: selection => {
-        const layoutQueryParams = BaseQueryHandler.getQueryParams(selection);
-        layoutQueryParams.typeFilter = ['jnt:content', 'jnt:contentFolder'];
+    getQueryVariables: selection => {
+        const queryVariables = BaseQueryHandler.getQueryVariables(selection);
+        queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder'];
         if (selection.tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            layoutQueryParams.fieldGrouping = null;
-            layoutQueryParams.offset = 0;
-            layoutQueryParams.limit = 10000;
+            queryVariables.fieldGrouping = null;
+            queryVariables.offset = 0;
+            queryVariables.limit = 10000;
 
-            layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
-            layoutQueryParams.typeFilter = ['jnt:content'];
+            queryVariables.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
+            queryVariables.typeFilter = ['jnt:content'];
         }
 
-        return layoutQueryParams;
+        return queryVariables;
     },
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED

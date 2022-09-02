@@ -24,7 +24,9 @@ export const BaseTreeQueryHandler = {
 
         return {
             nodes,
-            pageInfo: {}
+            pageInfo: {
+                totalCount: nodes.length
+            }
         };
     },
 

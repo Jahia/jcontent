@@ -71,10 +71,10 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
 
 ContentTypeSelector.propTypes = {
     selector: PropTypes.func,
-    reduxActions: {
+    reduxActions: PropTypes.shape({
         setPageAction: PropTypes.func.isRequired,
         setTableViewTypeAction: PropTypes.func.isRequired
-    }
+    })
 };
 
 ContentTypeSelector.defaultProps = {

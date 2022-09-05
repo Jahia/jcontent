@@ -79,10 +79,10 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             isExpanded: row => openPaths.indexOf(row.path) > -1,
             onExpand: (id, value) => {
                 const node = id.split('.').reduce((p, i) => p.subRows[i], {subRows: rows});
-                if (value !== false) {
-                    dispatch(cmOpenPaths([node.path]));
-                } else {
+                if (value === false) {
                     dispatch(cmClosePaths([node.path]));
+                } else {
+                    dispatch(cmOpenPaths([node.path]));
                 }
             },
             sort,

@@ -50,6 +50,7 @@ export class BasicSearch extends BasePage {
 
     executeSearch(): BasicSearch {
         getComponentByRole(Button, 'search-submit').click()
+        cy.get('.moonstone-loader').should('not.exist')
         return this
     }
 

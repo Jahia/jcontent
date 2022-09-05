@@ -23,7 +23,7 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
             pagination: state.jcontent.pagination,
             sort: state.jcontent.sort,
             tableView: state.jcontent.tableView,
-            openPaths: state.jcontent.openPaths
+            openPaths: state.jcontent.tableOpenPaths
         });
     }
 

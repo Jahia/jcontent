@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useApolloClient} from 'react-apollo';
 import {mixinTypes} from './ContentLayout.gql-queries';
 import * as _ from 'lodash';
@@ -8,7 +8,7 @@ import {
 } from '../../eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/JContent.redux';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
@@ -19,13 +19,12 @@ import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQue
 import clsx from 'clsx';
 import styles from './ContentLayout.scss';
 
-let currentResult;
-
 export const ContentLayoutContainer = () => {
     const {t} = useTranslation('jcontent');
+    const currentResult = useRef();
     const client = useApolloClient();
 
-    const {mode, path, previewSelection, previewState, filesMode, openedPaths, selection} = useSelector(state => ({
+    const {mode, path, previewSelection, previewState, filesMode, openedPaths, viewType, selection} = useSelector(state => ({
         mode: state.jcontent.mode,
         path: state.jcontent.path,
         previewSelection: state.jcontent.previewSelection,
@@ -33,6 +32,7 @@ export const ContentLayoutContainer = () => {
         params: state.jcontent.params,
         filesMode: state.jcontent.filesGrid.mode,
         openedPaths: state.jcontent.openPaths,
+        viewType: state.jcontent.tableView.viewType,
         selection: state.jcontent.selection
     }), shallowEqual);
 
@@ -172,6 +172,16 @@ export const ContentLayoutContainer = () => {
         };
     });
 
+    const autoExpand = useRef({path: '', level: 1, type: ''});
+    useEffect(() => {
+        if (isStructured && !loading && result?.nodes?.length && (autoExpand.current.path !== path || autoExpand.current.type !== viewType || autoExpand.current.level < 2)) {
+            autoExpand.current.level = (autoExpand.current.path === path && autoExpand.current.type === viewType) ? autoExpand.current.level + 1 : 1;
+            autoExpand.current.path = path;
+            autoExpand.current.type = viewType;
+            dispatch(cmOpenTablePaths(result.nodes.flatMap(r => [r.path, ...r.subRows?.map(c => c.path)])));
+        }
+    }, [dispatch, result, isStructured, path, viewType, loading, autoExpand]);
+
     if (error || (!loading && !result)) {
         if (error) {
             const message = t('jcontent:label.contentManager.error.queryingContent', {details: error.message || ''});
@@ -196,15 +206,15 @@ export const ContentLayoutContainer = () => {
     if (loading) {
         // While loading new results, render current ones loaded during previous render invocation (if any).
     } else {
-        currentResult = result;
+        currentResult.current = result;
     }
 
     let rows = [];
     let totalCount = 0;
 
-    if (currentResult) {
-        totalCount = currentResult.pageInfo.totalCount;
-        rows = currentResult.nodes;
+    if (currentResult.current) {
+        totalCount = currentResult.current.pageInfo.totalCount;
+        rows = currentResult.current.nodes;
     }
 
     return (

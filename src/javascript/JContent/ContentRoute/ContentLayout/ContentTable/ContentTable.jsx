@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {ContextualMenu, registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation, extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -28,7 +28,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, openPaths, sort} = useSelector(state => ({
+    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(state => ({
         mode: state.jcontent.mode,
         previewSelection: state.jcontent.previewSelection,
         siteKey: state.site,
@@ -38,7 +38,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         selection: state.jcontent.selection,
         tableView: state.jcontent.tableView,
         searchTerms: state.jcontent.params.searchTerms,
-        openPaths: state.jcontent.openPaths,
+        tableOpenPaths: state.jcontent.tableOpenPaths,
         sort: state.jcontent.sort
     }), shallowEqual);
 
@@ -76,13 +76,13 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         {
             columns: allColumnData,
             data: rows,
-            isExpanded: row => openPaths.indexOf(row.path) > -1,
+            isExpanded: row => tableOpenPaths.indexOf(row.path) > -1,
             onExpand: (id, value) => {
                 const node = id.split('.').reduce((p, i) => p.subRows[i], {subRows: rows});
                 if (value === false) {
-                    dispatch(cmClosePaths([node.path]));
+                    dispatch(cmCloseTablePaths([node.path]));
                 } else {
-                    dispatch(cmOpenPaths([node.path]));
+                    dispatch(cmOpenTablePaths([node.path]));
                 }
             },
             sort,
@@ -105,16 +105,6 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             }
         }
     }, [rows, selection, dispatch, paths]);
-
-    const firstLoad = useRef(true);
-    useEffect(() => {
-        if (isStructured && firstLoad.current) {
-            if (rows.length > 0) {
-                firstLoad.current = false;
-                dispatch(cmOpenPaths(rows.map(r => r.path)));
-            }
-        }
-    }, [dispatch, rows, isStructured, firstLoad]);
 
     const contextualMenus = useRef({});
 

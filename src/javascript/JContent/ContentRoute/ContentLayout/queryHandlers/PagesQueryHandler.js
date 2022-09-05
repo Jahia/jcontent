@@ -13,7 +13,6 @@ export const PagesQueryHandler = {
         const layoutQueryParams = BaseQueryHandler.getQueryParams(selection);
 
         if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            layoutQueryParams.fieldGrouping = null;
             layoutQueryParams.offset = 0;
             layoutQueryParams.limit = 10000;
 

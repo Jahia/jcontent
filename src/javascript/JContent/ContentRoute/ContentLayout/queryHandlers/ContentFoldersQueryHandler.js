@@ -17,6 +17,12 @@ export const ContentFoldersQueryHandler = {
 
             layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
             layoutQueryParams.typeFilter = ['jnt:content'];
+        } else {
+            layoutQueryParams.fieldGrouping = {
+                fieldName: 'primaryNodeType.name',
+                groups: ['jnt:contentFolder'],
+                groupingType: 'START'
+            };
         }
 
         return layoutQueryParams;

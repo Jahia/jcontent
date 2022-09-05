@@ -6,7 +6,12 @@ export const FilesQueryHandler = {
 
     getQueryParams: selection => ({
         ...BaseQueryHandler.getQueryParams(selection),
-        typeFilter: ['jnt:file', 'jnt:folder']
+        typeFilter: ['jnt:file', 'jnt:folder'],
+        fieldGrouping: {
+            fieldName: 'primaryNodeType.name',
+            groups: ['jnt:folder'],
+            groupingType: 'START'
+        }
     }),
 
     getFragments: () => [imageFields]

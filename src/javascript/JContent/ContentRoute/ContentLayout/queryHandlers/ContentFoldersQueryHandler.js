@@ -18,20 +18,10 @@ export const ContentFoldersQueryHandler = {
         return null;
     },
 
-    getQueryVariables: selection => {
-        const queryVariables = BaseQueryHandler.getQueryVariables(selection);
-        queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder'];
-        if (selection.tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            queryVariables.fieldGrouping = null;
-            queryVariables.offset = 0;
-            queryVariables.limit = 10000;
-
-            queryVariables.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
-            queryVariables.typeFilter = ['jnt:content'];
-        }
-
-        return queryVariables;
-    },
+    getQueryVariables: selection => ({
+        ...BaseQueryHandler.getQueryVariables(selection),
+        typeFilter: ['jnt:content', 'jnt:contentFolder']
+    }),
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED
 };

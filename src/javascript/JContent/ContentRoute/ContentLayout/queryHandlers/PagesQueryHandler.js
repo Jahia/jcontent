@@ -24,15 +24,9 @@ export const PagesQueryHandler = {
         const queryVariables = BaseQueryHandler.getQueryVariables(selection);
 
         if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            queryVariables.fieldGrouping = null;
-            queryVariables.offset = 0;
-            queryVariables.limit = 10000;
-
             if (tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {
-                queryVariables.recursionTypesFilter = {types: ['jnt:content']};
                 queryVariables.typeFilter = ['jnt:content'];
             } else if (tableView.viewType === JContentConstants.tableView.viewType.PAGES) {
-                queryVariables.recursionTypesFilter = {types: ['jnt:page']};
                 queryVariables.typeFilter = ['jnt:page'];
             }
         } else if (params.sub) {

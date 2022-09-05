@@ -47,7 +47,9 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
         const {treeEntries, error, loading, refetch} = useTreeEntries({
             ...treeParams,
             fragments: [...allFragments, QueryHandlersFragments.nodeFields, QueryHandlersFragments.childNodesCount],
-            queryVariables
+            queryVariables,
+            openableTypes: treeParams.openableTypes || queryVariables.typeFilter,
+            selectableTypes: treeParams.selectableTypes || []
         });
 
         const result = queryHandler.structureTreeEntries(treeEntries);

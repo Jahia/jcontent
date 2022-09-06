@@ -1,5 +1,3 @@
-import {useDispatch, useSelector} from 'react-redux';
-import {cmSetSort} from '../../../sort.redux';
 import {useGetLatest} from 'react-table';
 
 const DESC = 'DESC';
@@ -12,12 +10,16 @@ export const useSort = hooks => {
 
 useSort.pluginName = 'useSort';
 
+const toggleOrder = order => {
+    return order === DESC ? ASC : DESC;
+};
+
 const defaultGetSortProps = (props, {instance, column}) => {
     return [
         props,
         {
             onClick: () => {
-                instance.sortColumn(column);
+                instance.onSort(column, instance.sort.orderBy === column.property ? toggleOrder(instance.sort.order) : instance.sort.order);
             },
             style: {
                 cursor: 'pointer'
@@ -29,19 +31,6 @@ const defaultGetSortProps = (props, {instance, column}) => {
 function useInstance(instance) {
     const getInstance = useGetLatest(instance);
     const {getHooks, flatHeaders} = instance;
-    const {order, orderBy} = useSelector(state => state.jcontent.sort);
-    const dispatch = useDispatch();
-
-    const toggleOrder = order => {
-        return order === DESC ? ASC : DESC;
-    };
-
-    const sortColumn = column => {
-        dispatch(cmSetSort({
-            order: orderBy === column.property ? toggleOrder(order) : order,
-            orderBy: column.property
-        }));
-    };
 
     flatHeaders
         .forEach(column => {
@@ -53,17 +42,13 @@ function useInstance(instance) {
                     column: column
                 });
 
-                if (column.property === orderBy) {
+                if (column.property === instance.sort.orderBy) {
                     column.sorted = true;
-                    column.sortDirection = order === DESC ? 'descending' : 'ascending';
+                    column.sortDirection = instance.sort.order === DESC ? 'descending' : 'ascending';
                 } else {
                     column.sorted = false;
                 }
             }
         });
-
-    Object.assign(instance, {
-        sortColumn
-    });
 }
 

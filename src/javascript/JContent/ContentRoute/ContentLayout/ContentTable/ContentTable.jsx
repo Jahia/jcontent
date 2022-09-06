@@ -1,9 +1,8 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {ContextualMenu, registry} from '@jahia/ui-extender';
-import * as _ from 'lodash';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation, extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
@@ -15,20 +14,21 @@ import ContentListEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
 import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
-import {useExpanded, useTable} from 'react-table';
-import {useRowSelection, useSort} from './reactTable/plugins';
+import {useTable} from 'react-table';
+import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeader';
 import css from './ContentTable.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentTableWrapper from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
+import {cmSetSort} from '~/JContent/ContentRoute/ContentLayout/sort.redux';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
 
-    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms} = useSelector(state => ({
+    const {mode, previewSelection, siteKey, path, pagination, previewState, selection, searchTerms, tableOpenPaths, sort} = useSelector(state => ({
         mode: state.jcontent.mode,
         previewSelection: state.jcontent.previewSelection,
         siteKey: state.site,
@@ -37,7 +37,9 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         previewState: state.jcontent.previewState,
         selection: state.jcontent.selection,
         tableView: state.jcontent.tableView,
-        searchTerms: state.jcontent.params.searchTerms
+        searchTerms: state.jcontent.params.searchTerms,
+        tableOpenPaths: state.jcontent.tableOpenPaths,
+        sort: state.jcontent.sort
     }), shallowEqual);
 
     const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
@@ -69,16 +71,28 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         getTableBodyProps,
         headerGroups,
         rows: tableRows,
-        prepareRow,
-        toggleAllRowsExpanded
+        prepareRow
     } = useTable(
         {
             columns: allColumnData,
-            data: rows
+            data: rows,
+            isExpanded: row => tableOpenPaths.indexOf(row.path) > -1,
+            onExpand: (id, value) => {
+                const node = id.split('.').reduce((p, i) => p.subRows[i], {subRows: rows});
+                if (value === false) {
+                    dispatch(cmCloseTablePaths([node.path]));
+                } else {
+                    dispatch(cmOpenTablePaths([node.path]));
+                }
+            },
+            sort,
+            onSort: (column, order) => {
+                dispatch(cmSetSort({order, orderBy: column.property}));
+            }
         },
         useRowSelection,
         useSort,
-        useExpanded
+        useExpandedControlled
     );
 
     useEffect(() => {
@@ -91,12 +105,6 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             }
         }
     }, [rows, selection, dispatch, paths]);
-
-    useEffect(() => {
-        if (isStructured) {
-            toggleAllRowsExpanded(true);
-        }
-    }, [rows, isStructured, toggleAllRowsExpanded]);
 
     const contextualMenus = useRef({});
 
@@ -122,7 +130,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     const tableHeader = registry.get('accordionItem', mode)?.tableHeader;
 
-    if (_.isEmpty(rows) && !isLoading) {
+    if (!rows?.length && !isLoading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
             return <EmptyTable text={searchTerms}/>;
         }

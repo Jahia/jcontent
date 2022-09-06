@@ -90,6 +90,10 @@ export const QueryHandlersFragments = {
             }
             ${PredefinedFragments.nodeCacheRequiredFields.gql}
         `,
+        variables: {
+            displayLanguage: 'String!',
+            language: 'String!'
+        },
         applyFor: 'node'
     }
 };

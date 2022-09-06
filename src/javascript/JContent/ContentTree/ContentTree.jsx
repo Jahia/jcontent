@@ -87,7 +87,6 @@ export const accordionPropType = PropTypes.shape({
         hideRoot: PropTypes.bool,
         rootPath: PropTypes.node.isRequired,
         selectableTypes: PropTypes.arrayOf(PropTypes.string),
-        type: PropTypes.string.isRequired,
         openableTypes: PropTypes.arrayOf(PropTypes.string),
         rootLabel: PropTypes.string,
         sortBy: PropTypes.shape({

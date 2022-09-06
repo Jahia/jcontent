@@ -1,5 +1,6 @@
 export * from './BaseQueryHandler.gql-queries';
 export * from './BaseQueryHandler';
+export * from './BaseTreeQueryHandler';
 export * from './FilesQueryHandler';
 export * from './ContentFoldersQueryHandler';
 export * from './PagesQueryHandler';

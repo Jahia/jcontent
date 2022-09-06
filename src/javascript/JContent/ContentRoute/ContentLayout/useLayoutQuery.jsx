@@ -1,7 +1,8 @@
 import {shallowEqual, useSelector} from 'react-redux';
 import {useQuery} from 'react-apollo';
 import {registry} from '@jahia/ui-extender';
-import {replaceFragmentsInDocument} from '@jahia/data-helper';
+import {replaceFragmentsInDocument, useTreeEntries} from '@jahia/data-helper';
+import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 
 export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const defaultOptions = {
@@ -18,7 +19,8 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
             params: state.jcontent.params,
             pagination: state.jcontent.pagination,
             sort: state.jcontent.sort,
-            tableView: state.jcontent.tableView
+            tableView: state.jcontent.tableView,
+            openPaths: state.jcontent.tableOpenPaths
         });
     }
 
@@ -26,19 +28,39 @@ export function useLayoutQuery(selector, options, fragments, queryVariables) {
     const {fetchPolicy} = {...defaultOptions, ...options};
 
     const queryHandler = registry.get('accordionItem', selection.mode).queryHandler;
-    const layoutQuery = replaceFragmentsInDocument(queryHandler.getQuery(), [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])]);
+    const allFragments = [...(queryHandler.getFragments && queryHandler.getFragments()) || [], ...(fragments || [])];
 
-    let layoutQueryParams = queryHandler.getQueryParams(selection);
+    queryVariables = {...queryHandler.getQueryVariables(selection), ...queryVariables};
 
-    const {data, error, loading, refetch} = useQuery(layoutQuery, {
-        variables: {...layoutQueryParams, ...queryVariables},
-        fetchPolicy
-    });
+    const treeParams = queryHandler.getTreeParams && queryHandler.getTreeParams(selection);
 
     const isStructured = queryHandler.isStructured(selection);
 
+    if (treeParams) {
+        // Conditional hook / branch 1 - both branches have the exact same hook structure, useTreeEntries just wraps useQuery
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const {treeEntries, error, loading, refetch} = useTreeEntries({
+            ...treeParams,
+            fragments: [...allFragments, QueryHandlersFragments.nodeFields, QueryHandlersFragments.childNodesCount],
+            queryVariables,
+            openableTypes: treeParams.openableTypes || queryVariables.typeFilter,
+            selectableTypes: treeParams.selectableTypes || []
+        });
+
+        const result = queryHandler.structureTreeEntries(treeEntries);
+        return {isStructured, result, error, loading, refetch};
+    }
+
+    const layoutQuery = queryHandler.getQuery && replaceFragmentsInDocument(queryHandler.getQuery(), allFragments);
+
+    // Conditional hook / branch 2 - both branches have the exact same hook structure, useTreeEntries just wraps useQuery
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const {data, error, loading, refetch} = useQuery(layoutQuery, {
+        variables: queryVariables,
+        fetchPolicy
+    });
+
     const queryResult = data && queryHandler.getResults(data, selection);
     const result = isStructured ? queryHandler.structureData(selection.path, queryResult) : queryResult;
-
-    return {layoutQuery, isStructured, layoutQueryParams, result, error, loading, refetch};
+    return {isStructured, result, error, loading, refetch};
 }

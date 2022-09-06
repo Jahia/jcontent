@@ -144,7 +144,7 @@ export const NodeIcon = ({node, ...props}) => {
 NodeIcon.propTypes = {
     node: PropTypes.shape({
         path: PropTypes.string,
-        primaryNodeType: PropTypes.string
+        primaryNodeType: PropTypes.object
     }).isRequired
 };
 

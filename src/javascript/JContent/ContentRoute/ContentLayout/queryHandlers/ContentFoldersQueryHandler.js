@@ -1,26 +1,27 @@
 import {BaseQueryHandler} from './BaseQueryHandler';
 import JContentConstants from '~/JContent/JContent.constants';
 import {BaseDescendantsQuery} from './BaseQueryHandler.gql-queries';
+import {BaseTreeQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseTreeQueryHandler';
 
 export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,
+    ...BaseTreeQueryHandler,
 
     getQuery: () => BaseDescendantsQuery,
 
-    getQueryParams: selection => {
-        const layoutQueryParams = BaseQueryHandler.getQueryParams(selection);
-        layoutQueryParams.typeFilter = ['jnt:content', 'jnt:contentFolder'];
-        if (selection.tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            layoutQueryParams.fieldGrouping = null;
-            layoutQueryParams.offset = 0;
-            layoutQueryParams.limit = 10000;
-
-            layoutQueryParams.recursionTypesFilter = {multi: 'NONE', types: ['jnt:contentFolder']};
-            layoutQueryParams.typeFilter = ['jnt:content'];
+    getTreeParams: selection => {
+        const {openPaths, tableView} = selection;
+        if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+            return BaseTreeQueryHandler.getTreeParams(selection);
         }
 
-        return layoutQueryParams;
+        return null;
     },
+
+    getQueryVariables: selection => ({
+        ...BaseQueryHandler.getQueryVariables(selection),
+        typeFilter: ['jnt:content', 'jnt:contentFolder']
+    }),
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED
 };

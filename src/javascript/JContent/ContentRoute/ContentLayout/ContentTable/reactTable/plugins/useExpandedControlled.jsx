@@ -8,7 +8,7 @@ const expandRows = (rows, {manualExpandedKey, isExpanded, expandSubRows = true})
         row.isExpanded =
             (row.original && row.original[manualExpandedKey]) || isExpanded(row.original);
 
-        row.canExpand = (row.subRows && Boolean(row.subRows.length)) || row.original.hasSubRows;
+        row.canExpand = row.original.openable && ((row.subRows && Boolean(row.subRows.length)) || row.original.hasSubRows);
 
         if (addToExpandedRows) {
             expandedRows.push(row);

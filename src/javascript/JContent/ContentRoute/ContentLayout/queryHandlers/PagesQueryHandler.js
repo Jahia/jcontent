@@ -11,7 +11,7 @@ export const PagesQueryHandler = {
 
     getTreeParams: selection => {
         const {openPaths, tableView} = selection;
-        if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+        if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED && tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {
             return BaseTreeQueryHandler.getTreeParams(selection);
         }
 
@@ -39,5 +39,5 @@ export const PagesQueryHandler = {
         return queryVariables;
     },
 
-    isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED
+    isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED && tableView.viewType === JContentConstants.tableView.viewType.CONTENT
 };

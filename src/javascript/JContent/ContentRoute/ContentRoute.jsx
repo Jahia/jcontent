@@ -20,7 +20,7 @@ const ContentRoute = () => {
         >
             <LoaderSuspense>
                 <ErrorBoundary>
-                    { mode.length > 0 && inEditMode ? <EditFrame isDeviceView={JContentConstants.tableView.viewType.VIEW_DEVICE === viewMode}/> : <ContentLayout key={mode + viewMode}/> }
+                    { mode.length > 0 && inEditMode ? <EditFrame isDeviceView={JContentConstants.tableView.viewType.VIEW_DEVICE === viewMode}/> : <ContentLayout/> }
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

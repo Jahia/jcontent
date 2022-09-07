@@ -34,7 +34,14 @@ export const ContentFoldersQueryHandler = {
             return BaseTreeQueryHandler.getQueryVariables(options);
         }
 
-        return BaseQueryHandler.getQueryVariables(options);
+        return {
+            ...BaseQueryHandler.getQueryVariables(options),
+            fieldGrouping: {
+                fieldName: 'primaryNodeType.name',
+                groups: ['jnt:contentFolder'],
+                groupingType: 'START'
+            }
+        };
     },
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED

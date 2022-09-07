@@ -9,19 +9,23 @@ export const ContentFoldersQueryHandler = {
 
     getQuery: () => BaseDescendantsQuery,
 
-    getTreeParams: selection => {
-        const {openPaths, tableView} = selection;
+    getTreeParams: options => {
+        const {openPaths, tableView} = options;
         if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
-            return BaseTreeQueryHandler.getTreeParams(selection);
+            return BaseTreeQueryHandler.getTreeParams(options);
         }
 
         return null;
     },
 
-    getQueryVariables: selection => ({
-        ...BaseQueryHandler.getQueryVariables(selection),
-        typeFilter: ['jnt:content', 'jnt:contentFolder']
-    }),
+    getQueryVariables: options => {
+        const {openPaths, tableView} = options;
+        if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
+            return BaseTreeQueryHandler.getQueryVariables(options);
+        }
+
+        return BaseQueryHandler.getQueryVariables(options);
+    },
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED
 };

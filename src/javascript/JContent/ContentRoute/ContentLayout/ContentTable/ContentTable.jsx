@@ -128,7 +128,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
-    const tableHeader = registry.get('accordionItem', mode)?.tableHeader;
+    const tableHeader = registry.get('accordionItem', mode)?.tableConfig?.tableHeader;
 
     if (!rows?.length && !isLoading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {

@@ -5,3 +5,28 @@
 .tooltip.tooltip {
     display: unset;
 }
+
+.textHeading {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 18px;
+}
+
+.textSubheading {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.textContainer {
+    width: 100%;
+
+    white-space: nowrap;
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.container {
+    overflow: hidden;
+}

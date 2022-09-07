@@ -18,12 +18,13 @@ import styles from './FilesGrid.scss';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
-    const {path, pagination, mode, siteKey, uilang, previewSelection, previewState} = useSelector(state => ({
+    const {path, pagination, mode, siteKey, uilang, lang, previewSelection, previewState} = useSelector(state => ({
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
         mode: state.jcontent.filesGrid.mode,
         siteKey: state.site,
         uilang: state.uilang,
+        lang: state.lang,
         previewSelection: state.jcontent.previewSelection,
         previewState: state.jcontent.previewState
     }), shallowEqual);
@@ -88,6 +89,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                         <FileCard key={node.uuid}
                                   mode={mode}
                                   uilang={uilang}
+                                  lang={lang}
                                   siteKey={siteKey}
                                   previewSelection={previewSelection}
                                   previewState={previewState}

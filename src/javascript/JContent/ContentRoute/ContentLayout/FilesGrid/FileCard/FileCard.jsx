@@ -65,6 +65,7 @@ export const FileCard = ({
         >
             <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={node.path}/>
 
+            hello
             <PublicationStatus node={node} styles={{publicationInfo: styles.publicationInfoDetailed}}/>
 
             {isImage ?

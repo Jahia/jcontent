@@ -25,22 +25,28 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
         actionsBatch.push(reduxActions.setPageAction(0));
     }
 
-    const pages = useLayoutQuery(state => ({
-        ...selector(state),
-        tableView: {
-            ...selector(state).tableView,
-            viewType: JContentConstants.tableView.viewType.PAGES
-        }
-    }), {fetchPolicy: 'cache-and-network'});
+    const pages = useLayoutQuery({
+        ...useSelector(state => ({
+            ...selector(state),
+            tableView: {
+                ...selector(state).tableView,
+                viewType: JContentConstants.tableView.viewType.PAGES
+            }
+        })),
+        fetchPolicy: 'cache-and-network'
+    });
     const pagesCount = pages.loading ? 0 : pages.result.pageInfo.totalCount;
 
-    const content = useLayoutQuery(state => ({
-        ...selector(state),
-        tableView: {
-            ...selector(state).tableView,
-            viewType: JContentConstants.tableView.viewType.CONTENT
-        }
-    }), {fetchPolicy: 'cache-and-network'});
+    const content = useLayoutQuery({
+        ...useSelector(state => ({
+            ...selector(state),
+            tableView: {
+                ...selector(state).tableView,
+                viewType: JContentConstants.tableView.viewType.CONTENT
+            }
+        })),
+        fetchPolicy: 'cache-and-network'
+    });
     const contentCount = content.loading ? 0 : content.result.pageInfo.totalCount;
 
     return (

@@ -9,19 +9,19 @@ export const PagesQueryHandler = {
 
     getQuery: () => BaseDescendantsQuery,
 
-    getTreeParams: selection => {
-        const {openPaths, tableView} = selection;
+    getTreeParams: options => {
+        const {openPaths, tableView} = options;
         if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED && tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {
-            return BaseTreeQueryHandler.getTreeParams(selection);
+            return BaseTreeQueryHandler.getTreeParams(options);
         }
 
         return null;
     },
 
-    getQueryVariables: selection => {
-        const {tableView, params} = selection;
+    getQueryVariables: options => {
+        const {tableView, subContent} = options;
 
-        const queryVariables = BaseQueryHandler.getQueryVariables(selection);
+        const queryVariables = BaseQueryHandler.getQueryVariables(options);
 
         if (tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             if (tableView.viewType === JContentConstants.tableView.viewType.CONTENT) {
@@ -29,7 +29,7 @@ export const PagesQueryHandler = {
             } else if (tableView.viewType === JContentConstants.tableView.viewType.PAGES) {
                 queryVariables.typeFilter = ['jnt:page'];
             }
-        } else if (params.sub) {
+        } else if (subContent) {
             queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder'];
         } else {
             queryVariables.typeFilter = JContentConstants.tableView.viewType.PAGES === tableView.viewType ? ['jnt:page'] : [JContentConstants.contentType];

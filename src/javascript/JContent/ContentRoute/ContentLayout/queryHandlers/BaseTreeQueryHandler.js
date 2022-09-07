@@ -1,15 +1,15 @@
 export const BaseTreeQueryHandler = {
-    structureTreeEntries: treeEntries => {
+    structureTreeEntries: (treeEntries, {hideRoot}) => {
         const stack = [];
         const nodes = [];
         treeEntries.forEach(entry => {
             const node = {
                 ...entry.node,
                 subRows: [],
-                hasSubRows: entry.node.children.pageInfo.nodesCount > 0
+                hasSubRows: entry.openable && entry.node.children.pageInfo.nodesCount > 0
             };
-
-            while (entry.depth <= stack.length) {
+            const depth = hideRoot ? entry.depth : entry.depth + 1;
+            while (depth <= stack.length) {
                 stack.pop();
             }
 
@@ -30,13 +30,13 @@ export const BaseTreeQueryHandler = {
         };
     },
 
-    getTreeParams: ({path, openPaths, params, sort}) => ({
+    getTreeParams: ({path, openPaths, openableTypes, selectableTypes, sort, hideRoot}) => ({
         rootPaths: [path],
         openPaths: [...new Set([path, ...openPaths])],
         selectedPaths: [],
-        openableTypes: params.openableTypes,
-        selectableTypes: params.selectableTypesTable,
-        hideRoot: true,
+        openableTypes,
+        selectableTypes,
+        hideRoot: hideRoot !== false,
         sortBy: sort.orderBy === '' ? null : {
             sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
             fieldName: sort.orderBy === '' ? null : sort.orderBy,

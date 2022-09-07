@@ -16,7 +16,7 @@ describe('Accordion with 3 accordion items', () => {
                 key: JContentConstants.mode.PAGES,
                 icon: <File/>,
                 label: 'label.contentManager.navigation.pages',
-                defaultPath: siteKey => '/sites/' + siteKey,
+                rootPath: '/sites/{site}',
                 render: v => (
                     <AccordionItem key={v.id} id={v.id} label={v.label}><div>Pages</div></AccordionItem>
                 )
@@ -25,7 +25,7 @@ describe('Accordion with 3 accordion items', () => {
                 key: JContentConstants.mode.CONTENT_FOLDERS,
                 icon: <FolderSpecial/>,
                 label: 'label.contentManager.navigation.contentFolders',
-                defaultPath: siteKey => '/sites/' + siteKey + '/contents',
+                rootPath: '/sites/{site}/contents',
                 render: v => (
                     <AccordionItem key={v.id} id={v.id} label={v.label}><div>Content Folders</div></AccordionItem>
                 )
@@ -34,7 +34,7 @@ describe('Accordion with 3 accordion items', () => {
                 key: JContentConstants.mode.MEDIA,
                 icon: <Collections/>,
                 label: 'label.contentManager.navigation.media',
-                defaultPath: siteKey => '/sites/' + siteKey + '/files',
+                rootPath: '/sites/{site}/files',
                 render: v => (
                     <AccordionItem key={v.id} id={v.id} label={v.label}><div>Files</div></AccordionItem>
                 )

@@ -40,14 +40,14 @@ export const BaseQueryHandler = {
         return [];
     },
 
-    getQueryVariables({path, lang, uilang, pagination, sort}) {
+    getQueryVariables({path, lang, uilang, pagination, sort, typeFilter}) {
         return {
             path: path,
             language: lang,
             displayLanguage: uilang,
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
-            typeFilter: ['jnt:content'],
+            typeFilter: typeFilter,
             fieldSorter: sort.orderBy === '' ? null : {
                 sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,

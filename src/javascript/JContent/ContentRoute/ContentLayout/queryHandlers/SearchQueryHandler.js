@@ -6,11 +6,11 @@ export const SearchQueryHandler = {
 
     getQuery: () => SearchQuery,
 
-    getQueryVariables: ({uilang, lang, params, pagination, sort}) => ({
-        searchPath: params.searchPath,
-        nodeType: (params.searchContentType || 'jmix:searchable'),
-        searchTerms: params.searchTerms,
-        nodeNameSearchTerms: `%${params.searchTerms}%`,
+    getQueryVariables: ({uilang, lang, searchPath, searchContentType, searchTerms, pagination, sort}) => ({
+        searchPath,
+        nodeType: (searchContentType || 'jmix:searchable'),
+        searchTerms,
+        nodeNameSearchTerms: `%${searchTerms}%`,
         language: lang,
         displayLanguage: uilang,
         offset: pagination.currentPage * pagination.pageSize,

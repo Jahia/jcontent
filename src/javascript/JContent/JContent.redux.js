@@ -18,7 +18,7 @@ const extractParamsFromUrl = (pathname, search) => {
         let [, , site, language, mode, ...pathElements] = pathname.split('/');
         let registryItem = registry.get('accordionItem', mode);
 
-        let path = (registryItem && registryItem.getPath && registryItem.getPath(site, pathElements, registryItem)) || ('/' + pathElements.join('/'));
+        let path = (registryItem && registryItem.getPath && registryItem.getPath(site, pathElements)) || ('/' + pathElements.join('/'));
 
         path = decodeURIComponent(path);
         let params = deserializeQueryString(search);

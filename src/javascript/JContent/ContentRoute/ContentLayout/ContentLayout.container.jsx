@@ -44,7 +44,25 @@ export const ContentLayoutContainer = () => {
     const removeSelection = path => dispatch(cmRemoveSelection(path));
     const switchSelection = path => dispatch(cmSwitchSelection(path));
 
-    const {isStructured, result, error, loading, refetch} = useLayoutQuery();
+    const options = useSelector(state => ({
+        mode: state.jcontent.mode,
+        siteKey: state.site,
+        path: state.jcontent.path,
+        lang: state.language,
+        uilang: state.uilang,
+        subContent: state.jcontent.params.sub,
+        searchPath: state.jcontent.params.searchPath,
+        searchContentType: state.jcontent.params.searchContentType,
+        searchTerms: state.jcontent.params.searchTerms,
+        sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
+        sql2SearchWhere: state.jcontent.params.sql2SearchWhere,
+        pagination: state.jcontent.pagination,
+        sort: state.jcontent.sort,
+        tableView: state.jcontent.tableView,
+        openPaths: state.jcontent.tableOpenPaths
+    }));
+
+    const {isStructured, result, error, loading, refetch} = useLayoutQuery(options);
 
     function onGwtCreate(nodePath) {
         let parentPath = nodePath.substring(0, nodePath.lastIndexOf('/'));
@@ -178,7 +196,7 @@ export const ContentLayoutContainer = () => {
             autoExpand.current.level = (autoExpand.current.path === path && autoExpand.current.type === viewType) ? autoExpand.current.level + 1 : 1;
             autoExpand.current.path = path;
             autoExpand.current.type = viewType;
-            dispatch(cmOpenTablePaths(result.nodes.flatMap(r => [r.path, ...r.subRows?.map(c => c.path)])));
+            dispatch(cmOpenTablePaths(result.nodes.filter(n => n.hasSubRows).flatMap(r => [r.path, ...r.subRows?.filter(c => c.hasSubRows).map(c => c.path)])));
         }
     }, [dispatch, result, isStructured, path, viewType, loading, autoExpand]);
 

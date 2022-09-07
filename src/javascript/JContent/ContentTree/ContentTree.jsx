@@ -13,7 +13,7 @@ import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
     const {lang, siteKey, path, openPaths} = useSelector(selector, shallowEqual);
-    const rootPath = '/sites/' + siteKey + item.config.rootPath;
+    const rootPath = item.getRootPath(siteKey);
 
     if (openPaths && openPaths.findIndex(p => p === rootPath) === -1) {
         openPaths.push(rootPath);
@@ -24,18 +24,18 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
-        openableTypes: arrayValue(item.config.openableTypes),
-        selectableTypes: arrayValue(item.config.selectableTypes),
+        openableTypes: arrayValue(item.treeConfig.openableTypes),
+        selectableTypes: arrayValue(item.treeConfig.selectableTypes),
         queryVariables: {language: lang},
-        hideRoot: booleanValue(item.config.hideRoot),
-        sortBy: item.config.sortBy
+        hideRoot: booleanValue(item.treeConfig.hideRoot),
+        sortBy: item.treeConfig.sortBy
     };
 
     const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson);
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child
-    if (((path === rootPath) || (path === rootPath + '/')) && item.config.hideRoot && treeEntries.length > 0) {
+    if (((path === rootPath) || (path === rootPath + '/')) && item.treeConfig.hideRoot && treeEntries.length > 0) {
         const first = treeEntries[0];
         first.selected = true;
         switchPath = first.path;
@@ -81,11 +81,10 @@ export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
     icon: PropTypes.node.isRequired,
     label: PropTypes.string.isRequired,
-    defaultPath: PropTypes.func,
+    getRootPath: PropTypes.func,
     requiredSitePermission: PropTypes.string.isRequired,
-    config: PropTypes.shape({
+    treeConfig: PropTypes.shape({
         hideRoot: PropTypes.bool,
-        rootPath: PropTypes.node.isRequired,
         selectableTypes: PropTypes.arrayOf(PropTypes.string),
         openableTypes: PropTypes.arrayOf(PropTypes.string),
         rootLabel: PropTypes.string,

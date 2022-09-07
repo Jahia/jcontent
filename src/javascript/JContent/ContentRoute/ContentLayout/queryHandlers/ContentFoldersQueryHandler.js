@@ -32,15 +32,16 @@ export const ContentFoldersQueryHandler = {
         const {openPaths, tableView} = options;
         if (openPaths && tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED) {
             return BaseTreeQueryHandler.getQueryVariables(options);
-        } else {
-            layoutQueryParams.fieldGrouping = {
+        }
+
+        return {
+            ...BaseQueryHandler.getQueryVariables(options),
+            fieldGrouping: {
                 fieldName: 'primaryNodeType.name',
                 groups: ['jnt:contentFolder'],
                 groupingType: 'START'
-            };
-        }
-
-        return BaseQueryHandler.getQueryVariables(options);
+            }
+        };
     },
 
     isStructured: ({tableView}) => tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED

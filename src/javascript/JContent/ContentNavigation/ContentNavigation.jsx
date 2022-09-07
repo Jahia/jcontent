@@ -12,7 +12,7 @@ const ContentNavigation = ({accordionItems, mode, siteKey, handleNavigation, hea
         >
             <Accordion isReversed={isReversed}
                        openedItem={mode}
-                       onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).defaultPath(siteKey))}
+                       onSetOpenedItem={id => id && mode !== id && handleNavigation(id, accordionItems.find(item => id === item.key).getRootPath(siteKey))}
             >
                 {accordionItems.filter(accordionItem => !accordionItem.isEnabled || accordionItem.isEnabled(siteKey)).map(accordionItem => {
                     let props = {

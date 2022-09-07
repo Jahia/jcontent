@@ -6,9 +6,8 @@ export const Sql2SearchQueryHandler = {
 
     getQuery: () => Sql2SearchQuery,
 
-    getQueryParams: ({uilang, lang, params, pagination, sort}) => {
-        let {sql2SearchFrom, sql2SearchWhere} = params;
-        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${params.searchPath}')`;
+    getQueryVariables: ({uilang, lang, sql2SearchFrom, sql2SearchWhere, searchPath, pagination, sort}) => {
+        let query = `SELECT * FROM [${sql2SearchFrom}] WHERE ISDESCENDANTNODE('${searchPath}')`;
         if (sql2SearchWhere && sql2SearchWhere !== '') {
             query += ` AND (${sql2SearchWhere})`;
         }

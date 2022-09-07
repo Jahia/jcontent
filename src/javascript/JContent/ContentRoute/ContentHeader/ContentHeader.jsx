@@ -32,7 +32,7 @@ const ContentHeader = () => {
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
 
-    const viewSelector = registry.get('accordionItem', mode)?.viewSelector;
+    const viewSelector = registry.get('accordionItem', mode)?.tableConfig?.viewSelector;
 
     const {loading, node} = useNodeInfo({path, language: language, displayLanguage}, {getPrimaryNodeType: true, getDisplayName: true});
     const nodeType = node?.primaryNodeType;

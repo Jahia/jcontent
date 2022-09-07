@@ -4,6 +4,7 @@ import ellipsize from 'ellipsize';
 import JContentConstants from './JContent.constants';
 import {getIcon} from '@jahia/icons';
 import {Layers} from '@jahia/moonstone';
+import {registry} from '@jahia/ui-extender';
 
 export const getNewNodePath = (oldPath, oldAncestorPath, newAncestorPath) => {
     if (_.startsWith(oldPath, oldAncestorPath + '/') || oldPath === oldAncestorPath) {
@@ -181,3 +182,24 @@ export const getCanDisplayItemParams = node => {
 
     return params;
 };
+
+export const getAccordionItem = (accordion, accordionItemProps) => {
+    if (accordionItemProps && accordion && accordionItemProps[accordion.key]) {
+        return mergeDeep({}, accordion, accordionItemProps[accordion.key]);
+    }
+
+    return accordion;
+};
+
+export const getAccordionItems = (accordionItemTarget, accordionItemProps) => {
+    const accordionItems = registry.find({type: 'accordionItem', target: accordionItemTarget});
+
+    if (accordionItemProps) {
+        return accordionItems.map(item => {
+            return getAccordionItem(item, accordionItemProps);
+        });
+    }
+
+    return accordionItems;
+};
+

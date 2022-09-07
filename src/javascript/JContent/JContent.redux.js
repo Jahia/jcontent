@@ -18,7 +18,7 @@ const extractParamsFromUrl = (pathname, search) => {
         let [, , site, language, mode, ...pathElements] = pathname.split('/');
         let registryItem = registry.get('accordionItem', mode);
 
-        let path = (registryItem && registryItem.getPath && registryItem.getPath(site, pathElements, registryItem)) || ('/' + pathElements.join('/'));
+        let path = (registryItem && registryItem.getPath && registryItem.getPath(site, pathElements)) || ('/' + pathElements.join('/'));
 
         path = decodeURIComponent(path);
         let params = deserializeQueryString(search);
@@ -57,8 +57,8 @@ export const buildUrl = ({site, language, mode, path, params}) => {
     return '/jcontent/' + [site, language, mode].join('/') + path + queryString;
 };
 
-export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo, cmReplaceOpenedPaths} =
-    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS');
+export const {cmOpenPaths, cmClosePaths, cmPreSearchModeMemo, cmReplaceOpenedPaths, cmOpenTablePaths, cmCloseTablePaths} =
+    createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS', 'CM_OPEN_TABLE_PATHS', 'CM_CLOSE_TABLE_PATHS');
 
 export const cmGoto = data => (
     (dispatch, getStore) => {
@@ -110,11 +110,17 @@ export const jContentRedux = registry => {
         [cmClosePaths]: (state, action) => _.difference(state, action.payload)
     }, _.dropRight(extractPaths(currentValueFromUrl.site, currentValueFromUrl.path, currentValueFromUrl.mode), 1));
 
+    const tableOpenPathsReducer = handleActions({
+        [cmOpenTablePaths]: (state, action) => _.union(state, action.payload),
+        [cmCloseTablePaths]: (state, action) => _.difference(state, action.payload)
+    }, []);
+
     registry.add('redux-reducer', 'mode', {targets: ['jcontent'], reducer: modeReducer});
     registry.add('redux-reducer', 'preSearchModeMemo', {targets: ['jcontent'], reducer: preSearchModeMemoReducer});
     registry.add('redux-reducer', 'path', {targets: ['jcontent'], reducer: pathReducer});
     registry.add('redux-reducer', 'params', {targets: ['jcontent'], reducer: paramsReducer});
     registry.add('redux-reducer', 'openPaths', {targets: ['jcontent'], reducer: openPathsReducer});
+    registry.add('redux-reducer', 'tableOpenPaths', {targets: ['jcontent'], reducer: tableOpenPathsReducer});
     registry.add('redux-reducer', 'jContentSite', {targets: ['site:2'], reducer: siteReducer});
     registry.add('redux-reducer', 'jContentLanguage', {targets: ['language:2'], reducer: languageReducer});
 

@@ -2,29 +2,15 @@ import React from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
-import {registry} from '@jahia/ui-extender';
 import {useNodeChecks} from '@jahia/data-helper';
 import {cmGoto} from '~/JContent/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
-import {mergeDeep} from '~/JContent/JContent.utils';
+import {getAccordionItems} from '~/JContent/JContent.utils';
 
-const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, accordionItemType, header, accordionItemProps, isReversed}) => {
+const ContentNavigationContainer = ({handleNavigationAction, selector, accordionItemTarget, header, accordionItemProps, isReversed}) => {
     const dispatch = useDispatch();
     const {siteKey, language, mode} = useSelector(selector, shallowEqual);
-
-    let accordionItems = registry.find({type: accordionItemType, target: accordionItemTarget});
-
-    if (accordionItemProps) {
-        accordionItems = accordionItems.map(item => {
-            const overrideProps = accordionItemProps[item.key];
-
-            if (overrideProps) {
-                return mergeDeep({}, item, overrideProps);
-            }
-
-            return item;
-        });
-    }
+    let accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
 
     const sitePermissions = accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined);
 
@@ -58,7 +44,6 @@ ContentNavigationContainer.propTypes = {
     selector: PropTypes.func,
     accordionItemProps: PropTypes.object,
     accordionItemTarget: PropTypes.string,
-    accordionItemType: PropTypes.string,
     handleNavigationAction: PropTypes.func,
     header: PropTypes.element,
     isReversed: PropTypes.bool
@@ -73,7 +58,6 @@ ContentNavigationContainer.defaultProps = {
     }),
     handleNavigationAction: (mode, path) => cmGoto({mode, path}),
     accordionItemTarget: 'jcontent',
-    accordionItemType: 'accordionItem',
     isReversed: true
 };
 

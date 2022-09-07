@@ -12,6 +12,7 @@ export {default as ContentListHeader} from '../JContent/ContentRoute/ContentLayo
 export {default as ContentTableWrapper} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentTableWrapper';
 export {useLayoutQuery} from '../JContent/ContentRoute/ContentLayout/useLayoutQuery';
 export {NodeIcon} from '../utils/NodeIcon';
+export * as jcontentUtils from '../JContent/JContent.utils';
 export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable/reactTable';
 export {default as FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard/FileSize';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';

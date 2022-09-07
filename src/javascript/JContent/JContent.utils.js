@@ -183,18 +183,20 @@ export const getCanDisplayItemParams = node => {
     return params;
 };
 
+export const getAccordionItem = (accordion, accordionItemProps) => {
+    if (accordionItemProps && accordion && accordionItemProps[accordion.key]) {
+        return mergeDeep({}, accordion, accordionItemProps[accordion.key]);
+    }
+
+    return accordion;
+};
+
 export const getAccordionItems = (accordionItemTarget, accordionItemProps) => {
     const accordionItems = registry.find({type: 'accordionItem', target: accordionItemTarget});
 
     if (accordionItemProps) {
         return accordionItems.map(item => {
-            const overrideProps = accordionItemProps[item.key];
-
-            if (overrideProps) {
-                return mergeDeep({}, item, overrideProps);
-            }
-
-            return item;
+            return getAccordionItem(item, accordionItemProps);
         });
     }
 

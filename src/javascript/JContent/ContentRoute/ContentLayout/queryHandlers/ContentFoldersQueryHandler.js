@@ -7,6 +7,16 @@ export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,
     ...BaseTreeQueryHandler,
 
+    structureTreeEntries: (treeEntries, options) => {
+        treeEntries.forEach(entry => {
+            if (entry.node.primaryNodeType.name === 'jnt:contentFolder') {
+                entry.openable = false;
+            }
+        });
+
+        return BaseTreeQueryHandler.structureTreeEntries(treeEntries, options);
+    },
+
     getQuery: () => BaseDescendantsQuery,
 
     getTreeParams: options => {

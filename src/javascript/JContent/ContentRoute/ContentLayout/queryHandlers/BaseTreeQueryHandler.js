@@ -6,7 +6,7 @@ export const BaseTreeQueryHandler = {
             const node = {
                 ...entry.node,
                 subRows: [],
-                hasSubRows: entry.node.children.pageInfo.nodesCount > 0
+                hasSubRows: entry.openable && entry.node.children.pageInfo.nodesCount > 0
             };
             const depth = hideRoot ? entry.depth : entry.depth + 1;
             while (depth <= stack.length) {

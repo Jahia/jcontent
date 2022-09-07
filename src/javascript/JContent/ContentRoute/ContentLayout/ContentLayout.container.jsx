@@ -196,7 +196,7 @@ export const ContentLayoutContainer = () => {
             autoExpand.current.level = (autoExpand.current.path === path && autoExpand.current.type === viewType) ? autoExpand.current.level + 1 : 1;
             autoExpand.current.path = path;
             autoExpand.current.type = viewType;
-            dispatch(cmOpenTablePaths(result.nodes.flatMap(r => [r.path, ...r.subRows?.map(c => c.path)])));
+            dispatch(cmOpenTablePaths(result.nodes.filter(n => n.hasSubRows).flatMap(r => [r.path, ...r.subRows?.filter(c => c.hasSubRows).map(c => c.path)])));
         }
     }, [dispatch, result, isStructured, path, viewType, loading, autoExpand]);
 

@@ -14,7 +14,7 @@ export const FileName = ({node}) => {
             <Typography noWrap
                         variant="heading"
                         title={name}
-                        className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textContainer, styles.textHeading) : styles.textContainer}
+                        className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textContainer, styles.textHeading) : clsx(styles.textContainer, styles.textHeading)}
                         data-cm-role="grid-content-list-card-name"
             >
                 {name}
@@ -23,9 +23,9 @@ export const FileName = ({node}) => {
                 <Typography noWrap
                             variant="subheading"
                             title={sysName}
-                            className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textContainer, styles.textSubheading) : styles.textContainer}
+                            className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textContainer, styles.textSubheading) : clsx(styles.textContainer, styles.textSubheading)}
                 >
-                    {name}
+                    {sysName}
                 </Typography>}
         </div>
     );

@@ -1,3 +1,3 @@
-import FileCard from './FileCard2';
+import FileCard from './FileCard';
 
 export default FileCard;

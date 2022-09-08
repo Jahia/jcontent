@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {Cloud, Delete, File, Lock, NoCloud, Warning} from '@jahia/moonstone';
+import {Cloud, Delete, File, Lock, NoCloud, Warning, Build} from '@jahia/moonstone';
 
 import Status from './Status';
 
@@ -65,6 +65,6 @@ describe('Status', () => {
         expect(wrapper.find('Chip').exists()).toBeTruthy();
         expect(wrapper.props().label).toBe('translated_label.contentManager.contentStatus.workInProgress');
         expect(wrapper.props().color).toBe('default');
-        expect(wrapper.props().icon).toStrictEqual(<File/>);
+        expect(wrapper.props().icon).toStrictEqual(<Build/>);
     });
 });

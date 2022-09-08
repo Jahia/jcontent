@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-
 import JContentConstants from '~/JContent/JContent.constants';
 import {isMarkedForDeletion, isWorkInProgress} from '~/JContent/JContent.utils';
 import {getTooltip} from './ContentStatuses.utils';
 import styles from './ContentStatuses.scss';
 import Status from './Status';
+import clsx from 'clsx';
 
-const ContentStatuses = ({node, isDisabled, language, uilang}) => {
+const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, className, hasLabel}) => {
     const {t} = useTranslation('jcontent');
 
     const statuses = {
@@ -37,16 +37,25 @@ const ContentStatuses = ({node, isDisabled, language, uilang}) => {
     }
 
     const renderStatus = type => (
-        <Status type={type} isDisabled={isDisabled} tooltip={getTooltip(node, type, t, uilang)}/>
+        <Status key={type} type={type} isDisabled={isDisabled} tooltip={getTooltip(node, type, t, uilang)} hasLabel={hasLabel}/>
     );
+
+    const statusesToRender = renderedStatuses.map(s => {
+        if (s === 'published') {
+            return !statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished');
+        }
+
+        return statuses[s] && renderStatus(s);
+    });
+
+    // Do not return empty div
+    if (statusesToRender.find(s => s) === undefined) {
+        return null;
+    }
+
     return (
-        <div className={styles.contentStatuses}>
-            {statuses.modified && renderStatus('modified')}
-            {statuses.markedForDeletion && renderStatus('markedForDeletion')}
-            {statuses.workInProgress && renderStatus('workInProgress')}
-            {statuses.locked && renderStatus('locked')}
-            {!statuses.warning && renderStatus(statuses.published ? 'published' : 'notPublished')}
-            {statuses.warning && renderStatus('warning')}
+        <div className={className ? clsx(className, styles.contentStatuses) : styles.contentStatuses}>
+            {statusesToRender}
         </div>
     );
 };
@@ -97,11 +106,16 @@ ContentStatuses.propTypes = {
     }).isRequired,
     language: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    renderedStatuses: PropTypes.array,
+    className: PropTypes.string,
+    hasLabel: PropTypes.bool
 };
 
 ContentStatuses.defaultProps = {
-    isDisabled: false
+    isDisabled: false,
+    hasLabel: true,
+    renderedStatuses: ['modified', 'markedForDeletion', 'workInProgress', 'locked', 'published', 'warning']
 };
 
 export default ContentStatuses;

@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 export const imageFields = {
     gql: gql`
         fragment ImageNodeFields on JCRNode {
-            isFile: isNodeType(type: {types: ["jnt:file", "jmix:image"]})
+            isFile: isNodeType(type: {types: ["jnt:file"]})
             width: property(name: "j:width") {
                 value
             }

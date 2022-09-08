@@ -37,7 +37,7 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
     }
 
     const renderStatus = type => (
-        <Status type={type} isDisabled={isDisabled} tooltip={getTooltip(node, type, t, uilang)} hasLabel={hasLabel}/>
+        <Status key={type} type={type} isDisabled={isDisabled} tooltip={getTooltip(node, type, t, uilang)} hasLabel={hasLabel}/>
     );
 
     const statusesToRender = renderedStatuses.map(s => {

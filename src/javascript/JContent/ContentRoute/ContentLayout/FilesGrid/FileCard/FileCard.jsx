@@ -44,6 +44,8 @@ export const FileCard = ({
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"
+            data-sel-role-card={node.name}
+            aria-checked={isPreviewSelected}
             onContextMenu={event => {
                 event.stopPropagation();
                 contextualMenu.current(event);

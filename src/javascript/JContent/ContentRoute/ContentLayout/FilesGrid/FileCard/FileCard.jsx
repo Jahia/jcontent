@@ -5,7 +5,6 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {isBrowserImage} from '../../ContentLayout.utils';
 import {NodeIcon} from '~/utils';
-import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
 import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
 import classNames from 'clsx';
 import FileName from './FileName';
@@ -21,19 +20,18 @@ export const FileCard = ({
     setPath,
     previewSelection,
     onPreviewSelect,
-    previewState,
     siteKey,
-    mode
+    mode,
+    selection
 }) => {
     const {t} = useTranslation('jcontent');
 
     let contextualMenu = useRef();
 
     const isImage = isBrowserImage(node.path);
-    const isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
-    const isPreviewSelected = (previewSelection && previewSelection === node.path) && isPreviewOpened;
+    const isPreviewSelected = selection === undefined ? (previewSelection && previewSelection === node.path) : selection.find(value => value.uuid === node.uuid) !== undefined;
 
-    // This is to support IE11, please don't remove it, we need to put inline style in each elements to place them into grid layout
+    // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout
     // let rowNumber = Math.floor(index / 2) + 1;
     // let columnNumber = (index % 2) + 1;
     let encodedPath = node.path.replace(/[^/]/g, encodeURIComponent);
@@ -46,6 +44,8 @@ export const FileCard = ({
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"
+            data-sel-role-card={node.name}
+            aria-checked={isPreviewSelected}
             onContextMenu={event => {
                 event.stopPropagation();
                 contextualMenu.current(event);
@@ -107,11 +107,11 @@ FileCard.propTypes = {
     node: PropTypes.object.isRequired,
     onPreviewSelect: PropTypes.func.isRequired,
     previewSelection: PropTypes.string,
-    previewState: PropTypes.number.isRequired,
     setPath: PropTypes.func.isRequired,
     siteKey: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,
-    lang: PropTypes.string.isRequired
+    lang: PropTypes.string.isRequired,
+    selection: PropTypes.array
 };
 
 export default FileCard;

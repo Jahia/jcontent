@@ -18,15 +18,14 @@ import styles from './FilesGrid.scss';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
-    const {path, pagination, mode, siteKey, uilang, lang, previewSelection, previewState} = useSelector(state => ({
+    const {path, pagination, mode, siteKey, uilang, lang, previewSelection} = useSelector(state => ({
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
         mode: state.jcontent.filesGrid.mode,
         siteKey: state.site,
         uilang: state.uilang,
         lang: state.lang,
-        previewSelection: state.jcontent.previewSelection,
-        previewState: state.jcontent.previewState
+        previewSelection: state.jcontent.previewSelection
     }), shallowEqual);
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
@@ -92,7 +91,6 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   lang={lang}
                                   siteKey={siteKey}
                                   previewSelection={previewSelection}
-                                  previewState={previewState}
                                   index={index}
                                   node={node}
                                   setPath={setPath}
@@ -102,13 +100,6 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   }}
                         />
                     ))}
-                    {/* please keep this divs to handle the grid layout when there is less than 6 elements */}
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
                 </UploadTransformComponent>
             </div>
             <TablePagination totalNumberOfRows={totalCount}

@@ -1,5 +1,5 @@
 .grid.grid {
-    display: flex;
+    display: block;
     flex: 1 1 0;
     margin: 0 !important;
     padding: var(--spacing-small);
@@ -22,7 +22,11 @@
     display: grid;
     flex: 1;
     gap: var(--spacing-medium);
-    justify-content: center;
+    justify-content: start;
+    align-content: start;
+    align-items: start;
+    justify-items: stretch;
+
     margin: var(--spacing-small);
 
     background-color: var(--color-gray_light);
@@ -30,6 +34,7 @@
 }
 
 .detailedGrid.detailedGrid {
+    grid-auto-rows: 360px;
     grid-template-columns: repeat(auto-fit, minmax(200px, 350px));
 }
 

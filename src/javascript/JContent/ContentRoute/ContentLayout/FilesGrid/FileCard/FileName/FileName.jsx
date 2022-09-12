@@ -6,7 +6,7 @@ import styles from './FileName.scss';
 import clsx from 'clsx';
 
 export const FileName = ({node}) => {
-    const name = node.displayName;
+    const name = node.title === null ? node.displayName : node.title.value;
     const sysName = node.name;
 
     return (

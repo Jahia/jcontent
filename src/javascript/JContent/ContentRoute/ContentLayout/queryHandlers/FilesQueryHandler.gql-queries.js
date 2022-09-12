@@ -10,6 +10,9 @@ export const imageFields = {
             height: property(name: "j:height") {
                 value
             }
+            title : property(name: "jcr:title", language: $language) {
+                value
+            }
             children(typesFilter: {types: ["jnt:resource"]}) {
                 nodes {
                     ...NodeCacheRequiredFields
@@ -25,4 +28,3 @@ export const imageFields = {
     `,
     applyFor: 'node'
 };
-

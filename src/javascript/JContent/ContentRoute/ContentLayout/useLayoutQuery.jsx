@@ -29,7 +29,7 @@ export function useLayoutQuery(options, fragments, queryVariables) {
             fragments: [...allFragments, QueryHandlersFragments.nodeFields, QueryHandlersFragments.childNodesCount],
             queryVariables,
             openableTypes: treeParams.openableTypes || queryVariables.typeFilter,
-            selectableTypes: treeParams.selectableTypes || []
+            selectableTypes: treeParams.selectableTypes || queryVariables.selectableTypesTable || []
         });
 
         const result = queryHandler.structureTreeEntries(treeEntries, treeParams);

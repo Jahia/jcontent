@@ -34,6 +34,7 @@
     display: flex;
     flex: 0 1 600px;
     order: 3;
+    padding-top: var(--spacing-small);
 
     transition: transform 0.15s;
     overflow: hidden;
@@ -51,7 +52,6 @@
     width: 100%;
     max-width: 600px;
     height: unset;
-    padding-top: var(--spacing-small);
 
     transition: 0.15s;
     overflow: hidden;

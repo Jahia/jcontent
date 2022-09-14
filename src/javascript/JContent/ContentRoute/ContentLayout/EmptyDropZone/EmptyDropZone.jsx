@@ -8,7 +8,7 @@ import {useNodeChecks} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import styles from './EmptyDropZone.scss';
 
-const EmptyDropZone = ({component: Component, mode}) => {
+const EmptyDropZone = ({component: Component, uploadType}) => {
     const currentState = useSelector(state => ({site: state.site, language: state.language}), shallowEqual);
     const {t} = useTranslation('jcontent');
 
@@ -23,7 +23,7 @@ const EmptyDropZone = ({component: Component, mode}) => {
         return 'Loading...';
     }
 
-    if (mode === JContentConstants.mode.MEDIA && permissions.node.site.uploadFilesAction) {
+    if (uploadType === JContentConstants.mode.UPLOAD && permissions.node.site.uploadFilesAction) {
         return (
             <Component className={styles.dropZone}>
                 <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
@@ -32,7 +32,7 @@ const EmptyDropZone = ({component: Component, mode}) => {
         );
     }
 
-    if (mode === JContentConstants.mode.CONTENT_FOLDERS && permissions.node.site.importAction) {
+    if (uploadType === JContentConstants.mode.IMPORT && permissions.node.site.importAction) {
         return (
             <Component className={styles.dropZone}>
                 <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
@@ -50,7 +50,7 @@ const EmptyDropZone = ({component: Component, mode}) => {
 
 EmptyDropZone.propTypes = {
     component: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired
+    uploadType: PropTypes.string.isRequired
 };
 
 export default EmptyDropZone;

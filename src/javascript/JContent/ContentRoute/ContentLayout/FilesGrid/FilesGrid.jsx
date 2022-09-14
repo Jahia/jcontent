@@ -65,7 +65,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     if ((!rows || rows.length === 0) && !isLoading) {
         return (
             <React.Fragment>
-                <FilesGridEmptyDropZone mode={JContentConstants.mode.MEDIA} path={path}/>
+                <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD} path={path}/>
             </React.Fragment>
         );
     }
@@ -81,7 +81,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
             >
                 <UploadTransformComponent uploadTargetComponent={Paper}
                                           uploadPath={path}
-                                          mode="media"
+                                          uploadType={JContentConstants.mode.UPLOAD}
                                           className={classNames(styles.defaultGrid, styles.detailedGrid)}
                 >
                     {rows.map((node, index) => (

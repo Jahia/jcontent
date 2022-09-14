@@ -10,7 +10,7 @@ import {cmSetPreviewSelection} from '~/JContent/preview.redux';
 import {cmSetPage, cmSetPageSize} from '../pagination.redux';
 import {cmRemoveSelection} from '../contentSelection.redux';
 import JContentConstants from '~/JContent/JContent.constants';
-import ContentListEmptyDropZone from './ContentEmptyDropZone';
+import ContentEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
 import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
@@ -128,7 +128,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
-    const tableHeader = registry.get('accordionItem', mode)?.tableConfig?.tableHeader;
+    const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
+    const tableHeader = tableConfig?.tableHeader;
 
     if (!rows?.length && !isLoading) {
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
@@ -138,7 +139,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return (
             <>
                 {tableHeader}
-                <ContentListEmptyDropZone mode={mode} path={path}/>
+                <ContentEmptyDropZone uploadType={tableConfig?.uploadType} path={path}/>
             </>
         );
     }
@@ -148,7 +149,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
             {tableHeader}
             <UploadTransformComponent uploadTargetComponent={ContentTableWrapper}
                                       uploadPath={path}
-                                      mode={mode}
+                                      uploadType={tableConfig?.uploadType}
                                       reference={mainPanelRef}
                                       onKeyDown={handleKeyboardNavigation}
                                       onClick={setFocusOnMainContainer}

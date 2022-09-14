@@ -6,7 +6,7 @@ import {Table, TableBody, TableBodyCell, TableRow} from '@jahia/moonstone';
 import ContentTableWrapper from './ContentTableWrapper';
 import styles from './ContentEmptyDropZone.scss';
 
-export const ContentEmptyDropZone = ({path, mode}) => (
+export const ContentEmptyDropZone = ({path, uploadType}) => (
     <ContentTableWrapper>
         <Table aria-labelledby="tableTitle" data-cm-role="table-content-list">
             <TableBody>
@@ -14,10 +14,10 @@ export const ContentEmptyDropZone = ({path, mode}) => (
                     uploadTargetComponent={TableRow}
                     uploadPath={path}
                     className={styles.dragZoneContentList}
-                    mode={mode}
+                    uploadType={uploadType}
                 >
                     <TableBodyCell className={styles.dragZone}>
-                        <EmptyDropZone component="div" mode={mode}/>
+                        <EmptyDropZone component="div" uploadType={uploadType}/>
                     </TableBodyCell>
                 </UploadTransformComponent>
             </TableBody>
@@ -26,7 +26,7 @@ export const ContentEmptyDropZone = ({path, mode}) => (
 );
 
 ContentEmptyDropZone.propTypes = {
-    mode: PropTypes.string.isRequired,
+    uploadType: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired
 };
 

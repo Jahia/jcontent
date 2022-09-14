@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {batchActions} from 'redux-batched-actions';
 import {
     createMissingFolders,
@@ -11,15 +11,39 @@ import {
     onFilesSelected
 } from '../Upload/Upload.utils';
 import {fileuploadAddUploads, fileuploadSetOverlayTarget} from '../Upload/Upload.redux';
-import {withApollo} from 'react-apollo';
-import {compose} from '~/utils';
 import {UploadRequirementsQuery} from './UploadTransformComponent.gql-queries';
 import JContentConstants from '~/JContent/JContent.constants';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import randomUUID from 'uuid/v4';
 import {uploadStatuses} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.constants';
+import {useApolloClient, useQuery} from '@apollo/react-hooks';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
+
+// Calculates elements position if/when scrolled.
+// Adaptation of https://stackoverflow.com/questions/1236171/how-do-i-calculate-an-elements-position-in-a-scrolled-div
+const getOverlayPosition = el => {
+    let boundingClientRect = el.getBoundingClientRect();
+    let position = {
+        x: boundingClientRect.left,
+        y: boundingClientRect.top,
+        width: boundingClientRect.width,
+        height: boundingClientRect.height
+    };
+    if (el.offsetParent && el.offsetParent.offsetTop === 0) {
+        return position;
+    }
+
+    position.x = 0;
+    position.y = 0;
+    while (el && el.offsetParent) {
+        position.x += el.offsetLeft - el.offsetParent.scrollLeft || 0;
+        position.y += el.offsetTop - el.offsetParent.scrollTop || 0;
+        el = el.offsetParent;
+    }
+
+    return position;
+};
 
 async function scan(fileList, uploadMaxSize, uploadMinSize, uploadPath) {
     const files = [];
@@ -70,207 +94,133 @@ async function scan(fileList, uploadMaxSize, uploadMinSize, uploadPath) {
     return {files, directories};
 }
 
-export class UploadTransformComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        // This property avoid to call setState when the component is unmounted, which can happen in the checkPermission function
-        this._isMounted = false;
-        this.state = {
-            allowDrop: false
-        };
-        this.dragTargets = [];
-        this.onDragEnter = this.onDragEnter.bind(this);
-        this.onDragLeave = this.onDragLeave.bind(this);
-        this.onDragOver = this.onDragOver.bind(this);
-        this.onDrop = this.onDrop.bind(this);
-    }
+export const UploadTransformComponent = ({
+    uploadTargetComponent: Component,
+    uploadPath,
+    uploadAcceptedFileTypes,
+    uploadMinSize,
+    uploadMaxSize,
+    uploadType,
+    ...props
+}) => {
+    const {data, loading, error} = useQuery(UploadRequirementsQuery, {
+        variables: {
+            path: uploadPath,
+            permittedNodeTypes: ACCEPTING_NODE_TYPES,
+            permission: 'jcr:addChildNodes',
+            sitePermission: ACTION_PERMISSIONS.uploadFilesAction
+        },
+        skip: !uploadType
+    });
 
-    componentDidMount() {
-        this._isMounted = true;
-        this.checkPermission();
-    }
+    const allowDrop = !loading && !error && data?.jcr?.results?.hasPermission && data?.jcr?.results?.site?.hasPermission && data?.jcr?.results?.acceptsFiles;
 
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
+    const client = useApolloClient();
+    const dragTargets = useRef([]);
+    const node = useRef();
+    const dispatch = useDispatch();
 
-    render() {
-        const {uploadTargetComponent: Component} = this.props;
-
-        if (this.state.allowDrop) {
-            return (
-                <Component
-                    onDragOver={this.onDragOver}
-                    onDragEnter={this.onDragEnter}
-                    onDragLeave={this.onDragLeave}
-                    onDrop={this.onDrop}
-                    {...this.generatePropertiesForComponent()}
-                />
-            );
-        }
-
-        return (
-            <Component {...this.generatePropertiesForComponent()}/>
-        );
-    }
-
-    generatePropertiesForComponent() {
-        const {
-            uploadTargetComponent,
-            uploadPath,
-            uploadAcceptedFileTypes,
-            uploadMinSize,
-            uploadMaxSize,
-            uploadDispatchBatch,
-            uploadSetOverlayTarget,
-            client,
-            ...props
-        } = this.props;
-        return props;
-    }
-
-    onDragEnter(evt) {
+    const onDragEnter = evt => {
         evt.preventDefault();
 
-        // Count the dropzone and any children that are entered.
-        if (this.dragTargets.indexOf(evt.target) === -1) {
-            this.dragTargets.push(evt.target);
-            this.node = evt.target;
+        if (allowDrop) {
+            // Count the dropzone and any children that are entered.
+            if (dragTargets.current.indexOf(evt.target) === -1) {
+                dragTargets.current.push(evt.target);
+                node.current = evt.target;
+            }
+
+            evt.persist();
+            let position = getOverlayPosition(evt.currentTarget);
+            dispatch(fileuploadSetOverlayTarget(position));
+        }
+    };
+
+    const onDragOver = evt => {
+        evt.preventDefault();
+        if (allowDrop) {
+            evt.persist();
         }
 
-        evt.persist();
-        let position = this.getOverlayPosition(evt.currentTarget);
-        this.props.uploadSetOverlayTarget(position);
-    }
-
-    onDragOver(evt) {
-        evt.preventDefault();
-        evt.persist();
         return false;
-    }
+    };
 
-    onDragLeave(evt) {
+    const onDragLeave = evt => {
         evt.preventDefault();
-        evt.persist();
+        if (allowDrop) {
+            evt.persist();
 
-        this.dragTargets = this.dragTargets.filter(el => el !== evt.target && this.node.contains(el));
-        if (this.dragTargets.length > 0) {
-            return;
-        }
-
-        this.props.uploadSetOverlayTarget(null);
-    }
-
-    onDrop(evt) {
-        const {uploadMaxSize, uploadMinSize, uploadPath, mode} = this.props;
-
-        evt.preventDefault();
-        evt.persist();
-        this.dragTargets = [];
-
-        this.props.uploadSetOverlayTarget(null);
-        if (isDragDataWithFiles(evt)) {
-            const fileList = getDataTransferItems(evt);
-            if (evt.isPropagationStopped()) {
+            dragTargets.current = dragTargets.current.filter(el => el !== evt.target && node.current.contains(el));
+            if (dragTargets.current.length > 0) {
                 return;
             }
 
-            const asyncScanAndUpload = async () => {
-                const {directories, files} = await scan(fileList, uploadMaxSize, uploadMinSize, uploadPath);
-                let acceptedFiles = files;
+            dispatch(fileuploadSetOverlayTarget(null));
+        }
+    };
 
-                if (mode === JContentConstants.mode.MEDIA) {
-                    const {conflicts} = await createMissingFolders(this.props.client, directories);
+    const onDrop = evt => {
+        evt.preventDefault();
+        if (allowDrop) {
+            evt.persist();
+            dragTargets.current = [];
 
-                    if (conflicts.length > 0) {
-                        const uploads = conflicts.map(dir => ({
-                            status: uploadStatuses.HAS_ERROR,
-                            error: 'FOLDER_EXISTS',
-                            ...dir,
-                            id: randomUUID()
-                        }));
-                        conflicts.forEach(dir => {
-                            acceptedFiles = acceptedFiles.filter(f => !f.path.startsWith(uploadPath + dir.entry.fullPath));
-                        });
-                        this.props.uploadAddUploads(uploads);
-                    }
+            dispatch(fileuploadSetOverlayTarget(null));
+            if (isDragDataWithFiles(evt)) {
+                const fileList = getDataTransferItems(evt);
+                if (evt.isPropagationStopped()) {
+                    return;
                 }
 
-                onFilesSelected({
-                    acceptedFiles,
-                    dispatchBatch: this.props.uploadDispatchBatch,
-                    type: mode === JContentConstants.mode.MEDIA ? JContentConstants.mode.UPLOAD : JContentConstants.mode.IMPORT
-                });
-            };
+                const asyncScanAndUpload = async () => {
+                    const {directories, files} = await scan(fileList, uploadMaxSize, uploadMinSize, uploadPath);
+                    let acceptedFiles = files;
 
-            asyncScanAndUpload().then(() => {});
-        }
-    }
+                    if (uploadType === JContentConstants.mode.UPLOAD) {
+                        const {conflicts} = await createMissingFolders(client, directories);
 
-    async checkPermission() {
-        try {
-            const result = await this.props.client.query({
-                variables: {
-                    path: this.props.uploadPath,
-                    permittedNodeTypes: ACCEPTING_NODE_TYPES,
-                    permission: 'jcr:addChildNodes',
-                    sitePermission: ACTION_PERMISSIONS.uploadFilesAction
-                },
-                query: UploadRequirementsQuery
-            });
+                        if (conflicts.length > 0) {
+                            const uploads = conflicts.map(dir => ({
+                                status: uploadStatuses.HAS_ERROR,
+                                error: 'FOLDER_EXISTS',
+                                ...dir,
+                                id: randomUUID()
+                            }));
+                            conflicts.forEach(dir => {
+                                acceptedFiles = acceptedFiles.filter(f => !f.path.startsWith(uploadPath + dir.entry.fullPath));
+                            });
+                            dispatch(fileuploadAddUploads(uploads));
+                        }
+                    }
 
-            if (result.data.jcr.results.hasPermission && result.data.jcr.results.site.hasPermission && result.data.jcr.results.acceptsFiles && this._isMounted) {
-                this.setState({
-                    allowDrop: true
+                    onFilesSelected({
+                        acceptedFiles,
+                        dispatchBatch: actions => dispatch(batchActions(actions)),
+                        type: uploadType
+                    });
+                };
+
+                asyncScanAndUpload().then(() => {
                 });
             }
-        } catch (e) {
-            console.error(e);
         }
-    }
-
-    // Calculates elements position if/when scrolled.
-    // Adaptation of https://stackoverflow.com/questions/1236171/how-do-i-calculate-an-elements-position-in-a-scrolled-div
-    getOverlayPosition(el) {
-        let boundingClientRect = el.getBoundingClientRect();
-        let position = {
-            x: boundingClientRect.left,
-            y: boundingClientRect.top,
-            width: boundingClientRect.width,
-            height: boundingClientRect.height
-        };
-        if (el.offsetParent && el.offsetParent.offsetTop === 0) {
-            return position;
-        }
-
-        position.x = 0;
-        position.y = 0;
-        while (el && el.offsetParent) {
-            position.x += el.offsetLeft - el.offsetParent.scrollLeft || 0;
-            position.y += el.offsetTop - el.offsetParent.scrollTop || 0;
-            el = el.offsetParent;
-        }
-
-        return position;
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        uploadAddUploads: uploads => dispatch(fileuploadAddUploads(uploads)),
-        uploadDispatchBatch: actions => dispatch(batchActions(actions)),
-        uploadSetOverlayTarget: state => dispatch(fileuploadSetOverlayTarget(state))
     };
+
+    return (
+        <Component
+            onDragOver={onDragOver}
+            onDragEnter={onDragEnter}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            {...props}
+        />
+    );
 };
 
 UploadTransformComponent.propTypes = {
     uploadTargetComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
     uploadPath: PropTypes.string.isRequired,
-    mode: PropTypes.string.isRequired,
-    uploadAddUploads: PropTypes.func.isRequired,
-    uploadDispatchBatch: PropTypes.func.isRequired,
-    uploadSetOverlayTarget: PropTypes.func.isRequired,
-    client: PropTypes.object.isRequired,
+    uploadType: PropTypes.string.isRequired,
     uploadAcceptedFileTypes: PropTypes.array,
     uploadMaxSize: PropTypes.number,
     uploadMinSize: PropTypes.number
@@ -281,7 +231,4 @@ UploadTransformComponent.defaultProps = {
     uploadMinSize: 0
 };
 
-export default compose(
-    withApollo,
-    connect(null, mapDispatchToProps)
-)(UploadTransformComponent);
+export default UploadTransformComponent;

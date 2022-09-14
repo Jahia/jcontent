@@ -59,7 +59,8 @@ export const jContentAccordionItems = registry => {
         rootPath: '/sites/{site}',
         tableConfig: {
             queryHandler: ContentFoldersQueryHandler,
-            typeFilter: ['jnt:content']
+            typeFilter: ['jnt:content'],
+            uploadType: JContentConstants.mode.IMPORT
         }
     });
 
@@ -136,7 +137,8 @@ export const jContentAccordionItems = registry => {
         tableConfig: {
             queryHandler: ContentFoldersQueryHandler,
             typeFilter: ['jnt:content'],
-            viewSelector: <ViewModeSelector/>
+            viewSelector: <ViewModeSelector/>,
+            uploadType: JContentConstants.mode.IMPORT
         }
     });
 
@@ -156,7 +158,8 @@ export const jContentAccordionItems = registry => {
         tableConfig: {
             queryHandler: FilesQueryHandler,
             typeFilter: ['jnt:file', 'jnt:folder'],
-            viewSelector: <FileModeSelector/>
+            viewSelector: <FileModeSelector/>,
+            uploadType: JContentConstants.mode.UPLOAD
         }
     });
 

@@ -105,7 +105,9 @@ export const ImageEditorDialog = ({
                             />
                         )}
                             {currentPanel === PANELS.CROP && (
-                                <CropPanel cropParams={cropParams}
+                                <CropPanel originalWidth={originalWidth}
+                                           originalHeight={originalHeight}
+                                           cropParams={cropParams}
                                            onCrop={onCrop}
                             />
                         )}

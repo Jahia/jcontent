@@ -3,10 +3,10 @@ import {DisplayAction} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 
-export const Actions = ({className, node}) => (
+export const Actions = ({className, node, action}) => (
     <div className={className}>
         <DisplayAction
-            actionKey="contentMenu"
+            actionKey={action}
             path={node.path}
             render={ButtonRendererNoLabel}
             buttonProps={{variant: 'ghost', size: 'big'}}
@@ -16,7 +16,8 @@ export const Actions = ({className, node}) => (
 
 Actions.propTypes = {
     className: PropTypes.string,
-    node: PropTypes.object.isRequired
+    node: PropTypes.object.isRequired,
+    action: PropTypes.string.isRequired
 };
 
 export default Actions;

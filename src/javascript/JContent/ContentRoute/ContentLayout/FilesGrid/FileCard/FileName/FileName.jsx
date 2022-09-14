@@ -11,19 +11,20 @@ export const FileName = ({node}) => {
 
     return (
         <div className={styles.container}>
-            <Typography noWrap
-                        variant="heading"
+            <Typography isNowrap
+                        variant="subheading"
+                        weight="bold"
                         title={name}
-                        className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textContainer, styles.textHeading) : clsx(styles.textContainer, styles.textHeading)}
+                        className={isMarkedForDeletion(node) && clsx(styles.isDeleted)}
                         data-cm-role="grid-content-list-card-name"
             >
                 {name}
             </Typography>
             {name !== sysName &&
-                <Typography noWrap
-                            variant="subheading"
+                <Typography isNowrap
+                            variant="caption"
                             title={sysName}
-                            className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textContainer, styles.textSubheading) : clsx(styles.textContainer, styles.textSubheading)}
+                            className={isMarkedForDeletion(node) ? clsx(styles.isDeleted, styles.textSubheading) : clsx(styles.textSubheading)}
                 >
                     {sysName}
                 </Typography>}

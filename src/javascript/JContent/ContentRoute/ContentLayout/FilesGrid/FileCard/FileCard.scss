@@ -42,7 +42,7 @@
     background-repeat: no-repeat;
     background-position: center;
 
-    background-size: cover;
+    background-size: contain;
 
     & svg {
         width: 100px;
@@ -56,8 +56,9 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-    min-height: 40px;
+    height: 26px;
 }
 
 .infoContainer {
@@ -77,4 +78,6 @@
     flex-direction: row;
     gap: var(--spacing-small);
     align-self: flex-start;
+
+    color: var(--color-gray);
 }

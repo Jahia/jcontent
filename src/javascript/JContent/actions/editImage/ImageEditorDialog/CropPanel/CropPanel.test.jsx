@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow} from '@jahia/test-framework';
+import {mount, shallow} from '@jahia/test-framework';
 import {Input} from '@material-ui/core';
 import {CropPanel} from './CropPanel';
 import defaultProps from '../../../../../testDefaultProps';
@@ -30,7 +30,8 @@ describe('Crop panel', () => {
     it('Should crop the image keeping ratio', () => {
         wrapper.find(Input).at(0).simulate('change', {
             target: {
-                value: '400'
+                value: '400',
+                checkValidity: () => true
             }
         });
         expect(props.onCrop.mock.calls.length).toBe(1);
@@ -38,7 +39,8 @@ describe('Crop panel', () => {
 
         wrapper.find(Input).at(1).simulate('change', {
             target: {
-                value: '200'
+                value: '200',
+                checkValidity: () => true
             }
         });
         expect(props.onCrop.mock.calls.length).toBe(2);
@@ -50,7 +52,8 @@ describe('Crop panel', () => {
 
         wrapper.find(Input).at(0).simulate('change', {
             target: {
-                value: '200'
+                value: '200',
+                checkValidity: () => true
             }
         });
         expect(props.onCrop.mock.calls.length).toBe(2);
@@ -59,7 +62,8 @@ describe('Crop panel', () => {
 
         wrapper.find(Input).at(1).simulate('change', {
             target: {
-                value: '200'
+                value: '200',
+                checkValidity: () => true
             }
         });
         expect(props.onCrop.mock.calls.length).toBe(3);
@@ -67,11 +71,13 @@ describe('Crop panel', () => {
     });
 
     it('Should not crop when typing garbage', () => {
-        wrapper.find(Input).at(0).simulate('change', {
-            target: {
-                value: 'gzgzgz'
-            }
-        });
+        mount(<CropPanel {...defaultProps} {...props}/>)
+            .find(Input).at(0).simulate('change', {
+                target: {
+                    value: 'gzgzgz',
+                    checkValidity: () => true
+                }
+            });
         expect(props.onCrop.mock.calls.length).toBe(0);
     });
 });

@@ -10,8 +10,6 @@ import {refetchTypes, triggerRefetch} from '../../../JContent.refetches';
 import Feedback from './Feedback';
 
 const getBox = ({width, cropParams, height, top, left, originalWidth, originalHeight}) => {
-    width = width || cropParams.width;
-    height = height || cropParams.height;
     top = top || cropParams.top;
     left = left || cropParams.left;
     if (width > originalWidth) {
@@ -182,9 +180,9 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                 aspect = previousState.cropParams.aspect;
             }
 
-            if (aspect && width) {
+            if (aspect && typeof width !== 'undefined') {
                 height = width / aspect;
-            } else if (aspect && height) {
+            } else if (aspect && typeof height !== 'undefined') {
                 width = height * aspect;
             }
 
@@ -197,9 +195,9 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
             return {
                 ...previousState,
                 cropParams: {
-                    dirty: Boolean(height || width || top || left),
-                    width,
-                    height,
+                    dirty: width && height && (imageSize.originalWidth !== width || imageSize.originalHeight !== height),
+                    width: width || '',
+                    height: height || '',
                     top,
                     left,
                     aspect

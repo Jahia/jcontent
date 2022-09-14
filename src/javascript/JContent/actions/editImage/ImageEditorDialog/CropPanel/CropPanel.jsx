@@ -5,21 +5,25 @@ import {Button, Link, Typography} from '@jahia/moonstone';
 import styles from './CropPanel.scss';
 import {useTranslation} from 'react-i18next';
 
-export const CropPanel = ({onCrop, cropParams}) => {
+export const CropPanel = ({originalWidth, originalHeight, cropParams, onCrop}) => {
     const {t} = useTranslation('jcontent');
     const setWidth = event => {
         let width = event.target.value;
 
-        if (/\d+/.test(width)) {
-            onCrop({width: parseInt(width, 10)});
+        if (event.target.checkValidity()) {
+            onCrop({width: Math.floor(Math.min(width, originalWidth))});
+        } else {
+            onCrop({width: cropParams.width});
         }
     };
 
     const setHeight = event => {
         let height = event.target.value;
 
-        if (/\d+/.test(height)) {
-            onCrop({height: parseInt(height, 10)});
+        if (event.target.checkValidity()) {
+            onCrop({height: Math.floor(Math.min(height, originalHeight))});
+        } else {
+            onCrop({height: cropParams.height});
         }
     };
 
@@ -78,6 +82,8 @@ export const CropPanel = ({onCrop, cropParams}) => {
 };
 
 CropPanel.propTypes = {
+    originalWidth: PropTypes.number.isRequired,
+    originalHeight: PropTypes.number.isRequired,
     cropParams: PropTypes.object,
     onCrop: PropTypes.func.isRequired
 };

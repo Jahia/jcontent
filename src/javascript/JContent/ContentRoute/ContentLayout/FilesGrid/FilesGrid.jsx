@@ -94,6 +94,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   index={index}
                                   node={node}
                                   setPath={setPath}
+                                  contextualMenuAction="contentMenu"
                                   onPreviewSelect={(...args) => {
                                       setSelectedItemIndex(index);
                                       onPreviewSelect(...args);

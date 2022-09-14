@@ -67,7 +67,9 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
                           event.stopPropagation();
-                          contextualMenu.current(event, {path: object.id});
+                          if (contextualMenuAction) {
+                              contextualMenu.current(event, {path: object.id});
+                          }
                       }}
                       onClickItem={object => dispatch(setPathAction(object.id, {sub: false}))}
                       onOpenItem={object => dispatch(openPathAction(object.id))}

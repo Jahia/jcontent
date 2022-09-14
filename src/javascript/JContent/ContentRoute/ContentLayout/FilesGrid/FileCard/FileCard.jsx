@@ -22,7 +22,8 @@ export const FileCard = ({
     onPreviewSelect,
     siteKey,
     mode,
-    selection
+    selection,
+    contextualMenuAction
 }) => {
     const {t} = useTranslation('jcontent');
 
@@ -48,7 +49,9 @@ export const FileCard = ({
             aria-checked={isPreviewSelected}
             onContextMenu={event => {
                 event.stopPropagation();
-                contextualMenu.current(event);
+                if (contextualMenuAction) {
+                    contextualMenu.current(event);
+                }
             }}
             onClick={() => {
                 if (!node.notSelectableForPreview) {
@@ -57,7 +60,7 @@ export const FileCard = ({
             }}
             onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
         >
-            <ContextualMenu setOpenRef={contextualMenu} actionKey="contentMenu" path={node.path}/>
+            {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction} path={node.path}/>}
 
             {isImage ?
                 <div
@@ -71,7 +74,7 @@ export const FileCard = ({
             <div className={styles.infoContainer}>
                 <div className={styles.nameAndActions}>
                     <FileName node={node}/>
-                    <Actions node={node} className={styles.actions}/>
+                    {contextualMenuAction && <Actions node={node} className={styles.actions} action={contextualMenuAction}/>}
                 </div>
                 <div className={styles.fileInfo}>
                     <ContentStatuses hasLabel={false}
@@ -111,7 +114,8 @@ FileCard.propTypes = {
     siteKey: PropTypes.string.isRequired,
     uilang: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired,
-    selection: PropTypes.array
+    selection: PropTypes.array,
+    contextualMenuAction: PropTypes.string
 };
 
 export default FileCard;

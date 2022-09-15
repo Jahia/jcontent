@@ -33,7 +33,7 @@ export const PagesQueryHandler = {
             queryVariables.typeFilter = ['jnt:content', 'jnt:contentFolder'];
         } else {
             queryVariables.typeFilter = JContentConstants.tableView.viewType.PAGES === tableView.viewType ? ['jnt:page'] : [JContentConstants.contentType];
-            queryVariables.recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder']};
+            queryVariables.recursionTypesFilter = {multi: 'NONE', types: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']};
         }
 
         return queryVariables;

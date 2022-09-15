@@ -45,7 +45,7 @@ const getOverlayPosition = el => {
     return position;
 };
 
-async function scan(fileList, uploadMaxSize, uploadMinSize, uploadPath) {
+async function scan(fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath) {
     const files = [];
     const directories = [];
 
@@ -64,7 +64,7 @@ async function scan(fileList, uploadMaxSize, uploadMinSize, uploadPath) {
             const file = await new Promise((res, rej) => {
                 entry.file(res, rej);
             });
-            if (fileMatchSize(file, uploadMaxSize, uploadMinSize) && !fileIgnored(file)) {
+            if (fileMatchSize(file, uploadMaxSize, uploadMinSize) && !fileIgnored(file) && uploadFilter(file)) {
                 files.push({
                     path: entry.fullPath ? uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)) : uploadPath,
                     entry,
@@ -101,6 +101,7 @@ export const UploadTransformComponent = ({
     uploadMinSize,
     uploadMaxSize,
     uploadType,
+    uploadFilter,
     ...props
 }) => {
     const {data, loading, error} = useQuery(UploadRequirementsQuery, {
@@ -173,7 +174,7 @@ export const UploadTransformComponent = ({
                 }
 
                 const asyncScanAndUpload = async () => {
-                    const {directories, files} = await scan(fileList, uploadMaxSize, uploadMinSize, uploadPath);
+                    const {directories, files} = await scan(fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath);
                     let acceptedFiles = files;
 
                     if (uploadType === JContentConstants.mode.UPLOAD) {
@@ -223,12 +224,14 @@ UploadTransformComponent.propTypes = {
     uploadType: PropTypes.string.isRequired,
     uploadAcceptedFileTypes: PropTypes.array,
     uploadMaxSize: PropTypes.number,
-    uploadMinSize: PropTypes.number
+    uploadMinSize: PropTypes.number,
+    uploadFilter: PropTypes.func
 };
 
 UploadTransformComponent.defaultProps = {
     uploadMaxSize: Infinity,
-    uploadMinSize: 0
+    uploadMinSize: 0,
+    uploadFilter: () => true
 };
 
 export default UploadTransformComponent;

@@ -186,8 +186,8 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                 width = height * aspect;
             }
 
-            width = typeof width === 'undefined' ? previousState.resizeParams.width : width;
-            height = typeof height === 'undefined' ? previousState.resizeParams.height : height;
+            width = typeof width === 'undefined' ? previousState.cropParams.width : width;
+            height = typeof height === 'undefined' ? previousState.cropParams.height : height;
 
             const box = getBox({width, cropParams: previousState.cropParams, height, top, left, originalWidth: imageSize.originalWidth, originalHeight: imageSize.originalHeight});
             width = box.width;

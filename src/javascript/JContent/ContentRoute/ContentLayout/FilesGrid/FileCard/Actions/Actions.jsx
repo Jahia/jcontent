@@ -8,6 +8,7 @@ export const Actions = ({className, node, action}) => (
         <DisplayAction
             actionKey={action}
             path={node.path}
+            uuid={node.uuid}
             render={ButtonRendererNoLabel}
             buttonProps={{variant: 'ghost', size: 'big'}}
         />

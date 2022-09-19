@@ -1,11 +1,9 @@
 .grid.grid {
     display: flex;
     flex: 1 1 0;
-    padding: var(--spacing-small);
 
     outline: none;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 
     background-color: var(--color-gray_light);
 }
@@ -21,20 +19,16 @@
     display: grid;
     flex: 1;
     gap: var(--spacing-medium);
-    justify-content: start;
-    align-content: start;
-    align-items: start;
-    justify-items: stretch;
-
-    margin: var(--spacing-small);
 
     background-color: var(--color-gray_light);
     box-shadow: none;
 }
 
 .detailedGrid.detailedGrid {
-    grid-auto-rows: 360px;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    padding: 0 var(--spacing-medium) var(--spacing-medium);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .empty.empty {

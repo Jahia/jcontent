@@ -55,7 +55,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
             left: 0,
             width: null,
             height: null,
-            aspect: 1
+            aspect: true
         },
         transforms: []
     });
@@ -99,6 +99,8 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
                 aspect: image.naturalWidth / image.naturalHeight
             }
         }));
+
+        return false;
     };
 
     const rotate = val => {
@@ -173,7 +175,7 @@ export const ImageEditorDialogContainer = ({path, onExit}) => {
 
         setOperations(previousState => {
             if (aspect === true) {
-                aspect = imageSize.originalWidth / imageSize.originalHeight;
+                aspect = previousState.cropParams.width / previousState.cropParams.height;
             } else if (aspect === false) {
                 aspect = null;
             } else {

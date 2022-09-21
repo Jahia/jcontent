@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {CreateFolderQuery} from './CreateFolderDialog.gql-queries';
-import {CreateFolderMutation} from './CreateFolderDialog.gql-mutations';
+import React, {useEffect, useState} from 'react';
+import {RenameQuery} from './RenameDialog.gql-queries';
+import {RenameMutation} from './RenameDialog.gql-mutations';
 import PropTypes from 'prop-types';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from '@material-ui/core';
-import styles from './CreateFolderDialog.scss';
+import styles from './RenameDialog.scss';
 import {Button} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 
-export const CreateFolderDialog = ({path, contentType, onExit}) => {
+export const RenameDialog = ({path, contentType, onExit}) => {
     const [open, setOpen] = useState(true);
     const [name, updateName] = useState('');
 
@@ -18,13 +18,21 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
     const invalidRegex = /[\\/:*?"<>|%]/g;
 
     const client = useApolloClient();
-    const {loading, data} = useQuery(CreateFolderQuery, {
+    const {loading, data} = useQuery(RenameQuery, {
         variables: {
             path: path
         },
         fetchPolicy: 'network-only'
     });
-    const [mutation] = useMutation(CreateFolderMutation, {
+
+    const previousName = data?.jcr?.nodeByPath?.name;
+    useEffect(() => {
+        if (previousName) {
+            updateName(previousName);
+        }
+    }, [previousName]);
+
+    const [mutation] = useMutation(RenameMutation, {
         onCompleted: () => {
             client.cache.flushNodeEntryByPath(path);
             triggerRefetchAll();
@@ -40,11 +48,11 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
         setOpen(false);
     };
 
-    const handleCreate = () => {
+    const handleRename = () => {
         // Do mutation to create folder.
         mutation({
             variables: {
-                folderName: name,
+                newName: name,
                 parentPath: path,
                 primaryNodeType: contentType
             }
@@ -52,16 +60,17 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
         setOpen(false);
     };
 
-    const isNameAvailable = (data?.jcr?.nodeByPath?.children?.nodes || []).find(node => node.name === name) === undefined;
+    const isNameAvailable = (data?.jcr?.nodeByPath?.parent?.children?.nodes || []).find(node => node.name === name) === undefined;
     const isNameValid = name.match(invalidRegex) === null;
+
     let errMsg = '';
 
-    if (!isNameAvailable) {
-        errMsg = t('jcontent:label.contentManager.createFolderAction.exists');
+    if (!isNameAvailable && previousName !== name) {
+        errMsg = t('jcontent:label.contentManager.renameAction.exists');
     }
 
     if (!isNameValid) {
-        errMsg = t('jcontent:label.contentManager.createFolderAction.invalidChars');
+        errMsg = t('jcontent:label.contentManager.renameAction.invalidChars');
     }
 
     return (
@@ -71,10 +80,10 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
                 onClose={handleCancel}
                 onExited={onExit}
         >
-            <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.createFolderAction.title')}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{t('jcontent:label.contentManager.renameAction.title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText className={errMsg ? styles.error : null}>
-                    {t('jcontent:label.contentManager.createFolderAction.text')}
+                    {t('jcontent:label.contentManager.renameAction.text')}
                 </DialogContentText>
                 <TextField
                     fullWidth
@@ -84,6 +93,7 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
                     id="folder-name"
                     aria-describedby="folder-name-error-text"
                     margin="dense"
+                    disabled={loading}
                     helperText={errMsg}
                     onChange={onChangeName}
                 />
@@ -101,14 +111,14 @@ export const CreateFolderDialog = ({path, contentType, onExit}) => {
                     data-cm-role="create-folder-as-confirm"
                     isDisabled={loading || !name || !isNameValid || !isNameAvailable}
                     label={t('jcontent:label.ok')}
-                    onClick={handleCreate}
+                    onClick={handleRename}
                 />
             </DialogActions>
         </Dialog>
     );
 };
 
-CreateFolderDialog.propTypes = {
+RenameDialog.propTypes = {
     path: PropTypes.string.isRequired,
     contentType: PropTypes.string.isRequired,
     onExit: PropTypes.func.isRequired

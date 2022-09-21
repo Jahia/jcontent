@@ -2,6 +2,7 @@ import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
 
 import {
+    AddBox,
     AddFolder,
     ChevronDown,
     CloudDownload,
@@ -53,6 +54,7 @@ import {triggerRefetchAll} from './JContent.refetches';
 import {ACTION_PERMISSIONS} from './actions/actions.constants';
 import {EditImageActionComponent} from '~/JContent/actions/editImage';
 import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAction';
+import {RenameActionComponent} from '~/JContent/actions/renameAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -72,6 +74,12 @@ export const jContentActions = registry => {
         targets: ['createMenuActions:3', 'contentActions:2', 'headerPrimaryActions:2'],
         createFolderType: 'contentFolder',
         component: CreateFolderActionComponent
+    });
+    registry.add('action', 'rename', {
+        buttonIcon: <Edit/>,
+        buttonLabel: 'jcontent:label.contentManager.rename',
+        targets: ['contentActions:2'],
+        component: RenameActionComponent
     });
     registry.add('action', 'createFolder', {
         buttonIcon: <AddFolder/>,

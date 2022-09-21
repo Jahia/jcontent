@@ -15,6 +15,7 @@
         },
         "show": "Vorschau öffnen"
       },
+      "rename": "Umbenennen",
       "workInProgress": "In Arbeit: {{wipLang}} (ausgenommen gemeinsame Eigenschaften)",
       "publicationStatus": {
         "notPublished": "Dieser Content wurde nie veröffentlicht",
@@ -322,9 +323,13 @@
       "createFolderAction": {
         "title": "Neuer Ordner",
         "text": "Geben Sie einen Ordner-Namen ein",
-        "ok": "OK",
-        "cancel": "Abbrechen",
         "exists": "Ein Ordner mit diesem Namen existiert bereits",
+        "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
+      },
+      "renameAction": {
+        "title": "Umbenennen",
+        "text": "Geben Sie einen Namen ein",
+        "exists": "Eine Datei mit diesem Namen existiert bereits",
         "invalidChars": "Ungültige Zeichen: \/:*?\"<>|%"
       },
       "contentStatus": {
@@ -345,6 +350,8 @@
         "contents": "Content {{count}}",
         "pages": "Unter-Seiten {{count}}"
       }
-    }
+    },
+    "ok": "OK",
+    "cancel": "Abbrechen"
   }
 }

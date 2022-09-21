@@ -280,7 +280,7 @@
         "emptyContextMenu": "No actions available for those items"
       },
       "editImage": {
-        "action": "Open in image editor",
+        "action": "Image editor",
         "title": "Image edition",
         "resize": "Resize",
         "crop": "Crop",

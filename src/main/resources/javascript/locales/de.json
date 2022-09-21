@@ -277,7 +277,7 @@
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar"
       },
       "editImage": {
-        "action": "Im Bild-Editor öffnen",
+        "action": "Bild-Editor",
         "title": "Bildausgabe",
         "resize": "Größe anpassen",
         "crop": "Zuschneiden",

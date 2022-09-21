@@ -279,7 +279,7 @@
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments"
       },
       "editImage": {
-        "action": "Ouvrir avec l'éditeur d'images",
+        "action": "Editeur d'images",
         "title": "Edition d'image",
         "resize": "Redimensionner",
         "crop": "Recadrage",

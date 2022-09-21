@@ -15,6 +15,7 @@
         },
         "show": "Show Preview"
       },
+      "rename": "Rename",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
       "publicationStatus": {
         "notPublished": "This content has never been published",
@@ -326,9 +327,13 @@
       "createFolderAction": {
         "title": "New folder",
         "text": "Enter a folder name",
-        "ok": "OK",
-        "cancel": "Cancel",
         "exists": "A folder with this name already exists",
+        "invalidChars": "Invalid characters:  \/:*?\"<>|%"
+      },
+      "renameAction": {
+        "title": "Rename",
+        "text": "Enter a new name",
+        "exists": "A file with this name already exists",
         "invalidChars": "Invalid characters:  \/:*?\"<>|%"
       },
       "contentStatus": {
@@ -351,6 +356,8 @@
         "contents": "Contents {{count}}",
         "pages": "Sub-pages {{count}}"
       }
-    }
+    },
+    "ok": "OK",
+    "cancel": "Cancel"
   }
 }

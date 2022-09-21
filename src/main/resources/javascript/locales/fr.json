@@ -15,6 +15,7 @@
         },
         "show": "Afficher l'aperçu"
       },
+      "rename": "Renommer",
       "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
       "publicationStatus": {
         "notPublished": "Ce contenu n'a jamais été publié",
@@ -323,9 +324,13 @@
       "createFolderAction": {
         "title": "Nouveau dossier",
         "text": "Entrez un nom de dossier",
-        "ok": "OK",
-        "cancel": "Annuler",
         "exists": "Un dossier de ce nom existe déjà",
+        "invalidChars": "Caractères invalides: \/:*?\"<>|%"
+      },
+      "renameAction": {
+        "title": "Renommer",
+        "text": "Entrez un nouveau nom",
+        "exists": "Un fichier de ce nom existe déjà",
         "invalidChars": "Caractères invalides: \/:*?\"<>|%"
       },
       "contentStatus": {
@@ -346,6 +351,8 @@
         "contents": "Contenus {{count}}",
         "pages": "Sous-pages {{count}}"
       }
-    }
+    },
+    "ok": "OK",
+    "cancel": "Annuler"
   }
 }

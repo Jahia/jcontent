@@ -5,7 +5,6 @@ const CreateFolderQuery = gql`
     query FolderQuery($path:String!) {
         jcr {
             nodeByPath(path: $path) {
-                id: uuid
                 name
                 children {
                     nodes {

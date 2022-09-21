@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import CreateFolderDialog from './CreateFolderDialog';
+import {CreateFolderDialog} from './CreateFolderDialog';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';

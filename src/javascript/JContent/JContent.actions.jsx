@@ -2,7 +2,6 @@ import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
 
 import {
-    AddBox,
     AddFolder,
     ChevronDown,
     CloudDownload,

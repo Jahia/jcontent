@@ -6,6 +6,7 @@ export {default as ViewModeSelector} from '../JContent/ContentRoute/ToolBar/View
 export {default as FileModeSelector} from '../JContent/ContentRoute/ToolBar/FileModeSelector';
 export {default as UploadTransformComponent} from '../JContent/ContentRoute/ContentLayout/UploadTransformComponent';
 export {default as ContentEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentEmptyDropZone';
+export {default as FilesGridEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';
 export {default as ContentNotFound} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentNotFound';
 export {default as EmptyTable} from '../JContent/ContentRoute/ContentLayout/ContentTable/EmptyTable';
 export {default as ContentListHeader} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentListHeader';

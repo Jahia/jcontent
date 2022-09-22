@@ -125,8 +125,6 @@ export const ContentLayoutContainer = () => {
         if (previewSelection && isDescendantOrSelf(previewSelection, nodePath)) {
             setPreviewSelection(getNewNodePath(previewSelection, nodePath, newPath));
         }
-
-        return client.reFetchObservableQueries();
     }
 
     async function onGwtUpdate(nodePath, nodeUuid) {

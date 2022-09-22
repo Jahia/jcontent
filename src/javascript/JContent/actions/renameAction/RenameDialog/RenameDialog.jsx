@@ -56,8 +56,14 @@ export const RenameDialog = ({path, contentType, onExit}) => {
                 parentPath: path,
                 primaryNodeType: contentType
             }
+        }).then(({data}) => {
+            return Promise.all(window.contentModificationEventHandlers.map(handler => handler(data.jcr.mutateNode.node.uuid, path, name, 'update')));
+        }).then(() => {
+            setOpen(false);
+        }).catch(e => {
+            console.error('Error when renaming', e.message);
+            setOpen(false);
         });
-        setOpen(false);
     };
 
     const isNameAvailable = (data?.jcr?.nodeByPath?.parent?.children?.nodes || []).find(node => node.name === name) === undefined;

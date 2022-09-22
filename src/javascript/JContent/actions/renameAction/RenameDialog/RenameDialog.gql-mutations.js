@@ -7,6 +7,7 @@ const RenameMutation = gql`
             mutateNode(pathOrId: $parentPath) {
                 rename(name: $newName)
                 node {
+                    uuid
                     name
                     path
                     ...NodeCacheRequiredFields

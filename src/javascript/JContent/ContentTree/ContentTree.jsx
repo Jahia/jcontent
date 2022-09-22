@@ -31,7 +31,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         sortBy: item.treeConfig.sortBy
     };
 
-    const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson);
+    const {treeEntries, refetch} = useTreeEntries(useTreeEntriesOptionsJson, {errorPolicy: 'all'});
 
     let switchPath;
     // If path is root one but root is hidden, then select its first child

@@ -12,7 +12,7 @@ const ContentNavigationContainer = ({handleNavigationAction, selector, accordion
     const {siteKey, language, mode} = useSelector(selector, shallowEqual);
     let accordionItems = getAccordionItems(accordionItemTarget, accordionItemProps);
 
-    const sitePermissions = accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined);
+    const sitePermissions = [...new Set(accordionItems.map(item => item.requiredSitePermission).filter(item => item !== undefined))];
 
     const permissions = useNodeChecks({
         path: `/sites/${siteKey}`,

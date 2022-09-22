@@ -85,4 +85,8 @@ export default function () {
     jContentAccordionItems(registry);
     jContentRedux(registry);
     jContentAppRoot(registry);
+
+    return import('./shared').then(m => {
+        window.jahia.jcontent = m;
+    });
 }

@@ -30,7 +30,7 @@ export const FileCard = ({
     let contextualMenu = useRef();
 
     const isImage = isBrowserImage(node.path);
-    const isPreviewSelected = selection === undefined ? (previewSelection && previewSelection === node.path) : selection.find(value => value.uuid === node.uuid) !== undefined;
+    const isPreviewSelected = selection === undefined ? (previewSelection && previewSelection === node.path) : selection.find(value => value === node.uuid) !== undefined;
 
     // This is to support IE11, please don't remove it, we need to put inline style in each element to place them into grid layout
     // let rowNumber = Math.floor(index / 2) + 1;
@@ -55,7 +55,7 @@ export const FileCard = ({
             }}
             onClick={() => {
                 if (!node.notSelectableForPreview) {
-                    onPreviewSelect(node.path);
+                    onPreviewSelect(node);
                 }
             }}
             onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}

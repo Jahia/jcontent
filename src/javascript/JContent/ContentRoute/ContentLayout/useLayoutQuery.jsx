@@ -30,7 +30,7 @@ export function useLayoutQuery(options, fragments, queryVariables) {
             queryVariables,
             openableTypes: treeParams.openableTypes || queryVariables.typeFilter,
             selectableTypes: treeParams.selectableTypes || queryVariables.selectableTypesTable || []
-        });
+        }, {errorPolicy: 'all'});
 
         const result = queryHandler.structureTreeEntries(treeEntries, treeParams);
         return {isStructured, result, error, loading, refetch};

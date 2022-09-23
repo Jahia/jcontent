@@ -29,7 +29,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     }), shallowEqual);
     const dispatch = useDispatch();
     const setCurrentPage = page => dispatch(cmSetPage(page - 1));
-    const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection));
+    const onPreviewSelect = previewSelection => dispatch(cmSetPreviewSelection(previewSelection.path));
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
     const setPath = (siteKey, path, mode) => {
         dispatch(cmOpenPaths(extractPaths(siteKey, path, mode)));

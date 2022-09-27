@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 const FileSize = ({node}) => (
     <>
-        {node.descendant && node.descendant.data &&
-        bytes(node.descendant.data.size, {unitSeparator: ' '})}
+        {node.content && node.content.data &&
+        bytes(node.content.data.size, {unitSeparator: ' '})}
     </>
 );
 FileSize.propTypes = {

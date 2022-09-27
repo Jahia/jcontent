@@ -10,10 +10,10 @@ export const imageFields = {
             height: property(name: "j:height") {
                 value
             }
-            title : property(name: "jcr:title", language: $language) {
+            title: property(name: "jcr:title", language: $language) {
                 value
             }
-            descendant(relPath: "jcr:content") {
+            content: descendant(relPath: "jcr:content") {
                 ...NodeCacheRequiredFields
                 data: property(name: "jcr:data") {
                     size

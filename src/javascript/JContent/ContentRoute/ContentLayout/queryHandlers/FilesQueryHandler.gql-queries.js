@@ -10,18 +10,16 @@ export const imageFields = {
             height: property(name: "j:height") {
                 value
             }
-            title : property(name: "jcr:title", language: $language) {
+            title: property(name: "jcr:title", language: $language) {
                 value
             }
-            children(typesFilter: {types: ["jnt:resource"]}) {
-                nodes {
-                    ...NodeCacheRequiredFields
-                    data: property(name: "jcr:data") {
-                        size
-                    }
-                    mimeType: property(name: "jcr:mimeType") {
-                        value
-                    }
+            content: descendant(relPath: "jcr:content") {
+                ...NodeCacheRequiredFields
+                data: property(name: "jcr:data") {
+                    size
+                }
+                mimeType: property(name: "jcr:mimeType") {
+                    value
                 }
             }
         }

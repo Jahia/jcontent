@@ -5,14 +5,10 @@ import {shallow} from '@jahia/test-framework';
 describe('FileSize', () => {
     it('should show the size', () => {
         const mockNode = {
-            children: {
-                nodes: [
-                    {
-                        data: {
-                            size: 100
-                        }
-                    }
-                ]
+            content: {
+                data: {
+                    size: 100
+                }
             }
         };
         const wrapper = shallow(<FileSize node={mockNode}/>);
@@ -22,9 +18,7 @@ describe('FileSize', () => {
 
     it('should render an empty text', () => {
         const emptyNode = {
-            children: {
-                nodes: []
-            }
+            content: {}
         };
         const wrapper = shallow(<FileSize node={emptyNode}/>);
         const text = wrapper.text();
@@ -40,14 +34,10 @@ describe('FileSize', () => {
 
     it('should show the unit', () => {
         const mockNode = {
-            children: {
-                nodes: [
-                    {
-                        data: {
-                            size: 36585
-                        }
-                    }
-                ]
+            content: {
+                data: {
+                    size: 36585
+                }
             }
         };
         const wrapper = shallow(<FileSize node={mockNode}/>);

@@ -99,11 +99,11 @@ export const QueryHandlersFragments = {
 };
 
 export const BaseChildrenQuery = gql`
-    query getNodeChildren($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+    query getNodeChildren($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput, $fieldFilter: InputFieldFiltersInput) {
         jcr {
             nodeByPath(path: $path) {
                 ...NodeFields
-                children(offset: $offset, limit: $limit, typesFilter: {types: $typeFilter, multi: ANY}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                children(offset: $offset, limit: $limit, typesFilter: {types: $typeFilter, multi: ANY}, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping, fieldFilter: $fieldFilter) {
                     pageInfo {
                         totalCount
                     }
@@ -121,11 +121,11 @@ export const BaseChildrenQuery = gql`
 `;
 
 export const BaseDescendantsQuery = gql`
-    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+    query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput, $fieldFilter: InputFieldFiltersInput) {
         jcr {
             nodeByPath(path: $path) {
                 ...NodeFields
-                children: descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: $recursionTypesFilter, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                children: descendants(offset:$offset, limit:$limit, typesFilter: {types: $typeFilter, multi: ANY}, recursionTypesFilter: $recursionTypesFilter, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping, fieldFilter: $fieldFilter) {
                     pageInfo {
                         totalCount
                     }

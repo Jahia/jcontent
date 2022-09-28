@@ -99,7 +99,7 @@ export const FileCard = ({
                                 t('jcontent:label.contentManager.filesGrid.element') : t('jcontent:label.contentManager.filesGrid.elements')}
                         </Typography>}
                 </div>
-                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'modified']}/>
+                <ContentStatuses className={styles.statuses} node={node} uilang={uilang} language={lang} renderedStatuses={['published', 'modified', 'markedForDeletion']}/>
             </div>
         </div>
     );

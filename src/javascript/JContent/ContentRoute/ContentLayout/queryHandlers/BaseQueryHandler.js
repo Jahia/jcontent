@@ -53,8 +53,7 @@ export const BaseQueryHandler = {
                 fieldName: sort.orderBy === '' ? null : sort.orderBy,
                 ignoreCase: true
             },
-            recursionTypesFilter: {multi: 'NONE', types: ['nt:base']},
-            fieldFilter: {multi: 'ANY', filters: [{evaluation: 'NOT_EMPTY', fieldName: 'uuid'}]}
+            recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
         };
     },
 

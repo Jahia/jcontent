@@ -2,13 +2,14 @@ import {useQuery} from 'react-apollo';
 import {registry} from '@jahia/ui-extender';
 import {replaceFragmentsInDocument, useTreeEntries} from '@jahia/data-helper';
 import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
+import {getAccordionItem} from '~/JContent/JContent.utils';
 
-export function useLayoutQuery(options, fragments, queryVariables) {
+export function useLayoutQuery(options, fragments, queryVariables, accordionItemProps) {
     const defaultOptions = {
         fetchPolicy: 'network-only'
     };
 
-    const tableConfig = registry.get('accordionItem', options.mode).tableConfig;
+    const tableConfig = getAccordionItem(registry.get('accordionItem', options.mode), accordionItemProps).tableConfig;
 
     options = {...defaultOptions, ...tableConfig, ...options};
 

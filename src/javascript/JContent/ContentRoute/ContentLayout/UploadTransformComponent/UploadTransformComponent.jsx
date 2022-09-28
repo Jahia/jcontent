@@ -17,6 +17,7 @@ import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import randomUUID from 'uuid/v4';
 import {uploadStatuses} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.constants';
 import {useApolloClient, useQuery} from '@apollo/react-hooks';
+import mime from 'mime';
 
 const ACCEPTING_NODE_TYPES = ['jnt:folder', 'jnt:contentFolder'];
 
@@ -45,7 +46,7 @@ const getOverlayPosition = el => {
     return position;
 };
 
-async function scan(fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath) {
+async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath}) {
     const files = [];
     const directories = [];
 
@@ -61,9 +62,16 @@ async function scan(fileList, uploadMaxSize, uploadMinSize, uploadFilter, upload
             });
             await Promise.all(entries.map(entry => scanFiles(entry)));
         } else {
-            const file = await new Promise((res, rej) => {
+            let file = await new Promise((res, rej) => {
                 entry.file(res, rej);
             });
+            if (!file.type) {
+                // Crappy hack for bugged firefox
+                file = new File([file], file.name, {
+                    type: mime.getType(file.name)
+                });
+            }
+
             if (fileMatchSize(file, uploadMaxSize, uploadMinSize) && !fileIgnored(file) && uploadFilter(file)) {
                 files.push({
                     path: entry.fullPath ? uploadPath + entry.fullPath.substring(0, entry.fullPath.indexOf('/' + entry.name)) : uploadPath,
@@ -174,7 +182,7 @@ export const UploadTransformComponent = ({
                 }
 
                 const asyncScanAndUpload = async () => {
-                    const {directories, files} = await scan(fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath);
+                    const {directories, files} = await scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploadPath});
                     let acceptedFiles = files;
 
                     if (uploadType === JContentConstants.mode.UPLOAD) {

@@ -54,7 +54,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
             <TabItem isSelected={JContentConstants.tableView.viewType.CONTENT === tableView.viewType}
                      isDisabled={contentCount === 0}
                      data-cm-view-type={JContentConstants.tableView.viewType.CONTENT}
-                     label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount > 0 ? `(${contentCount})` : ' '})}
+                     label={t('jcontent:label.contentManager.contentTypeSelector.contents', {count: contentCount > 0 && !isStructuredView ? `(${contentCount})` : ' '})}
                      size="big"
                      onClick={() => {
                          actionsBatch.push(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.CONTENT));
@@ -64,7 +64,7 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
             <TabItem isSelected={JContentConstants.tableView.viewType.PAGES === tableView.viewType}
                      isDisabled={pagesCount === 0}
                      data-cm-view-type={JContentConstants.tableView.viewType.PAGES}
-                     label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount > 0 ? `(${pagesCount})` : ' '})}
+                     label={t('jcontent:label.contentManager.contentTypeSelector.pages', {count: pagesCount > 0 && !isStructuredView ? `(${pagesCount})` : ' '})}
                      size="big"
                      onClick={() => {
                          actionsBatch.push(reduxActions.setTableViewTypeAction(JContentConstants.tableView.viewType.PAGES));

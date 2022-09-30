@@ -102,7 +102,7 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
     return {files, directories};
 }
 
-export const UploadTransformComponent = ({
+export const UploadTransformComponent = React.forwardRef(({
     uploadTargetComponent: Component,
     uploadPath,
     uploadAcceptedFileTypes,
@@ -111,7 +111,7 @@ export const UploadTransformComponent = ({
     uploadType,
     uploadFilter,
     ...props
-}) => {
+}, ref) => {
     const {data, loading, error} = useQuery(UploadRequirementsQuery, {
         variables: {
             path: uploadPath,
@@ -217,6 +217,7 @@ export const UploadTransformComponent = ({
 
     return (
         <Component
+            ref={ref}
             onDragOver={onDragOver}
             onDragEnter={onDragEnter}
             onDragLeave={onDragLeave}
@@ -224,7 +225,7 @@ export const UploadTransformComponent = ({
             {...props}
         />
     );
-};
+});
 
 UploadTransformComponent.propTypes = {
     uploadTargetComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,

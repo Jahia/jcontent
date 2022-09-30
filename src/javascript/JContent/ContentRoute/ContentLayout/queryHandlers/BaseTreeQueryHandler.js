@@ -16,7 +16,10 @@ export const BaseTreeQueryHandler = {
             if (stack.length === 0) {
                 nodes.push(node);
             } else {
-                stack[stack.length - 1].subRows.push(node);
+                const nodeOnTop = stack[stack.length - 1];
+                if (nodeOnTop.hasSubRows) {
+                    nodeOnTop.subRows.push(node);
+                }
             }
 
             stack.push(node);

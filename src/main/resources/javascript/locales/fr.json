@@ -38,6 +38,7 @@
         "unknown": "Statut de publication indisponible"
       },
       "contentNotFound": "Oups, nous ne trouvons pas ce que vous cherchez. La ressource n'existe pas, ou elle a récemment été supprimée, déplacée ou modifiée.",
+      "downloadAsZip": "Télécharger comme Zip",
       "fileUpload": {
         "nothingToDisplay": "Rien à afficher",
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",

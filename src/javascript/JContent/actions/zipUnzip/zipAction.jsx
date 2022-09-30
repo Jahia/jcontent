@@ -12,6 +12,7 @@ import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS, PATH_FILES_ITSELF} from '../actions.constants';
 import {TransparentLoaderOverlay} from '~/JContent/TransparentLoaderOverlay';
+import {compareVersions} from 'compare-versions';
 
 export const ZipActionComponent = withNotifications()(({path, paths, render: Render, loading: Loading, notificationContext, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
@@ -33,7 +34,7 @@ export const ZipActionComponent = withNotifications()(({path, paths, render: Ren
         return (Loading && <Loading {...others}/>) || false;
     }
 
-    let isVisible = res.checksResult;
+    let isVisible = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') < 0 && res.checksResult;
 
     return (
         <Render

@@ -54,6 +54,7 @@ import {ACTION_PERMISSIONS} from './actions/actions.constants';
 import {EditImageActionComponent} from '~/JContent/actions/editImage';
 import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAction';
 import {RenameActionComponent} from '~/JContent/actions/renameAction';
+import {DownloadAsZipActionComponent} from '~/JContent/actions/downloadAsZip';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -268,6 +269,13 @@ export const jContentActions = registry => {
         showOnNodeTypes: ['jnt:contentFolder', 'jnt:content'],
         requiredSitePermission: [ACTION_PERMISSIONS.exportAction],
         component: ExportActionComponent
+    });
+    registry.add('action', 'downloadAsZip', {
+        buttonIcon: <Upload/>,
+        buttonLabel: 'jcontent:label.contentManager.downloadAsZip',
+        targets: ['contentActions:4.21', 'selectedContentActions'],
+        showOnNodeTypes: ['jnt:file', 'jnt:folder'],
+        component: DownloadAsZipActionComponent
     });
     registry.add('action', 'import', {
         buttonIcon: <Download/>,

@@ -38,6 +38,7 @@
         "unknown": "Publication status unavailable"
       },
       "contentNotFound": "Oops, we can't find what you're looking for. This may be because it doesn't exist or it has recently been deleted, moved or modified.",
+      "downloadAsZip": "Download as zip",
       "fileUpload": {
         "nothingToDisplay": "Nothing to display",
         "selectMessage": "Select files from my computer",

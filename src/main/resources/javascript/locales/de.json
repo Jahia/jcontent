@@ -38,6 +38,7 @@
         "unknown": "Veröffentlichungsstatus nicht verfügbar"
       },
       "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
+      "downloadAsZip": "als ZIP herunterladen",
       "fileUpload": {
         "selectMessage": "Datei von meinem Computer wählen",
         "uploadingActionMessage": "Es gibt Fehler, die Ihre Aufmerksamkeit benötigen",

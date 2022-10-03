@@ -35,7 +35,7 @@ function useInstance(instance) {
     flatHeaders
         .forEach(column => {
             column.getSortProps = () => [];
-            if (column.sortable) {
+            if (column.sortable && column.property) {
                 column.sortDirection = 'descending';
                 column.getSortProps = () => getHooks().getSortProps({}, {
                     instance: getInstance(),

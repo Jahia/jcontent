@@ -22,7 +22,7 @@ export const ContentListHeader = ({headerGroups}) => {
                                        width={column.width}
                         >
                             {column.render('Header')}
-                            {column.sortable && <SortIndicator isSorted={column.sorted} direction={column.sortDirection}/>}
+                            {column.sortable && column.property && <SortIndicator isSorted={column.sorted} direction={column.sortDirection}/>}
                         </TableHeadCell>
                     ))}
                 </TableRow>

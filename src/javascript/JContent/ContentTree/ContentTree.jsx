@@ -36,9 +36,11 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     let switchPath;
     // If path is root one but root is hidden, then select its first child
     if (((path === rootPath) || (path === rootPath + '/')) && item.treeConfig.hideRoot && treeEntries.length > 0) {
-        const first = treeEntries[0];
-        first.selected = true;
-        switchPath = first.path;
+        const first = treeEntries.find(entry => entry.path.startsWith(`/sites/${siteKey}`));
+        if (first) {
+            first.selected = true;
+            switchPath = first.path;
+        }
     }
 
     useEffect(() => {

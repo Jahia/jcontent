@@ -48,11 +48,11 @@ export const BaseQueryHandler = {
             offset: pagination.currentPage * pagination.pageSize,
             limit: pagination.pageSize,
             typeFilter: typeFilter,
-            fieldSorter: sort.orderBy === '' ? null : {
-                sortType: sort.order === '' ? null : (sort.order === 'DESC' ? 'DESC' : 'ASC'),
-                fieldName: sort.orderBy === '' ? null : sort.orderBy,
+            fieldSorter: sort.orderBy ? {
+                sortType: sort.order === 'DESC' ? 'DESC' : 'ASC',
+                fieldName: sort.orderBy,
                 ignoreCase: true
-            },
+            } : null,
             recursionTypesFilter: {multi: 'NONE', types: ['nt:base']}
         };
     },

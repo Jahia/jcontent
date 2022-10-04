@@ -1,6 +1,8 @@
 @import './reactTable/components/cells/Cells.scss';
 
 .tableRow {
+    flex-wrap: nowrap;
+
     &:hover .cellActions {
         visibility: inherit;
     }
@@ -17,6 +19,8 @@
 }
 
 .tableHeader {
+    flex-wrap: nowrap;
+
     .header-name {
         flex-grow: 1;
     }

@@ -95,7 +95,8 @@ export class UploadItem extends React.Component {
                 status: uploadStatuses.UPLOADED,
                 error: null,
                 path: this.props.path,
-                type: this.props.type
+                type: this.props.type,
+                uuid: uploadReturnObj.uuid
             };
             setTimeout(() => {
                 this.props.uploadFile(upload);

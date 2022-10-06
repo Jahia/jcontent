@@ -12,6 +12,12 @@
 
 .cellName {
     flex-grow: 1;
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        height: 40px;
+    }
 }
 
 .cellLastModified {

@@ -44,6 +44,7 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
     return (
         <Component className={styles.emptyZone}>
             <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
+            <Typography weight="light">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay2')}</Typography>
         </Component>
     );
 };

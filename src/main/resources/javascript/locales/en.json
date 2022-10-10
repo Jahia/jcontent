@@ -41,6 +41,7 @@
       "downloadAsZip": "Download as zip",
       "fileUpload": {
         "nothingToDisplay": "Nothing to display",
+        "nothingToDisplay2": "Non-selectable items are not listed in this view",
         "selectMessage": "Select files from my computer",
         "uploadingActionMessage": "There are error(s) which need your attention",
         "or": "or",

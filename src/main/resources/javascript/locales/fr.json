@@ -41,6 +41,7 @@
       "downloadAsZip": "Télécharger comme Zip",
       "fileUpload": {
         "nothingToDisplay": "Rien à afficher",
+        "nothingToDisplay2": "Les éléments non selectionables n'apparaissent pas dans cette vue",
         "selectMessage": "Sélectionner des fichiers depuis mon ordinateur",
         "uploadingActionMessage": "Il y a des erreurs qui nécessitent votre attention.",
         "or": "ou",

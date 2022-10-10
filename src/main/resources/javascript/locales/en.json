@@ -266,6 +266,11 @@
         "success": "Item successfully pasted",
         "error": "An error occurred when pasting the element"
       },
+      "move": {
+        "success": "{{count}} item has been moved to {{dest}}",
+        "success_plural": "{{count}} items have been moved to {{dest}}.",
+        "error": "{{name}} cannot be moved to {{dest}}."
+      },
       "actions": {
         "pageComposer": "Open in Page Composer",
         "openInJContent": "Open in jContent",

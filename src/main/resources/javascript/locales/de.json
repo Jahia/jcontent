@@ -264,6 +264,11 @@
         "success": "Element erfolgreich kopiert",
         "error": "Beim Kopieren des Elements ist ein Fehler aufgetreten"
       },
+      "move": {
+        "success": "{{count}} item has been moved to {{dest}}",
+        "success_plural": "{{count}} items have been moved to {{dest}}.",
+        "error": "{{name}} kann nicht verschoben werden."
+      },
       "actions": {
         "openInEditMode": "Im Bearbeitungsmodus öffnen",
         "pageComposer": "Im Page Composer öffnen",

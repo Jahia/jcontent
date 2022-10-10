@@ -9,6 +9,31 @@ import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
+import clsx from 'clsx';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+
+const ItemComponent = ({children, node, ...props}) => {
+    const ref = useRef(null);
+    const [{dropClasses}, drop] = useNodeDrop(node);
+    const [{dragClasses}, drag, dragEl] = useNodeDrag(node);
+
+    drag(drop(ref));
+
+    return (
+        <>
+            <li ref={ref} {...props} className={clsx([...dragClasses, ...dropClasses])}>
+                {children}
+                {dragEl}
+            </li>
+        </>
+    );
+};
+
+ItemComponent.propTypes = {
+    children: PropTypes.node,
+    node: PropTypes.object
+};
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
@@ -64,6 +89,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
+                      itemComponent={ItemComponent}
                       data={convertPathsToTree(treeEntries, path, isReversed, contextualMenuAction)}
                       openedItems={openPaths}
                       selectedItems={[path]}

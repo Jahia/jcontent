@@ -12,6 +12,8 @@ import Actions from './Actions';
 import FileSize from './FileSize';
 import styles from './FileCard.scss';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 
 export const FileCard = ({
     node,
@@ -26,6 +28,11 @@ export const FileCard = ({
     contextualMenuAction
 }) => {
     const {t} = useTranslation('jcontent');
+    const ref = useRef(null);
+    const [{dropClasses}, drop] = useNodeDrop(node);
+    const [{dragClasses}, drag, dragEl] = useNodeDrag(node);
+
+    drag(drop(ref));
 
     let contextualMenu = useRef();
 
@@ -40,8 +47,11 @@ export const FileCard = ({
 
     return (
         <div
+            ref={ref}
             className={classNames(
                 styles.card,
+                dragClasses,
+                dropClasses,
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"
@@ -60,6 +70,7 @@ export const FileCard = ({
             }}
             onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
         >
+            {dragEl}
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction} path={node.path}/>}
 
             {isImage ?

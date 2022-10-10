@@ -25,6 +25,7 @@ const PickerItemsFragment = {
         gql: gql`fragment PrimaryNodeTypeName on JCRNode {
             primaryNodeType {
                 name
+                icon
             }
         }`
     }

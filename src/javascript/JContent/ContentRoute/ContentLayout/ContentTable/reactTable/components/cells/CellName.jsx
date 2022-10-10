@@ -9,12 +9,16 @@ import clsx from 'clsx';
 export const CellName = ({value, cell, column, row}) => {
     const node = row.original;
     const deleted = isMarkedForDeletion(node);
+
     return (
         <TableBodyCell key={row.id + column.id}
+                       ref={row.ref}
                        isExpandableColumn
                        isScrollable
                        className={clsx(
                            classes.cellName,
+                           row.dropClasses,
+                           row.dragClasses,
                            {[classes.deleted]: deleted}
                        )}
                        width={column.width}

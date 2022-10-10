@@ -21,3 +21,11 @@
 .ContentTree_Item:hover .ContentTree_ItemMenuIcon {
     display: block;
 }
+
+.drag.drag {
+    opacity: 0.5;
+}
+
+.drop.drop {
+    box-shadow: inset 0 0 0 2px var(--color-accent_light40);
+}

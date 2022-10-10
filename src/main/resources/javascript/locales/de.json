@@ -40,6 +40,8 @@
       "contentNotFound": "Hoppla, wir können nicht finden, wonach Sie gesucht haben. Der gesuchte Inhalt existiert möglicherweise nicht, oder wurde gelöscht, verschoben oder verändert.",
       "downloadAsZip": "als ZIP herunterladen",
       "fileUpload": {
+        "nothingToDisplay": "Nichts anzuzeigen",
+        "nothingToDisplay2": "Nicht-auswählbare Elemente werden in dieser Anzeige nicht gelistet",
         "selectMessage": "Datei von meinem Computer wählen",
         "uploadingActionMessage": "Es gibt Fehler, die Ihre Aufmerksamkeit benötigen",
         "or": "oder",

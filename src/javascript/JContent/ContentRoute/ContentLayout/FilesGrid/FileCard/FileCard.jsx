@@ -29,10 +29,8 @@ export const FileCard = ({
 }) => {
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
-    const [{dropClasses}, drop] = useNodeDrop(node);
-    const [{dragClasses}, drag, dragEl] = useNodeDrag(node);
-
-    drag(drop(ref));
+    const {dropClasses} = useNodeDrop(node, ref);
+    const {dragClasses} = useNodeDrag(node, ref);
 
     let contextualMenu = useRef();
 
@@ -70,7 +68,6 @@ export const FileCard = ({
             }}
             onDoubleClick={allowDoubleClickNavigation(node.primaryNodeType.name, null, () => setPath(siteKey, node.path, mode))}
         >
-            {dragEl}
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction} path={node.path}/>}
 
             {isImage ?

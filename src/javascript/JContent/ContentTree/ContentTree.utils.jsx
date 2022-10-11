@@ -33,7 +33,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(treeEntries, selected, isReversed, contentMenu) {
+function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps}) {
     let tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -67,7 +67,8 @@ function convertPathsToTree(treeEntries, selected, isReversed, contentMenu) {
             children: [],
             treeItemProps: {
                 'data-sel-role': treeEntry.node.name,
-                node: treeEntry.node
+                node: treeEntry.node,
+                ...itemProps
             }
         };
         const parent = findInTree(tree, parentPath);

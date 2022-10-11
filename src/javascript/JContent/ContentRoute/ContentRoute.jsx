@@ -13,14 +13,14 @@ const ContentRoute = () => {
         viewMode: state.jcontent.tableView.viewMode
     }), shallowEqual);
 
-    const inEditMode = JContentConstants.mode.PAGES === mode && (JContentConstants.tableView.viewType.VIEW === viewMode || JContentConstants.tableView.viewType.VIEW_DEVICE === viewMode);
+    const inEditMode = JContentConstants.mode.PAGES === mode && (JContentConstants.tableView.viewMode.VIEW === viewMode || JContentConstants.tableView.viewMode.VIEW_DEVICE === viewMode);
     return (
         <MainLayout
             header={<ContentHeader/>}
         >
             <LoaderSuspense>
                 <ErrorBoundary>
-                    { mode.length > 0 && inEditMode ? <EditFrame isDeviceView={JContentConstants.tableView.viewType.VIEW_DEVICE === viewMode}/> : <ContentLayout/> }
+                    { mode.length > 0 && inEditMode ? <EditFrame isDeviceView={JContentConstants.tableView.viewMode.VIEW_DEVICE === viewMode}/> : <ContentLayout/> }
                 </ErrorBoundary>
             </LoaderSuspense>
         </MainLayout>

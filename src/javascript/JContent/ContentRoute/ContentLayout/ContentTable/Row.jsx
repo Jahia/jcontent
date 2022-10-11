@@ -25,11 +25,10 @@ export const Row = ({
     const contextualMenu = useRef();
 
     const ref = useRef(null);
-    const [{dropClasses}, drop] = useNodeDrop(node);
-    const [{dragClasses}, drag] = useNodeDrag(node);
+    const {dropClasses} = useNodeDrop(node, ref);
+    const {dragClasses} = useNodeDrag(node, ref);
 
     row.ref = ref;
-    drag(drop(ref));
 
     const openContextualMenu = event => {
         contextualMenu.current(event);

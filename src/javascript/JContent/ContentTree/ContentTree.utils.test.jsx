@@ -73,7 +73,7 @@ describe('convertPathsToTree', () => {
         hasChildren: true
     }];
 
-    let tree = convertPathsToTree(entries);
+    let tree = convertPathsToTree({treeEntries: entries});
     expect(tree.length).toEqual(1);
     expect(tree[0].id).toEqual('/sites/testsite');
     expect(tree[0].children[0].id).toEqual('/sites/testsite/home');

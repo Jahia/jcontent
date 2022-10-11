@@ -4,35 +4,37 @@ import {useEffect} from 'react';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 import {useSelector} from 'react-redux';
 
-export function useNodeDrag(node) {
+export function useNodeDrag(dragSource, ref) {
     const selection = useSelector(state => state.jcontent.selection);
     const isAnythingDragging = useDragLayer(monitor => monitor.isDragging());
 
     const [props, drag, dragPreview] = useDrag(() => selection.length === 0 ? ({
         type: 'node',
-        item: node,
+        item: dragSource,
         collect: monitor => ({
             dragClasses: monitor.isDragging() ? [styles.drag] : []
         })
     }) : ({
         type: 'paths',
         item: selection,
-        canDrag: () => selection.indexOf(node.path) > -1,
+        canDrag: () => selection.indexOf(dragSource.path) > -1,
         collect: monitor => ({
             dragClasses: monitor.isDragging() ? [styles.drag] : []
         })
-    }), [node, selection]);
+    }), [dragSource, selection]);
 
     useEffect(() => {
         dragPreview(getEmptyImage(), {captureDraggingState: true});
     }, [dragPreview]);
 
-    if (isAnythingDragging && selection.indexOf(node.path) > -1 && props.dragClasses.length === 0) {
-        return [{
-            ...props,
-            dragClasses: styles.drag
-        }, drag];
+    const enhancedProps = (isAnythingDragging && selection.indexOf(dragSource.path) > -1 && props.dragClasses.length === 0) ? {
+        ...props,
+        dragClasses: styles.drag
+    } : props;
+
+    if (ref) {
+        drag(ref);
     }
 
-    return [props, drag];
+    return enhancedProps;
 }

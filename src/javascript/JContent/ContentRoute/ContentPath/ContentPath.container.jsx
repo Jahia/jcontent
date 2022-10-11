@@ -58,8 +58,7 @@ const ContentPathContainer = () => {
         console.log(error);
     }
 
-    const node = data?.jcr?.node || {};
-    const items = useMemo(() => getItems(node), [node]);
+    const items = useMemo(() => getItems((data?.jcr?.node || {})), [data?.jcr?.node]);
     return <ContentPath items={items} onItemClick={handleNavigation}/>;
 };
 

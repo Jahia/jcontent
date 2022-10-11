@@ -5,9 +5,6 @@ import './date.config';
 import {initClipboardWatcher} from '~/JContent/actions/copyPaste/localStorageHandler';
 import {useApolloClient} from 'react-apollo';
 import {useDispatch} from 'react-redux';
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
-import {DragLayer} from '~/JContent/dnd/DragLayer';
 
 const JContentApp = () => {
     const client = useApolloClient();
@@ -19,10 +16,7 @@ const JContentApp = () => {
     return (
         <>
             <CssBaseline/>
-            <DndProvider backend={HTML5Backend}>
-                <DragLayer/>
-                <JContent/>
-            </DndProvider>
+            <JContent/>
         </>
     );
 };

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
+import {displayName, lockInfo, parentNode, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
@@ -13,24 +13,45 @@ import clsx from 'clsx';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 
-const ItemComponent = ({children, node, ...props}) => {
-    const ref = useRef(null);
-    const [{dropClasses}, drop] = useNodeDrop(node);
-    const [{dragClasses}, drag, dragEl] = useNodeDrag(node);
+export const accordionPropType = PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    icon: PropTypes.node.isRequired,
+    label: PropTypes.string.isRequired,
+    getRootPath: PropTypes.func,
+    requiredSitePermission: PropTypes.string.isRequired,
+    treeConfig: PropTypes.shape({
+        hideRoot: PropTypes.bool,
+        selectableTypes: PropTypes.arrayOf(PropTypes.string),
+        openableTypes: PropTypes.arrayOf(PropTypes.string),
+        rootLabel: PropTypes.string,
+        sortBy: PropTypes.shape({
+            fieldName: PropTypes.string,
+            sortType: PropTypes.string
+        }),
+        dnd: PropTypes.shape({
+            canDrag: PropTypes.bool,
+            canDrop: PropTypes.bool,
+            canReorder: PropTypes.bool
+        })
+    }).isRequired
+});
 
-    drag(drop(ref));
+const ItemComponent = ({children, node, item, ...props}) => {
+    const ref = useRef(null);
+    const {dropClasses} = useNodeDrop(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref, item.treeConfig.dnd && item.treeConfig.dnd.canReorder);
+    const {dragClasses} = useNodeDrag(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref);
 
     return (
         <>
             <li ref={ref} {...props} className={clsx([...dragClasses, ...dropClasses])}>
                 {children}
-                {dragEl}
             </li>
         </>
     );
 };
 
 ItemComponent.propTypes = {
+    item: accordionPropType,
     children: PropTypes.node,
     node: PropTypes.object
 };
@@ -45,7 +66,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     const useTreeEntriesOptionsJson = {
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, parentNode, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
@@ -90,7 +111,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
                       itemComponent={ItemComponent}
-                      data={convertPathsToTree(treeEntries, path, isReversed, contextualMenuAction)}
+                      data={convertPathsToTree({treeEntries, selected: path, isReversed, contentMenu: contextualMenuAction, itemProps: {item}})}
                       openedItems={openPaths}
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
@@ -106,24 +127,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         </React.Fragment>
     );
 };
-
-export const accordionPropType = PropTypes.shape({
-    key: PropTypes.string.isRequired,
-    icon: PropTypes.node.isRequired,
-    label: PropTypes.string.isRequired,
-    getRootPath: PropTypes.func,
-    requiredSitePermission: PropTypes.string.isRequired,
-    treeConfig: PropTypes.shape({
-        hideRoot: PropTypes.bool,
-        selectableTypes: PropTypes.arrayOf(PropTypes.string),
-        openableTypes: PropTypes.arrayOf(PropTypes.string),
-        rootLabel: PropTypes.string,
-        sortBy: PropTypes.shape({
-            fieldName: PropTypes.string,
-            sortType: PropTypes.string
-        })
-    }).isRequired
-});
 
 ContentTree.propTypes = {
     item: accordionPropType,

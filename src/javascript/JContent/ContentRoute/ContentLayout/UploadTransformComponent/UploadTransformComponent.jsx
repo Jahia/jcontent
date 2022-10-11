@@ -230,7 +230,7 @@ export const UploadTransformComponent = React.forwardRef(({
 UploadTransformComponent.propTypes = {
     uploadTargetComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
     uploadPath: PropTypes.string.isRequired,
-    uploadType: PropTypes.string.isRequired,
+    uploadType: PropTypes.string,
     uploadAcceptedFileTypes: PropTypes.array,
     uploadMaxSize: PropTypes.number,
     uploadMinSize: PropTypes.number,
@@ -242,5 +242,7 @@ UploadTransformComponent.defaultProps = {
     uploadMinSize: 0,
     uploadFilter: () => true
 };
+
+UploadTransformComponent.displayName = 'UploadTransformComponent';
 
 export default UploadTransformComponent;

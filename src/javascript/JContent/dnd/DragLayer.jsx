@@ -1,19 +1,10 @@
 import React from 'react';
 import {useDragLayer} from 'react-dnd';
-import {Typography} from '@jahia/moonstone';
+import {Collections, Typography} from '@jahia/moonstone';
 import {NodeIcon} from '~/utils';
 import styles from './DragLayer.scss';
 import clsx from 'clsx';
-
-const layerStyles = {
-    position: 'fixed',
-    pointerEvents: 'none',
-    zIndex: 100,
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%'
-};
+import {useTranslation} from 'react-i18next';
 
 function getItemStyles(clientOffset) {
     if (!clientOffset) {
@@ -33,6 +24,7 @@ function getItemStyles(clientOffset) {
 }
 
 export const DragLayer = () => {
+    const {t} = useTranslation('jcontent');
     const {itemType, isDragging, item, clientOffset} =
         useDragLayer(monitor => ({
             item: monitor.getItem(),
@@ -56,6 +48,17 @@ export const DragLayer = () => {
                         </Typography>
                     </>
                 );
+            case 'paths':
+                return (
+                    <>
+                        <div>
+                            <Collections className={styles.icon}/>
+                        </div>
+                        <Typography isNowrap>
+                            {t('label.contentManager.selection.itemsSelected', {count: item.length})}
+                        </Typography>
+                    </>
+                );
             default:
                 return null;
         }
@@ -66,7 +69,7 @@ export const DragLayer = () => {
     }
 
     return (
-        <div style={layerStyles}>
+        <div className={styles.layer}>
             <div className={clsx('flexRow_nowrap', 'alignCenter', styles.box)} style={getItemStyles(clientOffset)}>
                 {renderItem()}
             </div>

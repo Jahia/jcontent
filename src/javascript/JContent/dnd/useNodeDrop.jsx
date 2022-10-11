@@ -2,20 +2,18 @@ import {useMutation} from '@apollo/react-hooks';
 import {useDrop} from 'react-dnd';
 import styles from '~/JContent/ContentTree/ContentTree.scss';
 import gql from 'graphql-tag';
-import {PredefinedFragments} from '@jahia/data-helper';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
+import {PredefinedFragments} from '@jahia/data-helper';
 
-const moveNode = gql`mutation moveNode($pathOrId: String!, $destParentPathOrId: String!, $name:String, $next: String, $move: Boolean!, $reorder: Boolean!) {
+const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!) {
     jcr {
-        pasteNode(mode: MOVE, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, namingConflictResolution: RENAME) @include(if: $move) {
+        mutateNodes(pathsOrIds: $pathsOrIds) {
+            move(parentPathOrId: $destParentPathOrId)
             node {
                 ...NodeCacheRequiredFields
                 path
             }
-        }
-        mutateNode(pathOrId: $destParentPathOrId) @include(if: $reorder) {
-            reorderChildren(names: [$name, $next])
         }
     }
 }
@@ -23,30 +21,37 @@ ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
 export function useNodeDrop(node) {
-    const [paste] = useMutation(moveNode);
+    const [move] = useMutation(moveNode);
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
 
     return useDrop(() => ({
-        accept: ['node'],
+        accept: ['node', 'paths'],
         collect: monitor => ({
             dropClasses: monitor.canDrop() && monitor.isOver() ? [styles.drop] : []
         }),
         canDrop: () => (node.primaryNodeType.name === 'jnt:folder' || node.primaryNodeType.name === 'jnt:contentFolder'),
-        drop: item => {
-            paste({
-                variables: {
-                    pathOrId: item.uuid,
-                    destParentPathOrId: node.uuid,
-                    move: true,
-                    reorder: false
-                }
-            }).then(() => {
-                const message = t('jcontent:label.contentManager.move.success', {count: 1, name: item.displayName, dest: node.displayName});
-                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+        drop: (item, monitor) => {
+            const isNode = monitor.getItemType() === 'node';
+            const pathsOrIds = isNode ? [item.uuid] : item;
+
+            move({variables: {pathsOrIds, destParentPathOrId: node.uuid}}).then(() => {
+                const message = t('jcontent:label.contentManager.move.success', {
+                    count: pathsOrIds.length,
+                    dest: node.displayName
+                });
+                notificationContext.notify(message, ['closeButton']);
             }).catch(() => {
-                const message = t('jcontent:label.contentManager.move.error', {count: 1, name: item.displayName, dest: node.displayName});
-                notificationContext.notify(message, ['closeButton', 'noAutomaticClose']);
+                const message = isNode ?
+                    t('jcontent:label.contentManager.move.error_name', {
+                        name: item.displayName,
+                        dest: node.displayName
+                    }) :
+                    t('jcontent:label.contentManager.move.error', {
+                        count: pathsOrIds.length,
+                        dest: node.displayName}
+                    );
+                notificationContext.notify(message, ['closeButton']);
             });
         }
     }), [node]);

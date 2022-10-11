@@ -51,7 +51,7 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
 
 EmptyDropZone.propTypes = {
     component: PropTypes.string.isRequired,
-    uploadType: PropTypes.string.isRequired
+    uploadType: PropTypes.string
 };
 
 export default EmptyDropZone;

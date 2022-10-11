@@ -26,7 +26,7 @@ export const ContentEmptyDropZone = ({path, uploadType}) => (
 );
 
 ContentEmptyDropZone.propTypes = {
-    uploadType: PropTypes.string.isRequired,
+    uploadType: PropTypes.string,
     path: PropTypes.string.isRequired
 };
 

@@ -78,7 +78,8 @@
         "dialogRenameCancel": "Anuuler",
         "dialogRename": "Renommer",
         "replaceWith": "Remplacer par",
-        "edit": "Editer"
+        "edit": "Editer",
+        "drop": "Déposez vos fichiers et dossiers ici"
       },
       "import": {
         "dropMessage": "Glisser-déposer un fichier à importer",

@@ -77,7 +77,8 @@
         "dialogRenameExample": "ex: Dateiname",
         "dialogRenameCancel": "Abbrechen",
         "dialogRename": "Umbenennen",
-        "replaceWith": "Ersetzen mit"
+        "replaceWith": "Ersetzen mit",
+        "drop": "Drop Datei und Ordner hier ab"
       },
       "import": {
         "dropMessage": "Drag und Drop zu importierende Datei",

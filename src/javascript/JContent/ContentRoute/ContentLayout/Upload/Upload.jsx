@@ -172,7 +172,6 @@ export class Upload extends React.Component {
 
     generateOverlayStyle() {
         let {overlayTarget} = this.props;
-        console.log('overlay', overlayTarget);
         if (overlayTarget !== null) {
             return Object.assign({}, this.overlayStyle.active, {
                 top: overlayTarget.y,

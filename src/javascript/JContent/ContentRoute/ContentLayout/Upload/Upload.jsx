@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Snackbar} from '@material-ui/core';
-import {Button, Close, Typography} from '@jahia/moonstone';
+import {Button, Close, Download, Typography} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {
@@ -33,7 +33,7 @@ export class Upload extends React.Component {
                 display: 'flex',
                 position: 'absolute',
                 backgroundColor: 'var(--color-white)',
-                opacity: '0.95',
+                opacity: '0.9',
                 pointerEvents: 'none',
                 'z-index': '9999'
             },
@@ -107,6 +107,7 @@ export class Upload extends React.Component {
                                     weight="default"
                         >{t('jcontent:label.contentManager.fileUpload.drop')}
                         </Typography>
+                        <Download/>
                     </div>
                 </div>
             </React.Fragment>

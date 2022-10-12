@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
-import {Publish, Typography} from '@jahia/moonstone';
+import {Download, Typography} from '@jahia/moonstone';
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
@@ -27,7 +27,7 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
         return (
             <Component className={styles.dropZone}>
                 <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
-                <Publish/>
+                <Download/>
             </Component>
         );
     }
@@ -36,7 +36,7 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
         return (
             <Component className={styles.dropZone}>
                 <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
-                <Publish/>
+                <Download/>
             </Component>
         );
     }

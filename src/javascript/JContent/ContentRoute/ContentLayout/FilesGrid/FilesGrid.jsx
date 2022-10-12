@@ -43,7 +43,11 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         setSelectedItemIndex
     } = useKeyboardNavigation({
         listLength: rows.length,
-        onSelectionChange: index => onPreviewSelect(rows[index].path)
+        onSelectionChange: index => {
+            const row = rows[index];
+            document.querySelector(`[data-sel-role-card="${row.name}"]`).scrollIntoView(true);
+            return onPreviewSelect(row);
+        }
     });
 
     if ((!rows || rows.length === 0) && isLoading) {

@@ -19,3 +19,26 @@
     max-height: 150px;
     overflow: auto;
 }
+
+.dragZone {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+
+    border: 2px dashed var(--color-gray60);
+}
+
+.dropZone {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: inherit;
+
+    color: var(--color-gray);
+    text-align: center; // This one is for Safari rendering
+
+    transition-duration: 0.1s;
+}

@@ -79,7 +79,8 @@
         "dialogRenameCancel": "Cancel",
         "dialogRename": "Rename",
         "replaceWith": "Replace with",
-        "edit": "Edit"
+        "edit": "Edit",
+        "drop": "Drop your file(s) and folder(s) here"
       },
       "import": {
         "dropMessage": "Drag and drop a file to import",

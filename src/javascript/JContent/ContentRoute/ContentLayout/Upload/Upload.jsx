@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Snackbar} from '@material-ui/core';
-import {Button, Close} from '@jahia/moonstone';
+import {Button, Close, Download, Typography} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {
@@ -30,11 +30,12 @@ export class Upload extends React.Component {
         this.clearCloseTimeout = this.clearCloseTimeout.bind(this);
         this.overlayStyle = {
             active: {
-                display: 'block',
+                display: 'flex',
                 position: 'absolute',
-                backgroundColor: 'var(--color-accent)',
-                opacity: '0.4',
-                pointerEvents: 'none'
+                backgroundColor: 'var(--color-white)',
+                opacity: '0.9',
+                pointerEvents: 'none',
+                'z-index': '9999'
             },
             inactive: {
                 display: 'none',
@@ -71,7 +72,7 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
+        let {uploads, updateUpload, uploadFile, removeUploadFromQueue, t} = this.props;
 
         return (
             <React.Fragment>
@@ -91,10 +92,24 @@ export class Upload extends React.Component {
                                 />
                             ))}
                         </div>
-                        <Button isReversed variant="ghost" size="small" data-cm-role="upload-close-button" icon={<Close/>} className={styles.closeButton} onClick={this.handleCloseSnackBar}/>
+                        <Button isReversed
+                                variant="ghost"
+                                size="small"
+                                data-cm-role="upload-close-button"
+                                icon={<Close/>}
+                                className={styles.closeButton}
+                                onClick={this.handleCloseSnackBar}/>
                     </React.Fragment>
                 </Snackbar>
-                <div style={this.generateOverlayStyle()}/>
+                <div style={this.generateOverlayStyle()} className={styles.dragZone}>
+                    <div className={styles.dropZone}>
+                        <Typography variant="heading"
+                                    weight="default"
+                        >{t('jcontent:label.contentManager.fileUpload.drop')}
+                        </Typography>
+                        <Download/>
+                    </div>
+                </div>
             </React.Fragment>
         );
     }
@@ -158,7 +173,7 @@ export class Upload extends React.Component {
 
     generateOverlayStyle() {
         let {overlayTarget} = this.props;
-        if (overlayTarget !== null && overlayTarget.path === this.props.uploadPath) {
+        if (overlayTarget !== null) {
             return Object.assign({}, this.overlayStyle.active, {
                 top: overlayTarget.y,
                 left: overlayTarget.x,
@@ -206,7 +221,8 @@ Upload.propTypes = {
     uploadUpdateCallback: PropTypes.func.isRequired,
     updateUpload: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
-    removeUploadFromQueue: PropTypes.func.isRequired
+    removeUploadFromQueue: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired
 };
 
 export default compose(

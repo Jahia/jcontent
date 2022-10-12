@@ -35,7 +35,7 @@ export class Upload extends React.Component {
                 backgroundColor: 'var(--color-white)',
                 opacity: '0.95',
                 pointerEvents: 'none',
-                'z-index': '999'
+                'z-index': '9999'
             },
             inactive: {
                 display: 'none',

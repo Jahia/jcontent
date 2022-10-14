@@ -1,8 +1,11 @@
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useContext} from 'react';
+import {ComponentRendererContext} from '@jahia/ui-extender';
+import {DownloadFileDialog} from '~/JContent/actions/downloadFileAction/DownloadFileDialog';
 
 export const DownloadFileActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+    const componentRenderer = useContext(ComponentRendererContext);
     const res = useNodeChecks(
         {path},
         {
@@ -17,19 +20,17 @@ export const DownloadFileActionComponent = ({path, render: Render, loading: Load
 
     const isVisible = res.checksResult;
 
+    const onExit = () => {
+        componentRenderer.destroy('downloadFileDialog');
+    };
+
     return (
         <Render
             {...others}
             isVisible={isVisible}
             enabled={isVisible}
             onClick={() => {
-                let a = document.createElement('a');
-                a.setAttribute('title', 'download');
-                a.setAttribute('href', window.contextJsParameters.contextPath + '/files/' + window.contextJsParameters.workspace + path);
-                a.setAttribute('download', path.split('/').pop());
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                componentRenderer.render('downloadFileDialog', DownloadFileDialog, {path, onExit});
             }}
         />
     );

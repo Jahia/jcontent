@@ -38,7 +38,7 @@ export const DownloadFileDialog = ({path, onExit}) => {
         }
     }, [node, dropdownData]);
 
-    const sizeInfo = (node && node.height && node.width) ? ` - ${parseInt(node.height.value, 10)}x${parseInt(node.width.value, 10)}px` : '';
+    const sizeInfo = (node && node.height && node.width) ? `${parseInt(node.height.value, 10)} x ${parseInt(node.width.value, 10)} - ` : '';
 
     return (
         <Dialog open={open}

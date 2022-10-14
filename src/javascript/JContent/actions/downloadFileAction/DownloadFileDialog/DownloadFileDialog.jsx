@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import styles from './DownloadFileDialog.scss';
@@ -14,20 +14,29 @@ export const DownloadFileDialog = ({path, onExit}) => {
     const [open, setOpen] = useState(true);
     const {t} = useTranslation('jcontent');
     const aRef = useRef();
+    const [mode, setMode] = useState();
 
-    const dropdownData = useMemo(() => [
-        {label: t('jcontent:label.contentManager.downloadFile.default'), value: 'default'},
-        {label: t('jcontent:label.contentManager.downloadFile.live'), value: 'live'}
-    ], [t]);
-
-    const {data} = useQuery(FileInfoQuery, {variables: {path, language: 'en'}});
-
-    const [mode, setMode] = useState(dropdownData[0]);
+    const {data} = useQuery(FileInfoQuery, {
+        variables: {path, language: 'en'}
+    });
 
     const handleClose = () => setOpen(false);
 
-    const href = window.contextJsParameters.contextPath + '/files/' + mode.value + path;
+    const href = mode && new URL(window.contextJsParameters.contextPath + '/files/' + mode.value + path, window.location.href).toString();
     const node = data?.jcr?.nodeByPath;
+
+    const dropdownData = useMemo(() => [
+        {label: t('jcontent:label.contentManager.downloadFile.default'), value: 'default'},
+        {label: t('jcontent:label.contentManager.downloadFile.live'), value: 'live', isDisabled: !(node?.aggregatedPublicationInfo?.existsInLive)}
+    ], [t, node]);
+
+    useEffect(() => {
+        if (node && !node.aggregatedPublicationInfo.existsInLive) {
+            setMode(dropdownData[0]);
+        } else {
+            setMode(dropdownData[1]);
+        }
+    }, [node, dropdownData]);
 
     const sizeInfo = (node && node.height && node.width) ? ` - ${parseInt(node.height.value, 10)}x${parseInt(node.width.value, 10)}px` : '';
 

@@ -339,6 +339,14 @@
         "exists": "A file with this name already exists",
         "invalidChars": "Invalid characters:  \/:*?\"<>|%"
       },
+      "downloadFile": {
+        "title": "Download file",
+        "selectVersion": "Select version",
+        "live": "Live",
+        "default": "Staging",
+        "copyUrl": "Copy URL",
+        "download": "Download"
+      },
       "contentStatus": {
         "locked": "Locked",
         "markedForDeletion": "Marked for deletion",

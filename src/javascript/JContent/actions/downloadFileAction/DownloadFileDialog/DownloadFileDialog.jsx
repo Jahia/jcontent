@@ -85,6 +85,7 @@ export const DownloadFileDialog = ({path, onExit}) => {
                                 icon={<Copy/>}
                                 size="default"
                                 label={t('jcontent:label.contentManager.downloadFile.copyUrl')}
+                                data-sel-role="download-copyUrl"
                                 onClick={() => {
                                     navigator.clipboard.writeText(href);
                                     notify(t('jcontent:label.contentManager.downloadFile.copied'), ['closeButton']);
@@ -98,12 +99,14 @@ export const DownloadFileDialog = ({path, onExit}) => {
                 <Button
                     size="big"
                     label={t('jcontent:label.cancel')}
+                    data-sel-role="download-cancel"
                     onClick={handleClose}
                 />
                 <Button
                     color="accent"
                     size="big"
                     label={t('jcontent:label.contentManager.downloadFile.download')}
+                    data-sel-role="do-download"
                     onClick={() => {
                         aRef.current.click();
                     }}

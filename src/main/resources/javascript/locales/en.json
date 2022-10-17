@@ -345,6 +345,7 @@
         "live": "Live",
         "default": "Staging",
         "copyUrl": "Copy URL",
+        "copied": "URL copied in the clipboard",
         "download": "Download"
       },
       "contentStatus": {

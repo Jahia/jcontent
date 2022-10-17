@@ -336,6 +336,15 @@
         "exists": "Un fichier de ce nom existe déjà",
         "invalidChars": "Caractères invalides: \/:*?\"<>|%"
       },
+      "downloadFile": {
+        "title": "Télécharger le fichier",
+        "selectVersion": "Selectionner la version",
+        "live": "En ligne",
+        "default": "En édition",
+        "copyUrl": "Copier l'URL",
+        "copied": "L'URL a été copiée dans le presse-papier",
+        "download": "Télécharger"
+      },
       "contentStatus": {
         "locked": "Verrouillé",
         "markedForDeletion": "Marqué pour suppression",

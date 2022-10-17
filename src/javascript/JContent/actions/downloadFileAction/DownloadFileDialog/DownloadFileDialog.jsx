@@ -52,7 +52,7 @@ export const DownloadFileDialog = ({path, onExit}) => {
                 <Typography weight="bold">
                     {t('jcontent:label.contentManager.downloadFile.selectVersion')}
                 </Typography>
-                {node && (
+                {mode && node && (
                     <>
                         <Dropdown
                             maxWidth="100%"

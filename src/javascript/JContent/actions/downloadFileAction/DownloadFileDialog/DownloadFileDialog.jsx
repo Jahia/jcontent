@@ -9,10 +9,12 @@ import {FileInfoQuery} from '~/JContent/actions/downloadFileAction/DownloadFileD
 import clsx from 'clsx';
 import {NodeIcon} from '~/utils';
 import {FileSize} from '~/shared';
+import {useNotifications} from '@jahia/react-material';
 
 export const DownloadFileDialog = ({path, onExit}) => {
     const [open, setOpen] = useState(true);
     const {t} = useTranslation('jcontent');
+    const {notify} = useNotifications();
     const aRef = useRef();
     const [mode, setMode] = useState();
 
@@ -85,6 +87,7 @@ export const DownloadFileDialog = ({path, onExit}) => {
                                 label={t('jcontent:label.contentManager.downloadFile.copyUrl')}
                                 onClick={() => {
                                     navigator.clipboard.writeText(href);
+                                    notify(t('jcontent:label.contentManager.downloadFile.copied'), ['closeButton']);
                                 }}
                             />
                         </div>

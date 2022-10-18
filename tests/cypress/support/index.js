@@ -14,7 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-
+import "cypress-real-events/support";
 require('cypress-terminal-report/src/installLogsCollector')()
 require('@jahia/cypress/dist/support/registerSupport').registerSupport()
 

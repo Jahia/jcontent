@@ -69,7 +69,7 @@ export class JContent extends BasePage {
     }
 
     switchToMode(name: string): JContent {
-        getComponentByRole(Button, `sel-view-mode-${name}`).click()
+        getComponentByRole(Dropdown, `sel-view-mode-dropdown`).select(name)
         return this
     }
 
@@ -79,7 +79,7 @@ export class JContent extends BasePage {
     }
 
     switchToListMode(): JContent {
-        this.switchToMode('list')
+        this.switchToMode('List')
         return this
     }
 

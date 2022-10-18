@@ -1,4 +1,5 @@
-import { JContent } from '../page-object'
+import {JContent} from '../page-object'
+import {Button, getComponentByRole} from '@jahia/cypress'
 
 describe('Menu tests', () => {
     beforeEach(function () {
@@ -17,5 +18,21 @@ describe('Menu tests', () => {
         jcontent.getTable().getRowByIndex(1).contextMenu().select('Delete')
 
         cy.contains('.x-btn-text', 'No').click()
+    })
+
+    it('Can download file', function () {
+        const jcontent = JContent.visit('jcontentSite', 'en', 'media/files/bootstrap/css')
+        jcontent.switchToListMode()
+        jcontent.getTable().getRowByIndex(1).contextMenu().select('Download')
+        cy.window().then((win) => {
+            console.log(win)
+        })
+        getComponentByRole(Button, 'download-copyUrl').get().realClick()
+        cy.window().then((win) =>
+            win.navigator.clipboard.readText().then((text) => {
+                expect(text).to.contain('/files/bootstrap/css/bootstrap.css')
+            }),
+        )
+        getComponentByRole(Button, 'download-cancel').click()
     })
 })

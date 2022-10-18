@@ -5,7 +5,10 @@ import styles from './DownloadFileDialog.scss';
 import {Button, Chip, Copy, Dropdown, Folder, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useQuery} from '@apollo/react-hooks';
-import {FileInfoQuery} from '~/JContent/actions/downloadFileAction/DownloadFileDialog/DownloadFileDialog.gql-queries';
+import {
+    FileInfoQuery,
+    FileInfoQueryLive
+} from '~/JContent/actions/downloadFileAction/DownloadFileDialog/DownloadFileDialog.gql-queries';
 import clsx from 'clsx';
 import {NodeIcon} from '~/utils';
 import {FileSize} from '~/shared';
@@ -16,16 +19,25 @@ export const DownloadFileDialog = ({path, onExit}) => {
     const {t} = useTranslation('jcontent');
     const {notify} = useNotifications();
     const aRef = useRef();
-    const [mode, setMode] = useState();
+    const [mode, setMode] = useState('default');
 
     const {data} = useQuery(FileInfoQuery, {
         variables: {path, language: 'en'}
     });
 
+    const node = data?.jcr?.nodeByPath;
+
+    const {data: liveData} = useQuery(FileInfoQueryLive, {
+        variables: {uuid: node?.uuid, language: 'en'},
+        skip: !node || !node.aggregatedPublicationInfo?.existsInLive || mode !== 'live'
+    });
+
+    const liveNode = liveData?.jcr?.nodeById;
+
     const handleClose = () => setOpen(false);
 
-    const href = mode && new URL(window.contextJsParameters.contextPath + '/files/' + mode.value + path, window.location.href).toString();
-    const node = data?.jcr?.nodeByPath;
+    const currentNode = mode === 'live' ? liveNode : node;
+    const href = new URL(window.contextJsParameters.contextPath + '/files/' + mode + currentNode?.path, window.location.href).toString();
 
     const dropdownData = useMemo(() => [
         {label: t('jcontent:label.contentManager.downloadFile.default'), value: 'default'},
@@ -33,14 +45,10 @@ export const DownloadFileDialog = ({path, onExit}) => {
     ], [t, node]);
 
     useEffect(() => {
-        if (node && !node.aggregatedPublicationInfo.existsInLive) {
-            setMode(dropdownData[0]);
-        } else {
-            setMode(dropdownData[1]);
-        }
-    }, [node, dropdownData]);
+        setMode((node && !node.aggregatedPublicationInfo.existsInLive) ? 'default' : 'live');
+    }, [node]);
 
-    const sizeInfo = (node && node.height && node.width) ? `${parseInt(node.height.value, 10)} x ${parseInt(node.width.value, 10)} - ` : '';
+    const sizeInfo = (currentNode && currentNode.height && currentNode.width) ? `${parseInt(currentNode.height.value, 10)} x ${parseInt(currentNode.width.value, 10)} - ` : '';
 
     return (
         <Dialog open={open}
@@ -54,29 +62,29 @@ export const DownloadFileDialog = ({path, onExit}) => {
                 <Typography weight="bold">
                     {t('jcontent:label.contentManager.downloadFile.selectVersion')}
                 </Typography>
-                {mode && node && (
+                {currentNode && (
                     <>
                         <Dropdown
                             maxWidth="100%"
                             className={styles.dropdown}
                             variant="outlined"
                             data={dropdownData}
-                            label={mode.label}
-                            value={mode.value}
-                            onChange={(e, item) => setMode(item)}
+                            label={dropdownData.find(f => f.value === mode).label}
+                            value={mode}
+                            onChange={(e, item) => setMode(item.value)}
                         />
                         <a ref={aRef} title="download" href={href} download={path.split('/').pop()}> </a>
 
                         <div className={clsx(styles.card, 'flexRow_nowrap', 'alignCenter')}>
                             <div className={styles.cardThumbnail}>
-                                {node.isImage ? <img src={href}/> : <NodeIcon node={node}/>}
+                                {currentNode.isImage ? <img src={href}/> : <NodeIcon node={currentNode}/>}
                             </div>
                             <div className={clsx(styles.gap, 'flexFluid', 'flexCol')}>
-                                <Typography isNowrap>{node?.displayName}</Typography>
+                                <Typography isNowrap>{currentNode?.displayName}</Typography>
                                 <div className={clsx('flexRow', styles.gap)}>
-                                    <Chip icon={<Folder/>} label={node?.parent?.name}/>
+                                    <Chip icon={<Folder/>} label={currentNode?.parent?.name}/>
                                     <Typography variant="caption" className={styles.grey}>
-                                        {sizeInfo} <FileSize node={node}/>
+                                        {sizeInfo} <FileSize node={currentNode}/>
                                     </Typography>
                                 </div>
                             </div>

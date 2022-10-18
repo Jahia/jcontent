@@ -27,7 +27,6 @@ describe('Menu tests', () => {
         cy.window().then((win) => {
             console.log(win)
         })
-        getComponentByRole(Button, 'download-copyUrl').click()
         getComponentByRole(Button, 'download-cancel').click()
     })
 })

@@ -27,12 +27,7 @@ describe('Menu tests', () => {
         cy.window().then((win) => {
             console.log(win)
         })
-        getComponentByRole(Button, 'download-copyUrl').get().realClick()
-        cy.window().then((win) =>
-            win.navigator.clipboard.readText().then((text) => {
-                expect(text).to.contain('/files/bootstrap/css/bootstrap.css')
-            }),
-        )
+        getComponentByRole(Button, 'download-copyUrl').click()
         getComponentByRole(Button, 'download-cancel').click()
     })
 })

@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {isBrowserImage} from '../../ContentLayout.utils';
 import {NodeIcon} from '~/utils';
 import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
-import classNames from 'clsx';
+import clsx from 'clsx';
 import FileName from './FileName';
 import Actions from './Actions';
 import FileSize from './FileSize';
@@ -29,8 +29,8 @@ export const FileCard = ({
 }) => {
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
-    const {dropClasses} = useNodeDrop(node, ref);
-    const {dragClasses} = useNodeDrag(node, ref);
+    const {canDrop} = useNodeDrop(node, ref);
+    const {dragging} = useNodeDrag(node, ref);
 
     let contextualMenu = useRef();
 
@@ -46,10 +46,10 @@ export const FileCard = ({
     return (
         <div
             ref={ref}
-            className={classNames(
+            className={clsx(
                 styles.card,
-                dragClasses,
-                dropClasses,
+                dragging && styles.drag,
+                canDrop && styles.drop,
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"
@@ -72,7 +72,7 @@ export const FileCard = ({
 
             {isImage ?
                 <div
-                    className={classNames(styles.cardPreviewAndIcon)}
+                    className={clsx(styles.cardPreviewAndIcon)}
                     style={{backgroundImage: `url("${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2")`}}
                 /> :
                 <div className={styles.cardPreviewAndIcon}>

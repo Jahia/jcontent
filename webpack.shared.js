@@ -12,6 +12,7 @@ const sharedDeps = [
     'i18next-xhr-backend',
     'graphql-tag',
     'react-apollo',
+    'react-dnd',
     'react-redux',
     'redux',
     'rxjs',

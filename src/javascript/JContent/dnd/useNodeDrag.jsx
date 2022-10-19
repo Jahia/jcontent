@@ -12,7 +12,7 @@ export function useNodeDrag(dragSource, ref) {
         type: 'node',
         item: dragSource,
         collect: monitor => ({
-            dragClasses: monitor.isDragging() ? [styles.drag] : []
+            dragging: monitor.isDragging()
         })
     }) : ({
         type: 'paths',

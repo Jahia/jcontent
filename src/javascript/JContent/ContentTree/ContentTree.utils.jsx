@@ -68,6 +68,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
             treeItemProps: {
                 'data-sel-role': treeEntry.node.name,
                 node: treeEntry.node,
+                treeEntries,
                 ...itemProps
             }
         };

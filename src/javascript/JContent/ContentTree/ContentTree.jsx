@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {displayName, lockInfo, parentNode, useTreeEntries} from '@jahia/data-helper';
+import {displayName, lockInfo, useTreeEntries} from '@jahia/data-helper';
 import {PickerItemsFragment} from './ContentTree.gql-fragments';
 import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
@@ -12,6 +12,7 @@ import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+import styles from './ContentTree.scss';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -36,14 +37,24 @@ export const accordionPropType = PropTypes.shape({
     }).isRequired
 });
 
-const ItemComponent = ({children, node, item, ...props}) => {
+const getStyle = insertPosition => insertPosition ? styles[insertPosition] : styles.drop;
+
+const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     const ref = useRef(null);
-    const {dropClasses} = useNodeDrop(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref, item.treeConfig.dnd && item.treeConfig.dnd.canReorder);
-    const {dragClasses} = useNodeDrag(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref);
+    const {canDrop, insertPosition, destParent} = useNodeDrop(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref, item.treeConfig.dnd && item.treeConfig.dnd.canReorder, treeEntries);
+    const {dragging} = useNodeDrag(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref);
+
+    const depth = canDrop ? treeEntries.find(e => e.node.path === destParent.path)?.depth : -1;
+
+    useEffect(() => {
+        if (ref.current && depth > 0) {
+            ref.current.style.setProperty('--depth', depth);
+        }
+    }, [depth]);
 
     return (
         <>
-            <li ref={ref} {...props} className={clsx([...dragClasses, ...dropClasses])}>
+            <li ref={ref} {...props} className={clsx([dragging && styles.drag, canDrop && getStyle(insertPosition)])}>
                 {children}
             </li>
         </>
@@ -53,7 +64,8 @@ const ItemComponent = ({children, node, item, ...props}) => {
 ItemComponent.propTypes = {
     item: accordionPropType,
     children: PropTypes.node,
-    node: PropTypes.object
+    node: PropTypes.object,
+    treeEntries: PropTypes.array
 };
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
@@ -66,7 +78,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     const useTreeEntriesOptionsJson = {
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, parentNode, displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, PickerItemsFragment.parentNode, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],

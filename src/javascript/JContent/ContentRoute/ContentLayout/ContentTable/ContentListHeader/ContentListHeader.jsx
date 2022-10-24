@@ -6,7 +6,7 @@ import {SortIndicator, TableHead, TableHeadCell, TableRow} from '@jahia/moonston
 import clsx from 'clsx';
 import classes from '../ContentTable.scss';
 
-export const ContentListHeader = ({headerGroups}) => {
+export const ContentListHeader = ({headerGroups, headerClasses}) => {
     return (
         <TableHead>
             {headerGroups.map(headerGroup => (
@@ -18,7 +18,7 @@ export const ContentListHeader = ({headerGroups}) => {
                         <TableHeadCell key={column.id}
                                        {...column.getHeaderProps(column.getSortProps())}
                                        data-cm-role={'table-content-list-header-cell-' + column.id}
-                                       className={clsx(classes[`header-${column.id}`])}
+                                       className={clsx({...classes, ...headerClasses}[`header-${column.id}`])}
                                        width={column.width}
                         >
                             {column.render('Header')}
@@ -32,7 +32,8 @@ export const ContentListHeader = ({headerGroups}) => {
 };
 
 ContentListHeader.propTypes = {
-    headerGroups: PropTypes.array.isRequired
+    headerGroups: PropTypes.array.isRequired,
+    headerClasses: PropTypes.object
 };
 
 export default compose(

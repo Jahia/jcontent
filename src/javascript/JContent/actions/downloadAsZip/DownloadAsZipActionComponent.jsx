@@ -27,8 +27,10 @@ export const DownloadAsZipActionComponent = ({path, paths, render: Render, loadi
 
     // This action is only available for Jahia 8.1.3.0 or higher.
     // Currently parent version is 8.0.2.0, please remove that check once the requirement higher than 8.1.3.0
-    const isVisible = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') >= 0 && res.checksResult && (res.node ? !hasMixin(res.node, 'jmix:markedForDeletionRoot') : res.nodes.reduce((acc, node) => acc && !hasMixin(node, 'jmix:markedForDeletionRoot'), true));
-    const zipPath = `${res.node ? res.node.path : res.nodes[0].parent.path}.zip`;
+    const isNodeMarkedForDeletionFn = node => hasMixin(node, 'jmix:markedForDeletionRoot');
+    const isVisible = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') >= 0 &&
+        res.checksResult &&
+        res.node ? !isNodeMarkedForDeletionFn(res.node) : !res.nodes.some(isNodeMarkedForDeletionFn);
     return (
         <Render
             {...others}
@@ -37,6 +39,7 @@ export const DownloadAsZipActionComponent = ({path, paths, render: Render, loadi
             onClick={() => {
                 let nodes = res.node ? [res.node] : res.nodes;
                 const filesToZip = `${btoa(JSON.stringify(nodes.map(node => node.path)))}`;
+                const zipPath = `${res.node ? res.node.path : res.nodes[0].parent.path}.zip`;
                 window.open(`${window.contextJsParameters.contextPath}/cms/export/default${zipPath}?filesToZip=${nodes.length === 1 ? '' : filesToZip}`);
             }}
         />

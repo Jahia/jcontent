@@ -5,8 +5,8 @@ import {useTranslation} from 'react-i18next';
 import JContentConstants from '~/JContent/JContent.constants';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {setTableViewMode} from '../../ContentLayout/StructuredView/StructuredView.redux';
-import {useCode} from '~/JContent/useCode';
 import classes from './ViewModeSelector.scss';
+import {booleanValue} from '~/JContent/JContent.utils';
 
 const localStorage = window.localStorage;
 
@@ -35,8 +35,6 @@ const icons = {
 const buttons = [FLATLIST, STRUCTUREDVIEW];
 const pagesButtons = [VIEW, VIEW_DEVICE];
 
-const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
-
 const tableViewDropdownData = (t, viewMode, allButtons) => {
     return allButtons.map(v => ({
         label: t(`jcontent:label.contentManager.view.${v}`),
@@ -51,7 +49,7 @@ const tableViewDropdownData = (t, viewMode, allButtons) => {
 
 export const ViewModeSelector = ({selector, setTableViewModeAction}) => {
     const {t} = useTranslation('jcontent');
-    const valid = useCode(code);
+    const valid = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
 
     let {mode, viewMode} = useSelector(selector, shallowEqual);
 

@@ -25,6 +25,24 @@ const PickerItemsFragment = {
         gql: gql`fragment PrimaryNodeTypeName on JCRNode {
             primaryNodeType {
                 name
+                icon
+            }
+        }`
+    },
+    parentNode: {
+        variables: {
+            language: 'String!'
+        },
+        applyFor: 'node',
+        gql: gql`fragment ParentNodeWithName on JCRNode {
+            parent {
+                path
+                displayName(language:$language)
+                primaryNodeType {
+                    name
+                }
+                name
+                ...NodeCacheRequiredFields
             }
         }`
     }

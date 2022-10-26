@@ -264,6 +264,13 @@
         "success": "L'élément a été collé avec succès",
         "error": "Une erreur s'est produite lors du collage de l'élément"
       },
+      "move": {
+        "success": "{{count}} élément a été déplacé dans {{dest}}",
+        "success_plural": "{{count}} éléments ont été déplacés dans {{dest}}.",
+        "error": "L'élément ne peut pas être déplacé vers {{dest}}.",
+        "error_plural": "Les éléments ne peuvent pas être déplacés vers {{dest}}.",
+        "error_name": "{{name}} ne peut pas être déplacé vers {{dest}}."
+      },
       "actions": {
         "openInEditMode": "Ouvrir en mode édition",
         "pageComposer": "Ouvrir dans Page Composer",

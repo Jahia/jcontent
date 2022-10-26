@@ -7,7 +7,7 @@ import classNames from 'clsx';
 import styles from './ContentTree.scss';
 import {DefaultEntry, Section} from '@jahia/moonstone';
 
-function displayIcon(node) {
+export function displayIcon(node) {
     if (node.primaryNodeType.name === 'jnt:navMenuText') {
         return <Section/>;
     }
@@ -33,7 +33,7 @@ function findInTree(tree, id) {
     }
 }
 
-function convertPathsToTree(treeEntries, selected, isReversed, contentMenu) {
+function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, itemProps}) {
     let tree = [];
     if (treeEntries.length === 0) {
         return tree;
@@ -66,7 +66,10 @@ function convertPathsToTree(treeEntries, selected, isReversed, contentMenu) {
             }),
             children: [],
             treeItemProps: {
-                'data-sel-role': treeEntry.node.name
+                'data-sel-role': treeEntry.node.name,
+                node: treeEntry.node,
+                treeEntries,
+                ...itemProps
             }
         };
         const parent = findInTree(tree, parentPath);

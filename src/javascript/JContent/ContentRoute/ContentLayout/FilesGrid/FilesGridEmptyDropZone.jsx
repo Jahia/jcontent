@@ -16,7 +16,7 @@ export const FilesGridEmptyDropZone = ({path, uploadType}) => (
 );
 
 FilesGridEmptyDropZone.propTypes = {
-    uploadType: PropTypes.string.isRequired,
+    uploadType: PropTypes.string,
     path: PropTypes.string.isRequired
 };
 

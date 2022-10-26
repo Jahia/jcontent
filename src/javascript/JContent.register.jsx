@@ -19,6 +19,9 @@ import {contentSelectionRedux} from './JContent/ContentRoute/ContentLayout/conte
 import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {structuredViewRedux} from './JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+import {DragLayer} from '~/JContent/dnd/DragLayer';
 
 export default function () {
     const CmmNavItem = () => {
@@ -69,6 +72,16 @@ export default function () {
         targets: ['main:2'],
         path: '/jcontent/:siteKey/:lang/:mode', // Catch everything that's jcontent and let the app resolve correct view
         render: () => registry.get('route', 'requireCoreLicenseRoot').render() || <JContentApp/>
+    });
+
+    registry.add('app', 'dnd', {
+        targets: ['root:2'],
+        render: next => (
+            <DndProvider backend={HTML5Backend}>
+                <DragLayer/>
+                {next}
+            </DndProvider>
+        )
     });
 
     jContentRoutes(registry);

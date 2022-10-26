@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
-import {ContextualMenu, registry} from '@jahia/ui-extender';
+import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/JContent.redux';
-import {allowDoubleClickNavigation, extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
+import {extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/preview.redux';
@@ -13,16 +13,16 @@ import JContentConstants from '~/JContent/JContent.constants';
 import ContentEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
 import EmptyTable from './EmptyTable';
-import {Table, TableBody, TablePagination, TableRow} from '@jahia/moonstone';
+import {Table, TableBody, TablePagination} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {useExpandedControlled, useRowSelection, useSort} from './reactTable/plugins';
 import ContentListHeader from './ContentListHeader/ContentListHeader';
-import css from './ContentTable.scss';
 import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentTableWrapper from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import {cmSetSort} from '~/JContent/ContentRoute/ContentLayout/sort.redux';
+import {Row} from '~/JContent/ContentRoute/ContentLayout/ContentTable/Row';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const {t} = useTranslation('jcontent');
@@ -106,8 +106,6 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         }
     }, [rows, selection, dispatch, paths]);
 
-    const contextualMenus = useRef({});
-
     const doubleClickNavigation = node => {
         let newMode = mode;
         if (mode === JContentConstants.mode.SEARCH) {
@@ -163,45 +161,17 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                     <TableBody {...getTableBodyProps()}>
                         {tableRows.map((row, index) => {
                             prepareRow(row);
-                            const rowProps = row.getRowProps();
-                            const node = row.original;
-                            const isSelected = node.path === previewSelection && isPreviewOpened;
-                            contextualMenus.current[node.path] = contextualMenus.current[node.path] || React.createRef();
-
-                            const openContextualMenu = event => {
-                                contextualMenus.current[node.path].current(event);
-                            };
-
                             return (
-                                <TableRow key={'row' + row.id}
-                                          {...rowProps}
-                                          data-cm-role="table-content-list-row"
-                                          className={css.tableRow}
-                                          isHighlighted={isSelected}
-                                          onClick={() => {
-                                              if (isPreviewOpened && !node.notSelectableForPreview) {
-                                                  setSelectedItemIndex(index);
-                                                  onPreviewSelect(node.path);
-                                              }
-                                          }}
-                                          onContextMenu={event => {
-                                                            event.stopPropagation();
-                                                            openContextualMenu(event);
-                                                        }}
-                                          onDoubleClick={allowDoubleClickNavigation(
-                                              node.primaryNodeType.name,
-                                              node.subNodes ? node.subNodes.pageInfo.totalCount : null,
-                                              () => doubleClickNavigation(node)
-                                          )}
-                                >
-                                    <ContextualMenu
-                                        setOpenRef={contextualMenus.current[node.path]}
-                                        actionKey={selection.length === 0 || selection.indexOf(node.path) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                                        path={selection.length === 0 || selection.indexOf(node.path) === -1 ? node.path : null}
-                                        paths={selection.length === 0 || selection.indexOf(node.path) === -1 ? null : selection}
-                                    />
-                                    {row.cells.map(cell => <React.Fragment key={cell.column.id}>{cell.render('Cell')}</React.Fragment>)}
-                                </TableRow>
+                                <Row key={'row' + row.id}
+                                     row={row}
+                                     selection={selection}
+                                     previewSelection={previewSelection}
+                                     isPreviewOpened={isPreviewOpened}
+                                     setSelectedItemIndex={setSelectedItemIndex}
+                                     doubleClickNavigation={doubleClickNavigation}
+                                     index={index}
+                                     onPreviewSelect={onPreviewSelect}
+                                />
                             );
                         })}
                     </TableBody>

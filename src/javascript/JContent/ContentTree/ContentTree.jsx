@@ -9,6 +9,64 @@ import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
 import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
 import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
+import clsx from 'clsx';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+import styles from './ContentTree.scss';
+
+export const accordionPropType = PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    icon: PropTypes.node.isRequired,
+    label: PropTypes.string.isRequired,
+    getRootPath: PropTypes.func,
+    requiredSitePermission: PropTypes.string.isRequired,
+    treeConfig: PropTypes.shape({
+        hideRoot: PropTypes.bool,
+        selectableTypes: PropTypes.arrayOf(PropTypes.string),
+        openableTypes: PropTypes.arrayOf(PropTypes.string),
+        rootLabel: PropTypes.string,
+        sortBy: PropTypes.shape({
+            fieldName: PropTypes.string,
+            sortType: PropTypes.string
+        }),
+        dnd: PropTypes.shape({
+            canDrag: PropTypes.bool,
+            canDrop: PropTypes.bool,
+            canReorder: PropTypes.bool
+        })
+    }).isRequired
+});
+
+const getStyle = insertPosition => insertPosition ? styles[insertPosition] : styles.drop;
+
+const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
+    const ref = useRef(null);
+    const {canDrop, insertPosition, destParent} = useNodeDrop(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref, item.treeConfig.dnd && item.treeConfig.dnd.canReorder, treeEntries);
+    const {dragging} = useNodeDrag(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref);
+
+    const depth = canDrop ? treeEntries.find(e => e.node.path === destParent.path)?.depth : -1;
+
+    useEffect(() => {
+        if (ref.current && depth > 0) {
+            ref.current.style.setProperty('--depth', depth);
+        }
+    }, [depth]);
+
+    return (
+        <>
+            <li ref={ref} {...props} className={clsx([dragging && styles.drag, canDrop && getStyle(insertPosition)])}>
+                {children}
+            </li>
+        </>
+    );
+};
+
+ItemComponent.propTypes = {
+    item: accordionPropType,
+    children: PropTypes.node,
+    node: PropTypes.object,
+    treeEntries: PropTypes.array
+};
 
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction}) => {
     const dispatch = useDispatch();
@@ -20,7 +78,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     const useTreeEntriesOptionsJson = {
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, PickerItemsFragment.parentNode, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
@@ -64,7 +122,8 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         <React.Fragment>
             {contextualMenuAction && <ContextualMenu setOpenRef={contextualMenu} actionKey={contextualMenuAction}/>}
             <TreeView isReversed={isReversed}
-                      data={convertPathsToTree(treeEntries, path, isReversed, contextualMenuAction)}
+                      itemComponent={ItemComponent}
+                      data={convertPathsToTree({treeEntries, selected: path, isReversed, contentMenu: contextualMenuAction, itemProps: {item}})}
                       openedItems={openPaths}
                       selectedItems={[path]}
                       onContextMenuItem={(object, event) => {
@@ -80,24 +139,6 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
         </React.Fragment>
     );
 };
-
-export const accordionPropType = PropTypes.shape({
-    key: PropTypes.string.isRequired,
-    icon: PropTypes.node.isRequired,
-    label: PropTypes.string.isRequired,
-    getRootPath: PropTypes.func,
-    requiredSitePermission: PropTypes.string.isRequired,
-    treeConfig: PropTypes.shape({
-        hideRoot: PropTypes.bool,
-        selectableTypes: PropTypes.arrayOf(PropTypes.string),
-        openableTypes: PropTypes.arrayOf(PropTypes.string),
-        rootLabel: PropTypes.string,
-        sortBy: PropTypes.shape({
-            fieldName: PropTypes.string,
-            sortType: PropTypes.string
-        })
-    }).isRequired
-});
 
 ContentTree.propTypes = {
     item: accordionPropType,

@@ -112,7 +112,10 @@ export const jContentAccordionItems = registry => {
             hideRoot: true,
             selectableTypes: ['jnt:page', 'jnt:virtualsite'],
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
-            rootLabel: 'jcontent:label.contentManager.browsePages'
+            rootLabel: 'jcontent:label.contentManager.browsePages',
+            dnd: {
+                canDrag: true, canDrop: true, canReorder: true
+            }
         },
         tableConfig: {
             queryHandler: PagesQueryHandler,
@@ -132,7 +135,10 @@ export const jContentAccordionItems = registry => {
             selectableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
             openableTypes: ['jmix:cmContentTreeDisplayable', 'jmix:visibleInContentTree', 'jnt:contentFolder'],
             rootLabel: 'jcontent:label.contentManager.browseFolders',
-            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC
+            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
+            dnd: {
+                canDrag: true, canDrop: true, canReorder: false
+            }
         },
         tableConfig: {
             queryHandler: ContentFoldersQueryHandler,
@@ -153,7 +159,10 @@ export const jContentAccordionItems = registry => {
             selectableTypes: ['jnt:folder'],
             openableTypes: ['jnt:folder'],
             rootLabel: 'jcontent:label.contentManager.browseFiles',
-            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC
+            sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
+            dnd: {
+                canDrag: true, canDrop: true, canReorder: false
+            }
         },
         tableConfig: {
             queryHandler: FilesQueryHandler,

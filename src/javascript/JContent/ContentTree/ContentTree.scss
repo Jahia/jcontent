@@ -21,3 +21,45 @@
 .ContentTree_Item:hover .ContentTree_ItemMenuIcon {
     display: block;
 }
+
+.drag.drag {
+    opacity: 0.5;
+}
+
+.drop.drop {
+    box-shadow: inset 0 0 0 2px var(--color-accent_light40);
+}
+
+.insertAfter {
+    position: relative;
+
+    &::after {
+        position: absolute;
+        top: calc(100% - 1px);
+
+        width: 100%;
+        height: 2px;
+
+        margin-left: calc(( var(--depth) * 20px ) + 36px);
+
+        border-top: 2px dashed var(--color-accent_light40);
+        content: "";
+    }
+}
+
+.insertBefore {
+    position: relative;
+
+    &::before {
+        position: absolute;
+        top: -1px;
+
+        width: 100%;
+        height: 2px;
+
+        margin-left: calc(( var(--depth) * 20px ) + 36px);
+
+        border-top: 2px dashed var(--color-accent_light40);
+        content: "";
+    }
+}

@@ -39,13 +39,13 @@ const JContentConstants = {
     tableView: {
         viewMode: {
             FLAT: 'flatList',
-            STRUCTURED: 'structuredView'
+            STRUCTURED: 'structuredView',
+            VIEW: 'view',
+            VIEW_DEVICE: 'view_device'
         },
         viewType: {
             CONTENT: 'content',
-            PAGES: 'pages',
-            VIEW: 'view',
-            VIEW_DEVICE: 'view_device'
+            PAGES: 'pages'
         }
     }
 };

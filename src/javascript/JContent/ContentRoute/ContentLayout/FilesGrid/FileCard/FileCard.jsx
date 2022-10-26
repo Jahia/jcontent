@@ -6,12 +6,14 @@ import {useTranslation} from 'react-i18next';
 import {isBrowserImage} from '../../ContentLayout.utils';
 import {NodeIcon} from '~/utils';
 import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
-import classNames from 'clsx';
+import clsx from 'clsx';
 import FileName from './FileName';
 import Actions from './Actions';
 import FileSize from './FileSize';
 import styles from './FileCard.scss';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 
 export const FileCard = ({
     node,
@@ -26,6 +28,9 @@ export const FileCard = ({
     contextualMenuAction
 }) => {
     const {t} = useTranslation('jcontent');
+    const ref = useRef(null);
+    const {canDrop} = useNodeDrop(node, ref);
+    const {dragging} = useNodeDrag(node, ref);
 
     let contextualMenu = useRef();
 
@@ -40,8 +45,11 @@ export const FileCard = ({
 
     return (
         <div
-            className={classNames(
+            ref={ref}
+            className={clsx(
                 styles.card,
+                dragging && styles.drag,
+                canDrop && styles.drop,
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"
@@ -64,7 +72,7 @@ export const FileCard = ({
 
             {isImage ?
                 <div
-                    className={classNames(styles.cardPreviewAndIcon)}
+                    className={clsx(styles.cardPreviewAndIcon)}
                     style={{backgroundImage: `url("${window.contextJsParameters.contextPath}/files/default/${encodedPath}?lastModified=${node.lastModified.value}&t=thumbnail2")`}}
                 /> :
                 <div className={styles.cardPreviewAndIcon}>

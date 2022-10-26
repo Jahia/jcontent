@@ -3,7 +3,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import ContentNavigation from './ContentNavigation';
 import PropTypes from 'prop-types';
 import {useNodeChecks} from '@jahia/data-helper';
-import {cmGoto} from '~/JContent/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import NavigationHeader from '~/JContent/ContentNavigation/NavigationHeader';
 import {getAccordionItems} from '~/JContent/JContent.utils';
 

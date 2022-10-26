@@ -1,7 +1,7 @@
 import {cmSetPage, cmSetPageSize} from './pagination.redux';
 import {cmSetSort} from './sort.redux';
 import {createAction, handleActions} from 'redux-actions';
-import {cmSetPreviewSelection} from '~/JContent/preview.redux';
+import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
 
 const getAction = (path, type) => (dispatch, getState) => {
     dispatch({
@@ -25,7 +25,7 @@ cmSwitchSelection.toString = () => 'CM_SWITCH_SELECTION';
 
 export const cmClearSelection = createAction('CM_CLEAR_SELECTION');
 
-export const contentSelectionRedux = registry => {
+export const selectionRedux = registry => {
     const toArray = value => (Array.isArray(value) ? value : [value]);
 
     const selectionReducer = handleActions({

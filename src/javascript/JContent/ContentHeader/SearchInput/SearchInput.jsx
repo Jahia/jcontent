@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import {Button, Close, Search} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmGoto} from '~/JContent/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './SearchInput.scss';
 

@@ -4,7 +4,7 @@ import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import zipUnzipQueries from './zipUnzip.gql-queries';
 import zipUnzipMutations from './zipUnzip.gql-mutations';
 import {getNewCounter, removeFileExtension} from '~/JContent/JContent.utils';
-import {cmClearSelection} from '../../ContentRoute/ContentLayout/contentSelection.redux';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useDispatch} from 'react-redux';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {Tab, TabItem} from '@jahia/moonstone';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import JContentConstants from '~/JContent/JContent.constants';
-import {setTableViewType} from '../../StructuredView/StructuredView.redux';
+import {setTableViewType} from '~/JContent/redux/tableView.redux';
 import classes from './ContentTypeSelector.scss';
 import {useTranslation} from 'react-i18next';
 import {batchActions} from 'redux-batched-actions';
-import {cmSetPage} from '../../pagination.redux';
+import {cmSetPage} from '~/JContent/redux/pagination.redux';
 import {useLayoutQuery} from '~/JContent/ContentRoute/ContentLayout/useLayoutQuery';
 
 const localStorage = window.localStorage;

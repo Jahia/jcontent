@@ -1,6 +1,6 @@
 import {expandTree} from './expandTree';
-import {cmGoto, cmOpenPaths} from '../JContent.redux';
-import {cmSetPreviewSelection} from '../preview.redux';
+import {cmGoto, cmOpenPaths} from '../redux/JContent.redux';
+import {cmSetPreviewSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
 import React from 'react';
 import {useNodeChecks} from '@jahia/data-helper';

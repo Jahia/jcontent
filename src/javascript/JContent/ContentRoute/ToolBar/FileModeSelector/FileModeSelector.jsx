@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import {filesgridSetMode} from '../../ContentLayout/FilesGrid/FilesGrid.redux';
+import {filesgridSetMode} from '~/JContent/redux/filesGrid.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import {Dropdown, ViewGrid, ViewList} from '@jahia/moonstone';
 import classes from './FileModeSelector.scss';

@@ -1,12 +1,12 @@
-import {cmGoto, cmOpenPaths} from '../JContent.redux';
+import {cmGoto, cmOpenPaths} from '../redux/JContent.redux';
 import {expandTree} from './expandTree';
-import {cmSetPreviewSelection} from '../preview.redux';
+import {cmSetPreviewSelection} from '../redux/preview.redux';
 import JContentConstants from '../JContent.constants';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useDispatch, useSelector} from 'react-redux';
-import {setTableViewType} from '~/JContent/ContentRoute/ContentLayout/StructuredView/StructuredView.redux';
+import {setTableViewType} from '~/JContent/redux/tableView.redux';
 import {batchActions} from 'redux-batched-actions';
 
 export const LocateActionComponent = ({path, render: Render, ...others}) => {

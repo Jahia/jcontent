@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
-import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '../contentSelection.redux';
+import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 

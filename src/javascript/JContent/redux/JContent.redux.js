@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {extractPaths} from './JContent.utils';
+import {extractPaths} from '../JContent.utils';
 import {createActions, handleActions} from 'redux-actions';
 import {registry} from '@jahia/ui-extender';
 import rison from 'rison';

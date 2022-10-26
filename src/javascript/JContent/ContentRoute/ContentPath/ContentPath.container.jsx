@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/react-hooks';
 
-import {cmGoto} from '~/JContent/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPath from './ContentPath';
 

@@ -6,7 +6,7 @@ import {shallow} from '@jahia/test-framework';
 import {GetContentPath} from './ContentPath.gql-queries';
 import ContentPathContainer from './ContentPath.container';
 import ContentPath from './ContentPath';
-import {cmGoto} from '~/JContent/JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 
 jest.mock('~/JContent/JContent.redux', () => ({
     cmGoto: jest.fn()

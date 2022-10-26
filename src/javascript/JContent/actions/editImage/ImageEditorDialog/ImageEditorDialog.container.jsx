@@ -6,7 +6,7 @@ import {getImageMutation} from './ImageEditorDialog.gql-mutations';
 import ConfirmSaveDialog from './ConfirmSaveDialog';
 import SaveAsDialog from './SaveAsDialog';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
-import {refetchTypes, triggerRefetch} from '../../../JContent.refetches';
+import {refetchTypes, triggerRefetch} from '~/JContent/JContent.refetches';
 import Feedback from './Feedback';
 
 const getBox = ({width, cropParams, height, top, left, originalWidth, originalHeight}) => {

@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {Deleted} from './Deleted';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '../../../JContent.utils';
+import {isMarkedForDeletion} from '~/JContent/JContent.utils';
 
 export const Infos = ({currentDocument}) => {
     const language = useSelector(state => state.language);

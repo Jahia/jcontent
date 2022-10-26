@@ -368,8 +368,8 @@
       "view": {
         "flatList": "List",
         "structuredView": "Structured",
-        "view": "Page view",
-        "view_device": "Mobile page view"
+        "pageComposer": "Page Composer",
+        "preview": "Preview Staging"
       },
       "contentTypeSelector": {
         "contents": "Contents {{count}}",

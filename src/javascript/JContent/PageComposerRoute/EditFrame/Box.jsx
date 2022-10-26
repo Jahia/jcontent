@@ -9,7 +9,7 @@ import {DisplayAction, registry} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {useDragSource} from './useDragSource';
 import {useDropTarget} from './useDropTarget';
-import PublicationStatus from '../PublicationStatus/PublicationStatus';
+import PublicationStatus from '~/JContent/PublicationStatus';
 
 const DefaultBar = ({node, path, onSaved, ButtonRenderer}) => (
     <>

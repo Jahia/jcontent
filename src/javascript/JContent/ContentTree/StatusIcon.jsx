@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './ContentTree.scss';
 import {DisplayAction} from '@jahia/ui-extender';
-import {ButtonRendererNoLabel} from '../../utils/getButtonRenderer';
+import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 import clsx from 'clsx';
 
 export const StatusIcon = ({isLocked, isNotPublished, path, contentMenu, ...props}) => {

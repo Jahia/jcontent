@@ -5,7 +5,7 @@ import {Drawer, Paper} from '@material-ui/core';
 import ContentTable from './ContentTable';
 import PreviewDrawer from './PreviewDrawer';
 import classNames from 'clsx';
-import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
+import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
 import FilesGrid from './FilesGrid';
 import JContentConstants from '~/JContent/JContent.constants';
 import contentManagerStyleConstants from '~/JContent/JContent.style-constants';

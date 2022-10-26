@@ -1,4 +1,4 @@
-import {cmGoto} from '../JContent.redux';
+import {cmGoto} from '../redux/JContent.redux';
 import React from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';

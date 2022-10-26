@@ -110,9 +110,11 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
     const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
 
     useEffect(() => {
+        const renderMode = isPreview ? 'render' : 'editframe';
+        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${path}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            if (path === framePath && previousDevice.current === deviceParam) {
+            if (!isPreview && path === framePath && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 document.querySelectorAll('style[styleloader]').forEach(s => {
@@ -121,15 +123,15 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
-            } else {
-                iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+            } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
+                iframe.current.contentWindow.location.href = url;
                 previousDevice.current = deviceParam;
             }
         } else if (path && !path.endsWith('/')) {
-            iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+            iframe.current.contentWindow.location.href = url;
             previousDevice.current = deviceParam;
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language]);
+    }, [currentDocument, path, previousDevice, deviceParam, language, isPreview]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;

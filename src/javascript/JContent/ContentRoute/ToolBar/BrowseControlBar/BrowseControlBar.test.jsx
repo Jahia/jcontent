@@ -20,7 +20,7 @@ jest.mock('@jahia/ui-extender', () => ({
     DisplayActions: () => false
 }));
 
-jest.mock('~/JContent/JContent.redux', () => ({
+jest.mock('~/JContent/redux/JContent.redux', () => ({
     cmClearSelection: jest.fn()
 }));
 

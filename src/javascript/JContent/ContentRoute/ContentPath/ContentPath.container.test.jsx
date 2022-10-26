@@ -8,7 +8,7 @@ import ContentPathContainer from './ContentPath.container';
 import ContentPath from './ContentPath';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 
-jest.mock('~/JContent/JContent.redux', () => ({
+jest.mock('~/JContent/redux/JContent.redux', () => ({
     cmGoto: jest.fn()
 }));
 

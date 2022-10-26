@@ -9,7 +9,7 @@ jest.mock('react-redux', () => ({
     useSelector: jest.fn()
 }));
 
-jest.mock('~/JContent/JContent.redux', () => ({
+jest.mock('~/JContent/redux/JContent.redux', () => ({
     cmClearSelection: jest.fn()
 }));
 

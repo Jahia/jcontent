@@ -8,7 +8,7 @@ const VIEW_TYPE = JContentConstants.localStorageKeys.viewType;
 const DEFAULT_VIEW_MODE = JContentConstants.tableView.viewMode.FLAT;
 const DEFAULT_VIEW_TYPE = JContentConstants.tableView.viewType.CONTENT;
 
-export const structuredViewRedux = registry => {
+export const tableViewRedux = registry => {
     const initialState = {
         viewMode: localStorage.getItem(VIEW_MODE) === null ? DEFAULT_VIEW_MODE : localStorage.getItem(VIEW_MODE),
         viewType: localStorage.getItem(VIEW_TYPE) === null ? DEFAULT_VIEW_TYPE : localStorage.getItem(VIEW_TYPE)

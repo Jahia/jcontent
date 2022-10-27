@@ -2,6 +2,7 @@ import React from 'react';
 import {AccordionItem, Collections, FolderSpecial, Grain, Page} from '@jahia/moonstone';
 import ContentTree from './ContentTree';
 import ContentRoute from './ContentRoute';
+import PageComposerRoute from './PageComposerRoute';
 import AdditionalAppsTree from './AdditionalAppsTree';
 import AdditionalAppsRoute from './AdditionalAppsRoute';
 import JContentConstants from './JContent.constants';
@@ -9,9 +10,7 @@ import ContentTypeSelector from '~/JContent/ContentRoute/ContentLayout/ContentTa
 import FileModeSelector from '~/JContent/ContentRoute/ToolBar/FileModeSelector';
 import ViewModeSelector from '~/JContent/ContentRoute/ToolBar/ViewModeSelector';
 import {PagesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/PagesQueryHandler';
-import {
-    ContentFoldersQueryHandler
-} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentFoldersQueryHandler';
+import {ContentFoldersQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/ContentFoldersQueryHandler';
 import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/FilesQueryHandler';
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
@@ -94,6 +93,7 @@ export const jContentAccordionItems = registry => {
         icon: <Page/>,
         label: 'jcontent:label.contentManager.navigation.pages',
         rootPath: '/sites/{site}',
+        routeComponent: PageComposerRoute,
         getPathForItem: node => {
             const pages = node.ancestors
                 .filter(n => n.primaryNodeType.name === 'jnt:page');

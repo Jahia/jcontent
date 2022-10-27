@@ -8,13 +8,13 @@ import ContentPath from '~/JContent/ContentRoute/ContentPath';
 import {useNodeInfo} from '@jahia/data-helper';
 import {getNodeTypeIcon} from '~/JContent/JContent.utils';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmGoto} from '~/JContent/JContent.redux';
+import {CM_DRAWER_STATES, cmGoto} from '~/JContent/redux/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
 import BrowseControlBar from '~/JContent/ContentRoute/ToolBar/BrowseControlBar';
-import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
-import {cmSetPreviewState} from '~/JContent/preview.redux';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
+import {cmSetPreviewState} from '~/JContent/redux/preview.redux';
 import {SelectionActionsBar} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/SelectionActionsBar';
-import SearchInput from '../SearchInput';
+import SearchInput from './SearchInput';
 import {registry} from '@jahia/ui-extender';
 
 const ContentHeader = () => {

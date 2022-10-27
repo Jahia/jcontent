@@ -1,13 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmGoto} from '../../../JContent.redux';
+import {cmGoto} from '~/JContent/redux/JContent.redux';
 import styles from './EditFrame.scss';
-import {refetchTypes, setRefetcher, unsetRefetcher} from '../../../JContent.refetches';
+import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
-} from '../../../eventHandlerRegistry';
-import {isDescendantOrSelf} from '../../../JContent.utils';
+} from '~/JContent/eventHandlerRegistry';
+import {isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useApolloClient} from 'react-apollo';
 import {prefixCssSelectors} from './EditFrame.utils';
 import {Boxes} from './Boxes';
@@ -16,7 +16,7 @@ import {Infos} from './Infos';
 import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
 
-export const EditFrame = ({isDeviceView}) => {
+export const EditFrame = ({isPreview, isDeviceView}) => {
     const {path, site, language} = useSelector(state => ({
         language: state.language,
         site: state.site,
@@ -110,9 +110,11 @@ export const EditFrame = ({isDeviceView}) => {
     const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
 
     useEffect(() => {
+        const renderMode = isPreview ? 'render' : 'editframe';
+        const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${path}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
             const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            if (path === framePath && previousDevice.current === deviceParam) {
+            if (!isPreview && path === framePath && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 document.querySelectorAll('style[styleloader]').forEach(s => {
@@ -121,15 +123,15 @@ export const EditFrame = ({isDeviceView}) => {
                     currentDocument.adoptNode(clone);
                     head.appendChild(clone);
                 });
-            } else {
-                iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+            } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
+                iframe.current.contentWindow.location.href = url;
                 previousDevice.current = deviceParam;
             }
         } else if (path && !path.endsWith('/')) {
-            iframe.current.contentWindow.location.href = `${window.contextJsParameters.contextPath}/cms/editframe/default/${language}${path}.html?redirect=false${deviceParam}`;
+            iframe.current.contentWindow.location.href = url;
             previousDevice.current = deviceParam;
         }
-    }, [currentDocument, path, previousDevice, deviceParam, language]);
+    }, [currentDocument, path, previousDevice, deviceParam, language, isPreview]);
 
     if (site === 'systemsite') {
         return <h2 style={{color: 'grey'}}>You need to create a site to see this page</h2>;
@@ -152,7 +154,7 @@ export const EditFrame = ({isDeviceView}) => {
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>
-            {currentDocument && (
+            {currentDocument && !isPreview && (
                 <Portal target={currentDocument.documentElement.querySelector('body')}>
                     <div className={styles.root}>
                         <Boxes currentDocument={currentDocument}
@@ -170,5 +172,6 @@ export const EditFrame = ({isDeviceView}) => {
 };
 
 EditFrame.propTypes = {
+    isPreview: PropTypes.bool,
     isDeviceView: PropTypes.bool
 };

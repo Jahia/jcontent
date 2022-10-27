@@ -7,7 +7,7 @@ import {TreeView} from '@jahia/moonstone';
 import {ContextualMenu} from '@jahia/ui-extender';
 import {convertPathsToTree} from './ContentTree.utils';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '../JContent.refetches';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/JContent.redux';
+import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
 import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';

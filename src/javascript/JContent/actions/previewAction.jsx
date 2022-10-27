@@ -1,6 +1,6 @@
 import React from 'react';
-import {CM_DRAWER_STATES} from '../JContent.redux';
-import {cmSetPreviewSelection, cmSetPreviewState} from '../preview.redux';
+import {CM_DRAWER_STATES} from '../redux/JContent.redux';
+import {cmSetPreviewSelection, cmSetPreviewState} from '../redux/preview.redux';
 import {useDispatch} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';

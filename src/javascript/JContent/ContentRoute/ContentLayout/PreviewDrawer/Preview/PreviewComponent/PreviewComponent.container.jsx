@@ -1,6 +1,6 @@
 import React from 'react';
 import {useContentPreview} from '@jahia/data-helper';
-import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
+import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
 import PreviewComponent from './PreviewComponent';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';

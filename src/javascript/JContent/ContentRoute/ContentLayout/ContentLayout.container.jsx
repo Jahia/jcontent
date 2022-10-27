@@ -5,13 +5,13 @@ import * as _ from 'lodash';
 import {
     registerContentModificationEventHandler,
     unregisterContentModificationEventHandler
-} from '../../eventHandlerRegistry';
+} from '~/JContent/eventHandlerRegistry';
 import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {cmClosePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/JContent.redux';
+import {cmClosePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
 import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
-import {cmRemoveSelection, cmSwitchSelection} from './contentSelection.redux';
-import {cmSetPreviewSelection} from '~/JContent/preview.redux';
+import {cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
+import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
 import ContentLayout from './ContentLayout';
 import {refetchTypes, setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 import {Loader} from '@jahia/moonstone';

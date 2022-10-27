@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'clsx';
 import {Paper} from '@material-ui/core';
 import {useDispatch} from 'react-redux';
-import {cmClearSelection} from '../../../contentSelection.redux';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useTranslation} from 'react-i18next';
 import {Button, Copy, Typography} from '@jahia/moonstone';
 

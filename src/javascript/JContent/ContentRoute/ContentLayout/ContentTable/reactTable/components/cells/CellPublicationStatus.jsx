@@ -1,6 +1,6 @@
 import React from 'react';
 import {TableBodyCell} from '@jahia/moonstone';
-import PublicationStatus from '../../../../PublicationStatus';
+import PublicationStatus from '~/JContent/PublicationStatus';
 import PropTypes from 'prop-types';
 import scssStyles from './Cells.scss';
 import styles from './CellPublicationStatus.scss';

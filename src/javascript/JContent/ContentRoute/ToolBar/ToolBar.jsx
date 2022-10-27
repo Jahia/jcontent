@@ -8,10 +8,10 @@ import {useTranslation} from 'react-i18next';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import styles from './ToolBar.scss';
 import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonstone';
-import {cmClearSelection} from '~/JContent/ContentRoute/ContentLayout/contentSelection.redux';
+import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {useNodeInfo} from '@jahia/data-helper';
-import {CM_DRAWER_STATES} from '~/JContent/JContent.redux';
-import {cmSetPreviewState} from '~/JContent/preview.redux';
+import {CM_DRAWER_STATES} from '~/JContent/redux/JContent.redux';
+import {cmSetPreviewState} from '~/JContent/redux/preview.redux';
 
 export const ToolBar = () => {
     const {t} = useTranslation('jcontent');

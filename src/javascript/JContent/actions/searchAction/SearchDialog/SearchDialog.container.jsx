@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {cmGoto, cmPreSearchModeMemo} from '~/JContent/JContent.redux';
+import {cmGoto, cmPreSearchModeMemo} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import SearchDialog from './SearchDialog';
 

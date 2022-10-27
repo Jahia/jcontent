@@ -2,13 +2,13 @@ import React, {useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
-import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/JContent.redux';
+import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
 import {extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import UploadTransformComponent from '../UploadTransformComponent';
-import {cmSetPreviewSelection} from '~/JContent/preview.redux';
-import {cmSetPage, cmSetPageSize} from '../pagination.redux';
-import {cmRemoveSelection} from '../contentSelection.redux';
+import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {cmSetPage, cmSetPageSize} from '~/JContent/redux/pagination.redux';
+import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import ContentEmptyDropZone from './ContentEmptyDropZone';
 import ContentNotFound from './ContentNotFound';
@@ -21,7 +21,7 @@ import {allColumnData, reducedColumnData} from './reactTable/columns';
 import ContentTableWrapper from './ContentTableWrapper';
 import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
-import {cmSetSort} from '~/JContent/ContentRoute/ContentLayout/sort.redux';
+import {cmSetSort} from '~/JContent/redux/sort.redux';
 import {Row} from '~/JContent/ContentRoute/ContentLayout/ContentTable/Row';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {

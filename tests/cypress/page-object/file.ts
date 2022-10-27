@@ -7,6 +7,7 @@ import {
 } from '@jahia/cypress'
 import {Media} from "./media";
 import * as path from "path";
+import * as fs from "fs";
 
 export class File extends BasePage {
     media: Media
@@ -54,6 +55,11 @@ export class File extends BasePage {
         getComponentByRole(Button, "download-cancel").click();
 
         const downloadsFolder = Cypress.config("downloadsFolder");
+
+        cy.exec('ls ' + downloadsFolder).then((result) => {
+            console.log(result.stdout);
+        })
+
         cy.readFile(path.join(downloadsFolder, this.urlEscapedFileName)).should("exist");
 
         return this;

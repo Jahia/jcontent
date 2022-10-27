@@ -57,7 +57,7 @@ export class File extends BasePage {
         const downloadsFolder = Cypress.config("downloadsFolder");
 
         cy.exec('ls ' + downloadsFolder).then((result) => {
-            console.log(result.stdout);
+            cy.log(result.stdout);
         })
 
         cy.readFile(path.join(downloadsFolder, this.urlEscapedFileName)).should("exist");

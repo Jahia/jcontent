@@ -50,7 +50,7 @@ export class File extends BasePage {
         getComponentByRole(Menu, 'jcontent-contentMenu').selectByRole('downloadFile');
         cy.wait(500);
         getComponentByRole(Button, "do-download").click();
-        cy.wait(500);
+        cy.wait(2000);
         getComponentByRole(Button, "download-cancel").click();
 
         const downloadsFolder = Cypress.config("downloadsFolder");

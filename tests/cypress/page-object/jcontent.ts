@@ -11,6 +11,7 @@ import {
 } from '@jahia/cypress'
 import { BasicSearch } from './basicSearch'
 import { CreateContent } from './createContent'
+import { Media } from "./media";
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav
@@ -61,6 +62,10 @@ export class JContent extends BasePage {
 
     getCreateContent(): CreateContent {
         return new CreateContent(this)
+    }
+
+    getMedia() : Media {
+        return new Media(this)
     }
 
     selectAccordion(accordion: string): JContent {

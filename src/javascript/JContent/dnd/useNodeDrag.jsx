@@ -4,7 +4,7 @@ import {useEffect} from 'react';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 import {useSelector} from 'react-redux';
 
-export function useNodeDrag(dragSource, ref) {
+export function useNodeDrag({dragSource, ref}) {
     const selection = useSelector(state => state.jcontent.selection);
     const isAnythingDragging = useDragLayer(monitor => monitor.isDragging());
 

@@ -41,8 +41,16 @@ const getStyle = insertPosition => insertPosition ? styles[insertPosition] : sty
 
 const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     const ref = useRef(null);
-    const {canDrop, insertPosition, destParent} = useNodeDrop(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref, item.treeConfig.dnd && item.treeConfig.dnd.canReorder, treeEntries);
-    const {dragging} = useNodeDrag(node, item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref);
+    const {canDrop, insertPosition, destParent} = useNodeDrop({
+        dropTarget: node,
+        ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref,
+        orderable: item.treeConfig.dnd && item.treeConfig.dnd.canReorder,
+        treeEntries
+    });
+    const {dragging} = useNodeDrag({
+        dragSource: node,
+        ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref
+    });
 
     const depth = canDrop ? treeEntries.find(e => e.node.path === destParent.path)?.depth : -1;
 

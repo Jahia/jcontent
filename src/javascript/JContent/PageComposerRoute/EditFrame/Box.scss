@@ -83,6 +83,23 @@
     margin: 0 4px;
 }
 
-:global(.noprefix) .dropTarget {
-    border-top: 1px dashed gray;
+:global(.noprefix) .dropTarget_insertBefore {
+    &::before {
+        width: 100%;
+        height: 50px;
+        border: 2px dashed gray;
+        content: "";
+        display: inline-block;
+    }
 }
+
+:global(.noprefix) .dropTarget_insertAfter {
+    &::after {
+        width: 100%;
+        height: 50px;
+        border: 2px dashed gray;
+        content: "";
+        display: inline-block;
+    }
+}
+

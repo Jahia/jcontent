@@ -26,8 +26,8 @@ export const Row = ({
     const contextualMenu = useRef();
 
     const ref = useRef(null);
-    const {canDrop} = useNodeDrop(node, ref);
-    const {dragging} = useNodeDrag(node, ref);
+    const {canDrop} = useNodeDrop({dropTarget: node, ref});
+    const {dragging} = useNodeDrag({dragSource: node, ref});
 
     row.ref = ref;
 

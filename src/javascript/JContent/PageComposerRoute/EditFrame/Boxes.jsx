@@ -106,7 +106,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
             <ContextualMenu
                 ref={contextualMenu}
                 actionKey={selection.length <= 1 || selection.indexOf(currentPath) === -1 ? 'contentMenu' : 'selectedContentMenu'}
-                context={selection.length === 0 || selection.indexOf(currentPath) === -1 ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
+                {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
             {modules.map(e => {

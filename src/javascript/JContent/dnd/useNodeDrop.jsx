@@ -1,9 +1,9 @@
-import {useApolloClient, useMutation} from '@apollo/react-hooks';
+import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 import {useDrop} from 'react-dnd';
 import gql from 'graphql-tag';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
-import {PredefinedFragments} from '@jahia/data-helper';
+import {PredefinedFragments, useNodeInfo} from '@jahia/data-helper';
 import {useState} from 'react';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
@@ -27,14 +27,41 @@ const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOr
 ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
-export function useNodeDrop(dropTarget, ref, orderable, entries) {
+export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
     const [moveMutation] = useMutation(moveNode);
     const client = useApolloClient();
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
     const [insertPosition, setInsertPosition] = useState();
-    const [destParent, setDestParent] = useState(dropTarget);
+    const [destParentState, setDestParent] = useState();
     const [names, setNames] = useState([]);
+
+    const destParent = destParentState || dropTarget;
+
+    const {data} = useQuery(gql`query getChildName($path:String!) { 
+        jcr {
+            nodeByPath(path: $path) {
+                uuid
+                workspace
+                path
+                children {
+                    nodes {
+                        uuid
+                        workspace
+                        path
+                        name
+                    }
+                }
+            }
+        }
+    }`, {
+        variables: {
+            path: dropTarget?.parent?.path
+        },
+        skip: !dropTarget || !orderable || entries
+    });
+
+    entries = entries || (data && data.jcr.nodeByPath.children.nodes);
 
     const [props, drop] = useDrop(() => ({
         accept: ['node', 'paths'],
@@ -44,14 +71,14 @@ export function useNodeDrop(dropTarget, ref, orderable, entries) {
             destParent
         }),
         hover: (dragSource, monitor) => {
-            if (ref.current && orderable && entries) {
+            if (ref.current && dropTarget && orderable && entries) {
                 const hoverBoundingRect = ref.current.getBoundingClientRect();
                 const height = hoverBoundingRect.height;
                 const clientOffset = monitor.getClientOffset();
-                const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-                if (hoverClientY < (height / 2)) {
+                const hoverClientY = clientOffset.y - 156 - hoverBoundingRect.top;
+                if (hoverClientY < (height / 4)) {
                     setInsertPosition('insertBefore');
-                } else {
+                } else if (hoverClientY > height - (height / 4)) {
                     setInsertPosition('insertAfter');
                 }
 
@@ -68,10 +95,10 @@ export function useNodeDrop(dropTarget, ref, orderable, entries) {
                 }
 
                 setNames(names);
-                setDestParent(insertPosition === 'insertBefore' || (insertPosition === 'insertAfter' && d !== 1) ? dropTarget.parent : dropTarget);
+                setDestParent(insertPosition === 'insertBefore' || (insertPosition === 'insertAfter' && d !== 1) ? dropTarget.parent : null);
             }
         },
-        canDrop: dragSource => (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))) && (destParent.primaryNodeType.name === 'jnt:folder' || destParent.primaryNodeType.name === 'jnt:contentFolder' || destParent.primaryNodeType.name === 'jnt:page'),
+        canDrop: dragSource => dropTarget && (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))),
         drop: (dragSource, monitor) => {
             const isNode = monitor.getItemType() === 'node';
             const pathsOrIds = isNode ? [dragSource.uuid] : dragSource;
@@ -92,25 +119,31 @@ export function useNodeDrop(dropTarget, ref, orderable, entries) {
             }).then(() => {
                 const message = t('jcontent:label.contentManager.move.success', {
                     count: pathsOrIds.length,
-                    dest: destParent.displayName
+                    dest: destParent.displayName || destParent.name
                 });
-                client.reFetchObservableQueries();
+
+                if (onSaved) {
+                    onSaved();
+                } else {
+                    client.reFetchObservableQueries();
+                }
+
                 notificationContext.notify(message, ['closeButton']);
             }).catch(() => {
                 const message = isNode ?
                     t('jcontent:label.contentManager.move.error_name', {
                         name: dragSource.displayName,
-                        dest: destParent.displayName
+                        dest: destParent.displayName || destParent.name
                     }) :
                     t('jcontent:label.contentManager.move.error', {
                         count: pathsOrIds.length,
-                        dest: destParent.displayName
+                        dest: destParent.displayName || destParent.name
                     }
                     );
                 notificationContext.notify(message, ['closeButton']);
             });
         }
-    }), [dropTarget, destParent, names, insertPosition]);
+    }), [dropTarget, destParent, names, insertPosition, entries]);
 
     if (ref) {
         drop(ref);

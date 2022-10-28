@@ -2,15 +2,15 @@ import React, {useEffect, useRef} from 'react';
 import {ArrowUp, Button, Typography} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import {useNodeInfo} from '@jahia/data-helper';
-import classnames from 'clsx';
+import clsx from 'clsx';
 import styles from './Box.scss';
 import publicationStatusStyles from './PublicationStatus.scss';
 import {DisplayAction, registry} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
-import {useDragSource} from './useDragSource';
-import {useDropTarget} from './useDropTarget';
 import PublicationStatus from '~/JContent/PublicationStatus';
-
+import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+import editStyles from './EditFrame.scss';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 const DefaultBar = ({node, path, onSaved, ButtonRenderer}) => (
     <>
         <DisplayAction actionKey="quickEdit" path={path} editCallback={onSaved} render={ButtonRenderer}/>
@@ -41,6 +41,7 @@ export const Box = ({
     onSaved,
     rootElementRef
 }) => {
+    const ref = useRef(element);
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -50,7 +51,8 @@ export const Box = ({
         getAggregatedPublicationInfo: true,
         getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy'],
         getOperationSupport: true,
-        getPrimaryNodeType: true
+        getPrimaryNodeType: true,
+        getParent: true
     });
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
@@ -64,33 +66,6 @@ export const Box = ({
             element.dataset.jahiaParent = parent.id;
         }
     }
-
-    const {onDragEnd, onDragStart, dragClassName} = useDragSource({element});
-
-    const {onDragEnter, onDragLeave, onDragOver, onDrop, dropClassName} = useDropTarget({
-        parent,
-        element,
-        onSaved,
-        enabledClassName: styles.dropTarget
-    });
-
-    useEffect(() => {
-        if (parent) {
-            element.classList.add(dropClassName);
-            element.addEventListener('dragenter', onDragEnter);
-            element.addEventListener('dragleave', onDragLeave);
-            element.addEventListener('dragover', onDragOver);
-            element.addEventListener('drop', onDrop);
-        }
-
-        return () => {
-            element.classList.remove(dropClassName);
-            element.removeEventListener('dragenter', onDragEnter);
-            element.removeEventListener('dragleave', onDragLeave);
-            element.removeEventListener('dragover', onDragOver);
-            element.removeEventListener('drop', onDrop);
-        };
-    }, [dropClassName, element, onDragEnter, onDragLeave, onDragOver, onDrop, parent]);
 
     const ButtonRenderer = getButtonRenderer({
         defaultButtonProps: {
@@ -120,30 +95,58 @@ export const Box = ({
     const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
+    const {dragging} = useNodeDrag({dragSource: node, ref: div});
+    const {canDrop, insertPosition, destParent} = useNodeDrop({dropTarget: parent && node, ref, orderable: true, onSaved});
+
+    useEffect(() => {
+        if (dragging) {
+            element.ownerDocument.body.classList.add(editStyles.disablePointerEvents);
+            element.classList.add(editStyles.dragging);
+            rootElementRef.current?.classList?.add?.(styles.dragging);
+        }
+
+        return () => {
+            element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
+            element.classList.remove(editStyles.dragging);
+            rootElementRef.current?.classList?.remove?.(styles.dragging);
+        };
+    }, [dragging]);
+
+    useEffect(() => {
+        if (parent) {
+            element.classList.add(editStyles.enablePointerEvents);
+        }
+
+        return () => {
+            element.classList.remove(editStyles.enablePointerEvents);
+        };
+    }, [parent]);
+
+    useEffect(() => {
+        if (canDrop) {
+            element.classList.add(styles['dropTarget_' + insertPosition]);
+        }
+
+        return () => {
+            element.classList.remove(styles['dropTarget_' + insertPosition]);
+        };
+    }, [canDrop, insertPosition, destParent]);
+
     return (
         <>
             <div ref={rootDiv}
-                 className={classnames(styles.root, styles['color_' + color])}
+                 className={clsx(styles.root, styles['color_' + color])}
                  style={currentOffset}
             >
                 <div className={styles.rel} style={{height: 24 + rect.height}}>
                     <div ref={div}
-                         draggable
-                         className={classnames(styles.sticky, dragClassName)}
+                         className={clsx(styles.sticky, editStyles.enablePointerEvents)}
                          data-jahia-parent={element.getAttribute('id')}
                          onClick={onSelect}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
-                         onDragStart={e => {
-                             rootElementRef.current.classList.add(styles.dragging);
-                             onDragStart(e);
-                         }}
-                         onDragEnd={e => {
-                             rootElementRef.current.classList.remove(styles.dragging);
-                             onDragEnd(e);
-                         }}
                     >
-                        <div className={classnames(styles.header, styles['color_' + color])}>
+                        <div className={clsx(styles.header, styles['color_' + color])}>
                             {node && <PublicationStatus node={nodeWithProps} className={publicationStatusStyles.root}/>}
                             {onGoesUp && (
                                 <Button className={styles.button}

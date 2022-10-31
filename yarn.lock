@@ -1138,10 +1138,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@jahia/data-helper@^1.0.7":
-  version "1.0.7"
-  resolved "https://npm.jahia.com/@jahia%2fdata-helper/-/data-helper-1.0.7.tgz#213d9e819781f9d70786fc3f3c07e8e2138fc025"
-  integrity sha512-sK+mBtVU1kwC4eS/IcRetbxyCJkY8H8clKa0/ETq6XUwWSYSB/AhXx4yD++mkXw3OJzxwV0I88vLatHJVm022Q==
+"@jahia/data-helper@1.0.6":
+  version "1.0.6"
+  resolved "https://npm.jahia.com/@jahia%2fdata-helper/-/data-helper-1.0.6.tgz#e4fb0e180644ee6459990d821d17fb9d9c1c1815"
+  integrity sha512-R1Jt/KBRHYXfoRlBteHARiyMHvgZI7tghkVywVmEOpyYTU30sSlxhscsr6XkJkqIviGvV/Tj9paoREWox1BBVQ==
   dependencies:
     apollo-cache "^1.3.4"
     apollo-client "^2.6.8"

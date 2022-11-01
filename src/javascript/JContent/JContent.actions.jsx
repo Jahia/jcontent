@@ -16,6 +16,7 @@ import {
     MoreVert,
     NoCloud,
     OpenInBrowser,
+    OpenInNew,
     Paste,
     Publish,
     Reload,
@@ -55,6 +56,7 @@ import {EditImageActionComponent} from '~/JContent/actions/editImage';
 import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAction';
 import {RenameActionComponent} from '~/JContent/actions/renameAction';
 import {DownloadAsZipActionComponent} from '~/JContent/actions/downloadAsZip';
+import {OpenInLiveActionComponent} from '~/JContent/actions/openInLiveAction/openInLiveAction';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -326,5 +328,12 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.actions.openInJContent',
         targets: [],
         component: OpenInJContentActionComponent
+    });
+
+    registry.add('action', 'openInLive', {
+        buttonIcon: <OpenInNew/>,
+        buttonLabel: 'jcontent:label.contentManager.actions.openInLive',
+        targets: [],
+        component: OpenInLiveActionComponent
     });
 };

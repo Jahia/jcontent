@@ -163,6 +163,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                             prepareRow(row);
                             return (
                                 <Row key={'row' + row.id}
+                                     cl
                                      row={row}
                                      selection={selection}
                                      previewSelection={previewSelection}

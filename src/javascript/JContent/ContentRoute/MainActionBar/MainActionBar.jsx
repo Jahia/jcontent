@@ -23,7 +23,6 @@ export const MainActionBar = () => {
         <div className={styles.root}>
             <DisplayAction actionKey="search" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
-            {/* <DisplayAction actionKey="pageComposer" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', className: styles.item}}/> */}
             <DisplayAction actionKey="openInLive" path={livePath} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>

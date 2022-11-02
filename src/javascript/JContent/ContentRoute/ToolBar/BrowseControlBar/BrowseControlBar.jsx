@@ -22,9 +22,10 @@ const excludedActions = [
 ];
 
 export const BrowseControlBar = ({isShowingActions}) => {
-    const {path, siteKey} = useSelector(state => ({
+    const {path, siteKey, selection} = useSelector(state => ({
         path: state.jcontent.path,
-        siteKey: state.site
+        siteKey: state.site,
+        selection: state.jcontent.selection
     }), shallowEqual);
 
     const contentActions = useMemo(() => [
@@ -32,12 +33,13 @@ export const BrowseControlBar = ({isShowingActions}) => {
         ...excludedActions
     ], []);
     const isRootNode = (path === ('/sites/' + siteKey));
+    const editPath = selection && selection.length === 1 ? selection[0] : path;
 
     return isShowingActions && !isRootNode && (
         <>
             <div className="flexRow">
                 <DisplayActions target="headerPrimaryActions"
-                                path={path}
+                                path={editPath}
                                 render={ButtonRenderer}
                                 buttonProps={{size: 'default', variant: 'ghost'}}
                                 loading={() => false}/>
@@ -46,7 +48,7 @@ export const BrowseControlBar = ({isShowingActions}) => {
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <DisplayAction isMenuPreload
                                actionKey="contentMenu"
-                               path={path}
+                               path={editPath}
                                menuFilter={action => contentActions.indexOf(action.key) === -1}
                                buttonProps={{size: 'default', variant: 'ghost'}}
                                render={ButtonRendererNoLabel}

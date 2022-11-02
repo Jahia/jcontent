@@ -3,7 +3,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {TableRow} from '@jahia/moonstone';
 import clsx from 'clsx';
-import css from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTable';
+import css from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTable.scss';
 import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';

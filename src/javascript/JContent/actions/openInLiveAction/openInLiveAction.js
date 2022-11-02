@@ -22,7 +22,7 @@ export const OpenInLiveActionComponent = ({
         skip: !path
     });
 
-    if (loading || error || !data || !data.jcr.result.publicationInfo.existsInLive || data.jcr.result.publicationInfo.status !== 'PUBLISHED') {
+    if (loading || error || !data || !data.jcr.result.publicationInfo.existsInLive || data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' || data.jcr.result.publicationInfo.status === 'UNPUBLISHED') {
         return <></>;
     }
 
@@ -34,7 +34,7 @@ export const OpenInLiveActionComponent = ({
         <Render
             {...others}
             onClick={() => {
-                window.open(`${window.contextJsParameters.baseUrl.replace(/\/default\//, '/live/')}${livePath}.html`, 'jahiaLive');
+                window.open(`${window.contextJsParameters.baseUrl.replace(/\/default\//, '/live/')}${livePath}.html`, '_blank');
             }}
         />
     );

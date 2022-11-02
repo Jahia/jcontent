@@ -64,7 +64,7 @@ const ContentHeader = () => {
             breadcrumb={<ContentPath/>}
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={<ContentStatuses/>}
-            toolbarLeft={<BrowseControlBar isShowingActions={selection.length <= 1}/>}
+            toolbarLeft={<BrowseControlBar isShowingActions={selection.length === 0}/>}
             toolbarRight={
                 <>
                     {viewSelector}

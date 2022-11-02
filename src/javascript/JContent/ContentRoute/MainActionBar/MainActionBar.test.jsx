@@ -49,9 +49,7 @@ describe('MainActionBar', () => {
         const wrapper = shallow(<MainActionBar/>);
 
         wrapper.find('DisplayAction').forEach(node => {
-            if (node.props().actionKey !== 'openInLive') {
-                expect(node.props().isDisabled).toBeTruthy();
-            }
+            expect(node.props().isDisabled).toBeTruthy();
         });
         expect(wrapper.findWhere(node => node.props().actionKey === 'publish').exists()).toBeTruthy();
         expect(wrapper.findWhere(node => node.props().actionKey === 'publishAll').exists()).toBeFalsy();

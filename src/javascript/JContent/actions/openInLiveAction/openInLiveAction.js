@@ -22,7 +22,10 @@ export const OpenInLiveActionComponent = ({
         skip: !path
     });
 
-    if (loading || error || !data || !data.jcr.result.publicationInfo.existsInLive || data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' || data.jcr.result.publicationInfo.status === 'UNPUBLISHED') {
+    if (loading || error || !data || !data.jcr.result.publicationInfo.existsInLive ||
+        data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' ||
+        data.jcr.result.publicationInfo.status === 'UNPUBLISHED' ||
+        (!data.jcr.result.previewAvailable && data.jcr.result.displayableNode === null)) {
         return <></>;
     }
 

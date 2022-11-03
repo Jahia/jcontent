@@ -47,7 +47,7 @@
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
     "@babel/polyfill": "^7.0.0",
-    "@jahia/data-helper": "1.0.6",
+    "@jahia/data-helper": "^1.0.7",
     "@jahia/design-system-kit": "^1.1.2",
     "@jahia/icons": "^1.1.1",
     "@jahia/jahia-reporter": "^1.0.3",

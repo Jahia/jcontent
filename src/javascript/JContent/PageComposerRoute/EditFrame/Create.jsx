@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeInfo} from '@jahia/data-helper';
 import editStyles from './EditFrame.scss';
+import {useDragLayer} from 'react-dnd';
 
 export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
@@ -39,6 +40,10 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const ref = useRef();
     const {canDrop} = useNodeDrop({dropTarget: parent && node, ref, onSaved});
 
+    const {anyDragging} = useDragLayer(monitor => ({
+        anyDragging: monitor.isDragging()
+    }));
+
     const currentOffset = {
         top: rect.top + scrollTop,
         left: rect.left + scrollLeft,
@@ -57,9 +62,9 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         return () => {
             element.classList.remove(styles.dropTarget);
         };
-    }, [canDrop]);
+    }, [canDrop, element]);
 
-    return (
+    return !anyDragging && (
         <div ref={ref}
              className={clsx(styles.root, editStyles.enablePointerEvents)}
              style={currentOffset}

@@ -45,7 +45,7 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
         dropTarget: node,
         ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref,
         orderable: item.treeConfig.dnd && item.treeConfig.dnd.canReorder,
-        treeEntries
+        entries: treeEntries
     });
     const {dragging} = useNodeDrag({
         dragSource: node,

@@ -1,10 +1,11 @@
-import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useMutation} from '@apollo/react-hooks';
 import {useDrop} from 'react-dnd';
 import gql from 'graphql-tag';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
-import {PredefinedFragments, useNodeInfo} from '@jahia/data-helper';
-import {useState} from 'react';
+import {PredefinedFragments} from '@jahia/data-helper';
+import {useRef, useState} from 'react';
+import {ellipsizeText} from '~/JContent/JContent.utils';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -37,49 +38,30 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
     const [names, setNames] = useState([]);
 
     const destParent = destParentState || dropTarget;
-
-    const {data} = useQuery(gql`query getChildName($path:String!) { 
-        jcr {
-            nodeByPath(path: $path) {
-                uuid
-                workspace
-                path
-                children {
-                    nodes {
-                        uuid
-                        workspace
-                        path
-                        name
-                    }
-                }
-            }
-        }
-    }`, {
-        variables: {
-            path: dropTarget?.parent?.path
-        },
-        skip: !dropTarget || !orderable || entries
-    });
-
-    entries = entries || (data && data.jcr.nodeByPath.children.nodes);
+    const baseRect = useRef();
 
     const [props, drop] = useDrop(() => ({
         accept: ['node', 'paths'],
         collect: monitor => ({
-            canDrop: (monitor.canDrop() && monitor.isOver()),
+            canDrop: (monitor.canDrop() && monitor.isOver({shallow: true})),
             insertPosition,
             destParent
         }),
         hover: (dragSource, monitor) => {
             if (ref.current && dropTarget && orderable && entries) {
-                const hoverBoundingRect = ref.current.getBoundingClientRect();
-                const height = hoverBoundingRect.height;
+                if (!baseRect.current) {
+                    baseRect.current = ref.current.getBoundingClientRect();
+                }
+
+                const height = baseRect.current.height;
                 const clientOffset = monitor.getClientOffset();
-                const hoverClientY = clientOffset.y - 156 - hoverBoundingRect.top;
+                const hoverClientY = clientOffset.y - baseRect.current.top;
                 if (hoverClientY < (height / 4)) {
                     setInsertPosition('insertBefore');
                 } else if (hoverClientY > height - (height / 4)) {
                     setInsertPosition('insertAfter');
+                } else {
+                    setInsertPosition(null);
                 }
 
                 const names = [dragSource.name];
@@ -100,13 +82,16 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
         },
         canDrop: dragSource => dropTarget && (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))),
         drop: (dragSource, monitor) => {
+            if (monitor.didDrop()) {
+                return;
+            }
+
             const isNode = monitor.getItemType() === 'node';
             const pathsOrIds = isNode ? [dragSource.uuid] : dragSource;
             const move = (dragSource.path !== (destParent.path + '/' + dragSource.name));
             const reorder = Boolean(insertPosition);
 
             const position = names?.length === 2 ? 'INPLACE' : 'LAST';
-
             moveMutation({
                 variables: {
                     pathsOrIds,
@@ -119,7 +104,7 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
             }).then(() => {
                 const message = t('jcontent:label.contentManager.move.success', {
                     count: pathsOrIds.length,
-                    dest: destParent.displayName || destParent.name
+                    dest: (destParent.displayName && ellipsizeText(destParent.displayName, 20)) || destParent.name
                 });
 
                 if (onSaved) {
@@ -132,12 +117,12 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
             }).catch(() => {
                 const message = isNode ?
                     t('jcontent:label.contentManager.move.error_name', {
-                        name: dragSource.displayName,
-                        dest: destParent.displayName || destParent.name
+                        name: (dragSource.displayName && ellipsizeText(dragSource.displayName, 50)) || dragSource.name,
+                        dest: (destParent.displayName && ellipsizeText(destParent.displayName, 50)) || destParent.name
                     }) :
                     t('jcontent:label.contentManager.move.error', {
                         count: pathsOrIds.length,
-                        dest: destParent.displayName || destParent.name
+                        dest: (destParent.displayName && ellipsizeText(destParent.displayName, 50)) || destParent.name
                     }
                     );
                 notificationContext.notify(message, ['closeButton']);

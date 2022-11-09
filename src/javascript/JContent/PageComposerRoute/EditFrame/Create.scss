@@ -11,10 +11,11 @@
 
 :global(.noprefix) .dropTarget {
     &::after {
+        display: inline-block;
         width: 100%;
         height: 50px;
+
         border: 2px dashed gray;
         content: "";
-        display: inline-block;
     }
 }

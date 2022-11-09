@@ -1,6 +1,6 @@
-//import styles from './EditFrame.scss';
+// Import styles from './EditFrame.scss';
 //
-//export const useDragSource = ({element}) => {
+// export const useDragSource = ({element}) => {
 //    const dragClassName = styles.enablePointerEvents;
 //
 //    const onDragStart = e => {
@@ -22,4 +22,4 @@
 //        onDragStart,
 //        onDragEnd
 //    };
-//};
+// };

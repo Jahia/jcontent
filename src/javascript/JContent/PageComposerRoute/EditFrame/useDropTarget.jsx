@@ -1,10 +1,10 @@
-//import {useMutation} from '@apollo/react-hooks';
-//import styles from './EditFrame.scss';
+// Import {useMutation} from '@apollo/react-hooks';
+// import styles from './EditFrame.scss';
 //
-//import gql from 'graphql-tag';
-//import {PredefinedFragments} from '@jahia/data-helper';
+// import gql from 'graphql-tag';
+// import {PredefinedFragments} from '@jahia/data-helper';
 //
-//const moveNode = gql`mutation moveNode($pathOrId: String!, $destParentPathOrId: String!, $name:String, $next: String, $move: Boolean!, $reorder: Boolean!) {
+// const moveNode = gql`mutation moveNode($pathOrId: String!, $destParentPathOrId: String!, $name:String, $next: String, $move: Boolean!, $reorder: Boolean!) {
 //    jcr {
 //        pasteNode(mode: MOVE, pathOrId: $pathOrId, destParentPathOrId: $destParentPathOrId, namingConflictResolution: RENAME) @include(if: $move) {
 //            node {
@@ -16,11 +16,11 @@
 //            reorderChildren(names: [$name, $next])
 //        }
 //    }
-//}
-//${PredefinedFragments.nodeCacheRequiredFields.gql}
-//`;
+// }
+// ${PredefinedFragments.nodeCacheRequiredFields.gql}
+// `;
 //
-//export const useDropTarget = ({parent, element, onSaved, enabledClassName}) => {
+// export const useDropTarget = ({parent, element, onSaved, enabledClassName}) => {
 //    const dropClassName = styles.enablePointerEvents;
 //    const [paste] = useMutation(moveNode);
 //
@@ -86,4 +86,4 @@
 //        onDragLeave,
 //        onDrop
 //    };
-//};
+// };

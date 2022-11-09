@@ -85,21 +85,26 @@
 
 :global(.noprefix) .dropTarget_insertBefore {
     &::before {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 100%;
         height: 50px;
+
         border: 2px dashed gray;
-        content: "";
-        display: inline-block;
+        content: var(--droplabel);
     }
 }
 
 :global(.noprefix) .dropTarget_insertAfter {
     &::after {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 100%;
         height: 50px;
+
         border: 2px dashed gray;
-        content: "";
-        display: inline-block;
+        content: var(--droplabel);
     }
 }
-

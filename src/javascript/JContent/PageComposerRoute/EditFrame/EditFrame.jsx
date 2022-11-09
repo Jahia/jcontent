@@ -17,48 +17,35 @@ import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
 import {useDragDropManager} from 'react-dnd';
 
-function addEventListeners(target, backend, f) {
-    const convertEventOffset = e => {
-        let proxyHandler = {
-            get: (obj, prop) => {
-                if (prop === 'clientX') {
-                    return obj[prop] + f.current.getBoundingClientRect().x;
-                }
-
-                if (prop === 'clientY') {
-                    console.log(obj[prop]);
-                    return obj[prop] + f.current.getBoundingClientRect().y;
-                }
-
-                if (prop === 'preventDefault') {
-                    return () => e.preventDefault();
-                }
-
-                return obj[prop];
-            }
-        };
-        return new Proxy(e, proxyHandler);
-    };
-
+function addEventListeners(target, manager, iframeRef) {
     // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
     if (!target.addEventListener) {
         return;
     }
 
-    target.addEventListener('dragstart', e => backend.handleTopDragStart(convertEventOffset(e)));
+    const {backend} = manager;
+
+    target.addEventListener('dragover', () => {
+        const clientRect = iframeRef.current.getBoundingClientRect();
+        if (manager.additionalOffset.x !== clientRect.x || manager.additionalOffset.y !== clientRect.y) {
+            manager.setAdditionalOffset(clientRect);
+        }
+    });
+
+    target.addEventListener('dragstart', backend.handleTopDragStart);
     target.addEventListener('dragstart', backend.handleTopDragStartCapture, true);
     target.addEventListener('dragend', backend.handleTopDragEndCapture, true);
-    target.addEventListener('dragenter', e => backend.handleTopDragEnter(convertEventOffset(e)));
+    target.addEventListener('dragenter', backend.handleTopDragEnter);
     target.addEventListener('dragenter', backend.handleTopDragEnterCapture, true);
     target.addEventListener('dragleave', backend.handleTopDragLeaveCapture, true);
-    target.addEventListener('dragover', e => backend.handleTopDragOver(convertEventOffset(e)));
+    target.addEventListener('dragover', backend.handleTopDragOver);
     target.addEventListener('dragover', backend.handleTopDragOverCapture, true);
-    target.addEventListener('drop', e => backend.handleTopDrop(convertEventOffset(e)));
+    target.addEventListener('drop', backend.handleTopDrop);
     target.addEventListener('drop', backend.handleTopDropCapture, true);
 }
 
 export const EditFrame = ({isPreview, isDeviceView}) => {
-    const {backend} = useDragDropManager();
+    const manager = useDragDropManager();
 
     const {path, site, language} = useSelector(state => ({
         language: state.language,
@@ -82,7 +69,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 
         if (loadedIframe.contentWindow.location.href !== 'about:blank') {
             // Enable react-dnd
-            addEventListeners(loadedIframe.contentWindow, backend, iframe);
+            addEventListeners(loadedIframe.contentWindow, manager, iframe);
             if (iframe.current !== loadedIframe) {
                 iframeSwap.current = iframe.current;
                 iframe.current = loadedIframe;

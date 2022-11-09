@@ -6,7 +6,7 @@ import styles from './ImageViewer.scss';
 
 export const ImageViewer = ({file, isFullScreen, className}) => {
     return (
-        <CardMedia className={classNames(styles.container, className, isFullScreen && styles.fullScreen)}
+        <CardMedia className={clsx(styles.container, className, isFullScreen && styles.fullScreen)}
                    data-cm-role="preview-image"
                    image={file}
         />

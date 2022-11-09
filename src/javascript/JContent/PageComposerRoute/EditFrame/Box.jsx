@@ -11,6 +11,7 @@ import PublicationStatus from '~/JContent/PublicationStatus';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+
 const DefaultBar = ({node, path, onSaved, ButtonRenderer}) => (
     <>
         <DisplayAction actionKey="quickEdit" path={path} editCallback={onSaved} render={ButtonRenderer}/>
@@ -32,6 +33,7 @@ DefaultBar.propTypes = {
 
 export const Box = ({
     element,
+    entries,
     language,
     color,
     onSelect,
@@ -96,21 +98,22 @@ export const Box = ({
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     const {dragging} = useNodeDrag({dragSource: node, ref: div});
-    const {canDrop, insertPosition, destParent} = useNodeDrop({dropTarget: parent && node, ref, orderable: true, onSaved});
+    const {canDrop, insertPosition, destParent} = useNodeDrop({dropTarget: parent && node, ref, orderable: true, entries, onSaved});
 
     useEffect(() => {
+        const currentRootElement = rootElementRef.current;
         if (dragging) {
             element.ownerDocument.body.classList.add(editStyles.disablePointerEvents);
             element.classList.add(editStyles.dragging);
-            rootElementRef.current?.classList?.add?.(styles.dragging);
+            currentRootElement?.classList?.add?.(styles.dragging);
         }
 
         return () => {
             element.ownerDocument.body.classList.remove(editStyles.disablePointerEvents);
             element.classList.remove(editStyles.dragging);
-            rootElementRef.current?.classList?.remove?.(styles.dragging);
+            currentRootElement?.classList?.remove?.(styles.dragging);
         };
-    }, [dragging]);
+    }, [dragging, element, rootElementRef]);
 
     useEffect(() => {
         if (parent) {
@@ -120,17 +123,19 @@ export const Box = ({
         return () => {
             element.classList.remove(editStyles.enablePointerEvents);
         };
-    }, [parent]);
+    }, [parent, element]);
 
     useEffect(() => {
         if (canDrop) {
+            element.style.setProperty('--droplabel', `"[${destParent?.name.replace(/[\u00A0-\u9999<>&]/g, i => '&#' + i.charCodeAt(0) + ';')}]"`);
             element.classList.add(styles['dropTarget_' + insertPosition]);
         }
 
         return () => {
             element.classList.remove(styles['dropTarget_' + insertPosition]);
+            element.style.removeProperty('--droplabel');
         };
-    }, [canDrop, insertPosition, destParent]);
+    }, [canDrop, insertPosition, destParent, element]);
 
     return (
         <>
@@ -169,6 +174,8 @@ export const Box = ({
 
 Box.propTypes = {
     element: PropTypes.any,
+
+    entries: PropTypes.array,
 
     language: PropTypes.string,
 

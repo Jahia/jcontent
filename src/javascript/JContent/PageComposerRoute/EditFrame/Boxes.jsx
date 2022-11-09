@@ -100,6 +100,11 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver]);
 
     const currentPath = currentElement ? currentElement.getAttribute('path') : path;
+    const entries = modules.map(m => ({
+        name: m.getAttribute('path').substr(m.getAttribute('path').lastIndexOf('/') + 1),
+        path: m.getAttribute('path'),
+        depth: m.getAttribute('path').split('/').length
+    }));
 
     return (
         <div ref={rootElement}>
@@ -122,6 +127,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                     <Box key={e.getAttribute('id')}
                          rootElementRef={rootElement}
                          element={e}
+                         entries={entries}
                          language={language}
                          color={color}
                          onMouseOver={onMouseOver}

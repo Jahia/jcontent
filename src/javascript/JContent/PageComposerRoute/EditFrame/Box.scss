@@ -83,6 +83,10 @@
     margin: 0 4px;
 }
 
+:global(.noprefix) .dropTarget {
+    border: 2px dashed gray;
+}
+
 :global(.noprefix) .dropTarget_insertBefore {
     &::before {
         display: flex;

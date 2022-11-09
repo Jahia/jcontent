@@ -126,13 +126,14 @@ export const Box = ({
     }, [parent, element]);
 
     useEffect(() => {
+        const classname = insertPosition ? styles['dropTarget_' + insertPosition] : styles.dropTarget;
         if (canDrop) {
             element.style.setProperty('--droplabel', `"[${destParent?.name.replace(/[\u00A0-\u9999<>&]/g, i => '&#' + i.charCodeAt(0) + ';')}]"`);
-            element.classList.add(styles['dropTarget_' + insertPosition]);
+            element.classList.add(classname);
         }
 
         return () => {
-            element.classList.remove(styles['dropTarget_' + insertPosition]);
+            element.classList.remove(classname);
             element.style.removeProperty('--droplabel');
         };
     }, [canDrop, insertPosition, destParent, element]);

@@ -6,8 +6,9 @@ import {useSiteInfo} from '@jahia/data-helper';
 import {Dropdown} from '@jahia/moonstone';
 import styles from './LanguageSwitcher.scss';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
+import {Separator} from '@jahia/moonstone';
 
-export const LanguageSwitcher = () => {
+const LanguageSwitcher = () => {
     const {siteKey, lang} = useSelector(state => ({
         siteKey: state.site,
         lang: state.language
@@ -40,18 +41,22 @@ export const LanguageSwitcher = () => {
     }
 
     const data = siteInfo.languages.filter(l => l.activeInEdit).map(l => ({label: l.language, value: l.language}));
-    return data && (data.length > 0) && (
-        <Dropdown
-            data-cm-role="language-switcher"
-            className={styles.languageSwitcher}
-            label={lang}
-            value={lang}
-            data={data}
-            onChange={(e, item) => {
-                onSelectLanguageHandler(item.value);
-                return true;
-            }}
-        />
+    return data && (data.length > 1) && (
+        <>
+            <Separator variant="vertical"/>
+            <Dropdown
+                data-cm-role="language-switcher"
+                className={styles.languageSwitcher}
+                label={lang}
+                value={lang}
+                data={data}
+                onChange={(e, item) => {
+                    onSelectLanguageHandler(item.value);
+                    return true;
+                }}
+            />
+        </>
+
     );
 };
 

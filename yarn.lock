@@ -1225,9 +1225,9 @@
     xml-js "^1.6.11"
 
 "@jahia/moonstone@^2.4.12":
-  version "2.4.15"
-  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.4.15.tgz#13520d5b9eee10f44ae1d67fe54b1ee19efdb39e"
-  integrity sha512-L4z/0OonyutQf9ZcpIrbCa6I+svZXdZawwuugjnqAHbA6DRnKT6U1YCBnw3jiYVeDsGzng8unh9h3yOHQ6EYbQ==
+  version "2.4.16"
+  resolved "https://npm.jahia.com/@jahia%2fmoonstone/-/moonstone-2.4.16.tgz#e119e38998301ce8af7be3c8c51f8996a9d3a06e"
+  integrity sha512-kZv6CFG1MrjmdLOqxzak0Byy60eWPXL5XIy6UFog2WPSvab6mvxBYP6qiQIuVNSur6wzUHQXrNMdaairdYz9qQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     clsx "^1.1.1"

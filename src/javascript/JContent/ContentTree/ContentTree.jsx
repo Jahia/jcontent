@@ -12,7 +12,6 @@ import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
-import styles from './ContentTree.scss';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -37,8 +36,6 @@ export const accordionPropType = PropTypes.shape({
     }).isRequired
 });
 
-const getStyle = insertPosition => insertPosition ? styles[insertPosition] : styles.drop;
-
 const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     const ref = useRef(null);
     const {canDrop, insertPosition, destParent} = useNodeDrop({
@@ -62,7 +59,17 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
 
     return (
         <>
-            <li ref={ref} {...props} className={clsx([dragging && styles.drag, canDrop && getStyle(insertPosition)])}>
+            <li ref={ref}
+                {...props}
+                className={clsx([
+                    {
+                        'moonstone-drag': dragging,
+                        'moonstone-drop_listItem': canDrop && !insertPosition,
+                        'moonstone-order_before': canDrop && insertPosition === 'insertBefore',
+                        'moonstone-order_after': canDrop && insertPosition === 'insertAfter'
+                    }
+                ])}
+            >
                 {children}
             </li>
         </>

@@ -7,7 +7,6 @@ import css from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTable
 import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
-import styles from './Row.scss';
 
 export const Row = ({
     row,
@@ -38,7 +37,7 @@ export const Row = ({
     return (
         <TableRow {...rowProps}
                   data-cm-role="table-content-list-row"
-                  className={clsx(css.tableRow, canDrop && styles.drop, dragging && styles.drag)}
+                  className={clsx(css.tableRow, canDrop && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isSelected}
                   onClick={() => {
                       if (isPreviewOpened && !node.notSelectableForPreview) {

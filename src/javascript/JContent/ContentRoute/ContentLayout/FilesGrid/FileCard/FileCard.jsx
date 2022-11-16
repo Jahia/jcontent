@@ -48,8 +48,10 @@ export const FileCard = ({
             ref={ref}
             className={clsx(
                 styles.card,
-                dragging && styles.drag,
-                canDrop && styles.drop,
+                {
+                    'moonstone-drag': dragging,
+                    'moonstone-drop_card': canDrop
+                },
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"

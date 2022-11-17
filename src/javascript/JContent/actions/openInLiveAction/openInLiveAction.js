@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {OpenInLiveActionQuery} from '~/JContent/actions/openInLiveAction/openInLiveAction.gql-queries';
 import {shallowEqual, useSelector} from 'react-redux';
+import {setRefetcher, unsetRefetcher} from '~/JContent/JContent.refetches';
 
 export const OpenInLiveActionComponent = ({
     render: Render,
@@ -14,7 +15,7 @@ export const OpenInLiveActionComponent = ({
         language: state.language
     }), shallowEqual);
     let livePath = path;
-    const {data, error, loading} = useQuery(OpenInLiveActionQuery, {
+    const res = useQuery(OpenInLiveActionQuery, {
         variables: {
             path: path,
             language: language
@@ -22,22 +23,31 @@ export const OpenInLiveActionComponent = ({
         skip: !path
     });
 
-    if (loading || error || !data || !data.jcr.result.publicationInfo.existsInLive ||
-        data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' ||
-        data.jcr.result.publicationInfo.status === 'UNPUBLISHED' ||
-        (!data.jcr.result.previewAvailable && data.jcr.result.displayableNode === null)) {
+    useEffect(() => {
+        setRefetcher('openInLive', {
+            refetch: res.refetch
+        });
+
+        return () => unsetRefetcher('openInLive');
+    }, [res.refetch]);
+
+    if (res.loading || res.error || !res.data || !res.data.jcr.result.publicationInfo.existsInLive ||
+        res.data.jcr.result.publicationInfo.status === 'NOT_PUBLISHED' ||
+        res.data.jcr.result.publicationInfo.status === 'UNPUBLISHED' ||
+        (!res.data.jcr.result.previewAvailable && res.data.jcr.result.displayableNode === null)) {
         return <></>;
     }
 
-    if (!data.jcr.result.previewAvailable && data.jcr.result.displayableNode.previewAvailable) {
-        livePath = data.jcr.result.displayableNode.path;
+    if (!res.data.jcr.result.previewAvailable && res.data.jcr.result.displayableNode.previewAvailable) {
+        livePath = res.data.jcr.result.displayableNode.path;
     }
 
     return (
         <Render
             {...others}
             onClick={() => {
-                window.open(`${window.contextJsParameters.baseUrl.replace(/\/default\//, '/live/')}${livePath}.html`, '_blank');
+                const baseURL = window.contextJsParameters.baseUrl.replace(/\/default\/[a-zA-Z_]{2,5}/, `/live/${language}`);
+                window.open(`${baseURL}${livePath}.html`, '_blank');
             }}
         />
     );

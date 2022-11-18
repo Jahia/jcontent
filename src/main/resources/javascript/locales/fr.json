@@ -267,6 +267,8 @@
       "move": {
         "success": "{{count}} élément a été déplacé dans {{dest}}",
         "success_plural": "{{count}} éléments ont été déplacés dans {{dest}}.",
+        "error_itemExists": "Un élément ne peut pas être déplacé car un élément avec le même nom système existe déjà.",
+        "error_itemExists_name": "{{name}} ne peut pas être déplacé car un élément avec le même nom système existe déjà.",
         "error": "L'élément ne peut pas être déplacé vers {{dest}}.",
         "error_plural": "Les éléments ne peuvent pas être déplacés vers {{dest}}.",
         "error_name": "{{name}} ne peut pas être déplacé vers {{dest}}."

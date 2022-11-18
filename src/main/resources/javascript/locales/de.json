@@ -267,6 +267,8 @@
       "move": {
         "success": "{{count}} Element wurde nach {{dest}} verschoben",
         "success_plural": "{{count}} Elemente wurden nach {{dest}} verschoben.",
+        "error_itemExists": "Ein Element kann nicht verschoben werden, da ein bereits ein Element mit diesem Namen existiert.",
+        "error_itemExists_name": "{{name}} kann nicht verschoben werden, da ein bereits ein Element mit diesem Namen existiert.",
         "error": "Das Element kann nicht verschoben werden.",
         "error_plural": "Die Elemente können nicht verschoben werden.",
         "error_name": "{{name}} kann nicht verschoben werden."

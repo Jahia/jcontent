@@ -28,6 +28,22 @@ const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOr
 ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
 
+function getName(dragSource) {
+    return (dragSource.displayName && ellipsizeText(dragSource.displayName, 50)) || dragSource.name;
+}
+
+function getErrorMessage(isNode, dragSource, destParent, pathsOrIds, e, t) {
+    if (e.message.startsWith('javax.jcr.ItemExistsException')) {
+        return isNode ?
+            t('jcontent:label.contentManager.move.error_itemExists_name', {name: getName(dragSource)}) :
+            t('jcontent:label.contentManager.move.error_itemExists');
+    }
+
+    return isNode ?
+        t('jcontent:label.contentManager.move.error_name', {name: getName(dragSource), dest: getName(destParent)}) :
+        t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
+}
+
 export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
     const [moveMutation] = useMutation(moveNode);
     const client = useApolloClient();
@@ -114,18 +130,8 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
                 }
 
                 notificationContext.notify(message, ['closeButton']);
-            }).catch(() => {
-                const message = isNode ?
-                    t('jcontent:label.contentManager.move.error_name', {
-                        name: (dragSource.displayName && ellipsizeText(dragSource.displayName, 50)) || dragSource.name,
-                        dest: (destParent.displayName && ellipsizeText(destParent.displayName, 50)) || destParent.name
-                    }) :
-                    t('jcontent:label.contentManager.move.error', {
-                        count: pathsOrIds.length,
-                        dest: (destParent.displayName && ellipsizeText(destParent.displayName, 50)) || destParent.name
-                    }
-                    );
-                notificationContext.notify(message, ['closeButton']);
+            }).catch(e => {
+                notificationContext.notify(getErrorMessage(isNode, dragSource, destParent, pathsOrIds, e, t), ['closeButton']);
             });
         }
     }), [dropTarget, destParent, names, insertPosition, entries]);

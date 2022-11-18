@@ -270,6 +270,8 @@
       "move": {
         "success": "{{count}} item has been moved to {{dest}}",
         "success_plural": "{{count}} items have been moved to {{dest}}.",
+        "error_itemExists": "An item cannot be moved as another item with the same name already exists.",
+        "error_itemExists_name": "{{name}} cannot be moved as another item with the same name already exists.",
         "error": "Item cannot be moved to {{dest}}.",
         "error_plural": "Items cannot be moved to {{dest}}.",
         "error_name": "{{name}} cannot be moved to {{dest}}."

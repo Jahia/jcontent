@@ -100,8 +100,6 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                 return;
             }
 
-            console.log('drop to ' + uploadPath);
-
             const fileList = item.items || item.files;
 
             const asyncScanAndUpload = async () => {
@@ -136,13 +134,6 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
             });
         },
         canDrop: () => allowDrop,
-        hover: (item, monitor) => {
-            console.log('hover');
-            if (monitor.canDrop() && monitor.isOver({shallow: true})) {
-                console.log('hover2');
-                //
-            }
-        },
         collect: monitor => ({
             isOver: monitor.isOver({shallow: true}),
             isCanDrop: (monitor.canDrop() && monitor.isOver({shallow: true}))

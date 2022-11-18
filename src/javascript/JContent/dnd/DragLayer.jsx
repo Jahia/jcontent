@@ -64,7 +64,7 @@ export const DragLayer = () => {
                         </Typography>
                     </>
                 );
-            case 'paths':
+            case 'nodes':
                 return (
                     <>
                         <div>

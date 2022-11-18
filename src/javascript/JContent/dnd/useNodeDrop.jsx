@@ -3,9 +3,10 @@ import {useDrop} from 'react-dnd';
 import gql from 'graphql-tag';
 import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
-import {PredefinedFragments} from '@jahia/data-helper';
+import {PredefinedFragments, useNodeChecks} from '@jahia/data-helper';
 import {useRef, useState} from 'react';
-import {ellipsizeText} from '~/JContent/JContent.utils';
+import {ellipsizeText, isDescendantOrSelf} from '~/JContent/JContent.utils';
+import {useNodeTypeCheck} from '~/JContent';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -32,7 +33,7 @@ function getName(dragSource) {
     return (dragSource.displayName && ellipsizeText(dragSource.displayName, 50)) || dragSource.name;
 }
 
-function getErrorMessage(isNode, dragSource, destParent, pathsOrIds, e, t) {
+function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
     if (e.message.startsWith('javax.jcr.ItemExistsException')) {
         return isNode ?
             t('jcontent:label.contentManager.move.error_itemExists_name', {name: getName(dragSource)}) :
@@ -56,8 +57,19 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
 
+    const res = useNodeChecks(
+        {path: destParent?.path},
+        {
+            requiredPermission: 'jcr:addChildNodes',
+            getChildNodeTypes: true,
+            getContributeTypesRestrictions: true
+        }
+    );
+
+    const nodeTypeCheck = useNodeTypeCheck();
+
     const [props, drop] = useDrop(() => ({
-        accept: ['node', 'paths'],
+        accept: ['node', 'nodes'],
         collect: monitor => ({
             isCanDrop: (monitor.canDrop() && monitor.isOver({shallow: true})),
             insertPosition,
@@ -96,14 +108,21 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
                 setDestParent(insertPosition === 'insertBefore' || (insertPosition === 'insertAfter' && d !== 1) ? dropTarget.parent : null);
             }
         },
-        canDrop: dragSource => dropTarget && (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))),
+        canDrop: (dragSource, monitor) => {
+            const nodes = (monitor.getItemType() === 'nodes') ? dragSource : [dragSource];
+
+            return dropTarget && res.node &&
+                (insertPosition || (dragSource.path !== (destParent.path + '/' + dragSource.name))) &&
+                !isDescendantOrSelf(destParent.path, dragSource.path) &&
+                nodeTypeCheck(res.node, nodes).checkResult;
+        },
         drop: (dragSource, monitor) => {
             if (monitor.didDrop()) {
                 return;
             }
 
             const isNode = monitor.getItemType() === 'node';
-            const pathsOrIds = isNode ? [dragSource.uuid] : dragSource;
+            const pathsOrIds = isNode ? [dragSource.uuid] : dragSource.map(n => n.uuid);
             const move = (dragSource.path !== (destParent.path + '/' + dragSource.name));
             const reorder = Boolean(insertPosition);
 
@@ -131,10 +150,10 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
 
                 notificationContext.notify(message, ['closeButton']);
             }).catch(e => {
-                notificationContext.notify(getErrorMessage(isNode, dragSource, destParent, pathsOrIds, e, t), ['closeButton']);
+                notificationContext.notify(getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}), ['closeButton']);
             });
         }
-    }), [dropTarget, destParent, names, insertPosition, entries]);
+    }), [dropTarget, destParent, names, insertPosition, entries, res, nodeTypeCheck]);
 
     if (ref) {
         drop(ref);

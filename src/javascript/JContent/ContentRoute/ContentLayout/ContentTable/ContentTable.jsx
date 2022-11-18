@@ -1,11 +1,10 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {CM_DRAWER_STATES, cmCloseTablePaths, cmGoto, cmOpenPaths, cmOpenTablePaths} from '~/JContent/redux/JContent.redux';
 import {extractPaths, getCanDisplayItemParams} from '~/JContent/JContent.utils';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import UploadTransformComponent from '../UploadTransformComponent';
 import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
 import {cmSetPage, cmSetPageSize} from '~/JContent/redux/pagination.redux';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
@@ -23,6 +22,7 @@ import {flattenTree, isInSearchMode} from '../ContentLayout.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import {cmSetSort} from '~/JContent/redux/sort.redux';
 import {Row} from '~/JContent/ContentRoute/ContentLayout/ContentTable/Row';
+import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const {t} = useTranslation('jcontent');
@@ -53,6 +53,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
 
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
+    const dropReference = useRef();
     const {
         mainPanelRef,
         handleKeyboardNavigation,
@@ -122,11 +123,14 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     let columnData = previewState === CM_DRAWER_STATES.SHOW ? reducedColumnData : allColumnData;
     let isPreviewOpened = previewState === CM_DRAWER_STATES.SHOW;
 
+    const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
+
+    const {isCanDrop} = useFileDrop({uploadType: tableConfig?.uploadType, uploadPath: path, ref: dropReference});
+
     if (isContentNotFound) {
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
     }
 
-    const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
     const tableHeader = tableConfig?.tableHeader;
 
     if (!rows?.length && !isLoading) {
@@ -137,7 +141,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return (
             <>
                 {tableHeader}
-                <ContentEmptyDropZone uploadType={tableConfig?.uploadType} path={path}/>
+                <ContentEmptyDropZone reference={dropReference} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop}/>
             </>
         );
     }
@@ -145,12 +149,12 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     return (
         <>
             {tableHeader}
-            <UploadTransformComponent uploadTargetComponent={ContentTableWrapper}
-                                      uploadPath={path}
-                                      uploadType={tableConfig?.uploadType}
-                                      reference={mainPanelRef}
-                                      onKeyDown={handleKeyboardNavigation}
-                                      onClick={setFocusOnMainContainer}
+            <ContentTableWrapper isCanDrop={isCanDrop}
+                                 dropReference={dropReference}
+                                 reference={mainPanelRef}
+                                 uploadType={tableConfig?.uploadType}
+                                 onKeyDown={handleKeyboardNavigation}
+                                 onClick={setFocusOnMainContainer}
             >
                 <Table aria-labelledby="tableTitle"
                        data-cm-role="table-content-list"
@@ -176,7 +180,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                         })}
                     </TableBody>
                 </Table>
-            </UploadTransformComponent>
+            </ContentTableWrapper>
             {(!isStructured || isInSearchMode(mode) || JContentConstants.mode.MEDIA === mode) &&
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}

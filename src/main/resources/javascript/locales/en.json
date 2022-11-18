@@ -84,6 +84,7 @@
       },
       "import": {
         "dropMessage": "Drag and drop a file to import",
+        "drop": "Drop your file here",
         "action": "Import content"
       },
       "zipUnzip": {

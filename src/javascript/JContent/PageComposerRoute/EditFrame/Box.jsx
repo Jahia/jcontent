@@ -98,7 +98,7 @@ export const Box = ({
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     const {dragging} = useNodeDrag({dragSource: node, ref: div});
-    const {canDrop, insertPosition, destParent} = useNodeDrop({dropTarget: parent && node, ref, orderable: true, entries, onSaved});
+    const {isCanDrop, insertPosition, destParent} = useNodeDrop({dropTarget: parent && node, ref, orderable: true, entries, onSaved});
 
     useEffect(() => {
         const currentRootElement = rootElementRef.current;
@@ -127,7 +127,7 @@ export const Box = ({
 
     useEffect(() => {
         const classname = insertPosition ? styles['dropTarget_' + insertPosition] : styles.dropTarget;
-        if (canDrop) {
+        if (isCanDrop) {
             element.style.setProperty('--droplabel', `"[${destParent?.name.replace(/[\u00A0-\u9999<>&]/g, i => '&#' + i.charCodeAt(0) + ';')}]"`);
             element.classList.add(classname);
         }
@@ -136,7 +136,7 @@ export const Box = ({
             element.classList.remove(classname);
             element.style.removeProperty('--droplabel');
         };
-    }, [canDrop, insertPosition, destParent, element]);
+    }, [isCanDrop, insertPosition, destParent, element]);
 
     return (
         <>

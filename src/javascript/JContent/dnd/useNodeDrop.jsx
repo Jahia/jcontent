@@ -43,7 +43,7 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
     const [props, drop] = useDrop(() => ({
         accept: ['node', 'paths'],
         collect: monitor => ({
-            canDrop: (monitor.canDrop() && monitor.isOver({shallow: true})),
+            isCanDrop: (monitor.canDrop() && monitor.isOver({shallow: true})),
             insertPosition,
             destParent
         }),

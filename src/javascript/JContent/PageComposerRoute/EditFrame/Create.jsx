@@ -38,7 +38,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     });
 
     const ref = useRef();
-    const {canDrop} = useNodeDrop({dropTarget: parent && node, ref, onSaved});
+    const {isCanDrop} = useNodeDrop({dropTarget: parent && node, ref, onSaved});
 
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
@@ -55,14 +55,14 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
 
     useEffect(() => {
-        if (canDrop) {
+        if (isCanDrop) {
             element.classList.add(styles.dropTarget);
         }
 
         return () => {
             element.classList.remove(styles.dropTarget);
         };
-    }, [canDrop, element]);
+    }, [isCanDrop, element]);
 
     return !anyDragging && (
         <div ref={ref}

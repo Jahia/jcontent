@@ -7,6 +7,8 @@ import css from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTable
 import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
+import {useFileDrop} from '~/JContent/dnd/useFileDrop';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const Row = ({
     row,
@@ -25,7 +27,8 @@ export const Row = ({
     const contextualMenu = useRef();
 
     const ref = useRef(null);
-    const {canDrop} = useNodeDrop({dropTarget: node, ref});
+    const {isCanDrop} = useNodeDrop({dropTarget: node, ref});
+    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref});
     const {dragging} = useNodeDrag({dragSource: node, ref});
 
     row.ref = ref;
@@ -37,7 +40,7 @@ export const Row = ({
     return (
         <TableRow {...rowProps}
                   data-cm-role="table-content-list-row"
-                  className={clsx(css.tableRow, canDrop && 'moonstone-drop_row', dragging && 'moonstone-drag')}
+                  className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isSelected}
                   onClick={() => {
                       if (isPreviewOpened && !node.notSelectableForPreview) {

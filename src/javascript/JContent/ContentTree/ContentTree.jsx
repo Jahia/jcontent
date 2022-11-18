@@ -12,6 +12,8 @@ import {arrayValue, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+import {useFileDrop} from '~/JContent/dnd/useFileDrop';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const accordionPropType = PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -38,18 +40,24 @@ export const accordionPropType = PropTypes.shape({
 
 const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     const ref = useRef(null);
-    const {canDrop, insertPosition, destParent} = useNodeDrop({
+    const {isCanDrop, insertPosition, destParent} = useNodeDrop({
         dropTarget: node,
         ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref,
         orderable: item.treeConfig.dnd && item.treeConfig.dnd.canReorder,
         entries: treeEntries
     });
+    const {isCanDrop: isCanDropFile} = useFileDrop({
+        uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD,
+        uploadPath: node.path,
+        ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref
+    });
+
     const {dragging} = useNodeDrag({
         dragSource: node,
         ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrag && ref
     });
 
-    const depth = canDrop ? treeEntries.find(e => e.node.path === destParent.path)?.depth : -1;
+    const depth = (isCanDrop || isCanDropFile) ? treeEntries.find(e => e.node.path === destParent.path)?.depth : -1;
 
     useEffect(() => {
         if (ref.current && depth > 0) {
@@ -64,9 +72,9 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
                 className={clsx([
                     {
                         'moonstone-drag': dragging,
-                        'moonstone-drop_listItem': canDrop && !insertPosition,
-                        'moonstone-order_before': canDrop && insertPosition === 'insertBefore',
-                        'moonstone-order_after': canDrop && insertPosition === 'insertAfter'
+                        'moonstone-drop_listItem': (isCanDrop || isCanDropFile) && !insertPosition,
+                        'moonstone-order_before': isCanDrop && insertPosition === 'insertBefore',
+                        'moonstone-order_after': isCanDrop && insertPosition === 'insertAfter'
                     }
                 ])}
             >

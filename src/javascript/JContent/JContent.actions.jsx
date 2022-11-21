@@ -338,7 +338,7 @@ export const jContentActions = registry => {
     });
 
     registry.add('action', 'contentActionsSeparator1', {
-        targets: ['contentActions:-0.1'],
+        targets: ['contentActions:0'],
         isSeparator: true
     });
 

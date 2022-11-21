@@ -14,7 +14,7 @@ export const UploadTransformComponent = React.forwardRef(({
     ...props
 }, ref) => {
     const rootRef = useRef();
-    useFileDrop({uploadPath, uploadType, uploadMaxSize, uploadMinSize, uploadFilter, rootRef});
+    useFileDrop({uploadPath, uploadType, uploadMaxSize, uploadMinSize, uploadFilter, ref: rootRef});
     return (
         <RootRef rootRef={rootRef}>
             <Component ref={ref} {...props}/>

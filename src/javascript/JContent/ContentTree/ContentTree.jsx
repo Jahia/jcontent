@@ -78,7 +78,7 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
     }
 
     const useTreeEntriesOptionsJson = {
-        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, lockInfo, PickerItemsFragment.parentNode, displayName],
+        fragments: [PickerItemsFragment.mixinTypes, PickerItemsFragment.primaryNodeType, PickerItemsFragment.isPublished, PickerItemsFragment.isTreeSelectable, lockInfo, PickerItemsFragment.parentNode, displayName],
         rootPaths: [rootPath],
         openPaths: openPaths,
         selectedPaths: [path],
@@ -132,7 +132,11 @@ export const ContentTree = ({setPathAction, openPathAction, closePathAction, ite
                               contextualMenu.current(event, {path: object.id});
                           }
                       }}
-                      onClickItem={object => dispatch(setPathAction(object.id, {sub: false}))}
+                      onClickItem={object => {
+                          if (object.treeItemProps.node.isTreeSelectable) {
+                              dispatch(setPathAction(object.id, {sub: false}));
+                          }
+                      }}
                       onOpenItem={object => dispatch(openPathAction(object.id))}
                       onCloseItem={object => dispatch(closePathAction(object.id))}
             />

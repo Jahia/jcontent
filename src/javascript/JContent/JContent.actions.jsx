@@ -253,7 +253,7 @@ export const jContentActions = registry => {
     registry.add('action', 'subContents', {
         buttonIcon: <Subdirectory/>,
         buttonLabel: 'jcontent:label.contentManager.subContentsAction',
-        targets: ['contentActions:0.1'],
+        targets: ['contentActions:15'],
         component: SubContentsActionComponent
     });
     registry.add('action', 'exportPage', {
@@ -335,5 +335,15 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.actions.openInLive',
         targets: [],
         component: OpenInLiveActionComponent
+    });
+
+    registry.add('action', 'contentActionsSeparator1', {
+        targets: ['contentActions:-0.1'],
+        isSeparator: true
+    });
+
+    registry.add('action', 'contentActionsSeparator2', {
+        targets: ['contentActions:10'],
+        isSeparator: true
     });
 };

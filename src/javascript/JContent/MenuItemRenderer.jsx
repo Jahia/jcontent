@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
-import {MenuItem} from '@jahia/moonstone';
+import {MenuItem, Separator} from '@jahia/moonstone';
 
-export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, actionKey, enabled, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
+export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, menuState, buttonIcon, actionKey, enabled, isSeparator, onClick, onMouseEnter, onMouseLeave, buttonProps}) => {
     const {t} = useTranslation('jcontent');
     const [hover, setHover] = useState(false);
+
+    if (isSeparator) {
+        return <Separator invisible="firstOrLastChild" />;
+    }
 
     const onEnter = e => {
         onMouseEnter(e);
@@ -52,6 +56,7 @@ MenuItemRenderer.propTypes = {
     menuState: PropTypes.object,
     buttonIcon: PropTypes.object,
     enabled: PropTypes.bool,
+    isSeparator: PropTypes.bool,
 
     /**
      * Function to call when the menu item is clicked

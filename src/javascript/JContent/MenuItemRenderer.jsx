@@ -8,7 +8,7 @@ export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, men
     const [hover, setHover] = useState(false);
 
     if (isSeparator) {
-        return <Separator invisible="firstOrLastChild" />;
+        return <Separator invisible="firstOrLastChild"/>;
     }
 
     const onEnter = e => {

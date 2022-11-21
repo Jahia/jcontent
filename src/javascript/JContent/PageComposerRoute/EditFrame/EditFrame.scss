@@ -169,3 +169,7 @@
 :global(.noprefix) .disablePointerEvents.disablePointerEvents.disablePointerEvents *.enablePointerEvents {
     pointer-events: all;
 }
+
+:global(.noprefix) .dragging {
+    opacity: 0.2;
+}

@@ -14,6 +14,8 @@ import styles from './FileCard.scss';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
+import {useFileDrop} from '~/JContent/dnd/useFileDrop';
+import JContentConstants from '~/JContent/JContent.constants';
 
 export const FileCard = ({
     node,
@@ -29,8 +31,9 @@ export const FileCard = ({
 }) => {
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
-    const {canDrop} = useNodeDrop(node, ref);
-    const {dragging} = useNodeDrag(node, ref);
+    const {isCanDrop} = useNodeDrop({dropTarget: node, ref});
+    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref});
+    const {dragging} = useNodeDrag({dragSource: node, ref});
 
     let contextualMenu = useRef();
 
@@ -48,8 +51,10 @@ export const FileCard = ({
             ref={ref}
             className={clsx(
                 styles.card,
-                dragging && styles.drag,
-                canDrop && styles.drop,
+                {
+                    'moonstone-drag': dragging,
+                    'moonstone-drop_card': isCanDrop || isCanDropFile
+                },
                 isPreviewSelected && styles.selected
             )}
             data-cm-role="grid-content-list-card"

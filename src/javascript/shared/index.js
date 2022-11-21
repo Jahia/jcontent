@@ -18,3 +18,4 @@ export * as reactTable from '../JContent/ContentRoute/ContentLayout/ContentTable
 export {default as FileSize} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard/FileSize';
 export {default as FileCard} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FileCard';
 export * from '../JContent/ContentRoute/ContentLayout/queryHandlers';
+export * from '../JContent/dnd';

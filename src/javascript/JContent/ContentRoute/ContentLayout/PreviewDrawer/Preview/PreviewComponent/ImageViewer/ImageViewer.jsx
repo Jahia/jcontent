@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {CardMedia} from '@material-ui/core';
-import classNames from 'clsx';
+import clsx from 'clsx';
 import styles from './ImageViewer.scss';
 
 export const ImageViewer = ({file, isFullScreen, className}) => {
     return (
-        <CardMedia className={classNames(styles.container, className, isFullScreen && styles.fullScreen)}
+        <CardMedia className={clsx(styles.container, className, isFullScreen && styles.fullScreen)}
                    data-cm-role="preview-image"
                    image={file}
         />

@@ -77,7 +77,7 @@ export default function () {
     registry.add('app', 'dnd', {
         targets: ['root:2'],
         render: next => (
-            <DndProvider backend={HTML5Backend}>
+            <DndProvider debugMode={(!process.env.NODE_ENV || process.env.NODE_ENV === 'development')} backend={HTML5Backend}>
                 <DragLayer/>
                 {next}
             </DndProvider>

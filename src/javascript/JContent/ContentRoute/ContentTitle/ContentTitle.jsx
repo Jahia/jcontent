@@ -1,5 +1,5 @@
 import React from 'react';
-import classnames from 'clsx';
+import clsx from 'clsx';
 import {Typography} from '@jahia/moonstone';
 import styles from './ContentTitle.scss';
 import {shallowEqual, useSelector} from 'react-redux';
@@ -14,7 +14,7 @@ const ContentTitle = () => {
     const {loading, node} = useNodeInfo({path: path, language: language}, {getDisplayName: true});
 
     return (
-        <div className={classnames(styles.root, 'alignCenter')} data-sel-role="title">
+        <div className={clsx(styles.root, 'alignCenter')} data-sel-role="title">
             <Typography variant="title" style={{opacity: loading ? 0 : 1}}>
                 {(!loading && node && node.displayName) || 'Loading ...'}
             </Typography>

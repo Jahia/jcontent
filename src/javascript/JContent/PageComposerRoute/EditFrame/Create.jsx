@@ -1,11 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
 import {DisplayAction} from '@jahia/ui-extender';
 import {getButtonRenderer} from '~/utils/getButtonRenderer';
-import classnames from 'clsx';
-import {useDropTarget} from './useDropTarget';
+import clsx from 'clsx';
+import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
+import {useNodeInfo} from '@jahia/data-helper';
+import editStyles from './EditFrame.scss';
+import {useDragLayer} from 'react-dnd';
 
 export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
@@ -24,13 +27,22 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         element.dataset.jahiaParent = parent.id;
     }
 
-    const {onDragEnter, onDragLeave, onDragOver, onDrop, dropClassName} = useDropTarget({parent, element, onSaved, enabledClassName: styles.dropTarget});
-
     useEffect(() => {
         element.style.height = '28px';
     });
 
     const parentPath = parent.getAttribute('path');
+
+    const {node} = useNodeInfo({path: parentPath}, {
+        getPrimaryNodeType: true
+    });
+
+    const ref = useRef();
+    const {isCanDrop} = useNodeDrop({dropTarget: parent && node, ref, onSaved});
+
+    const {anyDragging} = useDragLayer(monitor => ({
+        anyDragging: monitor.isDragging()
+    }));
 
     const currentOffset = {
         top: rect.top + scrollTop,
@@ -42,16 +54,23 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
 
-    return (
-        <div className={classnames(styles.root, dropClassName)}
+    useEffect(() => {
+        if (isCanDrop) {
+            element.classList.add(styles.dropTarget);
+        }
+
+        return () => {
+            element.classList.remove(styles.dropTarget);
+        };
+    }, [isCanDrop, element]);
+
+    return !anyDragging && (
+        <div ref={ref}
+             className={clsx(styles.root, editStyles.enablePointerEvents)}
              style={currentOffset}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
-             onDragOver={onDragOver}
-             onDragEnter={onDragEnter}
-             onDragLeave={onDragLeave}
-             onDrop={onDrop}
         >
             <DisplayAction actionKey="createContent" path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>
             <DisplayAction actionKey="paste" path={parentPath} loading={() => false} render={ButtonRenderer}/>

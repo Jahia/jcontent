@@ -6,6 +6,12 @@
     overflow: hidden;
 
     background-color: var(--color-gray_light);
+
+    transition: opacity 0.1s;
+}
+
+.drop.drop {
+    opacity: 0.5;
 }
 
 .gridEmpty.gridEmpty {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Snackbar} from '@material-ui/core';
-import {Button, Close, Download, Typography} from '@jahia/moonstone';
+import {Button, Close} from '@jahia/moonstone';
 import {connect} from 'react-redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS, uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {
@@ -12,7 +12,6 @@ import {
     fileuploadUpdateUpload
 } from './Upload.redux';
 import UploadItem from './UploadItem';
-import {withTranslation} from 'react-i18next';
 import {compose} from '~/utils';
 import UploadHeader from './UploadHeader';
 import {batchActions} from 'redux-batched-actions';
@@ -72,7 +71,7 @@ export class Upload extends React.Component {
     }
 
     render() {
-        let {uploads, updateUpload, uploadFile, removeUploadFromQueue, t} = this.props;
+        let {uploads, updateUpload, uploadFile, removeUploadFromQueue} = this.props;
 
         return (
             <React.Fragment>
@@ -101,15 +100,6 @@ export class Upload extends React.Component {
                                 onClick={this.handleCloseSnackBar}/>
                     </React.Fragment>
                 </Snackbar>
-                <div style={this.generateOverlayStyle()} className={styles.dragZone}>
-                    <div className={styles.dropZone}>
-                        <Typography variant="heading"
-                                    weight="default"
-                        >{t('jcontent:label.contentManager.fileUpload.drop')}
-                        </Typography>
-                        <Download/>
-                    </div>
-                </div>
             </React.Fragment>
         );
     }
@@ -170,20 +160,6 @@ export class Upload extends React.Component {
 
         return status;
     }
-
-    generateOverlayStyle() {
-        let {overlayTarget} = this.props;
-        if (overlayTarget !== null) {
-            return Object.assign({}, this.overlayStyle.active, {
-                top: overlayTarget.y,
-                left: overlayTarget.x,
-                width: overlayTarget.width,
-                height: overlayTarget.height
-            });
-        }
-
-        return this.overlayStyle.inactive;
-    }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -193,8 +169,7 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         status: state.jcontent.fileUpload.status,
-        uploads: state.jcontent.fileUpload.uploads,
-        overlayTarget: state.jcontent.fileUpload.overlayTarget
+        uploads: state.jcontent.fileUpload.uploads
     };
 };
 
@@ -217,7 +192,6 @@ Upload.propTypes = {
     status: PropTypes.string,
     uploads: PropTypes.array.isRequired,
     uploadPath: PropTypes.string,
-    overlayTarget: PropTypes.object,
     uploadUpdateCallback: PropTypes.func.isRequired,
     updateUpload: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
@@ -226,6 +200,5 @@ Upload.propTypes = {
 };
 
 export default compose(
-    withTranslation(),
     connect(mapStateToProps, mapDispatchToProps)
 )(Upload);

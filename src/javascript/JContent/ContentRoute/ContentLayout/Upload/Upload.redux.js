@@ -2,8 +2,8 @@ import {uploadsStatuses, uploadStatuses} from './Upload.constants';
 import {createActions, handleActions} from 'redux-actions';
 import {importContent, updateFileContent, uploadFile} from './UploadItem/UploadItem.gql-mutations';
 
-export const {fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue, fileuploadSetOverlayTarget} =
-    createActions('FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE', 'FILEUPLOAD_SET_OVERLAY_TARGET');
+export const {fileuploadSetStatus, fileuploadSetUploads, fileuploadAddUploads, fileuploadUpdateUpload, fileuploadRemoveUpload, fileuploadTakeFromQueue} =
+    createActions('FILEUPLOAD_SET_STATUS', 'FILEUPLOAD_SET_UPLOADS', 'FILEUPLOAD_ADD_UPLOADS', 'FILEUPLOAD_UPDATE_UPLOAD', 'FILEUPLOAD_REMOVE_UPLOAD', 'FILEUPLOAD_TAKE_FROM_QUEUE');
 
 export const uploadSeed = {
     id: '',
@@ -15,8 +15,7 @@ export const uploadSeed = {
 export const fileuploadRedux = registry => {
     const initialState = {
         status: uploadsStatuses.NOT_STARTED,
-        uploads: [],
-        overlayTarget: null
+        uploads: []
     };
 
     const fileUpload = handleActions({
@@ -67,11 +66,7 @@ export const fileuploadRedux = registry => {
                     return upload;
                 })
             };
-        },
-        [fileuploadSetOverlayTarget]: (state, action) => ({
-            ...state,
-            overlayTarget: action.payload
-        })
+        }
     }, initialState);
 
     registry.add('redux-reducer', 'fileUpload', {targets: ['jcontent'], reducer: fileUpload});

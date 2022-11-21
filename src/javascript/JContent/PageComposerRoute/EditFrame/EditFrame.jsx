@@ -15,8 +15,38 @@ import {Portal} from './Portal';
 import {Infos} from './Infos';
 import {DeviceContainer} from './DeviceContainer';
 import PropTypes from 'prop-types';
+import {useDragDropManager} from 'react-dnd';
+
+function addEventListeners(target, manager, iframeRef) {
+    // SSR Fix (https://github.com/react-dnd/react-dnd/pull/813
+    if (!target.addEventListener) {
+        return;
+    }
+
+    const {backend} = manager;
+
+    target.addEventListener('dragover', () => {
+        const clientRect = iframeRef.current.getBoundingClientRect();
+        if (manager.additionalOffset.x !== clientRect.x || manager.additionalOffset.y !== clientRect.y) {
+            manager.setAdditionalOffset(clientRect);
+        }
+    });
+
+    target.addEventListener('dragstart', backend.handleTopDragStart);
+    target.addEventListener('dragstart', backend.handleTopDragStartCapture, true);
+    target.addEventListener('dragend', backend.handleTopDragEndCapture, true);
+    target.addEventListener('dragenter', backend.handleTopDragEnter);
+    target.addEventListener('dragenter', backend.handleTopDragEnterCapture, true);
+    target.addEventListener('dragleave', backend.handleTopDragLeaveCapture, true);
+    target.addEventListener('dragover', backend.handleTopDragOver);
+    target.addEventListener('dragover', backend.handleTopDragOverCapture, true);
+    target.addEventListener('drop', backend.handleTopDrop);
+    target.addEventListener('drop', backend.handleTopDropCapture, true);
+}
 
 export const EditFrame = ({isPreview, isDeviceView}) => {
+    const manager = useDragDropManager();
+
     const {path, site, language} = useSelector(state => ({
         language: state.language,
         site: state.site,
@@ -36,7 +66,10 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
 
     const iFrameOnLoad = event => {
         const loadedIframe = event.currentTarget;
+
         if (loadedIframe.contentWindow.location.href !== 'about:blank') {
+            // Enable react-dnd
+            addEventListeners(loadedIframe.contentWindow, manager, iframe);
             if (iframe.current !== loadedIframe) {
                 iframeSwap.current = iframe.current;
                 iframe.current = loadedIframe;

@@ -7,8 +7,9 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {ACTION_PERMISSIONS} from '../../../actions/actions.constants';
 import styles from './EmptyDropZone.scss';
+import clsx from 'clsx';
 
-const EmptyDropZone = ({component: Component, uploadType}) => {
+const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
     const currentState = useSelector(state => ({site: state.site, language: state.language}), shallowEqual);
     const {t} = useTranslation('jcontent');
 
@@ -25,8 +26,9 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
 
     if (uploadType === JContentConstants.mode.UPLOAD && permissions.node.site.uploadFilesAction) {
         return (
-            <Component className={styles.dropZone}>
-                <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>
+            <Component className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
+                {!isCanDrop && <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>}
+                {isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.fileUpload.drop')}</Typography>}
                 <Download/>
             </Component>
         );
@@ -34,8 +36,9 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
 
     if (uploadType === JContentConstants.mode.IMPORT && permissions.node.site.importAction) {
         return (
-            <Component className={styles.dropZone}>
-                <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>
+            <Component className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
+                {!isCanDrop && <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>}
+                {isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.import.drop')}</Typography>}
                 <Download/>
             </Component>
         );
@@ -51,7 +54,8 @@ const EmptyDropZone = ({component: Component, uploadType}) => {
 
 EmptyDropZone.propTypes = {
     component: PropTypes.string.isRequired,
-    uploadType: PropTypes.string
+    uploadType: PropTypes.string,
+    isCanDrop: PropTypes.bool
 };
 
 export default EmptyDropZone;

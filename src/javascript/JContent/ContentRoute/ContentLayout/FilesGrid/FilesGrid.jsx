@@ -4,7 +4,6 @@ import {useTranslation} from 'react-i18next';
 import FileCard from './FileCard';
 import {Grid, Paper} from '@material-ui/core';
 import {TablePagination, Typography} from '@jahia/moonstone';
-import UploadTransformComponent from '../UploadTransformComponent';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmSetPage, cmSetPageSize} from '~/JContent/redux/pagination.redux';
 import FilesGridEmptyDropZone from './FilesGridEmptyDropZone';
@@ -15,6 +14,8 @@ import {extractPaths} from '~/JContent/JContent.utils';
 import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
+import {useFileDrop} from '~/JContent/dnd/useFileDrop';
+import clsx from 'clsx';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
@@ -50,44 +51,38 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
         }
     });
 
+    const {isCanDrop} = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path, ref: mainPanelRef});
+
     if ((!rows || rows.length === 0) && isLoading) {
         return null;
     }
 
     if (isContentNotFound) {
         return (
-            <React.Fragment>
-                <Grid container className={styles.gridEmpty} data-cm-role="grid-content-list">
-                    <Typography className={styles.empty}>
-                        {t('jcontent:label.contentManager.contentNotFound')}
-                    </Typography>
-                </Grid>
-            </React.Fragment>
+            <Grid container className={styles.gridEmpty} data-cm-role="grid-content-list">
+                <Typography className={styles.empty}>
+                    {t('jcontent:label.contentManager.contentNotFound')}
+                </Typography>
+            </Grid>
         );
     }
 
     if ((!rows || rows.length === 0) && !isLoading) {
         return (
-            <React.Fragment>
-                <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD} path={path}/>
-            </React.Fragment>
+            <FilesGridEmptyDropZone uploadType={JContentConstants.mode.UPLOAD} reference={mainPanelRef} isCanDrop={isCanDrop}/>
         );
     }
 
     return (
-        <React.Fragment>
+        <>
             <div ref={mainPanelRef}
-                 className={styles.grid}
+                 className={clsx(styles.grid, isCanDrop && styles.drop)}
                  data-cm-role="grid-content-list"
                  tabIndex="1"
                  onKeyDown={handleKeyboardNavigation}
                  onClick={setFocusOnMainContainer}
             >
-                <UploadTransformComponent uploadTargetComponent={Paper}
-                                          uploadPath={path}
-                                          uploadType={JContentConstants.mode.UPLOAD}
-                                          className={classNames(styles.defaultGrid, styles.detailedGrid)}
-                >
+                <Paper className={classNames(styles.defaultGrid, styles.detailedGrid)}>
                     {rows.map((node, index) => (
                         <FileCard key={node.uuid}
                                   mode={mode}
@@ -105,7 +100,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   }}
                         />
                     ))}
-                </UploadTransformComponent>
+                </Paper>
             </div>
             <TablePagination totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
@@ -118,7 +113,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                              onPageChange={setCurrentPage}
                              onRowsPerPageChange={setPageSize}
             />
-        </React.Fragment>
+        </>
     );
 };
 

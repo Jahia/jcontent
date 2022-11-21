@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'clsx';
+import clsx from 'clsx';
 import styles from './Deleted.scss';
 import {Typography} from '@jahia/moonstone';
 
@@ -17,7 +17,7 @@ export const Deleted = ({element}) => {
     };
     return (
         <>
-            <div className={classnames(styles.root)}
+            <div className={clsx(styles.root)}
                  style={currentOffset}
             >
                 <Typography className={styles.typo} variant="heading">DELETED</Typography>

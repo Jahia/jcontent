@@ -1145,7 +1145,7 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@jahia/data-helper@1.0.7":
+"@jahia/data-helper@^1.0.7":
   version "1.0.7"
   resolved "https://npm.jahia.com/@jahia%2fdata-helper/-/data-helper-1.0.7.tgz#213d9e819781f9d70786fc3f3c07e8e2138fc025"
   integrity sha512-sK+mBtVU1kwC4eS/IcRetbxyCJkY8H8clKa0/ETq6XUwWSYSB/AhXx4yD++mkXw3OJzxwV0I88vLatHJVm022Q==

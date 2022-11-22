@@ -44,7 +44,8 @@ const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
         dropTarget: node,
         ref: item.treeConfig.dnd && item.treeConfig.dnd.canDrop && ref,
         orderable: item.treeConfig.dnd && item.treeConfig.dnd.canReorder,
-        entries: treeEntries
+        entries: treeEntries,
+        refetchQueries: ['PickerQuery__DisplayName_IsTreeSelectable_LockInfo_MixinTypes_ParentNodeWithName_PrimaryNodeTypeName_PublicationStatus']
     });
     const {isCanDrop: isCanDropFile} = useFileDrop({
         uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD,

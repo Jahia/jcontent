@@ -1,4 +1,4 @@
-import {useApolloClient, useMutation} from '@apollo/react-hooks';
+import {useMutation} from '@apollo/react-hooks';
 import {useDrop} from 'react-dnd';
 import gql from 'graphql-tag';
 import {useNotifications} from '@jahia/react-material';
@@ -7,6 +7,7 @@ import {PredefinedFragments, useNodeChecks} from '@jahia/data-helper';
 import {useRef, useState} from 'react';
 import {ellipsizeText, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useNodeTypeCheck} from '~/JContent';
+import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -45,9 +46,8 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
-    const [moveMutation] = useMutation(moveNode);
-    const client = useApolloClient();
+export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved, refetchQueries}) {
+    const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
     const [insertPosition, setInsertPosition] = useState();
@@ -145,7 +145,7 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved}) {
                 if (onSaved) {
                     onSaved();
                 } else {
-                    client.reFetchObservableQueries();
+                    triggerRefetchAll();
                 }
 
                 notificationContext.notify(message, ['closeButton']);

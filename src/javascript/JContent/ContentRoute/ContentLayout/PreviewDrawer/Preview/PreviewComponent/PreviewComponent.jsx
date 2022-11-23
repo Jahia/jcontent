@@ -9,36 +9,58 @@ import ImageViewer from './ImageViewer';
 import {useTranslation} from 'react-i18next';
 import styles from './PreviewComponent.scss';
 
+function writeInIframe(html, iframeWindow, iFrameStyle) {
+    return new Promise((resolve, reject) => {
+        iframeWindow.document.open();
+        iframeWindow.onload = resolve;
+        iframeWindow.onerror = reject;
+        iframeWindow.document.write(html);
+        iframeWindow.document.body.setAttribute('style', iFrameStyle);
+        iframeWindow.document.close();
+    });
+}
+
+function loadAsset(asset, iframeHeadEl) {
+    return new Promise(resolve => {
+        const linkEl = document.createElement('link');
+        linkEl.rel = 'stylesheet';
+        linkEl.type = 'text/css';
+        linkEl.href = asset.key;
+        linkEl.onload = resolve;
+
+        iframeHeadEl.appendChild(linkEl);
+    });
+}
+
+function loadAssets(assets, iframeDocument) {
+    if (!assets || assets.length === 0) {
+        return Promise.resolve();
+    }
+
+    let iframeHeadEl = iframeDocument.getElementsByTagName('head')[0];
+    if (!iframeHeadEl) {
+        iframeDocument.getElementsByTagName('html')[0].insertBefore(iframeDocument.createElement('head'), iframeDocument.body);
+        iframeHeadEl = iframeDocument.getElementsByTagName('head')[0];
+    }
+
+    return Promise.all(assets.map(asset => loadAsset(asset, iframeHeadEl)));
+}
+
 const iframeLoadContent = ({assets, displayValue, element, domLoadedCallback, iFrameStyle}) => {
     if (element) {
-        let frameDoc = element.document;
-        if (element.contentWindow) {
-            frameDoc = element.contentWindow.document;
-        }
+        const iframeWindow = element.contentWindow || element;
 
-        frameDoc.open();
-        frameDoc.close();
-        frameDoc.body.innerHTML = displayValue;
-        frameDoc.body.setAttribute('style', iFrameStyle);
-
-        if (assets !== null) {
-            let iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
-            if (!iframeHeadEl) {
-                frameDoc.getElementsByTagName('html')[0].insertBefore(frameDoc.createElement('head'), frameDoc.body);
-                iframeHeadEl = frameDoc.getElementsByTagName('head')[0];
-            }
-
-            assets.forEach(asset => {
-                let linkEl = document.createElement('link');
-                linkEl.setAttribute('rel', 'stylesheet');
-                linkEl.setAttribute('type', 'text/css');
-                linkEl.setAttribute('href', asset.key);
-                iframeHeadEl.appendChild(linkEl);
-            });
-        }
+        writeInIframe(displayValue, iframeWindow, iFrameStyle)
+            .then(() => {
+                iframeWindow.document.body.setAttribute('style', 'pointer-events: none');
+            })
+            .then(() => {
+                return loadAssets(assets, iframeWindow.document);
+            })
+            .catch(err => console.error('Error in the preview', err));
 
         if (domLoadedCallback) {
-            domLoadedCallback(frameDoc);
+            domLoadedCallback(iframeWindow.document);
         }
     }
 };

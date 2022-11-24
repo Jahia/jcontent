@@ -4,7 +4,7 @@ import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import {TableRow} from '@jahia/moonstone';
 import clsx from 'clsx';
 import css from '~/JContent/ContentRoute/ContentLayout/ContentTable/ContentTable.scss';
-import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
+import {allowDoubleClickNavigation, booleanValue} from '~/JContent/JContent.utils';
 import {ContextualMenu} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
@@ -18,6 +18,7 @@ export const Row = ({
     setSelectedItemIndex,
     onPreviewSelect,
     doubleClickNavigation,
+    tableConfig,
     index
 }) => {
     const rowProps = row.getRowProps();
@@ -27,9 +28,9 @@ export const Row = ({
     const contextualMenu = useRef();
 
     const ref = useRef(null);
-    const {isCanDrop} = useNodeDrop({dropTarget: node, ref});
-    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref});
-    const {dragging} = useNodeDrag({dragSource: node, ref});
+    const {isCanDrop} = useNodeDrop({dropTarget: node, ref: booleanValue(tableConfig.dnd?.canDrop) && ref});
+    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref: booleanValue(tableConfig.dnd?.canDropFile) && ref});
+    const {dragging} = useNodeDrag({dragSource: node, ref: booleanValue(tableConfig.dnd?.canDrag) && ref});
 
     row.ref = ref;
 
@@ -77,5 +78,12 @@ Row.propTypes = {
     setSelectedItemIndex: PropTypes.func,
     onPreviewSelect: PropTypes.func,
     doubleClickNavigation: PropTypes.func,
+    tableConfig: PropTypes.shape({
+        dnd: PropTypes.shape({
+            canDrag: PropTypes.bool,
+            canDrop: PropTypes.bool,
+            canDropFile: PropTypes.bool
+        })
+    }).isRequired,
     index: PropTypes.number
 };

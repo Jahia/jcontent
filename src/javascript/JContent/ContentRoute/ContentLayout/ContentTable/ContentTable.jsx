@@ -23,6 +23,7 @@ import {useKeyboardNavigation} from '../useKeyboardNavigation';
 import {cmSetSort} from '~/JContent/redux/sort.redux';
 import {Row} from '~/JContent/ContentRoute/ContentLayout/ContentTable/Row';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
+import styles from './ContentTable.scss';
 
 export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
     const {t} = useTranslation('jcontent');
@@ -166,8 +167,9 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                         {tableRows.map((row, index) => {
                             prepareRow(row);
                             return (
-                                <Row key={'row' + row.id}
+                                <Row key={'row' + row.original.uuid}
                                      row={row}
+                                     tableConfig={tableConfig}
                                      selection={selection}
                                      previewSelection={previewSelection}
                                      isPreviewOpened={isPreviewOpened}
@@ -182,7 +184,8 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                 </Table>
             </ContentTableWrapper>
             {(!isStructured || isInSearchMode(mode) || JContentConstants.mode.MEDIA === mode) &&
-            <TablePagination totalNumberOfRows={totalCount}
+            <TablePagination className={styles.pagination}
+                             totalNumberOfRows={totalCount}
                              currentPage={pagination.currentPage + 1}
                              rowsPerPage={pagination.pageSize}
                              label={{

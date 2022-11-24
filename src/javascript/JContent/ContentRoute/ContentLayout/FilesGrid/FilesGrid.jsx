@@ -16,13 +16,15 @@ import JContentConstants from '~/JContent/JContent.constants';
 import styles from './FilesGrid.scss';
 import {useFileDrop} from '~/JContent/dnd/useFileDrop';
 import clsx from 'clsx';
+import {registry} from '@jahia/ui-extender';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
-    const {path, pagination, mode, siteKey, uilang, lang, previewSelection} = useSelector(state => ({
+    const {mode, path, pagination, gridMode, siteKey, uilang, lang, previewSelection} = useSelector(state => ({
+        mode: state.jcontent.mode,
         path: state.jcontent.path,
         pagination: state.jcontent.pagination,
-        mode: state.jcontent.filesGrid.mode,
+        gridMode: state.jcontent.filesGrid.mode,
         siteKey: state.site,
         uilang: state.uilang,
         lang: state.lang,
@@ -50,6 +52,8 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
             return onPreviewSelect(row);
         }
     });
+
+    const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
     const {isCanDrop} = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path, ref: mainPanelRef});
 
@@ -85,7 +89,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                 <Paper className={classNames(styles.defaultGrid, styles.detailedGrid)}>
                     {rows.map((node, index) => (
                         <FileCard key={node.uuid}
-                                  mode={mode}
+                                  mode={gridMode}
                                   uilang={uilang}
                                   lang={lang}
                                   siteKey={siteKey}
@@ -94,6 +98,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
                                   node={node}
                                   setPath={setPath}
                                   contextualMenuAction="contentMenu"
+                                  tableConfig={tableConfig}
                                   onPreviewSelect={(...args) => {
                                       setSelectedItemIndex(index);
                                       onPreviewSelect(...args);

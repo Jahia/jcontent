@@ -168,7 +168,17 @@ export const arrayValue = value => {
     return (typeof value === 'string') ? value.split(',') : value;
 };
 
-export const booleanValue = v => typeof v === 'string' ? v === 'true' : Boolean(v);
+export const booleanValue = v => {
+    if (typeof v === 'string') {
+        return v === 'true';
+    }
+
+    if (typeof v === 'function') {
+        return v();
+    }
+
+    return Boolean(v);
+};
 
 export const getCanDisplayItemParams = node => {
     const folders = ['jnt:contentFolder', 'jnt:folder'];

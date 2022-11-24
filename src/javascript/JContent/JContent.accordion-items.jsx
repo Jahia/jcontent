@@ -22,6 +22,8 @@ const contentFolderRegex = /^\/sites\/[^/]+\/contents((\/.*)|$)/;
 const folderRegex = /^\/sites\/[^/]+\/files((\/.*)|$)/;
 const everythingUnderSitesRegex = /^\/sites\/.*/;
 
+const showPageComposer = contextJsParameters.config.jcontent?.showPageComposer;
+
 export const jContentAccordionItems = registry => {
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: (v, item) => (
@@ -88,6 +90,11 @@ export const jContentAccordionItems = registry => {
         }
     });
 
+    const canDragDrop = () => {
+        let tableView = window.jahia.reduxStore.getState().jcontent.tableView;
+        return tableView.viewMode !== JContentConstants.tableView.viewMode.FLAT && tableView.viewType !== JContentConstants.tableView.viewType.PAGES;
+    };
+
     registry.add('accordionItem', 'pages', renderDefaultContentTrees, {
         targets: ['jcontent:50'],
         icon: <Page/>,
@@ -114,13 +121,16 @@ export const jContentAccordionItems = registry => {
             openableTypes: ['jnt:page', 'jnt:virtualsite', 'jnt:navMenuText'],
             rootLabel: 'jcontent:label.contentManager.browsePages',
             dnd: {
-                canDrag: true, canDrop: true, canReorder: true
+                canDrag: showPageComposer, canDrop: showPageComposer, canReorder: showPageComposer
             }
         },
         tableConfig: {
             queryHandler: PagesQueryHandler,
             viewSelector: <ViewModeSelector/>,
-            tableHeader: <ContentTypeSelector/>
+            tableHeader: <ContentTypeSelector/>,
+            dnd: {
+                canDrag: canDragDrop, canDrop: canDragDrop, canDropFile: canDragDrop
+            }
         }
     });
 
@@ -137,14 +147,17 @@ export const jContentAccordionItems = registry => {
             rootLabel: 'jcontent:label.contentManager.browseFolders',
             sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
             dnd: {
-                canDrag: true, canDrop: true, canReorder: false
+                canDrag: true, canDrop: true, canDropFile: true
             }
         },
         tableConfig: {
             queryHandler: ContentFoldersQueryHandler,
             typeFilter: ['jnt:content'],
             viewSelector: <ViewModeSelector/>,
-            uploadType: JContentConstants.mode.IMPORT
+            uploadType: JContentConstants.mode.IMPORT,
+            dnd: {
+                canDrag: true, canDrop: true, canDropFile: true
+            }
         }
     });
 
@@ -161,14 +174,17 @@ export const jContentAccordionItems = registry => {
             rootLabel: 'jcontent:label.contentManager.browseFiles',
             sortBy: SORT_CONTENT_TREE_BY_NAME_ASC,
             dnd: {
-                canDrag: true, canDrop: true, canReorder: false
+                canDrag: true, canDrop: true, canDropFile: true
             }
         },
         tableConfig: {
             queryHandler: FilesQueryHandler,
             typeFilter: ['jnt:file', 'jnt:folder'],
             viewSelector: <FileModeSelector/>,
-            uploadType: JContentConstants.mode.UPLOAD
+            uploadType: JContentConstants.mode.UPLOAD,
+            dnd: {
+                canDrag: true, canDrop: true, canDropFile: true
+            }
         }
     });
 

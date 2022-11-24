@@ -5,7 +5,7 @@ import {ContextualMenu} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
 import {isBrowserImage} from '../../ContentLayout.utils';
 import {NodeIcon} from '~/utils';
-import {allowDoubleClickNavigation} from '~/JContent/JContent.utils';
+import {allowDoubleClickNavigation, booleanValue} from '~/JContent/JContent.utils';
 import clsx from 'clsx';
 import FileName from './FileName';
 import Actions from './Actions';
@@ -27,13 +27,15 @@ export const FileCard = ({
     siteKey,
     mode,
     selection,
+    tableConfig,
     contextualMenuAction
 }) => {
     const {t} = useTranslation('jcontent');
     const ref = useRef(null);
-    const {isCanDrop} = useNodeDrop({dropTarget: node, ref});
-    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref});
-    const {dragging} = useNodeDrag({dragSource: node, ref});
+
+    const {isCanDrop} = useNodeDrop({dropTarget: node, ref: booleanValue(tableConfig.dnd?.canDrop) && ref});
+    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref: booleanValue(tableConfig.dnd?.canDropFile) && ref});
+    const {dragging} = useNodeDrag({dragSource: node, ref: booleanValue(tableConfig.dnd?.canDrag) && ref});
 
     let contextualMenu = useRef();
 
@@ -128,6 +130,13 @@ FileCard.propTypes = {
     uilang: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired,
     selection: PropTypes.array,
+    tableConfig: PropTypes.shape({
+        dnd: PropTypes.shape({
+            canDrag: PropTypes.bool,
+            canDrop: PropTypes.bool,
+            canDropFile: PropTypes.bool
+        })
+    }).isRequired,
     contextualMenuAction: PropTypes.string
 };
 

@@ -93,7 +93,9 @@ export const jContentAccordionItems = registry => {
 
     const canDragDrop = () => {
         let tableView = window.jahia.reduxStore.getState().jcontent.tableView;
-        return tableView.viewMode !== JContentConstants.tableView.viewMode.FLAT && (showPageComposer || tableView.viewType !== JContentConstants.tableView.viewType.PAGES);
+        let pages = showPageComposer && tableView.viewType === JContentConstants.tableView.viewType.PAGES;
+        let structuredContent = tableView.viewMode === JContentConstants.tableView.viewMode.STRUCTURED && tableView.viewType === JContentConstants.tableView.viewType.CONTENT;
+        return pages || structuredContent;
     };
 
     registry.add('accordionItem', 'pages', renderDefaultContentTrees, {

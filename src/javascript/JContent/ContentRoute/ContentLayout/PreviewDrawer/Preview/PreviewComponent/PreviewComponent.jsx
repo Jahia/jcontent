@@ -9,13 +9,12 @@ import ImageViewer from './ImageViewer';
 import {useTranslation} from 'react-i18next';
 import styles from './PreviewComponent.scss';
 
-function writeInIframe(html, iframeWindow, iFrameStyle) {
+function writeInIframe(html, iframeWindow) {
     return new Promise((resolve, reject) => {
         iframeWindow.document.open();
         iframeWindow.onload = resolve;
         iframeWindow.onerror = reject;
         iframeWindow.document.write(html);
-        iframeWindow.document.body.setAttribute('style', iFrameStyle);
         iframeWindow.document.close();
     });
 }
@@ -50,9 +49,9 @@ const iframeLoadContent = ({assets, displayValue, element, domLoadedCallback, iF
     if (element) {
         const iframeWindow = element.contentWindow || element;
 
-        writeInIframe(displayValue, iframeWindow, iFrameStyle)
+        writeInIframe(displayValue, iframeWindow)
             .then(() => {
-                iframeWindow.document.body.setAttribute('style', 'pointer-events: none');
+                iframeWindow.document.body.setAttribute('style', `{ pointer-events: none; ${iFrameStyle}}`);
             })
             .then(() => {
                 return loadAssets(assets, iframeWindow.document);

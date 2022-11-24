@@ -15,6 +15,7 @@ import {FilesQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHand
 import {SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/SearchQueryHandler';
 import {Sql2SearchQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/Sql2SearchQueryHandler';
 import {SORT_CONTENT_TREE_BY_NAME_ASC} from '~/JContent/ContentTree/ContentTree.constants';
+import {booleanValue} from '~/JContent/JContent.utils';
 
 const filesRegex = /^\/sites\/[^/]+\/files\/.*/;
 const contentsRegex = /^\/sites\/[^/]+\/contents\/.*/;
@@ -22,9 +23,9 @@ const contentFolderRegex = /^\/sites\/[^/]+\/contents((\/.*)|$)/;
 const folderRegex = /^\/sites\/[^/]+\/files((\/.*)|$)/;
 const everythingUnderSitesRegex = /^\/sites\/.*/;
 
-const showPageComposer = contextJsParameters.config.jcontent?.showPageComposer;
-
 export const jContentAccordionItems = registry => {
+    const showPageComposer = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
+
     const renderDefaultContentTrees = registry.add('accordionItem', 'renderDefaultContentTrees', {
         render: (v, item) => (
             <AccordionItem key={v.id} id={v.id} label={v.label} icon={v.icon}>
@@ -92,7 +93,7 @@ export const jContentAccordionItems = registry => {
 
     const canDragDrop = () => {
         let tableView = window.jahia.reduxStore.getState().jcontent.tableView;
-        return tableView.viewMode !== JContentConstants.tableView.viewMode.FLAT && tableView.viewType !== JContentConstants.tableView.viewType.PAGES;
+        return tableView.viewMode !== JContentConstants.tableView.viewMode.FLAT && (showPageComposer || tableView.viewType !== JContentConstants.tableView.viewType.PAGES);
     };
 
     registry.add('accordionItem', 'pages', renderDefaultContentTrees, {

@@ -5,8 +5,11 @@ import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
 import {shallowEqual, useSelector} from 'react-redux';
 import styles from './MainActionBar.scss';
+import {booleanValue} from '~/JContent/JContent.utils';
 
 export const MainActionBar = () => {
+    const showPageComposer = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
+
     const {path, language, selection} = useSelector(state => ({path: state.jcontent.path, language: state.language, selection: state.jcontent.selection}), shallowEqual);
 
     const {node, loading} = useNodeInfo({path, language}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
@@ -22,7 +25,15 @@ export const MainActionBar = () => {
         <div className={styles.root}>
             <DisplayAction actionKey="search" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', 'data-sel-role': 'open-search-dialog'}}/>
             <Separator variant="vertical" invisible="firstOrLastChild" className={styles.showSeparator}/>
-            <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
+
+            {showPageComposer ? (
+                <DisplayAction actionKey="openInLive" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', color: 'accent', className: styles.item}}/>
+            ) : (
+                <>
+                    <DisplayAction actionKey="pageComposer" path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'ghost', size: 'big', color: 'accent', className: styles.item}}/>
+                    <DisplayAction actionKey={node['jnt:page'] ? 'editPage' : 'edit'} path={path} isDisabled={isDisabled} render={ButtonRenderer} buttonProps={{variant: 'outlined', size: 'big', className: styles.item}}/>
+                </>
+            )}
 
             <ButtonGroup size="big" variant="default" color="accent" className={styles.item}>
                 <DisplayAction isMediumLabel actionKey={publishAction} path={path} isDisabled={isDisabled} render={ButtonRendererShortLabel} buttonProps={{variant: 'default', size: 'big', color: 'accent'}}/>

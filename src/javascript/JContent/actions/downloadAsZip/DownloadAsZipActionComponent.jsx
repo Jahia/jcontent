@@ -30,7 +30,7 @@ export const DownloadAsZipActionComponent = ({path, paths, render: Render, loadi
     const isNodeMarkedForDeletionFn = node => hasMixin(node, 'jmix:markedForDeletionRoot');
     const isVisible = compareVersions(window.contextJsParameters.dxVersion, '8.1.3.0') >= 0 &&
         res.checksResult &&
-        res.node ? !isNodeMarkedForDeletionFn(res.node) : !res.nodes?.some(isNodeMarkedForDeletionFn);
+        (res.node ? !isNodeMarkedForDeletionFn(res.node) : !res.nodes?.some(isNodeMarkedForDeletionFn));
     return (
         <Render
             {...others}

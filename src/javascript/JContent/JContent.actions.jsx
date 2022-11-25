@@ -3,6 +3,7 @@ import {menuAction} from '@jahia/ui-extender';
 
 import {
     AddFolder,
+    Archive,
     ChevronDown,
     CloudDownload,
     CloudUpload,
@@ -273,7 +274,7 @@ export const jContentActions = registry => {
         component: ExportActionComponent
     });
     registry.add('action', 'downloadAsZip', {
-        buttonIcon: <Upload/>,
+        buttonIcon: <Archive/>,
         buttonLabel: 'jcontent:label.contentManager.downloadAsZip',
         targets: ['contentActions:4.21', 'selectedContentActions'],
         showOnNodeTypes: ['jnt:file', 'jnt:folder'],

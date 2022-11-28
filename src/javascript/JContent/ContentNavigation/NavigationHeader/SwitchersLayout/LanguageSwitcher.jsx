@@ -3,10 +3,9 @@ import {useTranslation} from 'react-i18next';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useNotifications} from '@jahia/react-material';
 import {useSiteInfo} from '@jahia/data-helper';
-import {Dropdown} from '@jahia/moonstone';
+import {Dropdown, Typography} from '@jahia/moonstone';
 import styles from './LanguageSwitcher.scss';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
-import {Separator} from '@jahia/moonstone';
 
 const LanguageSwitcher = () => {
     const {siteKey, lang} = useSelector(state => ({
@@ -41,23 +40,24 @@ const LanguageSwitcher = () => {
     }
 
     const data = siteInfo.languages.filter(l => l.activeInEdit).map(l => ({label: l.language, value: l.language}));
-    return data && (data.length > 1) && (
-        <>
-            <Separator variant="vertical"/>
-            <Dropdown
-                data-cm-role="language-switcher"
-                className={styles.languageSwitcher}
-                label={lang}
-                value={lang}
-                data={data}
-                onChange={(e, item) => {
-                    onSelectLanguageHandler(item.value);
-                    return true;
-                }}
-            />
-        </>
 
-    );
+    if (!data) {
+        return null;
+    }
+
+    return (data.length === 1) ?
+        <Typography isUpperCase className={styles.label} variant="caption">{lang}</Typography> :
+        <Dropdown
+            data-cm-role="language-switcher"
+            className={styles.languageSwitcher}
+            label={lang}
+            value={lang}
+            data={data}
+            onChange={(e, item) => {
+                onSelectLanguageHandler(item.value);
+                return true;
+            }}
+        />;
 };
 
 export default LanguageSwitcher;

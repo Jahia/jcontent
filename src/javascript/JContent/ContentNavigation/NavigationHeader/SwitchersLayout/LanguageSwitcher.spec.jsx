@@ -34,11 +34,12 @@ describe('Language switcher test', () => {
         useDispatch.mockImplementation(jest.fn());
     });
 
-    it('should NOT show language switcher in left nav with one language', () => {
+    it('should show language label, not dropdown, in left nav with one language', () => {
         useSiteInfo.mockReturnValue({siteInfo});
 
         const cmp = shallow(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeFalsy();
+        expect(cmp.find('Typography').exists()).toBeTruthy();
     });
 
     it('should show language switcher in left nav with more than one language', () => {
@@ -47,13 +48,15 @@ describe('Language switcher test', () => {
 
         const cmp = shallow(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeTruthy();
+        expect(cmp.find('Typography').exists()).toBeFalsy();
     });
 
-    it('should NOT show language switcher in left nav with only one ACTIVE language', () => {
+    it('should show language label, not dropdown, in left nav with only one ACTIVE language', () => {
         siteInfo.languages.push({language: 'fr-ca', activeInEdit: false});
         useSiteInfo.mockReturnValue({siteInfo});
 
         const cmp = shallow(<LanguageSwitcher/>);
         expect(cmp.find('Dropdown').exists()).toBeFalsy();
+        expect(cmp.find('Typography').exists()).toBeTruthy();
     });
 });

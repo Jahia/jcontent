@@ -12,6 +12,7 @@ import {
 import { BasicSearch } from './basicSearch'
 import { CreateContent } from './createContent'
 import { Media } from "./media";
+import {ContentTable} from "./contentTable";
 
 export class JContent extends BasePage {
     secondaryNav: SecondaryNav
@@ -52,8 +53,8 @@ export class JContent extends BasePage {
         return this.languageSwitcher
     }
 
-    getTable(): Table {
-        return getComponent(Table, null, (el) => expect(el).to.be.visible)
+    getTable(): ContentTable {
+        return getComponent(ContentTable, null, (el) => expect(el).to.be.visible)
     }
 
     getBasicSearch(): BasicSearch {
@@ -74,7 +75,7 @@ export class JContent extends BasePage {
     }
 
     switchToMode(name: string): JContent {
-        getComponentByRole(Dropdown, `sel-view-mode-dropdown`).select(name)
+        getComponentByRole(Dropdown, `sel-view-mode-dropdown`).select(name).get().should('contain', name);
         return this
     }
 

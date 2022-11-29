@@ -56,7 +56,7 @@ const mergeChecks = (v1, v2) => {
 };
 
 function getButtonLabelParams(paths, language, res, t) {
-    if (!res.nodes || res.nodes.length === 0) {
+    if (!res.nodes || res.nodes.length === 0 || !paths?.length) {
         return {
             displayName: t('jcontent:label.contentManager.selection.items', {count: 0}),
             language

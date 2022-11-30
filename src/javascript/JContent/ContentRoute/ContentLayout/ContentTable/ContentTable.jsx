@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo, useRef} from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
 import {useTranslation} from 'react-i18next';
@@ -148,10 +149,9 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     }
 
     return (
-        <>
+        <div ref={dropReference} className={clsx({'moonstone-drop_card': isCanDrop}, 'flexFluid', 'flexCol')}>
             {tableHeader}
             <ContentTableWrapper isCanDrop={isCanDrop}
-                                 dropReference={dropReference}
                                  reference={mainPanelRef}
                                  uploadType={tableConfig?.uploadType}
                                  onKeyDown={handleKeyboardNavigation}
@@ -196,7 +196,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
                              onPageChange={setCurrentPage}
                              onRowsPerPageChange={setPageSize}
             />}
-        </>
+        </div>
     );
 };
 

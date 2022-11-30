@@ -1,3 +1,6 @@
+$color-accent_light: rgba(99, 209, 255, 0.6);
+$color-accent: rgb(0, 160, 227);
+
 .root {
     position: absolute;
     z-index: 9999;
@@ -84,31 +87,27 @@
 }
 
 :global(.noprefix) .dropTarget {
-    border: 2px dashed gray;
+    outline: 4px solid $color-accent_light;
+    outline-offset: 4px;
 }
 
-:global(.noprefix) .dropTarget_insertBefore {
-    &::before {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 50px;
+:global(.noprefix) .dropTarget_insertBefore::before,
+:global(.noprefix) .dropTarget_insertAfter::after {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
 
-        border: 2px dashed gray;
-        content: var(--droplabel);
-    }
+    font-size: 16px;
+    color: $color-accent;
+
+    outline: 4px dashed $color-accent_light;
+    outline-offset: 4px;
+
+    content: var(--droplabel);
 }
 
-:global(.noprefix) .dropTarget_insertAfter {
-    &::after {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 50px;
-
-        border: 2px dashed gray;
-        content: var(--droplabel);
-    }
+:global .moonstone-tableHead {
+    background-color: transparent;
 }

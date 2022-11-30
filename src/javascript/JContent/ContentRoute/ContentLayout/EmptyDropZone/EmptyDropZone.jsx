@@ -26,8 +26,8 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
 
     if (uploadType === JContentConstants.mode.UPLOAD && permissions.node.site.uploadFilesAction) {
         return (
-            <Component className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
-                {!isCanDrop && <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>}
+            <Component data-type="upload" className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
+                {!isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.fileUpload.dropMessage')}</Typography>}
                 {isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.fileUpload.drop')}</Typography>}
                 <Download/>
             </Component>
@@ -36,8 +36,8 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
 
     if (uploadType === JContentConstants.mode.IMPORT && permissions.node.site.importAction) {
         return (
-            <Component className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
-                {!isCanDrop && <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>}
+            <Component data-type="import" className={clsx(styles.dropZone, isCanDrop && styles.dropZoneEnabled)}>
+                {!isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.import.dropMessage')}</Typography>}
                 {isCanDrop && <Typography variant="heading">{t('jcontent:label.contentManager.import.drop')}</Typography>}
                 <Download/>
             </Component>
@@ -45,9 +45,9 @@ const EmptyDropZone = ({component: Component, isCanDrop, uploadType}) => {
     }
 
     return (
-        <Component className={styles.emptyZone}>
-            <Typography variant="heading" weight="light">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
-            <Typography weight="light">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay2')}</Typography>
+        <Component data-type="emptyZone" className={styles.emptyZone}>
+            <Typography variant="heading">{t('jcontent:label.contentManager.fileUpload.nothingToDisplay')}</Typography>
+            <Typography>{t('jcontent:label.contentManager.fileUpload.nothingToDisplay2')}</Typography>
         </Component>
     );
 };

@@ -1,26 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import css from './ContentTable.scss';
-import EmptyDropZone from '~/JContent/ContentRoute/ContentLayout/EmptyDropZone';
 
 const ContentTableWrapper = ({children, reference, dropReference, uploadType, onClick = () => {}, onKeyDown = () => {}, isCanDrop, ...rest}) => {
     return (
-        <>
-            <div ref={reference}
-                 className={css.tableWrapper}
-                 tabIndex="1"
-                 onClick={onClick}
-                 onKeyDown={onKeyDown}
-                 {...rest}
-            >
-                {children}
-            </div>
-            <div ref={dropReference} className="flexRow flexFluid">
-                {isCanDrop && (
-                    <EmptyDropZone component="div" isCanDrop={isCanDrop} uploadType={uploadType}/>
-                )}
-            </div>
-        </>
+        <div ref={reference}
+             className={clsx(css.tableWrapper, 'flexFluid')}
+             tabIndex="1"
+             onClick={onClick}
+             onKeyDown={onKeyDown}
+             {...rest}
+        >
+            {children}
+        </div>
     );
 };
 

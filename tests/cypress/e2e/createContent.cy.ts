@@ -1,27 +1,27 @@
-import { JContent } from '../page-object'
+import {JContent} from '../page-object';
 
-describe('Create content tests', {retries: 10},() => {
-    let jcontent: JContent
+describe('Create content tests', {retries: 10}, () => {
+    let jcontent: JContent;
 
     before(function () {
-        cy.executeGroovy('jcontent/createSite.groovy', { SITEKEY: 'jcontentSite' })
+        cy.executeGroovy('jcontent/createSite.groovy', {SITEKEY: 'jcontentSite'});
 
-        cy.apollo({ mutationFile: 'jcontent/createContent.graphql' })
-        cy.login() // edit in chief
+        cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
+        cy.login(); // Edit in chief
 
-        JContent.visit('jcontentSite', 'en', 'content-folders/contents')
-    })
+        JContent.visit('jcontentSite', 'en', 'content-folders/contents');
+    });
 
     after(function () {
-        cy.logout()
-        cy.executeGroovy('jcontent/deleteSite.groovy', { SITEKEY: 'jcontentSite' })
-    })
+        cy.logout();
+        cy.executeGroovy('jcontent/deleteSite.groovy', {SITEKEY: 'jcontentSite'});
+    });
 
     beforeEach(() => {
-        Cypress.Cookies.preserveOnce('JSESSIONID')
-        jcontent = new JContent()
-        jcontent.selectAccordion('content-folders')
-    })
+        Cypress.Cookies.preserveOnce('JSESSIONID');
+        jcontent = new JContent();
+        jcontent.selectAccordion('content-folders');
+    });
 
     it('Can create content', function () {
         jcontent
@@ -30,7 +30,7 @@ describe('Create content tests', {retries: 10},() => {
             .getContentTypeSelector()
             .selectContentType('Content:Basic')
             .selectContentType('Rich text')
-            .create()
+            .create();
 
         /**
          // check that no non-editorial-content can be created via create-menu
@@ -51,5 +51,5 @@ describe('Create content tests', {retries: 10},() => {
          folders.openMenu(myFolder).click(Menu.MENU_CREATE_CONTENT);
          cm.insureContentTypeCanBeCreate(false,"Top stories", false);
          */
-    })
-})
+    });
+});

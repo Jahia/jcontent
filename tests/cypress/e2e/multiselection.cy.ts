@@ -1,5 +1,5 @@
 import {JContent} from '../page-object';
-import {Button, getComponentByRole, getComponentBySelector} from '@jahia/cypress';
+import {Button, getComponentBySelector} from '@jahia/cypress';
 
 describe('Multi-selection tests', () => {
     beforeEach(function () {

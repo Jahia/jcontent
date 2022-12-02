@@ -1,13 +1,6 @@
-import {
-    BasePage,
-    Button,
-    getComponentByAttr,
-    getComponentByRole,
-    Menu
-} from '@jahia/cypress';
+import {BasePage, Button, getComponentByAttr, getComponentByRole, Menu} from '@jahia/cypress';
 import {Media} from './media';
 import * as path from 'path';
-import * as fs from 'fs';
 
 export class File extends BasePage {
     media: Media

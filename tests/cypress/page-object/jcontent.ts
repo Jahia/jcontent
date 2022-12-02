@@ -1,13 +1,11 @@
 import {
     Accordion,
     BasePage,
-    Button,
     Dropdown,
     getComponent,
     getComponentByAttr,
     getComponentByRole,
-    SecondaryNav,
-    Table
+    SecondaryNav
 } from '@jahia/cypress';
 import {BasicSearch} from './basicSearch';
 import {CreateContent} from './createContent';

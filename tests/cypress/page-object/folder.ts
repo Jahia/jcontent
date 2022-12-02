@@ -23,7 +23,7 @@ export class Folder extends BasePage {
         return this;
     }
 
-    visitParent() {
+    visitParent() : Folder {
         JContent.visit('jcontentSite', 'en', this.parentPath);
         return this;
     }

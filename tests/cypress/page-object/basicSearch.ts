@@ -7,89 +7,91 @@ import {
     getComponentBySelector,
     MUIInput,
     MUIRadio,
-    Pagination,
-} from '@jahia/cypress'
-import { JContent } from './jcontent'
+    Pagination
+} from '@jahia/cypress';
+import {JContent} from './jcontent';
 
 export class BasicSearch extends BasePage {
     jcontent: JContent
 
     constructor(jcontent: JContent) {
-        super()
-        this.jcontent = jcontent
+        super();
+        this.jcontent = jcontent;
     }
 
     openSearch(): BasicSearch {
-        getComponentByRole(Button, 'open-search-dialog').click()
-        return this
+        getComponentByRole(Button, 'open-search-dialog').click();
+        return this;
     }
 
     editQuery(): BasicSearch {
-        getComponentByRole(Button, 'search').click()
-        return this
+        getComponentByRole(Button, 'search').click();
+        return this;
     }
 
     searchTerm(value: string): BasicSearch {
         if (value) {
-            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear().type(value)
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear().type(value);
         } else {
-            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear()
+            getComponentBySelector(MUIInput, 'input[data-sel-role="search-input-terms"]').clear();
         }
-        return this
+
+        return this;
     }
 
     searchInWholeSite(): BasicSearch {
-        getComponentByRole(MUIRadio, 'search-whole-website').click()
-        return this
+        getComponentByRole(MUIRadio, 'search-whole-website').click();
+        return this;
     }
 
     searchInCurrentPath(): BasicSearch {
-        getComponentByRole(MUIRadio, 'search-current-path').click()
-        return this
+        getComponentByRole(MUIRadio, 'search-current-path').click();
+        return this;
     }
 
     executeSearch(): BasicSearch {
-        getComponentByRole(Button, 'search-submit').click()
-        cy.get('.moonstone-loader').should('not.exist')
-        return this
+        getComponentByRole(Button, 'search-submit').click();
+        cy.get('.moonstone-loader').should('not.exist');
+        return this;
     }
 
     verifyTotalCount(expectedTotalCount: number): BasicSearch {
         if (expectedTotalCount === 0) {
-            getComponent(Pagination, null, (el) => expect(el).to.not.exist)
+            getComponent(Pagination, null, el => expect(el).to.not.exist);
         } else {
-            getComponent(Pagination, null, (el) => expect(el).to.be.visible)
+            getComponent(Pagination, null, el => expect(el).to.be.visible)
                 .getTotalRows()
-                .should('eq', expectedTotalCount)
+                .should('eq', expectedTotalCount);
         }
-        return this
+
+        return this;
     }
 
     verifyResults(results: string[]): BasicSearch {
-        this.jcontent.getTable().getRows((rows) => {
-            expect(rows).to.have.length(results.length)
+        this.jcontent.getTable().getRows(rows => {
+            expect(rows).to.have.length(results.length);
             for (let i = 0; i < results.length; i++) {
-                expect(rows[i]).to.contain(results[i])
+                expect(rows[i]).to.contain(results[i]);
             }
-        })
-        return this
+        });
+        return this;
     }
 
     verifyResultType(typeName: string): BasicSearch {
-        this.jcontent.getTable().getRows((rows) => {
+        this.jcontent.getTable().getRows(rows => {
             for (let i = 0; i < rows.length; i++) {
-                expect(rows[i]).to.contain(typeName)
+                expect(rows[i]).to.contain(typeName);
             }
-        })
-        return this
+        });
+        return this;
     }
 
     selectContentType(contentType: string): BasicSearch {
-        getComponentByRole(Dropdown, 'content-type-dropdown').select(contentType)
-        return this
+        getComponentByRole(Dropdown, 'content-type-dropdown').select(contentType);
+        return this;
     }
 
     reset(): BasicSearch {
-        return this.searchTerm('').searchInCurrentPath().selectContentType('Any content')
+        return this.searchTerm('').searchInCurrentPath().selectContentType('Any content');
     }
 }

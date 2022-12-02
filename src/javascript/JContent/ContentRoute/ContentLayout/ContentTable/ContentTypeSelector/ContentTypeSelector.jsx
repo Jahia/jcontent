@@ -35,7 +35,8 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
         })),
         fetchPolicy: 'cache-and-network'
     });
-    const pagesCount = pages.loading ? 0 : pages.result.pageInfo.totalCount;
+
+    const pagesCount = (pages.loading || pages.error) ? 0 : pages?.result?.pageInfo?.totalCount;
 
     const content = useLayoutQuery({
         ...useSelector(state => ({
@@ -47,7 +48,8 @@ const ContentTypeSelector = ({selector, reduxActions}) => {
         })),
         fetchPolicy: 'cache-and-network'
     });
-    const contentCount = content.loading ? 0 : content.result.pageInfo.totalCount;
+
+    const contentCount = (content.loading || content.error) ? 0 : content?.result?.pageInfo?.totalCount;
 
     return (
         <Tab className={classes.tabs}>

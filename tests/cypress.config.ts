@@ -1,5 +1,5 @@
 import {defineConfig} from 'cypress';
-import * as fs from "fs";
+import * as fs from 'fs';
 
 export default defineConfig({
     chromeWebSecurity: false,
@@ -20,12 +20,13 @@ export default defineConfig({
             on('task', {
                 readFileMaybe(filename) {
                     if (fs.existsSync(filename)) {
-                        return fs.readFileSync(filename, 'utf8')
+                        return fs.readFileSync(filename, 'utf8');
                     }
 
-                    return null
-                },
-            })
+                    return null;
+                }
+            });
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             return require('./cypress/plugins/index.js')(on, config);
         },
         excludeSpecPattern: '*.ignore.ts',

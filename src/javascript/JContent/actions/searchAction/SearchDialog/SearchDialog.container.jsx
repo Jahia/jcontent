@@ -27,6 +27,10 @@ const SearchDialogContainer = ({isOpen, handleClose}) => {
     const [sql2SearchFrom, setSql2SearchFrom] = useState(params.sql2SearchFrom ? params.sql2SearchFrom : '');
     const [sql2SearchWhere, setSql2SearchWhere] = useState(params.sql2SearchWhere ? params.sql2SearchWhere : '');
 
+    useEffect(() => {
+        setSearchPath(params.searchPath ? params.searchPath : path);
+    }, [params.searchPath, path]);
+
     const searchForm = {
         searchPath,
         searchTerms,

@@ -50,7 +50,7 @@ export let MenuItemRenderer = ({buttonLabel, buttonLabelParams, menuContext, men
 
 MenuItemRenderer.propTypes = {
     actionKey: PropTypes.string.isRequired,
-    buttonLabel: PropTypes.string.isRequired,
+    buttonLabel: PropTypes.string,
     buttonLabelParams: PropTypes.object,
     menuContext: PropTypes.object,
     menuState: PropTypes.object,
@@ -61,7 +61,7 @@ MenuItemRenderer.propTypes = {
     /**
      * Function to call when the menu item is clicked
      */
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
 
     /**
      * Function to call when the menu item is hovered

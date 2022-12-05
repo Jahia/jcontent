@@ -195,8 +195,7 @@ Upload.propTypes = {
     uploadUpdateCallback: PropTypes.func.isRequired,
     updateUpload: PropTypes.func.isRequired,
     uploadFile: PropTypes.func.isRequired,
-    removeUploadFromQueue: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired
+    removeUploadFromQueue: PropTypes.func.isRequired
 };
 
 export default compose(

@@ -22,6 +22,10 @@ import {tableViewRedux} from './JContent/redux/tableView.redux';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DragLayer} from '~/JContent/dnd/DragLayer';
+import hashes from './localesHash!';
+
+window.jahia.localeFiles = window.jahia.localeFiles || {};
+window.jahia.localeFiles.jcontent = hashes;
 
 export default function () {
     const CmmNavItem = () => {

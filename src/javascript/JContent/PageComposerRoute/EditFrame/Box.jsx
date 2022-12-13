@@ -78,7 +78,6 @@ export const Box = ({
     });
 
     const rootDiv = useRef();
-    const div = useRef();
 
     const left = Math.max(0, (rect.left + scrollLeft - 4));
     const width = Math.min(document.documentElement.clientWidth - left, rect.width + 8);
@@ -97,8 +96,9 @@ export const Box = ({
     const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
-    const {dragging} = useNodeDrag({dragSource: node, ref: div});
-    const {isCanDrop, insertPosition, destParent} = useNodeDrop({dropTarget: parent && node, ref, orderable: true, entries, onSaved});
+    const [{dragging}, drag] = useNodeDrag({dragSource: node});
+    const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({dropTarget: parent && node, orderable: true, entries, onSaved});
+    drop(ref);
 
     useEffect(() => {
         const currentRootElement = rootElementRef.current;
@@ -145,7 +145,7 @@ export const Box = ({
                  style={currentOffset}
             >
                 <div className={styles.rel} style={{height: 24 + rect.height}}>
-                    <div ref={div}
+                    <div ref={drag}
                          className={clsx(styles.sticky, editStyles.enablePointerEvents)}
                          data-jahia-parent={element.getAttribute('id')}
                          onClick={onSelect}

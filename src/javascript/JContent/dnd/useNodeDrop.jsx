@@ -8,6 +8,7 @@ import {useRef, useState} from 'react';
 import {ellipsizeText, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useNodeTypeCheck} from '~/JContent';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
+import {useConnector} from './useConnector';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -46,7 +47,7 @@ function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
         t('jcontent:label.contentManager.move.error', {count: pathsOrIds.length, dest: getName(destParent)});
 }
 
-export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved, refetchQueries}) {
+export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQueries}) {
     const [moveMutation] = useMutation(moveNode, {refetchQueries});
     const notificationContext = useNotifications();
     const {t} = useTranslation('jcontent');
@@ -54,6 +55,7 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved, refet
     const [destParentState, setDestParent] = useState();
     const [names, setNames] = useState([]);
 
+    const {getCurrent, setCurrent} = useConnector();
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
 
@@ -76,9 +78,10 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved, refet
             destParent
         }),
         hover: (dragSource, monitor) => {
-            if (ref.current && dropTarget && orderable && entries) {
+            const target = getCurrent();
+            if (target && dropTarget && orderable && entries) {
                 if (!baseRect.current) {
-                    baseRect.current = ref.current.getBoundingClientRect();
+                    baseRect.current = target.getBoundingClientRect();
                 }
 
                 const height = baseRect.current.height;
@@ -155,9 +158,10 @@ export function useNodeDrop({dropTarget, ref, orderable, entries, onSaved, refet
         }
     }), [dropTarget, destParent, names, insertPosition, entries, res, nodeTypeCheck]);
 
-    if (ref) {
-        drop(ref);
-    }
+    const enhancedDrop = elem => {
+        setCurrent(elem);
+        drop(elem);
+    };
 
-    return props;
+    return [props, enhancedDrop];
 }

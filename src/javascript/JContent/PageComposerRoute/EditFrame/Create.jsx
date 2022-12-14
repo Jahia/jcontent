@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
@@ -37,8 +37,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
         getPrimaryNodeType: true
     });
 
-    const ref = useRef();
-    const {isCanDrop} = useNodeDrop({dropTarget: parent && node, ref, onSaved});
+    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved});
 
     const {anyDragging} = useDragLayer(monitor => ({
         anyDragging: monitor.isDragging()
@@ -65,7 +64,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
     }, [isCanDrop, element]);
 
     return !anyDragging && (
-        <div ref={ref}
+        <div ref={drop}
              className={clsx(styles.root, editStyles.enablePointerEvents)}
              style={currentOffset}
              data-jahia-parent={parent.getAttribute('id')}

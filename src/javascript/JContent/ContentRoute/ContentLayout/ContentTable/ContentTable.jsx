@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {registry} from '@jahia/ui-extender';
@@ -55,7 +55,6 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const setPageSize = pageSize => dispatch(cmSetPageSize(pageSize));
 
     const paths = useMemo(() => flattenTree(rows).map(n => n.path), [rows]);
-    const dropReference = useRef();
     const {
         mainPanelRef,
         handleKeyboardNavigation,
@@ -127,7 +126,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
 
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
-    const {isCanDrop} = useFileDrop({uploadType: tableConfig?.uploadType, uploadPath: path, ref: dropReference});
+    const [{isCanDrop}, drop] = useFileDrop({uploadType: tableConfig?.uploadType, uploadPath: path});
 
     if (isContentNotFound) {
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
@@ -143,13 +142,13 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
         return (
             <>
                 {tableHeader}
-                <ContentEmptyDropZone reference={dropReference} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop}/>
+                <ContentEmptyDropZone reference={drop} uploadType={tableConfig?.uploadType} isCanDrop={isCanDrop}/>
             </>
         );
     }
 
     return (
-        <div ref={dropReference} className={clsx({'moonstone-drop_card': isCanDrop}, 'flexFluid', 'flexCol')}>
+        <div ref={drop} className={clsx({'moonstone-drop_card': isCanDrop}, 'flexFluid', 'flexCol')}>
             {tableHeader}
             <ContentTableWrapper isCanDrop={isCanDrop}
                                  reference={mainPanelRef}

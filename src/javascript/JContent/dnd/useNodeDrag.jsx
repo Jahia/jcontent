@@ -6,7 +6,7 @@ import {shallowEqual, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '~/JContent/actions/actions.constants';
 
-export function useNodeDrag({dragSource, ref}) {
+export function useNodeDrag({dragSource}) {
     const {selection, language, displayLanguage} = useSelector(state => ({
         selection: state.jcontent.selection,
         language: state.language,
@@ -49,9 +49,5 @@ export function useNodeDrag({dragSource, ref}) {
         dragClasses: styles.drag
     } : props;
 
-    if (ref) {
-        drag(ref);
-    }
-
-    return enhancedProps;
+    return [enhancedProps, drag];
 }

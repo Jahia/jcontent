@@ -77,7 +77,7 @@ async function scan({fileList, uploadMaxSize, uploadMinSize, uploadFilter, uploa
     return {files, directories};
 }
 
-export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, uploadMinSize = 0, uploadFilter = () => true, ref}) {
+export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, uploadMinSize = 0, uploadFilter = () => true}) {
     const {data, loading, error} = useQuery(UploadRequirementsQuery, {
         variables: {
             path: uploadPath,
@@ -93,7 +93,7 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
     const client = useApolloClient();
     const dispatch = useDispatch();
 
-    const [props, drop] = useDrop(() => ({
+    return useDrop(() => ({
         accept: [NativeTypes.FILE],
         drop: (item, monitor) => {
             if (monitor.didDrop()) {
@@ -138,11 +138,5 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
             isOver: monitor.isOver({shallow: true}),
             isCanDrop: (monitor.canDrop() && monitor.isOver({shallow: true}))
         })
-    }), [allowDrop]);
-
-    if (ref) {
-        drop(ref);
-    }
-
-    return props;
+    }), [client, dispatch, uploadFilter, uploadPath, uploadType, uploadMaxSize, uploadMinSize, allowDrop]);
 }

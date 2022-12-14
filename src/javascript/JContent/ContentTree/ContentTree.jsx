@@ -41,23 +41,29 @@ export const accordionPropType = PropTypes.shape({
 
 const ItemComponent = ({children, node, item, treeEntries, ...props}) => {
     const ref = useRef(null);
-    const {isCanDrop, insertPosition, destParent} = useNodeDrop({
+    const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({
         dropTarget: node,
-        ref: item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canDrop) && ref,
         orderable: item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canReorder),
         entries: treeEntries,
         refetchQueries: ['PickerQuery__DisplayName_IsTreeSelectable_LockInfo_MixinTypes_ParentNodeWithName_PickerPrimaryNodeTypeName_PublicationStatus']
     });
-    const {isCanDrop: isCanDropFile} = useFileDrop({
+    const [{isCanDrop: isCanDropFile}, dropFile] = useFileDrop({
         uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD,
-        uploadPath: node.path,
-        ref: item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canDropFile) && ref
+        uploadPath: node.path
     });
+    const [{dragging}, drag] = useNodeDrag({dragSource: node});
 
-    const {dragging} = useNodeDrag({
-        dragSource: node,
-        ref: item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canDrag) && ref
-    });
+    if (item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canDrop)) {
+        drop(ref);
+    }
+
+    if (item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canDropFile)) {
+        dropFile(ref);
+    }
+
+    if (item.treeConfig.dnd && booleanValue(item.treeConfig.dnd?.canDrag)) {
+        drag(ref);
+    }
 
     const depth = (isCanDrop || isCanDropFile) ? treeEntries.find(e => e.node.path === destParent.path)?.depth : -1;
 

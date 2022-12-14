@@ -28,9 +28,21 @@ export const Row = ({
     const contextualMenu = useRef();
 
     const ref = useRef(null);
-    const {isCanDrop} = useNodeDrop({dropTarget: node, ref: booleanValue(tableConfig.dnd?.canDrop) && ref});
-    const {isCanDrop: isCanDropFile} = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path, ref: booleanValue(tableConfig.dnd?.canDropFile) && ref});
-    const {dragging} = useNodeDrag({dragSource: node, ref: booleanValue(tableConfig.dnd?.canDrag) && ref});
+    const [{isCanDrop}, drop] = useNodeDrop({dropTarget: node});
+    const [{isCanDrop: isCanDropFile}, dropFile] = useFileDrop({uploadType: node.primaryNodeType.name === 'jnt:folder' && JContentConstants.mode.UPLOAD, uploadPath: node.path});
+    const [{dragging}, drag] = useNodeDrag({dragSource: node});
+
+    if (booleanValue(tableConfig.dnd?.canDrop)) {
+        drop(ref);
+    }
+
+    if (booleanValue(tableConfig.dnd?.canDropFile)) {
+        dropFile(ref);
+    }
+
+    if (booleanValue(tableConfig.dnd?.canDrag)) {
+        drag(ref);
+    }
 
     row.ref = ref;
 

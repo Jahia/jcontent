@@ -1,14 +1,11 @@
-import * as _ from 'lodash';
 import pasteMutations from './copyPaste.gql-mutations';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {copypasteClear} from './copyPaste.redux';
 import {withNotifications} from '@jahia/react-material';
-import {getNewNodePath, isDescendantOrSelf} from '~/JContent/JContent.utils';
-import {cmClosePaths, cmGoto, cmOpenPaths} from '~/JContent/redux/JContent.redux';
-import {cmSetPreviewSelection} from '~/JContent/redux/preview.redux';
+import {isDescendantOrSelf} from '~/JContent/JContent.utils';
 import copyPasteConstants from './copyPaste.constants';
 import {setLocalStorage} from './localStorageHandler';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import React from 'react';
 import {useApolloClient} from '@apollo/react-hooks';
@@ -16,17 +13,15 @@ import {useTranslation} from 'react-i18next';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';
 import {useNodeTypeCheck} from '~/JContent';
+import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
 
 export const PasteActionComponent = withNotifications()(({path, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
-    const {copyPaste, treePath, openedPaths, previewSelection} = useSelector(state => ({
-        copyPaste: state.jcontent.copyPaste,
-        treePath: state.jcontent.path,
-        openedPaths: state.jcontent.openPaths,
-        previewSelection: state.jcontent.previewSelection
-    }), shallowEqual);
+    const copyPaste = useSelector(state => state.jcontent.copyPaste);
+
+    const refreshTree = useRefreshTreeAfterMove();
 
     const res = useNodeChecks(
         {path},
@@ -90,35 +85,8 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
                     setLocalStorage(copyPasteConstants.COPY, [], client);
                     notificationContext.notify(t('jcontent:label.contentManager.copyPaste.success'), ['closeButton']);
 
-                    // Let's make sure the content table will be refreshed when displayed
-                    client.cache.flushNodeEntryByPath(path);
-                    nodes.map(nodeToPaste => nodeToPaste.path.substring(0, nodeToPaste.path.lastIndexOf('/'))).forEach(p => client.cache.flushNodeEntryByPath(p));
-
-                    // If it's a move we need to update the list of opened path with the new paths, update the tree path and update the preview selection
-                    let pastedNodes = _.merge(nodes, datas.map(({data}) => ({newPath: data.jcr.pasteNode.node.path})));
-
-                    const pathsToClose = openedPaths.filter(openedPath => pastedNodes.reduce((acc, pastedNode) => acc || (type === copyPasteConstants.CUT && isDescendantOrSelf(openedPath, pastedNode.path)), false));
-                    if (pathsToClose.length > 0) {
-                        dispatch(cmClosePaths(pathsToClose));
-                        const pathsToReopen = pathsToClose.map(pathToReopen => pastedNodes.reduce((acc, pastedNode) => getNewNodePath(acc, pastedNode.path, pastedNode.newPath), pathToReopen));
-                        if (pathsToReopen.indexOf(path) === -1) {
-                            pathsToReopen.push(path);
-                        }
-
-                        dispatch(cmOpenPaths(pathsToReopen));
-                    }
-
-                    pastedNodes.forEach(pastedNode => {
-                        if (pastedNode.path === treePath) {
-                            dispatch(cmGoto({path: pastedNode.newPath, params: {sub: false}}));
-                        }
-
-                        if (pastedNode.path === previewSelection) {
-                            dispatch(cmSetPreviewSelection(null));
-                        }
-                    });
-
-                    triggerRefetchAll();
+                    const moveResults = datas.map(d => d.data.jcr.pasteNode.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});
+                    refreshTree(path, nodes, moveResults);
                 }, error => {
                     console.error(error);
                     dispatch(copypasteClear());

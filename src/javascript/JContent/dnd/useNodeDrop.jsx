@@ -7,8 +7,8 @@ import {PredefinedFragments, useNodeChecks} from '@jahia/data-helper';
 import {useRef, useState} from 'react';
 import {ellipsizeText, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useNodeTypeCheck} from '~/JContent';
-import {triggerRefetchAll} from '~/JContent/JContent.refetches';
 import {useConnector} from './useConnector';
+import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
 
 const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOrId: String!, $move: Boolean!, $reorder: Boolean!, $names: [String]!, $position: ReorderedChildrenPosition) {
     jcr {
@@ -58,7 +58,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
     const {getCurrent, setCurrent} = useConnector();
     const destParent = destParentState || dropTarget;
     const baseRect = useRef();
-
+    const refreshTree = useRefreshTreeAfterMove();
     const res = useNodeChecks(
         {path: destParent?.path},
         {
@@ -125,7 +125,8 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
             }
 
             const isNode = monitor.getItemType() === 'node';
-            const pathsOrIds = isNode ? [dragSource.uuid] : dragSource.map(n => n.uuid);
+            const nodes = isNode ? [dragSource] : dragSource;
+            const pathsOrIds = nodes.map(n => n.uuid);
             const move = (dragSource.path !== (destParent.path + '/' + dragSource.name));
             const reorder = Boolean(insertPosition);
 
@@ -139,7 +140,7 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
                     names,
                     position
                 }
-            }).then(() => {
+            }).then(({data}) => {
                 const message = t('jcontent:label.contentManager.move.success', {
                     count: pathsOrIds.length,
                     dest: (destParent.displayName && ellipsizeText(destParent.displayName, 20)) || destParent.name
@@ -148,7 +149,8 @@ export function useNodeDrop({dropTarget, orderable, entries, onSaved, refetchQue
                 if (onSaved) {
                     onSaved();
                 } else {
-                    triggerRefetchAll();
+                    const moveResults = data.jcr.mutateNodes.map(n => n.node).reduce((acc, n) => Object.assign(acc, {[n.uuid]: n}), {});
+                    refreshTree(destParent.path, nodes, moveResults);
                 }
 
                 notificationContext.notify(message, ['closeButton']);

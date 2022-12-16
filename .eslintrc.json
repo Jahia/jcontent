@@ -1,5 +1,6 @@
 {
   "extends": "@jahia",
+  "root": true,
   "rules": {
     "react/boolean-prop-naming": [2, { "rule": "^(is|has)[A-Z]([A-Za-z0-9]?)+|enabled" }]
   }

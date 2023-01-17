@@ -42,6 +42,11 @@
     vertical-align: top;
 }
 
+.publicationStatusCell {
+    height: 100%;
+    overflow-y: unset;
+}
+
 .publicationStatusCell div {
     padding-left: 0;
 }

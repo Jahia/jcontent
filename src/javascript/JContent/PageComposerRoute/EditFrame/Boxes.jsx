@@ -5,6 +5,7 @@ import {Box} from './Box';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
+import {registry} from '@jahia/ui-extender';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -32,6 +33,8 @@ const getParentModule = e => {
 };
 
 export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
+    const [inlineEditor] = registry.find({type: 'inline-editor'});
+
     const {language, selection, path} = useSelector(state => ({
         language: state.language,
         path: state.jcontent.path,
@@ -98,6 +101,18 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
             event.preventDefault();
         });
     }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver]);
+
+    useEffect(() => {
+        if (inlineEditor) {
+            currentDocument.querySelectorAll('[jahiatype=inline]').forEach(elem => {
+                const path = elem.getAttribute('path');
+                const property = elem.getAttribute('property');
+                inlineEditor.callback(elem, content => {
+                    console.log('Saving to ', path, property, content);
+                });
+            });
+        }
+    }, [currentDocument, inlineEditor]);
 
     const currentPath = currentElement ? currentElement.getAttribute('path') : path;
     const entries = modules.map(m => ({

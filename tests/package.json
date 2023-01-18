@@ -12,6 +12,7 @@
     "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public"
   },
   "main": "index.js",
+  "files": ["cypress"],
   "license": "MIT",
   "devDependencies": {
     "@jahia/cypress": "^1.1.4",

@@ -38,12 +38,6 @@
       "jahia": "/jcontent/(?<siteKey>\\S*?)/(?<language>\\S*?)/(?<contentPath>\\S*)"
     }
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "./node/node ./node/yarn/dist/bin/yarn.js lint --max-warnings 1",
-      "pre-push": " ./node/node ./node/yarn/dist/bin/yarn.js test"
-    }
-  },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
     "@babel/polyfill": "^7.0.0",

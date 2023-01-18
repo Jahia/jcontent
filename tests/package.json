@@ -9,16 +9,18 @@
     "lint": "eslint . -c .eslintrc.json --ext .ts",
     "report:merge": "mochawesome-merge results/reports/cypress*.json > results/reports/report.json && rm results/reports/cypress*.json",
     "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",
+    "build": "tsc -p ./lib-tsconfig.json",
     "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public"
   },
   "main": "index.js",
   "files": [
-    "cypress"
+    "dist"
   ],
   "license": "MIT",
   "devDependencies": {
     "@jahia/cypress": "^1.1.4",
     "@jahia/jahia-reporter": "^1.0.3",
+    "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "cypress": "^10.10.0",

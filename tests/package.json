@@ -1,13 +1,15 @@
 {
-  "name": "jcontent-tests",
-  "version": "1.0.0",
+  "name": "@jahia/jcontent-cypress",
+  "private": false,
+  "version": "2.10.0-tests.1",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
     "e2e:debug": "cypress open",
     "lint": "eslint . -c .eslintrc.json --ext .ts",
     "report:merge": "mochawesome-merge results/reports/cypress*.json > results/reports/report.json && rm results/reports/cypress*.json",
-    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/"
+    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",
+    "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public"
   },
   "main": "index.js",
   "license": "MIT",

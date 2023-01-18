@@ -1,7 +1,7 @@
 {
   "name": "@jahia/jcontent-cypress",
   "private": false,
-  "version": "2.10.0-tests.4",
+  "version": "2.10.0-tests.5",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
@@ -12,7 +12,9 @@
     "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public"
   },
   "main": "index.js",
-  "files": ["cypress"],
+  "files": [
+    "cypress"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@jahia/cypress": "^1.1.4",

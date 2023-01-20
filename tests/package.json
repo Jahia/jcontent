@@ -1,18 +1,26 @@
 {
-  "name": "jcontent-tests",
-  "version": "1.0.0",
+  "name": "@jahia/jcontent-cypress",
+  "private": false,
+  "version": "2.10.0-tests.6",
   "scripts": {
     "instrument": "nyc instrument --compact=false cypress instrumented",
     "e2e:ci": "cypress run --browser chrome",
     "e2e:debug": "cypress open",
     "lint": "eslint . -c .eslintrc.json --ext .ts",
     "report:merge": "mochawesome-merge results/reports/cypress*.json > results/reports/report.json && rm results/reports/cypress*.json",
-    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/"
+    "report:html": "marge --inline results/reports/report.json --reportDir results/reports/",
+    "build": "tsc -p ./lib-tsconfig.json",
+    "publish-tests": "yarn version --prerelease --preid=tests && git push --follow-tags && npm publish --access public"
   },
   "main": "index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@jahia/cypress": "^1.1.4",
+    "@jahia/jahia-reporter": "^1.0.3",
+    "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "cypress": "^10.10.0",
@@ -28,9 +36,6 @@
     "mochawesome-report-generator": "^6.2.0",
     "prettier": "^2.4.0",
     "typescript": "^4.4.2"
-  },
-  "dependencies": {
-    "@jahia/jahia-reporter": "^1.0.3"
   },
   "resolutions": {
     "json-schema": "^0.4.0"

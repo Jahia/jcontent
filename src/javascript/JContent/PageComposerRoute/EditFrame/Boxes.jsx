@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {ContextualMenu} from '@jahia/ui-extender';
+import {ContextualMenu, registry} from '@jahia/ui-extender';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
 import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
-import {registry} from '@jahia/ui-extender';
+import {useMutation} from '@apollo/react-hooks';
+import {updateProperty} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-mutations';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -47,6 +48,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     const disableHover = useRef(false);
     const [placeholders, setPlaceholders] = useState([]);
     const [modules, setModules] = useState([]);
+    const [updatePropertyMutation] = useMutation(updateProperty);
 
     const onMouseOver = useCallback(event => {
         event.stopPropagation();
@@ -107,12 +109,17 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
             currentDocument.querySelectorAll('[jahiatype=inline]').forEach(elem => {
                 const path = elem.getAttribute('path');
                 const property = elem.getAttribute('property');
-                inlineEditor.callback(elem, content => {
-                    console.log('Saving to ', path, property, content);
+                inlineEditor.callback(elem, value => {
+                    console.log('Saving to ', path, property, value);
+                    updatePropertyMutation({variables: {path, property, language, value}}).then(r => {
+                        console.log('Property updated', r);
+                    }).catch(e => {
+                        console.log('Error', e);
+                    });
                 });
             });
         }
-    }, [currentDocument, inlineEditor]);
+    }, [currentDocument, inlineEditor, language, updatePropertyMutation]);
 
     const currentPath = currentElement ? currentElement.getAttribute('path') : path;
     const entries = modules.map(m => ({

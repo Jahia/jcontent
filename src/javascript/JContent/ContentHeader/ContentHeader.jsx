@@ -12,7 +12,6 @@ import {CM_DRAWER_STATES, cmGoto} from '~/JContent/redux/JContent.redux';
 import SearchControlBar from '~/JContent/ContentRoute/ToolBar/SearchControlBar';
 import BrowseControlBar from '~/JContent/ContentRoute/ToolBar/BrowseControlBar';
 import {cmClearSelection} from '~/JContent/redux/selection.redux';
-import {cmSetPreviewState} from '~/JContent/redux/preview.redux';
 import {SelectionActionsBar} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/SelectionActionsBar';
 import SearchInput from './SearchInput';
 import {registry} from '@jahia/ui-extender';
@@ -27,7 +26,7 @@ const ContentHeader = () => {
         language: state.language,
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
-        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection
+        previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection !== null
     }), shallowEqual);
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
@@ -45,9 +44,7 @@ const ContentHeader = () => {
         dispatch(cmGoto({mode: preSearchModeMemo ? preSearchModeMemo : defaultMode, params: {}}));
     };
 
-    const paths = selection.length > 0 ? selection : (previewSelection ? [previewSelection] : []);
-
-    let clear = () => selection.length > 0 ? dispatch(cmClearSelection()) : dispatch(dispatch(cmSetPreviewState(CM_DRAWER_STATES.HIDE)));
+    let clear = () => dispatch(cmClearSelection());
 
     return inSearchMode ? (
         <Header
@@ -55,7 +52,7 @@ const ContentHeader = () => {
             mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
             title={title}
             toolbarLeft={<SearchControlBar/>}
-            toolbarRight={paths.length > 0 && <SelectionActionsBar paths={paths} clear={clear}/>}
+            toolbarRight={!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
         />
     ) : (
         <Header
@@ -68,7 +65,7 @@ const ContentHeader = () => {
             toolbarRight={
                 <>
                     {viewSelector}
-                    {paths.length > 0 && <SelectionActionsBar paths={paths} clear={clear}/>}
+                    {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
                 </>
             }
         />

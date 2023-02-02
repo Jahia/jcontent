@@ -3,34 +3,9 @@ $color-accent: rgb(0, 160, 227);
 
 .root {
     position: absolute;
-    z-index: 9999;
-
-    border-bottom-right-radius: 8px;
-
-    border-bottom-left-radius: 8px;
+    z-index: 10000;
 
     pointer-events: none;
-
-    &.color_default {
-        border: 2px solid var(--color-gray);
-        border-top: 0;
-    }
-
-    &.color_accent {
-        z-index: 10000;
-
-        border: 2px solid var(--color-accent);
-        border-top: 0;
-    }
-
-    &.color_hidden {
-        display: none;
-    }
-
-    .dragging &.color_accent,
-    .dragging &.color_default {
-        border: 0;
-    }
 }
 
 .rel {
@@ -38,8 +13,15 @@ $color-accent: rgb(0, 160, 227);
     top: -34px;
     left: 0;
 
+
+    border: 2px solid rgba(0, 160, 227, 1);
+    box-shadow: 0px 4px 8px 0px rgba(19, 28, 33, 0.2);
+    border-radius: 4px;
+
     display: block;
     width: calc(100% + 4px);
+    height: calc(100% + 36px);
+
     margin-left: -2px;
 }
 
@@ -48,11 +30,21 @@ $color-accent: rgb(0, 160, 227);
     top: 0;
     left: 0;
 
-    display: block;
+    overflow: hidden;
+
+    gap: var(--spacing-small);
+    padding-right: var(--spacing-small);
+    display: flex;
     width: 100%;
-    height: 34px;
+    height: 32px;
 
     pointer-events: all;
+
+    background-color: var(--color-gray_light40);
+}
+
+.dragHandle {
+    height: 32px;
 }
 
 .header {
@@ -84,6 +76,14 @@ $color-accent: rgb(0, 160, 227);
 .button {
     flex: 0 0 auto;
     margin: 0 4px;
+}
+
+.icon {
+    width: 1rem;
+    height: 1rem;
+    margin: 0 var(--spacing-nano);
+
+    vertical-align: top;
 }
 
 :global(.noprefix) .dropTarget {

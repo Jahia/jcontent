@@ -1,28 +1,15 @@
 import React, {useEffect, useRef} from 'react';
-import {ArrowUp, Button, Typography} from '@jahia/moonstone';
+import {HandleDrag} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
-import {useNodeInfo} from '@jahia/data-helper';
 import clsx from 'clsx';
 import styles from './Box.scss';
-import publicationStatusStyles from './PublicationStatus.scss';
-import {DisplayAction, registry} from '@jahia/ui-extender';
-import {getButtonRenderer} from '~/utils/getButtonRenderer';
-import PublicationStatus from '~/JContent/PublicationStatus';
+import {registry} from '@jahia/ui-extender';
 import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
-
-const DefaultBar = ({node, path, onSaved, ButtonRenderer}) => (
-    <>
-        <DisplayAction actionKey="quickEdit" path={path} editCallback={onSaved} render={ButtonRenderer}/>
-        <Typography isUpperCase
-                    isNowrap
-                    className="flexFluid"
-                    variant="caption"
-        >{node ? node.displayName : ''}
-        </Typography>
-    </>
-);
+import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
+import {useQuery} from '@apollo/react-hooks';
+import {BoxQuery} from '~/JContent/PageComposerRoute/EditFrame/Box.gql-queries';
 
 DefaultBar.propTypes = {
     node: PropTypes.object,
@@ -35,9 +22,7 @@ export const Box = ({
     element,
     entries,
     language,
-    color,
-    onSelect,
-    onGoesUp,
+    displayLanguage,
     onMouseOver,
     onMouseOut,
     onSaved,
@@ -48,56 +33,42 @@ export const Box = ({
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
     const path = element.getAttribute('path');
-    const {node} = useNodeInfo({path, language}, {
-        getDisplayName: true,
-        getAggregatedPublicationInfo: true,
-        getProperties: ['jcr:mixinTypes', 'jcr:lastModified', 'jcr:lastModifiedBy', 'j:lastPublished', 'j:lastPublishedBy'],
-        getOperationSupport: true,
-        getPrimaryNodeType: true,
-        getParent: true
+
+    const {data} = useQuery(BoxQuery, {
+        variables: {path, language, displayLanguage}
     });
+
+    const node = data?.jcr?.nodeByPath;
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
-        parent = element.parentElement;
-        while (parent && parent.getAttribute('jahiatype') !== 'module') {
-            parent = parent.parentElement;
-        }
+        parent = element.closest('[jahiatype=module]');
 
         if (parent) {
             element.dataset.jahiaParent = parent.id;
         }
     }
 
-    const ButtonRenderer = getButtonRenderer({
-        defaultButtonProps: {
-            color,
-            variant: 'outlined',
-            className: styles.button
-        }
-    });
-
     const rootDiv = useRef();
 
-    const left = Math.max(0, (rect.left + scrollLeft - 4));
-    const width = Math.min(document.documentElement.clientWidth - left, rect.width + 8);
+    const left = Math.max(2, (rect.left + scrollLeft - 4));
+    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
     const top = rect.top + scrollTop;
     const height = rect.height + 4;
     const currentOffset = {top, left, width, height};
 
-    const nodeWithProps = {};
-    if (node) {
-        Object.assign(nodeWithProps, node);
-        node.properties.filter(p => p.name !== 'jcr:mixinTypes').forEach(p => {
-            nodeWithProps[p.name.substr(p.name.indexOf(':') + 1)] = p;
-        });
-    }
+    const type = element.getAttribute('type');
 
     const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
     const [{dragging}, drag] = useNodeDrag({dragSource: node});
-    const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({dropTarget: parent && node, orderable: true, entries, onSaved});
+    const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({
+        dropTarget: parent && node,
+        orderable: true,
+        entries,
+        onSaved
+    });
     drop(ref);
 
     useEffect(() => {
@@ -141,30 +112,21 @@ export const Box = ({
     return (
         <>
             <div ref={rootDiv}
-                 className={clsx(styles.root, styles['color_' + color])}
+                 className={styles.root}
                  style={currentOffset}
             >
-                <div className={styles.rel} style={{height: 24 + rect.height}}>
-                    <div ref={drag}
-                         className={clsx(styles.sticky, editStyles.enablePointerEvents)}
-                         data-jahia-parent={element.getAttribute('id')}
-                         onClick={onSelect}
+                <div className={styles.rel}>
+                    <div className={clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)}
+                         data-jahia-id={element.getAttribute('id')}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                     >
-                        <div className={clsx(styles.header, styles['color_' + color])}>
-                            {node && <PublicationStatus node={nodeWithProps} className={publicationStatusStyles.root}/>}
-                            {onGoesUp && (
-                                <Button className={styles.button}
-                                        variant="outlined"
-                                        color={color}
-                                        label="Up"
-                                        icon={<ArrowUp/>}
-                                        onClick={onGoesUp}
-                                />
-                            )}
-                            <Bar node={node} path={path} element={element} ButtonRenderer={ButtonRenderer} onSaved={onSaved}/>
-                        </div>
+                        {type === 'existingNode' && (
+                            <div ref={drag} className={clsx(styles.dragHandle, 'flexRow_center', 'alignCenter')}>
+                                <HandleDrag size="default"/>
+                            </div>
+                        )}
+                        {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={width}/>}
                     </div>
                 </div>
 
@@ -180,13 +142,9 @@ Box.propTypes = {
 
     language: PropTypes.string,
 
-    color: PropTypes.string,
+    displayLanguage: PropTypes.string,
 
     onSaved: PropTypes.func,
-
-    onSelect: PropTypes.func,
-
-    onGoesUp: PropTypes.func,
 
     onMouseOver: PropTypes.func,
 

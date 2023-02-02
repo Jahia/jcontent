@@ -44,7 +44,7 @@ export function useNodeDrag({dragSource}) {
         dragPreview(getEmptyImage(), {captureDraggingState: true});
     }, [dragPreview]);
 
-    const enhancedProps = (isAnythingDragging && selection.indexOf(dragSource.path) > -1 && props.dragClasses.length === 0) ? {
+    const enhancedProps = (isAnythingDragging && selection.indexOf(dragSource?.path) > -1 && props.dragClasses.length === 0) ? {
         ...props,
         dragClasses: styles.drag
     } : props;

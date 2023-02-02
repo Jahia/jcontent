@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ContextualMenu, registry} from '@jahia/ui-extender';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {Box} from './Box';
-import {cmAddSelection, cmRemoveSelection, cmSwitchSelection} from '~/JContent/redux/selection.redux';
 import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useMutation} from '@apollo/react-hooks';
@@ -12,32 +11,22 @@ const getModuleElement = (currentDocument, target) => {
     let element = target;
 
     if (element && !element.getAttribute('jahiatype')) {
-        while (element && !element.getAttribute('jahiatype') && !element.dataset?.jahiaParent) {
-            element = element.parentElement;
-        }
+        element = element.closest('[jahiatype]');
+    }
 
-        if (element?.dataset?.jahiaParent) {
-            element = currentDocument.getElementById(element.dataset.jahiaParent);
-        }
+    if (element?.dataset?.jahiaId) {
+        element = currentDocument.getElementById(element.dataset.jahiaId);
     }
 
     return element;
 };
 
-const getParentModule = e => {
-    let parent = e.parentElement;
-    while (parent && parent.getAttribute('jahiatype') !== 'module') {
-        parent = parent.parentElement;
-    }
-
-    return parent;
-};
-
 export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     const [inlineEditor] = registry.find({type: 'inline-editor'});
 
-    const {language, selection, path} = useSelector(state => ({
+    const {language, displayLanguage, selection, path} = useSelector(state => ({
         language: state.language,
+        displayLanguage: state.uilang,
         path: state.jcontent.path,
         selection: state.jcontent.selection
     }), shallowEqual);
@@ -136,45 +125,20 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                 {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
-            {modules.map(e => {
-                let color = 'hidden';
-                const selected = selection.indexOf(e.getAttribute('path')) > -1;
-                if (selected) {
-                    color = 'accent';
-                } else if (e === currentElement) {
-                    color = 'default';
-                }
+            {currentElement && (
+                <Box key={currentElement.getAttribute('id')}
+                     rootElementRef={rootElement}
+                     element={currentElement}
+                     entries={entries}
+                     language={language}
+                     displayLanguage={displayLanguage}
+                     color="default"
+                     onMouseOver={onMouseOver}
+                     onMouseOut={onMouseOut}
+                     onSaved={onSaved}
+                />
+            )}
 
-                return (
-                    <Box key={e.getAttribute('id')}
-                         rootElementRef={rootElement}
-                         element={e}
-                         entries={entries}
-                         language={language}
-                         color={color}
-                         onMouseOver={onMouseOver}
-                         onMouseOut={onMouseOut}
-                         onSaved={onSaved}
-                         onSelect={() => {
-                             dispatch(cmSwitchSelection(e.getAttribute('path')));
-                         }}
-                         onGoesUp={getParentModule(e) && (event => {
-                             event.stopPropagation();
-                             let parent = getParentModule(e);
-
-                             if (parent) {
-                                 if (selected) {
-                                     dispatch(cmRemoveSelection(e.getAttribute('path')));
-                                     dispatch(cmAddSelection(parent.getAttribute('path')));
-                                 } else {
-                                     disableHover.current = true;
-                                     setCurrentElement(parent);
-                                 }
-                             }
-                         })}
-                    />
-                );
-            })}
             {placeholders.map(elem => (
                 <Create key={elem.getAttribute('id')}
                         element={elem}

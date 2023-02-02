@@ -41,6 +41,7 @@ export const QueryHandlersFragments = {
                 }
                 aggregatedPublicationInfo(language: $language) {
                     publicationStatus
+                    existsInLive
                 }
                 lockOwner: property(name: "jcr:lockOwner") {
                     value

@@ -125,6 +125,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
 
             {currentElement && (
                 <Box key={currentElement.getAttribute('id')}
+                     currentFrameRef={currentFrameRef}
                      rootElementRef={rootElement}
                      element={currentElement}
                      entries={entries}

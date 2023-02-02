@@ -8,7 +8,27 @@ import React from 'react';
 import ContentStatuses from '~/JContent/ContentRoute/ContentStatuses/ContentStatuses';
 import PropTypes from 'prop-types';
 
-export const DefaultBar = ({node, language, displayLanguage, width}) => {
+export const DefaultBar = ({node, language, displayLanguage, width, currentFrameRef}) => {
+    // eslint-disable-next-line react/prop-types
+    const wrap = Renderer => ({onClick, ...props}) => (
+        <Renderer
+            onClick={(item, event) => onClick(item, {
+                ...event,
+                currentTarget: {
+                    ...event.currentTarget,
+                    getBoundingClientRect: () => {
+                        const boundingClientRect = event.currentTarget.getBoundingClientRect();
+                        const frameRect = currentFrameRef.current.getBoundingClientRect();
+                        return new DOMRect(boundingClientRect.x + frameRect.x, boundingClientRect.y + frameRect.y, boundingClientRect.width, boundingClientRect.height);
+                    }
+                }}
+            )}
+            {...props}
+        />
+    );
+    const WrappedButtonRendererNoLabel = wrap(ButtonRendererNoLabel);
+    const WrappedButtonRenderer = wrap(ButtonRenderer);
+
     const displayLabels = width > 400;
     return (
         <>
@@ -24,7 +44,7 @@ export const DefaultBar = ({node, language, displayLanguage, width}) => {
             <DisplayAction
                 actionKey="edit"
                 path={node.path}
-                render={displayLabels ? ButtonRenderer : ButtonRendererNoLabel}
+                render={displayLabels ? WrappedButtonRenderer : WrappedButtonRendererNoLabel}
                 buttonProps={{variant: 'ghost', size: 'small'}}
             />
 
@@ -32,7 +52,7 @@ export const DefaultBar = ({node, language, displayLanguage, width}) => {
                 actionKey="contentMenu"
                 path={node.path}
                 menuFilter={value => !includes(['edit'], value.key)}
-                render={ButtonRendererNoLabel}
+                render={WrappedButtonRendererNoLabel}
                 buttonProps={{variant: 'ghost', size: 'small'}}
             />
         </>
@@ -46,5 +66,7 @@ DefaultBar.propTypes = {
 
     displayLanguage: PropTypes.string,
 
-    width: PropTypes.number
+    width: PropTypes.number,
+
+    currentFrameRef: PropTypes.func
 };

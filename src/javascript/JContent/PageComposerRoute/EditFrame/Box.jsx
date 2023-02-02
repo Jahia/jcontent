@@ -11,13 +11,6 @@ import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
 import {useQuery} from '@apollo/react-hooks';
 import {BoxQuery} from '~/JContent/PageComposerRoute/EditFrame/Box.gql-queries';
 
-DefaultBar.propTypes = {
-    node: PropTypes.object,
-    path: PropTypes.string,
-    ButtonRenderer: PropTypes.func,
-    onSaved: PropTypes.func
-};
-
 export const Box = ({
     element,
     entries,
@@ -26,7 +19,8 @@ export const Box = ({
     onMouseOver,
     onMouseOut,
     onSaved,
-    rootElementRef
+    rootElementRef,
+    currentFrameRef
 }) => {
     const ref = useRef(element);
     const rect = element.getBoundingClientRect();
@@ -117,6 +111,7 @@ export const Box = ({
             >
                 <div className={styles.rel}>
                     <div className={clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)}
+                         jahiatype="header" // eslint-disable-line react/no-unknown-property
                          data-jahia-id={element.getAttribute('id')}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
@@ -126,7 +121,7 @@ export const Box = ({
                                 <HandleDrag size="default"/>
                             </div>
                         )}
-                        {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={width}/>}
+                        {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={width} currentFrameRef={currentFrameRef}/>}
                     </div>
                 </div>
 
@@ -150,5 +145,7 @@ Box.propTypes = {
 
     onMouseOut: PropTypes.func,
 
-    rootElementRef: PropTypes.any
+    rootElementRef: PropTypes.func,
+
+    currentFrameRef: PropTypes.func
 };

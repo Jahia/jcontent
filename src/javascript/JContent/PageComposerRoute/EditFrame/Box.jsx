@@ -11,7 +11,8 @@ import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
 import {useQuery} from '@apollo/react-hooks';
 import {BoxQuery} from '~/JContent/PageComposerRoute/EditFrame/Box.gql-queries';
 
-export const Box = ({
+export const Box = React.memo(({
+    isVisible,
     element,
     entries,
     language,
@@ -34,6 +35,8 @@ export const Box = ({
 
     const node = data?.jcr?.nodeByPath;
 
+    element.dataset.current = isVisible;
+
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
         parent = element.closest('[jahiatype=module]');
@@ -45,17 +48,6 @@ export const Box = ({
 
     const rootDiv = useRef();
 
-    const left = Math.max(2, (rect.left + scrollLeft - 4));
-    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
-    const top = rect.top + scrollTop;
-    const height = rect.height + 4;
-    const currentOffset = {top, left, width, height};
-
-    const type = element.getAttribute('type');
-
-    const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
-    const Bar = (customBarItem && customBarItem.component) || DefaultBar;
-
     const [{dragging}, drag] = useNodeDrag({dragSource: node});
     const [{isCanDrop, insertPosition, destParent}, drop] = useNodeDrop({
         dropTarget: parent && node,
@@ -63,7 +55,6 @@ export const Box = ({
         entries,
         onSaved
     });
-    drop(ref);
 
     useEffect(() => {
         const currentRootElement = rootElementRef.current;
@@ -93,7 +84,7 @@ export const Box = ({
     useEffect(() => {
         const classname = insertPosition ? styles['dropTarget_' + insertPosition] : styles.dropTarget;
         if (isCanDrop) {
-            element.style.setProperty('--droplabel', `"[${destParent?.name.replace(/[\u00A0-\u9999<>&]/g, i => '&#' + i.charCodeAt(0) + ';')}]"`);
+            element.style.setProperty('--droplabel', `"[${destParent?.name?.replace(/[\u00A0-\u9999<>&]/g, i => '&#' + i.charCodeAt(0) + ';')}]"`);
             element.classList.add(classname);
         }
 
@@ -103,7 +94,24 @@ export const Box = ({
         };
     }, [isCanDrop, insertPosition, destParent, element]);
 
-    return (
+    if (!isVisible) {
+        return false;
+    }
+
+    const left = Math.max(2, (rect.left + scrollLeft - 4));
+    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
+    const top = rect.top + scrollTop;
+    const height = rect.height + 4;
+    const currentOffset = {top, left, width, height};
+
+    const type = element.getAttribute('type');
+
+    const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
+    const Bar = (customBarItem && customBarItem.component) || DefaultBar;
+
+    drop(ref);
+
+    return isVisible && (
         <>
             <div ref={rootDiv}
                  className={styles.root}
@@ -112,6 +120,7 @@ export const Box = ({
                 <div className={styles.rel}>
                     <div className={clsx(styles.sticky, 'flexRow_nowrap', 'alignCenter', editStyles.enablePointerEvents)}
                          jahiatype="header" // eslint-disable-line react/no-unknown-property
+                         data-current="true"
                          data-jahia-id={element.getAttribute('id')}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
@@ -128,9 +137,11 @@ export const Box = ({
             </div>
         </>
     );
-};
+});
 
 Box.propTypes = {
+    isVisible: PropTypes.bool,
+
     element: PropTypes.any,
 
     entries: PropTypes.array,
@@ -145,7 +156,7 @@ Box.propTypes = {
 
     onMouseOut: PropTypes.func,
 
-    rootElementRef: PropTypes.func,
+    rootElementRef: PropTypes.any,
 
-    currentFrameRef: PropTypes.func
+    currentFrameRef: PropTypes.any
 };

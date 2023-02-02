@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ContextualMenu, registry} from '@jahia/ui-extender';
 import {shallowEqual, useSelector} from 'react-redux';
 import {Box} from './Box';
@@ -46,11 +46,11 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
 
     const onMouseOut = useCallback(event => {
         event.stopPropagation();
-        if (event.relatedTarget && event.currentTarget === currentElement && (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
+        if (event.relatedTarget && event.currentTarget.dataset.current === 'true' && (getModuleElement(currentDocument, event.currentTarget)?.getAttribute('path') !== getModuleElement(currentDocument, event.relatedTarget)?.getAttribute('path'))) {
             disableHover.current = false;
             setCurrentElement(null);
         }
-    }, [setCurrentElement, currentDocument, currentElement]);
+    }, [setCurrentElement, currentDocument]);
 
     const rootElement = useRef();
     const contextualMenu = useRef();
@@ -109,11 +109,11 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     }, [currentDocument, inlineEditor, language, updatePropertyMutation]);
 
     const currentPath = currentElement ? currentElement.getAttribute('path') : path;
-    const entries = modules.map(m => ({
+    const entries = useMemo(() => modules.map(m => ({
         name: m.getAttribute('path').substr(m.getAttribute('path').lastIndexOf('/') + 1),
         path: m.getAttribute('path'),
         depth: m.getAttribute('path').split('/').length
-    }));
+    })), [modules]);
 
     return (
         <div ref={rootElement}>
@@ -123,11 +123,12 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                 {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
-            {currentElement && (
-                <Box key={currentElement.getAttribute('id')}
+            {modules.map(e => (
+                <Box key={e.getAttribute('id')}
+                     isVisible={e === currentElement}
                      currentFrameRef={currentFrameRef}
                      rootElementRef={rootElement}
-                     element={currentElement}
+                     element={e}
                      entries={entries}
                      language={language}
                      displayLanguage={displayLanguage}
@@ -136,7 +137,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                      onMouseOut={onMouseOut}
                      onSaved={onSaved}
                 />
-            )}
+            ))}
 
             {placeholders.map(elem => (
                 <Create key={elem.getAttribute('id')}

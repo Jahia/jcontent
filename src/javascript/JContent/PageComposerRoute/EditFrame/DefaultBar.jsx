@@ -68,5 +68,5 @@ DefaultBar.propTypes = {
 
     width: PropTypes.number,
 
-    currentFrameRef: PropTypes.func
+    currentFrameRef: PropTypes.any
 };

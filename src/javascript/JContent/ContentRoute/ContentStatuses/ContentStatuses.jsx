@@ -21,7 +21,8 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
     };
 
     if (node.aggregatedPublicationInfo) {
-        const {publicationStatus} = node.aggregatedPublicationInfo;
+        const {publicationStatus, existsInLive} = node.aggregatedPublicationInfo;
+        statuses.published = existsInLive;
         if (publicationStatus === JContentConstants.availablePublicationStatuses.MODIFIED) {
             statuses.modified = true;
             statuses.published = true;
@@ -63,7 +64,8 @@ const ContentStatuses = ({node, isDisabled, language, uilang, renderedStatuses, 
 ContentStatuses.propTypes = {
     node: PropTypes.shape({
         aggregatedPublicationInfo: PropTypes.shape({
-            publicationStatus: PropTypes.string
+            publicationStatus: PropTypes.string,
+            existsInLive: PropTypes.bool
         }),
         deleted: PropTypes.shape({
             value: PropTypes.string

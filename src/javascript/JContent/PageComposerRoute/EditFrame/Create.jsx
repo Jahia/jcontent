@@ -10,7 +10,7 @@ import {useNodeInfo} from '@jahia/data-helper';
 import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
 
-export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
+export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -75,7 +75,7 @@ export const Create = ({element, onMouseOver, onMouseOut, onSaved}) => {
             <DisplayAction actionKey="paste" path={parentPath} loading={() => false} render={ButtonRenderer}/>
         </div>
     );
-};
+});
 
 Create.propTypes = {
     element: PropTypes.any,

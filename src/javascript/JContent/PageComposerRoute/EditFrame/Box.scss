@@ -43,6 +43,7 @@ $color-accent: rgb(0, 160, 227);
 }
 
 .header {
+    align-self: stretch;
     width: 100%;
 
     padding-right: var(--spacing-small);

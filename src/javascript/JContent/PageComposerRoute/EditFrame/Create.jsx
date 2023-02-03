@@ -65,6 +65,8 @@ export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) =
 
     return !anyDragging && (
         <div ref={drop}
+             jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
+             data-jahia-id={element.getAttribute('id')}
              className={clsx(styles.root, editStyles.enablePointerEvents)}
              style={currentOffset}
              data-jahia-parent={parent.getAttribute('id')}

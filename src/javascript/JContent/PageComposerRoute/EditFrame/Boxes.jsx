@@ -14,7 +14,9 @@ const getModuleElement = (currentDocument, target) => {
         element = element.closest('[jahiatype]');
     }
 
-    if (element?.dataset?.jahiaId) {
+    if (element.getAttribute('jahiatype') === 'createbuttons') {
+        element = currentDocument.getElementById(element.dataset.jahiaParent);
+    } else if (element?.dataset?.jahiaId) {
         element = currentDocument.getElementById(element.dataset.jahiaId);
     }
 

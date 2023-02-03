@@ -21,6 +21,8 @@ export const prefixCssSelectors = function (rules, className) {
         if (after.startsWith('.noprefix')) {
             after = after.substr(9);
             rules = before + after;
+        } else if (after.startsWith('html ')) {
+            rules = before + className + className + ' ' + after.substr(4);
         } else if (!after.startsWith(className)) {
             if (after.startsWith(':root')) {
                 after = after.substr(5);

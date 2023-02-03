@@ -45,6 +45,8 @@ $color-accent: rgb(0, 160, 227);
 .header {
     width: 100%;
 
+    align-self: stretch;
+
     padding-right: var(--spacing-small);
 
     background-color: var(--color-gray_light40);

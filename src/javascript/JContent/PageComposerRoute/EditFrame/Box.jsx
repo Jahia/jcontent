@@ -56,6 +56,8 @@ export const Box = React.memo(({
         onSaved
     });
 
+    drop(ref);
+
     useEffect(() => {
         const currentRootElement = rootElementRef.current;
         if (dragging) {
@@ -109,9 +111,7 @@ export const Box = React.memo(({
     const customBarItem = node && registry.get('customContentEditorBar', node.primaryNodeType.name);
     const Bar = (customBarItem && customBarItem.component) || DefaultBar;
 
-    drop(ref);
-
-    return isVisible && (
+    return (
         <>
             <div ref={rootDiv}
                  className={styles.root}
@@ -125,12 +125,14 @@ export const Box = React.memo(({
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                     >
-                        {type === 'existingNode' && (
-                            <div ref={drag} className={clsx(styles.dragHandle, 'flexRow_center', 'alignCenter')}>
-                                <HandleDrag size="default"/>
-                            </div>
-                        )}
-                        {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={width} currentFrameRef={currentFrameRef}/>}
+                        <div className={clsx(styles.header, 'flexRow_nowrap', 'alignCenter')}>
+                            {type === 'existingNode' && (
+                                <div ref={drag} className={clsx(editStyles.enablePointerEvents, styles.dragHandle, 'flexRow_center', 'alignCenter')}>
+                                    <HandleDrag size="default"/>
+                                </div>
+                            )}
+                            {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={width} currentFrameRef={currentFrameRef}/>}
+                        </div>
                     </div>
                 </div>
 

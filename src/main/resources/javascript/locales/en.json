@@ -225,6 +225,7 @@
         "publishedBy": "Published by {{userName}} on",
         "advancedPublish": "Advanced publish...",
         "cut": "Cut",
+        "clear": "Clear clipboard",
         "lockNode": "Lock content",
         "noViewAvailable": "No preview available",
         "noContentSelected": "Select a content item to preview it",
@@ -265,7 +266,8 @@
       },
       "copyPaste": {
         "success": "Item successfully pasted",
-        "error": "An error occurred when pasting the element"
+        "error": "An error occurred when pasting the element",
+        "clear": "Clipboard successfully emptied"
       },
       "move": {
         "success": "{{count}} item has been moved to {{dest}}",

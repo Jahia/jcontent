@@ -9,6 +9,7 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {useNodeInfo} from '@jahia/data-helper';
 import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
+import {useSelector} from 'react-redux';
 
 export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
@@ -43,6 +44,8 @@ export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) =
         anyDragging: monitor.isDragging()
     }));
 
+    const copyPaste = useSelector(state => state.jcontent.copyPaste);
+
     const currentOffset = {
         top: rect.top + scrollTop,
         left: rect.left + scrollLeft,
@@ -52,6 +55,7 @@ export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) =
 
     const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
+    const {nodes} = copyPaste;
 
     useEffect(() => {
         if (isCanDrop) {
@@ -73,7 +77,7 @@ export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) =
              onMouseOver={onMouseOver}
              onMouseOut={onMouseOut}
         >
-            <DisplayAction actionKey="createContent" path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>
+            {nodes.length === 0 && (<DisplayAction actionKey="createContent" path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>)}
             <DisplayAction actionKey="paste" path={parentPath} loading={() => false} render={ButtonRenderer}/>
         </div>
     );

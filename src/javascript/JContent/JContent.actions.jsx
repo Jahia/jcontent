@@ -5,6 +5,7 @@ import {
     AddFolder,
     Archive,
     ChevronDown,
+    ClearPaste,
     CloudDownload,
     CloudUpload,
     Copy,
@@ -58,6 +59,7 @@ import {OpenInJContentActionComponent} from '~/JContent/actions/openInJcontentAc
 import {RenameActionComponent} from '~/JContent/actions/renameAction';
 import {DownloadAsZipActionComponent} from '~/JContent/actions/downloadAsZip';
 import {OpenInLiveActionComponent} from '~/JContent/actions/openInLiveAction/openInLiveAction';
+import {ClearClipboardActionComponent} from '~/JContent/actions';
 
 export const jContentActions = registry => {
     const menuActionWithRenderer = registry.add('action', 'menuAction', menuAction, {
@@ -346,5 +348,12 @@ export const jContentActions = registry => {
     registry.add('action', 'contentActionsSeparator2', {
         targets: ['contentActions:10'],
         isSeparator: true
+    });
+
+    registry.add('action', 'clearClipboard', {
+        buttonIcon: <ClearPaste/>,
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.clear',
+        targets: ['headerPrimaryActions:14'],
+        component: ClearClipboardActionComponent
     });
 };

@@ -47,6 +47,7 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
 
     if (nodes.length === 0) {
         isEnabled = false;
+        isVisible = false;
     }
 
     if (isVisible && isEnabled && nodes.reduce((acc, nodeToPaste) => acc ||

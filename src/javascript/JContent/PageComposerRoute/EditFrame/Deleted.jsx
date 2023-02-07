@@ -5,31 +5,28 @@ import styles from './Deleted.scss';
 import {Delete, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 
-export const Deleted = ({element}) => {
-    const {t} = useTranslation('jcontent');
+function getBoundingBox(element) {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
-    const [currentOffset, setCurrentOffset] = useState({
+    const box = {
         top: rect.top + scrollTop,
         left: rect.left + scrollLeft,
         width: rect.width,
         height: rect.height
-    });
+    };
+    return box;
+}
+
+export const Deleted = ({element}) => {
+    const {t} = useTranslation('jcontent');
+    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
 
     const ref = useRef();
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const rect = element.getBoundingClientRect();
-            const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
-            const scrollTop = element.ownerDocument.documentElement.scrollTop;
-            const box = {
-                top: rect.top + scrollTop,
-                left: rect.left + scrollLeft,
-                width: rect.width,
-                height: rect.height
-            };
+            const box = getBoundingBox(element);
             if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
                 setCurrentOffset(box);
             }
@@ -37,7 +34,7 @@ export const Deleted = ({element}) => {
         return () => {
             clearInterval(interval);
         };
-    });
+    }, [currentOffset, element]);
 
     const iconWidth = Math.min(currentOffset.width / 3, 64) + 'px';
     const iconHeight = Math.min(currentOffset.height / 3, 64) + 'px';

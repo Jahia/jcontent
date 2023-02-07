@@ -11,12 +11,12 @@ import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
 
+const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default'}});
+
 export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) => {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
-
-    const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default'}});
 
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
     if (!parent) {
@@ -53,6 +53,13 @@ export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) =
         height: 25
     };
 
+    const sizers = [];
+    Array(10).fill(0).forEach((_, i) => {
+        if (rect.width < (i * 150)) {
+            sizers.push('sizer' + i);
+        }
+    });
+
     const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
     const {nodes} = copyPaste;
@@ -71,7 +78,7 @@ export const Create = React.memo(({element, onMouseOver, onMouseOut, onSaved}) =
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property
              data-jahia-id={element.getAttribute('id')}
-             className={clsx(styles.root, editStyles.enablePointerEvents)}
+             className={clsx(styles.root, editStyles.enablePointerEvents, sizers)}
              style={currentOffset}
              data-jahia-parent={parent.getAttribute('id')}
              onMouseOver={onMouseOver}

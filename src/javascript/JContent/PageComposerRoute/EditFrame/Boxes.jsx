@@ -6,6 +6,9 @@ import {Create} from './Create';
 import PropTypes from 'prop-types';
 import {useMutation} from '@apollo/react-hooks';
 import {updateProperty} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-mutations';
+import {useQuery} from 'react-apollo';
+import {BoxesQuery} from '~/JContent/PageComposerRoute/EditFrame/Boxes.gql-queries';
+import {hasMixin, isMarkedForDeletion} from '~/JContent/JContent.utils';
 
 const getModuleElement = (currentDocument, target) => {
     let element = target;
@@ -62,22 +65,30 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
 
     useEffect(() => {
         const placeholders = [];
-        currentDocument.querySelectorAll('[jahiatype=module]').forEach(elem => {
-            if (elem.getAttribute('path') === '*' || elem.getAttribute('type') === 'placeholder') {
-                placeholders.push(elem);
+        currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+            if (element.getAttribute('path') === '*' || element.getAttribute('type') === 'placeholder') {
+                placeholders.push(element);
+
+                let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+                if (!parent) {
+                    parent = element.parentElement;
+                    while (parent.getAttribute('jahiatype') !== 'module') {
+                        parent = parent.parentElement;
+                    }
+
+                    element.dataset.jahiaParent = parent.id;
+                }
             }
         });
 
         setPlaceholders(placeholders);
 
         const modules = [];
-        currentDocument.querySelectorAll('[jahiatype]').forEach(elem => {
-            const type = elem.getAttribute('jahiatype');
-            const path = elem.getAttribute('path');
+        currentDocument.querySelectorAll('[jahiatype]').forEach(element => {
+            const type = element.getAttribute('jahiatype');
+            const path = element.getAttribute('path');
             if (type === 'module' && path !== '*') {
-                elem.addEventListener('mouseover', onMouseOver);
-                elem.addEventListener('mouseout', onMouseOut);
-                modules.push(elem);
+                modules.push(element);
             }
         });
 
@@ -90,18 +101,27 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                 clientX: event.clientX + rect.x,
                 clientY: event.clientY + rect.y
             });
-            contextualMenu.current.open(dup);
+            contextualMenu.current(dup);
 
             event.preventDefault();
         });
     }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver]);
 
+    const paths = [...new Set([
+        ...modules.map(m => m.getAttribute('path')),
+        ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).getAttribute('path'))
+    ])];
+
+    const {data} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}});
+
+    const nodes = data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {});
+
     useEffect(() => {
         if (inlineEditor) {
-            currentDocument.querySelectorAll('[jahiatype=inline]').forEach(elem => {
-                const path = elem.getAttribute('path');
-                const property = elem.getAttribute('property');
-                inlineEditor.callback(elem, value => {
+            currentDocument.querySelectorAll('[jahiatype=inline]').forEach(element => {
+                const path = element.getAttribute('path');
+                const property = element.getAttribute('property');
+                inlineEditor.callback(element, value => {
                     console.log('Saving to ', path, property, value);
                     updatePropertyMutation({variables: {path, property, language, value}}).then(r => {
                         console.log('Property updated', r);
@@ -123,37 +143,42 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
     return (
         <div ref={rootElement}>
             <ContextualMenu
-                ref={contextualMenu}
+                setOpenRef={contextualMenu}
                 actionKey={selection.length <= 1 || selection.indexOf(currentPath) === -1 ? 'contentMenu' : 'selectedContentMenu'}
                 {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
-            {modules.map(e => (
-                <Box key={e.getAttribute('id')}
-                     isVisible={e === currentElement}
-                     currentFrameRef={currentFrameRef}
-                     rootElementRef={rootElement}
-                     element={e}
-                     entries={entries}
-                     language={language}
-                     displayLanguage={displayLanguage}
-                     color="default"
-                     onMouseOver={onMouseOver}
-                     onMouseOut={onMouseOut}
-                     onSaved={onSaved}
-                />
-            ))}
+            {modules.map(element => ({element, node: nodes[element.getAttribute('path')]}))
+                .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
+                .map(({node, element}) => (
+                    <Box key={element.getAttribute('id')}
+                         node={node}
+                         isVisible={element === currentElement}
+                         currentFrameRef={currentFrameRef}
+                         rootElementRef={rootElement}
+                         element={element}
+                         entries={entries}
+                         language={language}
+                         displayLanguage={displayLanguage}
+                         color="default"
+                         onMouseOver={onMouseOver}
+                         onMouseOut={onMouseOut}
+                         onSaved={onSaved}
+                    />
+                ))}
 
-            {placeholders.map(elem => (
-                <Create key={elem.getAttribute('id')}
-                        element={elem}
-                        parent={elem}
-                        onMouseOver={onMouseOver}
-                        onMouseOut={onMouseOut}
-                        onSaved={onSaved}
-                />
-            ))}
-
+            {placeholders.map(element => ({element, node: nodes[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]}))
+                .filter(({node}) => node && !isMarkedForDeletion(node))
+                .map(({node, element}) => (
+                    <Create key={element.getAttribute('id')}
+                            node={node}
+                            element={element}
+                            parent={element}
+                            onMouseOver={onMouseOver}
+                            onMouseOut={onMouseOut}
+                            onSaved={onSaved}
+                    />
+                ))}
         </div>
     );
 };

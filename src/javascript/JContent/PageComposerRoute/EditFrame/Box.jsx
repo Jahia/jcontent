@@ -8,10 +8,9 @@ import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
-import {useQuery} from '@apollo/react-hooks';
-import {BoxQuery} from '~/JContent/PageComposerRoute/EditFrame/Box.gql-queries';
 
 export const Box = React.memo(({
+    node,
     isVisible,
     element,
     entries,
@@ -27,13 +26,16 @@ export const Box = React.memo(({
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
-    const path = element.getAttribute('path');
 
-    const {data} = useQuery(BoxQuery, {
-        variables: {path, language, displayLanguage}
-    });
+    useEffect(() => {
+        element.addEventListener('mouseover', onMouseOver);
+        element.addEventListener('mouseout', onMouseOut);
 
-    const node = data?.jcr?.nodeByPath;
+        return () => {
+            element.removeEventListener('mouseover', onMouseOver);
+            element.removeEventListener('mouseout', onMouseOut);
+        };
+    }, [element, node, onMouseOut, onMouseOver]);
 
     element.dataset.current = isVisible;
 
@@ -145,6 +147,8 @@ Box.propTypes = {
     isVisible: PropTypes.bool,
 
     element: PropTypes.any,
+
+    node: PropTypes.any,
 
     entries: PropTypes.array,
 

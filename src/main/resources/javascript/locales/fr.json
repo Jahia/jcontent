@@ -357,6 +357,7 @@
       "contentStatus": {
         "locked": "Verrouillé",
         "markedForDeletion": "Marqué pour suppression",
+        "deleted": "Supprimé",
         "modified": "Modifié",
         "new": "Nouveau",
         "notPublished": "Non publié",

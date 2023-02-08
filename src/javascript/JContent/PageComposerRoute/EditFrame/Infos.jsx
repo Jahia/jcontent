@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import {useNodeInfo} from '@jahia/data-helper';
 import {Deleted} from './Deleted';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '~/JContent/JContent.utils';
+import {hasMixin} from '~/JContent/JContent.utils';
 
 export const Infos = ({currentDocument}) => {
     const language = useSelector(state => state.language);
@@ -12,6 +12,7 @@ export const Infos = ({currentDocument}) => {
 
     useEffect(() => {
         const paths = [];
+        paths.push(currentDocument.querySelector('[jahiatype=mainmodule]').getAttribute('path'));
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(elem => {
             if (elem.getAttribute('path') !== '*') {
                 paths.push(elem.getAttribute('path'));
@@ -29,7 +30,7 @@ export const Infos = ({currentDocument}) => {
     });
 
     return Boolean(nodes) && nodes
-        .filter(n => isMarkedForDeletion(n))
+        .filter(n => hasMixin(n, 'jmix:markedForDeletionRoot'))
         .map(n => currentDocument.querySelector(`[jahiatype][path="${n.path}"]`))
         .filter(e => e)
         .map(e => (

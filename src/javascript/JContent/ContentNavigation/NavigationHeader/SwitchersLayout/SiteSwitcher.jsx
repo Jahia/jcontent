@@ -39,16 +39,9 @@ const QUERY = gql`
         `;
 
 const getSites = data => {
-    let siteNodes = [];
-    if (data && data.jcr.result !== null) {
-        for (let i in data.jcr.result.siteNodes) {
-            if (data.jcr.result.siteNodes[i].hasPermission) {
-                siteNodes.push(data.jcr.result.siteNodes[i]);
-            }
-        }
-    }
-
-    return _.sortBy(siteNodes, ['displayName']);
+    let siteNodes = data?.jcr.result?.siteNodes?.filter(s => s.hasPermission) || [];
+    // Sort system site to the end of list (by returning null)
+    return _.sortBy(siteNodes, s => (s.name === 'systemsite') ? null : s.displayName);
 };
 
 const getTargetSiteLanguageForSwitch = (siteNode, currentLang) => {
@@ -101,11 +94,8 @@ const SiteSwitcher = ({selector, onSelectAction}) => {
 
                     const sites = getSites(data);
 
-                    // Lookup current site, get First site in case not found. Avoid the component to break if not site found at all.
-                    let currentSite = sites.find(site => site.name === siteKey);
-                    if (!currentSite) {
-                        currentSite = sites.length > 0 ? sites[0] : {};
-                    }
+                    // Lookup current site, get first site in case not found. Avoid the component to break if not site found at all.
+                    let currentSite = sites.find(site => site.name === siteKey) || sites?.[0] || {};
 
                     return (
                         <Dropdown

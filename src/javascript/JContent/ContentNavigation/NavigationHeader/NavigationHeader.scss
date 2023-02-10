@@ -7,4 +7,10 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+
+    [role="listbox"] input,
+    [role="listbox"] svg {
+        /* Reset .moonstone-reversed color scheme on dropdown search input */
+        color: initial;
+    }
 }

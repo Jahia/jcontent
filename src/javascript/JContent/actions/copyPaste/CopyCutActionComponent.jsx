@@ -8,14 +8,25 @@ import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {ACTION_PERMISSIONS, PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
+import {withNotifications} from '@jahia/react-material';
+import {useTranslation} from 'react-i18next';
 
-export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render, loading: Loading, ...others}) => {
+export const CopyCutActionComponent = withNotifications()(({
+    path,
+    paths,
+    copyCutType,
+    render: Render,
+    loading: Loading,
+    notificationContext,
+    ...others
+}) => {
     const {language, displayLanguage} = useSelector(state => ({
         language: state.language,
         displayLanguage: state.uilang
     }), shallowEqual);
     const client = useApolloClient();
     const dispatch = useDispatch();
+    const {t} = useTranslation('jcontent');
 
     const type = copyCutType || copyPasteConstants.COPY;
 
@@ -46,11 +57,12 @@ export const CopyCutActionComponent = ({path, paths, copyCutType, render: Render
             onClick={() => {
                 let nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);
+                notificationContext.notify(nodes.length === 1 ? t('jcontent:label.contentManager.copyPaste.stored.one', {name: nodes[0].displayName}) : t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length}), ['closeButton']);
                 dispatch(type === 'copy' ? copypasteCopy(nodes) : copypasteCut(nodes));
             }}
         />
     );
-};
+});
 
 CopyCutActionComponent.propTypes = {
     path: PropTypes.string,

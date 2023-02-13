@@ -265,7 +265,11 @@
       "copyPaste": {
         "success": "Element erfolgreich kopiert",
         "error": "Beim Kopieren des Elements ist ein Fehler aufgetreten",
-        "clear": "Clipboard erfolgreich geleert"
+        "clear": "Clipboard erfolgreich geleert",
+        "stored": {
+          "one": "{{name}} ist im Clipboard",
+          "many": "{{size}} Element sind im Clipboard"
+        }
       },
       "move": {
         "success": "{{count}} Element wurde nach {{dest}} verschoben",

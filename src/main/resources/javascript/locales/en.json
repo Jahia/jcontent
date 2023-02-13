@@ -267,7 +267,11 @@
       "copyPaste": {
         "success": "Item successfully pasted",
         "error": "An error occurred when pasting the element",
-        "clear": "Clipboard successfully emptied"
+        "clear": "Clipboard successfully emptied",
+        "stored": {
+          "one": "{{name}} is in the clipboard",
+          "many": "{{size}} items are in the clipboard"
+        }
       },
       "move": {
         "success": "{{count}} item has been moved to {{dest}}",

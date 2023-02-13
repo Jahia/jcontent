@@ -264,7 +264,11 @@
       "copyPaste": {
         "success": "L'élément a été collé avec succès",
         "error": "Une erreur s'est produite lors du collage de l'élément",
-        "clear": "Le presse-papier a été vidé"
+        "clear": "Le presse-papier a été vidé",
+        "stored": {
+          "one": "{{name}} est dans le presse-papier",
+          "many": "Il y a {{size}} éléments dans le presse-papier"
+        }
       },
       "move": {
         "success": "{{count}} élément a été déplacé dans {{dest}}",

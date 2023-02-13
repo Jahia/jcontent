@@ -222,6 +222,7 @@
         "publishedBy": "Veröffentlicht von {{userName}} am",
         "advancedPublish": "Erweiterte Veröffentlichung...",
         "cut": "Ausschneiden",
+        "clear": "Clipboard leeren",
         "lockNode": "Content sperren",
         "noViewAvailable": "Keine Vorschau verfügbar",
         "noContentSelected": "Wählen Sie einen Content, um die Vorschau zu aktivieren",
@@ -262,7 +263,8 @@
       },
       "copyPaste": {
         "success": "Element erfolgreich kopiert",
-        "error": "Beim Kopieren des Elements ist ein Fehler aufgetreten"
+        "error": "Beim Kopieren des Elements ist ein Fehler aufgetreten",
+        "clear": "Clipboard erfolgreich geleert"
       },
       "move": {
         "success": "{{count}} Element wurde nach {{dest}} verschoben",

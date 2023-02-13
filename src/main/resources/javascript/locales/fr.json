@@ -222,6 +222,7 @@
         "publishedBy": "Publié par {{userName}} le",
         "advancedPublish": "Publication avancée...",
         "cut": "Couper",
+        "clear": "Vider le presse-papier",
         "lockNode": "Verrouiller le contenu",
         "noViewAvailable": "Aperçu non disponible",
         "noContentSelected": "Sélectionnez un contenu pour le prévisualiser",
@@ -262,7 +263,8 @@
       },
       "copyPaste": {
         "success": "L'élément a été collé avec succès",
-        "error": "Une erreur s'est produite lors du collage de l'élément"
+        "error": "Une erreur s'est produite lors du collage de l'élément",
+        "clear": "Le presse-papier a été vidé"
       },
       "move": {
         "success": "{{count}} élément a été déplacé dans {{dest}}",

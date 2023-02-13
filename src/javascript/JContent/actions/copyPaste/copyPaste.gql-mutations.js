@@ -34,7 +34,25 @@ const copyPasteQueries = {
                 clearAllLocks
             }
         }
-    }`
+    }`,
+
+    pasteReferenceNode: gql`mutation pasteReferenceNode($pathOrId: String!, $destParentPathOrId: String!, $destName: String!, $referenceType: String!) {
+        jcr {
+            pasteNode: addNode(name: $destName, primaryNodeType: $referenceType, parentPathOrId: $destParentPathOrId, useAvailableNodeName: true) {
+                mutateProperty(name: "j:node") {
+                    setValue(value: $pathOrId)
+                }
+                node {
+                    ...NodeCacheRequiredFields
+                    path
+                }
+            }
+        }
+    }
+
+    ${PredefinedFragments.nodeCacheRequiredFields.gql}
+    `
+
 };
 
 export default copyPasteQueries;

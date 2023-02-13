@@ -230,6 +230,7 @@
         "noViewAvailable": "No preview available",
         "noContentSelected": "Select a content item to preview it",
         "paste": "Paste",
+        "pasteReference": "Paste as reference",
         "delete": "Delete",
         "translate": "Translate",
         "emptyMessage": "Loading...",

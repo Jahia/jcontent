@@ -204,6 +204,13 @@ export const jContentActions = registry => {
         targets: ['headerPrimaryActions:10', 'contentActions:3.91'],
         component: PasteActionComponent
     });
+    registry.add('action', 'pasteReference', {
+        buttonIcon: <Paste/>,
+        buttonLabel: 'jcontent:label.contentManager.contentPreview.pasteReference',
+        referenceTypes: ['jnt:contentReference'],
+        targets: ['headerPrimaryActions:10.1', 'contentActions:3.92'],
+        component: PasteActionComponent
+    });
     registry.add('action', 'cut', {
         buttonIcon: <Cut/>,
         buttonLabel: 'jcontent:label.contentManager.contentPreview.cut',

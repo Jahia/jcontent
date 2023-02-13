@@ -5,19 +5,24 @@ import {useCallback} from 'react';
 
 export function useNodeTypeCheck() {
     const [loadContentTypes, contentTypesResult] = useLazyQuery(gql`
-        query PasteCheckQuery($nodeTypes: [String]!, $contributeTypes:[String]!, $childNodeTypes:[String]!) {
+        query PasteCheckQuery($nodeTypes: [String]!, $contributeTypes:[String]!, $childNodeTypes:[String]!, $referenceTypes:[String]!, $isReference: Boolean!) {
             jcr {
                 nodeTypesByNames(names: $nodeTypes) {
                     name
-                    contributeTypes: isNodeType(type:{multi:ANY, types: $contributeTypes})
-                    childNodeTypes: isNodeType(type:{multi:ANY, types: $childNodeTypes})
+                    isContributeType: isNodeType(type:{multi:ANY, types: $contributeTypes})
+                    isChildNodeType: isNodeType(type:{multi:ANY, types: $childNodeTypes})
+                }
+                referenceTypes: nodeTypesByNames(names: $referenceTypes) @include(if: $isReference) {
+                    name
+                    isChildNodeType: isNodeType(type:{multi:ANY, types: $childNodeTypes})
                 }
             }
         }
     `);
 
-    return useCallback((target, sources) => {
+    return useCallback((target, sources, referenceTypes) => {
         const primaryNodeTypesToPaste = [...new Set(sources.map(n => n.primaryNodeType.name))];
+
         const childNodeTypes = target.allowedChildNodeTypes.map(t => t.name);
         const contributeTypesProperty = target.contributeTypes ||
             (target.ancestors && target.ancestors.length > 0 && target.ancestors[target.ancestors.length - 1].contributeTypes);
@@ -30,7 +35,9 @@ export function useNodeTypeCheck() {
         const variables = {
             nodeTypes: primaryNodeTypesToPaste,
             childNodeTypes,
-            contributeTypes
+            contributeTypes,
+            isReference: Boolean(referenceTypes),
+            referenceTypes: referenceTypes || []
         };
 
         let shouldCallQuery = !contentTypesResult.called || !_.isEqual(variables, contentTypesResult.variables);
@@ -43,15 +50,18 @@ export function useNodeTypeCheck() {
             return {loading: true};
         }
 
-        return {
+        // Type should match childNodeTypes and contributeTypes, if they are set.
+        const result = {
             loading: false,
-            checkResult: contentTypesResult.data.jcr.nodeTypesByNames.reduce((acc, val) => {
-                return (
-                    acc &&
-                    (contributeTypes.length === 0 || val.contributeTypes) &&
-                    (childNodeTypes.length === 0 || val.childNodeTypes)
-                );
-            }, true)
+            checkResult: contentTypesResult.data.jcr.nodeTypesByNames.reduce((acc, val) => acc && (contributeTypes.length === 0 || val.isContributeType) && (childNodeTypes.length === 0 || val.isChildNodeType), true)
         };
+
+        // In case of reference - type should match childNodeTypes and contributeTypes, if they are set - and the reference type should match childNodeTypes, if set
+        if (referenceTypes && result.checkResult) {
+            result.possibleReferenceTypes = contentTypesResult.data.jcr.referenceTypes.filter(val => (childNodeTypes.length === 0 || val.isChildNodeType));
+            result.checkResult = result.possibleReferenceTypes.length > 0;
+        }
+
+        return result;
     }, [loadContentTypes, contentTypesResult]);
 }

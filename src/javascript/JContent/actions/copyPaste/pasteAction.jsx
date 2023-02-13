@@ -15,7 +15,7 @@ import {ACTION_PERMISSIONS} from '../actions.constants';
 import {useNodeTypeCheck} from '~/JContent';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
 
-export const PasteActionComponent = withNotifications()(({path, render: Render, loading: Loading, notificationContext, ...others}) => {
+export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
     const {t} = useTranslation('jcontent');
@@ -56,14 +56,12 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
         isEnabled = false;
     }
 
-    if (isVisible && isEnabled) {
-        const {loading, checkResult} = nodeTypeCheck(res.node, nodes);
-        if (loading) {
-            return <Loading {...others}/>;
-        }
-
-        isEnabled = checkResult;
+    const {loading, checkResult, possibleReferenceTypes} = (isVisible && isEnabled) && nodeTypeCheck(res.node, nodes, referenceTypes);
+    if (loading) {
+        return <Loading {...others}/>;
     }
+
+    isEnabled = Boolean(checkResult);
 
     return (
         <Render
@@ -71,14 +69,17 @@ export const PasteActionComponent = withNotifications()(({path, render: Render, 
             isVisible={isVisible}
             enabled={isEnabled}
             onClick={() => {
-                const mutation = type === copyPasteConstants.CUT ? pasteMutations.moveNode : pasteMutations.pasteNode;
+                const mutation = referenceTypes ?
+                    pasteMutations.pasteReferenceNode :
+                    (type === copyPasteConstants.CUT ? pasteMutations.moveNode : pasteMutations.pasteNode);
 
                 // Execute paste
                 Promise.all(nodes.map(nodeToPaste => client.mutate({
                     variables: {
                         pathOrId: nodeToPaste.path,
                         destParentPathOrId: path,
-                        destName: nodeToPaste.name
+                        destName: nodeToPaste.name,
+                        referenceType: possibleReferenceTypes && possibleReferenceTypes.length > 0 ? possibleReferenceTypes[0].name : ''
                     },
                     mutation
                 }))).then(datas => {
@@ -104,5 +105,7 @@ PasteActionComponent.propTypes = {
 
     render: PropTypes.func.isRequired,
 
-    loading: PropTypes.func
+    loading: PropTypes.func,
+
+    referenceTypes: PropTypes.arrayOf(PropTypes.string)
 };

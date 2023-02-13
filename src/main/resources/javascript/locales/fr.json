@@ -227,6 +227,7 @@
         "noViewAvailable": "Aperçu non disponible",
         "noContentSelected": "Sélectionnez un contenu pour le prévisualiser",
         "paste": "Coller",
+        "pasteReference": "Coller une référence",
         "delete": "Supprimer",
         "translate": "Traduire",
         "emptyMessage": "Chargement en cours...",

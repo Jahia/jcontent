@@ -73,6 +73,7 @@ export const Create = React.memo(({element, node, onMouseOver, onMouseOut, onSav
         >
             {nodes.length === 0 && (<DisplayAction actionKey="createContent" path={parentPath} name={nodePath} nodeTypes={nodetypes} loading={() => false} render={ButtonRenderer}/>)}
             <DisplayAction actionKey="paste" path={parentPath} loading={() => false} render={ButtonRenderer}/>
+            <DisplayAction actionKey="pasteReference" path={parentPath} loading={() => false} render={ButtonRenderer}/>
         </div>
     );
 });

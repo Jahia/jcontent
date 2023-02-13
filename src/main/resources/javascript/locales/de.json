@@ -227,6 +227,7 @@
         "noViewAvailable": "Keine Vorschau verfügbar",
         "noContentSelected": "Wählen Sie einen Content, um die Vorschau zu aktivieren",
         "paste": "Einfügen",
+        "pasteReference": "Als referenz einfügen",
         "delete": "Löschen",
         "translate": "Übersetzen",
         "emptyMessage": "Laden...",

@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';
 import {useNodeTypeCheck} from '~/JContent';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
+import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 
 export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
@@ -72,6 +73,12 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
                 const mutation = referenceTypes ?
                     pasteMutations.pasteReferenceNode :
                     (type === copyPasteConstants.CUT ? pasteMutations.moveNode : pasteMutations.pasteNode);
+
+                if (type === copyPasteConstants.CUT) {
+                    nodes.forEach(nodeToPaste => {
+                        dispatch(cmRemoveSelection(nodeToPaste.path));
+                    });
+                }
 
                 // Execute paste
                 Promise.all(nodes.map(nodeToPaste => client.mutate({

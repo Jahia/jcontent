@@ -35,7 +35,8 @@ export const selectionRedux = registry => {
         [cmClearSelection]: () => ([]),
         [cmSetSort]: () => ([]),
         [cmSetPage]: () => ([]),
-        [cmSetPageSize]: () => ([])
+        [cmSetPageSize]: () => ([]),
+        '@@router/LOCATION_CHANGE': () => ([])
     }, []);
 
     registry.add('redux-reducer', 'selection', {targets: ['jcontent'], reducer: selectionReducer});

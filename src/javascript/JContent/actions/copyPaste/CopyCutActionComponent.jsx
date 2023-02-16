@@ -2,7 +2,7 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {useApolloClient} from '@apollo/react-hooks';
 import {useNodeChecks} from '@jahia/data-helper';
 import copyPasteConstants from './copyPaste.constants';
-import {hasMixin} from '~/JContent/JContent.utils';
+import {getName, hasMixin} from '~/JContent/JContent.utils';
 import {setLocalStorage} from './localStorageHandler';
 import {copypasteCopy, copypasteCut} from './copyPaste.redux';
 import PropTypes from 'prop-types';
@@ -57,7 +57,7 @@ export const CopyCutActionComponent = withNotifications()(({
             onClick={() => {
                 let nodes = res.node ? [res.node] : res.nodes;
                 setLocalStorage(type, nodes, client);
-                notificationContext.notify(nodes.length === 1 ? t('jcontent:label.contentManager.copyPaste.stored.one', {name: nodes[0].displayName}) : t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length}), ['closeButton']);
+                notificationContext.notify(nodes.length === 1 ? t('jcontent:label.contentManager.copyPaste.stored.one', {name: getName(nodes[0])}) : t('jcontent:label.contentManager.copyPaste.stored.many', {size: nodes.length}), ['closeButton']);
                 dispatch(type === 'copy' ? copypasteCopy(nodes) : copypasteCut(nodes));
             }}
         />

@@ -213,3 +213,6 @@ export const getAccordionItems = (accordionItemTarget, accordionItemProps) => {
     return accordionItems;
 };
 
+export const getName = node => {
+    return (node.displayName && ellipsizeText(node.displayName, 50)) || node.name;
+};

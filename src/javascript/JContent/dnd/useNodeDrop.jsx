@@ -5,7 +5,7 @@ import {useNotifications} from '@jahia/react-material';
 import {useTranslation} from 'react-i18next';
 import {PredefinedFragments, useNodeChecks} from '@jahia/data-helper';
 import {useRef, useState} from 'react';
-import {ellipsizeText, isDescendantOrSelf} from '~/JContent/JContent.utils';
+import {ellipsizeText, getName, isDescendantOrSelf} from '~/JContent/JContent.utils';
 import {useNodeTypeCheck} from '~/JContent';
 import {useConnector} from './useConnector';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
@@ -30,10 +30,6 @@ const moveNode = gql`mutation moveNode($pathsOrIds: [String]!, $destParentPathOr
 }
 ${PredefinedFragments.nodeCacheRequiredFields.gql}
 `;
-
-function getName(dragSource) {
-    return (dragSource.displayName && ellipsizeText(dragSource.displayName, 50)) || dragSource.name;
-}
 
 function getErrorMessage({isNode, dragSource, destParent, pathsOrIds, e, t}) {
     if (e.message.startsWith('javax.jcr.ItemExistsException')) {

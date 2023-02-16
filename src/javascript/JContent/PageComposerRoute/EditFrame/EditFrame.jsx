@@ -146,8 +146,10 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         const renderMode = isPreview ? 'render' : 'editframe';
         const url = `${window.contextJsParameters.contextPath}/cms/${renderMode}/default/${language}${path}.html?redirect=false${deviceParam}`;
         if (currentDocument) {
-            const framePath = currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute('path');
-            if (!isPreview && path === framePath && previousDevice.current === deviceParam) {
+            let mainModule = currentDocument.querySelector('[jahiatype=mainmodule]');
+            const framePath = mainModule?.getAttribute('path');
+            const locale = mainModule?.getAttribute('locale');
+            if (!isPreview && path === framePath && locale === language && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
                 document.querySelectorAll('style[styleloader]').forEach(s => {

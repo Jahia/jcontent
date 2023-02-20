@@ -12,7 +12,7 @@ export const Infos = ({currentDocument}) => {
 
     useEffect(() => {
         const paths = [];
-        paths.push(currentDocument.querySelector('[jahiatype=mainmodule]').getAttribute('path'));
+        paths.push(currentDocument.querySelector('[jahiatype=mainmodule]')?.getAttribute?.('path'));
         currentDocument.querySelectorAll('[jahiatype=module]').forEach(elem => {
             if (elem.getAttribute('path') !== '*') {
                 paths.push(elem.getAttribute('path'));

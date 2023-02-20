@@ -61,16 +61,6 @@ export const Create = React.memo(({element, node, onMouseOver, onMouseOut, onSav
         };
     }, [isCanDrop, element]);
 
-    const limit = parent.getAttribute('listLimit');
-    if (limit) {
-        const thisParent = element.parentElement.closest('[jahiatype="module"]');
-        const children = Array.prototype.slice.call(parent.querySelectorAll('[jahiatype="module"]'))
-            .filter(e => e.getAttribute('path') !== '*' && e.parentElement.closest('[jahiatype="module"]') === thisParent);
-        if (children.length >= limit) {
-            return false;
-        }
-    }
-
     return !anyDragging && (
         <div ref={drop}
              jahiatype="createbuttons" // eslint-disable-line react/no-unknown-property

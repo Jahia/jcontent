@@ -16,6 +16,20 @@ import {useNodeTypeCheck} from '~/JContent';
 import {useRefreshTreeAfterMove} from '~/JContent/hooks/useRefreshTreeAfterMove';
 import {cmRemoveSelection} from '~/JContent/redux/selection.redux';
 
+function childrenLimitReachedOrExceeded(node) {
+    if (!node) {
+        return false;
+    }
+
+    if (node['jmix:listSizeLimit']) {
+        const limit = node?.properties?.find(property => property.name === 'limit')?.value;
+        const childrenNumber = node?.subNodes?.pageInfo?.totalCount;
+        return limit && childrenNumber >= Number(limit);
+    }
+
+    return false;
+}
+
 export const PasteActionComponent = withNotifications()(({path, referenceTypes, render: Render, loading: Loading, notificationContext, ...others}) => {
     const client = useApolloClient();
     const dispatch = useDispatch();
@@ -31,7 +45,10 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
             requiredSitePermission: [ACTION_PERMISSIONS.pasteAction],
             getChildNodeTypes: true,
             getContributeTypesRestrictions: true,
-            hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText']
+            hideOnNodeTypes: ['jnt:page', 'jnt:navMenuText'],
+            getSubNodesCount: true,
+            getIsNodeTypes: ['jmix:listSizeLimit'],
+            getProperties: ['limit']
         }
     );
 
@@ -43,7 +60,7 @@ export const PasteActionComponent = withNotifications()(({path, referenceTypes, 
 
     const {nodes, type} = copyPaste;
 
-    let isVisible = res.checksResult && res.node.allowedChildNodeTypes.length > 0;
+    let isVisible = res.checksResult && res.node.allowedChildNodeTypes.length > 0 && !childrenLimitReachedOrExceeded(res?.node);
     let isEnabled = true;
 
     if (nodes.length === 0) {

@@ -49,7 +49,11 @@ export const DeviceContainer = ({enabled, device, setDevice, children}) => {
     }, [ref, device, scaled, enabled, setDevice]);
 
     if (!enabled || !device) {
-        return children;
+        return (
+            <div className={styles.frame}>
+                {children}
+            </div>
+        );
     }
 
     return (

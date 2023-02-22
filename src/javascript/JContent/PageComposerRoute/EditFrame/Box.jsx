@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {HandleDrag} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -9,6 +9,25 @@ import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
 
+function getBoundingBox(element) {
+    const rect = element.getBoundingClientRect();
+    const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
+    const scrollTop = element.ownerDocument.documentElement.scrollTop;
+
+    const left = Math.max(2, (rect.left + scrollLeft - 4));
+    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
+    const top = rect.top + scrollTop;
+    const height = rect.height + 4;
+    return {top, left, width, height};
+}
+
+const reposition = function (element, currentOffset, setCurrentOffset) {
+    const box = getBoundingBox(element);
+    if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
+        setCurrentOffset(box);
+    }
+};
+
 export const Box = React.memo(({
     node,
     isVisible,
@@ -16,6 +35,7 @@ export const Box = React.memo(({
     entries,
     language,
     displayLanguage,
+    addIntervalCallback,
     onMouseOver,
     onMouseOut,
     onSaved,
@@ -23,9 +43,7 @@ export const Box = React.memo(({
     currentFrameRef
 }) => {
     const ref = useRef(element);
-    const rect = element.getBoundingClientRect();
-    const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
-    const scrollTop = element.ownerDocument.documentElement.scrollTop;
+    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
 
     useEffect(() => {
         element.addEventListener('mouseover', onMouseOver);
@@ -98,15 +116,13 @@ export const Box = React.memo(({
         };
     }, [isCanDrop, insertPosition, destParent, element]);
 
+    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, currentOffset, element, setCurrentOffset]);
+
     if (!isVisible) {
         return false;
     }
 
-    const left = Math.max(2, (rect.left + scrollLeft - 4));
-    const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
-    const top = rect.top + scrollTop;
-    const height = rect.height + 4;
-    const currentOffset = {top, left, width, height};
+    reposition(element, currentOffset, setCurrentOffset);
 
     const type = element.getAttribute('type');
 
@@ -133,7 +149,7 @@ export const Box = React.memo(({
                                     <HandleDrag size="default"/>
                                 </div>
                             )}
-                            {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={width} currentFrameRef={currentFrameRef}/>}
+                            {node && <Bar node={node} language={language} displayLanguage={displayLanguage} width={currentOffset.width} currentFrameRef={currentFrameRef}/>}
                         </div>
                     </div>
                 </div>
@@ -155,6 +171,8 @@ Box.propTypes = {
     language: PropTypes.string,
 
     displayLanguage: PropTypes.string,
+
+    addIntervalCallback: PropTypes.func,
 
     onSaved: PropTypes.func,
 

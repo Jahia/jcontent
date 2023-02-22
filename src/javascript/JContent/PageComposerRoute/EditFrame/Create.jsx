@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import styles from './Create.scss';
 import PropTypes from 'prop-types';
@@ -12,11 +12,27 @@ import {useSelector} from 'react-redux';
 
 const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default'}});
 
-export const Create = React.memo(({element, node, onMouseOver, onMouseOut, onSaved}) => {
+function getBoundingBox(element) {
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
+    return {
+        top: rect.top + scrollTop,
+        left: rect.left + scrollLeft,
+        width: rect.width,
+        height: 25
+    };
+}
 
+const reposition = function (element, currentOffset, setCurrentOffset) {
+    const box = getBoundingBox(element);
+    if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
+        setCurrentOffset(box);
+    }
+};
+
+export const Create = React.memo(({element, node, addIntervalCallback, onMouseOver, onMouseOut, onSaved}) => {
+    const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
     let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
 
     useEffect(() => {
@@ -33,16 +49,9 @@ export const Create = React.memo(({element, node, onMouseOver, onMouseOut, onSav
 
     const copyPaste = useSelector(state => state.jcontent.copyPaste);
 
-    const currentOffset = {
-        top: rect.top + scrollTop,
-        left: rect.left + scrollLeft,
-        width: rect.width,
-        height: 25
-    };
-
     const sizers = [];
     Array(10).fill(0).forEach((_, i) => {
-        if (rect.width < (i * 150)) {
+        if (currentOffset.width < (i * 150)) {
             sizers.push('sizer' + i);
         }
     });
@@ -50,6 +59,9 @@ export const Create = React.memo(({element, node, onMouseOver, onMouseOut, onSav
     const nodePath = element.getAttribute('path') === '*' ? null : element.getAttribute('path');
     const nodetypes = element.getAttribute('nodetypes') ? element.getAttribute('nodetypes').split(' ') : null;
     const {nodes} = copyPaste;
+
+    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, currentOffset, element, setCurrentOffset]);
+    reposition(element, currentOffset, setCurrentOffset);
 
     useEffect(() => {
         if (isCanDrop) {
@@ -81,6 +93,7 @@ export const Create = React.memo(({element, node, onMouseOver, onMouseOut, onSav
 Create.propTypes = {
     element: PropTypes.any,
     node: PropTypes.any,
+    addIntervalCallback: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
     onSaved: PropTypes.func

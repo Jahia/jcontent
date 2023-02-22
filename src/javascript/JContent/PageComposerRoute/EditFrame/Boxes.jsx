@@ -26,7 +26,7 @@ const getModuleElement = (currentDocument, target) => {
     return element;
 };
 
-export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
+export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, onSaved}) => {
     const [inlineEditor] = registry.find({type: 'inline-editor'});
 
     const {language, displayLanguage, selection, path} = useSelector(state => ({
@@ -161,6 +161,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                          language={language}
                          displayLanguage={displayLanguage}
                          color="default"
+                         addIntervalCallback={addIntervalCallback}
                          onMouseOver={onMouseOver}
                          onMouseOut={onMouseOut}
                          onSaved={onSaved}
@@ -174,6 +175,7 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
                             node={node}
                             element={element}
                             parent={element}
+                            addIntervalCallback={addIntervalCallback}
                             onMouseOver={onMouseOver}
                             onMouseOut={onMouseOut}
                             onSaved={onSaved}
@@ -186,5 +188,6 @@ export const Boxes = ({currentDocument, currentFrameRef, onSaved}) => {
 Boxes.propTypes = {
     currentDocument: PropTypes.any,
     currentFrameRef: PropTypes.any,
+    addIntervalCallback: PropTypes.func,
     onSaved: PropTypes.func
 };

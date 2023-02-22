@@ -18,23 +18,21 @@ function getBoundingBox(element) {
     return box;
 }
 
-export const Deleted = ({element}) => {
+const reposition = function (element, currentOffset, setCurrentOffset) {
+    const box = getBoundingBox(element);
+    if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
+        setCurrentOffset(box);
+    }
+};
+
+export const Deleted = ({element, addIntervalCallback}) => {
     const {t} = useTranslation('jcontent');
     const [currentOffset, setCurrentOffset] = useState(getBoundingBox(element));
 
     const ref = useRef();
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const box = getBoundingBox(element);
-            if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
-                setCurrentOffset(box);
-            }
-        }, 100);
-        return () => {
-            clearInterval(interval);
-        };
-    }, [currentOffset, element]);
+    useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, element, currentOffset, setCurrentOffset]);
+    reposition(element, currentOffset, setCurrentOffset);
 
     const iconWidth = Math.min(currentOffset.width / 3, 64) + 'px';
     const iconHeight = Math.min(currentOffset.height / 3, 64) + 'px';
@@ -57,5 +55,7 @@ export const Deleted = ({element}) => {
 };
 
 Deleted.propTypes = {
-    element: PropTypes.any
+    element: PropTypes.any,
+
+    addIntervalCallback: PropTypes.func
 };

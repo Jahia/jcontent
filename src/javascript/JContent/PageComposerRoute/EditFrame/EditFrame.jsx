@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import styles from './EditFrame.scss';
@@ -140,6 +140,24 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
         };
     });
 
+    const intervalCallbacks = useRef([]);
+    const addIntervalCallback = useCallback(cb => {
+        intervalCallbacks.current.push(cb);
+        return () => {
+            intervalCallbacks.current.splice(intervalCallbacks.current.indexOf(cb), 1);
+        };
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            intervalCallbacks.current.forEach(cb => cb());
+        }, 50);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     const deviceParam = (isDeviceView && device) ? ('&channel=' + device) : '';
 
     useEffect(() => {
@@ -195,11 +213,12 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                     <div className={styles.root}>
                         <Boxes currentDocument={currentDocument}
                                currentFrameRef={iframe}
+                               addIntervalCallback={addIntervalCallback}
                                onSaved={() => {
                                    refresh();
                                }}
                         />
-                        <Infos currentDocument={currentDocument}/>
+                        <Infos currentDocument={currentDocument} addIntervalCallback={addIntervalCallback}/>
                     </div>
                 </Portal>
             )}

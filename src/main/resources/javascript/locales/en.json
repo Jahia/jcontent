@@ -386,6 +386,25 @@
       "contentTypeSelector": {
         "contents": "Contents {{count}}",
         "pages": "Sub-pages {{count}}"
+      },
+      "deleteAction": {
+        "markForDeletion": "Mark for deletion",
+        "deletion": "Delete permanently",
+        "loading": "Loading information or performing actions",
+        "mark": {
+          "item": "You are about to delete <span>{{name}}</span>",
+          "items": "You are about to delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>",
+          "action": "Mark {{count}} items for deletion"
+        },
+        "permanently": {
+          "item": "You are about to permanently delete <span>{{name}}</span>. <strong>This operation cannot be undone</strong>",
+          "items": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>. <strong>This operation cannot be undone</strong>",
+          "action": "Delete {{count}} items permanently"
+        },
+        "locked":{
+          "title": "Cannot be deleted",
+          "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+        }
       }
     },
     "ok": "OK",

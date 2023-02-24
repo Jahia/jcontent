@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {isMarkedForDeletion} from '../JContent.utils';
+import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
-import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './actions.constants';
+import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
+import Delete from './Delete';
 
 const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
@@ -30,6 +31,12 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
         }
     );
 
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleClose = () => {
+        setIsDialogOpen(false);
+    };
+
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
     }
@@ -37,24 +44,17 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
     let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
 
     return (
-        <Render
-            {...others}
-            isVisible={isVisible}
-            buttonProps={{...buttonProps, color: 'danger'}}
-            onClick={() => {
-                if (path) {
-                    window.authoringApi.deleteContent(res.node.uuid, res.node.path, res.node.displayName, ['jnt:content'], ['nt:base'], false, true);
-                } else if (paths) {
-                    window.authoringApi.deleteContents(res.nodes.map(node => ({
-                        uuid: node.uuid,
-                        path: node.path,
-                        displayName: node.displayName,
-                        nodeTypes: ['jnt:content'],
-                        inheritedNodeTypes: ['nt:base']
-                    })), false, true);
-                }
-            }}
-        />
+        <>
+            <Render
+                {...others}
+                isVisible={isVisible}
+                buttonProps={{...buttonProps, color: 'danger'}}
+                onClick={() => {
+                    setIsDialogOpen(true);
+                }}
+            />
+            <Delete onClose={handleClose} isOpen={isDialogOpen} node={res.node} nodes={res.nodes} isMarkedForDeletionDialog={false}/>
+        </>
     );
 };
 

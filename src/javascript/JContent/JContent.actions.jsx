@@ -31,9 +31,9 @@ import {
     Visibility
 } from '@jahia/moonstone';
 import {FileUploadActionComponent} from './actions/fileUploadAction';
-import {DeleteActionComponent} from './actions/deleteAction';
+import {DeleteActionComponent} from './actions/deleteActions/deleteAction';
 import {UndeleteActionComponent} from './actions/undeleteAction';
-import {DeletePermanentlyActionComponent} from './actions/deletePermanentlyAction';
+import {DeletePermanentlyActionComponent} from './actions/deleteActions/deletePermanentlyAction';
 import {PublishActionComponent} from './actions/publishAction';
 import {PublishDeletionActionComponent} from './actions/publishDeletionAction';
 import {PreviewActionComponent} from './actions/previewAction';

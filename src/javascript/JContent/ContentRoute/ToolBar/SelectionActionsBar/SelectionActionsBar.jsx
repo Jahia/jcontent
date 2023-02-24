@@ -1,13 +1,15 @@
 import React from 'react';
 import {useNodeInfo} from '@jahia/data-helper';
-import {ButtonGroup, Separator} from '@jahia/moonstone';
+import {useTranslation} from 'react-i18next';
+import {Button, ButtonGroup, Cancel, Separator, Typography} from '@jahia/moonstone';
+import styles from '~/JContent/ContentRoute/ToolBar/ToolBar.scss';
 import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
-import {Selection} from './Selection';
 
 export const SelectionActionsBar = ({paths, clear}) => {
     const {nodes} = useNodeInfo({paths}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
+    const {t} = useTranslation('jcontent');
 
     let publishAction;
     if (nodes) {
@@ -19,7 +21,17 @@ export const SelectionActionsBar = ({paths, clear}) => {
 
     return (
         <>
-            <Selection paths={paths} clear={clear}/>
+            <div className="flexRow">
+                <Typography variant="caption"
+                            data-cm-role="selection-infos"
+                            data-cm-selection-size={paths.length}
+                            className={`${styles.selection}`}
+                >
+                    {t('jcontent:label.contentManager.selection.itemsSelected', {count: paths.length})}
+                </Typography>
+                <div className={styles.spacer}/>
+                <Button icon={<Cancel/>} variant="ghost" size="default" onClick={clear}/>
+            </div>
             <div className="flexRow">
                 <Separator variant="vertical" invisible="onlyChild"/>
                 <DisplayActions

@@ -53,7 +53,7 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
                     setIsDialogOpen(true);
                 }}
             />
-            <Delete onClose={handleClose} isOpen={isDialogOpen} node={res.node} nodes={res.nodes} isMarkedForDeletionDialog={false}/>
+            <Delete isOpen={isDialogOpen} node={res.node} nodes={res.nodes} isMarkedForDeletionDialog={false} onClose={handleClose}/>
         </>
     );
 };

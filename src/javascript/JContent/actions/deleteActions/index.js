@@ -1,2 +1,2 @@
-export * from './deleteAction'
-export * from './deletePermanentlyAction'
+export * from './deleteAction';
+export * from './deletePermanentlyAction';

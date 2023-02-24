@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import {PredefinedFragments} from '@jahia/data-helper';
 
 const MarkForDeletionMutation = gql`
     mutation MarkForDeletionMutation($path: String!) {

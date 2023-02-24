@@ -2,7 +2,7 @@ import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import Delete from './Delete';
 
@@ -29,6 +29,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
     const handleClose = () => {
         setIsDialogOpen(false);
     };
+
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
     }
@@ -37,7 +38,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
 
     return (
         <>
-        <Render
+            <Render
             {...others}
             isVisible={isVisible}
             buttonProps={{...buttonProps, color: 'danger'}}
@@ -46,7 +47,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
                 setIsDialogOpen(true);
             }}
         />
-        <Delete onClose={handleClose} isOpen={isDialogOpen} node={res.node} nodes={res.nodes} isMarkedForDeletionDialog={true}/>
+            <Delete isMarkedForDeletionDialog isOpen={isDialogOpen} node={res.node} nodes={res.nodes} onClose={handleClose}/>
         </>
     );
 };

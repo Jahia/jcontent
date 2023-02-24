@@ -290,12 +290,7 @@
           "loading": "Error retrieving action data: {{details}}"
         },
         "locate": "Locate",
-        "openInLive": "Live",
-        "menuLabel": {
-          "actions": "Actions",
-          "moreActions": "More actions",
-          "publication": "Publication"
-        }
+        "openInLive": "Live"
       },
       "browseFolders": "Browse Folders",
       "selection": {

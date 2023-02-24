@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {ArrowLeft, Button, Chip, Header} from '@jahia/moonstone';
 import {MainActionBar} from '~/JContent/ContentRoute/MainActionBar';
 import JContentConstants from '~/JContent/JContent.constants';
@@ -15,10 +15,6 @@ import {cmClearSelection} from '~/JContent/redux/selection.redux';
 import {SelectionActionsBar} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/SelectionActionsBar';
 import SearchInput from './SearchInput';
 import {registry} from '@jahia/ui-extender';
-import {ResizeContext} from '../MainLayout/ResizeObserver';
-import {NarrowHeaderActions} from './NarrowHeaderActions';
-
-const NARROW_HEADER_WIDTH = 750;
 
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');
@@ -32,8 +28,6 @@ const ContentHeader = () => {
         selection: state.jcontent.selection,
         previewSelection: state.jcontent.previewState === CM_DRAWER_STATES.SHOW && state.jcontent.previewSelection !== null
     }), shallowEqual);
-
-    const width = useContext(ResizeContext);
 
     const inSearchMode = JContentConstants.mode.SEARCH === mode || JContentConstants.mode.SQL2SEARCH === mode;
 
@@ -52,7 +46,7 @@ const ContentHeader = () => {
 
     let clear = () => dispatch(cmClearSelection());
 
-    let HeaderComp = inSearchMode ? (
+    return inSearchMode ? (
         <Header
             backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
             mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
@@ -76,29 +70,6 @@ const ContentHeader = () => {
             }
         />
     );
-
-    if (width !== 0 && width <= NARROW_HEADER_WIDTH) {
-        HeaderComp = inSearchMode ? (
-            <Header
-                backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
-                mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
-                title={title}
-                toolbarLeft={!previewSelection && selection.length > 0 ? <NarrowHeaderActions path={node?.path} previewSelection={previewSelection} selection={selection} clear={clear}/> : <SearchControlBar/>}
-            />
-        ) : (
-            <Header
-                title={title}
-                mainActions={<MainActionBar/>}
-                breadcrumb={<ContentPath/>}
-                contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
-                status={<ContentStatuses/>}
-                toolbarLeft={<NarrowHeaderActions path={node?.path} previewSelection={previewSelection} selection={selection} clear={clear}/>}
-                toolbarRight={viewSelector}
-            />
-        );
-    }
-
-    return HeaderComp;
 };
 
 export default ContentHeader;

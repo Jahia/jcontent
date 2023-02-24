@@ -53,7 +53,7 @@ const DeleteContent = ({data, onClose, loading, onMarkForDeletion, onDeletion, t
     }
 
     function getPages() {
-        return data?.jcr?.nodesByPath.reduce((count, node) => count + (node.pages.pageInfo.totalCount + node.isPage ? 1 : 0), 0);
+        return data?.jcr?.nodesByPath.reduce((count, node) => count + (node.pages.pageInfo.totalCount + (node.isPage ? 1 : 0)), 0);
     }
 
     const isSingleNodeDeletion = data?.jcr?.nodesByPath.length === 1 && data?.jcr?.nodesByPath[0].pages.pageInfo.totalCount === 0 && data?.jcr?.nodesByPath[0].content.pageInfo.totalCount === 0;
@@ -67,7 +67,7 @@ const DeleteContent = ({data, onClose, loading, onMarkForDeletion, onDeletion, t
                             __html:
                                 (isSingleNodeDeletion ?
                                     t('jcontent:label.contentManager.deleteAction.mark.item', {name: data?.jcr?.nodesByPath[0].displayName}) :
-                                    t('jcontent:label.contentManager.deleteAction.mark.items', {
+                                    t(getPages() === 0 ? 'jcontent:label.contentManager.deleteAction.mark.itemsOnly' : 'jcontent:label.contentManager.deleteAction.mark.items', {
                                         count: getCount(),
                                         pages: getPages()
                                     }))
@@ -77,7 +77,7 @@ const DeleteContent = ({data, onClose, loading, onMarkForDeletion, onDeletion, t
                             __html:
                                 (isSingleNodeDeletion ?
                                     t('jcontent:label.contentManager.deleteAction.permanently.item', {name: data?.jcr?.nodesByPath[0].displayName}) :
-                                    t('jcontent:label.contentManager.deleteAction.permanently.items', {
+                                    t(getPages() === 0 ? 'jcontent:label.contentManager.deleteAction.permanently.itemsOnly' : 'jcontent:label.contentManager.deleteAction.permanently.items', {
                                         count: getCount(),
                                         pages: getPages()
                                     }))

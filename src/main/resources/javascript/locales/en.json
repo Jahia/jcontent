@@ -394,11 +394,13 @@
         "mark": {
           "item": "You are about to delete <span>{{name}}</span>",
           "items": "You are about to delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>",
+          "itemsOnly": "You are about to delete <span>{{count}} items</span>",
           "action": "Mark {{count}} items for deletion"
         },
         "permanently": {
           "item": "You are about to permanently delete <span>{{name}}</span>. <strong>This operation cannot be undone</strong>",
           "items": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>. <strong>This operation cannot be undone</strong>",
+          "itemsOnly": "You are about to permanently delete <span>{{count}} items</span>. <strong>This operation cannot be undone</strong>",
           "action": "Delete {{count}} items permanently"
         },
         "locked":{

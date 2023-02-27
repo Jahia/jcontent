@@ -142,7 +142,7 @@ const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
         siteKey: state.site,
         language: state.language
     }), shallowEqual);
-    const paths = node ? [node.path] : nodes.map(node => node.path);
+    const paths = node ? [node.path] : (nodes.map(node => node.path).sort().filter((path, index, array) => array.find(parentPath => path.startsWith(parentPath) && path.length > parentPath.length) === undefined));
     const client = useApolloClient();
     const {data, error, loading} = useQuery(DeleteQueries, {
         variables: {

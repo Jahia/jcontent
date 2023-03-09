@@ -4,8 +4,13 @@ import clsx from 'clsx';
 import styles from './Deleted.scss';
 import {Delete, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
+import {isVisible} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
 
 function getBoundingBox(element) {
+    if (!isVisible(element)) {
+        return {top: 0, left: 0, width: 0, height: 0};
+    }
+
     const rect = element.getBoundingClientRect();
     const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
     const scrollTop = element.ownerDocument.documentElement.scrollTop;
@@ -33,6 +38,10 @@ export const Deleted = ({element, addIntervalCallback}) => {
 
     useEffect(() => addIntervalCallback(() => reposition(element, currentOffset, setCurrentOffset)), [addIntervalCallback, element, currentOffset, setCurrentOffset]);
     reposition(element, currentOffset, setCurrentOffset);
+
+    if (currentOffset.width === 0 || currentOffset.height === 0) {
+        return false;
+    }
 
     const iconWidth = Math.min(currentOffset.width / 3, 64) + 'px';
     const iconHeight = Math.min(currentOffset.height / 3, 64) + 'px';

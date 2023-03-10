@@ -11,11 +11,16 @@
     position: absolute;
 
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     & > button {
-        flex: 1 0 0;
+        flex: 1;
+        overflow: hidden;
         margin: 0 4px;
+
+        & > svg {
+            flex: 0 0 auto;
+        }
 
         & > span {
             flex: unset;

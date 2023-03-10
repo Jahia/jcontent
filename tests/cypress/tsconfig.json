@@ -10,8 +10,10 @@
     "types": [
       "cypress",
       "node",
-      "@jahia/cypress"
+      "@jahia/cypress",
+      "cypress-iframe",
+      "cypress-real-events"
     ],
-    "lib": [ "es2015" ]    
+    "lib": [ "es2015" ]
   }
 }

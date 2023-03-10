@@ -1,0 +1,10 @@
+mutation($path: String!, $values: [String!]!) {
+    jcr {
+        mutateNode(pathOrId: $path) {
+            addMixins(mixins: ["jmix:contributeMode"])
+            mutateProperty(name: "j:contributeTypes") {
+                setValues(values: $values)
+            }
+        }
+    }
+}

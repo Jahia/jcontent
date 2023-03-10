@@ -39,5 +39,8 @@
   },
   "resolutions": {
     "json-schema": "^0.4.0"
+  },
+  "dependencies": {
+    "cypress-real-events": "^1.7.6"
   }
 }

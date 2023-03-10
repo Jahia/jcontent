@@ -20,6 +20,7 @@ function getBoundingBox(element) {
         top: rect.top + scrollTop,
         left: rect.left + scrollLeft,
         width: rect.width,
+        maxWidth: rect.width,
         height: 25
     };
 }

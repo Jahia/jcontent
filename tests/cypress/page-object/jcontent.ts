@@ -1,10 +1,14 @@
 import {
     Accordion,
+    BaseComponent,
     BasePage,
+    Button,
     Dropdown,
     getComponent,
     getComponentByAttr,
     getComponentByRole,
+    getComponentBySelector,
+    Menu,
     SecondaryNav
 } from '@jahia/cypress';
 import {BasicSearch} from './basicSearch';
@@ -99,5 +103,81 @@ export class JContent extends BasePage {
     switchToStructuredView(): JContent {
         this.switchToMode('structuredView');
         return this;
+    }
+
+    switchToPageComposer(): JContentPageComposer {
+        this.switchToMode('Page Composer');
+        return new JContentPageComposer(this);
+    }
+}
+
+export class JContentPageComposer extends JContent {
+    constructor(base: JContent) {
+        super();
+        Object.assign(this, base);
+    }
+
+    iframe() {
+        const bc = new BaseComponent(cy.iframe('[data-sel-role="page-composer-frame-active"]'));
+        bc.get().find('[jahiatype="createbuttons"]');
+        return bc;
+    }
+
+    getModule(path: string): PageComposerModule {
+        const parentFrame = this.iframe();
+        const module = getComponentBySelector(PageComposerModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
+        module.parentFrame = parentFrame;
+        return module;
+    }
+
+    refresh(): JContentPageComposer {
+        cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(previousId => {
+            cy.get('button[data-sel-role="refresh"]').click();
+            cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
+                expect(previousId).to.not.eq(e[0].getAttribute('id'));
+            });
+        });
+        return this;
+    }
+}
+
+class PageComposerModuleHeader extends BaseComponent {
+    static defaultSelector = '[jahiatype="header"]';
+}
+
+class PageComposerModuleCreateButton extends BaseComponent {
+    static defaultSelector = '[jahiatype="createbuttons"]';
+
+    getButton(type: string): Button {
+        return new Button(this.get().find('.moonstone-button').contains(type));
+    }
+
+    assertHasNoButton(type: string): void {
+        this.get().find('.moonstone-button').contains(type).should('not.exist');
+    }
+}
+
+class PageComposerModule extends BaseComponent {
+    static defaultSelector = '[jahiatype="module"]';
+    parentFrame: BaseComponent;
+
+    hover() {
+        this.get().realHover();
+    }
+
+    getHeader() {
+        this.hover();
+        return getComponent(PageComposerModuleHeader, this.parentFrame);
+    }
+
+    getCreateButtons() {
+        return new PageComposerModuleCreateButton(this.get().find('[jahiatype="module"][type="placeholder"]').invoke('attr', 'id').then(id => {
+            this.parentFrame.get().find(`[jahiatype="createbuttons"][data-jahia-id="${id}"]`);
+        }));
+    }
+
+    contextMenu(): Menu {
+        this.get().rightclick();
+        return getComponentBySelector(Menu, '#menuHolder .moonstone-menu:not(.moonstone-hidden)');
     }
 }

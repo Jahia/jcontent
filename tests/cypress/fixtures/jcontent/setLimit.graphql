@@ -1,0 +1,13 @@
+mutation($path: String!) {
+    jcr {
+        mutateNode(pathOrId: $path) {
+            addMixins(mixins: ["jmix:listSizeLimit"])
+            mutateProperty(name: "limit") {
+                setValue(value: "1")
+            }
+            addChildrenBatch(nodes: {name: "test-1", primaryNodeType: "jnt:bigText", properties: [{name: "text", value: "text", language: "en"}]}) {
+                uuid
+            }
+        }
+    }
+}

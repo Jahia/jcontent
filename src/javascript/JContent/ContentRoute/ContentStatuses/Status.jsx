@@ -40,7 +40,7 @@ const Status = ({type, tooltip, isDisabled, hasLabel}) => {
     const {t} = useTranslation('jcontent');
     const label = t(`label.contentManager.contentStatus.${type}`);
     return (
-        <Chip label={hasLabel ? label : null} isDisabled={isDisabled} title={tooltip || label} {...config[type]}/>
+        <Chip label={hasLabel ? label : null} isDisabled={isDisabled} title={tooltip || label} {...config[type]} data-sel-role="content-status"/>
     );
 };
 

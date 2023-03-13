@@ -2,7 +2,6 @@ import {useTranslation} from 'react-i18next';
 import {Button} from '@jahia/moonstone';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ellipsize from 'ellipsize';
 import {ellipsizeText} from '~/JContent/JContent.utils';
 
 export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {}) => {
@@ -21,7 +20,7 @@ export const getButtonRenderer = ({labelStyle, ellipsis, defaultButtonProps} = {
 
         if (ellipsis) {
             label = ellipsizeText(label, ellipsis);
-        };
+        }
 
         return (isVisible !== false &&
             <Button data-sel-role={actionKey}

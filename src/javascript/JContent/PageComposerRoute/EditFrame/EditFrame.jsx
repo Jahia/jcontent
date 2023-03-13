@@ -130,6 +130,13 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
     useEffect(() => {
         setRefetcher(refetchTypes.CONTENT_DATA, {
             refetch: () => {
+                currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+                    let path = element.getAttribute('path');
+                    if (path !== '*') {
+                        client.cache.flushNodeEntryByPath(path);
+                    }
+                });
+
                 refresh();
             }
         });

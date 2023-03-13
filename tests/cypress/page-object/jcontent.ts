@@ -109,6 +109,15 @@ export class JContent extends BasePage {
         this.switchToMode('Page Composer');
         return new JContentPageComposer(this);
     }
+
+    assertStatus(value: string) {
+        cy.get('.moonstone-header [data-sel-role="content-status"]').contains(value);
+    }
+
+    clearClipboard(): JContent {
+        cy.get('.moonstone-header button[data-sel-role="clearClipboard"]').click();
+        return this;
+    }
 }
 
 export class JContentPageComposer extends JContent {
@@ -123,6 +132,10 @@ export class JContentPageComposer extends JContent {
         return bc;
     }
 
+    getCreatePage(): void {
+        cy.get('.moonstone-header button[data-sel-role="jnt:page"]').click();
+    }
+
     getModule(path: string): PageComposerModule {
         const parentFrame = this.iframe();
         const module = getComponentBySelector(PageComposerModule, `[jahiatype="module"][path="${path}"]`, parentFrame);
@@ -132,7 +145,7 @@ export class JContentPageComposer extends JContent {
 
     refresh(): JContentPageComposer {
         cy.get('[data-sel-role="page-composer-frame-active"]').invoke('attr', 'id').then(previousId => {
-            cy.get('button[data-sel-role="refresh"]').click();
+            cy.get('.moonstone-header button[data-sel-role="refresh"]').click();
             cy.get('[data-sel-role="page-composer-frame-active"]').should(e => {
                 expect(previousId).to.not.eq(e[0].getAttribute('id'));
             });
@@ -143,6 +156,14 @@ export class JContentPageComposer extends JContent {
 
 class PageComposerModuleHeader extends BaseComponent {
     static defaultSelector = '[jahiatype="header"]';
+
+    assertStatus(value: string) {
+        this.get().find('[data-sel-role="content-status"]').contains(value);
+    }
+
+    getButton(role: string): Button {
+        return getComponentByRole(Button, role, this);
+    }
 }
 
 class PageComposerModuleCreateButton extends BaseComponent {
@@ -152,7 +173,11 @@ class PageComposerModuleCreateButton extends BaseComponent {
         return new Button(this.get().find('.moonstone-button').contains(type));
     }
 
-    assertHasNoButton(type: string): void {
+    assertHasNoButton(): void {
+        this.get().find('.moonstone-button').should('not.exist');
+    }
+
+    assertHasNoButtonForType(type: string): void {
         this.get().find('.moonstone-button').contains(type).should('not.exist');
     }
 }

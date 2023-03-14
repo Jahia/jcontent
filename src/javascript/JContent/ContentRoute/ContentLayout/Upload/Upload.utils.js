@@ -1,6 +1,6 @@
 import {fileuploadAddUploads, fileuploadTakeFromQueue, uploadSeed} from './Upload.redux';
 import {NUMBER_OF_SIMULTANEOUS_UPLOADS} from './Upload.constants';
-import randomUUID from 'uuid/v4';
+import {v4} from 'uuid';
 import {
     CheckNodeFolder
 } from '~/JContent/ContentRoute/ContentLayout/UploadTransformComponent/UploadTransformComponent.gql-queries';
@@ -15,7 +15,7 @@ export const onFilesSelected = ({acceptedFiles, dispatchBatch, type, additionalA
         const uploads = acceptedFiles.map(file => ({
             ...uploadSeed,
             ...file,
-            id: randomUUID(),
+            id: v4(),
             type
         }));
 

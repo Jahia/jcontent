@@ -14,7 +14,7 @@ import {
     onFilesSelected
 } from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.utils';
 import {uploadStatuses} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.constants';
-import randomUUID from 'uuid/v4';
+import {v4} from 'uuid';
 import {fileuploadAddUploads} from '~/JContent/ContentRoute/ContentLayout/Upload/Upload.redux';
 import {batchActions} from 'redux-batched-actions';
 import mime from 'mime';
@@ -114,7 +114,7 @@ export function useFileDrop({uploadPath, uploadType, uploadMaxSize = Infinity, u
                             status: uploadStatuses.HAS_ERROR,
                             error: 'FOLDER_EXISTS',
                             ...dir,
-                            id: randomUUID()
+                            id: v4()
                         }));
                         conflicts.forEach(dir => {
                             acceptedFiles = acceptedFiles.filter(f => !f.path.startsWith(uploadPath + dir.entry.fullPath));

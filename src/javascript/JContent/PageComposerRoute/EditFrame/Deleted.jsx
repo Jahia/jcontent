@@ -4,18 +4,10 @@ import clsx from 'clsx';
 import styles from './Deleted.scss';
 import {Delete, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
+import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
 
 function getBoundingBox(element) {
-    const rect = element.getBoundingClientRect();
-    const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
-    const scrollTop = element.ownerDocument.documentElement.scrollTop;
-    const box = {
-        top: rect.top + scrollTop,
-        left: rect.left + scrollLeft,
-        width: rect.width,
-        height: rect.height
-    };
-    return box;
+    return getCoords(element);
 }
 
 const reposition = function (element, currentOffset, setCurrentOffset) {

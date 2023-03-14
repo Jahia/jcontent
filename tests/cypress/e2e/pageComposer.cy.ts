@@ -48,8 +48,6 @@ describe('Page composer', () => {
                 variables: {path: '/sites/jcontentSite/home/landing'},
                 errorPolicy: 'ignore'
             });
-
-            jcontent.refresh();
         });
 
         afterEach(() => {
@@ -58,8 +56,6 @@ describe('Page composer', () => {
                 variables: {path: '/sites/jcontentSite/home/landing'},
                 errorPolicy: 'ignore'
             });
-
-            jcontent.refresh();
         });
 
         it('should show 1 create buttons with restrictions', () => {
@@ -73,7 +69,7 @@ describe('Page composer', () => {
             const buttons = jcontent.getModule('/sites/jcontentSite/home/landing').getCreateButtons();
             buttons.assertHasNoButtonForType('New content');
             buttons.assertHasNoButtonForType('New Banner');
-            buttons.getButton('New Event');
+            buttons.getButton('New');
         });
 
         it('should show 2 create buttons with restrictions', function () {
@@ -143,8 +139,6 @@ describe('Page composer', () => {
                 variables: {path: '/sites/jcontentSite/home/landing'},
                 errorPolicy: 'ignore'
             });
-
-            jcontent.refresh();
         });
 
         afterEach(function () {
@@ -153,8 +147,6 @@ describe('Page composer', () => {
                 variables: {path: '/sites/jcontentSite/home/landing'},
                 errorPolicy: 'ignore'
             });
-
-            jcontent.refresh();
         });
 
         it('should not show create button when limit is reached', function () {

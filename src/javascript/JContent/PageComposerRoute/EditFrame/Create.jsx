@@ -9,17 +9,14 @@ import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import editStyles from './EditFrame.scss';
 import {useDragLayer} from 'react-dnd';
 import {useSelector} from 'react-redux';
+import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
 
 const ButtonRenderer = getButtonRenderer({defaultButtonProps: {color: 'default'}});
 
 function getBoundingBox(element) {
-    const rect = element.getBoundingClientRect();
-    const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
-    const scrollTop = element.ownerDocument.documentElement.scrollTop;
+    const rect = getCoords(element);
     return {
-        top: rect.top + scrollTop,
-        left: rect.left + scrollLeft,
-        width: rect.width,
+        ...rect,
         maxWidth: rect.width,
         height: 25
     };

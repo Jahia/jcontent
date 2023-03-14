@@ -88,6 +88,13 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
             const type = element.getAttribute('jahiatype');
             const path = element.getAttribute('path');
             if (type === 'module' && path !== '*') {
+                if (path.startsWith('/')) {
+                    element.dataset.jahiaPath = path;
+                } else {
+                    let parent = element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent);
+                    element.dataset.jahiaPath = parent.dataset.jahiaPath + '/' + path;
+                }
+
                 modules.push(element);
             }
         });
@@ -108,11 +115,11 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
     }, [currentDocument, currentFrameRef, onMouseOut, onMouseOver]);
 
     const paths = [...new Set([
-        ...modules.map(m => m.getAttribute('path')),
-        ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).getAttribute('path'))
+        ...modules.map(m => m.dataset.jahiaPath),
+        ...placeholders.map(m => m.ownerDocument.getElementById(m.dataset.jahiaParent).dataset.jahiaPath)
     ])];
 
-    const {data} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}});
+    const {data} = useQuery(BoxesQuery, {variables: {paths, language, displayLanguage}, errorPolicy: 'all'});
 
     const nodes = data?.jcr && data.jcr.nodesByPath.reduce((acc, n) => ({...acc, [n.path]: n}), {});
 
@@ -135,9 +142,9 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
 
     const currentPath = currentElement ? currentElement.getAttribute('path') : path;
     const entries = useMemo(() => modules.map(m => ({
-        name: m.getAttribute('path').substr(m.getAttribute('path').lastIndexOf('/') + 1),
-        path: m.getAttribute('path'),
-        depth: m.getAttribute('path').split('/').length
+        name: m.dataset.jahiaPath.substr(m.dataset.jahiaPath.lastIndexOf('/') + 1),
+        path: m.dataset.jahiaPath,
+        depth: m.dataset.jahiaPath.split('/').length
     })), [modules]);
 
     return (
@@ -148,7 +155,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                 {...(selection.length === 0 || selection.indexOf(currentPath) === -1) ? {path: currentPath} : (selection.length === 1 ? {path: selection[0]} : {paths: selection})}
             />
 
-            {modules.map(element => ({element, node: nodes[element.getAttribute('path')]}))
+            {modules.map(element => ({element, node: nodes?.[element.dataset.jahiaPath]}))
                 .filter(({node}) => node && (!isMarkedForDeletion(node) || hasMixin(node, 'jmix:markedForDeletionRoot')))
                 .map(({node, element}) => (
                     <Box key={element.getAttribute('id')}
@@ -168,7 +175,7 @@ export const Boxes = ({currentDocument, currentFrameRef, addIntervalCallback, on
                     />
                 ))}
 
-            {placeholders.map(element => ({element, node: nodes[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]}))
+            {placeholders.map(element => ({element, node: nodes?.[element.dataset.jahiaParent && element.ownerDocument.getElementById(element.dataset.jahiaParent).getAttribute('path')]}))
                 .filter(({node}) => node && !isMarkedForDeletion(node))
                 .map(({node, element}) => (
                     <Create key={element.getAttribute('id')}

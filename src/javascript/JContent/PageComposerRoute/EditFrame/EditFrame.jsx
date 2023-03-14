@@ -73,16 +73,23 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             if (iframe.current !== loadedIframe) {
                 iframeSwap.current = iframe.current;
                 iframe.current = loadedIframe;
+                const pos = {
+                    scrollLeft: Math.floor(iframeSwap.current.contentWindow.scrollX || iframeSwap.current.contentWindow.pageXOffset),
+                    scrollTop: Math.floor(iframeSwap.current.contentWindow.scrollY || iframeSwap.current.contentWindow.pageYOffset)
+                };
                 setTimeout(() => {
-                    const pos = {
-                        scrollLeft: iframeSwap.current.contentWindow.pageXOffset || iframeSwap.current.contentDocument.documentElement.scrollLeft,
-                        scrollTop: iframeSwap.current.contentWindow.pageYOffset || iframeSwap.current.contentDocument.documentElement.scrollTop
-                    };
                     iframeSwap.current.style.top = '-10000';
                     iframe.current.style.top = '0';
                     iframe.current.setAttribute('data-sel-role', 'page-composer-frame-active');
                     iframeSwap.current.setAttribute('data-sel-role', 'page-composer-frame-inactive');
                     iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
+
+                    setTimeout(() => {
+                        // Firefox hack, if scroll has moved when redrawing
+                        if (Math.floor(iframe.current.contentWindow.scrollY) !== pos.scrollTop) {
+                            iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
+                        }
+                    }, 100);
                 });
             }
         }

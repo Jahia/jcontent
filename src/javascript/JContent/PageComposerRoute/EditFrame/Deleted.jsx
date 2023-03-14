@@ -4,23 +4,14 @@ import clsx from 'clsx';
 import styles from './Deleted.scss';
 import {Delete, Typography} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
-import {isVisible} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
+import {isVisible, getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
 
 function getBoundingBox(element) {
     if (!isVisible(element)) {
         return {top: 0, left: 0, width: 0, height: 0};
     }
 
-    const rect = element.getBoundingClientRect();
-    const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
-    const scrollTop = element.ownerDocument.documentElement.scrollTop;
-    const box = {
-        top: rect.top + scrollTop,
-        left: rect.left + scrollLeft,
-        width: rect.width,
-        height: rect.height
-    };
-    return box;
+    return getCoords(element);
 }
 
 const reposition = function (element, currentOffset, setCurrentOffset) {

@@ -1,0 +1,7 @@
+mutation($path: String!) {
+    jcr {
+        mutateNode(pathOrId: $path) {
+            removeMixins(mixins: ["jmix:contributeMode"])
+        }
+    }
+}

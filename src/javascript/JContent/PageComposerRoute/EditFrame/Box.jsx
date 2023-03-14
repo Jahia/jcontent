@@ -8,15 +8,14 @@ import {useNodeDrag} from '~/JContent/dnd/useNodeDrag';
 import editStyles from './EditFrame.scss';
 import {useNodeDrop} from '~/JContent/dnd/useNodeDrop';
 import {DefaultBar} from '~/JContent/PageComposerRoute/EditFrame/DefaultBar';
+import {getCoords} from '~/JContent/PageComposerRoute/EditFrame/EditFrame.utils';
 
 function getBoundingBox(element) {
-    const rect = element.getBoundingClientRect();
-    const scrollLeft = element.ownerDocument.documentElement.scrollLeft;
-    const scrollTop = element.ownerDocument.documentElement.scrollTop;
+    const rect = getCoords(element);
 
-    const left = Math.max(2, (rect.left + scrollLeft - 4));
+    const left = Math.max(2, (rect.left - 4));
     const width = Math.min(element.ownerDocument.documentElement.clientWidth - left - 2, rect.width + 8);
-    const top = rect.top + scrollTop;
+    const top = rect.top;
     const height = rect.height + 4;
     return {top, left, width, height};
 }

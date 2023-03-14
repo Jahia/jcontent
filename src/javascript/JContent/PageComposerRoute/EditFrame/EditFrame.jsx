@@ -80,6 +80,8 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                 setTimeout(() => {
                     iframeSwap.current.style.top = '-10000';
                     iframe.current.style.top = '0';
+                    iframe.current.setAttribute('data-sel-role', 'page-composer-frame-active');
+                    iframeSwap.current.setAttribute('data-sel-role', 'page-composer-frame-inactive');
                     iframe.current.contentWindow.scrollTo(pos.scrollLeft, pos.scrollTop);
 
                     setTimeout(() => {
@@ -135,6 +137,13 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
     useEffect(() => {
         setRefetcher(refetchTypes.CONTENT_DATA, {
             refetch: () => {
+                currentDocument.querySelectorAll('[jahiatype=module]').forEach(element => {
+                    let path = element.getAttribute('path');
+                    if (path !== '*') {
+                        client.cache.flushNodeEntryByPath(path);
+                    }
+                });
+
                 refresh();
             }
         });
@@ -177,7 +186,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
             if (!isPreview && path === framePath && locale === language && previousDevice.current === deviceParam) {
                 // Clone all styles with doubled classname prefix
                 const head = currentDocument.querySelector('head');
-                document.querySelectorAll('style[styleloader]').forEach(s => {
+                iframe.current.ownerDocument.querySelectorAll('style[styleloader]').forEach(s => {
                     const clone = s.cloneNode(true);
                     clone.textContent = prefixCssSelectors(clone.textContent, '.' + styles.root);
                     currentDocument.adoptNode(clone);
@@ -205,6 +214,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                         height="100%"
                         style={{position: 'absolute'}}
                         id="page-composer-frame-1"
+                        data-sel-role="page-composer-frame-active"
                         onLoad={iFrameOnLoad}
                 />
                 <iframe ref={iframeSwap}
@@ -212,6 +222,7 @@ export const EditFrame = ({isPreview, isDeviceView}) => {
                         height="100%"
                         style={{position: 'absolute', top: -10000}}
                         id="page-composer-frame-2"
+                        data-sel-role="page-composer-frame-inactive"
                         onLoad={iFrameOnLoad}
                 />
             </DeviceContainer>

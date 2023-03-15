@@ -1203,10 +1203,10 @@
     mdi-material-ui "^5.10.0"
     recompose "^0.30.0"
 
-"@jahia/jahia-reporter@^1.0.3":
-  version "1.0.39"
-  resolved "https://npm.jahia.com/@jahia%2fjahia-reporter/-/jahia-reporter-1.0.39.tgz#3ea43f16228f89e9afbb3bdf322f6e1d0c42bca1"
-  integrity sha512-LAV7iPODBd79+AoTPfyxue/7yjPX1Gla2ieN5IxumIAaZTcY7w8n9wX5lgZI/7R172ciP1BFOLpW3H38su81Vw==
+"@jahia/jahia-reporter@^1.0.42":
+  version "1.0.42"
+  resolved "https://npm.jahia.com/@jahia%2fjahia-reporter/-/jahia-reporter-1.0.42.tgz#8acfe50a103e826db075cbac026286120953ae6c"
+  integrity sha512-EvLFIr/ZjGi1fC67c5nn0cxeC+2w/Nc0F1ipHWEyk04W4F8zTZ9sCCZN5qWXE2qiCQFol0txurUEfZwJ7pRMPQ==
   dependencies:
     "@oclif/command" "^1"
     "@oclif/config" "^1"

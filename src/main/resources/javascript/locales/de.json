@@ -379,6 +379,40 @@
       "contentTypeSelector": {
         "contents": "Content {{count}}",
         "pages": "Unter-Seiten {{count}}"
+      },
+      "deleteAction": {
+        "loading": "Loading information or performing actions",
+        "mark": {
+          "title": "Zur Löschung markiert",
+          "item": "Sie sind dabei, <span>{{name}}</span> zu löschen.",
+          "items": "Sie sind dabei, <span>{{count}} items Element(e)</span> zu löschen, darunter <span>{{pages}} Seite</span>.",
+          "itemsOnly": "Sie sind dabei, <span>{{count}} items Element(e)</span> zu löschen.",
+          "action": "{{count}} Element(e) zur Löschung markiert"
+        },
+        "permanently": {
+          "title": "Löschen",
+          "item": "Sie sind dabei, die Löschung von <span>{{name}}</span> zu veröffentlichen. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
+          "items": "Sie sind dabei, die Löschung von <span>{{count}} items Element(e)</span> zu veröffentlichen, darunter <span>{{pages}} Seite</span>. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
+          "itemsOnly": "Sie sind dabei, die Löschung von <span>{{count}} items Element(e)</span> zu veröffentlichen. <strong>Dies kann nicht rückgängig gemacht werden.</strong>",
+          "action": "{{count}} Element(e) zu löschen"
+        },
+        "undelete": {
+          "title": "Undelete",
+          "item": "Do you really want to undelete <span>{{name}}</span> ?",
+          "items": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{pages}} pages</span> ?",
+          "itemsOnly": "Do you really want to undelete <span>{{count}} items</span> ?",
+          "action": "Undelete {{count}} items"
+        },
+        "locked":{
+          "permanently": {
+            "title": "Cannot be deleted",
+            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+          },
+          "undelete": {
+            "title": "Cannot be undeleted",
+            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+          }
+        }
       }
     },
     "ok": "OK",

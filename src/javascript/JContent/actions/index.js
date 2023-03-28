@@ -15,6 +15,5 @@ export * from './publishAction';
 export * from './publishDeletionAction';
 export * from './routerAction';
 export * from './subContentsAction';
-export * from './undeleteAction';
 export * from './unlockAction';
 export * from './openInLiveAction';

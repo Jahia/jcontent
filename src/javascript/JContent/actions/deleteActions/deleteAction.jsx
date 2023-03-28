@@ -45,7 +45,7 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
             enabled={isVisible}
             onClick={() => {
                 componentRenderer.render('deleteDialog', Delete, {
-                    isMarkedForDeletion: true,
+                    dialogType: 'mark',
                     node: res.node,
                     nodes: res.nodes,
                     onExit: onExit

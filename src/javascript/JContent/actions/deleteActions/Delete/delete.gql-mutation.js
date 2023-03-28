@@ -16,4 +16,12 @@ const DeleteMutation = gql`
     }
 `;
 
-export {MarkForDeletionMutation, DeleteMutation};
+const UndeleteMutation = gql`
+    mutation DeleteMutation($path: String!) {
+        jcr {
+            unmarkNodeForDeletion(pathOrId: $path)
+        }
+    }
+`;
+
+export {MarkForDeletionMutation, DeleteMutation, UndeleteMutation};

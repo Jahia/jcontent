@@ -8,9 +8,13 @@ import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 import {shallowEqual, useSelector} from 'react-redux';
 import {DeleteQueries} from './delete.gql-queries';
 import {triggerRefetchAll} from '~/JContent/JContent.refetches';
-import {DeleteMutation, MarkForDeletionMutation} from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
+import {
+    DeleteMutation,
+    MarkForDeletionMutation,
+    UndeleteMutation
+} from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
 
-const DeleteContent = ({data, onClose, isLoading, onMarkForDeletion, onDeletion, title}) => {
+const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title}) => {
     const {t} = useTranslation('jcontent');
     if (isLoading || data?.jcr.nodesByPath.length === 0) {
         return (
@@ -33,11 +37,11 @@ const DeleteContent = ({data, onClose, isLoading, onMarkForDeletion, onDeletion,
     if (data?.jcr?.nodesByPath[0].isMarkedForDeletion && !data?.jcr?.nodesByPath[0].isMarkedForDeletionRoot) {
         return (
             <>
-                <DialogTitle>{t('jcontent:label.contentManager.deleteAction.locked.title')}</DialogTitle>
+                <DialogTitle>{t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.title`)}</DialogTitle>
                 <DialogContent>
                     <DialogContentText className={styles.margins}
                                        dangerouslySetInnerHTML={{
-                                           __html: t('jcontent:label.contentManager.deleteAction.locked.content', {
+                                           __html: t(`jcontent:label.contentManager.deleteAction.locked.${dialogType}.content`, {
                                                name: data?.jcr?.nodesByPath[0].displayName,
                                                parentName: data?.jcr?.nodesByPath[0].rootDeletionInfo[0].displayName
                                            })
@@ -62,67 +66,47 @@ const DeleteContent = ({data, onClose, isLoading, onMarkForDeletion, onDeletion,
     }
 
     const isSingleNodeDeletion = data?.jcr?.nodesByPath.length === 1 && data?.jcr?.nodesByPath[0].pages.pageInfo.totalCount === 0 && data?.jcr?.nodesByPath[0].content.pageInfo.totalCount === 0;
+
+    function getLabel() {
+        if (isSingleNodeDeletion) {
+            return t(`jcontent:label.contentManager.deleteAction.${dialogType}.item`, {
+                name: data?.jcr?.nodesByPath[0].displayName
+            });
+        }
+
+        if (getPages() === 0) {
+            return t(`jcontent:label.contentManager.deleteAction.${dialogType}.itemsOnly`, {
+                count: getCount(),
+                pages: getPages()
+            });
+        }
+
+        return t(`jcontent:label.contentManager.deleteAction.${dialogType}.items`, {
+            count: getCount(),
+            pages: getPages()
+        });
+    }
+
     return (
         <>
             {title}
             <DialogContent>
-                {
-                    data?.jcr?.nodesByPath[0].isMarkedForDeletion ? <DialogContentText className={styles.margins}
-                                                                                       dangerouslySetInnerHTML={{
-                                                                                           __html:
-                                                                                               (isSingleNodeDeletion ?
-                                                                                                   t('jcontent:label.contentManager.deleteAction.permanently.item', {name: data?.jcr?.nodesByPath[0].displayName}) :
-                                                                                                   t(getPages() === 0 ? 'jcontent:label.contentManager.deleteAction.permanently.itemsOnly' : 'jcontent:label.contentManager.deleteAction.permanently.items', {
-                                                                                                       count: getCount(),
-                                                                                                       pages: getPages()
-                                                                                                   }))
-                                                                                       }}
-                    /> : <DialogContentText className={styles.margins}
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    (isSingleNodeDeletion ?
-                                                        t('jcontent:label.contentManager.deleteAction.mark.item', {name: data?.jcr?.nodesByPath[0].displayName}) :
-                                                        t(getPages() === 0 ? 'jcontent:label.contentManager.deleteAction.mark.itemsOnly' : 'jcontent:label.contentManager.deleteAction.mark.items', {
-                                                            count: getCount(),
-                                                            pages: getPages()
-                                                        }))
-                                            }}
-                    />
-                }
-
+                <DialogContentText className={styles.margins} dangerouslySetInnerHTML={{__html: getLabel()}}/>
             </DialogContent>
             <DialogActions>
                 <Button size="big"
                         label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
                         onClick={onClose}/>
-                {
-                    data?.jcr?.nodesByPath[0].isMarkedForDeletion ? <Button
-                        size="big"
+                <Button size="big"
                         color="danger"
                         data-cm-role="delete-button"
                         label={(isSingleNodeDeletion ?
-                            t('jcontent:label.contentManager.deleteAction.deletion') :
-                            t('jcontent:label.contentManager.deleteAction.permanently.action', {
+                            t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) :
+                            t(`jcontent:label.contentManager.deleteAction.${dialogType}.action`, {
                                 count: getCount()
                             }))}
-                        onClick={() => {
-                            onDeletion();
-                        }}
-                    /> : <Button
-                        size="big"
-                        color="danger"
-                        data-cm-role="delete-button"
-                        label={(isSingleNodeDeletion ?
-                            t('jcontent:label.contentManager.deleteAction.markForDeletion') :
-                            t('jcontent:label.contentManager.deleteAction.mark.action', {
-                                count: getCount()
-                            }))}
-                        onClick={() => {
-                            onMarkForDeletion();
-                        }}
-                    />
-                }
-
+                        onClick={onAction}
+                />
             </DialogActions>
         </>
     );
@@ -130,13 +114,26 @@ const DeleteContent = ({data, onClose, isLoading, onMarkForDeletion, onDeletion,
 
 DeleteContent.propTypes = {
     data: PropTypes.object,
+    dialogType: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    onMarkForDeletion: PropTypes.func.isRequired,
-    onDeletion: PropTypes.func.isRequired,
+    onAction: PropTypes.func.isRequired,
     title: PropTypes.object
 };
-const Delete = ({isMarkedForDeletionDialog, node, nodes, onExit}) => {
+
+const getMutation = dialogType => {
+    if (dialogType === 'undelete') {
+        return UndeleteMutation;
+    }
+
+    if (dialogType === 'permanently') {
+        return DeleteMutation;
+    }
+
+    return MarkForDeletionMutation;
+};
+
+const Delete = ({dialogType, node, nodes, onExit}) => {
     const [open, setOpen] = useState(true);
     const {t} = useTranslation('jcontent');
     const {siteKey, language} = useSelector(state => ({
@@ -153,30 +150,15 @@ const Delete = ({isMarkedForDeletionDialog, node, nodes, onExit}) => {
         }
     });
 
-    const [deleteMutation] = useMutation(DeleteMutation);
-
-    const [markForDeletionMutation] = useMutation(MarkForDeletionMutation);
+    const [mutation] = useMutation(getMutation(dialogType));
 
     if (error) {
         console.log(error);
         return null;
     }
 
-    const handleMarkForDeletion = () => {
-        Promise.all(paths.map(path => markForDeletionMutation({
-            variables: {
-                path: path
-            }
-        }))).then(() => {
-            setOpen(false);
-        }).then(() => {
-            paths.forEach(path => client.cache.flushNodeEntryByPath(path));
-            triggerRefetchAll();
-        });
-    };
-
-    const handleDeletion = () => {
-        Promise.all(paths.map(path => deleteMutation({
+    const handleMutation = () => {
+        Promise.all(paths.map(path => mutation({
             variables: {
                 path: path
             }
@@ -198,23 +180,21 @@ const Delete = ({isMarkedForDeletionDialog, node, nodes, onExit}) => {
         >
             <DeleteContent data={data}
                            isLoading={loading}
+                           dialogType={dialogType}
                            title={
                                <DialogTitle>
-                                   {isMarkedForDeletionDialog ?
-                                       t('jcontent:label.contentManager.deleteAction.deletion') :
-                                       t('jcontent:label.contentManager.deleteAction.markForDeletion')}
+                                   { t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) }
                                </DialogTitle>
-}
+                           }
                            onClose={() => setOpen(false)}
-                           onMarkForDeletion={handleMarkForDeletion}
-                           onDeletion={handleDeletion}/>
+                           onAction={handleMutation}/>
         </Dialog>
     );
 };
 
 Delete.propTypes = {
     onExit: PropTypes.func.isRequired,
-    isMarkedForDeletionDialog: PropTypes.bool.isRequired,
+    dialogType: PropTypes.string.isRequired,
     node: PropTypes.object,
     nodes: PropTypes.array
 };

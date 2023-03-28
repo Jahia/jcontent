@@ -388,24 +388,37 @@
         "pages": "Sub-pages {{count}}"
       },
       "deleteAction": {
-        "markForDeletion": "Mark for deletion",
-        "deletion": "Delete permanently",
         "loading": "Loading information or performing actions",
         "mark": {
+          "title": "Mark for deletion",
           "item": "You are about to delete <span>{{name}}</span>",
           "items": "You are about to delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>",
           "itemsOnly": "You are about to delete <span>{{count}} items</span>",
           "action": "Mark {{count}} items for deletion"
         },
         "permanently": {
+          "title": "Delete permanently",
           "item": "You are about to permanently delete <span>{{name}}</span>. <strong>This operation cannot be undone</strong>",
           "items": "You are about to permanently delete <span>{{count}} items</span>, including <span>{{pages}} pages</span>. <strong>This operation cannot be undone</strong>",
           "itemsOnly": "You are about to permanently delete <span>{{count}} items</span>. <strong>This operation cannot be undone</strong>",
           "action": "Delete {{count}} items permanently"
         },
+        "undelete": {
+          "title": "Undelete",
+          "item": "Do you really want to undelete <span>{{name}}</span> ?",
+          "items": "Do you really want to undelete <span>{{count}} items</span>, including <span>{{pages}} pages</span> ?",
+          "itemsOnly": "Do you really want to undelete <span>{{count}} items</span> ?",
+          "action": "Undelete {{count}} items"
+        },
         "locked":{
-          "title": "Cannot be deleted",
-          "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+          "permanently": {
+            "title": "Cannot be deleted",
+            "content": "The content item <strong>{{name}}</strong> cannot currently be deleted on its own. Please undelete, or permanently delete, its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+          },
+          "undelete": {
+            "title": "Cannot be undeleted",
+            "content": "The content item <strong>{{name}}</strong> cannot currently be undeleted on its own. Please undelete its parent content <strong>{{parentName}}</strong> which was the one initially marked for deletion."
+          }
         }
       }
     },

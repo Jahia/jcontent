@@ -379,6 +379,40 @@
       "contentTypeSelector": {
         "contents": "Contenus {{count}}",
         "pages": "Sous-pages {{count}}"
+      },
+      "deleteAction": {
+        "loading": "Loading information or performing actions",
+        "mark": {
+          "title": "Marquer pour suppression",
+          "item": "Vous allez supprimer <span>{{name}}</span>",
+          "items": "Vous allez supprimer <span>{{count}} éléments</span>, dont <span>{{pages}} pages</span>",
+          "itemsOnly": "Vous allez supprimer <span>{{count}} éléments</span>",
+          "action": "Marquer {{count}} éléments pour suppression"
+        },
+        "permanently": {
+          "title": "Supprimer définitivement",
+          "item": "Vous allez supprimer définitivement <span>{{name}}</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
+          "items": "Vous allez supprimer définitivement <span>{{count}} éléments</span>, dont <span>{{pages}} pages</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
+          "itemsOnly": "Vous allez supprimer définitivement <span>{{count}} éléments</span>. <strong>Cette opération ne peut pas être annulée.</strong>",
+          "action": "Supprimer {{count}} éléments définitivement"
+        },
+        "undelete": {
+          "title": "Annuler la suppression",
+          "item": "Souhaitez-vous annuler la suppression de <span>{{name}}</span> ?",
+          "items": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span>, dont <span>{{pages}} pages</span> ?",
+          "itemsOnly": "Souhaitez-vous annuler la suppression de <span>{{count}} éléments</span> ?",
+          "action": "Annuler la suppression de {{count}} éléments"
+        },
+        "locked":{
+          "permanently": {
+            "title": "Impossible de supprimer",
+            "content": "L’élément <strong>{{name}}</strong> ne peut actuellement être supprimé seul. Merci d’annuler la suppression, ou de supprimer définitivement, son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. "
+          },
+          "undelete": {
+            "title": "Impossible d'annuler la suppression",
+            "content": "Il n’est actuellement pas possible d’annuler la seule suppression de l’élément <strong>{{name}}</strong>. Merci d’annuler la suppression de son contenu parent <strong>{{parentName}}</strong>, qui est le contenu initialement marqué pour suppression. "
+          }
+        }
       }
     },
     "ok": "OK",

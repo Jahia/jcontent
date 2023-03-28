@@ -95,11 +95,12 @@ const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title}) 
             </DialogContent>
             <DialogActions>
                 <Button size="big"
+                        data-sel-role={`cancel-button`}
                         label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
                         onClick={onClose}/>
                 <Button size="big"
                         color="danger"
-                        data-cm-role="delete-button"
+                        data-sel-role={`delete-${dialogType}-button`}
                         label={(isSingleNodeDeletion ?
                             t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) :
                             t(`jcontent:label.contentManager.deleteAction.${dialogType}.action`, {
@@ -174,7 +175,7 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
         <Dialog fullWidth
                 open={open}
                 aria-labelledby="form-dialog-title"
-                data-cm-role="delete-dialog"
+                data-sel-role={`delete-${dialogType}-dialog`}
                 onClose={() => setOpen(false)}
                 onExited={onExit}
         >

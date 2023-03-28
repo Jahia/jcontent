@@ -95,7 +95,7 @@ const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title}) 
             </DialogContent>
             <DialogActions>
                 <Button size="big"
-                        data-sel-role={`cancel-button`}
+                        data-sel-role="cancel-button"
                         label={t('jcontent:label.contentManager.fileUpload.dialogRenameCancel')}
                         onClick={onClose}/>
                 <Button size="big"

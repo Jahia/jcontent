@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
 import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from './../actions.constants';
 import Delete from './Delete';
+import {ComponentRendererContext} from '@jahia/ui-extender';
 
 const checkActionOnNodes = res => {
     return res.nodes ? res.nodes.reduce((acc, node) => acc && checkAction(node), true) : true;
@@ -16,6 +17,7 @@ const checkAction = node => node.operationsSupport.markForDeletion &&
     (node.aggregatedPublicationInfo.existsInLive === undefined ? true : !node.aggregatedPublicationInfo.existsInLive);
 
 export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
+    const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
 
     const res = useNodeChecks(
@@ -31,10 +33,8 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
         }
     );
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const handleClose = () => {
-        setIsDialogOpen(false);
+    const onExit = () => {
+        componentRenderer.destroy('deleteDialog');
     };
 
     if (res.loading) {
@@ -44,17 +44,19 @@ export const DeletePermanentlyActionComponent = ({path, paths, buttonProps, rend
     let isVisible = res.node ? checkAction(res.node) : checkActionOnNodes(res);
 
     return (
-        <>
-            <Render
-                {...others}
-                isVisible={isVisible}
-                buttonProps={{...buttonProps, color: 'danger'}}
-                onClick={() => {
-                    setIsDialogOpen(true);
-                }}
-            />
-            <Delete isOpen={isDialogOpen} node={res.node} nodes={res.nodes} isMarkedForDeletionDialog={false} onClose={handleClose}/>
-        </>
+        <Render
+            {...others}
+            isVisible={isVisible}
+            buttonProps={{...buttonProps, color: 'danger'}}
+            onClick={() => {
+                componentRenderer.render('deleteDialog', Delete, {
+                    isMarkedForDeletion: false,
+                    node: res.node,
+                    nodes: res.nodes,
+                    onExit: onExit
+                });
+            }}
+        />
     );
 };
 

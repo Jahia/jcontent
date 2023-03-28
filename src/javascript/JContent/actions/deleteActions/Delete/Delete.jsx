@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
@@ -136,7 +136,8 @@ DeleteContent.propTypes = {
     onDeletion: PropTypes.func.isRequired,
     title: PropTypes.object
 };
-const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
+const Delete = ({isMarkedForDeletionDialog, node, nodes, onExit}) => {
+    const [open, setOpen] = useState(true);
     const {t} = useTranslation('jcontent');
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
@@ -167,7 +168,7 @@ const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
                 path: path
             }
         }))).then(() => {
-            onClose();
+            setOpen(false);
         }).then(() => {
             paths.forEach(path => client.cache.flushNodeEntryByPath(path));
             triggerRefetchAll();
@@ -180,7 +181,7 @@ const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
                 path: path
             }
         }))).then(() => {
-            onClose();
+            setOpen(false);
         }).then(() => {
             paths.forEach(path => client.cache.flushNodeEntryByPath(path));
             triggerRefetchAll();
@@ -189,10 +190,11 @@ const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
 
     return (
         <Dialog fullWidth
-                open={isOpen}
+                open={open}
                 aria-labelledby="form-dialog-title"
                 data-cm-role="delete-dialog"
-                onClose={onClose}
+                onClose={() => setOpen(false)}
+                onExited={onExit}
         >
             <DeleteContent data={data}
                            isLoading={loading}
@@ -203,7 +205,7 @@ const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
                                        t('jcontent:label.contentManager.deleteAction.markForDeletion')}
                                </DialogTitle>
 }
-                           onClose={onClose}
+                           onClose={() => setOpen(false)}
                            onMarkForDeletion={handleMarkForDeletion}
                            onDeletion={handleDeletion}/>
         </Dialog>
@@ -211,8 +213,7 @@ const Delete = ({isOpen, isMarkedForDeletionDialog, node, nodes, onClose}) => {
 };
 
 Delete.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired,
+    onExit: PropTypes.func.isRequired,
     isMarkedForDeletionDialog: PropTypes.bool.isRequired,
     node: PropTypes.object,
     nodes: PropTypes.array

@@ -2,15 +2,17 @@ import {isMarkedForDeletion} from '../../JContent.utils';
 import {useSelector} from 'react-redux';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {PATH_CONTENTS_ITSELF, PATH_FILES_ITSELF} from '../actions.constants';
 import Delete from './Delete';
+import {ComponentRendererContext} from '@jahia/ui-extender';
 
 function checkAction(node) {
     return node.operationsSupport.markForDeletion && !isMarkedForDeletion(node);
 }
 
 export const DeleteActionComponent = ({path, paths, buttonProps, render: Render, loading: Loading, ...others}) => {
+    const componentRenderer = useContext(ComponentRendererContext);
     const language = useSelector(state => state.language);
 
     const res = useNodeChecks(
@@ -24,10 +26,9 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
             hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF]
         }
     );
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const handleClose = () => {
-        setIsDialogOpen(false);
+    const onExit = () => {
+        componentRenderer.destroy('deleteDialog');
     };
 
     if (res.loading) {
@@ -37,18 +38,20 @@ export const DeleteActionComponent = ({path, paths, buttonProps, render: Render,
     const isVisible = res.checksResult && (res.node ? checkAction(res.node) : res.nodes.reduce((acc, node) => acc && checkAction(node), true));
 
     return (
-        <>
-            <Render
+        <Render
             {...others}
             isVisible={isVisible}
             buttonProps={{...buttonProps, color: 'danger'}}
             enabled={isVisible}
             onClick={() => {
-                setIsDialogOpen(true);
+                componentRenderer.render('deleteDialog', Delete, {
+                    isMarkedForDeletion: true,
+                    node: res.node,
+                    nodes: res.nodes,
+                    onExit: onExit
+                });
             }}
         />
-            <Delete isMarkedForDeletionDialog isOpen={isDialogOpen} node={res.node} nodes={res.nodes} onClose={handleClose}/>
-        </>
     );
 };
 

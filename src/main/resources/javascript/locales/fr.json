@@ -382,6 +382,18 @@
       },
       "deleteAction": {
         "loading": "Loading information or performing actions",
+        "info": {
+          "title": "A propos de la suppression",
+          "text1": "La suppression se fait en deux étapes :",
+          "text1-1": "Les éléments sont marqués pour suppression dans un premier temps. Cette opération va marquer pour suppression tous les sous-éléments, ce qui inclut les pages.",
+          "text1-1-1": "A cette étape, il est encore possible d’annuler la suppression, afin que les éléments ne soient plus marqués pour suppression.",
+          "text1-2": "Vous devez ensuite procéder à la suppression définitive :",
+          "text1-2-1": "Si les éléments ont été précédemment publiés, vous devez “publier la suppression”, afin que les éléments soient supprimés dans les versions en ligne et d’édition.",
+          "text1-2-2": "Si les éléments n’ont jamais été publiés, dans ce cas vous devez utiliser l’option “Supprimer définitivement”.",
+          "text1-2-3": "Ces opérations ne peuvent pas être annulées : les éléments ainsi supprimés ne peuvent pas être restaurés.",
+          "text2": "La seconde étape du processus de suppression (la suppression définitive), ainsi que l’annulation de la suppression, doit être faite sur l’élément initialement marqué pour suppression. Vous ne pouvez pas marquer une page pour suppression, et ensuite supprimer définitivement uniquement un contenu de la page. Dans ce cas, vous devez annuler la suppression de la page, procéder à la suppression en deux étapes du contenu en question, et ensuite marquer de nouveau la page pour suppression.",
+          "text3": "Il est possible que des éléments marqués pour suppression soient référencés par d’autres éléments (par exemple, un lien peut exister vers une page marquée pour suppression). Vous pouvez alors utiliser la corbeille afin de vérifier, et mettre à jour, de telles références. Ne pas faire ce travail peut casser des liens ou des références."
+        },
         "mark": {
           "title": "Marquer pour suppression",
           "item": "Vous allez supprimer <span>{{name}}</span>",

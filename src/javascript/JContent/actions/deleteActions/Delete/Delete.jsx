@@ -13,6 +13,8 @@ import {
     MarkForDeletionMutation,
     UndeleteMutation
 } from '~/JContent/actions/deleteActions/Delete/delete.gql-mutation';
+import SvgInformation from '@jahia/moonstone/dist/icons/components/Information';
+import {Info} from '~/JContent/actions/deleteActions/Delete/Info';
 
 const DeleteContent = ({data, onClose, isLoading, dialogType, onAction, title}) => {
     const {t} = useTranslation('jcontent');
@@ -136,6 +138,7 @@ const getMutation = dialogType => {
 
 const Delete = ({dialogType, node, nodes, onExit}) => {
     const [open, setOpen] = useState(true);
+    const [infoOpen, setInfoOpen] = useState(false);
     const {t} = useTranslation('jcontent');
     const {siteKey, language} = useSelector(state => ({
         siteKey: state.site,
@@ -173,24 +176,33 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
     };
 
     return (
-        <Dialog fullWidth
-                open={open}
-                aria-labelledby="form-dialog-title"
-                data-sel-role={`delete-${dialogType}-dialog`}
-                onClose={() => setOpen(false)}
-                onExited={onExit}
-        >
-            <DeleteContent data={data}
-                           isLoading={loading}
-                           dialogType={dialogType}
-                           title={
-                               <DialogTitle>
-                                   { t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) }
-                               </DialogTitle>
-                           }
-                           onClose={() => setOpen(false)}
-                           onAction={handleMutation}/>
-        </Dialog>
+        <>
+            <Dialog fullWidth
+                    open={open}
+                    aria-labelledby="form-dialog-title"
+                    data-sel-role={`delete-${dialogType}-dialog`}
+                    onClose={() => setOpen(false)}
+                    onExited={onExit}
+            >
+                <DeleteContent data={data}
+                               isLoading={loading}
+                               dialogType={dialogType}
+                               title={
+                                   <DialogTitle>
+                                       { t(`jcontent:label.contentManager.deleteAction.${dialogType}.title`) }
+                                       <Button className={styles.button}
+                                               icon={<SvgInformation/>}
+                                               variant="ghost"
+                                               onClick={() => {
+setInfoOpen(true);
+}}/>
+                                   </DialogTitle>
+                               }
+                               onClose={() => setOpen(false)}
+                               onAction={handleMutation}/>
+            </Dialog>
+            <Info isOpen={infoOpen} onClose={() => setInfoOpen(false)}/>
+        </>
     );
 };
 

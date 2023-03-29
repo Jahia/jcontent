@@ -194,8 +194,9 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
                                                icon={<SvgInformation/>}
                                                variant="ghost"
                                                onClick={() => {
-setInfoOpen(true);
-}}/>
+                                                   setInfoOpen(true);
+                                               }}
+                                       />
                                    </DialogTitle>
                                }
                                onClose={() => setOpen(false)}

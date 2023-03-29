@@ -148,7 +148,8 @@ const Delete = ({dialogType, node, nodes, onExit}) => {
             siteKey: `/sites/${siteKey}`,
             language: language,
             paths: paths
-        }
+        },
+        fetchPolicy: 'network-only'
     });
 
     const [mutation] = useMutation(getMutation(dialogType));

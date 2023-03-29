@@ -1,11 +1,15 @@
 import React from 'react';
 import {ButtonGroup, Separator} from '@jahia/moonstone';
-import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
+import {getButtonRenderer} from '~/utils/getButtonRenderer';
 import {DisplayAction} from '@jahia/ui-extender';
 import {useNodeInfo} from '@jahia/data-helper';
 import {shallowEqual, useSelector} from 'react-redux';
 import styles from './MainActionBar.scss';
 import {booleanValue} from '~/JContent/JContent.utils';
+
+const ButtonRenderer = getButtonRenderer({defaultButtonProps: {size: 'big'}});
+const ButtonRendererNoLabel = getButtonRenderer({labelStyle: 'none', defaultButtonProps: {size: 'big'}});
+const ButtonRendererShortLabel = getButtonRenderer({labelStyle: 'short', defaultButtonProps: {size: 'big'}});
 
 export const MainActionBar = () => {
     const showPageComposer = booleanValue(contextJsParameters.config.jcontent?.showPageComposer);
